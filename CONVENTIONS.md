@@ -7,6 +7,72 @@ This document shows our coding conventions and explains why we chose to use them
 1. C++ Version
 2. Header Files
     1. The #define Guard
+    2. Forward Declarations
+    3. Inline Functions
+    4. Names and Order of Includes
+3. Scoping
+    1. Namespaces
+    2. Internal Linkage
+    3. Nonmember, Static Member, and Global Functions
+    4. Local Variables
+    5. Static and Global Variables
+4. Classes
+    1. Implicit Conversions
+    2. Struct vs. Classes
+    3. Structs vs. Pairs and Tuples
+    4. Inheritance
+    5. Operator Overloading
+    6. Access Control
+    7. Declaration Order
+5. Functions
+    1. Inputs and outputs
+    2. Default Arguments
+    3. Trailing Return Type Syntax
+6. Other C++ Features
+    1. Friends
+    2. Exceptions
+    3. `noexcept`
+    4. Run-Time Type Information (RTTI)
+    5. Casting
+    6. Preincrement and Predecrement
+    7. Use of `const`
+        - Where to put the `const`
+    8. Use of `constexpr`, `constinit` and `consteval`
+    9. Integer types
+    10. 64-bit portability
+    11. Preprocessor Macros
+    12. `0`/`\0` and `nullptr`/`NULL`
+    13. `sizeof`
+    14. Type deduction
+    15. Template argument deduction
+    16. Lambda expressions
+    17. Concepts and Constraints
+    18. Typedefs and Aliases
+    19. Switch Statements
+7. Naming
+    1. General Naming Rules
+    2. File names
+    3. Type names
+    4. Variable Names
+8. Comments
+    1. Comment Style
+    2. File Comments
+9. Formatting
+    1. Spaces vs. Tabs
+    2. Function Declarations and Definitions
+    3. Lambda Expressions
+    4. Floating-point Literals
+    5. Function Calls
+    6. Braced Initializer List Format
+    7. Looping and Branching Statements
+    8. Pointer and Reference Expressions
+    9. Preprocessor Directives
+    10. Class Format
+    11. Namespace Formatting
+    12. Horizontal Whitespace
+        - Loops and Conditionals
+        - Operators
+        - Templates and Casts
 
 TODO
 
@@ -689,4 +755,155 @@ bool result = VeryVeryVeryVeryLongFunctionName(
 );
 ```
 
-## Exceptions to the Rules
+### Braced Initializer List Format
+
+Format a braced initializer list exactly like you would format a function call in its place.
+
+### Looping and Branching Statements
+
+At a high level, looping or branching statements consist of the following components:
+
+- One or more statement keywords (e.g. if, else, switch, while, do, or for).
+- One condition or iteration specifier, inside parentheses.
+- One or more controlled statements, or blocks of controlled statements.
+
+For these statements:
+
+- The components of the statement should be separated by single spaces (not line breaks).
+- Inside the condition or iteration specifier, put one space (or a line break) between each semicolon and the next token, except if the token is a closing parenthesis or another semicolon.
+- Inside the condition or iteration specifier, do not put a space after the opening parenthesis or before the closing parenthesis.
+- Put any controlled statements inside blocks (i.e. use curly braces) except if is only a single line.
+- Inside the controlled blocks, put one line break immediately before and after the opening and closing braces.
+
+```c++
+if (condition)
+{
+    DoSomething();
+    ...
+}
+else
+{
+    DoSomethingElse();
+    ...
+}
+
+while (condition)
+{
+    Foo();
+    ...
+}
+
+do
+{
+    Bar();
+    ...
+}
+while (condition);
+
+for (int i = 0; i < 10; i++)
+    someGlobal[i] = 0;
+
+for (;;)
+    // Infinite loop
+    DoSomethingForever();
+
+switch (value)
+{
+    case 1:
+        DoSomething();
+        break;
+
+    // Add a scope because we initialize a local with the same name of another case
+    case 2:
+    {
+        float f = 5.f;
+        Consume(f);
+        break;
+    }
+
+    case 3:
+    {
+        float f = 6.f;
+        ConsumeDifferently(f);
+        break;
+    }
+}
+```
+
+### Pointer and Reference Expressions
+
+No spaces around period or arrow. Pointer operators do not have trailing spaces.
+
+The following are examples of correctly-formatted pointer and reference expressions:
+
+```c++
+x = *p;
+p = &x;
+x = r.y;
+x = v->y;
+```
+
+It is allowed to declare multiple variables in the same declaration, but it is disallowed if any of those have pointer or reference decorations. Such declarations are easily misread.
+
+Correctly declared variables:
+
+```c++
+float x, y; // Fine if helpful for readability
+```
+
+Badly declared variables:
+
+```c++
+int x, *y;
+int* x, *y;
+char * c;
+const std::string & str;
+```
+
+### Preprocessor Directives
+
+The hash mark that starts a preprocessor directive should always be at the beginning of the line.
+
+Even when preprocessor directives are within the body of indented code, the directives should start at the beginning of the line.
+
+```c++
+void Func()
+{
+    DoSomething()
+#ifdef DEFINE
+    Foo();
+#else
+    Bar()
+#endif
+}
+```
+
+### Class Format
+
+Sections in `public`, `protected` and `private` are indented 4 spaces, as declared in [the Spaces vs. Tabs section](#spaces-vs-tabs). The keywords themselves should not be indented.
+
+### Namespace Formatting
+
+TODO
+
+### Horizontal Whitespace
+
+Use of horizontal whitespace depends on location. Never put trailing whitespace at the end of a line.
+
+### Vertical Whitespace
+
+Do not use excessive empty lines. You should almost never have two empty lines following one another.
+
+#### Loops and Conditionals
+
+See [the Looping and Branching Statements section](#looping-and-branching-statements).
+
+#### Operators
+
+Always put a space before and after mathematical operators. For pointer and reference operators, see [the Pointer and Reference Expressions section](#pointer-and-reference-expressions).
+
+#### Templates and Casts
+
+Never put extra spaces in template declarations.
+
+Always put one after a C-style cast. However, as stated in [the Casting section](#casting), you should use C++ casts, and because these are in a function-style form, an extra space isn't necessary.
