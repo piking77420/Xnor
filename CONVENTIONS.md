@@ -583,16 +583,110 @@ Type names follow the `PascalCase` rule, except for basic types, in which case i
 
 ### Variable Names
 
-Common variable names: `camelCase`
-Custom type public members: `camelCase`
-Custom type protected members: `m_PascalCase`
-Custom type private members: `m_PascalCase`
-Constant names: `PascalCase`
-`#define` preprocessors: `UPPER_CASE`
-`enum` constants: `UPPER_CASE`
+- Common variable names: `camelCase`
+- Custom type public members (for `struct` and `class` types): `camelCase`
+- Custom type protected members: `m_PascalCase`
+- Custom type private members: `m_PascalCase`
+- Constant names: `PascalCase`
+- `#define` macros: `UPPER_CASE`
+- `enum` constants: `PascalCase`
+- Function names: `PascalCase`
+- Namespace names: `PascalCase`
 
 ## Comments
 
+Comments are absolutely vital to keeping our code readable. The following rules describe what you should comment and where. But remember: while comments are very important, the best code is self-documenting. Giving sensible names to types and variables is much better than using obscure names that you must then explain through comments.
+
+### Comment Style
+
+Use the triple slash syntax (`///`) for documenting code. For simple comments, use double slashes (`//`).
+
+### File Comments
+
+We do not start each file with a license boilerplate, as we think placing code in a namespace is sufficient to categorize it.
+
 ## Formatting
+
+Coding style and formatting are pretty arbitrary, but a project is much easier to follow if everyone uses the same style.
+
+### Spaces vs. Tabs
+
+Use only spaces, and indent 4 spaces at a time. You should set your editor to emit spaces when you hit the tab key.
+
+### Function Declarations and Definitions
+
+Return type on the same line as function name, parameters on the same line if they fit. Wrap parameter lists which do not fit on a single line as you would wrap arguments in a function call.
+
+Functions look like this:
+
+```c++
+ReturnType ClassName::FunctionName(Type param1, Type param2)
+{
+    DoSomething();
+    ...
+}
+```
+
+If you have too much text to fit on one line:
+
+```c++
+ReturnType ClassName::ReallyLongFunctionName(
+    Type param1,
+    Type param2,
+    Type param3)
+{
+    DoSomething();
+    ...
+}
+```
+
+### Lambda Expressions
+
+Format parameters and bodies as for any other function, and capture lists like other comma-separated lists.
+
+For by-reference captures, do not leave a space between the ampersand (&) and the variable name.
+
+```c++
+int x = 0;
+auto x_plus_n = [&x] (int n) -> int { return x + n; }
+```
+
+### Floating-point Literals
+
+Correct:
+
+```c++
+float f = 1.f;
+float f2 = 1e+6f;
+float f2 = 1e-6f;
+```
+
+Incorrect:
+
+```c++
+float f = -.7f;
+float f2 = 1E6f;
+```
+
+### Function Calls
+
+Function calls have the following format:
+
+```c++
+bool result = DoSomething(arg1, arg2, arg3);
+```
+
+If the arguments do not all fit on one line:
+
+```c++
+bool result = VeryVeryVeryVeryLongFunctionName(
+    arg1,
+    arg2,
+    arg3,
+    arg4,
+    arg5,
+    arg6
+);
+```
 
 ## Exceptions to the Rules
