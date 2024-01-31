@@ -598,7 +598,7 @@ switch (value)
 }
 ```
 
-For fallthrough usages:
+For fallthrough usage:
 
 ```c++
 switch (value)
