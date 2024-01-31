@@ -4,77 +4,75 @@ This document shows our coding conventions and explains why we chose to use them
 
 ## Summary
 
-1. C++ Version
-2. Header Files
-    1. The #define Guard
-    2. Forward Declarations
-    3. Inline Functions
-    4. Names and Order of Includes
-3. Scoping
-    1. Namespaces
-    2. Internal Linkage
-    3. Nonmember, Static Member, and Global Functions
-    4. Local Variables
-    5. Static and Global Variables
-4. Classes
-    1. Implicit Conversions
-    2. Struct vs. Classes
-    3. Structs vs. Pairs and Tuples
-    4. Inheritance
-    5. Operator Overloading
-    6. Access Control
-    7. Declaration Order
-5. Functions
-    1. Inputs and outputs
-    2. Default Arguments
-    3. Trailing Return Type Syntax
-6. Other C++ Features
-    1. Friends
-    2. Exceptions
-    3. `noexcept`
-    4. Run-Time Type Information (RTTI)
-    5. Casting
-    6. Preincrement and Predecrement
-    7. Use of `const`
-        - Where to put the `const`
-    8. Use of `constexpr`, `constinit` and `consteval`
-    9. Integer types
-    10. 64-bit portability
-    11. Preprocessor Macros
-    12. `0`/`\0` and `nullptr`/`NULL`
-    13. `sizeof`
-    14. Type deduction
-    15. Template argument deduction
-    16. Lambda expressions
-    17. Concepts and Constraints
-    18. Typedefs and Aliases
-    19. Switch Statements
-7. Naming
-    1. General Naming Rules
-    2. File names
-    3. Type names
-    4. Variable Names
-8. Comments
-    1. Comment Style
-    2. File Comments
-9. Formatting
-    1. Spaces vs. Tabs
-    2. Function Declarations and Definitions
-    3. Lambda Expressions
-    4. Floating-point Literals
-    5. Function Calls
-    6. Braced Initializer List Format
-    7. Looping and Branching Statements
-    8. Pointer and Reference Expressions
-    9. Preprocessor Directives
-    10. Class Format
-    11. Namespace Formatting
-    12. Horizontal Whitespace
-        - Loops and Conditionals
-        - Operators
-        - Templates and Casts
-
-TODO
+1. [C++ Version](#c-version)
+2. [Header Files](#header-files)
+    1. [The #define Guard](#the-define-guard)
+    2. [Forward Declarations](#forward-declarations)
+    3. [Inline Functions](#inline-functions)
+    4. [Names and Order of Includes](#names-and-order-of-includes)
+3. [Scoping](#scoping)
+    1. [Namespaces](#namespaces)
+    2. [Internal Linkage](#internal-linkage)
+    3. [Nonmember, Static Member, and Global Functions](#nonmember-static-member-and-global-functions)
+    4. [Local Variables](#local-variables)
+    5. [Static and Global Variables](#static-and-global-variables)
+4. [Classes](#classes)
+    1. [Implicit Conversions](#implicit-conversions)
+    2. [Struct vs. Classes](#struct-vs-classes)
+    3. [Structs vs. Pairs and Tuples](#structs-vs-pairs-and-tuples)
+    4. [Inheritance](#inheritance)
+    5. [Operator Overloading](#operator-overloading)
+    6. [Access Control](#access-control)
+    7. [Declaration Order](#declaration-order)
+5. [Functions](#functions)
+    1. [Inputs and outputs](#inputs-and-outputs)
+    2. [Default Arguments](#default-arguments)
+    3. [Trailing Return Type Syntax](#trailing-return-type-syntax)
+6. [Other C++ Features](#other-c-features)
+    1. [Friends](#friends)
+    2. [Exceptions](#exceptions)
+    3. [`noexcept`](#noexcept)
+    4. [Run-Time Type Information (RTTI)](#run-time-type-information-rtti)
+    5. [Casting](#casting)
+    6. [Preincrement and Predecrement](#preincrement-and-predecrement)
+    7. [Use of `const`](#use-of-const)
+        - [Where to put the `const`](#where-to-put-the-const)
+    8. [Use of `constexpr`, `constinit` and `consteval`](#use-of-constexpr-constinit-and-consteval)
+    9. [Integer types](#integer-types)
+    10. [64-bit portability](#64-bit-portability)
+    11. [Preprocessor Macros](#preprocessor-macros)
+    12. [`0`/`\0` and `nullptr`/`NULL`](#00-and-nullptrnull)
+    13. [`sizeof`](#sizeof)
+    14. [Type deduction](#type-deduction)
+    15. [Template argument deduction](#template-argument-deduction)
+    16. [Lambda expressions](#lambda-expressions)
+    17. [Concepts and Constraints](#concepts-and-constraints)
+    18. [Typedefs and Aliases](#typedefs-and-aliases)
+    19. [Switch Statements](#switch-statements)
+7. [Naming](#naming)
+    1. [General Naming Rules](#general-naming-rules)
+    2. [File names](#file-names)
+    3. [Type names](#type-names)
+    4. [Variable Names](#variable-names)
+8. [Comments](#comments)
+    1. [Comment Style](#comment-style)
+    2. [File Comments](#file-comments)
+9. [Formatting](#formatting)
+    1. [Spaces vs. Tabs](#spaces-vs-tabs)
+    2. [Function Declarations and Definitions](#function-declarations-and-definitions)
+    3. [Lambda Expressions](#lambda-expressions-1)
+    4. [Floating-point Literals](#floating-point-literals)
+    5. [Function Calls](#function-calls)
+    6. [Braced Initializer List Format](#braced-initializer-list-format)
+    7. [Looping and Branching Statements](#looping-and-branching-statements)
+    8. [Pointer and Reference Expressions](#pointer-and-reference-expressions)
+    9. [Preprocessor Directives](#preprocessor-directives)
+    10. [Class Format](#class-format)
+    11. [Namespace Formatting](#namespace-formatting)
+    12. [Horizontal Whitespace](#horizontal-whitespace)
+        - [Loops and Conditionals](#loops-and-conditionals)
+        - [Operators](#operators)
+        - [Templates and Casts](#templates-and-casts)
 
 ## C++ Version
 
@@ -880,11 +878,33 @@ void Func()
 
 ### Class Format
 
-Sections in `public`, `protected` and `private` are indented 4 spaces, as declared in [the Spaces vs. Tabs section](#spaces-vs-tabs). The keywords themselves should not be indented.
+Sections in `public`, `protected` and `private` are indented. The keywords themselves should not be indented.
 
 ### Namespace Formatting
 
-TODO
+Namespace declarations should be placed in header files. Everything contained inside a namespace declaration should be indented.
+
+A source file defining functions or variables contained in a namespace, you should not use a namespace declaration. Instead use member accessors. For example:
+
+```c++
+// bar.hpp
+namespace Foo
+{
+    class Bar
+    {
+        static int staticInt;
+        void Func();
+    };
+}
+
+// bar.cpp
+int Foo::Bar::staticInt = 5;
+
+void Foo::Bar::Func()
+{
+    ...
+}
+```
 
 ### Horizontal Whitespace
 
