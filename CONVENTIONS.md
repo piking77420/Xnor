@@ -2,6 +2,8 @@
 
 This document shows our coding conventions and explains why we chose to use them.
 
+We took the [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) as an example for this document.
+
 ## Summary
 
 1. [C++ Version](#c-version)
@@ -26,8 +28,7 @@ This document shows our coding conventions and explains why we chose to use them
     7. [Declaration Order](#declaration-order)
 5. [Functions](#functions)
     1. [Inputs and outputs](#inputs-and-outputs)
-    2. [Default Arguments](#default-arguments)
-    3. [Trailing Return Type Syntax](#trailing-return-type-syntax)
+    2. [Trailing Return Type Syntax](#trailing-return-type-syntax)
 6. [Other C++ Features](#other-c-features)
     1. [Friends](#friends)
     2. [Exceptions](#exceptions)
@@ -76,12 +77,12 @@ This document shows our coding conventions and explains why we chose to use them
 
 ## C++ Version
 
-C++23 because we want to have access to the latest features such as the `[assume](https://en.cppreference.com/w/cpp/language/attributes/assume)` attribute, less `[constexpr](https://en.cppreference.com/w/cpp/language/constexpr)` restrictions, and [more](https://en.cppreference.com/w/cpp/23).
+C++23 because we want to have access to the latest features such as the [`assume`](https://en.cppreference.com/w/cpp/language/attributes/assume) attribute, less [`constexpr`](https://en.cppreference.com/w/cpp/language/constexpr) restrictions, and [more](https://en.cppreference.com/w/cpp/23).
 
 Another advantage of using C++23 is that we also have access to all previous features, such as for C++17:
-- `[std::filesystem](https://en.cppreference.com/w/cpp/header/filesystem)`
-- `[if constexpr](https://en.cppreference.com/w/cpp/language/if)`
-- `[nodiscard](https://en.cppreference.com/w/cpp/language/attributes/nodiscard)`
+- [`std::filesystem`](https://en.cppreference.com/w/cpp/header/filesystem)
+- [`if constexpr`](https://en.cppreference.com/w/cpp/language/if)`
+- [`nodiscard`](https://en.cppreference.com/w/cpp/language/attributes/nodiscard)
 - [fold-expressions](https://en.cppreference.com/w/cpp/language/fold)
 - [class template argument deduction](https://en.cppreference.com/w/cpp/language/class_template_argument_deduction)
 - And [more](https://en.cppreference.com/w/cpp/17)
@@ -411,21 +412,6 @@ Prefer using return values over output parameters: they improve readability, and
 Prefer to return by value or, failing that, return by reference. Avoid returning a pointer unless it can be null.
 
 Parameters are either inputs to the function, outputs from the function, or both. Input parameters should usually be values or `const` references, while output parameters should usually be pointer. Even though pointers may be null, we find passing output parameters much clearer by taking the address of a variables than passing it as a reference.
-
-### Default Arguments
-
-Use default function arguments only if it doesn't interfere with a different overload of this function. For example:
-
-```c++
-void Foo();
-
-void Foo(int i = 0); // Bad -- function call who be ambiguous
-```
-
-```c++
-void Foo(); // Consider that i is 0
-
-void Foo(int i);
 ```
 
 ### Trailing Return Type Syntax
