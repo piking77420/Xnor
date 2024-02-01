@@ -2,7 +2,7 @@
 
 This document shows our coding conventions and explains why we chose to use them.
 
-We took the [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) as an example for this document.
+We took the [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) as an example when writing this document.
 
 ## Summary
 
