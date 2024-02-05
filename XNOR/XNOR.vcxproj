@@ -88,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)externals\include;$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\include;$(ProjectDir)include;$(ProjectDir)include\scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -112,7 +112,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)externals\include;$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\include;$(ProjectDir)include;$(ProjectDir)include\scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -136,7 +136,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)externals\include;$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\include;$(ProjectDir)include;$(ProjectDir)include\scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -160,7 +160,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)externals\include;$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\include;$(ProjectDir)include;$(ProjectDir)include\scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -180,6 +180,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\scene\component.cpp" />
+    <ClCompile Include="src\scene\entity.cpp" />
+    <ClCompile Include="src\scene\scene.cpp" />
     <ClCompile Include="src\utils\logger.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -204,6 +207,9 @@
     <ClInclude Include="externals\include\Maths\vector2i.hpp" />
     <ClInclude Include="externals\include\Maths\vector3.hpp" />
     <ClInclude Include="externals\include\Maths\vector4.hpp" />
+    <ClInclude Include="include\scene\component.hpp" />
+    <ClInclude Include="include\scene\entity.hpp" />
+    <ClInclude Include="include\scene\scene.hpp" />
     <ClInclude Include="include\utils\logger.hpp" />
     <ClInclude Include="include\utils\tsqueue.hpp" />
   </ItemGroup>
