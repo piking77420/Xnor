@@ -1,14 +1,15 @@
 ﻿#pragma once
-#include <vcruntime_typeinfo.h>
 #include <vector>
-
 #include "component.hpp"
 
+class Component;
 
 class Entity
 {
 public:
-    
+
+    ~Entity();
+
     template<class T>
     void AddComponent();
     
@@ -23,9 +24,7 @@ public:
 
     template<class T>
     bool TryGetComponent(T*& output);
-
-    ~Entity();
-
+    
     void Begin();
 
     void Update();
@@ -39,7 +38,10 @@ void Entity::AddComponent()
 {
     static_assert(std::is_base_of<Component,T>(),"this class is not base on Component");
 
-    m_Components.emplace_back(new T());
+    Component* newT = new T();
+    newT->entity = this;
+    
+    m_Components.emplace_back(newT);
 }
 
 template <class T>

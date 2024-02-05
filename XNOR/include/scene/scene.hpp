@@ -2,24 +2,20 @@
 #include <vector>
 #include "entity.hpp"
 
+class Entity;
+
 class Scene
 {
 public:
 
-    static Scene* GetScene()
-    {
-        return m_CurrentScene;
-    }
+    static inline Scene* scene = nullptr;
     
-    static void Begin();
+    void Begin();
 
-    static void Update();
-    
-private:
-    
-    static inline Scene* m_CurrentScene = nullptr;
-    
+    void Update();
+
 public:
+    
     ~Scene();
     
 private:

@@ -2,7 +2,7 @@
 
 void Scene::Begin()
 {
-    for (Entity* ent : m_CurrentScene->m_entities)
+    for (Entity* ent : m_entities)
     {
         ent->Begin();
     }
@@ -10,7 +10,7 @@ void Scene::Begin()
 
 void Scene::Update()
 {
-    for (Entity* ent : m_CurrentScene->m_entities)
+    for (Entity* ent : m_entities)
     {
         ent->Update();
     }
@@ -18,7 +18,7 @@ void Scene::Update()
 
 Scene::~Scene()
 {
-    for (Entity* ent : m_CurrentScene->m_entities)
+    for (Entity* ent : m_entities)
     {
         delete ent;
     }
