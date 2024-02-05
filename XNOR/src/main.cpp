@@ -35,7 +35,7 @@ int main(int argc, char** argv)
 	ImGui_ImplOpenGL3_Init(glslVersion);
 	
 	while (!glfwWindowShouldClose(window))
-	{
+	{	
 		glfwPollEvents();
 		
 		// Start the Dear ImGui frame

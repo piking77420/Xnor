@@ -14,6 +14,7 @@ public:
     static void Begin();
 
     static void Update();
+    
 private:
     
     static inline Scene* m_CurrentScene = nullptr;
