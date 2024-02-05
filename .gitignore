@@ -514,3 +514,9 @@ FodyWeavers.xsd
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/c++,visualstudio,rider
+
+# Don't ignore precompiled external library files
+!**/externals/**/*.lib
+!**/externals/**/*.pdb
+!**/externals/**/*.idb
+!**/externals/**/*.dll
