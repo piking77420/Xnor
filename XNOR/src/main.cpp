@@ -1,16 +1,14 @@
-#include <iostream>
 #include "GLFW/glfw3.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include "imgui/imgui_impl_glfw.h"
-#include <Maths/math.hpp>
+
+#include "utils/logger.hpp"
 
 int main(int argc, char** argv)
 {
-	constexpr vec2 v = 5.f;
+	Logger::OpenDefaultFile();
 	
-	std::cout << v << " Hello, World!" << std::endl;
-
 	glfwInit();
 
 	GLFWwindow* window = glfwCreateWindow(800, 600, "XNOR", nullptr, nullptr);
@@ -30,8 +28,7 @@ int main(int argc, char** argv)
 
 	io.Fonts->AddFontDefault();
 
-	// GL 3.0 + GLSL 130
-	const char* const glslVersion = "#version 430";
+	const char* const glslVersion = "#version 460";
 
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -66,6 +63,8 @@ int main(int argc, char** argv)
 
 		glfwSwapBuffers(window);
 	}
+
+	Logger::Stop();
 	
 	return 0;
 }
