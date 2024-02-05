@@ -95,7 +95,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3dll.lib;imgui.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3dll.lib;imgui.lib;opengl32.lib;toolbox.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY "$(ProjectDir)"externals\libs\dll\*.DLL "$(TargetDir)" /D /K /Y</Command>
@@ -121,7 +121,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3dll.lib;imgui.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3dll.lib;imgui.lib;opengl32.lib;toolbox.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY "$(ProjectDir)"externals\libs\dll\*.DLL "$(TargetDir)" /D /K /Y</Command>
@@ -143,7 +143,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3dll.lib;imgui.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3dll.lib;imgui.lib;opengl32.lib;toolbox.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY "$(ProjectDir)"externals\libs\dll\*.DLL "$(TargetDir)" /D /K /Y</Command>
@@ -169,7 +169,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3dll.lib;imgui.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3dll.lib;imgui.lib;opengl32.lib;toolbox.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY "$(ProjectDir)"externals\libs\dll\*.DLL "$(TargetDir)" /D /K /Y</Command>
@@ -180,6 +180,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="include\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="externals\include\Maths\calc.hpp" />
+    <ClInclude Include="externals\include\Maths\math.hpp" />
+    <ClInclude Include="externals\include\Maths\matrix.hpp" />
+    <ClInclude Include="externals\include\Maths\quaternion.hpp" />
+    <ClInclude Include="externals\include\Maths\vector2.hpp" />
+    <ClInclude Include="externals\include\Maths\vector2i.hpp" />
+    <ClInclude Include="externals\include\Maths\vector3.hpp" />
+    <ClInclude Include="externals\include\Maths\vector4.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="externals\libs\static\toolbox.lib" />
+    <Content Include="externals\libs\static\toolbox.pdb" />
+    <Content Include="externals\libs\static\toolboxd.idb" />
+    <Content Include="externals\libs\static\toolboxd.lib" />
+    <Content Include="externals\libs\static\toolboxd.pdb" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -3,10 +3,13 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include "imgui/imgui_impl_glfw.h"
+#include <Maths/math.hpp>
 
 int main(int argc, char** argv)
 {
-	std::cout << "Hello, World!" << std::endl;
+	constexpr vec2 v = 5.f;
+	
+	std::cout << v << " Hello, World!" << std::endl;
 
 	glfwInit();
 

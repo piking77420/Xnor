@@ -515,8 +515,10 @@ FodyWeavers.xsd
 
 # End of https://www.toptal.com/developers/gitignore/api/c++,visualstudio,rider
 
-!XNOR/externals/libs/dll/*.dll
-!XNOR/externals/libs/lib/debug/
-!XNOR/externals/libs/lib/release/
-!XNOR/externals/libs/lib/debug/*.lib
-!XNOR/externals/libs/lib/release/*.lib
+# Don't ignore precompiled external library files
+!**/externals/**/*.lib
+!**/externals/**/*.pdb
+!**/externals/**/*.idb
+!**/externals/**/*.dll
+
+.idea/
