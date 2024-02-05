@@ -39,7 +39,7 @@ void Entity::AddComponent()
     static_assert(std::is_base_of<Component,T>(),"this class is not base on Component");
 
     Component* newT = new T();
-    newT->entity = this;
+    newT->entity = *this;
     
     m_Components.emplace_back(newT);
 }

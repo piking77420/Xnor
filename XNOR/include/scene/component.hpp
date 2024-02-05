@@ -9,7 +9,7 @@ class Component
 {
 public:
 
-   Entity& entity;
+     Entity& entity;
     
     virtual  ~Component() = default;
 
