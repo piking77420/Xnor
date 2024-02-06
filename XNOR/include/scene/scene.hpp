@@ -13,8 +13,6 @@ public:
     void Begin();
 
     void Update();
-
-public:
     
     ~Scene();
     

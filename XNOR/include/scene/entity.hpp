@@ -20,13 +20,19 @@ public:
     const ComponentT* GetComponent() const;
 
     template<class ComponentT>
+    void GetComponents(std::vector<ComponentT*>* components);
+
+    template<class ComponentT>
+    void GetComponents(std::vector<const ComponentT*>* components) const ;
+    
+    template<class ComponentT>
     ComponentT* GetComponent();
+    
+    template<class ComponentT>
+    bool TryGetComponent(ComponentT** output);
 
     template<class ComponentT>
     void RemoveComponent();
-
-    template<class ComponentT>
-    bool TryGetComponent(ComponentT** output);
     
     void Begin();
 
@@ -50,7 +56,7 @@ const ComponentT* Entity::GetComponent() const
 {
     for (Component* comp: m_Components)
     {
-        if (typeid(ComponentT) == typeid(comp))
+        if (dynamic_cast<ComponentT*>(comp))
         {
             return reinterpret_cast<ComponentT*>(comp);
         }
@@ -60,11 +66,36 @@ const ComponentT* Entity::GetComponent() const
 }
 
 template <class ComponentT>
+void Entity::GetComponents(std::vector<ComponentT*>* components)
+{
+
+    for (int i = 0; i < m_Components.size(); ++i)
+    {
+        if (dynamic_cast<ComponentT*>(m_Components[i]))
+        {
+            components->push_back(reinterpret_cast<ComponentT*>(&m_Components[i]));
+        }
+    }
+}
+
+template <class ComponentT>
+void Entity::GetComponents(std::vector<const ComponentT*>* components) const
+{
+    for (int i = 0; i < m_Components.size(); ++i)
+    {
+        if (dynamic_cast<ComponentT*>(m_Components[i]))
+        {
+            components->push_back(reinterpret_cast<const ComponentT*>(&m_Components[i]));
+        }
+    }
+}
+
+template <class ComponentT>
 ComponentT* Entity::GetComponent()
 {
     for (Component* comp : m_Components)
     {
-        if (dynamic_cast<ComponentT*>(comp) != nullptr)
+        if (dynamic_cast<ComponentT*>(comp))
         {
             return reinterpret_cast<ComponentT*>(comp);
         }
@@ -77,7 +108,7 @@ void Entity::RemoveComponent()
 {
     for (int i = 0; i < m_Components.size(); ++i)
     {
-        if (dynamic_cast<ComponentT*>(m_Components[i]) != nullptr)
+        if (dynamic_cast<ComponentT*>(m_Components[i]))
         {
             const std::vector<Component*>::iterator iterator = std::vector<Component*>::begin() + i;
             m_Components.erase(iterator);
