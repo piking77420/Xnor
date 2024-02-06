@@ -4,26 +4,29 @@
 
 class Component;
 
+template<class T>
+concept ComponentT = std::is_base_of_v<Component, T>;
+
 class Entity
 {
 public:
 
     ~Entity();
 
-    template<class T>
+    template<class ComponentT>
     void AddComponent();
     
-    template<class T>
-    const T* GetComponent() const ;
+    template<class ComponentT>
+    const ComponentT* GetComponent() const;
 
-    template<class T>
-    T* GetComponent();
+    template<class ComponentT>
+    ComponentT* GetComponent();
 
-    template<class T>
+    template<class ComponentT>
     void RemoveComponent();
 
-    template<class T>
-    bool TryGetComponent(T*& output);
+    template<class ComponentT>
+    bool TryGetComponent(ComponentT** output);
     
     void Begin();
 
@@ -33,76 +36,67 @@ private:
     std::vector<Component*> m_Components;
 };
 
-template <class T>
+template <class ComponentT>
 void Entity::AddComponent()
 {
-    static_assert(std::is_base_of<Component,T>(),"this class is not base on Component");
-
-    Component* newT = new T();
-    newT->entity = *this;
+    Component* newT = new ComponentT();
+    newT->entity = this;
     
     m_Components.emplace_back(newT);
 }
 
-template <class T>
-const T* Entity::GetComponent() const
+template <class ComponentT>
+const ComponentT* Entity::GetComponent() const
 {
-    static_assert(std::is_base_of<Component,T>(),"this class is not base on Component");
-
     for (Component* comp: m_Components)
     {
-        if(typeid(T) == typeid(comp))
+        if (typeid(ComponentT) == typeid(comp))
         {
-            return reinterpret_cast<T*>(comp);
+            return reinterpret_cast<ComponentT*>(comp);
         }
     }
 
     return nullptr;
 }
 
-template <class T>
-T* Entity::GetComponent()
+template <class ComponentT>
+ComponentT* Entity::GetComponent()
 {
-    static_assert(std::is_base_of<Component,T>(),"this class is not base on Component");
-
-    for (Component* comp: m_Components)
+    for (Component* comp : m_Components)
     {
-        if(dynamic_cast<T*>(comp) != nullptr)
+        if (dynamic_cast<ComponentT*>(comp) != nullptr)
         {
-            return reinterpret_cast<T*>(comp);
+            return reinterpret_cast<ComponentT*>(comp);
         }
     }
     return nullptr;
 }
 
-template <class T>
+template <class ComponentT>
 void Entity::RemoveComponent()
 {
-    static_assert(std::is_base_of<Component,T>(),"this class is not base on Component");
-
     for (int i = 0; i < m_Components.size(); ++i)
     {
-        if(dynamic_cast<T*>(m_Components[i]) != nullptr)
+        if (dynamic_cast<ComponentT*>(m_Components[i]) != nullptr)
         {
-            std::vector<Component*>::iterator iterator = std::vector<Component*>::begin() + i;
+            const std::vector<Component*>::iterator iterator = std::vector<Component*>::begin() + i;
             m_Components.erase(iterator);
-            return;
+            break;
         }
     }
 }
 
-template <class T>
-bool Entity::TryGetComponent(T*& output)
+template <class ComponentT>
+bool Entity::TryGetComponent(ComponentT** output)
 {
-    static_assert(std::is_base_of<Component,T>(),"this class is not base on Component");
     for (Component* comp: m_Components)
     {
-      
-        if(dynamic_cast<T*>(comp) != nullptr)
+        if (dynamic_cast<ComponentT*>(comp) != nullptr)
         {
-            output = reinterpret_cast<T*>(comp);
+            *output = reinterpret_cast<ComponentT*>(comp);
             return true;
         }
     }
+    
     return false;
 }

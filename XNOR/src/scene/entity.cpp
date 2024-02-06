@@ -3,7 +3,7 @@
 
 Entity::~Entity()
 {
-    for (Component* comp: m_Components)
+    for (Component* comp : m_Components)
     {
        delete comp;
     }
@@ -13,7 +13,7 @@ Entity::~Entity()
 
 void Entity::Begin()
 {
-    for (Component* comp: m_Components)
+    for (Component* comp : m_Components)
     {
         comp->Begin();
     }
@@ -21,7 +21,7 @@ void Entity::Begin()
 
 void Entity::Update()
 {
-    for (Component* comp: m_Components)
+    for (Component* comp : m_Components)
     {
         comp->Update();
     }
