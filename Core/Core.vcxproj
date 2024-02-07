@@ -183,6 +183,7 @@
     <ClCompile Include="src\scene\entity.cpp" />
     <ClCompile Include="src\scene\scene.cpp" />
     <ClCompile Include="src\utils\logger.cpp" />
+    <ClCompile Include="src\window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\include\glad\glad.h" />
@@ -203,6 +204,7 @@
     <ClInclude Include="include\scene\scene.hpp" />
     <ClInclude Include="include\utils\logger.hpp" />
     <ClInclude Include="include\utils\tsqueue.hpp" />
+    <ClInclude Include="include\window.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="externals\libs\dll\glfw3.dll" />
