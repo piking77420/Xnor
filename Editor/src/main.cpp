@@ -11,7 +11,7 @@ int main(int argc, char** argv)
 	
 	glfwInit();
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "XNOR", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(800, 600, "XNOR Engine", nullptr, nullptr);
 
 	glfwMakeContextCurrent(window);
 

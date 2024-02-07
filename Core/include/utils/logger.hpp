@@ -51,11 +51,15 @@ public:
     static void LogFatal(const std::string& format, Args&&... args);
 
     static void OpenFile(const std::filesystem::path& filename);
+
     static void OpenDefaultFile();
+
     static bool HasFileOpen();
+
     static void CloseFile();
 
     static void Synchronize();
+
     static void Stop();
 
 private:
@@ -76,10 +80,13 @@ private:
     static TsQueue<LogEntry> lines;
 
     static std::ofstream file;
+
     static std::condition_variable condVar;
+
     static std::thread thread;
 
     static void Run();
+
     static void PrintLog(const LogEntry& entry);
 
     template<class... Args>
