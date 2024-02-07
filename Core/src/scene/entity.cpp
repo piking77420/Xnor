@@ -1,5 +1,7 @@
 ﻿#include "entity.hpp"
+
 #include "scene.hpp"
+#include "component.hpp"
 
 Entity::~Entity()
 {

@@ -4,7 +4,7 @@
 
 #include <windows.h>
 
-#define ANSI_COLOR_GRAY      "\x1b[38;5;242m"
+#define ANSI_COLOR_GRAY     "\x1b[38;5;242m"
 #define ANSI_COLOR_YELLOW   "\x1b[33m"
 #define ANSI_COLOR_RED      "\x1b[31m"
 
@@ -12,14 +12,10 @@
 
 #define ANSI_RESET          "\x1b[0m"
 
-TsQueue<Logger::LogEntry> Logger::lines;
-std::ofstream Logger::file;
-std::condition_variable Logger::condVar;
-
-std::thread Logger::thread = std::thread(&Logger::Run);
 std::mutex mutex;
 bool synchronizing = false;
 bool running = true;
+std::ofstream file;
 
 void Logger::OpenFile(const std::filesystem::path &filename)
 {
@@ -88,38 +84,40 @@ bool Logger::HasFileOpen()
 
 void Logger::CloseFile()
 {
-    if (file.is_open())
-    {
-        file.flush();
-        file.close();
-    }
+    if (!file.is_open())
+        return;
+    
+    file.flush();
+    file.close();
 }
 
 void Logger::Synchronize()
 {
-    if (!lines.Empty())
-    {
-        synchronizing = true;
-        condVar.notify_one();
-        std::unique_lock<std::mutex> lock(mutex);
-        condVar.wait(lock, [] { return !synchronizing; });
-    }
+    if (lines.Empty())
+        return;
+    
+    synchronizing = true;
+    condVar.notify_one();
+    std::unique_lock lock(mutex);
+    condVar.wait(lock, [] { return !synchronizing; });
 }
 
 void Logger::Stop()
 {
     Synchronize();
+    
     running = false;
     condVar.notify_one();
+    
     if (thread.joinable())
         thread.join();
 }
 
 Logger::LogEntry::LogEntry(std::string&& message, const LogLevel level)
     : LogEntry(
-        std::move(message)
-        , level
-        , std::chrono::zoned_time(std::chrono::current_zone(), std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now()))
+        std::move(message),
+        level,
+        std::chrono::zoned_time(std::chrono::current_zone(), std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now()))
             .get_local_time().time_since_epoch()
     )
 {
@@ -156,7 +154,7 @@ void Logger::Run()
     // Set thread name for easier debugging
     (void) SetThreadDescription(thread.native_handle(), L"Logger Thread");
     std::unique_lock lock(mutex);
-    while (running)
+    while (running || !lines.Empty())
     {
         condVar.wait(lock, [] { return !lines.Empty() || !running || synchronizing; });
 

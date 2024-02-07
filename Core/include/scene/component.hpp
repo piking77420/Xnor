@@ -1,14 +1,12 @@
 ﻿#pragma once
-#include "scene.hpp"
 
-class Scene;
-class Entity;
+#include "core.hpp"
+#include "entity.hpp"
 
-class Component
+class XNOR_ENGINE Component
 {
 public:
-
-    Entity* entity;
+    Entity* entity = nullptr;
 
     virtual ~Component() = default;
 

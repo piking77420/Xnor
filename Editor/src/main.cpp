@@ -8,8 +8,8 @@
 int main(int argc, char** argv)
 {
 	Logger::OpenDefaultFile();
-	
-	glfwInit();
+
+	/*glfwInit();
 
 	GLFWwindow* window = glfwCreateWindow(800, 600, "XNOR Engine", nullptr, nullptr);
 
@@ -64,6 +64,14 @@ int main(int argc, char** argv)
 
 		glfwSwapBuffers(window);
 	}
+
+	ImGui::DestroyPlatformWindows();
+
+	ImGui::DestroyContext();
+
+	glfwDestroyWindow(window);
+
+	glfwTerminate();*/
 
 	Logger::Stop();
 	

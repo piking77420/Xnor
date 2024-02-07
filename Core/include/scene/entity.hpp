@@ -1,42 +1,44 @@
 ﻿#pragma once
+
 #include <vector>
-#include "component.hpp"
+#include "core.hpp"
 
 class Component;
 
 template<class T>
 concept ComponentT = std::is_base_of_v<Component, T>;
 
+
+
 class Entity
 {
 public:
-
-    ~Entity();
+    XNOR_ENGINE ~Entity();
 
     template<class ComponentT>
-    void AddComponent();
+    XNOR_ENGINE void AddComponent();
     
     template<class ComponentT>
-    const ComponentT* GetComponent() const;
+    XNOR_ENGINE const ComponentT* GetComponent() const;
 
     template<class ComponentT>
-    void GetComponents(std::vector<ComponentT*>* components);
+    XNOR_ENGINE void GetComponents(std::vector<ComponentT*>* components);
 
     template<class ComponentT>
-    void GetComponents(std::vector<const ComponentT*>* components) const ;
+    XNOR_ENGINE void GetComponents(std::vector<const ComponentT*>* components) const ;
     
     template<class ComponentT>
-    ComponentT* GetComponent();
+    XNOR_ENGINE ComponentT* GetComponent();
     
     template<class ComponentT>
-    bool TryGetComponent(ComponentT** output);
+    XNOR_ENGINE bool TryGetComponent(ComponentT** output);
 
     template<class ComponentT>
-    void RemoveComponent();
+    XNOR_ENGINE void RemoveComponent();
     
-    void Begin();
+    XNOR_ENGINE void Begin();
 
-    void Update();
+    XNOR_ENGINE void Update();
     
 private:
     std::vector<Component*> m_Components;
