@@ -517,11 +517,6 @@ FodyWeavers.xsd
 
 # Don't ignore precompiled external library files
 
-!**/externals/**/debug/
-!**/externals/**/release/
-!**/externals/**/*.lib
-!**/externals/**/*.pdb
-!**/externals/**/*.idb
-!**/externals/**/*.dll
+!**/externals/**
 
 .idea/

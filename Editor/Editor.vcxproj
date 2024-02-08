@@ -106,20 +106,21 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;MATH_TOOLBOX_DLL_IMPORT;%(PreprocessorDefinitions);GLFW_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)externals\include;$(SolutionDir)Core\externals\include;$(SolutionDir)Core\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imgui.lib;%(AdditionalDependencies);imgui.lib;imgui.lib;imgui.lib;imgui.lib;imgui.lib;imgui.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>XnorLibGenerator.lib;Core.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY "$(ProjectDir)"externals\libs\dll\*.DLL "$(TargetDir)" /D /K /Y</Command>
@@ -150,24 +151,25 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;MATH_TOOLBOX_DLL_IMPORT;%(PreprocessorDefinitions);GLFW_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)externals\include;$(SolutionDir)Core\externals\include;$(SolutionDir)Core\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);externals/libs/lib/Debug/</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imgui.lib;%(AdditionalDependencies);imgui.lib;imgui.lib;imgui.lib;imgui.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>XnorLibGenerator.lib;Core.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY "$(ProjectDir)"externals\libs\dll\*.DLL "$(TargetDir)" /D /K /Y</Command>
@@ -175,7 +177,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Folder Include="externals\include\" />
     <Folder Include="externals\libs\dll\" />
     <Folder Include="include\" />
   </ItemGroup>
@@ -193,6 +194,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="externals\include\imgui\imconfig.h" />
+    <ClInclude Include="externals\include\imgui\imgui.h" />
+    <ClInclude Include="externals\include\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="externals\include\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="externals\include\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="externals\include\imgui\imgui_internal.h" />
+    <ClInclude Include="externals\include\imgui\imstb_rectpack.h" />
+    <ClInclude Include="externals\include\imgui\imstb_textedit.h" />
+    <ClInclude Include="externals\include\imgui\imstb_truetype.h" />
     <ClInclude Include="include\editor.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

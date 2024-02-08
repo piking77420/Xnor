@@ -132,12 +132,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORTS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;_GLFW_BUILD_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)externals\include;$(ProjectDir)include;$(ProjectDir)include\scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,7 +147,7 @@
       <AdditionalDependencies>glfw3.lib;opengl32.lib;toolbox.lib;glad.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY "$(ProjectDir)"externals\libs\dll\*.DLL "$(TargetDir)" /D /K /Y</Command>
+      <Command>XCOPY "$(ProjectDir)externals\libs\dll\*.DLL" "$(TargetDir)" /D /K /Y</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy dll to running directory</Message>
@@ -154,14 +155,15 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORTS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;_GLFW_BUILD_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)externals\include;$(ProjectDir)include;$(ProjectDir)include\scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -172,7 +174,7 @@
       <AdditionalDependencies>glfw3.lib;opengl32.lib;toolbox.lib;glad.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY "$(ProjectDir)"externals\libs\dll\*.DLL "$(TargetDir)" /D /K /Y</Command>
+      <Command>XCOPY "$(ProjectDir)externals\libs\dll\*.DLL" "$(TargetDir)" /D /K /Y</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy dll to running directory</Message>
@@ -207,9 +209,18 @@
     <ClInclude Include="include\window.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="externals\libs\dll\glfw3.dll" />
-    <Content Include="externals\libs\lib\Debug\glfw3dll.lib" />
-    <Content Include="externals\libs\lib\Release\glfw3dll.lib" />
+    <Folder Include="externals\libs\dll\" />
+    <Folder Include="include\resources\" />
+    <Folder Include="src\resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="externals\libs\lib\Common\glad.lib" />
+    <Content Include="externals\libs\lib\Common\glfw3.lib" />
+    <Content Include="externals\libs\lib\Debug\toolbox.lib" />
+    <Content Include="externals\libs\lib\Debug\toolboxd.idb" />
+    <Content Include="externals\libs\lib\Debug\toolboxd.pdb" />
+    <Content Include="externals\libs\lib\Release\toolbox.lib" />
+    <Content Include="externals\libs\lib\Release\toolbox.pdb" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

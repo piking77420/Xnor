@@ -1,14 +1,10 @@
-#include "GLFW/glfw3.h"
 #include "imgui/imgui.h"
-#include "imgui/imgui_impl_opengl3.h"
-#include "imgui/imgui_impl_glfw.h"
-#include "Maths/vector2.hpp"
 
 #include "utils/logger.hpp"
 #include "Editor.hpp"
 #include "window.hpp"
 
-int main(int argc, char** argv)
+int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
 	Logger::OpenDefaultFile();
 
@@ -17,10 +13,10 @@ int main(int argc, char** argv)
 
 	while (!window.ShouldClose())
 	{
-		window.PoolEvents();
+		window.PollEvents();
 		editor.BeginFrame();
 
-		if (ImGui::Begin("sqdsqd"));
+		if (ImGui::Begin("Window"))
 		{
 			ImGui::End();
 		}

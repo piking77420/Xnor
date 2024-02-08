@@ -1,6 +1,5 @@
 #include "window.hpp"
 
-
 Window::Window()
 {
 	glfwInit();
@@ -11,7 +10,6 @@ Window::Window()
 
 	glfwSwapInterval(1); // Enable vsync
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
 }
 
 Window::~Window()
@@ -21,12 +19,27 @@ Window::~Window()
 	glfwTerminate();
 }
 
+Vector2i Window::GetSize() const
+{
+	return m_Size;
+}
+
+GLFWwindow* Window::GetWindow()
+{
+	return m_Window;
+}
+
+const GLFWwindow* Window::GetWindow() const
+{
+	return m_Window;
+}
+
 bool Window::ShouldClose()
 {
 	return glfwWindowShouldClose(m_Window);
 }
 
-void Window::PoolEvents()
+void Window::PollEvents()
 {
 	glfwPollEvents();
 }
