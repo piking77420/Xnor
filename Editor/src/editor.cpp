@@ -1,19 +1,19 @@
 #include "editor.hpp"
 
-#include <imgui/imgui.h>
-#include <imgui/imgui_impl_opengl3.h>
-#include <imgui/imgui_impl_glfw.h>
+#include <ImGui/imgui.h>
+#include <ImGui/imgui_impl_opengl3.h>
+#include <ImGui/imgui_impl_glfw.h>
 
 void Editor::BeginFrame()
 {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
-
 }
 
 void Editor::EndFrame(const Window& window)
 {
+	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	ImGui::UpdatePlatformWindows();
 	ImGui::RenderPlatformWindowsDefault();

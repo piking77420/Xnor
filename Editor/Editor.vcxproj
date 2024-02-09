@@ -109,18 +109,18 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;MATH_TOOLBOX_DLL_IMPORT;%(PreprocessorDefinitions);GLFW_DLL</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;MATH_TOOLBOX_DLL_IMPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)externals\include;$(SolutionDir)Core\externals\include;$(SolutionDir)Core\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;externals\include;..\Core\include;..\Core\externals\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>XnorLibGenerator.lib;Core.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>externals\libs\lib\$(Configuration);externals\libs\lib\Common;$(OutDir);..\Core\externals\libs\lib\Common;..\Core\externals\libs\lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Core.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY "$(ProjectDir)"externals\libs\dll\*.DLL "$(TargetDir)" /D /K /Y</Command>
@@ -169,7 +169,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>XnorLibGenerator.lib;Core.lib</AdditionalDependencies>
+      <AdditionalDependencies>ImGui.lib;Core.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY "$(ProjectDir)"externals\libs\dll\*.DLL "$(TargetDir)" /D /K /Y</Command>
@@ -194,15 +194,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="externals\include\imgui\imconfig.h" />
-    <ClInclude Include="externals\include\imgui\imgui.h" />
-    <ClInclude Include="externals\include\imgui\imgui_impl_glfw.h" />
-    <ClInclude Include="externals\include\imgui\imgui_impl_opengl3.h" />
-    <ClInclude Include="externals\include\imgui\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="externals\include\imgui\imgui_internal.h" />
-    <ClInclude Include="externals\include\imgui\imstb_rectpack.h" />
-    <ClInclude Include="externals\include\imgui\imstb_textedit.h" />
-    <ClInclude Include="externals\include\imgui\imstb_truetype.h" />
     <ClInclude Include="include\editor.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

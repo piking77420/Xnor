@@ -1,12 +1,10 @@
 #pragma once
 
-
 #include "window.hpp"
 
 class Editor
 {
 public:
-
 	Editor(const Window& window);
 
 	~Editor();
@@ -16,6 +14,5 @@ public:
 	void EndFrame(const Window& window);
 
 private:
-
 };
 

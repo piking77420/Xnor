@@ -134,9 +134,9 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;_GLFW_BUILD_DLL</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;IMGUI_EXPORT</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)externals\include;$(ProjectDir)include;$(ProjectDir)include\scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;externals\include;externals\include\ImGui;include\scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -144,7 +144,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);$(ProjectDir)externals\libs\lib\Common;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;toolbox.lib;glad.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;toolbox.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY "$(ProjectDir)externals\libs\dll\*.DLL" "$(TargetDir)" /D /K /Y</Command>
@@ -161,7 +161,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;_GLFW_BUILD_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)externals\include;$(ProjectDir)include;$(ProjectDir)include\scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\include;$(ProjectDir)include;$(ProjectDir)include\scene;..\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -170,8 +170,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);$(ProjectDir)externals\libs\lib\Common;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;toolbox.lib;glad.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);$(ProjectDir)externals\libs\lib\Common;%(AdditionalLibraryDirectories);$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;toolbox.lib;Glad.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>XCOPY "$(ProjectDir)externals\libs\dll\*.DLL" "$(TargetDir)" /D /K /Y</Command>
@@ -181,6 +181,14 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="externals\src\glad.c" />
+    <ClCompile Include="externals\src\ImGui\imgui.cpp" />
+    <ClCompile Include="externals\src\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="externals\src\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="externals\src\ImGui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="externals\src\ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="externals\src\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="externals\src\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="src\scene\component.cpp" />
     <ClCompile Include="src\scene\entity.cpp" />
     <ClCompile Include="src\scene\scene.cpp" />
@@ -191,8 +199,18 @@
     <ClInclude Include="externals\include\glad\glad.h" />
     <ClInclude Include="externals\include\GLFW\glfw3.h" />
     <ClInclude Include="externals\include\GLFW\glfw3native.h" />
+    <ClInclude Include="externals\include\ImGui\imconfig.h" />
+    <ClInclude Include="externals\include\ImGui\imgui.h" />
+    <ClInclude Include="externals\include\ImGui\imgui_impl_glfw.h" />
+    <ClInclude Include="externals\include\ImGui\imgui_impl_opengl3.h" />
+    <ClInclude Include="externals\include\ImGui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="externals\include\ImGui\imgui_internal.h" />
+    <ClInclude Include="externals\include\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="externals\include\ImGui\imstb_textedit.h" />
+    <ClInclude Include="externals\include\ImGui\imstb_truetype.h" />
     <ClInclude Include="externals\include\KHR\khrplatform.h" />
     <ClInclude Include="externals\include\Maths\calc.hpp" />
+    <ClInclude Include="externals\include\Maths\definitions.hpp" />
     <ClInclude Include="externals\include\Maths\math.hpp" />
     <ClInclude Include="externals\include\Maths\matrix.hpp" />
     <ClInclude Include="externals\include\Maths\quaternion.hpp" />

@@ -8,7 +8,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
 	Logger::OpenDefaultFile();
 
-	Window window = Window();
+	Window window;
 	Editor editor = Editor(window);
 
 	while (!window.ShouldClose())
