@@ -11,19 +11,19 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	Window window;
 	Editor editor = Editor(window);
 	OpenglRenderer renderer;
-	Vector4 clearColor = { 0.5f,0.5f,0.5f,0.5f};
-	renderer.SetClearColor(clearColor);
+
+	Vector4 colorCheck = { 0.5f,0.5f,0.5f,0.5f};
 
 	while (!window.ShouldClose())
 	{
 		window.PollEvents();
 		editor.BeginFrame();
+
+		renderer.SetClearColor(colorCheck);
 		renderer.ClearColorAndDepth();
 
-		if (ImGui::Begin("Inspector"))
-		{
-			ImGui::End();
-		}
+		ImGui::ColorPicker4("colorPickerTest", colorCheck.Raw(), ImGuiColorEditFlags_PickerHueWheel);
+
 
 		editor.EndFrame(window);
 		window.SwapBuffers(); 
