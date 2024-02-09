@@ -40,6 +40,8 @@ Editor::Editor(const Window& window)
 
 Editor::~Editor()
 {
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyPlatformWindows();
 	ImGui::DestroyContext();
 }

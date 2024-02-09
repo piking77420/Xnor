@@ -2488,7 +2488,7 @@ struct ImGuiTextFilter
 struct ImGuiTextBuffer
 {
     ImVector<char>      Buf;
-    IMGUI_API static char EmptyString[1];
+    static char EmptyString[1];
 
     ImGuiTextBuffer()   { }
     inline char         operator[](int i) const { IM_ASSERT(Buf.Data != NULL); return Buf.Data[i]; }

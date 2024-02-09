@@ -136,7 +136,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;IMGUI_EXPORT</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>include;externals\include;externals\include\ImGui;include\scene;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;externals\include;include\scene;%(AdditionalIncludeDirectories);$(ProjectDir)externals\include\ImGui;$(ProjectDir)include\rendering\opengl;$(ProjectDir)include\rendering</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -161,7 +161,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;_GLFW_BUILD_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)externals\include;$(ProjectDir)include;$(ProjectDir)include\scene;..\Glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\include;$(ProjectDir)include;$(ProjectDir)include\scene;..\Glad\include;%(AdditionalIncludeDirectories);$(ProjectDir)externals\include\ImGui;$(ProjectDir)include\rendering;$(ProjectDir)include\rendering\opengl</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -189,6 +189,8 @@
     <ClCompile Include="externals\src\ImGui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="externals\src\ImGui\imgui_tables.cpp" />
     <ClCompile Include="externals\src\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="src\rendering\opengl\opengl_renderer.cpp" />
+    <ClCompile Include="src\rendering\renderer.cpp" />
     <ClCompile Include="src\scene\component.cpp" />
     <ClCompile Include="src\scene\entity.cpp" />
     <ClCompile Include="src\scene\scene.cpp" />
@@ -219,6 +221,8 @@
     <ClInclude Include="externals\include\Maths\vector3.hpp" />
     <ClInclude Include="externals\include\Maths\vector4.hpp" />
     <ClInclude Include="include\core.hpp" />
+    <ClInclude Include="include\rendering\opengl\opengl_renderer.hpp" />
+    <ClInclude Include="include\rendering\renderer.hpp" />
     <ClInclude Include="include\scene\component.hpp" />
     <ClInclude Include="include\scene\entity.hpp" />
     <ClInclude Include="include\scene\scene.hpp" />
@@ -232,7 +236,6 @@
     <Folder Include="src\resources\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="externals\libs\lib\Common\glad.lib" />
     <Content Include="externals\libs\lib\Common\glfw3.lib" />
     <Content Include="externals\libs\lib\Debug\toolbox.lib" />
     <Content Include="externals\libs\lib\Debug\toolboxd.idb" />
