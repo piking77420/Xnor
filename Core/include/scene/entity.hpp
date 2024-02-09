@@ -16,25 +16,25 @@ public:
     XNOR_ENGINE ~Entity();
 
     template<class ComponentT>
-    XNOR_ENGINE void AddComponent();
+    void AddComponent();
     
     template<class ComponentT>
-    XNOR_ENGINE const ComponentT* GetComponent() const;
+    const ComponentT* GetComponent() const;
 
     template<class ComponentT>
-    XNOR_ENGINE void GetComponents(std::vector<ComponentT*>* components);
+    void GetComponents(std::vector<ComponentT*>* components);
 
     template<class ComponentT>
-    XNOR_ENGINE void GetComponents(std::vector<const ComponentT*>* components) const ;
+    void GetComponents(std::vector<const ComponentT*>* components) const ;
     
     template<class ComponentT>
-    XNOR_ENGINE ComponentT* GetComponent();
+    ComponentT* GetComponent();
     
     template<class ComponentT>
-    XNOR_ENGINE bool TryGetComponent(ComponentT** output);
+    bool TryGetComponent(ComponentT** output);
 
     template<class ComponentT>
-    XNOR_ENGINE void RemoveComponent();
+    void RemoveComponent();
     
     XNOR_ENGINE void Begin();
 
