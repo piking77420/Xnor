@@ -16,6 +16,12 @@ void Scene::Update()
     }
 }
 
+void Scene::CreateBasicScene()
+{
+    scene = new Scene();
+    scene->m_entities.emplace_back(new Entity());
+}
+
 Scene::~Scene()
 {
     for (Entity* ent : m_entities)
