@@ -5,6 +5,7 @@
 class XNOR_ENGINE XnorGuid
 {
 public:
+
     unsigned long  Data1;
     unsigned short Data2;
     unsigned short Data3;

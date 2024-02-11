@@ -3,6 +3,8 @@
 #include <Windows.h>
 #include<Rpc.h>
 
+#include "utils/logger.hpp"
+
 #define DATA4_SIZE 8
 
 bool XnorGuid::operator==(const XnorGuid& xnorGuid) const
@@ -26,8 +28,18 @@ bool XnorGuid::operator==(const XnorGuid& xnorGuid) const
 }
 
 
-
-XnorGuid::XnorGuid()
+XnorGuid::XnorGuid() : Data1(0),Data2(0),Data3(0)
 {
-	CoCreateGuid(reinterpret_cast<UUID*>(this));
+	for (size_t i = 0; i < DATA4_SIZE; i++)
+	{
+		Data4[i] = 0;
+	}
+
+	HRESULT result = S_OK;
+	result = CoCreateGuid(reinterpret_cast<UUID*>(this));
+
+	if (result != S_OK)
+	{
+		Logger::LogError("shouldn't print this");
+	}
 }

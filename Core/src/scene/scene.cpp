@@ -1,5 +1,5 @@
 ﻿#include "scene.hpp"
-
+#include "utils/logger.hpp"
 #include "component.hpp"
 
 void Scene::Begin()
@@ -28,6 +28,8 @@ Entity* Scene::GetEntityByID(const XnorGuid& xnorGuid)
             return &ent;
         }
     }
+
+    Logger::LogWarning("There is no entity with this id return nullptr ! ");
 
     return nullptr;
 }
