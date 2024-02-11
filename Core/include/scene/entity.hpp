@@ -1,18 +1,28 @@
 ﻿#pragma once
 
 #include <vector>
+
 #include "core.hpp"
+#include "transform.hpp"
+#include "utils/xnor_guid.hpp"
 
 class Component;
 
 template<class T>
 concept ComponentT = std::is_base_of_v<Component, T>;
 
-
-
 class Entity
 {
 public:
+
+    Entity* parent = nullptr;
+
+    Transform transform;
+
+    XNOR_ENGINE Entity(const XnorGuid& entiyID);
+
+    XNOR_ENGINE Entity();
+
     XNOR_ENGINE ~Entity();
 
     template<class ComponentT>
@@ -35,12 +45,23 @@ public:
 
     template<class ComponentT>
     void RemoveComponent();
+
+    XNOR_ENGINE const XnorGuid& GetID() const
+    {
+        return m_entityId;
+    }
     
     XNOR_ENGINE void Begin();
 
     XNOR_ENGINE void Update();
+
+    XNOR_ENGINE bool operator==(const Entity& entity);
+
     
 private:
+
+    XnorGuid m_entityId;
+
     std::vector<Component*> m_Components;
 };
 

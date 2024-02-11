@@ -20,3 +20,9 @@ public:
        
     }
 };
+
+class TestComponent : public Component
+{
+public:
+    char data;
+};

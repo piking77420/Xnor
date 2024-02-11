@@ -6,15 +6,14 @@ Window::Window()
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 
 	m_Window = glfwCreateWindow(m_Size.x, m_Size.y, "XNOR Engine", nullptr, nullptr);
 
 	glfwMakeContextCurrent(m_Window);
 
 	glfwSwapInterval(1); // Enable vsync
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
 Window::~Window()

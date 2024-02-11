@@ -3,6 +3,16 @@
 #include "scene.hpp"
 #include "component.hpp"
 
+Entity::Entity(const XnorGuid& entiyID) : m_entityId(entiyID)
+{
+
+}
+
+Entity::Entity()
+{
+   
+}
+
 Entity::~Entity()
 {
     for (Component* comp : m_Components)
@@ -28,3 +38,9 @@ void Entity::Update()
         comp->Update();
     }
 }
+
+bool Entity::operator==(const Entity& entity)
+{
+    return m_entityId == entity.m_entityId;
+}
+

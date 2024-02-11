@@ -14,5 +14,7 @@ public:
 
     virtual void ClearColorAndDepth() = 0;
 
+protected:
+
 };
 

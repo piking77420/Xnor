@@ -196,6 +196,9 @@
     <ClCompile Include="src\scene\scene.cpp" />
     <ClCompile Include="src\utils\logger.cpp" />
     <ClCompile Include="src\window.cpp" />
+    <ClCompile Include="src\rendering\vertex.cpp" />
+    <ClCompile Include="transform.cpp" />
+    <ClCompile Include="src\utils\xnor_guid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\include\glad\glad.h" />
@@ -229,6 +232,9 @@
     <ClInclude Include="include\utils\logger.hpp" />
     <ClInclude Include="include\utils\tsqueue.hpp" />
     <ClInclude Include="include\window.hpp" />
+    <ClInclude Include="include\rendering\vertex.hpp" />
+    <ClInclude Include="include\transform.hpp" />
+    <ClInclude Include="include\utils\xnor_guid.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="externals\libs\dll\" />
