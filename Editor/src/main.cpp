@@ -21,7 +21,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 	// Template seems to work between dll and exe
 	Scene::CreateBasicScene();
-	Scene& scene = *Scene::scene;
+	//Scene& scene = *Scene::scene;
 
 	while (!window.ShouldClose())
 	{
