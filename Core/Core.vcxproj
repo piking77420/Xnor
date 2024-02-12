@@ -102,6 +102,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="externals\src\glad.c" />
     <ClCompile Include="externals\src\ImGui\imgui.cpp" />
     <ClCompile Include="externals\src\ImGui\imgui_demo.cpp" />
@@ -200,6 +201,7 @@
     <ClCompile Include="src\utils\guid.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.hpp" />
     <ClInclude Include="externals\include\glad\glad.h" />
     <ClInclude Include="externals\include\GLFW\glfw3.h" />
     <ClInclude Include="externals\include\GLFW\glfw3native.h" />
