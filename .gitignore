@@ -520,3 +520,5 @@ FodyWeavers.xsd
 !**/externals/**
 
 .idea/
+
+!assets/**
