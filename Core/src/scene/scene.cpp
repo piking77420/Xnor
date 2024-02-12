@@ -37,5 +37,5 @@ void XnorCore::Scene::CreateBasicScene()
 {
     scene = new Scene();
     scene->m_Entities.emplace_back();
-    scene->m_Entities[0].AddComponent<TestComponent>();
+  
 }

@@ -17,10 +17,4 @@ public:
     virtual void Update();
 };
 
-class TestComponent : public Component
-{
-public:
-    char data;
-};
-
 END_XNOR_CORE

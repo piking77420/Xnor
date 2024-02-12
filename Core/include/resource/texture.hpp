@@ -27,10 +27,14 @@ public:
     [[nodiscard]]
     int GetChannels() const;
 
+    virtual void BindTexture(uint32_t index);
+
 private:
     unsigned char* m_Data = nullptr;
     vec2i m_Size;
     int m_Channels = 0;
+    
+    uint32_t m_Id;
 };
 
 END_XNOR_CORE
