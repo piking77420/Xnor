@@ -4,6 +4,8 @@
 #include <functional>
 #include <queue>
 
+BEGIN_XNOR_CORE
+
 /// <summary>
 /// Thread-Safe Queue
 /// </summary>
@@ -104,3 +106,5 @@ T TsQueue<T>::Pop()
     mQueue.pop();
     return item;
 }
+
+END_XNOR_CORE

@@ -1,5 +1,6 @@
 ﻿#include "utils/logger.hpp"
 
+#include <fstream>
 #include <iostream>
 
 #include <windows.h>
@@ -17,7 +18,7 @@ bool synchronizing = false;
 bool running = true;
 std::ofstream file;
 
-void Logger::OpenFile(const std::filesystem::path &filename)
+void XnorCore::Logger::OpenFile(const std::filesystem::path &filename)
 {
     CloseFile();
     
@@ -66,7 +67,7 @@ void Logger::OpenFile(const std::filesystem::path &filename)
     }
 }
 
-void Logger::OpenDefaultFile()
+void XnorCore::Logger::OpenDefaultFile()
 {
     // Get the current date and format it in yyyy-mm-dd for the file name
     const std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -77,12 +78,12 @@ void Logger::OpenDefaultFile()
     OpenFile("logs/" + date);
 }
 
-bool Logger::HasFileOpen()
+bool XnorCore::Logger::HasFileOpen()
 {
     return file.is_open();
 }
 
-void Logger::CloseFile()
+void XnorCore::Logger::CloseFile()
 {
     if (!file.is_open())
         return;
@@ -91,7 +92,7 @@ void Logger::CloseFile()
     file.close();
 }
 
-void Logger::Synchronize()
+void XnorCore::Logger::Synchronize()
 {
     if (lines.Empty())
         return;
@@ -102,7 +103,7 @@ void Logger::Synchronize()
     condVar.wait(lock, [] { return !synchronizing; });
 }
 
-void Logger::Stop()
+void XnorCore::Logger::Stop()
 {
     Synchronize();
     
@@ -113,7 +114,7 @@ void Logger::Stop()
         thread.join();
 }
 
-Logger::LogEntry::LogEntry(std::string&& message, const LogLevel level)
+XnorCore::Logger::LogEntry::LogEntry(std::string&& message, const LogLevel level)
     : LogEntry(
         std::move(message),
         level,
@@ -123,7 +124,7 @@ Logger::LogEntry::LogEntry(std::string&& message, const LogLevel level)
 {
 }
 
-Logger::LogEntry::LogEntry(
+XnorCore::Logger::LogEntry::LogEntry(
     std::string&& message,
     const LogLevel level,
     const std::chrono::system_clock::time_point timePoint
@@ -136,7 +137,7 @@ Logger::LogEntry::LogEntry(
 {
 }
 
-Logger::LogEntry::LogEntry(
+XnorCore::Logger::LogEntry::LogEntry(
     std::string&& message,
     const LogLevel level,
     const std::chrono::system_clock::duration duration
@@ -149,7 +150,7 @@ Logger::LogEntry::LogEntry(
 {
 }
 
-void Logger::Run()
+void XnorCore::Logger::Run()
 {
     // Set thread name for easier debugging
     (void) SetThreadDescription(thread.native_handle(), L"Logger Thread");
@@ -175,7 +176,7 @@ void Logger::Run()
     CloseFile();
 }
 
-void Logger::PrintLog(const LogEntry& entry)
+void XnorCore::Logger::PrintLog(const LogEntry& entry)
 {
     // Get the message time and format it in [hh:mm:ss:ms]
     const auto&& t = std::chrono::duration_cast<std::chrono::milliseconds, long long>(entry.time.time_since_epoch());

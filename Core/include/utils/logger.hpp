@@ -2,14 +2,14 @@
 #pragma once
 
 #include <filesystem>
-#include <fstream>
 #include <thread>
 #include <condition_variable>
-#include <iostream>
 #include <utility>
 
 #include "core.hpp"
 #include "utils/tsqueue.hpp"
+
+BEGIN_XNOR_CORE
 
 class Logger
 {
@@ -143,3 +143,5 @@ std::string Logger::Format(const std::string& format, Args&&... args)
     (void)sprintf_s(buffer, sizeof(buffer), format.c_str(), std::forward<Args>(args)...);
     return buffer;
 }
+
+END_XNOR_CORE

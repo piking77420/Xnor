@@ -2,12 +2,16 @@
 
 #include "rendering/renderer.hpp"
 
-class XNOR_ENGINE OpenglRenderer : public Renderer
+BEGIN_XNOR_CORE
+
+class XNOR_ENGINE OpenGlRenderer : public Renderer
 {
 public:
-    OpenglRenderer();
+    OpenGlRenderer();
     
     void SetClearColor(const Vector4& color) const override;
 
     void ClearColorAndDepth() override;
 };
+
+END_XNOR_CORE

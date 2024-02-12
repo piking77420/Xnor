@@ -180,15 +180,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Folder Include="externals\libs\dll\" />
-    <Folder Include="include\" />
+    <Folder Include="externals\libs\lib\Debug\" />
+    <Folder Include="externals\libs\lib\Release\" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\editor.cpp" />
     <ClCompile Include="src\main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="externals\libs\lib\Debug\imgui.lib" />
-    <Content Include="externals\libs\lib\Release\imgui.lib" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.vcxproj">
@@ -196,6 +193,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\definitions.hpp" />
     <ClInclude Include="include\editor.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -8,23 +8,20 @@
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
+	using namespace XnorCore;
+	using namespace XnorEditor;
+	
 	Logger::OpenDefaultFile();
 
 	Window window;
 	Editor editor(window);
-	const std::unique_ptr<Renderer> renderer = std::make_unique<OpenglRenderer>();
+	const std::unique_ptr<Renderer> renderer = std::make_unique<OpenGlRenderer>();
 
-	Vector4 colorCheck = {0.5f, 0.5f, 0.5f, 0.5f};
+	Vector4 colorCheck = 0.5f;
 
 	// Template seems to work between dll and exe
 	Scene::CreateBasicScene();
 	Scene& scene = *Scene::scene;
-
-	for (size_t i = 0; i < 100000; i++)
-	{
-		Guid g;
-		Logger::LogInfo("%s", static_cast<std::string>(g).c_str());
-	}
 
 	while (!window.ShouldClose())
 	{
