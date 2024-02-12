@@ -41,16 +41,20 @@ void font_parsed(void* args, void* _font_data, int error) {
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
+	using namespace XnorCore;
+	using namespace XnorEditor;
+	
 	Logger::OpenDefaultFile();
 
 	Window window;
 	Editor editor(window);
-	const std::unique_ptr<Renderer> renderer = std::make_unique<OpenglRenderer>();
+	const std::unique_ptr<Renderer> renderer = std::make_unique<OpenGlRenderer>();
 
-	Vector4 colorCheck = {0.5f, 0.5f, 0.5f, 0.5f};
+	Vector4 colorCheck = 0.5f;
 
 	// Template seems to work between dll and exe
 	Scene::CreateBasicScene();
+<<<<<<< HEAD
 	Scene& scene = *Scene::scene;
 	
 	uint8_t condition_variable = 0;
@@ -63,6 +67,9 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	while (!condition_variable) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
+=======
+	//Scene& scene = *Scene::scene;
+>>>>>>> 58e73e333b20af0deba7f08b0a6fa6652ef8b767
 
 	std::chrono::system_clock::time_point timeEnd = std::chrono::system_clock::now();
 

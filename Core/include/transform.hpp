@@ -3,6 +3,10 @@
 #include "Maths/vector3.hpp"
 #include "Maths/quaternion.hpp"
 
+#include "core.hpp"
+
+BEGIN_XNOR_CORE
+
 class Transform
 {
 public:
@@ -11,3 +15,4 @@ public:
 	Vector3 scale = 1.f;
 };
 
+END_XNOR_CORE

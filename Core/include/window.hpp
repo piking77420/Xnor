@@ -5,6 +5,8 @@
 #include "core.hpp"
 #include "Maths/vector2i.hpp"
 
+BEGIN_XNOR_CORE
+	
 class XNOR_ENGINE Window
 {
 public:
@@ -36,3 +38,5 @@ private:
 	GLFWwindow* m_Window = nullptr;
 	Vector2i m_Size = { 800,600 };
 };
+	
+END_XNOR_CORE

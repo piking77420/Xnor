@@ -5,7 +5,7 @@
 
 #include "utils/logger.hpp"
 
-Guid::Guid()
+XnorCore::Guid::Guid()
 	: m_Data1(0)
 	, m_Data2(0)
 	, m_Data3(0)
@@ -19,7 +19,7 @@ Guid::Guid()
 		Logger::LogError("Couldn't create GUID");
 }
 
-bool Guid::operator==(const Guid& other) const
+bool XnorCore::Guid::operator==(const Guid& other) const
 {
 	return (
 	   reinterpret_cast<const uint32_t*>(this)[0] == reinterpret_cast<const uint32_t*>(&other)[0] &&
@@ -29,7 +29,7 @@ bool Guid::operator==(const Guid& other) const
 	);
 }
 
-Guid::operator std::string() const
+XnorCore::Guid::operator std::string() const
 {
 	return std::format("{:X}-{:X}-{:X}-{:X}{:X}{:X}{:X}{:X}{:X}{:X}{:X}", m_Data1, m_Data2, m_Data3, m_Data4[0], m_Data4[1], m_Data4[2], m_Data4[3], m_Data4[4], m_Data4[5], m_Data4[6], m_Data4[7]);
 }

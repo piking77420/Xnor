@@ -4,14 +4,14 @@
 #include <ImGui/imgui_impl_opengl3.h>
 #include <ImGui/imgui_impl_glfw.h>
 
-void Editor::BeginFrame()
+void XnorEditor::Editor::BeginFrame()
 {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 }
 
-void Editor::EndFrame(const Window& window)
+void XnorEditor::Editor::EndFrame(const XnorCore::Window& window)
 {
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -20,7 +20,7 @@ void Editor::EndFrame(const Window& window)
 	window.SetCurrentContext();
 }
 
-Editor::Editor(const Window& window)
+XnorEditor::Editor::Editor(const XnorCore::Window& window)
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -38,7 +38,7 @@ Editor::Editor(const Window& window)
 	ImGui_ImplOpenGL3_Init(glslVersion);
 }
 
-Editor::~Editor()
+XnorEditor::Editor::~Editor()
 {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();

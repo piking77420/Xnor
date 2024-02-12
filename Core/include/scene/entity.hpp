@@ -6,6 +6,8 @@
 #include "transform.hpp"
 #include "utils/guid.hpp"
 
+BEGIN_XNOR_CORE
+
 class Component;
 
 template<class T>
@@ -20,7 +22,7 @@ public:
 
     XNOR_ENGINE explicit Entity(const Guid& entiyId);
 
-    XNOR_ENGINE Entity();
+    XNOR_ENGINE Entity() = default;
 
     XNOR_ENGINE ~Entity();
 
@@ -50,11 +52,11 @@ public:
         return m_EntityId;
     }
     
-    XNOR_ENGINE void Begin();
+    XNOR_ENGINE void Begin() const;
 
-    XNOR_ENGINE void Update();
+    XNOR_ENGINE void Update() const;
 
-    XNOR_ENGINE bool operator==(const Entity& entity);
+    XNOR_ENGINE bool operator==(const Entity& entity) const;
     
 private:
     Guid m_EntityId;
@@ -142,3 +144,5 @@ bool Entity::TryGetComponent(ComponentT** output)
     
     return false;
 }
+
+END_XNOR_CORE

@@ -5,6 +5,8 @@
 
 #include "core.hpp"
 
+BEGIN_XNOR_CORE
+
 class XNOR_ENGINE Guid
 {
 public:
@@ -23,3 +25,5 @@ private:
     uint16_t m_Data3;
     uint8_t  m_Data4[Data4Size];
 };
+
+END_XNOR_CORE

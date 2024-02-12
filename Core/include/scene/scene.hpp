@@ -2,8 +2,10 @@
 
 #include <vector>
 
-#include "entity.hpp"
 #include "core.hpp"
+#include "entity.hpp"
+
+BEGIN_XNOR_CORE
 
 class Scene
 {
@@ -15,7 +17,7 @@ public:
     // If XNOR_ENGINE so you can export it to the editor
     XNOR_ENGINE static inline Scene* scene = nullptr;
 
-    XNOR_ENGINE ~Scene();
+    XNOR_ENGINE ~Scene() = default;
 
     XNOR_ENGINE void Begin();
 
@@ -26,3 +28,5 @@ public:
 private:
     std::vector<Entity> m_Entities;
 };
+
+END_XNOR_CORE

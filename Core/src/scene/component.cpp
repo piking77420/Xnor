@@ -1,9 +1,9 @@
 ﻿#include "component.hpp"
 
-void Component::Begin()
+void XnorCore::Component::Begin()
 {
 }
 
-void Component::Update()
+void XnorCore::Component::Update()
 {
 }
