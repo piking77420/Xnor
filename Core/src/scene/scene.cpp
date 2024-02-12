@@ -22,8 +22,7 @@ Entity* Scene::GetEntityById(const Guid& xnorGuid)
 {
     for (Entity& ent : m_Entities)
     {
-        
-        if(ent.GetID() == xnorGuid)
+        if (ent.GetId() == xnorGuid)
         {
             return &ent;
         }
@@ -37,7 +36,7 @@ Entity* Scene::GetEntityById(const Guid& xnorGuid)
 void Scene::CreateBasicScene()
 {
     scene = new Scene();
-    scene->m_Entities.emplace_back(Entity());
+    scene->m_Entities.emplace_back();
     scene->m_Entities[0].AddComponent<TestComponent>();
 }
 

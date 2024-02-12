@@ -12,7 +12,7 @@ public:
     // REMOVE IT LATER
     XNOR_ENGINE static void CreateBasicScene();
 
-    // If XNOR_ENGINE is place you can export hit to editor
+    // If XNOR_ENGINE so you can export it to the editor
     XNOR_ENGINE static inline Scene* scene = nullptr;
 
     XNOR_ENGINE ~Scene();
@@ -21,7 +21,7 @@ public:
 
     XNOR_ENGINE void Update();
 
-    Entity* GetEntityById(const Guid& xnorGuid);
+    XNOR_ENGINE Entity* GetEntityById(const Guid& xnorGuid);
     
 private:
     std::vector<Entity> m_Entities;

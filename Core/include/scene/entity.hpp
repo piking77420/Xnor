@@ -4,7 +4,7 @@
 
 #include "core.hpp"
 #include "transform.hpp"
-#include "..\utils\guid.hpp"
+#include "utils/guid.hpp"
 
 class Component;
 
@@ -14,12 +14,11 @@ concept ComponentT = std::is_base_of_v<Component, T>;
 class Entity
 {
 public:
-
     Entity* parent = nullptr;
 
     Transform transform;
 
-    XNOR_ENGINE Entity(const Guid& entiyID);
+    XNOR_ENGINE explicit Entity(const Guid& entiyId);
 
     XNOR_ENGINE Entity();
 
@@ -35,7 +34,7 @@ public:
     void GetComponents(std::vector<ComponentT*>* components);
 
     template<class ComponentT>
-    void GetComponents(std::vector<const ComponentT*>* components) const ;
+    void GetComponents(std::vector<const ComponentT*>* components) const;
     
     template<class ComponentT>
     ComponentT* GetComponent();
@@ -46,9 +45,9 @@ public:
     template<class ComponentT>
     void RemoveComponent();
 
-    XNOR_ENGINE const Guid& GetID() const
+    XNOR_ENGINE const Guid& GetId() const
     {
-        return m_entityId;
+        return m_EntityId;
     }
     
     XNOR_ENGINE void Begin();
@@ -56,11 +55,9 @@ public:
     XNOR_ENGINE void Update();
 
     XNOR_ENGINE bool operator==(const Entity& entity);
-
     
 private:
-
-    Guid m_entityId;
+    Guid m_EntityId;
 
     std::vector<Component*> m_Components;
 };
@@ -80,9 +77,7 @@ const ComponentT* Entity::GetComponent() const
     for (Component* comp: m_Components)
     {
         if (dynamic_cast<ComponentT*>(comp))
-        {
             return reinterpret_cast<ComponentT*>(comp);
-        }
     }
 
     return nullptr;
@@ -91,13 +86,10 @@ const ComponentT* Entity::GetComponent() const
 template <class ComponentT>
 void Entity::GetComponents(std::vector<ComponentT*>* components)
 {
-
     for (int i = 0; i < m_Components.size(); ++i)
     {
         if (dynamic_cast<ComponentT*>(m_Components[i]))
-        {
             components->push_back(reinterpret_cast<ComponentT*>(&m_Components[i]));
-        }
     }
 }
 
@@ -107,9 +99,7 @@ void Entity::GetComponents(std::vector<const ComponentT*>* components) const
     for (int i = 0; i < m_Components.size(); ++i)
     {
         if (dynamic_cast<ComponentT*>(m_Components[i]))
-        {
             components->push_back(reinterpret_cast<const ComponentT*>(&m_Components[i]));
-        }
     }
 }
 
@@ -119,9 +109,7 @@ ComponentT* Entity::GetComponent()
     for (Component* comp : m_Components)
     {
         if (dynamic_cast<ComponentT*>(comp))
-        {
             return reinterpret_cast<ComponentT*>(comp);
-        }
     }
     return nullptr;
 }

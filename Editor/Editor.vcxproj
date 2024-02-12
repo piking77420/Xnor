@@ -78,14 +78,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -123,7 +123,8 @@
       <AdditionalDependencies>Core.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY "$(ProjectDir)"externals\libs\dll\*.DLL "$(TargetDir)" /D /K /Y</Command>
+      <Command>
+      </Command>
       <Message>Copy dll to running directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -172,7 +173,8 @@
       <AdditionalDependencies>ImGui.lib;Core.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY "$(ProjectDir)"externals\libs\dll\*.DLL "$(TargetDir)" /D /K /Y</Command>
+      <Command>
+      </Command>
       <Message>Copy dll to running directory</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>

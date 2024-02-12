@@ -192,17 +192,21 @@ void Logger::PrintLog(const LogEntry& entry)
             color = ANSI_COLOR_GRAY;
             baseMessage = time + "[DEBUG] " + baseMessage;
             break;
+
         case LogLevel::Info:
             baseMessage = time + "[INFO] " + baseMessage;
             break;
+
         case LogLevel::Warning:
             color = ANSI_COLOR_YELLOW;
             baseMessage = time + "[WARN] " + baseMessage;
             break;
+
         case LogLevel::Error:
             color = ANSI_COLOR_RED;
             baseMessage = time + "[ERROR] " + baseMessage;
             break;
+
         case LogLevel::Fatal:
             color = ANSI_STYLE_BOLD ANSI_COLOR_RED;
             baseMessage = time + "[FATAL] " + baseMessage;

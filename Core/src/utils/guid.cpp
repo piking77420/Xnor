@@ -21,20 +21,15 @@ Guid::Guid()
 
 bool Guid::operator==(const Guid& other) const
 {
-	if (other.m_Data1 != m_Data1)
-		return false;
+	return (
+	   reinterpret_cast<const uint32_t*>(this)[0] == reinterpret_cast<const uint32_t*>(&other)[0] &&
+	   reinterpret_cast<const uint32_t*>(this)[1] == reinterpret_cast<const uint32_t*>(&other)[1] &&
+	   reinterpret_cast<const uint32_t*>(this)[2] == reinterpret_cast<const uint32_t*>(&other)[2] &&
+	   reinterpret_cast<const uint32_t*>(this)[3] == reinterpret_cast<const uint32_t*>(&other)[3]
+	);
+}
 
-	if (other.m_Data2 != m_Data2)
-		return false;
-
-	if (other.m_Data3 != m_Data3)
-		return false;
-
-	for (size_t i = 0; i < Data4Size; i++)
-	{
-		if (other.m_Data4[i] != m_Data4[i])
-			return false;
-	}
-
-	return true;
+Guid::operator std::string() const
+{
+	return std::format("{:X}-{:X}-{:X}-{:X}{:X}{:X}{:X}{:X}{:X}{:X}{:X}", m_Data1, m_Data2, m_Data3, m_Data4[0], m_Data4[1], m_Data4[2], m_Data4[3], m_Data4[4], m_Data4[5], m_Data4[6], m_Data4[7]);
 }

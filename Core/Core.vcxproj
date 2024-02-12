@@ -147,7 +147,8 @@
       <AdditionalDependencies>glfw3.lib;opengl32.lib;toolbox.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY "$(ProjectDir)externals\libs\dll\*.DLL" "$(TargetDir)" /D /K /Y</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy dll to running directory</Message>
@@ -174,7 +175,8 @@
       <AdditionalDependencies>glfw3.lib;opengl32.lib;toolbox.lib;Glad.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>XCOPY "$(ProjectDir)externals\libs\dll\*.DLL" "$(TargetDir)" /D /K /Y</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy dll to running directory</Message>

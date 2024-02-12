@@ -3,7 +3,7 @@
 #include "scene.hpp"
 #include "component.hpp"
 
-Entity::Entity(const Guid& entiyID) : m_entityId(entiyID)
+Entity::Entity(const Guid& entiyID) : m_EntityId(entiyID)
 {
 
 }
@@ -41,6 +41,6 @@ void Entity::Update()
 
 bool Entity::operator==(const Entity& entity)
 {
-    return m_entityId == entity.m_entityId;
+    return m_EntityId == entity.m_EntityId;
 }
 

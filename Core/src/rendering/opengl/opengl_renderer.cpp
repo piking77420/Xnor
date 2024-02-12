@@ -9,8 +9,7 @@ OpenglRenderer::OpenglRenderer()
 	glDepthFunc(GL_LESS);
 }
 
-
-void OpenglRenderer::SetClearColor(const Vector4& color)
+void OpenglRenderer::SetClearColor(const Vector4& color) const
 {
 	glClearColor(color.x, color.y, color.z, color.w);
 }
