@@ -9,10 +9,34 @@
 
 BEGIN_XNOR_CORE
 
+/// @brief Custom XNOR smart pointer.
+///        Represents both a <c>std::shared_ptr</c> and a <c>std::weak_ptr</c>.
+///
+/// @paragraph reason Reason
+/// While using <c>std::weak_ptr</c>, we realized that it was not very practical because a <c>std::shared_ptr</c> needs to be
+/// constructed from the former for the pointed type to be used. The <c>Pointer</c> type is meant to fix this issue
+/// by being both a strong and a weak shared pointer.
+///
+/// @paragraph references Weak and Strong References
+/// By default, creating a <c>Pointer</c> with constructor arguments from the pointed type allocates this type on the heap.
+/// Copying this instance of <c>Pointer</c> creates a new weak reference by default, meaning that the copy won't keep the raw
+/// pointer alive. When all the strong references go out of scope or are destroyed, the underlying pointed type is freed.
+/// A strong reference can still be created if needed, by calling either <c>Pointer<T>::CreateStrongReference() const</c>,
+/// <c>Pointer::ToStrongReference()</c>, or by creating a copy with <c>Pointer::Pointer(const Pointer&, bool)</c>
+/// and giving a <c>true</c> value to the second argument.
+///
+/// @param T The type to point to.
+/// 
+/// @see <a href="https://en.cppreference.com/book/intro/smart_pointers">Smart Pointers</a>
+/// @see <a href="https://en.cppreference.com/w/cpp/memory/shared_ptr">std::shared_ptr</a>
+/// @see <a href="https://en.cppreference.com/w/cpp/memory/weak_ptr">std::weak_ptr</a>
 template<typename T>
 class Pointer
 {
 public:
+    /// <summary>
+    /// Creates an empty <c>Pointer</c> without a reference counter and pointing to <c>nullptr</c>.
+    /// </summary>
     Pointer() = default;
     
     Pointer(const Pointer& other, bool strongReference = false);
@@ -62,6 +86,8 @@ public:
 
     [[nodiscard]]
     bool GetIsStrongReference() const;
+
+    void ToStrongReference();
 
     void ToWeakReference();
     
@@ -220,6 +246,17 @@ bool Pointer<T>::IsValid() { return m_ReferenceCounter != nullptr; }
 
 template<typename T>
 bool Pointer<T>::GetIsStrongReference() const { return m_IsStrongReference; }
+
+template<typename T>
+void Pointer<T>::ToStrongReference()
+{
+    if (m_IsStrongReference)
+        return;
+    
+    m_ReferenceCounter->IncStrong();
+    m_ReferenceCounter->DecWeak(this);
+    m_IsStrongReference = true;
+}
 
 template<typename T>
 void Pointer<T>::ToWeakReference()
