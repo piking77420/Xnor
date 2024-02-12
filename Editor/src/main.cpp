@@ -18,7 +18,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	const std::unique_ptr<Renderer> renderer = std::make_unique<OpenGlRenderer>();
 
 	Vector4 colorCheck = 0.5f;
-
 	// Template seems to work between dll and exe
 	Scene::CreateBasicScene();
 	Scene& scene = *Scene::scene;
