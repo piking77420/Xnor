@@ -35,7 +35,7 @@ public:
     [[nodiscard]]
     const std::filesystem::path& GetFilenameNoExtension() const;
     
-private:
+protected:
     std::filesystem::path m_Filepath;
     std::filesystem::path m_Filename;
     std::filesystem::path m_FilenameNoExtension;

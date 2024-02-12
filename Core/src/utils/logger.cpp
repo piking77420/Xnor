@@ -46,7 +46,7 @@ void Logger::OpenFile(const std::filesystem::path &filename)
         // Write a newline to separate each log entry and use std::endl to make
         // sure to flush it so that when we count the number of newlines, we get
         // the correct number
-        file << std::endl;  // NOLINT(performance-avoid-endl)
+        file << std::endl; // NOLINT(performance-avoid-endl)
 
         // Read file contents to count empty lines and therefore know how many logs
         // where written in the file.

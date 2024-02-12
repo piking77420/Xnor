@@ -1,4 +1,4 @@
-#include "guid.hpp"
+#include "utils/guid.hpp"
 
 #include <Windows.h>
 #include <Rpc.h>

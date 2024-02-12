@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <unordered_map>
 
-#include "pointer.hpp"
+#include "utils/pointer.hpp"
 #include "resource.hpp"
 
 BEGIN_XNOR_CORE

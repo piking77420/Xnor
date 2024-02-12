@@ -1,4 +1,4 @@
-﻿#include "component.hpp"
+﻿#include "scene/component.hpp"
 
 using namespace XnorCore;
 

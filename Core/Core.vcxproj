@@ -55,7 +55,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;IMGUI_EXPORT</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;externals\include\ImGui;include;include\scene;include\rendering\opengl;include\rendering;include\utils;include\resources</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);include;externals\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -81,7 +81,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;_GLFW_BUILD_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;externals\include\ImGui;include;include\scene;include\rendering\opengl;include\rendering;include\utils;include\resources</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -113,8 +113,10 @@
     <ClCompile Include="externals\src\ttf\ttfParser.cpp" />
     <ClCompile Include="src\rendering\opengl\opengl_renderer.cpp" />
     <ClCompile Include="src\rendering\renderer.cpp" />
-    <ClCompile Include="src\resources\resource.cpp" />
-    <ClCompile Include="src\resources\resource_manager.cpp" />
+    <ClCompile Include="src\resource\model.cpp" />
+    <ClCompile Include="src\resource\resource.cpp" />
+    <ClCompile Include="src\resource\resource_manager.cpp" />
+    <ClCompile Include="src\resource\texture.cpp" />
     <ClCompile Include="src\scene\component.cpp" />
     <ClCompile Include="src\scene\entity.cpp" />
     <ClCompile Include="src\scene\scene.cpp" />
@@ -222,12 +224,15 @@
     <ClInclude Include="externals\include\Maths\vector2i.hpp" />
     <ClInclude Include="externals\include\Maths\vector3.hpp" />
     <ClInclude Include="externals\include\Maths\vector4.hpp" />
+    <ClInclude Include="externals\include\stb\stb_image.h" />
     <ClInclude Include="externals\include\ttf\ttfParser.h" />
     <ClInclude Include="include\core.hpp" />
     <ClInclude Include="include\rendering\opengl\opengl_renderer.hpp" />
     <ClInclude Include="include\rendering\renderer.hpp" />
-    <ClInclude Include="include\resources\resource.hpp" />
-    <ClInclude Include="include\resources\resource_manager.hpp" />
+    <ClInclude Include="include\resource\model.hpp" />
+    <ClInclude Include="include\resource\resource.hpp" />
+    <ClInclude Include="include\resource\resource_manager.hpp" />
+    <ClInclude Include="include\resource\texture.hpp" />
     <ClInclude Include="include\scene\component.hpp" />
     <ClInclude Include="include\scene\entity.hpp" />
     <ClInclude Include="include\scene\scene.hpp" />
@@ -242,9 +247,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="externals\libs\dll\" />
+    <Folder Include="externals\libs\lib\Common\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="externals\libs\lib\Common\glfw3.lib" />
     <Content Include="externals\libs\lib\Debug\toolbox.lib" />
     <Content Include="externals\libs\lib\Debug\toolboxd.idb" />
     <Content Include="externals\libs\lib\Debug\toolboxd.pdb" />

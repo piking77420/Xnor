@@ -1,6 +1,6 @@
-﻿#include "scene.hpp"
+﻿#include "scene/scene.hpp"
 #include "utils/logger.hpp"
-#include "component.hpp"
+#include "scene/component.hpp"
 
 using namespace XnorCore;
 
