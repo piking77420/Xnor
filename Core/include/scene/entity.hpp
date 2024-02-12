@@ -4,7 +4,7 @@
 
 #include "core.hpp"
 #include "transform.hpp"
-#include "utils/xnor_guid.hpp"
+#include "..\utils\guid.hpp"
 
 class Component;
 
@@ -19,7 +19,7 @@ public:
 
     Transform transform;
 
-    XNOR_ENGINE Entity(const XnorGuid& entiyID);
+    XNOR_ENGINE Entity(const Guid& entiyID);
 
     XNOR_ENGINE Entity();
 
@@ -46,7 +46,7 @@ public:
     template<class ComponentT>
     void RemoveComponent();
 
-    XNOR_ENGINE const XnorGuid& GetID() const
+    XNOR_ENGINE const Guid& GetID() const
     {
         return m_entityId;
     }
@@ -60,7 +60,7 @@ public:
     
 private:
 
-    XnorGuid m_entityId;
+    Guid m_entityId;
 
     std::vector<Component*> m_Components;
 };

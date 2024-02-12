@@ -340,7 +340,7 @@ The very first example is encouraged for the getters as it provides the user a r
 
 ### Declaration Order
 
-Group similar declarations together, placing `public` earlier.
+Group similar declarations together, placing `public` earlier. Other section may be declared first if a member declaration is needed for the `public` members.
 
 A class definition should usually start with a `public:` section, followed by `protected:`, then `private:`. Omit sections that would be empty.
 
@@ -638,10 +638,10 @@ Type names follow the `PascalCase` rule, except for basic types, in which case i
 ### Variable Names
 
 - Common variable names: `camelCase`
-- Custom type public members (for `struct` and `class` types): `camelCase`
+- Custom type public members: `camelCase`
 - Custom type protected members: `m_PascalCase`
 - Custom type private members: `m_PascalCase`
-- Constant names: `PascalCase`
+- Constant names (even inside a class definition): `PascalCase`
 - `#define` macros: `UPPER_CASE`
 - `enum` constants: `PascalCase`
 - Function names: `PascalCase`

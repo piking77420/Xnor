@@ -8,7 +8,6 @@
 class Scene
 {
 public:
-
     // TO DO test to virtual memory between dll and editor exe
     // REMOVE IT LATER
     XNOR_ENGINE static void CreateBasicScene();
@@ -22,8 +21,8 @@ public:
 
     XNOR_ENGINE void Update();
 
-    Entity* GetEntityByID(const XnorGuid& xnorGuid);
+    Entity* GetEntityById(const Guid& xnorGuid);
     
 private:
-    std::vector<Entity> m_entities;
+    std::vector<Entity> m_Entities;
 };

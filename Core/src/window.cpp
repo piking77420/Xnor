@@ -38,7 +38,7 @@ const GLFWwindow* Window::GetWindow() const
 	return m_Window;
 }
 
-bool Window::ShouldClose()
+bool Window::ShouldClose() const
 {
 	return glfwWindowShouldClose(m_Window);
 }
@@ -48,7 +48,7 @@ void Window::PollEvents()
 	glfwPollEvents();
 }
 
-void Window::SwapBuffers()
+void Window::SwapBuffers() const
 {
 	glfwSwapBuffers(m_Window);
 }

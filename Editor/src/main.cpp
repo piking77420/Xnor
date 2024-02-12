@@ -2,10 +2,9 @@
 #include "rendering/opengl/opengl_renderer.hpp"
 #include "scene/scene.hpp"
 #include "utils/logger.hpp"
-#include "Editor.hpp"
+#include "editor.hpp"
 #include "window.hpp"
 #include "scene/component.hpp"
-
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
@@ -13,26 +12,23 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 	Window window;
 	Editor editor(window);
-	std::unique_ptr<Renderer> renderer(std::make_unique<OpenglRenderer>());
+	std::unique_ptr<Renderer> renderer = std::make_unique<OpenglRenderer>();
 
 	Vector4 colorCheck = {0.5f, 0.5f, 0.5f, 0.5f};
-	
+
 	// Template seems to work between dll and exe
 	Scene::CreateBasicScene();
 	Scene& scene = *Scene::scene;
-
 
 	while (!window.ShouldClose())
 	{
 		window.PollEvents();
 		editor.BeginFrame();
 		
-		
 		renderer->SetClearColor(colorCheck);
 		renderer->ClearColorAndDepth();
 
 		ImGui::ColorPicker4("colorPickerTest", colorCheck.Raw(), ImGuiColorEditFlags_PickerHueWheel);
-
 
 		editor.EndFrame(window);
 		window.SwapBuffers(); 

@@ -3,7 +3,7 @@
 #include "scene.hpp"
 #include "component.hpp"
 
-Entity::Entity(const XnorGuid& entiyID) : m_entityId(entiyID)
+Entity::Entity(const Guid& entiyID) : m_entityId(entiyID)
 {
 
 }

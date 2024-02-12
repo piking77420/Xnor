@@ -937,7 +937,9 @@ bool    ImGui_ImplOpenGL3_CreateDeviceObjects()
     glBindTexture(GL_TEXTURE_2D, last_texture);
     glBindBuffer(GL_ARRAY_BUFFER, last_array_buffer);
 #ifdef IMGUI_IMPL_OPENGL_MAY_HAVE_BIND_BUFFER_PIXEL_UNPACK
-    if (bd->GlVersion >= 210) { glBindBuffer(GL_PIXEL_UNPACK_BUFFER, last_pixel_unpack_buffer); }
+#pragma warning(push, 3)
+    if (bd->GlVersion >= 210) { glBindBuffer(GL_PIXEL_UNPACK_BUFFER, last_pixel_unpack_buffer); }  // NOLINT(clang-diagnostic-conditional-uninitialized)
+#pragma warning(pop)
 #endif
 #ifdef IMGUI_IMPL_OPENGL_USE_VERTEX_ARRAY
     glBindVertexArray(last_vertex_array);

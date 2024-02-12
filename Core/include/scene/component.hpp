@@ -10,15 +10,9 @@ public:
 
     virtual ~Component() = default;
 
-    virtual void Begin()
-    {
-       
-    }
+    virtual void Begin();
 
-    virtual void Update()
-    {
-       
-    }
+    virtual void Update();
 };
 
 class TestComponent : public Component

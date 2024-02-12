@@ -15,16 +15,18 @@ public:
 	[[nodiscard]]
 	Vector2i GetSize() const;
 
+	[[nodiscard]]
 	GLFWwindow* GetWindow();
 
 	[[nodiscard]]
 	const GLFWwindow* GetWindow() const;
 
-	bool ShouldClose();
+	[[nodiscard]]
+	bool ShouldClose() const;
 
 	void PollEvents();
 
-	void SwapBuffers();
+	void SwapBuffers() const;
 
 	void SetCurrentContext();
 
