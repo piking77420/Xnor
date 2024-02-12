@@ -19,6 +19,12 @@ public:
 
     XNOR_ENGINE ~Scene() = default;
 
+    template<class ComponentT>
+    void GetAllComponentOfType(std::vector<const ComponentT*>*) const ;
+
+    template<class ComponentT>
+    void GetAllComponentOfType(std::vector<ComponentT*>*);
+
     XNOR_ENGINE void Begin();
 
     XNOR_ENGINE void Update();
@@ -28,5 +34,36 @@ public:
 private:
     std::vector<Entity> m_Entities;
 };
+
+
+template<class ComponentT>
+void Scene::GetAllComponentOfType(std::vector<const ComponentT*>* componentData) const
+{
+    for (const Entity& ent : m_Entities)
+    {
+        const ComponentT* component = ent.GetComponent<ComponentT>();
+
+        if (dynamic_cast<const Component*>(component) == nullptr)
+            continue;
+        componentData->emplace_back(component);
+
+    }
+
+}
+
+template<class ComponentT>
+void Scene::GetAllComponentOfType(std::vector<ComponentT*>* componentData)
+{
+    for (Entity& ent : m_Entities)
+    {
+        ComponentT* component = ent.GetComponent<ComponentT>();
+
+        if (dynamic_cast<Component*>(component) == nullptr)
+            continue;
+        componentData->emplace_back(component);
+
+    }
+
+}
 
 END_XNOR_CORE

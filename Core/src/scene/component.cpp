@@ -1,11 +1,9 @@
 ﻿#include "scene/component.hpp"
 
-using namespace XnorCore;
-
-void Component::Begin()
+void XnorCore::Component::Begin()
 {
 }
 
-void Component::Update()
+void XnorCore::Component::Update()
 {
 }

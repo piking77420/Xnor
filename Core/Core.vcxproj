@@ -102,7 +102,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="camera.cpp" />
     <ClCompile Include="externals\src\glad.c" />
     <ClCompile Include="externals\src\ImGui\imgui.cpp" />
     <ClCompile Include="externals\src\ImGui\imgui_demo.cpp" />
@@ -112,13 +111,17 @@
     <ClCompile Include="externals\src\ImGui\imgui_tables.cpp" />
     <ClCompile Include="externals\src\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="externals\src\ttf\ttfParser.cpp" />
-    <ClCompile Include="src\rendering\opengl\opengl_renderer.cpp" />
+    <ClCompile Include="src\rendering\camera.cpp" />
+    <ClCompile Include="src\rendering\frame_buffer.cpp" />
     <ClCompile Include="src\rendering\renderer.cpp" />
+    <ClCompile Include="src\rendering\renderer_context.cpp" />
     <ClCompile Include="src\resource\model.cpp" />
     <ClCompile Include="src\resource\resource.cpp" />
     <ClCompile Include="src\resource\resource_manager.cpp" />
     <ClCompile Include="src\resource\texture.cpp" />
     <ClCompile Include="src\scene\component.cpp" />
+    <ClCompile Include="src\scene\component\camera_component.cpp" />
+    <ClCompile Include="src\scene\component\mesh_renderer.cpp" />
     <ClCompile Include="src\scene\entity.cpp" />
     <ClCompile Include="src\scene\scene.cpp" />
     <ClCompile Include="src\transform.cpp">
@@ -203,7 +206,6 @@
     <ClCompile Include="src\utils\guid.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="camera.hpp" />
     <ClInclude Include="externals\include\glad\glad.h" />
     <ClInclude Include="externals\include\GLFW\glfw3.h" />
     <ClInclude Include="externals\include\GLFW\glfw3native.h" />
@@ -229,8 +231,10 @@
     <ClInclude Include="externals\include\stb\stb_image.h" />
     <ClInclude Include="externals\include\ttf\ttfParser.h" />
     <ClInclude Include="include\core.hpp" />
-    <ClInclude Include="include\rendering\opengl\opengl_renderer.hpp" />
+    <ClInclude Include="include\rendering\camera.hpp" />
+    <ClInclude Include="include\rendering\frame_buffer.hpp" />
     <ClInclude Include="include\rendering\renderer.hpp" />
+    <ClInclude Include="include\rendering\renderer_context.hpp" />
     <ClInclude Include="include\resource\model.hpp" />
     <ClInclude Include="include\resource\resource.hpp" />
     <ClInclude Include="include\resource\resource_manager.hpp" />

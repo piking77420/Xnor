@@ -1,4 +1,4 @@
-#include "camera.hpp"
+#include "rendering/camera.hpp"
 
 using namespace XnorCore;
 
@@ -12,7 +12,7 @@ void Camera::GetProjection(Matrix* matrix)
 
 void Camera::GetView(Matrix* matrix)
 {
-	Matrix::LookAt(pos,pos+ front,up,*matrix);
+	Matrix::LookAt(pos, pos + front, up, *matrix);
 }
 
 void Camera::GetVP(Matrix* matrix)
@@ -25,7 +25,7 @@ void Camera::GetVP(Matrix* matrix)
 	*matrix = projection * view;
 }
 
-Vector2i Camera::ProjectOn(const Vector3& vertex,const Matrix& model)
+Vector2i Camera::ProjectOn(const Vector3& vertex, const Matrix& model)
 {
 
 	Matrix MVP;

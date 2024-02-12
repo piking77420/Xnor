@@ -29,7 +29,7 @@ public:
 
 	Vector2i ProjectOn(const Vector3& vertex, const Matrix& model);
 
-	
+
 };
 
 END_XNOR_CORE
