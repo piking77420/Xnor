@@ -113,6 +113,8 @@
     <ClCompile Include="externals\src\ttf\ttfParser.cpp" />
     <ClCompile Include="src\rendering\opengl\opengl_renderer.cpp" />
     <ClCompile Include="src\rendering\renderer.cpp" />
+    <ClCompile Include="src\resources\resource.cpp" />
+    <ClCompile Include="src\resources\resource_manager.cpp" />
     <ClCompile Include="src\scene\component.cpp" />
     <ClCompile Include="src\scene\entity.cpp" />
     <ClCompile Include="src\scene\scene.cpp" />
@@ -191,6 +193,8 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="src\utils\logger.cpp" />
+    <ClCompile Include="src\utils\pointer.cpp" />
+    <ClCompile Include="src\utils\reference_counter.cpp" />
     <ClCompile Include="src\window.cpp" />
     <ClCompile Include="src\rendering\vertex.cpp" />
     <ClCompile Include="src\utils\guid.cpp" />
@@ -218,13 +222,18 @@
     <ClInclude Include="externals\include\Maths\vector2i.hpp" />
     <ClInclude Include="externals\include\Maths\vector3.hpp" />
     <ClInclude Include="externals\include\Maths\vector4.hpp" />
+    <ClInclude Include="externals\include\ttf\ttfParser.h" />
     <ClInclude Include="include\core.hpp" />
     <ClInclude Include="include\rendering\opengl\opengl_renderer.hpp" />
     <ClInclude Include="include\rendering\renderer.hpp" />
+    <ClInclude Include="include\resources\resource.hpp" />
+    <ClInclude Include="include\resources\resource_manager.hpp" />
     <ClInclude Include="include\scene\component.hpp" />
     <ClInclude Include="include\scene\entity.hpp" />
     <ClInclude Include="include\scene\scene.hpp" />
     <ClInclude Include="include\utils\logger.hpp" />
+    <ClInclude Include="include\utils\pointer.hpp" />
+    <ClInclude Include="include\utils\reference_counter.hpp" />
     <ClInclude Include="include\utils\tsqueue.hpp" />
     <ClInclude Include="include\window.hpp" />
     <ClInclude Include="include\rendering\vertex.hpp" />
@@ -233,8 +242,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="externals\libs\dll\" />
-    <Folder Include="include\resources\" />
-    <Folder Include="src\resources\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="externals\libs\lib\Common\glfw3.lib" />

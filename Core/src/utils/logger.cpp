@@ -13,12 +13,14 @@
 
 #define ANSI_RESET          "\x1b[0m"
 
+using namespace XnorCore;
+
 std::mutex mutex;
 bool synchronizing = false;
 bool running = true;
 std::ofstream file;
 
-void XnorCore::Logger::OpenFile(const std::filesystem::path &filename)
+void Logger::OpenFile(const std::filesystem::path &filename)
 {
     CloseFile();
     
@@ -67,7 +69,7 @@ void XnorCore::Logger::OpenFile(const std::filesystem::path &filename)
     }
 }
 
-void XnorCore::Logger::OpenDefaultFile()
+void Logger::OpenDefaultFile()
 {
     // Get the current date and format it in yyyy-mm-dd for the file name
     const std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -78,12 +80,12 @@ void XnorCore::Logger::OpenDefaultFile()
     OpenFile("logs/" + date);
 }
 
-bool XnorCore::Logger::HasFileOpen()
+bool Logger::HasFileOpen()
 {
     return file.is_open();
 }
 
-void XnorCore::Logger::CloseFile()
+void Logger::CloseFile()
 {
     if (!file.is_open())
         return;
@@ -92,7 +94,7 @@ void XnorCore::Logger::CloseFile()
     file.close();
 }
 
-void XnorCore::Logger::Synchronize()
+void Logger::Synchronize()
 {
     if (lines.Empty())
         return;
@@ -103,7 +105,7 @@ void XnorCore::Logger::Synchronize()
     condVar.wait(lock, [] { return !synchronizing; });
 }
 
-void XnorCore::Logger::Stop()
+void Logger::Stop()
 {
     Synchronize();
     
@@ -114,7 +116,7 @@ void XnorCore::Logger::Stop()
         thread.join();
 }
 
-XnorCore::Logger::LogEntry::LogEntry(std::string&& message, const LogLevel level)
+Logger::LogEntry::LogEntry(std::string&& message, const LogLevel level)
     : LogEntry(
         std::move(message),
         level,
@@ -124,7 +126,7 @@ XnorCore::Logger::LogEntry::LogEntry(std::string&& message, const LogLevel level
 {
 }
 
-XnorCore::Logger::LogEntry::LogEntry(
+Logger::LogEntry::LogEntry(
     std::string&& message,
     const LogLevel level,
     const std::chrono::system_clock::time_point timePoint
@@ -137,7 +139,7 @@ XnorCore::Logger::LogEntry::LogEntry(
 {
 }
 
-XnorCore::Logger::LogEntry::LogEntry(
+Logger::LogEntry::LogEntry(
     std::string&& message,
     const LogLevel level,
     const std::chrono::system_clock::duration duration
@@ -150,7 +152,7 @@ XnorCore::Logger::LogEntry::LogEntry(
 {
 }
 
-void XnorCore::Logger::Run()
+void Logger::Run()
 {
     // Set thread name for easier debugging
     (void) SetThreadDescription(thread.native_handle(), L"Logger Thread");
@@ -176,7 +178,7 @@ void XnorCore::Logger::Run()
     CloseFile();
 }
 
-void XnorCore::Logger::PrintLog(const LogEntry& entry)
+void Logger::PrintLog(const LogEntry& entry)
 {
     // Get the message time and format it in [hh:mm:ss:ms]
     const auto&& t = std::chrono::duration_cast<std::chrono::milliseconds, long long>(entry.time.time_since_epoch());

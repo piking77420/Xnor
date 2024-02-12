@@ -3,12 +3,14 @@
 #include "scene.hpp"
 #include "component.hpp"
 
-XnorCore::Entity::Entity(const Guid& entiyId)
+using namespace XnorCore;
+
+Entity::Entity(const Guid& entiyId)
     : m_EntityId(entiyId)
 {
 }
 
-XnorCore::Entity::~Entity()
+Entity::~Entity()
 {
     for (const Component* comp : m_Components)
     {
@@ -18,7 +20,7 @@ XnorCore::Entity::~Entity()
     m_Components.clear();
 }
 
-void XnorCore::Entity::Begin() const
+void Entity::Begin() const
 {
     for (Component* comp : m_Components)
     {
@@ -26,7 +28,7 @@ void XnorCore::Entity::Begin() const
     }
 }
 
-void XnorCore::Entity::Update() const
+void Entity::Update() const
 {
     for (Component* comp : m_Components)
     {
@@ -34,7 +36,7 @@ void XnorCore::Entity::Update() const
     }
 }
 
-bool XnorCore::Entity::operator==(const Entity& entity) const
+bool Entity::operator==(const Entity& entity) const
 {
     return m_EntityId == entity.m_EntityId;
 }
