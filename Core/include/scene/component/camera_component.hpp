@@ -8,7 +8,7 @@ BEGIN_XNOR_CORE
 class XNOR_ENGINE CameraComponent
 {
 public:
-	XnorCore::Camera camera;
+	Camera camera;
 };
 
 END_XNOR_CORE

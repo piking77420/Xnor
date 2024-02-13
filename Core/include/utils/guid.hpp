@@ -18,7 +18,7 @@ public:
     explicit operator std::string() const;
 
 private:
-    static constexpr inline size_t Data4Size = 8;
+    static constexpr inline uint64_t Data4Size = 8;
     
     uint32_t m_Data1;
     uint16_t m_Data2;

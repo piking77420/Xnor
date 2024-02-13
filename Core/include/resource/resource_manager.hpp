@@ -6,6 +6,7 @@
 
 #include "utils/pointer.hpp"
 #include "resource.hpp"
+#include "utils/logger.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -19,28 +20,32 @@ public:
     ResourceManager() = delete;
     
     template<ResourceT T>
-    static Pointer<T> Create(const std::string& name);
+    [[nodiscard]]
+    static Pointer<T> Create(std::string name);
 
-    static bool Contains(const std::string& name);
+    [[nodiscard]]
+    XNOR_ENGINE static bool Contains(const std::string& name);
 
     template<ResourceT T>
+    [[nodiscard]]
     static Pointer<T> Get(const std::string& name);
 
     template<ResourceT T>
+    [[nodiscard]]
     static bool IsResourceOfType(const std::string& name);
 
-    static void Delete(const std::string& name);
+    XNOR_ENGINE static void Delete(const std::string& name);
 
 private:
     static inline std::unordered_map<std::string, Pointer<Resource>> m_Resources;
 };
 
 template<ResourceT T>
-Pointer<T> ResourceManager::Create(const std::string& name)
+Pointer<T> ResourceManager::Create(std::string name)
 {
-    Pointer<T> resource(name);
+    Pointer<T> resource(std::forward<std::string>(name));
 
-    m_Resources[resource->GetFilenameNoExtension().string()] = static_cast<Pointer<Resource>>(resource.CreateStrongReference());
+    m_Resources[resource->GetName()] = static_cast<Pointer<Resource>>(resource.CreateStrongReference());
 
     // Make sure to return a weak reference
     resource.ToWeakReference();
@@ -53,7 +58,7 @@ Pointer<T> ResourceManager::Get(const std::string& name)
 {
     if (!Contains(name))
     {
-        std::cout << "Attempt to get an unknown resource: " << name << '\n';
+        Logger::LogError("Attempt to get an unknown resource: %s", name.c_str());
         return Pointer<T>();
     }
 

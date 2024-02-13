@@ -10,19 +10,19 @@ BEGIN_XNOR_CORE
 class Texture : public Resource
 {
 public:
-    explicit Texture(const std::string& filepath);
+    int32_t desiredChannels = 4;
 
-    void Load() override;
+    void Load(const uint8_t* buffer, int64_t length) override;
 
-    void Load(int desiredChannels);
-    
+    void Load(const File& file) override;
+
     void Unload() override;
 
     [[nodiscard]]
-    const unsigned char* GetData() const;
+    const uint8_t* GetData() const;
 
     [[nodiscard]]
-    vec2i GetSize() const;
+    Vector2i GetSize() const;
 
     [[nodiscard]]
     int GetChannels() const;
@@ -30,11 +30,11 @@ public:
     virtual void BindTexture(uint32_t index);
 
 private:
-    unsigned char* m_Data = nullptr;
-    vec2i m_Size;
-    int m_Channels = 0;
+    uint8_t* m_Data = nullptr;
+    Vector2i m_Size;
+    int32_t m_Channels = 0;
     
-    uint32_t m_Id;
+    uint32_t m_Id = 0;
 };
 
 END_XNOR_CORE

@@ -34,9 +34,7 @@ template<typename T>
 class Pointer
 {
 public:
-    /// <summary>
-    /// Creates an empty <c>Pointer</c> without a reference counter and pointing to <c>nullptr</c>.
-    /// </summary>
+    /// @brief Creates an empty <c>Pointer</c> without a reference counter and pointing to <c>nullptr</c>.
     Pointer() = default;
     
     Pointer(const Pointer& other, bool strongReference = false);
@@ -50,7 +48,7 @@ public:
     explicit Pointer(Pointer<Ty>&& other) noexcept;
 
     template<typename... Args>
-    explicit Pointer(Args&&... args);
+    explicit Pointer(Args... args);
 
     virtual ~Pointer();
 
@@ -141,7 +139,7 @@ Pointer<T>::Pointer(Pointer<Ty>&& other) noexcept
 
 template<typename T>
 template<typename... Args>
-Pointer<T>::Pointer(Args&&... args)
+Pointer<T>::Pointer(Args... args)
     : m_ReferenceCounter(new ReferenceCounter<T>(std::forward<Args>(args)...))
     , m_IsStrongReference(true)
 {
@@ -224,22 +222,22 @@ Pointer<T>& Pointer<T>::operator=(Pointer<Ty>&& other) noexcept
 }
 
 template<typename T>
-Pointer<T>::operator T*() const { return m_ReferenceCounter->m_Pointer; }
+Pointer<T>::operator T*() const { return m_ReferenceCounter->GetPointer(); }
 
 template<typename T>
 Pointer<T>::operator std::string() const { return std::format("{{ ptr={:p}, sRefs={:d}, wRefs={:d}, isSRef={} }}", static_cast<const T*>(this), m_ReferenceCounter->GetStrong(), m_ReferenceCounter->GetWeak(), m_IsStrongReference); }
 
 template<typename T>
-T& Pointer<T>::operator*() { return *m_ReferenceCounter->m_Pointer; }
+T& Pointer<T>::operator*() { return *m_ReferenceCounter->GetPointer(); }
 
 template<typename T>
-const T& Pointer<T>::operator*() const { return *m_ReferenceCounter->m_Pointer; }
+const T& Pointer<T>::operator*() const { return *m_ReferenceCounter->GetPointer(); }
 
 template<typename T>
-T* Pointer<T>::operator->() { return m_ReferenceCounter->m_Pointer; }
+T* Pointer<T>::operator->() { return m_ReferenceCounter->GetPointer(); }
 
 template<typename T>
-const T* Pointer<T>::operator->() const { return m_ReferenceCounter->m_Pointer; }
+const T* Pointer<T>::operator->() const { return m_ReferenceCounter->GetPointer(); }
 
 template <typename T>
 bool Pointer<T>::IsValid() { return m_ReferenceCounter != nullptr; }
@@ -278,6 +276,12 @@ void Pointer<T>::Reset()
 
 template<typename T>
 const ReferenceCounter<T>* Pointer<T>::GetReferenceCounter() const { return m_ReferenceCounter; }
+
+template<typename T>
+bool operator==(const Pointer<T>& a, const Pointer<T>& b)
+{
+    return static_cast<const T*>(a) == static_cast<const T*>(b);
+}
 
 template<typename T>
 std::ostream& operator<<(std::ostream& stream, const Pointer<T>& ptr)

@@ -10,6 +10,7 @@ BEGIN_XNOR_CORE
 template<typename T>
 class Pointer;
 
+/// @brief Reference counter for the <c>Pointer</c> class. This shouldn't be used for anything else.
 template<typename T>
 class ReferenceCounter
 {
@@ -17,7 +18,7 @@ public:
     ReferenceCounter();
 
     template<typename... Args>
-    explicit ReferenceCounter(Args&&... args);
+    explicit ReferenceCounter(Args... args);
 
     ReferenceCounter(const ReferenceCounter& other) = delete;
 
@@ -39,13 +40,19 @@ public:
     void DecWeak(Pointer<T>* weakReferenceOwner);
 
     [[nodiscard]]
-    size_t GetStrong() const;
+    uint64_t GetStrong() const;
     
     [[nodiscard]]
-    size_t GetWeak() const;
+    uint64_t GetWeak() const;
+
+    [[nodiscard]]
+    T* GetPointer();
+
+    [[nodiscard]]
+    const T* GetPointer() const;
 
 private:
-    size_t m_Strong = 1;
+    uint64_t m_Strong = 1;
 
     T* m_Pointer = nullptr;
 
@@ -59,7 +66,7 @@ ReferenceCounter<T>::ReferenceCounter()
 
 template<typename T>
 template<typename ... Args>
-ReferenceCounter<T>::ReferenceCounter(Args&&... args)
+ReferenceCounter<T>::ReferenceCounter(Args... args)
     : m_Pointer(new T(std::forward<Args>(args)...))
 {
 }
@@ -102,15 +109,27 @@ void ReferenceCounter<T>::DecWeak(Pointer<T>* weakReferenceOwner)
 }
 
 template<typename T>
-size_t ReferenceCounter<T>::GetStrong() const
+uint64_t ReferenceCounter<T>::GetStrong() const
 {
     return m_Strong;
 }
 
 template<typename T>
-size_t ReferenceCounter<T>::GetWeak() const
+uint64_t ReferenceCounter<T>::GetWeak() const
 {
     return m_WeakReferenceOwners.size();
+}
+
+template<typename T>
+T* ReferenceCounter<T>::GetPointer()
+{
+    return m_Pointer;
+}
+
+template<typename T>
+const T* ReferenceCounter<T>::GetPointer() const
+{
+    return m_Pointer;
 }
 
 END_XNOR_CORE

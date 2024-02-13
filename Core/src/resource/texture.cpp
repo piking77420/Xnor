@@ -1,28 +1,15 @@
 #include "resource/texture.hpp"
 
-#define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
 #include <glad/glad.h>
 
 using namespace XnorCore;
 
-Texture::Texture(const std::string& filepath)
-    : Resource(filepath)
+void Texture::Load(const uint8_t* buffer, const int64_t length)
 {
-}
-
-void Texture::Load()
-{
-    Load(4);
-}
-
-void Texture::Load(const int desiredChannels)
-{
-    m_Data = stbi_load(m_Filepath.string().c_str(), &m_Size.x, &m_Size.y, &m_Channels, desiredChannels);
-
-    // TO DO MOVE TO RHI
-
+    m_Data = stbi_load_from_memory(buffer, static_cast<int32_t>(length), &m_Size.x, &m_Size.y, &m_Channels, desiredChannels);
+    
     glCreateTextures(GL_TEXTURE_2D, 1, &m_Id);
 
     glTextureParameteri(m_Id, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -34,13 +21,23 @@ void Texture::Load(const int desiredChannels)
     glTextureSubImage2D(m_Id, 0, 0, 0, m_Size.x, m_Size.y, GL_RGBA, GL_UNSIGNED_BYTE, m_Data);
     glGenerateTextureMipmap(m_Id);
 
+    m_Loaded = true;
+}
+
+void Texture::Load(const File& file)
+{
+    Load(file.GetData<uint8_t>(), file.GetSize());
 }
 
 void Texture::Unload()
 {
-    stbi_image_free(m_Data);
+    glDeleteTextures(1, &m_Id);
     
-    Resource::Unload();
+    // No need to free the data from stbi_load as it is allocated in our File wrapper
+    m_Data = nullptr;
+    m_Size = 0;
+    
+    m_Loaded = false;
 }
 
 const unsigned char* Texture::GetData() const
@@ -48,7 +45,7 @@ const unsigned char* Texture::GetData() const
     return m_Data;
 }
 
-vec2i Texture::GetSize() const
+Vector2i Texture::GetSize() const
 {
     return m_Size;
 }

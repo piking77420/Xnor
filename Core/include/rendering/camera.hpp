@@ -21,13 +21,13 @@ public:
 	float fov = 90.f;
 	Vector2i screenSize = 1000;
 
-	void GetProjection(Matrix* matrix);
+	void GetProjection(Matrix* matrix) const;
 
-	void GetView(Matrix* matrix);
+	void GetView(Matrix* matrix) const;
 
-	void GetVP(Matrix* matrix);
+	void GetVp(Matrix* matrix) const;
 
-	Vector2i ProjectOn(const Vector3& vertex, const Matrix& model);
+	Vector2i ProjectOn(const Vector3& vertex, const Matrix& model) const;
 
 
 };

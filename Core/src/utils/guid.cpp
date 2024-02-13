@@ -12,7 +12,7 @@ Guid::Guid()
 	, m_Data2(0)
 	, m_Data3(0)
 {
-	for (unsigned char& i : m_Data4)
+	for (uint8_t& i : m_Data4)
 		i = 0;
 
 	const HRESULT result = CoCreateGuid(reinterpret_cast<UUID*>(this));

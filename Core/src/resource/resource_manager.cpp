@@ -9,5 +9,6 @@ bool ResourceManager::Contains(const std::string& name)
 
 void ResourceManager::Delete(const std::string& name)
 {
-    m_Resources.erase(name);
+    if (m_Resources.erase(name) == 0)
+        Logger::LogWarning("Attempt to delete an unknown resource: %s", name.c_str());
 }

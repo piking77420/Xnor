@@ -1,44 +1,45 @@
 ﻿#pragma once
 
-#include <filesystem>
-#include <string>
-
 #include "core.hpp"
+#include "file/file.hpp"
 
 BEGIN_XNOR_CORE
 
 class Resource
 {
 public:
-    explicit Resource(const std::string& filepath);
+    Resource() = default;
+
+    explicit Resource(const std::string& name);
 
     virtual ~Resource() = default;
 
-    Resource(const Resource& other) = delete;
+    Resource(const Resource& other) = default;
 
-    Resource(Resource&& other) = delete;
+    Resource(Resource&& other) = default;
 
-    Resource& operator=(const Resource& other) = delete;
+    Resource& operator=(const Resource& other) = default;
 
-    Resource& operator=(Resource&& other) = delete;
+    Resource& operator=(Resource&& other) = default;
 
-    virtual void Load() = 0;
+    /// @brief Load resource from memory.
+    virtual void Load(const uint8_t* buffer, int64_t length) = 0;
 
-    virtual void Unload();
+    /// @brief Load resource from file.
+    virtual void Load(const File& file) = 0;
+
+    virtual void Unload() = 0;
     
     [[nodiscard]]
-    const std::filesystem::path& GetFilepath() const;
-    
+    bool IsLoaded() const;
+
     [[nodiscard]]
-    const std::filesystem::path& GetFilename() const;
-    
-    [[nodiscard]]
-    const std::filesystem::path& GetFilenameNoExtension() const;
-    
+    std::string GetName() const;
+
 protected:
-    std::filesystem::path m_Filepath;
-    std::filesystem::path m_Filename;
-    std::filesystem::path m_FilenameNoExtension;
+    bool m_Loaded = false;
+
+    std::string m_Name;
 };
 
 END_XNOR_CORE

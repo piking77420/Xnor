@@ -4,6 +4,9 @@
 #include "utils/logger.hpp"
 #include "editor.hpp"
 #include "window.hpp"
+#include "file/file_manager.hpp"
+#include "resource/resource_manager.hpp"
+#include "resource/texture.hpp"
 #include "scene/component.hpp"
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
@@ -12,6 +15,11 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	using namespace XnorEditor;
 	
 	Logger::OpenDefaultFile();
+
+	Pointer<File> gradientFile = FileManager::Load("assets/gradient.png");
+
+	//Pointer<Texture> gradient = ResourceManager::Create<Texture>("gradient");
+	//gradient->Load(*gradientFile);
 
 	Window window;
 	Editor editor(window);
@@ -38,6 +46,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		editor.EndFrame(window);
 		window.SwapBuffers(); 
 	}
+
+	//ResourceManager::Delete("gradient");
+
+	FileManager::Delete(gradientFile);
 
 	Logger::Stop();
 	

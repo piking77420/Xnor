@@ -40,7 +40,9 @@ void Logger::OpenFile(const std::filesystem::path &filename)
 
     // If the file already exists, add newlines to space from the last log
     if (!exists)
+    {
         LogInfo("Starting logging #0");
+    }
     else
     {
         // Write a newline to separate each log entry and use std::endl to make
@@ -53,7 +55,9 @@ void Logger::OpenFile(const std::filesystem::path &filename)
         std::ifstream in(filename);
 
         if (!in.is_open() || !in.good())
+        {
             LogWarning("Could not open log file for reading: " + absolute(filename).string());
+        }
         else
         {
             std::string line;
