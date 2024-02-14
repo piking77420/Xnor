@@ -36,6 +36,11 @@ public:
 
     XNOR_ENGINE static void Delete(const std::string& name);
 
+    template<ResourceT T>
+    static void Delete(const Pointer<T>& resource);
+
+    XNOR_ENGINE static void DeleteAll();
+
 private:
     XNOR_ENGINE static inline std::unordered_map<std::string, Pointer<Resource>> m_Resources;
 };
@@ -76,6 +81,26 @@ bool ResourceManager::IsResourceOfType(const std::string& name)
         return true;
 
     return false;
+}
+
+template<ResourceT T>
+void ResourceManager::Delete(const Pointer<T>& resource)
+{
+    const size_t oldSize = m_Resources.size();
+    
+    for (decltype(m_Resources)::iterator it = m_Resources.begin(); it != m_Resources.end(); it++)
+    {
+        if (it->second == *reinterpret_cast<const Pointer<Resource>*>(&resource)) // TODO Change this to a static_cast
+        {
+            it = m_Resources.erase(it);
+
+            if (it == m_Resources.end())
+                break;
+        }
+    }
+    
+    if (oldSize == m_Resources.size())
+        Logger::LogWarning("Attempt to delete an unknown file entry: %p", static_cast<T*>(resource));
 }
 
 END_XNOR_CORE

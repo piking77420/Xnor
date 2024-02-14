@@ -277,6 +277,7 @@ void Pointer<T>::Reset()
 template<typename T>
 const ReferenceCounter<T>* Pointer<T>::GetReferenceCounter() const { return m_ReferenceCounter; }
 
+/// @brief Compares two Pointers by checking if they point to the same address
 template<typename T>
 bool operator==(const Pointer<T>& a, const Pointer<T>& b)
 {

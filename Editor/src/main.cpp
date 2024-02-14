@@ -46,9 +46,9 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		window.SwapBuffers(); 
 	}
 
-	ResourceManager::Delete("gradient");
+	ResourceManager::DeleteAll();
 
-	FileManager::Delete(gradientFile);
+	FileManager::DeleteAll();
 
 	Logger::Stop();
 	

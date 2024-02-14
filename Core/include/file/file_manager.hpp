@@ -21,6 +21,8 @@ public:
     XNOR_ENGINE static void Delete(const std::filesystem::path& filepath);
 
     XNOR_ENGINE static void Delete(const Pointer<File>& file);
+
+    XNOR_ENGINE static void DeleteAll();
     
 private:
     static inline std::map<std::filesystem::path, Pointer<File>> m_Files;

@@ -53,3 +53,9 @@ void FileManager::Delete(const Pointer<File>& file)
     if (oldSize == m_Files.size())
         Logger::LogWarning("Attempt to delete an unknown file entry: %p", static_cast<File*>(file));
 }
+
+void FileManager::DeleteAll()
+{
+    // Smart pointers are deleted automatically, we only need to clear the container
+    m_Files.clear();
+}
