@@ -27,6 +27,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 	Pointer<Texture> gradient = ResourceManager::CreateAndLoad<Texture>(FileManager::Get("assets/textures/gradient.png"));
 
+
+	
 	Vector4 colorCheck = 0.5f;
 	Scene::CreateBasicScene();
 	//Scene& scene = *Scene::scene;
