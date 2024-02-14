@@ -12,22 +12,26 @@ class Texture : public Resource
 public:
     int32_t desiredChannels = 4;
 
-    void Load(const uint8_t* buffer, int64_t length) override;
+    XNOR_ENGINE Texture() = default;
 
-    void Load(const File& file) override;
+    XNOR_ENGINE explicit Texture(const std::string& name);
 
-    void Unload() override;
+    XNOR_ENGINE void Load(const uint8_t* buffer, int64_t length) override;
 
-    [[nodiscard]]
-    const uint8_t* GetData() const;
+    XNOR_ENGINE void Load(File& file) override;
 
-    [[nodiscard]]
-    Vector2i GetSize() const;
+    XNOR_ENGINE void Unload() override;
 
     [[nodiscard]]
-    int GetChannels() const;
+    XNOR_ENGINE const uint8_t* GetData() const;
 
-    virtual void BindTexture(uint32_t index);
+    [[nodiscard]]
+    XNOR_ENGINE Vector2i GetSize() const;
+
+    [[nodiscard]]
+    XNOR_ENGINE int GetChannels() const;
+
+    XNOR_ENGINE virtual void BindTexture(uint32_t index);
 
 private:
     uint8_t* m_Data = nullptr;

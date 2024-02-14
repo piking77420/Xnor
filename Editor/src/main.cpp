@@ -18,15 +18,14 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 	Pointer<File> gradientFile = FileManager::Load("assets/gradient.png");
 
-	//Pointer<Texture> gradient = ResourceManager::Create<Texture>("gradient");
-	//gradient->Load(*gradientFile);
-
 	Window window;
 	Editor editor(window);
 	Renderer renderer;
 
+	Pointer<Texture> gradient = ResourceManager::Create<Texture>("gradient");
+	gradient->Load(*gradientFile);
+
 	Vector4 colorCheck = 0.5f;
-	// Template seems to work between dll and exe
 	Scene::CreateBasicScene();
 	//Scene& scene = *Scene::scene;
 	RendererContext context;
@@ -47,7 +46,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		window.SwapBuffers(); 
 	}
 
-	//ResourceManager::Delete("gradient");
+	ResourceManager::Delete("gradient");
 
 	FileManager::Delete(gradientFile);
 

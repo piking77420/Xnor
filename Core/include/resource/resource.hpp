@@ -8,33 +8,33 @@ BEGIN_XNOR_CORE
 class Resource
 {
 public:
-    Resource() = default;
+    XNOR_ENGINE Resource() = default;
 
-    explicit Resource(const std::string& name);
+    XNOR_ENGINE explicit Resource(const std::string& name);
 
-    virtual ~Resource() = default;
+    XNOR_ENGINE virtual ~Resource() = default;
 
-    Resource(const Resource& other) = default;
+    XNOR_ENGINE Resource(const Resource& other) = default;
 
-    Resource(Resource&& other) = default;
+    XNOR_ENGINE Resource(Resource&& other) = default;
 
-    Resource& operator=(const Resource& other) = default;
+    XNOR_ENGINE Resource& operator=(const Resource& other) = default;
 
-    Resource& operator=(Resource&& other) = default;
+    XNOR_ENGINE Resource& operator=(Resource&& other) = default;
 
     /// @brief Load resource from memory.
-    virtual void Load(const uint8_t* buffer, int64_t length) = 0;
+    XNOR_ENGINE virtual void Load(const uint8_t* buffer, int64_t length) = 0;
 
     /// @brief Load resource from file.
-    virtual void Load(const File& file) = 0;
+    XNOR_ENGINE virtual void Load(File& file) = 0;
 
-    virtual void Unload() = 0;
+    XNOR_ENGINE virtual void Unload() = 0;
     
     [[nodiscard]]
-    bool IsLoaded() const;
+    XNOR_ENGINE bool IsLoaded() const;
 
     [[nodiscard]]
-    std::string GetName() const;
+    XNOR_ENGINE std::string GetName() const;
 
 protected:
     bool m_Loaded = false;

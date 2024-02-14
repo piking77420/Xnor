@@ -37,7 +37,7 @@ public:
     XNOR_ENGINE static void Delete(const std::string& name);
 
 private:
-    static inline std::unordered_map<std::string, Pointer<Resource>> m_Resources;
+    XNOR_ENGINE static inline std::unordered_map<std::string, Pointer<Resource>> m_Resources;
 };
 
 template<ResourceT T>
