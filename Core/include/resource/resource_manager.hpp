@@ -23,6 +23,11 @@ public:
     [[nodiscard]]
     static Pointer<T> Create(std::string name);
 
+    /// @brief Creates the resource corresponding to the given @p file
+    template<ResourceT T>
+    [[nodiscard]]
+    static Pointer<T> CreateAndLoad(Pointer<File>&& file);
+
     [[nodiscard]]
     XNOR_ENGINE static bool Contains(const std::string& name);
 
@@ -50,10 +55,26 @@ Pointer<T> ResourceManager::Create(std::string name)
 {
     Pointer<T> resource(std::forward<std::string>(name));
 
+    // We cannot reuse the variable 'name' here in case it was moved inside the Resource constructor
     m_Resources[resource->GetName()] = static_cast<Pointer<Resource>>(resource.CreateStrongReference());
 
     // Make sure to return a weak reference
     resource.ToWeakReference();
+
+    return resource;
+}
+
+template<ResourceT T>
+Pointer<T> ResourceManager::CreateAndLoad(Pointer<File>&& file)
+{
+    Pointer<T> resource(file->GetFilepath().string());
+
+    m_Resources[resource->GetName()] = static_cast<Pointer<Resource>>(resource.CreateStrongReference());
+
+    // Make sure to return a weak reference
+    resource.ToWeakReference();
+
+    resource->Load(*file);
 
     return resource;
 }
@@ -92,13 +113,17 @@ void ResourceManager::Delete(const Pointer<T>& resource)
     {
         if (it->second == *reinterpret_cast<const Pointer<Resource>*>(&resource)) // TODO Change this to a static_cast
         {
+            if (it->second->IsLoaded())
+                it->second->Unload();
+            
             it = m_Resources.erase(it);
 
             if (it == m_Resources.end())
                 break;
         }
     }
-    
+
+    // If no resources were deleted
     if (oldSize == m_Resources.size())
         Logger::LogWarning("Attempt to delete an unknown file entry: %p", static_cast<T*>(resource));
 }

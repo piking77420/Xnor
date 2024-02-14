@@ -2,8 +2,8 @@
 
 using namespace XnorCore;
 
-Resource::Resource(const std::string& name)
-    : m_Name(name)
+Resource::Resource(std::string name)
+    : m_Name(std::move(name))
 {
 }
 

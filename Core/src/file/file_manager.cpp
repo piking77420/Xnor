@@ -6,12 +6,40 @@ using namespace XnorCore;
 
 Pointer<File> FileManager::Load(std::filesystem::path filepath)
 {
-    Pointer<File> file(std::forward<std::filesystem::path>(filepath));
+    Pointer<File> file;
+    try
+    {
+        file = Pointer<File>(std::forward<std::filesystem::path>(filepath));
+    }
+    catch (const std::invalid_argument& ex)
+    {
+        Logger::LogError("Uncaught exception while creating File object: %s", ex.what());
+        // Return the already-constructed null Pointer
+        return file;
+    }
 
     m_Files[file->GetFilepath()] = file.CreateStrongReference();
 
     // Make sure to return a weak reference
     file.ToWeakReference();
+
+    return file;
+}
+
+bool FileManager::Contains(const std::filesystem::path& filepath)
+{
+    return m_Files.contains(filepath);
+}
+
+Pointer<File> FileManager::Get(const std::filesystem::path& filepath)
+{
+    if (!Contains(filepath))
+    {
+        Logger::LogError("Attempt to get an unknown file entry: %s", filepath.c_str());
+        return Pointer<File>();
+    }
+
+    Pointer<File> file = m_Files.at(filepath);
 
     return file;
 }

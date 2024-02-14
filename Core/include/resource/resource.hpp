@@ -10,7 +10,7 @@ class Resource
 public:
     XNOR_ENGINE Resource() = default;
 
-    XNOR_ENGINE explicit Resource(const std::string& name);
+    XNOR_ENGINE explicit Resource(std::string name);
 
     XNOR_ENGINE virtual ~Resource() = default;
 

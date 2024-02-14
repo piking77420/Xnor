@@ -13,6 +13,16 @@ public:
     [[nodiscard]]
     XNOR_ENGINE explicit File(std::filesystem::path&& filepath);
 
+    XNOR_ENGINE ~File();
+
+    XNOR_ENGINE File(const File& other) = default;
+
+    XNOR_ENGINE File(File&& other) = default;
+
+    XNOR_ENGINE File& operator=(const File& other) = default;
+
+    XNOR_ENGINE File& operator=(File&& other) = default;
+
     /// @brief Returns <c>false</c> if an error occured while loading.
     XNOR_ENGINE bool Load();
 

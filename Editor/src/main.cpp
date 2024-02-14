@@ -8,6 +8,7 @@
 #include "resource/resource_manager.hpp"
 #include "resource/texture.hpp"
 #include "scene/component.hpp"
+#include "utils/memory_leak_detector.hpp"
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
@@ -15,15 +16,16 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	using namespace XnorEditor;
 	
 	Logger::OpenDefaultFile();
+	
+	//MemoryLeakDetector detector;
 
-	Pointer<File> gradientFile = FileManager::Load("assets/gradient.png");
+	Pointer<File> gradientFile = FileManager::Load("assets/textures/gradient.png");
 
 	Window window;
 	Editor editor(window);
 	Renderer renderer;
 
-	Pointer<Texture> gradient = ResourceManager::Create<Texture>("gradient");
-	gradient->Load(*gradientFile);
+	Pointer<Texture> gradient = ResourceManager::CreateAndLoad<Texture>(FileManager::Get("assets/textures/gradient.png"));
 
 	Vector4 colorCheck = 0.5f;
 	Scene::CreateBasicScene();

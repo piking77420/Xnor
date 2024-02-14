@@ -45,7 +45,7 @@ void Texture::Unload()
 {
     glDeleteTextures(1, &m_Id);
     
-    // No need to free the data from stbi_load as it is allocated in our File wrapper
+    stbi_image_free(m_Data);
     m_Data = nullptr;
     m_Size = 0;
     
@@ -67,7 +67,7 @@ int Texture::GetChannels() const
     return m_Channels;
 }
 
-void Texture::BindTexture(uint32_t index)
+void Texture::BindTexture(const uint32_t index)
 {
-    glBindTextureUnit(0, m_Id);
+    glBindTextureUnit(index, m_Id);
 }

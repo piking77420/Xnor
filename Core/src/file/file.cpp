@@ -19,6 +19,12 @@ File::File(std::filesystem::path&& filepath)
     m_FilenameNoExtension = m_Filepath.stem();
 }
 
+File::~File()
+{
+    if (m_Loaded)
+        Unload();
+}
+
 bool File::Load()
 {
     std::ifstream file(m_Filepath, std::ios::in | std::ios::ate | std::ios::binary);

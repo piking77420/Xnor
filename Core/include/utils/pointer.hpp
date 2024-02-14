@@ -25,7 +25,7 @@ BEGIN_XNOR_CORE
 /// <c>Pointer::ToStrongReference()</c>, or by creating a copy with <c>Pointer::Pointer(const Pointer&, bool)</c>
 /// and giving a <c>true</c> value to the second argument.
 ///
-/// @param T The type to point to.
+/// @tparam T The type to point to. Most of the time, this shouldn't be a pointer type.
 /// 
 /// @see <a href="https://en.cppreference.com/book/intro/smart_pointers">Smart Pointers</a>
 /// @see <a href="https://en.cppreference.com/w/cpp/memory/shared_ptr">std::shared_ptr</a>
@@ -113,6 +113,12 @@ Pointer<T>::Pointer(Pointer&& other) noexcept
     : m_ReferenceCounter(std::move(other.m_ReferenceCounter))
     , m_IsStrongReference(std::move(other.m_IsStrongReference))
 {
+    if (!m_IsStrongReference)
+    {
+        m_ReferenceCounter->DecWeak(&other);
+        m_ReferenceCounter->IncWeak(this);
+    }
+    
     other.Reset();
 }
 
@@ -134,6 +140,12 @@ Pointer<T>::Pointer(Pointer<Ty>&& other) noexcept
     : m_ReferenceCounter(reinterpret_cast<ReferenceCounter<T>*>(const_cast<ReferenceCounter<Ty>*>(std::move(other.GetReferenceCounter()))))
     , m_IsStrongReference(std::move(other.GetIsStrongReference()))
 {
+    if (!m_IsStrongReference)
+    {
+        m_ReferenceCounter->DecWeak(reinterpret_cast<Pointer*>(&other));
+        m_ReferenceCounter->IncWeak(this);
+    }
+    
     other.Reset();
 }
 
@@ -175,6 +187,8 @@ Pointer<T>& Pointer<T>::operator=(const Pointer& other)
     
     m_ReferenceCounter = other.m_ReferenceCounter;
     m_ReferenceCounter->IncWeak(this);
+
+    m_ReferenceCounter->DecWeak(&other);
     
     return *this;
 }
@@ -187,6 +201,12 @@ Pointer<T>& Pointer<T>::operator=(Pointer&& other) noexcept
     
     m_ReferenceCounter = std::move(other.m_ReferenceCounter);
     m_IsStrongReference = std::move(other.m_IsStrongReference);
+
+    if (!m_IsStrongReference)
+    {
+        m_ReferenceCounter->DecWeak(&other);
+        m_ReferenceCounter->IncWeak(this);
+    }
 
     other.Reset();
     
@@ -203,6 +223,8 @@ Pointer<T>& Pointer<T>::operator=(const Pointer<Ty>& other)
     m_ReferenceCounter = reinterpret_cast<ReferenceCounter<T>>(other.GetReferenceCounter());
     m_ReferenceCounter->IncWeak(this);
     
+    m_ReferenceCounter->DecWeak(&other);
+    
     return *this;
 }
 
@@ -215,6 +237,12 @@ Pointer<T>& Pointer<T>::operator=(Pointer<Ty>&& other) noexcept
     
     m_ReferenceCounter = reinterpret_cast<ReferenceCounter<T>>(std::move(other.GetReferenceCounter()));
     m_IsStrongReference = std::move(other.GetIsStrongReference());
+
+    if (!m_IsStrongReference)
+    {
+        m_ReferenceCounter->DecWeak(&other);
+        m_ReferenceCounter->IncWeak(this);
+    }
 
     other.Reset();
     
