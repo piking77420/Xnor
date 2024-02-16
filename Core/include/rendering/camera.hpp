@@ -19,7 +19,7 @@ public:
 	float far = 1000.f;
 	Vector3 up = Vector3::UnitY();
 	float fov = 90.f;
-	Vector2i screenSize = 1000;
+	Vector2i screenSize = {800,600};
 
 	void GetProjection(Matrix* matrix) const;
 

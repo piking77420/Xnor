@@ -24,7 +24,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 	Pointer<Texture> gradient = ResourceManager::CreateAndLoad<Texture>(FileManager::Get("assets/textures/gradient.png"));
 	
-	Vector4 colorCheck = 0.5f;
 	Scene::CreateBasicScene();
 	Scene& scene = *Scene::scene;
 	RendererContext context;
@@ -34,10 +33,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		window.PollEvents();
 		editor.BeginFrame();
 		
-		renderer.SetClearColor(colorCheck);
-		renderer.ClearColorAndDepth();
-
-		ImGui::ColorPicker4("colorPickerTest", colorCheck.Raw(), ImGuiColorEditFlags_PickerHueWheel);
+		ImGui::ColorPicker4("colorPickerTest", renderer.clearColor.Raw(), ImGuiColorEditFlags_PickerHueWheel);
 
 		renderer.RenderScene(*Scene::scene, context);
 
