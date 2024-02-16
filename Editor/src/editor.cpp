@@ -34,7 +34,7 @@ XnorEditor::Editor::Editor(const XnorCore::Window& window)
 	const char* const glslVersion = "#version 460";
 
 	ImGui::StyleColorsDark();
-	ImGui_ImplGlfw_InitForOpenGL(const_cast<GLFWwindow*>(window.GetWindow()), true);
+	ImGui_ImplGlfw_InitForOpenGL(const_cast<GLFWwindow*>(static_cast<const GLFWwindow*>(window.GetWindow())), true);
 	ImGui_ImplOpenGL3_Init(glslVersion);
 }
 

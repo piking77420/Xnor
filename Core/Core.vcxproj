@@ -58,6 +58,7 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);include;externals\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -205,6 +206,7 @@
     <ClCompile Include="src\utils\memory_leak_detector.cpp" />
     <ClCompile Include="src\utils\pointer.cpp" />
     <ClCompile Include="src\utils\reference_counter.cpp" />
+    <ClCompile Include="src\utils\reflectable.cpp" />
     <ClCompile Include="src\window.cpp" />
     <ClCompile Include="src\rendering\vertex.cpp" />
     <ClCompile Include="src\utils\guid.cpp" />
@@ -252,6 +254,7 @@
     <ClInclude Include="include\utils\memory_leak_detector.hpp" />
     <ClInclude Include="include\utils\pointer.hpp" />
     <ClInclude Include="include\utils\reference_counter.hpp" />
+    <ClInclude Include="include\utils\reflectable.hpp" />
     <ClInclude Include="include\utils\tsqueue.hpp" />
     <ClInclude Include="include\window.hpp" />
     <ClInclude Include="include\rendering\vertex.hpp" />

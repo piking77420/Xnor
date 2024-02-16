@@ -1,6 +1,8 @@
 #include "window.hpp"
 
-XnorCore::Window::Window()
+using namespace XnorCore;
+
+Window::Window()
 {
 	glfwInit();
 
@@ -16,49 +18,49 @@ XnorCore::Window::Window()
 	glfwSwapInterval(1); // Enable vsync
 }
 
-XnorCore::Window::~Window()
+Window::~Window()
 {
 	glfwDestroyWindow(m_Window);
 
 	glfwTerminate();
 }
 
-Vector2i XnorCore::Window::GetSize() const
+Vector2i Window::GetSize() const
 {
 	return m_Size;
 }
 
-GLFWwindow* XnorCore::Window::GetWindow()
+void* Window::GetWindow()
 {
 	return m_Window;
 }
 
-const GLFWwindow* XnorCore::Window::GetWindow() const
+const void* Window::GetWindow() const
 {
 	return m_Window;
 }
 
-bool XnorCore::Window::ShouldClose() const
+bool Window::ShouldClose() const
 {
 	return glfwWindowShouldClose(m_Window);
 }
 
-void XnorCore::Window::PollEvents()
+void Window::PollEvents() const
 {
 	glfwPollEvents();
 }
 
-void XnorCore::Window::SwapBuffers() const
+void Window::SwapBuffers() const
 {
 	glfwSwapBuffers(m_Window);
 }
 
-void XnorCore::Window::SetCurrentContext()
+void Window::SetCurrentContext()
 {
 	glfwMakeContextCurrent(m_Window);
 }
 
-void XnorCore::Window::SetCurrentContext() const
+void Window::SetCurrentContext() const
 {
 	glfwMakeContextCurrent(m_Window);
 }

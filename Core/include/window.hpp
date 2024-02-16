@@ -6,7 +6,7 @@
 #include "Maths/vector2i.hpp"
 
 BEGIN_XNOR_CORE
-	
+
 class XNOR_ENGINE Window
 {
 public:
@@ -18,15 +18,15 @@ public:
 	Vector2i GetSize() const;
 
 	[[nodiscard]]
-	GLFWwindow* GetWindow();
+	void* GetWindow();
 
 	[[nodiscard]]
-	const GLFWwindow* GetWindow() const;
+	const void* GetWindow() const;
 
 	[[nodiscard]]
 	bool ShouldClose() const;
 
-	void PollEvents();
+	void PollEvents() const;
 
 	void SwapBuffers() const;
 
