@@ -19,7 +19,7 @@ public:
 
     void ClearColorAndDepth();
 
-    void RenderScene(const Scene& scene, RendererContext& rendererContext) const;
+    void RenderScene(const Scene& scene, const RendererContext& rendererContext) const;
 
 };
 

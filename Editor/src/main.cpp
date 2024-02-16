@@ -16,8 +16,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	
 	Logger::OpenDefaultFile();
 	
-	//MemoryLeakDetector detector;
-
 	Pointer<File> gradientFile = FileManager::Load("assets/textures/gradient.png");
 
 	Window window;
@@ -28,7 +26,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	
 	Vector4 colorCheck = 0.5f;
 	Scene::CreateBasicScene();
-	//Scene& scene = *Scene::scene;
+	Scene& scene = *Scene::scene;
 	RendererContext context;
 
 	while (!window.ShouldClose())
@@ -48,6 +46,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	}
 
 	ResourceManager::DeleteAll();
+	
+	delete Scene::scene;
 
 	FileManager::DeleteAll();
 

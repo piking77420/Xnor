@@ -12,7 +12,7 @@ public:
 
 	XNOR_ENGINE void Load(File& file) override;
 
-	XNOR_ENGINE void Load(const File& vertexShader, File& fragmentShader);
+	XNOR_ENGINE void Load(const File& vertexShader, const File& fragmentShader);
 
 	XNOR_ENGINE void Recompile(const File& vertexShader, File& fragmentShader);
 

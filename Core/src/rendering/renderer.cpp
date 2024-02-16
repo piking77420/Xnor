@@ -22,14 +22,12 @@ void Renderer::ClearColorAndDepth()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Renderer::RenderScene(const Scene& scene, RendererContext& rendererContext) const
+void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererContext) const
 {
 	if (!rendererContext.IsValid())
 		return;//throw std::runtime_error("renderer Context is not valid");
-
 	
 	std::vector<const MeshRenderer*> meshrenderer;
 	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderer);
-
 }
 

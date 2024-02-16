@@ -7,36 +7,34 @@
 
 using namespace XnorCore;
 
-void Shader::Load(const uint8_t* buffer, int64_t length) 
+void Shader::Load([[maybe_unused]] const uint8_t* buffer, [[maybe_unused]] const int64_t length) 
 {
-    throw std::runtime_error("Not implemented");
 }
 
-void Shader::Load(File& file)
+void Shader::Load([[maybe_unused]] File& file)
 {
-    throw std::runtime_error("Not implemented");
 }
 
-void Shader::Load(const File& vertexShader, File& fragmentShader)
+void Shader::Load(const File& vertexShader, const File& fragmentShader)
 {
     std::string vertexCode;
     GetShaderCode(vertexShader.GetFilepath().generic_string().c_str(), &vertexCode);
 
     std::string fragmentCode;
-    GetShaderCode(vertexShader.GetFilepath().generic_string().c_str(), &fragmentCode);
+    GetShaderCode(fragmentShader.GetFilepath().generic_string().c_str(), &fragmentCode);
 
     const char* vShaderCode = vertexCode.c_str();
     const char* fShaderCode = fragmentCode.c_str();
 
     // Move to rhi
     const uint32_t vertex = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex, 1, &vShaderCode, NULL);
+    glShaderSource(vertex, 1, &vShaderCode, nullptr);
     glCompileShader(vertex);
     ShaderCompilationError(vertex, "VERTEX");
 
     // Move to rhi
     const uint32_t fragment = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment, 1, &fShaderCode, NULL);
+    glShaderSource(fragment, 1, &fShaderCode, nullptr);
     glCompileShader(fragment);
     ShaderCompilationError(fragment, "FRAGMENT");
 

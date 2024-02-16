@@ -4,27 +4,27 @@
 
 void XnorCore::Scene::Begin()
 {
-    for (Entity& ent : m_Entities)
+    for (Entity* ent : m_Entities)
     {
-        ent.Begin();
+        ent->Begin();
     }
 }
 
 void XnorCore::Scene::Update()
 {
-    for (Entity& ent : m_Entities)
+    for (Entity* ent : m_Entities)
     {
-        ent.Update();
+        ent->Update();
     }
 }
 
 XnorCore::Entity* XnorCore::Scene::GetEntityById(const Guid& xnorGuid)
 {
-    for (Entity& ent : m_Entities)
+    for (Entity* ent : m_Entities)
     {
-        if (ent.GetId() == xnorGuid)
+        if (ent->GetId() == xnorGuid)
         {
-            return &ent;
+            return ent;
         }
     }
 
@@ -35,7 +35,13 @@ XnorCore::Entity* XnorCore::Scene::GetEntityById(const Guid& xnorGuid)
 
 void XnorCore::Scene::CreateBasicScene()
 {
-    scene = new Scene();
-    scene->m_Entities.emplace_back();
-  
+    scene = new Scene;
+}
+
+XnorCore::Scene::~Scene()
+{
+    for (Entity* ent : m_Entities)
+    {
+        delete ent;
+    }
 }

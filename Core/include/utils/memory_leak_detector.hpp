@@ -22,7 +22,7 @@ public:
     MemoryLeakDetector& operator=(MemoryLeakDetector&& other) = delete;
 
 private:
-    static void ReportFailure(const size_t unfreedBytes);
+    static void ReportFailure(size_t unfreedBytes);
 
     _CrtMemState m_MemState;
 };
