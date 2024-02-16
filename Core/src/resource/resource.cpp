@@ -7,6 +7,18 @@ Resource::Resource(std::string name)
 {
 }
 
+void Resource::Load(File& file)
+{
+    const bool wasLoaded = file.IsLoaded();
+    if (!wasLoaded)
+        file.Load();
+    
+    Load(file.GetData<uint8_t>(), file.GetSize());
+
+    if (!wasLoaded)
+        file.Unload();
+}
+
 bool Resource::IsLoaded() const
 {
     return m_Loaded;

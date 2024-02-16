@@ -90,8 +90,8 @@ public:
 	constexpr Vector3(float xyz) noexcept;
 	
 	/// <summary>
-	/// Constructs a Vector2 with its components set to the data pointed by <code>data</code>.
-	/// This constructor assumes that <code>data</code> is a valid pointer pointing to at least 2 float values.
+	/// Constructs a Vector3 with its components set to the data pointed by <code>data</code>.
+	/// This constructor assumes that <code>data</code> is a valid pointer pointing to at least 3 float values.
 	/// </summary>
 	/// <param name="data">The data where the values for this vector's components are located.</param>
 	constexpr explicit Vector3(const float* data) noexcept;

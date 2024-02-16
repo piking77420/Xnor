@@ -13,7 +13,7 @@ BEGIN_XNOR_CORE
 template<class T>
 concept ResourceT = std::is_base_of_v<Resource, T>;
 
-class ResourceManager
+class ResourceManager final
 {
 public:
     // You cannot instantiate this class
@@ -26,7 +26,7 @@ public:
     /// @brief Creates the resource corresponding to the given @p file
     template<ResourceT T>
     [[nodiscard]]
-    static Pointer<T> CreateAndLoad(Pointer<File>&& file);
+    static Pointer<T> CreateAndLoad(const Pointer<File>& file);
 
     [[nodiscard]]
     XNOR_ENGINE static bool Contains(const std::string& name);
@@ -65,7 +65,7 @@ Pointer<T> ResourceManager::Create(std::string name)
 }
 
 template<ResourceT T>
-Pointer<T> ResourceManager::CreateAndLoad(Pointer<File>&& file)
+Pointer<T> ResourceManager::CreateAndLoad(const Pointer<File>& file)
 {
     Pointer<T> resource(file->GetFilepath().string());
 
@@ -74,7 +74,7 @@ Pointer<T> ResourceManager::CreateAndLoad(Pointer<File>&& file)
     // Make sure to return a weak reference
     resource.ToWeakReference();
 
-    resource->Load(*file);
+    resource->Load(*const_cast<Pointer<File>&>(file));
 
     return resource;
 }

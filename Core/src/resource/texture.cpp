@@ -6,11 +6,6 @@
 
 using namespace XnorCore;
 
-Texture::Texture(const std::string& name)
-    : Resource(name)
-{
-}
-
 void Texture::Load(const uint8_t* buffer, const int64_t length)
 {
     m_Data = stbi_load_from_memory(buffer, static_cast<int32_t>(length), &m_Size.x, &m_Size.y, &m_Channels, desiredChannels);
@@ -27,18 +22,6 @@ void Texture::Load(const uint8_t* buffer, const int64_t length)
     glGenerateTextureMipmap(m_Id);
 
     m_Loaded = true;
-}
-
-void Texture::Load(File& file)
-{
-    const bool wasLoaded = file.IsLoaded();
-    if (!wasLoaded)
-        file.Load();
-    
-    Load(file.GetData<uint8_t>(), file.GetSize());
-
-    if (!wasLoaded)
-        file.Unload();
 }
 
 void Texture::Unload()

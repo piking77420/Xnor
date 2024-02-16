@@ -26,7 +26,7 @@ public:
     XNOR_ENGINE virtual void Load(const uint8_t* buffer, int64_t length) = 0;
 
     /// @brief Load resource from file.
-    XNOR_ENGINE virtual void Load(File& file) = 0;
+    XNOR_ENGINE void Load(File& file);
 
     XNOR_ENGINE virtual void Unload() = 0;
     

@@ -11,7 +11,7 @@
 
 BEGIN_XNOR_CORE
 
-class Logger
+class Logger final
 {
 public:
     enum class LogLevel : unsigned char

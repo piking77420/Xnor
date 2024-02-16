@@ -10,8 +10,6 @@ class Shader : public Resource
 public:
 	XNOR_ENGINE void Load(const uint8_t* buffer, int64_t length) override;
 
-	XNOR_ENGINE void Load(File& file) override;
-
 	XNOR_ENGINE void Load(const File& vertexShader, const File& fragmentShader);
 
 	XNOR_ENGINE void Recompile(const File& vertexShader, File& fragmentShader);

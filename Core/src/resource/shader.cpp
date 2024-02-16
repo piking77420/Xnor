@@ -11,10 +11,6 @@ void Shader::Load([[maybe_unused]] const uint8_t* buffer, [[maybe_unused]] const
 {
 }
 
-void Shader::Load([[maybe_unused]] File& file)
-{
-}
-
 void Shader::Load(const File& vertexShader, const File& fragmentShader)
 {
     std::string vertexCode;
