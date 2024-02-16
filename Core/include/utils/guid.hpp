@@ -7,7 +7,7 @@
 
 BEGIN_XNOR_CORE
 
-class XNOR_ENGINE Guid
+class XNOR_ENGINE Guid final
 {
 public:
     Guid();

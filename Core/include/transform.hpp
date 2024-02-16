@@ -7,7 +7,7 @@
 
 BEGIN_XNOR_CORE
 
-class Transform
+class Transform final
 {
 public:
 	Vector3 position = 0.f;

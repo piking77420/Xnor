@@ -21,5 +21,5 @@ MemoryLeakDetector::~MemoryLeakDetector()
 
 void MemoryLeakDetector::ReportFailure(const size_t unfreedBytes)
 {
-    Logger::LogError("Memory leak of %llu (0x%llX) byte(s) detected", unfreedBytes, unfreedBytes);
+    std::cerr << "Memory leak of " << unfreedBytes << " (0x" << std::hex << unfreedBytes << std::dec << ") (signed: " << static_cast<int64_t>(unfreedBytes) << ") byte(s) detected" << std::endl;
 }

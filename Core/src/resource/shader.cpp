@@ -3,55 +3,49 @@
 #include <fstream>
 #include <glad/glad.h>
 
+#include "rendering/rhi.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
 
-void Shader::Load(const uint8_t* buffer, int64_t length) 
+void Shader::Load([[maybe_unused]] const uint8_t* buffer, [[maybe_unused]] const int64_t length) 
 {
-    throw std::runtime_error("Not implemented");
 }
 
-void Shader::Load(File& file)
-{
-    throw std::runtime_error("Not implemented");
-}
-
-void Shader::Load(const File& vertexShader, File& fragmentShader)
+void Shader::Load(const File& vertexShader, const File& fragmentShader)
 {
     std::string vertexCode;
     GetShaderCode(vertexShader.GetFilepath().generic_string().c_str(), &vertexCode);
 
     std::string fragmentCode;
-    GetShaderCode(vertexShader.GetFilepath().generic_string().c_str(), &fragmentCode);
+    GetShaderCode(fragmentShader.GetFilepath().generic_string().c_str(), &fragmentCode);
 
     const char* vShaderCode = vertexCode.c_str();
     const char* fShaderCode = fragmentCode.c_str();
 
     // Move to rhi
     const uint32_t vertex = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex, 1, &vShaderCode, NULL);
+    glShaderSource(vertex, 1, &vShaderCode, nullptr);
     glCompileShader(vertex);
-    ShaderCompilationError(vertex, "VERTEX");
+    RHI::CheckCompilationError(vertex, "VERTEX");
 
     // Move to rhi
     const uint32_t fragment = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment, 1, &fShaderCode, NULL);
+    glShaderSource(fragment, 1, &fShaderCode, nullptr);
     glCompileShader(fragment);
-    ShaderCompilationError(fragment, "FRAGMENT");
+    RHI::CheckCompilationError(fragment, "FRAGMENT");
 
     // Move to rhi
     m_Id = glCreateProgram();
     glAttachShader(m_Id, vertex);
     glAttachShader(m_Id, fragment);
     glLinkProgram(m_Id);
-    Shader::ShaderCompilationError(m_Id, "PROGRAM");
+    RHI::CheckCompilationError(m_Id, "PROGRAM");
 }
 
-XNOR_ENGINE void Shader::Recompile(const File& vertexShader, File& fragmentShader)
+XNOR_ENGINE void Shader::Recompile(const File& vertexShader, const File& fragmentShader)
 {
-    // Move to rhi
-    glDeleteShader(m_Id);
+    RHI::DestroyShader(m_Id);
 
     Load(vertexShader, fragmentShader);
 }
@@ -61,17 +55,11 @@ void Shader::Unload()
     return void();
 }
 
-void Shader::Bind()
+uint32_t Shader::GetId() const
 {
-    // Move to rhi
-    glUseProgram(m_Id);
+    return  m_Id;
 }
 
-void Shader::UnBind()
-{
-    // Move to rhi
-    glUseProgram(0);
-}
 
 void Shader::GetShaderCode(const char* shaderPath, std::string* shaderCode)
 {
@@ -91,34 +79,12 @@ void Shader::GetShaderCode(const char* shaderPath, std::string* shaderCode)
     }
     catch (std::ifstream::failure& e)
     {
-        const std::string ewhat = e.what();
+        const std::string what = e.what();
         std::string message = "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ:";
-        message += ewhat;
+        message += what;
         message += '\n';
-       Logger::LogError("%s", message.c_str());
+        Logger::LogError("%s", message.c_str());
     }
 }
 
-void Shader::ShaderCompilationError(const uint32_t shaderId, const std::string& type)
-{
-    int success;
-    char infoLog[1024];
-    if (type != "PROGRAM")
-    {
-        glGetShaderiv(shaderId, GL_COMPILE_STATUS, &success);
-        if (!success)
-        {
-            glGetShaderInfoLog(shaderId, 1024, nullptr, infoLog);
-            Logger::LogError("Error while compiling shader of type %s: %s", type.c_str(), infoLog);
-        }
-    }
-    else
-    {
-        glGetProgramiv(shaderId, GL_LINK_STATUS, &success);
-        if (!success)
-        {
-            glGetProgramInfoLog(shaderId, 1024, nullptr, infoLog);
-            Logger::LogError("Error while linking shader program of type %s: %s", type.c_str(), infoLog);
-        }
-    }
-}
+

@@ -9,7 +9,7 @@
 
 BEGIN_XNOR_CORE
 
-class FileManager
+class FileManager final
 {
 public:
     // You cannot instantiate this class

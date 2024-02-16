@@ -55,6 +55,11 @@ public:
     /// </summary>
     /// <returns>Item</returns>
     T Pop();
+    
+    /// <summary>
+    /// Clears the queue
+    /// </summary>
+    void Clear();
 
 private:
     // Mutex guarding the queue
@@ -105,6 +110,14 @@ T TsQueue<T>::Pop()
     T item = std::move(mQueue.front());
     mQueue.pop();
     return item;
+}
+
+template<typename T>
+void TsQueue<T>::Clear()
+{
+    std::scoped_lock lock(mQueueMutex);
+    while (!mQueue.empty())
+        mQueue.pop();
 }
 
 END_XNOR_CORE

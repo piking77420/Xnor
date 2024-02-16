@@ -11,7 +11,7 @@
 
 BEGIN_XNOR_CORE
 
-class Logger
+class Logger final
 {
 public:
     enum class LogLevel : unsigned char
@@ -80,13 +80,13 @@ private:
         XNOR_ENGINE LogEntry(std::string&& message, LogLevel level, std::chrono::system_clock::duration duration);
     };
 
-    XNOR_ENGINE static inline TsQueue<LogEntry> lines;
+    XNOR_ENGINE static inline TsQueue<LogEntry> m_Lines;
 
-    XNOR_ENGINE static inline std::condition_variable condVar;
+    XNOR_ENGINE static inline std::condition_variable m_CondVar;
 
     XNOR_ENGINE static void Run();
 
-    XNOR_ENGINE static inline std::thread thread = std::thread(&Logger::Run);
+    XNOR_ENGINE static inline std::thread m_Thread = std::thread(&Logger::Run);
 
     static void PrintLog(const LogEntry& entry);
 
@@ -102,8 +102,8 @@ void Logger::Log(const LogLevel level, const std::string& format, Args&&... args
     if (level < minimumConsoleLevel && level < minimumFileLevel)
         return;
 
-    lines.Push(LogEntry(Logger::Format(format, std::forward<Args>(args)...), level));
-    condVar.notify_one();
+    m_Lines.Push(LogEntry(Logger::Format(format, std::forward<Args>(args)...), level));
+    m_CondVar.notify_one();
 }
 
 template<class... Args>

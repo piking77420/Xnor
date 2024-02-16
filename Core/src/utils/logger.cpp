@@ -100,13 +100,13 @@ void Logger::CloseFile()
 
 void Logger::Synchronize()
 {
-    if (lines.Empty())
+    if (m_Lines.Empty())
         return;
     
     synchronizing = true;
-    condVar.notify_one();
+    m_CondVar.notify_one();
     std::unique_lock lock(mutex);
-    condVar.wait(lock, [] { return !synchronizing; });
+    m_CondVar.wait(lock, [] { return !synchronizing; });
 }
 
 void Logger::Stop()
@@ -114,10 +114,14 @@ void Logger::Stop()
     Synchronize();
     
     running = false;
-    condVar.notify_one();
-    
-    if (thread.joinable())
-        thread.join();
+    m_CondVar.notify_one();
+
+    m_Lines.Clear();
+
+    if (m_Thread.joinable())
+        m_Thread.join();
+
+    CloseFile();
 }
 
 Logger::LogEntry::LogEntry(std::string&& message, const LogLevel level)
@@ -159,14 +163,14 @@ Logger::LogEntry::LogEntry(
 void Logger::Run()
 {
     // Set thread name for easier debugging
-    (void) SetThreadDescription(thread.native_handle(), L"Logger Thread");
+    (void) SetThreadDescription(m_Thread.native_handle(), L"Logger Thread");
     std::unique_lock lock(mutex);
-    while (running || !lines.Empty())
+    while (running || !m_Lines.Empty())
     {
-        condVar.wait(lock, [] { return !lines.Empty() || !running || synchronizing; });
+        m_CondVar.wait(lock, [] { return !m_Lines.Empty() || !running || synchronizing; });
 
-        while (!lines.Empty())
-            PrintLog(lines.Pop());
+        while (!m_Lines.Empty())
+            PrintLog(m_Lines.Pop());
 
         // As we don't use std::endl for newlines, make sure to flush the streams before going to sleep
         std::cout.flush();
@@ -176,7 +180,7 @@ void Logger::Run()
         if (synchronizing)
         {
             synchronizing = false;
-            condVar.notify_one();
+            m_CondVar.notify_one();
         }
     }
     CloseFile();

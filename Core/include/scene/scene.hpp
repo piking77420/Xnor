@@ -17,7 +17,7 @@ public:
     // If XNOR_ENGINE so you can export it to the editor
     XNOR_ENGINE static inline Scene* scene = nullptr;
 
-    XNOR_ENGINE ~Scene() = default;
+    XNOR_ENGINE ~Scene();
 
     template<class ComponentT>
     void GetAllComponentOfType(std::vector<const ComponentT*>*) const ;
@@ -32,16 +32,16 @@ public:
     XNOR_ENGINE Entity* GetEntityById(const Guid& xnorGuid);
     
 private:
-    std::vector<Entity> m_Entities;
+    std::vector<Entity*> m_Entities;
 };
 
 
 template<class ComponentT>
 void Scene::GetAllComponentOfType(std::vector<const ComponentT*>* componentData) const
 {
-    for (const Entity& ent : m_Entities)
+    for (const Entity* ent : m_Entities)
     {
-        const ComponentT* component = ent.GetComponent<ComponentT>();
+        const ComponentT* component = ent->GetComponent<ComponentT>();
 
         if (dynamic_cast<const Component*>(component) == nullptr)
             continue;

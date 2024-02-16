@@ -11,14 +11,12 @@ class Texture : public Resource
 {
 public:
     int32_t desiredChannels = 4;
+    
+    using Resource::Resource;
 
-    XNOR_ENGINE Texture() = default;
-
-    XNOR_ENGINE explicit Texture(const std::string& name);
+    using Resource::Load;
 
     XNOR_ENGINE void Load(const uint8_t* buffer, int64_t length) override;
-
-    XNOR_ENGINE void Load(File& file) override;
 
     XNOR_ENGINE void Unload() override;
 
@@ -37,7 +35,6 @@ private:
     uint8_t* m_Data = nullptr;
     Vector2i m_Size;
     int32_t m_Channels = 0;
-    
     uint32_t m_Id = 0;
 };
 
