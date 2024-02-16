@@ -16,9 +16,8 @@ public:
 
 	XNOR_ENGINE void Unload() override;
 
-	virtual void Bind();
-
-	virtual void UnBind();
+	uint32_t GetId() const;
+	
 
 private:
 	static void GetShaderCode(const char* shaderPath, std::string* shaderCode);

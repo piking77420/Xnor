@@ -55,17 +55,11 @@ void Shader::Unload()
     return void();
 }
 
-void Shader::Bind()
+uint32_t Shader::GetId() const
 {
-    // Move to rhi
-    glUseProgram(m_Id);
+    return  m_Id;
 }
 
-void Shader::UnBind()
-{
-    // Move to rhi
-    glUseProgram(0);
-}
 
 void Shader::GetShaderCode(const char* shaderPath, std::string* shaderCode)
 {

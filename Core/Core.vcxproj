@@ -111,6 +111,8 @@
     <ClCompile Include="externals\src\ImGui\imgui_tables.cpp" />
     <ClCompile Include="externals\src\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="externals\src\ttf\ttfParser.cpp" />
+    <ClCompile Include="src\rendering\material.cpp" />
+    <ClCompile Include="src\rendering\rhi.cpp" />
     <ClCompile Include="src\resource\shader.cpp" />
     <ClCompile Include="src\file\file.cpp" />
     <ClCompile Include="src\file\file_manager.cpp" />
@@ -330,6 +332,7 @@
     <ClInclude Include="include\file\file_manager.hpp" />
     <ClInclude Include="include\rendering\camera.hpp" />
     <ClInclude Include="include\rendering\frame_buffer.hpp" />
+    <ClInclude Include="include\rendering\material.hpp" />
     <ClInclude Include="include\rendering\renderer.hpp" />
     <ClInclude Include="include\rendering\renderer_context.hpp" />
     <ClInclude Include="include\resource\model.hpp" />
@@ -349,6 +352,7 @@
     <ClInclude Include="include\transform.hpp" />
     <ClInclude Include="include\utils\guid.hpp" />
     <ClInclude Include="include\resource\shader.hpp" />
+    <ClInclude Include="include\rendering\rhi.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="externals\libs\dll\" />
