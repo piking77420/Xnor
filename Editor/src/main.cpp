@@ -7,7 +7,6 @@
 #include "file/file_manager.hpp"
 #include "resource/resource_manager.hpp"
 #include "resource/texture.hpp"
-#include "scene/component.hpp"
 #include "utils/memory_leak_detector.hpp"
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
@@ -26,8 +25,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	Renderer renderer;
 
 	Pointer<Texture> gradient = ResourceManager::CreateAndLoad<Texture>(FileManager::Get("assets/textures/gradient.png"));
-
-
 	
 	Vector4 colorCheck = 0.5f;
 	Scene::CreateBasicScene();

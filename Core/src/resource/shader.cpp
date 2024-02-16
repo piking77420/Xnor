@@ -17,26 +17,25 @@ void Shader::Load(File& file)
     throw std::runtime_error("Not implemented");
 }
 
-void Shader::Load(File& file, File& file1)
+void Shader::Load(const File& vertexShader, File& fragmentShader)
 {
     std::string vertexCode;
-    Shader::GetShaderCode(file.GetFilepath().generic_string().c_str(), &vertexCode);
+    GetShaderCode(vertexShader.GetFilepath().generic_string().c_str(), &vertexCode);
 
     std::string fragmentCode;
-    Shader::GetShaderCode(file.GetFilepath().generic_string().c_str(), &fragmentCode);
+    GetShaderCode(vertexShader.GetFilepath().generic_string().c_str(), &fragmentCode);
 
-    std::uint32_t vertex, fragment;
     const char* vShaderCode = vertexCode.c_str();
     const char* fShaderCode = fragmentCode.c_str();
 
     // Move to rhi
-    vertex = glCreateShader(GL_VERTEX_SHADER);
+    const uint32_t vertex = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex, 1, &vShaderCode, NULL);
     glCompileShader(vertex);
     ShaderCompilationError(vertex, "VERTEX");
 
     // Move to rhi
-    fragment = glCreateShader(GL_FRAGMENT_SHADER);
+    const uint32_t fragment = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragment, 1, &fShaderCode, NULL);
     glCompileShader(fragment);
     ShaderCompilationError(fragment, "FRAGMENT");
@@ -47,19 +46,14 @@ void Shader::Load(File& file, File& file1)
     glAttachShader(m_Id, fragment);
     glLinkProgram(m_Id);
     Shader::ShaderCompilationError(m_Id, "PROGRAM");
-
-
-    return;
 }
 
-XNOR_ENGINE void Shader::Recompile(File& vertexShader, File& fragmentShader)
+XNOR_ENGINE void Shader::Recompile(const File& vertexShader, File& fragmentShader)
 {
     // Move to rhi
     glDeleteShader(m_Id);
 
     Load(vertexShader, fragmentShader);
-
-    return;
 }
 
 void Shader::Unload()
@@ -97,34 +91,34 @@ void Shader::GetShaderCode(const char* shaderPath, std::string* shaderCode)
     }
     catch (std::ifstream::failure& e)
     {
-        std::string Ewhat = e.what();
+        const std::string ewhat = e.what();
         std::string message = "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ:";
-        message += Ewhat;
+        message += ewhat;
         message += '\n';
-       Logger::LogError(message.c_str());
+       Logger::LogError("%s", message.c_str());
     }
 }
 
-void Shader::ShaderCompilationError(uint32_t shaderID, std::string type)
+void Shader::ShaderCompilationError(const uint32_t shaderId, const std::string& type)
 {
     int success;
     char infoLog[1024];
     if (type != "PROGRAM")
     {
-        glGetShaderiv(shaderID, GL_COMPILE_STATUS, &success);
+        glGetShaderiv(shaderId, GL_COMPILE_STATUS, &success);
         if (!success)
         {
-            glGetShaderInfoLog(shaderID, 1024, NULL, infoLog);
-            std::string  d = "ERROR::PROGRAM_LINKING_ERROR of type: " + type + "\n" + infoLog + "\n -- --------------------------------------------------- -- " + '\n';
+            glGetShaderInfoLog(shaderId, 1024, nullptr, infoLog);
+            Logger::LogError("Error while compiling shader of type %s: %s", type.c_str(), infoLog);
         }
     }
     else
     {
-        glGetProgramiv(shaderID, GL_LINK_STATUS, &success);
+        glGetProgramiv(shaderId, GL_LINK_STATUS, &success);
         if (!success)
         {
-            glGetProgramInfoLog(shaderID, 1024, NULL, infoLog);
-            std::string  d = "ERROR::PROGRAM_LINKING_ERROR of type: " + type + "\n" + infoLog + "\n -- --------------------------------------------------- -- " + '\n';
+            glGetProgramInfoLog(shaderId, 1024, nullptr, infoLog);
+            Logger::LogError("Error while linking shader program of type %s: %s", type.c_str(), infoLog);
         }
     }
 }
