@@ -25,6 +25,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 	Pointer<Model> model = ResourceManager::CreateAndLoad<Model>(modelFile);
 	
+	
 	Scene::CreateBasicScene();
 	//Scene& scene = *Scene::scene;
 	RendererContext context;

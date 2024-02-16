@@ -20,6 +20,7 @@ public:
 private:
     std::vector<Vertex> m_Vertices;
     std::vector<uint32_t> m_Indices;
+    uint32_t m_ModelId = 0;
 };
 
 END_XNOR_CORE

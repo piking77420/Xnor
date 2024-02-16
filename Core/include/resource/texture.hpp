@@ -35,7 +35,6 @@ private:
     uint8_t* m_Data = nullptr;
     Vector2i m_Size;
     int32_t m_Channels = 0;
-    
     uint32_t m_Id = 0;
 };
 

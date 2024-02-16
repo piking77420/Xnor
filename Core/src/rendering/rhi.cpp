@@ -1,6 +1,7 @@
 #include "rendering/rhi.hpp"
 #include <glad/glad.h>
 #include "resource/shader.hpp"
+#include "utils/logger.hpp"
 
 using namespace XnorCore;
 
@@ -12,15 +13,15 @@ void RHI::SetPolyGoneMode(PolyGoneFace face, PolyGoneMode mode)
 uint32_t RHI::CreateModel(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indicies)
 {
 	ModelInternal modelInternal;
-	modelInternal.nbrOfVertex = vertices.size();
-	modelInternal.nbrOfIndicies = indicies.size(); 
+	modelInternal.nbrOfVertex = static_cast<uint32_t>(vertices.size());
+	modelInternal.nbrOfIndicies = static_cast<uint32_t>(indicies.size()); 
 	
 	glCreateVertexArrays(1,&modelInternal.vao);
 
 	glCreateBuffers(1,&modelInternal.vbo);
 	glCreateBuffers(1,&modelInternal.ebo);
 
-	glNamedBufferData(modelInternal.vbo,sizeof(Vertex) * vertices.size(),vertices.data(),GL_STATIC_DRAW);
+	glNamedBufferData(modelInternal.vbo, sizeof(Vertex) * vertices.size(),vertices.data(),GL_STATIC_DRAW);
 	glNamedBufferData(modelInternal.ebo,sizeof(uint32_t) * indicies.size() ,indicies.data(),GL_STATIC_DRAW);
 
 	glEnableVertexArrayAttrib(modelInternal.vao,0);
@@ -38,7 +39,7 @@ uint32_t RHI::CreateModel(const std::vector<Vertex>& vertices, const std::vector
 	glVertexArrayVertexBuffer(modelInternal.vao,0,modelInternal.vbo,0,sizeof(Vertex));
 	glVertexArrayElementBuffer(modelInternal.vao,modelInternal.ebo);
 	
-	uint32_t modelId = m_ModelMap.size();
+	uint32_t modelId = static_cast<uint32_t>(m_ModelMap.size());
 	
 	m_ModelMap.emplace(modelId,modelInternal);
 	
@@ -51,8 +52,8 @@ bool RHI::DestroyModel(uint32_t modelID)
 	{
 		return false;
 	}
-	
-	ModelInternal* model = &m_ModelMap.at(modelID);
+
+	const ModelInternal* model = &m_ModelMap.at(modelID);
 
 	glDeleteBuffers(1,&model->vbo);
 	glDeleteBuffers(1,&model->ebo);
@@ -63,7 +64,7 @@ bool RHI::DestroyModel(uint32_t modelID)
 
 void RHI::DrawModel(uint32_t modelID)
 {
-	ModelInternal model = m_ModelMap.at(modelID);
+	const ModelInternal model = m_ModelMap.at(modelID);
 	glBindVertexArray(model.vao);
 	glDrawElements(GL_TRIANGLES, model.nbrOfIndicies, GL_UNSIGNED_INT, 0);
 }
@@ -76,6 +77,35 @@ void RHI::BindMaterial(const Material& material)
 	
 }
 
+void RHI::DestroyShader(uint32_t id)
+{
+	glDeleteShader(id);
+}
+
+void RHI::CheckCompilationError(uint32_t shaderId, const std::string& type)
+{
+	int success;
+	char infoLog[1024];
+	if (type != "PROGRAM")
+	{
+		glGetShaderiv(shaderId, GL_COMPILE_STATUS, &success);
+		if (!success)
+		{
+			glGetShaderInfoLog(shaderId, 1024, nullptr, infoLog);
+			Logger::LogError("Error while compiling shader of type %s: %s", type.c_str(), infoLog);
+		}
+	}
+	else
+	{
+		glGetProgramiv(shaderId, GL_LINK_STATUS, &success);
+		if (!success)
+		{
+			glGetProgramInfoLog(shaderId, 1024, nullptr, infoLog);
+			Logger::LogError("Error while linking shader program of type %s: %s", type.c_str(), infoLog);
+		}
+	}
+}
+
 RHI::RHI()
 {
 	gladLoadGL();
@@ -85,6 +115,10 @@ RHI::RHI()
 
 RHI::~RHI()
 {
+	for (std::unordered_map<uint32_t,ModelInternal>::iterator it = m_ModelMap.begin() ; it != m_ModelMap.end(); it++)
+	{
+		DestroyModel(it->first);
+	}
 }
 
 

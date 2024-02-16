@@ -5,6 +5,7 @@
 #include <assimp/postprocess.h>
 
 #include "utils/logger.hpp"
+#include "rendering/rhi.hpp"
 
 using namespace XnorCore;
 
@@ -63,6 +64,8 @@ void Model::Load(const uint8_t* buffer, const int64_t length)
     }
 
     m_Loaded = true;
+
+    m_ModelId = RHI::CreateModel(m_Vertices,m_Indices);
 }
 
 void Model::Unload()

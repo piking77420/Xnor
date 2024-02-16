@@ -31,6 +31,14 @@ enum PolyGoneFace : int
 	FRONT_AND_BACK
 };
 
+enum ShaderType
+{
+	VERTEX,
+	FRAGMENT,
+	GEOMETRY,
+	COMPUTE,
+};
+
 class RHI
 {
 public:
@@ -43,6 +51,10 @@ public:
 	static void DrawModel(uint32_t modelID); 
 
 	static void BindMaterial(const Material& material);
+
+	// Shader
+	static void DestroyShader(uint32_t id);
+	static void CheckCompilationError(uint32_t shaderId,const std::string& type);
 
 	RHI();
 
