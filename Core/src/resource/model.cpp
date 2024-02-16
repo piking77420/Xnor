@@ -11,9 +11,7 @@ using namespace XnorCore;
 
 void Model::Load(const uint8_t* buffer, const int64_t length)
 {
-    using namespace Assimp;
-
-    Importer importer;
+    Assimp::Importer importer;
     const aiScene* scene = importer.ReadFileFromMemory(buffer, length, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FindInvalidData | aiProcess_FixInfacingNormals);
 
     if (!scene)
@@ -34,23 +32,26 @@ void Model::Load(const uint8_t* buffer, const int64_t length)
         return;
     }
 
-    const aiMesh* mesh = scene->mMeshes[0];
+    Load(*scene->mMeshes[0]);
+}
 
-    m_Vertices.resize(mesh->mNumVertices);
+void Model::Load(const aiMesh& loadedData)
+{
+    m_Vertices.resize(loadedData.mNumVertices);
     
-    for (uint32_t i = 0; i < mesh->mNumVertices; i++)
+    for (uint32_t i = 0; i < loadedData.mNumVertices; i++)
     {
         Vertex& vert = m_Vertices[i];
-        vert.position = Vector3(&mesh->mVertices[i].x);
-        vert.normal = Vector3(&mesh->mNormals[i].x);
-        vert.textureCoord = Vector2(&mesh->mTextureCoords[0][i].x);
+        vert.position = Vector3(&loadedData.mVertices[i].x);
+        vert.normal = Vector3(&loadedData.mNormals[i].x);
+        vert.textureCoord = Vector2(&loadedData.mTextureCoords[0][i].x);
     }
 
-    m_Indices.resize(static_cast<size_t>(mesh->mNumFaces) * 3);
+    m_Indices.resize(static_cast<size_t>(loadedData.mNumFaces) * 3);
     
-    for (uint32_t i = 0; i < mesh->mNumFaces; i++)
+    for (uint32_t i = 0; i < loadedData.mNumFaces; i++)
     {
-        const aiFace& face = mesh->mFaces[i];
+        const aiFace& face = loadedData.mFaces[i];
         if (face.mNumIndices != 3)
         {
             Logger::LogError("Model data should be triangulated: %s", m_Name.c_str());
@@ -65,7 +66,7 @@ void Model::Load(const uint8_t* buffer, const int64_t length)
 
     m_Loaded = true;
 
-    m_ModelId = RHI::CreateModel(m_Vertices,m_Indices);
+    m_ModelId = RHI::CreateModel(m_Vertices, m_Indices);
 }
 
 void Model::Unload()

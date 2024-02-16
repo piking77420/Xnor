@@ -1,3 +1,4 @@
+// ReSharper disable CppClangTidyBugproneMacroParentheses
 #pragma once
 
 #include <cstdint>
@@ -11,3 +12,9 @@
 #define BEGIN_XNOR_CORE namespace XnorCore {
 
 #define END_XNOR_CORE }
+
+#define DEFAULT_COPY_MOVE_OPERATIONS(type)                      \
+    XNOR_ENGINE type(const type& other) = default;              \
+    XNOR_ENGINE type(type&& other) = default;                   \
+    XNOR_ENGINE type& operator=(const type& other) = default;   \
+    XNOR_ENGINE type& operator=(type&& other) = default;

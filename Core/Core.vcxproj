@@ -125,6 +125,7 @@
     <ClCompile Include="src\resource\resource.cpp" />
     <ClCompile Include="src\resource\resource_manager.cpp" />
     <ClCompile Include="src\resource\texture.cpp" />
+    <ClCompile Include="src\scene\camera_component.cpp" />
     <ClCompile Include="src\scene\component.cpp" />
     <ClCompile Include="src\scene\component\camera_component.cpp" />
     <ClCompile Include="src\scene\component\mesh_renderer.cpp" />
@@ -341,7 +342,10 @@
     <ClInclude Include="include\resource\resource.hpp" />
     <ClInclude Include="include\resource\resource_manager.hpp" />
     <ClInclude Include="include\resource\texture.hpp" />
+    <ClInclude Include="include\scene\camera_component.hpp" />
     <ClInclude Include="include\scene\component.hpp" />
+    <ClInclude Include="include\scene\component\camera_component.hpp" />
+    <ClInclude Include="include\scene\component\mesh_renderer.hpp" />
     <ClInclude Include="include\scene\entity.hpp" />
     <ClInclude Include="include\scene\scene.hpp" />
     <ClInclude Include="include\utils\logger.hpp" />

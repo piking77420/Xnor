@@ -14,13 +14,7 @@ public:
 
     XNOR_ENGINE virtual ~Resource() = default;
 
-    XNOR_ENGINE Resource(const Resource& other) = default;
-
-    XNOR_ENGINE Resource(Resource&& other) = default;
-
-    XNOR_ENGINE Resource& operator=(const Resource& other) = default;
-
-    XNOR_ENGINE Resource& operator=(Resource&& other) = default;
+    DEFAULT_COPY_MOVE_OPERATIONS(Resource)
 
     /// @brief Load resource from memory.
     XNOR_ENGINE virtual void Load(const uint8_t* buffer, int64_t length) = 0;

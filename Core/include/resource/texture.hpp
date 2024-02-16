@@ -12,8 +12,10 @@ class Texture : public Resource
 public:
     int32_t desiredChannels = 4;
     
+    // Same constructor from base class
     using Resource::Resource;
 
+    // We keep both function overloads and only override one
     using Resource::Load;
 
     XNOR_ENGINE void Load(const uint8_t* buffer, int64_t length) override;
