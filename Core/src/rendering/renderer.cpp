@@ -10,9 +10,13 @@ Renderer::Renderer() : clearColor(0.5f)
 	m_Rhi.SetClearColor(clearColor);
 
 	vertexPath = FileManager::Load("assets/shaders/vertex.vert");
-	framentPath = FileManager::Load("assets/shaders/fragment.frag");
+	fragmentPath = FileManager::Load("assets/shaders/fragment.frag");
 	
-	// basicShader = ResourceManager::Create<Shader>("basicShader");
+	basicShader = new Shader();
+	basicShader->Load(*vertexPath, *fragmentPath);
+
+	const Pointer<File> modelFile = FileManager::Load("assets/models/cube.obj");
+	model = ResourceManager::CreateAndLoad<Model>(modelFile);
 }
 
 void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererContext) const
@@ -20,16 +24,17 @@ void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererCo
 	m_Rhi.SetClearColor(clearColor);
 	m_Rhi.ClearColorAndDepth();
 	
+	/*
 	if (!rendererContext.IsValid())
 		return;//throw std::runtime_error("renderer Context is not valid");
-	
+	*/
 	std::vector<const MeshRenderer*> meshrenderer;
 	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderer);
 
 	basicShader->Use();
 	
 	RHI::SetPolyGoneMode(FRONT_AND_BACK,FILL);
-
+	RHI::DrawModel(model->GetID());
 
 	basicShader->UnUse();
 

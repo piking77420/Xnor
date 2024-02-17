@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <vector>
+
 #include "core.hpp"
 #include "resource/texture.hpp"
 #include "utils/pointer.hpp"

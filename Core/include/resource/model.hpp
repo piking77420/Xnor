@@ -26,6 +26,8 @@ public:
     
     XNOR_ENGINE void Unload() override;
 
+    uint32_t GetID() const;
+    
 private:
     std::vector<Vertex> m_Vertices;
     std::vector<uint32_t> m_Indices;

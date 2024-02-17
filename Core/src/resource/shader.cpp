@@ -28,7 +28,7 @@ void Shader::Load(const File& vertexShader, const File& fragmentShader)
     shaderCodes[0].shaderCode = vShaderCode;
 
     shaderCodes[1].shaderType = FRAGMENT;
-    shaderCodes[2].shaderCode = fShaderCode;
+    shaderCodes[1].shaderCode = fShaderCode;
     
     m_Id = RHI::CreateShader(shaderCodes);
     
