@@ -3,6 +3,7 @@
 #include "core.hpp"
 #include "Maths/vector4.hpp"
 #include "renderer_context.hpp"
+#include "file/file_manager.hpp"
 #include "scene/scene.hpp"
 #include "rendering/rhi.hpp"
 
@@ -19,7 +20,11 @@ public:
     
     XNOR_ENGINE void RenderScene(const Scene& scene, const RendererContext& rendererContext) const;
 private:
-
+    
+    Pointer<File> vertexPath = FileManager::Load("assets/shaders/vertex.vert");
+    Pointer<File> framentPath = FileManager::Load("assets/shaders/fragment.frag");
+    Pointer<Shader> basicShader;
+    
     RHI m_Rhi;
 };
 

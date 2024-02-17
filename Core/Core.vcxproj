@@ -452,6 +452,7 @@
     <Content Include="externals\libs\lib\Release\glfw3.lib" />
     <Content Include="externals\libs\lib\Release\toolbox.lib" />
     <Content Include="externals\libs\lib\Release\toolbox.pdb" />
+    <Content Include="include\rendering\rhi_typedef.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

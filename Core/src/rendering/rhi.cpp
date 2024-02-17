@@ -131,6 +131,11 @@ uint32_t RHI::CreateShader(const std::vector<ShaderCode>& shaderCodes)
 	return shaderID;
 }
 
+void RHI::UseShader(const uint32_t shaderID)
+{
+	glUseProgram(shaderID);
+}
+
 uint32_t RHI::GetOpenglShaderType(ShaderType shaderType)
 {
 	switch (shaderType)

@@ -15,7 +15,7 @@ public:
     using Resource::Resource;
     
     // Use the defined destructor from the base class instead of the deleted one from the interface
-    using Resource::~Resource;
+    //using Resource::~Resource;
 
     // We keep both function overloads and only override one
     using Resource::Load;

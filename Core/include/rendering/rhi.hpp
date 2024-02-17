@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "core.hpp"
+#include "rhi_typedef.hpp"
 #include "Maths/vector4.hpp"
 #include "vertex.hpp"
 #include "material.hpp"
@@ -11,39 +11,6 @@
 
 
 BEGIN_XNOR_CORE
-enum PolyGoneMode : int
-{
-	POINT = 0,
-	LINE,
-	FILL,
-	
-};
-
-enum PolyGoneFace : int
-{
-	FRONT_LEFT = 0,
-	FRONT_RIGHT ,
-	BACK_LEFT ,
-	FRONT,
-	BACK,
-	LEFT,
-	RIGHT,
-	FRONT_AND_BACK
-};
-
-enum ShaderType
-{
-	VERTEX,
-	FRAGMENT,
-	GEOMETRY,
-	COMPUTE,
-};
-
-struct ShaderCode
-{
-	const char* shaderCode;
-	ShaderType shaderType;
-};
 
 
 class RHI
@@ -65,6 +32,8 @@ public:
 	XNOR_ENGINE static void DestroyShader(uint32_t id);
 	XNOR_ENGINE static void CheckCompilationError(uint32_t shaderId,const std::string& type);
 	XNOR_ENGINE static  uint32_t CreateShader(const std::vector<ShaderCode>& shaderCodes);
+	XNOR_ENGINE static  void UseShader(const uint32_t shaderID);
+
 	
 private:
 

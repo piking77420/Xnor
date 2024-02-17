@@ -1,5 +1,6 @@
 #include "rendering/renderer.hpp"
 
+#include "resource/resource_manager.hpp"
 #include "scene/component/mesh_renderer.hpp"
 
 using namespace XnorCore;
@@ -7,6 +8,12 @@ using namespace XnorCore;
 Renderer::Renderer() : clearColor(0.5f)
 {
 	m_Rhi.SetClearColor(clearColor);
+
+	vertexPath = FileManager::Load("assets/shaders/vertex.vert");
+	framentPath = FileManager::Load("assets/shaders/fragment.frag");
+	
+	basicShader = ResourceManager::Create<Shader>("basicShader");
+
 }
 
 void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererContext) const
@@ -20,6 +27,12 @@ void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererCo
 	std::vector<const MeshRenderer*> meshrenderer;
 	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderer);
 
+	basicShader->Use();
+	
 	RHI::SetPolyGoneMode(FRONT_AND_BACK,FILL);
+
+
+	basicShader->UnUse();
+
 }
 

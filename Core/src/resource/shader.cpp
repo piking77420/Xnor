@@ -51,6 +51,16 @@ uint32_t Shader::GetId() const
     return  m_Id;
 }
 
+void Shader::Use() const
+{
+    RHI::UseShader(m_Id);
+}
+
+void Shader::UnUse() const
+{
+    RHI::UseShader(0);
+}
+
 
 void Shader::GetShaderCode(const char* shaderPath, std::string* shaderCode)
 {
