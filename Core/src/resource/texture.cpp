@@ -1,11 +1,16 @@
 #include "resource/texture.hpp"
 
 #include <stb/stb_image.h>
-#include <glad/glad.h>
 
 #include "rendering/rhi.hpp"
 
 using namespace XnorCore;
+
+Texture::Texture(TextureCreateInfo createInfo)
+{
+    RHI::CreateTexture(&m_Id,createInfo);
+    m_Loaded = true;
+}
 
 Texture::~Texture()
 {
@@ -14,9 +19,19 @@ Texture::~Texture()
 
 void Texture::Load(const uint8_t* buffer, const int64_t length)
 {
-    m_Data = stbi_load_from_memory(buffer, static_cast<int32_t>(length), &m_Size.x, &m_Size.y, &m_Channels, desiredChannels);
+    m_Data = stbi_load_from_memory(buffer, static_cast<int32_t>(length), &m_Size.x, &m_Size.y, &m_Channels,0);
+
+    TextureCreateInfo textureCreateInfo
+    {
+        m_Data,
+        static_cast<uint32_t>(m_Size.x),
+        static_cast<uint32_t>(m_Size.y),
+        TextureFiltering::LINEAR,
+        TextureWrapping::REPEAT,
+        GetFormat(m_Channels)
+    };
     
-    RHI::CreateTexture(&m_Id,m_Data,m_Size,TextureWrapping::REPEAT,TextureFiltering::LINEAR);
+    RHI::CreateTexture(&m_Id,textureCreateInfo);
     
     m_Loaded = true;
 }
@@ -49,4 +64,20 @@ int Texture::GetChannels() const
 void Texture::BindTexture(const uint32_t index)
 {
     RHI::BindTexture(TextureType::TEXTURE_2D,m_Id);
+}
+
+TextureFormat Texture::GetFormat(uint32_t textureFormat)
+{
+    switch (textureFormat)
+    {
+    case 1:
+       return  TextureFormat::RED;
+    case 3:
+        return  TextureFormat::RGB;
+    case 4:
+         return  TextureFormat::RGBA;
+    default:
+        return  TextureFormat::RGB;
+    }
+    
 }

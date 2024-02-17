@@ -3,8 +3,7 @@
 #include "core.hpp"
 
 BEGIN_XNOR_CORE
-
-enum PolyGoneMode : int
+	enum PolyGoneMode : int
 {
 	POINT = 0,
 	LINE,
@@ -66,5 +65,45 @@ enum class TextureType: int
 	TEXTURE_2D_MULTISAMPLE,
 	TEXTURE_2D_MULTISAMPLE_ARRAY,
 };
+
+enum class TextureFormat
+{
+	R_8,
+	R_16,
+	RG_8,
+	RG_16,
+	RGB_8,
+	RGB_16,
+	RGBA_8,
+	RGBA_16,
+	R_16F,
+	RG_16F,
+	RGB_16F,
+	RGBA_16F,
+	DEPTH_COMPONENT,
+	RED,
+	RGB,
+	RGBA,
+};
+
+enum class AttachementHandle
+{
+	Color,
+	Position,
+	Normal,
+	TextureCoord,
+};
+
+
+struct TextureCreateInfo
+{
+	void* data;
+	uint32_t textureSizeWidth;
+	uint32_t textureSizeHeight;
+	TextureFiltering textureFiltering;
+	TextureWrapping textureWrapping;
+	TextureFormat textureFormat;
+};
+
 
 END_XNOR_CORE

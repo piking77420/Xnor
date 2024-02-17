@@ -12,7 +12,7 @@ Renderer::Renderer() : clearColor(0.5f)
 	vertexPath = FileManager::Load("assets/shaders/vertex.vert");
 	framentPath = FileManager::Load("assets/shaders/fragment.frag");
 	
-	basicShader = ResourceManager::Create<Shader>("basicShader");
+	//basicShader = ResourceManager::Create<Shader>("basicShader");
 
 }
 

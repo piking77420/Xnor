@@ -3,11 +3,10 @@
 #include <unordered_map>
 #include <vector>
 
+#include "material.hpp"
 #include "rhi_typedef.hpp"
 #include "Maths/vector4.hpp"
 #include "vertex.hpp"
-#include "material.hpp"
-
 
 
 BEGIN_XNOR_CORE
@@ -35,11 +34,16 @@ public:
 	XNOR_ENGINE static  void UseShader(const uint32_t shaderID);
 
 	// TEXTURE
-	XNOR_ENGINE  static void CreateTexture(uint32_t* textureId,void* data, vec2i textureSize, TextureWrapping wrapper, TextureFiltering filtering);
+	XNOR_ENGINE  static void CreateTexture(uint32_t* textureId,TextureCreateInfo textureCreateInfo);
 	XNOR_ENGINE  static void DestroyTexture(const uint32_t* textureId);
+
 
 	XNOR_ENGINE  static void BindTexture(TextureType textureType,uint32_t textureID);
 	XNOR_ENGINE  static void UnBindTexture(TextureType textureType);
+
+	// FrammeBuffer 
+	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferID);
+	XNOR_ENGINE static void DestroyFrameBuffer(uint32_t* frameBufferID);
 
 	
 private:
@@ -48,11 +52,13 @@ private:
 	
 	static std::string GetShaderTypeToString(ShaderType shaderType);
 	
-	static uint32_t ComputeTextureWrapper(uint32_t textureID, TextureWrapping textureWrapping);
+	static void ComputeTextureWrapper(uint32_t textureID, TextureWrapping textureWrapping);
 	
-	static uint32_t ComputeOpenglTextureFilter(uint32_t textureID, TextureFiltering textureFilter);
+	static void ComputeOpenglTextureFilter(uint32_t textureID, TextureFiltering textureFilter);
 
 	static uint32_t TextureTypeToOpenglTexture(TextureType textureType);
+
+	static uint32_t GetOpenglFormatFromTextureFormat(TextureFormat textureFormat);
 
 
 public:

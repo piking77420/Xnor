@@ -74,15 +74,15 @@ void RHI::DrawModel(uint32_t modelID)
 	glDrawElements(GL_TRIANGLES,  static_cast<GLsizei>(model.nbrOfIndicies), GL_UNSIGNED_INT, 0);
 }
 
+/*
 void RHI::BindMaterial(const Material& material)
 {
-	// TO DO 
-	
-	glUseProgram(material.shader->GetId());
-
+	material.shader->Use();
 	
 	
-}
+	
+	material.shader->UnUse();
+}*/
 
 void RHI::DestroyShader(uint32_t id)
 {
@@ -139,17 +139,19 @@ void RHI::UseShader(const uint32_t shaderID)
 	glUseProgram(shaderID);
 }
 
-void RHI::CreateTexture(uint32_t* textureId, void* data,vec2i textureSize, TextureWrapping wrapper, TextureFiltering filtering)
+void RHI::CreateTexture(uint32_t* textureId,TextureCreateInfo textureCreateInfo)
 {
 	glCreateTextures(GL_TEXTURE_2D, 1, textureId);
-	ComputeTextureWrapper(*textureId,wrapper);
-	ComputeOpenglTextureFilter(*textureId,filtering);
+	ComputeTextureWrapper(*textureId,textureCreateInfo.textureWrapping);
+	ComputeOpenglTextureFilter(*textureId,textureCreateInfo.textureFiltering);
 
-	glTextureStorage2D(*textureId, 1, GL_RGBA8, textureSize.x, textureSize.y);
-	glTextureSubImage2D(*textureId, 0, 0, 0, textureSize.x, textureSize.y, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glTextureStorage2D(*textureId, 1, GetOpenglFormatFromTextureFormat(textureCreateInfo.textureFormat),static_cast<GLsizei>(textureCreateInfo.textureSizeWidth), static_cast<GLsizei>(textureCreateInfo.textureSizeHeight));
+	glTextureSubImage2D(*textureId, 0, 0, 0, static_cast<GLsizei>(textureCreateInfo.textureSizeWidth),  static_cast<GLsizei>(textureCreateInfo.textureSizeHeight), GL_RGBA, GL_UNSIGNED_BYTE, textureCreateInfo.data);
 	glGenerateTextureMipmap(*textureId);
 	
 }
+
+
 
 void RHI::DestroyTexture(const uint32_t* textureId)
 {
@@ -164,6 +166,16 @@ void RHI::BindTexture(TextureType textureType, uint32_t textureID)
 void RHI::UnBindTexture(TextureType textureType)
 {
 	glBindTextureUnit(TextureTypeToOpenglTexture(textureType), 0);
+}
+
+void RHI::CreateFrameBuffer(uint32_t* frameBufferID)
+{
+	glCreateFramebuffers(1,frameBufferID);
+}
+
+void RHI::DestroyFrameBuffer(uint32_t* frameBufferID)
+{
+	glDeleteFramebuffers(1,frameBufferID);
 }
 
 uint32_t RHI::GetOpenglShaderType(ShaderType shaderType)
@@ -200,7 +212,7 @@ std::string RHI::GetShaderTypeToString(ShaderType shaderType)
 	return  "UNKNOW_SHADER_TYPE";
 }
 
-uint32_t RHI::ComputeTextureWrapper(uint32_t textureID, TextureWrapping textureWrapping)
+void RHI::ComputeTextureWrapper(uint32_t textureID, TextureWrapping textureWrapping)
 {
 	switch (textureWrapping)
 	{
@@ -221,10 +233,12 @@ uint32_t RHI::ComputeTextureWrapper(uint32_t textureID, TextureWrapping textureW
 		glTextureParameteri(textureID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 		break;
 	}
+
+	
 }
 
 
-uint32_t RHI::ComputeOpenglTextureFilter(uint32_t textureID, TextureFiltering textureFilter)
+void RHI::ComputeOpenglTextureFilter(uint32_t textureID, TextureFiltering textureFilter)
 {
 	switch (textureFilter)
 	{
@@ -245,39 +259,84 @@ uint32_t RHI::TextureTypeToOpenglTexture(TextureType textureType)
 	{
 	case TextureType::TEXTURE_1D:
 		return GL_TEXTURE_1D;
-		break;
 	case TextureType::TEXTURE_2D:
 		return GL_TEXTURE_2D;
-		break;
 	case TextureType::TEXTURE_3D:
 		return GL_TEXTURE_3D;
-		break;
 	case TextureType::TEXTURE_1D_ARRAY:
 		return GL_TEXTURE_3D;
-		break;
 	case TextureType::TEXTURE_2D_ARRAY:
 		return GL_TEXTURE_2D_ARRAY;
-		break;
 	case TextureType::TEXTURE_RECTANGLE:
 		return GL_TEXTURE_RECTANGLE;
-		break;
 	case TextureType::TEXTURE_CUBE_MAP:
 		return GL_TEXTURE_CUBE_MAP;
-		break;
 	case TextureType::TEXTURE_CUBE_MAP_ARRAY:
 		return GL_TEXTURE_CUBE_MAP_ARRAY;
-		break;
 	case TextureType::TEXTURE_BUFFER:
 		return GL_TEXTURE_BUFFER;
-		break;
 	case TextureType::TEXTURE_2D_MULTISAMPLE:
 		return GL_TEXTURE_2D_MULTISAMPLE;
-		break;
 	case TextureType::TEXTURE_2D_MULTISAMPLE_ARRAY:
 		return GL_TEXTURE_2D_MULTISAMPLE_ARRAY;
-		break;
 	default:
 		break;
+	}
+}
+
+uint32_t RHI::GetOpenglFormatFromTextureFormat(TextureFormat textureFormat)
+{
+	switch (textureFormat)
+	{
+	case TextureFormat::R_8:
+		return GL_R8;
+		break;
+	case TextureFormat::R_16:
+		return GL_R16;
+		break;
+	case TextureFormat::RG_8:
+		return GL_RG8;
+		break;
+	case TextureFormat::RG_16:
+		return GL_RG16;
+		break;
+	case TextureFormat::RGB_8:
+		return GL_RGB8;
+		break;
+	case TextureFormat::RGB_16:
+		return GL_RGB16;
+		break;
+	case TextureFormat::RGBA_8:
+		return GL_RGBA8;
+		break;
+	case TextureFormat::RGBA_16:
+		return GL_RGBA16;
+		break;
+	case TextureFormat::R_16F:
+		return GL_R16F;
+		break;
+	case TextureFormat::RG_16F:
+		return GL_RG16F;
+		break;
+	case TextureFormat::RGB_16F:
+		return GL_RGB16F;
+		break;
+	case TextureFormat::RGBA_16F:
+		return GL_RGBA16F;
+		break;
+	case TextureFormat::DEPTH_COMPONENT:
+		return GL_DEPTH_COMPONENT;
+		break;
+	case TextureFormat::RED:
+		return GL_RED;
+		break;
+	case TextureFormat::RGB:
+		return GL_RGB;
+	case TextureFormat::RGBA:
+		return GL_RGBA;
+		break;
+	default:
+		return GL_RGB8;
 	}
 }
 

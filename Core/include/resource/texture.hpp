@@ -4,13 +4,13 @@
 
 #include "core.hpp"
 #include "resource.hpp"
+#include "rendering/rhi_typedef.hpp"
 
 BEGIN_XNOR_CORE
 
 class Texture : public Resource
 {
 public:
-    int32_t desiredChannels = 4;
     
     // Same constructor from base class
     using Resource::Resource;
@@ -18,6 +18,8 @@ public:
     // We keep both function overloads and only override one
     using Resource::Load;
 
+    Texture(TextureCreateInfo createInfo);
+    
     ~Texture();
 
     XNOR_ENGINE void Load(const uint8_t* buffer, int64_t length) override;
@@ -40,6 +42,8 @@ private:
     Vector2i m_Size;
     int32_t m_Channels = 0;
     uint32_t m_Id = 0;
+
+    TextureFormat GetFormat(uint32_t textureFormat);
 };
 
 END_XNOR_CORE

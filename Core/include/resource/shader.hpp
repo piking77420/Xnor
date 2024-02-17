@@ -20,9 +20,9 @@ public:
 
 	uint32_t GetId() const;
 
-	XNOR_ENGINE void Use() const;
+	void Use() const;
 
-	XNOR_ENGINE void UnUse() const;
+	void UnUse() const;
 
 private:
 	uint32_t m_Id = 0;
