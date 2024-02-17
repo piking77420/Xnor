@@ -84,7 +84,7 @@ public:
      * \param typeHash Type hash
      * \return Type info
      */
-    static const TypeInfo& Get(size_t typeHash);
+    XNOR_ENGINE static const TypeInfo& Get(size_t typeHash);
 
 private:
     /**
@@ -154,7 +154,7 @@ template <typename T>
 size_t TypeInfo::GetMemberOffset(const T member)
 {
     char buffer[50];
-    sprintf_s(buffer, sizeof(buffer), "%p", member.pointer);
+    (void) sprintf_s(buffer, sizeof(buffer), "%p", member.pointer);
     char* end = &buffer[sizeof(buffer)];
     return std::strtoll(buffer, &end, 16);
 }

@@ -7,7 +7,7 @@
 using namespace XnorEditor;
 
 Editor::Editor(XnorCore::Window& window)
-	: m_Window(&window)
+	: m_Window(&window), m_Inspector(), m_EntityTest()
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -23,6 +23,8 @@ Editor::Editor(XnorCore::Window& window)
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(const_cast<GLFWwindow*>(static_cast<const GLFWwindow*>(window.GetWindow())), true);
 	ImGui_ImplOpenGL3_Init(glslVersion);
+
+	m_EntityTest.Begin();
 }
 
 void Editor::BeginFrame()
@@ -30,6 +32,11 @@ void Editor::BeginFrame()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
+}
+
+void Editor::Update()
+{
+	m_Inspector.Display(&m_EntityTest);
 }
 
 void Editor::EndFrame()
