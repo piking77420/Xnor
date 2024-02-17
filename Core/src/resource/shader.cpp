@@ -1,7 +1,6 @@
 #include "resource/shader.hpp"
 
 #include <fstream>
-#include <glad/glad.h>
 
 #include "rendering/rhi.hpp"
 #include "utils/logger.hpp"
@@ -23,24 +22,16 @@ void Shader::Load(const File& vertexShader, const File& fragmentShader)
     const char* vShaderCode = vertexCode.c_str();
     const char* fShaderCode = fragmentCode.c_str();
 
-    // Move to rhi
-    const uint32_t vertex = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex, 1, &vShaderCode, nullptr);
-    glCompileShader(vertex);
-    RHI::CheckCompilationError(vertex, "VERTEX");
+    std::vector<ShaderCode> shaderCodes(2);
 
-    // Move to rhi
-    const uint32_t fragment = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment, 1, &fShaderCode, nullptr);
-    glCompileShader(fragment);
-    RHI::CheckCompilationError(fragment, "FRAGMENT");
+    shaderCodes[0].shaderType = VERTEX;
+    shaderCodes[0].shaderCode = vShaderCode;
 
-    // Move to rhi
-    m_Id = glCreateProgram();
-    glAttachShader(m_Id, vertex);
-    glAttachShader(m_Id, fragment);
-    glLinkProgram(m_Id);
-    RHI::CheckCompilationError(m_Id, "PROGRAM");
+    shaderCodes[1].shaderType = FRAGMENT;
+    shaderCodes[2].shaderCode = fShaderCode;
+    
+    m_Id = RHI::CreateShader(shaderCodes);
+    
 }
 
 XNOR_ENGINE void Shader::Recompile(const File& vertexShader, const File& fragmentShader)

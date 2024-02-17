@@ -21,8 +21,10 @@ uint32_t RHI::CreateModel(const std::vector<Vertex>& vertices, const std::vector
 	glCreateBuffers(1,&modelInternal.vbo);
 	glCreateBuffers(1,&modelInternal.ebo);
 
-	glNamedBufferData(modelInternal.vbo, sizeof(Vertex) * vertices.size(),vertices.data(),GL_STATIC_DRAW);
-	glNamedBufferData(modelInternal.ebo,sizeof(uint32_t) * indicies.size() ,indicies.data(),GL_STATIC_DRAW);
+	GLintptr offset =  static_cast<GLintptr>(vertices.size() * sizeof(Vertex));
+	glNamedBufferData(modelInternal.vbo, offset,vertices.data(),GL_STATIC_DRAW);
+	offset = static_cast<GLintptr>(indicies.size() * sizeof(uint32_t));
+	glNamedBufferData(modelInternal.ebo, offset,indicies.data(),GL_STATIC_DRAW);
 
 	glEnableVertexArrayAttrib(modelInternal.vao,0);
 	glVertexArrayAttribBinding(modelInternal.vao,0,0);
@@ -66,11 +68,13 @@ void RHI::DrawModel(uint32_t modelID)
 {
 	const ModelInternal model = m_ModelMap.at(modelID);
 	glBindVertexArray(model.vao);
-	glDrawElements(GL_TRIANGLES, model.nbrOfIndicies, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES,  static_cast<GLsizei>(model.nbrOfIndicies), GL_UNSIGNED_INT, 0);
 }
 
 void RHI::BindMaterial(const Material& material)
 {
+	// TO DO 
+	
 	glUseProgram(material.shader->GetId());
 
 	
@@ -104,6 +108,61 @@ void RHI::CheckCompilationError(uint32_t shaderId, const std::string& type)
 			Logger::LogError("Error while linking shader program of type %s: %s", type.c_str(), infoLog);
 		}
 	}
+}
+
+uint32_t RHI::CreateShader(const std::vector<ShaderCode>& shaderCodes)
+{
+	uint32_t shaderID = glCreateProgram();
+	
+	std::vector<uint32_t> shadersID(shaderCodes.size());
+
+	for (size_t i = 0; i < shaderCodes.size(); ++i)
+	{
+		shadersID[i] = glCreateShader(GL_VERTEX_SHADER);
+		glShaderSource(shadersID[i], 1, &shaderCodes[i].shaderCode, nullptr);
+		glCompileShader(shadersID[i]);
+		RHI::CheckCompilationError(shadersID[i], RHI::GetShaderTypeToString(shaderCodes[i].shaderType));
+		glAttachShader(shaderID, shadersID[i]);
+
+	}
+	glLinkProgram(shaderID);
+	RHI::CheckCompilationError(shaderID, "PROGRAM");
+
+	return shaderID;
+}
+
+uint32_t RHI::GetOpenglShaderType(ShaderType shaderType)
+{
+	switch (shaderType)
+	{
+	case VERTEX :
+		return  GL_VERTEX_SHADER;
+	case FRAGMENT :
+		return  GL_FRAGMENT_SHADER;
+	case GEOMETRY :
+		return  GL_GEOMETRY_SHADER;
+	case COMPUTE :
+		return GL_COMPUTE_SHADER;
+	}
+
+	return  GL_VERTEX_SHADER;
+}
+
+std::string RHI::GetShaderTypeToString(ShaderType shaderType)
+{
+	switch (shaderType)
+	{
+	case VERTEX :
+		return  "VERTEX_SHADER";
+	case FRAGMENT :
+		return  "FRAGMENT_SHADER";
+	case GEOMETRY :
+		return  "GEOMETRY_SHADER";
+	case COMPUTE :
+		return "COMPUTE_SHADER";
+	}
+	
+	return  "UNKNOW_SHADER_TYPE";
 }
 
 RHI::RHI()

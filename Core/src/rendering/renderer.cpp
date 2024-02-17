@@ -4,7 +4,7 @@
 
 using namespace XnorCore;
 
-Renderer::Renderer()
+Renderer::Renderer() : clearColor(0.5f)
 {
 	m_Rhi.SetClearColor(clearColor);
 }

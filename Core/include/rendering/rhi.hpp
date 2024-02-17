@@ -39,30 +39,47 @@ enum ShaderType
 	COMPUTE,
 };
 
+struct ShaderCode
+{
+	const char* shaderCode;
+	ShaderType shaderType;
+};
+
+
 class RHI
 {
 public:
 
-	static void SetPolyGoneMode(PolyGoneFace face, PolyGoneMode mode);
+	// Utils
+	XNOR_ENGINE static void SetPolyGoneMode(PolyGoneFace face, PolyGoneMode mode);
 	
 	// Model //
-	static uint32_t CreateModel(const std::vector<Vertex>& vertices,const std::vector<uint32_t>& indicies);
-	static bool DestroyModel(uint32_t modelID);
-	static void DrawModel(uint32_t modelID); 
+	XNOR_ENGINE static uint32_t CreateModel(const std::vector<Vertex>& vertices,const std::vector<uint32_t>& indicies);
+	XNOR_ENGINE static bool DestroyModel(uint32_t modelID);
+	XNOR_ENGINE static void DrawModel(uint32_t modelID); 
 
-	static void BindMaterial(const Material& material);
+	// Material
+	XNOR_ENGINE static void BindMaterial(const Material& material);
 
 	// Shader
-	static void DestroyShader(uint32_t id);
-	static void CheckCompilationError(uint32_t shaderId,const std::string& type);
-
-	RHI();
-
-	~RHI();
-
-	void SetClearColor(const Vector4& color) const;
+	XNOR_ENGINE static void DestroyShader(uint32_t id);
+	XNOR_ENGINE static void CheckCompilationError(uint32_t shaderId,const std::string& type);
+	XNOR_ENGINE static  uint32_t CreateShader(const std::vector<ShaderCode>& shaderCodes);
 	
-	void ClearColorAndDepth() const;
+private:
+
+	static uint32_t GetOpenglShaderType(ShaderType shaderType);
+	static std::string GetShaderTypeToString(ShaderType shaderType);
+
+public:
+	
+	XNOR_ENGINE RHI();
+
+	XNOR_ENGINE ~RHI();
+
+	XNOR_ENGINE void SetClearColor(const Vector4& color) const;
+	
+	XNOR_ENGINE void ClearColorAndDepth() const;
 
 private:
 	
@@ -76,7 +93,7 @@ private:
 	};
 
 
-	static inline std::unordered_map<uint32_t,ModelInternal> m_ModelMap;
+	XNOR_ENGINE static inline std::unordered_map<uint32_t,ModelInternal> m_ModelMap;
 };
 
 END_XNOR_CORE

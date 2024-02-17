@@ -8,16 +8,16 @@
 
 BEGIN_XNOR_CORE
 
-class XNOR_ENGINE Renderer
+class  Renderer
 {
 public:
-    Vector4 clearColor = 0.5f;
+    Vector4 clearColor;
 
-    Renderer();
+    XNOR_ENGINE Renderer();
 
-    ~Renderer() = default;
+    XNOR_ENGINE  ~Renderer() = default;
     
-    void RenderScene(const Scene& scene, const RendererContext& rendererContext) const;
+    XNOR_ENGINE void RenderScene(const Scene& scene, const RendererContext& rendererContext) const;
 private:
 
     RHI m_Rhi;
