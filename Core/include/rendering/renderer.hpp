@@ -21,9 +21,9 @@ public:
     XNOR_ENGINE void RenderScene(const Scene& scene, const RendererContext& rendererContext) const;
 private:
     
-    Pointer<File> vertexPath = FileManager::Load("assets/shaders/vertex.vert");
-    Pointer<File> framentPath = FileManager::Load("assets/shaders/fragment.frag");
-    Pointer<Shader> basicShader;
+    Pointer<File> vertexPath;
+    Pointer<File> fragmentPath;
+    Shader* basicShader;
     
     RHI m_Rhi;
 };

@@ -116,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\editor.cpp" />
+    <ClCompile Include="src\entity_test.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +127,7 @@
   <ItemGroup>
     <ClInclude Include="include\definitions.hpp" />
     <ClInclude Include="include\editor.hpp" />
+    <ClInclude Include="include\entity_test.hpp" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

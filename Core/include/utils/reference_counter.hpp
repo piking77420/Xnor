@@ -122,7 +122,7 @@ uint64_t ReferenceCounter<T>::GetStrong() const
 template<typename T>
 uint64_t ReferenceCounter<T>::GetWeak() const
 {
-    return m_WeakReferenceOwners.size();
+    return m_WeakReferenceOwners.fullSize();
 }
 
 template<typename T>

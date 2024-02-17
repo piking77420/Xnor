@@ -10,23 +10,7 @@
 #include "resource/texture.hpp"
 #include "utils/memory_leak_detector.hpp"
 #include "utils/reflectable.hpp"
-
-class TestClass : public XnorCore::Reflectable
-{
-public:
-	REFLECTABLE_IMPL(TestClass)
-	
-private:
-	float_t  m1[64];
-	float_t  m2;
-	float_t  m3;
-	float_t* m4;
-};
-
-REFL_AUTO(type(TestClass),
-	field(m1), field(m2),
-	field(m3), field(m4)
-)
+#include "entity_test.hpp"
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
@@ -35,18 +19,18 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 	Logger::OpenDefaultFile();
 
-	TestClass t;
-	t.CreateTypeInfo();
+	EntityTest t;
+	t.Begin();
+	EntityDamage d;
+	d.Begin();
 
-	const TypeInfo& type = TypeInfo::Get<TestClass>();
-	Logger::LogInfo("%s", type.GetName().c_str());
+	const TypeInfo& type = TypeInfo::Get<Entity>();
 
 	const std::vector<FieldInfo>& members = type.GetMembers();
 
 	for (const FieldInfo& f : members)
 	{
-		Logger::LogInfo("%s ; %s ; Hash : %llu ; Size : %llu ; %llu ; Is array : %d ; Is static : %d ; Is const : %d", f.typeName.c_str(), f.name.c_str(), f.typeHash, f.size, f.offset, f.isArray, f.isStatic, f.isConst);
-		// Logger::LogInfo("Hash : %llu", f.typeHash);
+		Logger::LogInfo("%s ; %s ; Hash : %llu ; Size : %llu ; Element size : %llu ; Offset : %llu ; Is array : %d ; Is static : %d ; Is const : %d", f.typeName.c_str(), f.name.c_str(), f.typeHash, f.fullSize, f.elementSize, f.offset, f.isArray, f.isStatic, f.isConst);
 	}
 	
 	//MemoryLeakDetector detector;
@@ -72,7 +56,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 		renderer.RenderScene(*Scene::scene, context);
 
-		editor.EndFrame(window);
+		editor.EndFrame();
 		window.SwapBuffers(); 
 	}
 
