@@ -9,7 +9,7 @@
 
 BEGIN_XNOR_CORE
 
-class  Renderer
+class Renderer
 {
 public:
     Vector4 clearColor;

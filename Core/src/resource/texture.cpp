@@ -1,32 +1,28 @@
 #include "resource/texture.hpp"
 
 #include <stb/stb_image.h>
-
 #include <glad/glad.h>
 
+#include "rendering/rhi.hpp"
+
 using namespace XnorCore;
+
+Texture::~Texture()
+{
+    RHI::DestroyTexture(&m_Id);
+}
 
 void Texture::Load(const uint8_t* buffer, const int64_t length)
 {
     m_Data = stbi_load_from_memory(buffer, static_cast<int32_t>(length), &m_Size.x, &m_Size.y, &m_Channels, desiredChannels);
     
-    glCreateTextures(GL_TEXTURE_2D, 1, &m_Id);
-
-    glTextureParameteri(m_Id, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTextureParameteri(m_Id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTextureParameteri(m_Id, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTextureParameteri(m_Id, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    glTextureStorage2D(m_Id, 1, GL_RGBA8, m_Size.x, m_Size.y);
-    glTextureSubImage2D(m_Id, 0, 0, 0, m_Size.x, m_Size.y, GL_RGBA, GL_UNSIGNED_BYTE, m_Data);
-    glGenerateTextureMipmap(m_Id);
-
+    RHI::CreateTexture(&m_Id,m_Data,m_Size,TextureWrapping::REPEAT,TextureFiltering::LINEAR);
+    
     m_Loaded = true;
 }
 
 void Texture::Unload()
 {
-    glDeleteTextures(1, &m_Id);
     
     stbi_image_free(m_Data);
     m_Data = nullptr;
@@ -52,5 +48,5 @@ int Texture::GetChannels() const
 
 void Texture::BindTexture(const uint32_t index)
 {
-    glBindTextureUnit(index, m_Id);
+    RHI::BindTexture(TextureType::TEXTURE_2D,m_Id);
 }

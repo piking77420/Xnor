@@ -5,6 +5,7 @@ using namespace XnorCore;
 
 FrameBuffer::FrameBuffer()
 {
+	
 }
 
 FrameBuffer::~FrameBuffer()

@@ -1,7 +1,10 @@
 #include "rendering/rhi.hpp"
+
 #include <glad/glad.h>
+
 #include "resource/shader.hpp"
 #include "utils/logger.hpp"
+
 
 using namespace XnorCore;
 
@@ -136,6 +139,33 @@ void RHI::UseShader(const uint32_t shaderID)
 	glUseProgram(shaderID);
 }
 
+void RHI::CreateTexture(uint32_t* textureId, void* data,vec2i textureSize, TextureWrapping wrapper, TextureFiltering filtering)
+{
+	glCreateTextures(GL_TEXTURE_2D, 1, textureId);
+	ComputeTextureWrapper(*textureId,wrapper);
+	ComputeOpenglTextureFilter(*textureId,filtering);
+
+	glTextureStorage2D(*textureId, 1, GL_RGBA8, textureSize.x, textureSize.y);
+	glTextureSubImage2D(*textureId, 0, 0, 0, textureSize.x, textureSize.y, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glGenerateTextureMipmap(*textureId);
+	
+}
+
+void RHI::DestroyTexture(const uint32_t* textureId)
+{
+	glDeleteTextures(1,textureId);
+}
+
+void RHI::BindTexture(TextureType textureType, uint32_t textureID)
+{
+	glBindTextureUnit(TextureTypeToOpenglTexture(textureType), textureID);
+}
+
+void RHI::UnBindTexture(TextureType textureType)
+{
+	glBindTextureUnit(TextureTypeToOpenglTexture(textureType), 0);
+}
+
 uint32_t RHI::GetOpenglShaderType(ShaderType shaderType)
 {
 	switch (shaderType)
@@ -168,6 +198,87 @@ std::string RHI::GetShaderTypeToString(ShaderType shaderType)
 	}
 	
 	return  "UNKNOW_SHADER_TYPE";
+}
+
+uint32_t RHI::ComputeTextureWrapper(uint32_t textureID, TextureWrapping textureWrapping)
+{
+	switch (textureWrapping)
+	{
+	case TextureWrapping::REPEAT :
+		glTextureParameteri(textureID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(textureID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		break;
+	case TextureWrapping::MIRRORED_REPEAT :
+		glTextureParameteri(textureID, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+		glTextureParameteri(textureID, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+		break;
+	case TextureWrapping::CLAMP_TO_EDGE:
+		glTextureParameteri(textureID, GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
+		glTextureParameteri(textureID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		break;
+	case TextureWrapping::CLAMP_TO_BORDER:
+		glTextureParameteri(textureID, GL_TEXTURE_WRAP_S,GL_CLAMP_TO_BORDER);
+		glTextureParameteri(textureID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		break;
+	}
+}
+
+
+uint32_t RHI::ComputeOpenglTextureFilter(uint32_t textureID, TextureFiltering textureFilter)
+{
+	switch (textureFilter)
+	{
+	case TextureFiltering::LINEAR:
+		glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		break;
+	case TextureFiltering::NEAREST:
+		glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		break;
+	}
+}
+
+uint32_t RHI::TextureTypeToOpenglTexture(TextureType textureType)
+{
+	switch (textureType)
+	{
+	case TextureType::TEXTURE_1D:
+		return GL_TEXTURE_1D;
+		break;
+	case TextureType::TEXTURE_2D:
+		return GL_TEXTURE_2D;
+		break;
+	case TextureType::TEXTURE_3D:
+		return GL_TEXTURE_3D;
+		break;
+	case TextureType::TEXTURE_1D_ARRAY:
+		return GL_TEXTURE_3D;
+		break;
+	case TextureType::TEXTURE_2D_ARRAY:
+		return GL_TEXTURE_2D_ARRAY;
+		break;
+	case TextureType::TEXTURE_RECTANGLE:
+		return GL_TEXTURE_RECTANGLE;
+		break;
+	case TextureType::TEXTURE_CUBE_MAP:
+		return GL_TEXTURE_CUBE_MAP;
+		break;
+	case TextureType::TEXTURE_CUBE_MAP_ARRAY:
+		return GL_TEXTURE_CUBE_MAP_ARRAY;
+		break;
+	case TextureType::TEXTURE_BUFFER:
+		return GL_TEXTURE_BUFFER;
+		break;
+	case TextureType::TEXTURE_2D_MULTISAMPLE:
+		return GL_TEXTURE_2D_MULTISAMPLE;
+		break;
+	case TextureType::TEXTURE_2D_MULTISAMPLE_ARRAY:
+		return GL_TEXTURE_2D_MULTISAMPLE_ARRAY;
+		break;
+	default:
+		break;
+	}
 }
 
 RHI::RHI()
