@@ -8,13 +8,16 @@ BEGIN_XNOR_EDITOR
 class Editor
 {
 public:
-	explicit Editor(const XnorCore::Window& window);
+	explicit Editor(XnorCore::Window& window);
 
 	~Editor();
 
 	void BeginFrame();
 
-	void EndFrame(const XnorCore::Window& window);
+	void EndFrame();
+
+private:
+	XnorCore::Window* m_Window;
 };
 
 END_XNOR_EDITOR

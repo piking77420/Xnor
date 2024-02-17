@@ -2,7 +2,9 @@
 #include "utils/logger.hpp"
 #include "scene/component.hpp"
 
-void XnorCore::Scene::Begin()
+using namespace XnorCore;
+
+void Scene::Begin()
 {
     for (Entity* ent : m_Entities)
     {
@@ -10,7 +12,7 @@ void XnorCore::Scene::Begin()
     }
 }
 
-void XnorCore::Scene::Update()
+void Scene::Update()
 {
     for (Entity* ent : m_Entities)
     {
@@ -18,7 +20,7 @@ void XnorCore::Scene::Update()
     }
 }
 
-XnorCore::Entity* XnorCore::Scene::GetEntityById(const Guid& xnorGuid)
+Entity* Scene::GetEntityById(const Guid& xnorGuid)
 {
     for (Entity* ent : m_Entities)
     {
@@ -33,12 +35,12 @@ XnorCore::Entity* XnorCore::Scene::GetEntityById(const Guid& xnorGuid)
     return nullptr;
 }
 
-void XnorCore::Scene::CreateBasicScene()
+void Scene::CreateBasicScene()
 {
     scene = new Scene;
 }
 
-XnorCore::Scene::~Scene()
+Scene::~Scene()
 {
     for (Entity* ent : m_Entities)
     {

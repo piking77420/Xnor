@@ -20,6 +20,7 @@ XnorCore::Entity::~Entity()
 
 void XnorCore::Entity::Begin() const
 {
+    Entity::CreateTypeInfo();
     for (Component* comp : m_Components)
     {
         comp->Begin();
