@@ -79,3 +79,8 @@ void Model::Unload()
 
     m_Loaded = false;
 }
+
+uint32_t Model::GetID() const
+{
+    return  m_ModelId;
+}

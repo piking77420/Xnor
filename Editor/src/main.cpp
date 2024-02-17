@@ -35,13 +35,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	
 	//MemoryLeakDetector detector;
 
-	const Pointer<File> modelFile = FileManager::Load("assets/models/sphere.obj");
-	
 	Window window;
 	Editor editor(window);
 	Renderer renderer;
 
-	Pointer<Model> model = ResourceManager::CreateAndLoad<Model>(modelFile);
 	
 	Scene::CreateBasicScene();
 	//Scene& scene = *Scene::scene;

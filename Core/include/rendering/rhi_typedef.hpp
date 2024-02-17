@@ -12,14 +12,15 @@ BEGIN_XNOR_CORE
 
 enum PolyGoneFace : int
 {
-	FRONT_LEFT = 0,
+	FRONT_LEFT = 1024,
 	FRONT_RIGHT,
-	BACK_LEFT,
-	FRONT,
-	BACK,
-	LEFT,
-	RIGHT,
-	FRONT_AND_BACK
+	BACK_LEFT ,
+	BACK_RIGHT ,
+	FRONT ,
+	BACK ,
+	LEFT ,
+	RIGHT ,
+	FRONT_AND_BACK 
 };
 
 enum ShaderType : int

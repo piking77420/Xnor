@@ -6,6 +6,7 @@
 #include "file/file_manager.hpp"
 #include "scene/scene.hpp"
 #include "rendering/rhi.hpp"
+#include "resource/model.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -24,6 +25,8 @@ private:
     Pointer<File> vertexPath;
     Pointer<File> fragmentPath;
     Shader* basicShader;
+
+    Pointer<Model> model;
     
     RHI m_Rhi;
 };

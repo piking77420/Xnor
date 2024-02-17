@@ -14,6 +14,9 @@ Renderer::Renderer() : clearColor(0.5f)
 	
 	basicShader = new Shader();
 	basicShader->Load(*vertexPath, *fragmentPath);
+
+	const Pointer<File> modelFile = FileManager::Load("assets/models/cube.obj");
+	model = ResourceManager::CreateAndLoad<Model>(modelFile);
 }
 
 void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererContext) const
@@ -31,7 +34,7 @@ void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererCo
 	basicShader->Use();
 	
 	RHI::SetPolyGoneMode(FRONT_AND_BACK,FILL);
-
+	RHI::DrawModel(model->GetID());
 
 	basicShader->UnUse();
 

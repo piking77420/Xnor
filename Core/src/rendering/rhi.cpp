@@ -10,7 +10,7 @@ using namespace XnorCore;
 
 void RHI::SetPolyGoneMode(PolyGoneFace face, PolyGoneMode mode)
 {
-	glPolygonMode(face + GL_FRONT_LEFT,GL_POINT + mode);
+	glPolygonMode(face,GL_POINT + mode);
 }
 
 uint32_t RHI::CreateModel(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indicies)
@@ -121,7 +121,7 @@ uint32_t RHI::CreateShader(const std::vector<ShaderCode>& shaderCodes)
 
 	for (size_t i = 0; i < shaderCodes.size(); ++i)
 	{
-		shadersID[i] = glCreateShader(GL_VERTEX_SHADER);
+		shadersID[i] = glCreateShader(GetOpenglShaderType(shaderCodes[i].shaderType));
 		glShaderSource(shadersID[i], 1, &shaderCodes[i].shaderCode, nullptr);
 		glCompileShader(shadersID[i]);
 		RHI::CheckCompilationError(shadersID[i], RHI::GetShaderTypeToString(shaderCodes[i].shaderType));
