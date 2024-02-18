@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <unordered_map>
 #include <vector>
 
@@ -29,11 +30,14 @@ public:
 	XNOR_ENGINE static void BindMaterial(const Material& material);
 
 	// Shader
-	XNOR_ENGINE static void DestroyShader(uint32_t id);
+	XNOR_ENGINE static void DestroyShader(uint32_t shaderID);
 	XNOR_ENGINE static void CheckCompilationError(uint32_t shaderId,const std::string& type);
 	XNOR_ENGINE static  uint32_t CreateShader(const std::vector<ShaderCode>& shaderCodes);
 	XNOR_ENGINE static  void UseShader(const uint32_t shaderID);
+	XNOR_ENGINE static  void UnUseShader();
 
+	static void SetUniform(UniformType uniformType,const void* data, uint32_t shaderID,const char* uniformKey);
+	
 	// TEXTURE
 	XNOR_ENGINE  static void CreateTexture(uint32_t* textureId,TextureCreateInfo textureCreateInfo);
 	XNOR_ENGINE  static void DestroyTexture(const uint32_t* textureId);
@@ -50,6 +54,26 @@ public:
 	
 private:
 
+	struct ModelInternal
+	{
+		uint32_t vao = 0;
+		uint32_t vbo = 0 ;
+		uint32_t ebo = 0;
+		uint32_t nbrOfVertex = 0;
+		uint32_t nbrOfIndicies = 0;
+	};
+
+	struct ShaderInternal
+	{
+		uint32_t id;
+		std::map<std::string,uint32_t> uniformMap;
+	};
+
+	static constexpr int NULL_UNIFORM_LOCATION = -1;
+	
+	XNOR_ENGINE static inline std::unordered_map<uint32_t,ShaderInternal> m_ShaderMap;
+	XNOR_ENGINE static inline std::unordered_map<uint32_t,ModelInternal> m_ModelMap;
+
 	static uint32_t GetOpenglShaderType(ShaderType shaderType);
 	
 	static std::string GetShaderTypeToString(ShaderType shaderType);
@@ -62,7 +86,9 @@ private:
 
 	static uint32_t GetOpenglFormatFromTextureFormat(TextureFormat textureFormat);
 
-
+	static void IsShaderValid(uint32_t shaderID);
+	
+	static int GetUniformInMap(uint32_t shaderID, const char* uniformKey);
 public:
 	
 	XNOR_ENGINE RHI();
@@ -81,20 +107,11 @@ public:
 
 private:
 	
-	struct ModelInternal
-	{
-		uint32_t vao = 0;
-		uint32_t vbo = 0 ;
-		uint32_t ebo = 0;
-		uint32_t nbrOfVertex = 0;
-		uint32_t nbrOfIndicies = 0;
-	};
-
-	mutable UniformBuffer* m_CameraUniform;
-	mutable UniformBuffer* m_ModelUniform;
-
-
-	XNOR_ENGINE static inline std::unordered_map<uint32_t,ModelInternal> m_ModelMap;
+	 mutable UniformBuffer* m_CameraUniform = nullptr;
+	 mutable  UniformBuffer* m_ModelUniform = nullptr;
 };
+
+
+
 
 END_XNOR_CORE

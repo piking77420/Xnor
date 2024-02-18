@@ -22,8 +22,10 @@ public:
     
     ~Texture();
 
+    XNOR_ENGINE void Load(File& file) override;
+    
     XNOR_ENGINE void Load(const uint8_t* buffer, int64_t length) override;
-
+    
     XNOR_ENGINE void Unload() override;
 
     [[nodiscard]]

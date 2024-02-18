@@ -31,7 +31,8 @@ void Shader::Load(const File& vertexShader, const File& fragmentShader)
     shaderCodes[1].shaderCode = fShaderCode;
     
     m_Id = RHI::CreateShader(shaderCodes);
-    
+
+    m_Loaded = true;
 }
 
 XNOR_ENGINE void Shader::Recompile(const File& vertexShader, const File& fragmentShader)
@@ -46,6 +47,36 @@ void Shader::Unload()
     return void();
 }
 
+void Shader::SetInt(const std::string& keyName, int value) const
+{
+    RHI::SetUniform(UniformType::INT,&value,m_Id,keyName.c_str());
+}
+
+void Shader::SetBool(const std::string& keyName, bool value) const
+{
+    RHI::SetUniform(UniformType::BOOL,&value,m_Id,keyName.c_str());
+}
+
+void Shader::SetFloat(const std::string& keyName, float value) const
+{
+    RHI::SetUniform(UniformType::Float,&value,m_Id,keyName.c_str());
+}
+
+void Shader::SetVec3(const std::string& keyName, const Vector3& value) const
+{
+    RHI::SetUniform(UniformType::Vec3,&value,m_Id,keyName.c_str());
+}
+
+void Shader::SetVec4(const std::string& keyName, const Vector4& value) const
+{
+    RHI::SetUniform(UniformType::Vec4,&value,m_Id,keyName.c_str());
+}
+
+void Shader::SetMat4(const std::string& keyName, const Matrix& value) const
+{
+    RHI::SetUniform(UniformType::mat4,&value,m_Id,keyName.c_str());
+}
+
 uint32_t Shader::GetId() const
 {
     return  m_Id;
@@ -58,7 +89,7 @@ void Shader::Use() const
 
 void Shader::UnUse() const
 {
-    RHI::UseShader(0);
+    RHI::UnUseShader();
 }
 
 

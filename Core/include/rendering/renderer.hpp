@@ -20,12 +20,16 @@ public:
     XNOR_ENGINE  ~Renderer() = default;
     
     XNOR_ENGINE void RenderScene(const Scene& scene, const RendererContext& rendererContext) const;
+
+    XNOR_ENGINE void CompileShader();
 private:
     
     Pointer<File> vertexPath;
     Pointer<File> fragmentPath;
-    Shader* basicShader;
+    //Pointer<File> diamondPath;
 
+    Shader* basicShader;
+    //Pointer<Texture> diamondtexture;
     Pointer<Model> model;
     
     RHI m_Rhi;

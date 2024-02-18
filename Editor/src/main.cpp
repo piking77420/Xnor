@@ -38,6 +38,13 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		window.PollEvents();
 		editor.BeginFrame();
 
+		ImGui::Begin("Renderer Settings");
+		if(ImGui::Button("Recompile Shader"))
+		{
+			renderer.CompileShader();
+		}
+		ImGui::End();
+		
 		ImGui::ColorPicker4("colorPickerTest", renderer.clearColor.Raw(), ImGuiColorEditFlags_PickerHueWheel);
 		editor.Update();
 

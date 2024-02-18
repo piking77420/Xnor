@@ -2,7 +2,6 @@
 
 #include <glad/glad.h>
 
-#include "resource/shader.hpp"
 #include "utils/logger.hpp"
 
 
@@ -84,9 +83,11 @@ void RHI::BindMaterial(const Material& material)
 	material.shader->UnUse();
 }*/
 
-void RHI::DestroyShader(uint32_t id)
+void RHI::DestroyShader(uint32_t shaderID)
 {
-	glDeleteShader(id);
+	IsShaderValid(shaderID);
+	
+	glDeleteShader(shaderID);
 }
 
 void RHI::CheckCompilationError(uint32_t shaderId, const std::string& type)
@@ -130,13 +131,57 @@ uint32_t RHI::CreateShader(const std::vector<ShaderCode>& shaderCodes)
 	}
 	glLinkProgram(shaderID);
 	RHI::CheckCompilationError(shaderID, "PROGRAM");
+	m_ShaderMap.emplace(shaderID,ShaderInternal());
 
 	return shaderID;
 }
 
 void RHI::UseShader(const uint32_t shaderID)
 {
+#ifdef _DEBUG
+	IsShaderValid(shaderID);
+#endif
+#ifdef NDEBUG 
+
+#endif // NDEBUG 
 	glUseProgram(shaderID);
+}
+
+void RHI::UnUseShader()
+{
+	glUseProgram(0);
+}
+
+void RHI::SetUniform(UniformType uniformType, const void* data,uint32_t shaderID,
+	const char* uniformKey)
+{
+	GLint uniformLocation = GetUniformInMap(shaderID,uniformKey);
+
+	switch (uniformType)
+	{
+	case UniformType::INT:
+		glUniform1i(uniformLocation, *reinterpret_cast<const int*>(data));
+		break;
+	case UniformType::BOOL:
+		glUniform1i(uniformLocation, *reinterpret_cast<const bool*>(data));
+		break;
+	case UniformType::Float:
+		glUniform1f(uniformLocation, *reinterpret_cast<const bool*>(data));
+		break;
+	case UniformType::Vec3:
+		glUniform3fv(uniformLocation,1, reinterpret_cast<const GLfloat*>(data));
+		break;
+	case UniformType::Vec4:
+		glUniform4fv(uniformLocation,1, reinterpret_cast<const GLfloat*>(data));
+		break;
+	case UniformType::mat3:
+		glUniformMatrix3fv(uniformLocation,1,GL_FALSE, reinterpret_cast<const GLfloat*>(data));
+		break;
+	case UniformType::mat4:
+		glUniformMatrix4fv(uniformLocation,1,GL_FALSE, reinterpret_cast<const GLfloat*>(data));
+		break;
+	}
+
 }
 
 void RHI::CreateTexture(uint32_t* textureId,TextureCreateInfo textureCreateInfo)
@@ -146,7 +191,7 @@ void RHI::CreateTexture(uint32_t* textureId,TextureCreateInfo textureCreateInfo)
 	ComputeOpenglTextureFilter(*textureId,textureCreateInfo.textureFiltering);
 
 	glTextureStorage2D(*textureId, 1, GetOpenglFormatFromTextureFormat(textureCreateInfo.textureFormat),static_cast<GLsizei>(textureCreateInfo.textureSizeWidth), static_cast<GLsizei>(textureCreateInfo.textureSizeHeight));
-	glTextureSubImage2D(*textureId, 0, 0, 0, static_cast<GLsizei>(textureCreateInfo.textureSizeWidth),  static_cast<GLsizei>(textureCreateInfo.textureSizeHeight), GL_RGBA, GL_UNSIGNED_BYTE, textureCreateInfo.data);
+	glTextureSubImage2D(*textureId, 0, 0, 0, static_cast<GLsizei>(textureCreateInfo.textureSizeWidth), static_cast<GLsizei>(textureCreateInfo.textureSizeHeight), GL_RGBA, GL_UNSIGNED_BYTE,nullptr);
 	glGenerateTextureMipmap(*textureId);
 	
 }
@@ -264,7 +309,7 @@ uint32_t RHI::TextureTypeToOpenglTexture(TextureType textureType)
 	case TextureType::TEXTURE_3D:
 		return GL_TEXTURE_3D;
 	case TextureType::TEXTURE_1D_ARRAY:
-		return GL_TEXTURE_3D;
+		return GL_TEXTURE_1D_ARRAY;
 	case TextureType::TEXTURE_2D_ARRAY:
 		return GL_TEXTURE_2D_ARRAY;
 	case TextureType::TEXTURE_RECTANGLE:
@@ -290,54 +335,67 @@ uint32_t RHI::GetOpenglFormatFromTextureFormat(TextureFormat textureFormat)
 	{
 	case TextureFormat::R_8:
 		return GL_R8;
-		break;
 	case TextureFormat::R_16:
 		return GL_R16;
-		break;
 	case TextureFormat::RG_8:
 		return GL_RG8;
-		break;
 	case TextureFormat::RG_16:
 		return GL_RG16;
-		break;
 	case TextureFormat::RGB_8:
 		return GL_RGB8;
-		break;
 	case TextureFormat::RGB_16:
 		return GL_RGB16;
-		break;
 	case TextureFormat::RGBA_8:
 		return GL_RGBA8;
-		break;
 	case TextureFormat::RGBA_16:
 		return GL_RGBA16;
-		break;
 	case TextureFormat::R_16F:
 		return GL_R16F;
-		break;
 	case TextureFormat::RG_16F:
 		return GL_RG16F;
-		break;
 	case TextureFormat::RGB_16F:
 		return GL_RGB16F;
-		break;
 	case TextureFormat::RGBA_16F:
 		return GL_RGBA16F;
-		break;
 	case TextureFormat::DEPTH_COMPONENT:
 		return GL_DEPTH_COMPONENT;
-		break;
 	case TextureFormat::RED:
 		return GL_RED;
-		break;
 	case TextureFormat::RGB:
 		return GL_RGB;
 	case TextureFormat::RGBA:
 		return GL_RGBA;
-		break;
-	default:
-		return GL_RGB8;
 	}
+	return GL_RGB;
+}
+
+void RHI::IsShaderValid(uint32_t shaderID)
+{
+	if(!m_ShaderMap.contains(shaderID))
+	{
+		Logger::LogFatal("No shader with this id %d",shaderID);
+		throw std::runtime_error("No shader With this Id");
+	}
+}
+
+
+
+int RHI::GetUniformInMap(uint32_t shaderID, const char* uniformKey)
+{
+	std::map<std::string,uint32_t>& shaderUniformMap = m_ShaderMap.at(shaderID).uniformMap;
+
+	if (shaderUniformMap.find(uniformKey) != shaderUniformMap.end())
+	{
+		return shaderUniformMap[uniformKey];
+	}
+
+	GLint location = glGetUniformLocation(shaderID, uniformKey);
+	if(location == NULL_UNIFORM_LOCATION)
+	{
+		Logger::LogWarning("There is no uniform with this key [%s] in the shader %d",uniformKey,shaderID);
+	}
+		
+	shaderUniformMap[uniformKey] = location;
 }
 
 RHI::RHI()

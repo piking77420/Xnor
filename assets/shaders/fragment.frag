@@ -1,5 +1,10 @@
 #version 460 core
 
+readonly restrict layout(std430) buffer u_textureSamplerers
+{
+    uvec2 textureSamplerers[];
+};
+
 
 in VS_OUT 
 {
@@ -10,10 +15,12 @@ in VS_OUT
 
 out vec4 FragColor;
 
+uniform vec3 color;
+
 void main()
 {
    
-    FragColor = vec4(1,1,1,1.0);
+    FragColor = vec4(color,1.0);
 }
     
 

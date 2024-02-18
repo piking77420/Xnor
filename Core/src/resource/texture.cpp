@@ -17,9 +17,9 @@ Texture::~Texture()
     RHI::DestroyTexture(&m_Id);
 }
 
-void Texture::Load(const uint8_t* buffer, const int64_t length)
+void Texture::Load(File& file)
 {
-    m_Data = stbi_load_from_memory(buffer, static_cast<int32_t>(length), &m_Size.x, &m_Size.y, &m_Channels,0);
+    m_Data = stbi_load(file.GetFilepath().generic_string().c_str(), &m_Size.x, &m_Size.y, &m_Channels,0);
 
     TextureCreateInfo textureCreateInfo
     {
@@ -35,6 +35,11 @@ void Texture::Load(const uint8_t* buffer, const int64_t length)
     
     m_Loaded = true;
 }
+
+void Texture::Load(const uint8_t* buffer, int64_t length)
+{
+}
+
 
 void Texture::Unload()
 {

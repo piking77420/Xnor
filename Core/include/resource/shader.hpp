@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core.hpp"
+#include "Maths/math.hpp"
 #include "resource/resource.hpp"
 
 BEGIN_XNOR_CORE
@@ -18,6 +19,18 @@ public:
 
 	XNOR_ENGINE void Unload() override;
 
+	XNOR_ENGINE void SetInt(const std::string& keyName,int value) const ;
+	
+	XNOR_ENGINE void SetBool(const std::string& keyName,bool value) const ;
+	
+	XNOR_ENGINE void SetFloat(const std::string& keyName,float value) const ;
+	
+	XNOR_ENGINE void SetVec3(const std::string& keyName,const Vector3& value) const ;
+	
+	XNOR_ENGINE void SetVec4(const std::string& keyName,const Vector4& value) const ;
+	
+	XNOR_ENGINE void SetMat4(const std::string& keyName,const Matrix& value) const ;
+	
 	uint32_t GetId() const;
 
 	void Use() const;
@@ -27,5 +40,8 @@ public:
 private:
 	uint32_t m_Id = 0;
 };
+
+
+
 
 END_XNOR_CORE

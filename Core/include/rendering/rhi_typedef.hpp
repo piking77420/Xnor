@@ -119,4 +119,15 @@ struct ModelUniformData
 	Matrix normalInvertMatrix = Matrix::Identity();
 };
 
+enum class UniformType
+{
+	INT,
+	BOOL,
+	Float,
+	Vec3,
+	Vec4,
+	mat3,
+	mat4,
+};
+
 END_XNOR_CORE
