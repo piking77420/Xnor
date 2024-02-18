@@ -80,7 +80,7 @@ void Model::Unload()
     m_Loaded = false;
 }
 
-uint32_t Model::GetID() const
+uint32_t Model::GetId() const
 {
     return  m_ModelId;
 }

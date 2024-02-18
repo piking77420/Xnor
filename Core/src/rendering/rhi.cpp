@@ -279,9 +279,9 @@ uint32_t RHI::TextureTypeToOpenglTexture(TextureType textureType)
 		return GL_TEXTURE_2D_MULTISAMPLE;
 	case TextureType::TEXTURE_2D_MULTISAMPLE_ARRAY:
 		return GL_TEXTURE_2D_MULTISAMPLE_ARRAY;
-	default:
-		break;
 	}
+	
+	return 0;
 }
 
 uint32_t RHI::GetOpenglFormatFromTextureFormat(TextureFormat textureFormat)
@@ -362,12 +362,12 @@ RHI::~RHI()
 void RHI::PrepareUniform()
 {
 	m_CameraUniform = new UniformBuffer();
-	m_CameraUniform->Allocate(sizeof (m_CameraUniform), nullptr);
+	m_CameraUniform->Allocate(sizeof (CameraUniformData), nullptr);
 	m_CameraUniform->Bind(0);
 
 
 	m_ModelUniform = new UniformBuffer();
-	m_ModelUniform->Allocate(sizeof(m_ModelUniform), nullptr);
+	m_ModelUniform->Allocate(sizeof(ModelUniformData), nullptr);
 	m_ModelUniform->Bind(1);
 }
 
@@ -391,7 +391,7 @@ void RHI::UpdateModelUniform(const ModelUniformData& modelUniformData) const
 
 void RHI::UpdateCameraUniform(const CameraUniformData& cameraUniformData) const
 {
-	m_CameraUniform->Update(sizeof(ModelUniformData),0,cameraUniformData.view.Raw());
+	m_CameraUniform->Update(sizeof(CameraUniformData),0,cameraUniformData.view.Raw());
 }
 
 

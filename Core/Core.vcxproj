@@ -418,7 +418,6 @@
     <ClInclude Include="include\resource\resource.hpp" />
     <ClInclude Include="include\resource\resource_manager.hpp" />
     <ClInclude Include="include\resource\texture.hpp" />
-    <ClInclude Include="include\scene\camera_component.hpp" />
     <ClInclude Include="include\scene\component.hpp" />
     <ClInclude Include="include\scene\component\camera_component.hpp" />
     <ClInclude Include="include\scene\component\mesh_renderer.hpp" />

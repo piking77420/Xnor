@@ -75,9 +75,9 @@ public:
 	
 	XNOR_ENGINE void ClearColorAndDepth() const;
 
-	void UpdateModelUniform(const ModelUniformData& modelUniformData) const;
+	XNOR_ENGINE void UpdateModelUniform(const ModelUniformData& modelUniformData) const;
 
-	void UpdateCameraUniform(const CameraUniformData& cameraUniformData) const;
+	XNOR_ENGINE void UpdateCameraUniform(const CameraUniformData& cameraUniformData) const;
 
 private:
 	

@@ -16,12 +16,12 @@ UniformBuffer::~UniformBuffer()
 
 void UniformBuffer::Allocate(size_t size, const void* data)
 {
-    glNamedBufferStorage(m_Id, size, data, GL_DYNAMIC_STORAGE_BIT);
+    glNamedBufferStorage(m_Id, static_cast<GLsizeiptr>(size), data, GL_DYNAMIC_STORAGE_BIT);
 }
 
 void UniformBuffer::Update(size_t size, size_t offset, const void* data)
 {
-    glNamedBufferSubData(m_Id, offset, size, data);   
+    glNamedBufferSubData(m_Id, static_cast<GLsizeiptr>(offset), static_cast<GLsizeiptr>(size), data);   
 }
 
 void UniformBuffer::Bind(uint32_t index)

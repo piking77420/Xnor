@@ -18,20 +18,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	using namespace XnorEditor;
 
 	Logger::OpenDefaultFile();
-
-	EntityTest t;
-	t.Begin();
-	EntityDamage d;
-	d.Begin();
-
-	const TypeInfo& type = TypeInfo::Get<Entity>();
-
-	const std::vector<FieldInfo>& members = type.GetMembers();
-
-	for (const FieldInfo& f : members)
-	{
-		Logger::LogInfo("%s ; %s ; Hash : %llu ; Size : %llu ; Element size : %llu ; Offset : %llu ; Is array : %d ; Is static : %d ; Is const : %d", f.typeName.c_str(), f.name.c_str(), f.typeHash, f.fullSize, f.elementSize, f.offset, f.isArray, f.isStatic, f.isConst);
-	}
 	
 	//MemoryLeakDetector detector;
 
@@ -51,8 +37,9 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	{
 		window.PollEvents();
 		editor.BeginFrame();
-		
+
 		ImGui::ColorPicker4("colorPickerTest", renderer.clearColor.Raw(), ImGuiColorEditFlags_PickerHueWheel);
+		editor.Update();
 
 		renderer.RenderScene(*Scene::scene, context);
 

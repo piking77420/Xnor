@@ -13,7 +13,7 @@ out vec4 FragColor;
 void main()
 {
    
-    FragColor = vec4(fs_in.FragPos,1.0);
+    FragColor = vec4(1,1,1,1.0);
 }
     
 

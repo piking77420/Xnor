@@ -25,11 +25,8 @@ out VS_OUT {
 
 void main()
  {
+     gl_Position = projection * view * model * vec4(aPos, 1.0);
 
-    vec4 fragpos = projection * view * model * vec4(aPos, 1.0);
-    gl_Position = fragpos;
-
-    // Pass transformed position, normal, and texture coordinates to fragment shader
     vs_out.FragPos = vec3(model * vec4(aPos, 1.0));
     vs_out.Normal = mat3(normalInvertMatrix) * aNormal;
     vs_out.TexCoords = aTexCoords;

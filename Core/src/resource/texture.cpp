@@ -61,7 +61,7 @@ int Texture::GetChannels() const
     return m_Channels;
 }
 
-void Texture::BindTexture(const uint32_t index)
+void Texture::BindTexture([[maybe_unused]] const uint32_t index)
 {
     RHI::BindTexture(TextureType::TEXTURE_2D,m_Id);
 }
