@@ -245,14 +245,13 @@ void RHI::UnBindFrameBuffer()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void RHI::CreateColorAttachement(uint32_t* textureID, const vec2i size)
+void RHI::CreateColorAttachement(uint32_t*, const vec2i size)
 {
 	TextureCreateInfo createInfo
 	{
 		nullptr,
 		static_cast<uint32_t>(size.x),
 		static_cast<uint32_t>(size.y),
-		
 	};
 }
 

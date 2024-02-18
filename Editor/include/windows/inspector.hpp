@@ -3,6 +3,7 @@
 #include "definitions.hpp"
 #include "ImGui/imgui.h"
 #include "utils/reflectable.hpp"
+#include "utils/utils.hpp"
 
 BEGIN_XNOR_EDITOR
 
@@ -17,9 +18,6 @@ private:
 
     template <typename T>
     static void DisplayScalar(void* obj, size_t offset, const char* name, size_t element);
-
-    template <typename T>
-    static constexpr T* GetPointer(void* obj, size_t offset, size_t element);
 };
 
 template <typename T>
@@ -44,15 +42,7 @@ void Inspector::DisplayScalar(void* const obj, const size_t offset, const char* 
     else if constexpr (std::is_same_v<T, double_t>)
         type = ImGuiDataType_Double;
 
-    ImGui::InputScalar(name, type, GetPointer<T>(obj, offset, element));
-}
-
-template <typename T>
-constexpr T* Inspector::GetPointer(void* const obj, const size_t offset, const size_t element)
-{
-    uint8_t* const ptrSmall = static_cast<uint8_t*>(obj);
-    void* const addr = ptrSmall + offset + sizeof(T) * element;
-    return static_cast<T*>(addr);
+    ImGui::InputScalar(name, type, XnorCore::Utils::GetObjectPointer<T>(obj, offset, element));
 }
 
 END_XNOR_EDITOR

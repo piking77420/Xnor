@@ -64,7 +64,6 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
         name = nameStr.c_str();
     }
 
- 
     if (fieldInfo.typeHash == typeid(int32_t).hash_code())
     {
         DisplayScalar<int32_t>(obj, fieldInfo.offset, name, element);
@@ -99,30 +98,30 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
     }
     else if (fieldInfo.typeHash == typeid(Vector2i).hash_code())
     {
-        ImGui::InputInt2(name, GetPointer<Vector2i>(obj, fieldInfo.offset, element)->Raw());
+        ImGui::InputInt2(name, XnorCore::Utils::GetObjectPointer<Vector2i>(obj, fieldInfo.offset, element)->Raw());
     }
     else if (fieldInfo.typeHash == typeid(Vector2).hash_code())
     {
-        ImGui::InputFloat2(name, GetPointer<Vector2>(obj, fieldInfo.offset, element)->Raw());
+        ImGui::InputFloat2(name, XnorCore::Utils::GetObjectPointer<Vector2>(obj, fieldInfo.offset, element)->Raw());
     }
     else if (fieldInfo.typeHash == typeid(Vector3).hash_code())
     {
-        ImGui::InputFloat3(name, GetPointer<Vector3>(obj, fieldInfo.offset, element)->Raw());
+        ImGui::InputFloat3(name, XnorCore::Utils::GetObjectPointer<Vector3>(obj, fieldInfo.offset, element)->Raw());
     }
     else if (fieldInfo.typeHash == typeid(Vector4).hash_code())
     {
-        ImGui::InputFloat4(name, GetPointer<Vector4>(obj, fieldInfo.offset, element)->Raw());
+        ImGui::InputFloat4(name, XnorCore::Utils::GetObjectPointer<Vector4>(obj, fieldInfo.offset, element)->Raw());
     }
     else if (fieldInfo.typeHash == typeid(Quaternion).hash_code())
     {
-        ImGui::InputFloat4(name, GetPointer<Quaternion>(obj, fieldInfo.offset, element)->Raw());
+        ImGui::InputFloat4(name, XnorCore::Utils::GetObjectPointer<Quaternion>(obj, fieldInfo.offset, element)->Raw());
     }
     else
     {
         if (ImGui::CollapsingHeader(name))
         {
             const XnorCore::TypeInfo& subInfo = XnorCore::TypeInfo::Get(fieldInfo.typeHash);
-            void* const subPtr = GetPointer<uint8_t>(obj, fieldInfo.offset, element * subInfo.GetSize());
+            void* const subPtr = XnorCore::Utils::GetObjectPointer<uint8_t>(obj, fieldInfo.offset, element * subInfo.GetSize());
             ImGui::PushID(subPtr);
 
             for (const XnorCore::FieldInfo& m : subInfo.GetMembers())

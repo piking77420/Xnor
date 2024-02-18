@@ -39,6 +39,8 @@ class Reflectable
 {
 public:
     virtual ~Reflectable() = default;
+
+    DEFAULT_COPY_MOVE_OPERATIONS(Reflectable)
     
     XNOR_ENGINE virtual void CreateTypeInfo() const = 0;
 };
@@ -46,19 +48,19 @@ public:
 template<class T>
 concept ReflectT = std::is_base_of_v<Reflectable, T>;
 
-#define REFLECTABLE_IMPL(type) \
-public:\
-virtual void CreateTypeInfo() const override \
-{ \
-    XnorCore::TypeInfo::Create<refl::trait::remove_qualifiers_t<decltype(*this)>>(); \
-} \
+#define REFLECTABLE_IMPL(type)                                                                                                          \
+public:                                                                                                                                 \
+virtual void CreateTypeInfo() const override                                                                                            \
+{                                                                                                                                       \
+    XnorCore::TypeInfo::Create<refl::trait::remove_qualifiers_t<decltype(*this)>>();                                                    \
+}                                                                                                                                       \
 /*
 Even though the use of the friend functionality is prohibited in the C++ style guidelines of this project, it has to be used here to
 circumvent the issue of accessing private members through reflection, the friend declaration allows the underlying code generated
 by the reflection library to access private types.
 There might be another solution to this, but it's the easiest one found so far, also it works and isn't too ugly
-*/\
-private:\
+*/                                                                                                                                      \
+private:                                                                                                                                \
 friend struct refl_impl::metadata::type_info__<type>;
 
 class TypeInfo
@@ -273,14 +275,15 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
 template <typename ReflectT>
 constexpr void TypeInfo::ParseParents(refl::type_descriptor<ReflectT> desc)
 {
-    if constexpr (desc.declared_bases.size == 0)
-        return;
-
-    refl::util::for_each(refl::util::reflect_types(desc.declared_bases), [&]<typename T>([[maybe_unused]] const T t)
+    if constexpr (desc.declared_bases.size != 0)
     {
-        // We store the type hash of the parent class, so we can get it back from the list of type info later 
-        m_BaseClasses.push_back(typeid(T::type).hash_code());
-    });
+        refl::util::for_each(refl::util::reflect_types(desc.declared_bases), [&]<typename T>(const T)
+            {
+                // We store the type hash of the parent class, so we can get it back from the list of type info later 
+                m_BaseClasses.push_back(typeid(T::type).hash_code());
+            }
+        );
+    }
 }
 
 END_XNOR_CORE

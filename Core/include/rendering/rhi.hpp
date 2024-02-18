@@ -52,7 +52,7 @@ public:
 	XNOR_ENGINE static void BindFrameBuffer(const uint32_t frameBufferId);
 	XNOR_ENGINE static void UnBindFrameBuffer();
 
-	XNOR_ENGINE static void CreateColorAttachement(uint32_t* textureID, const vec2i size);
+	XNOR_ENGINE static void CreateColorAttachement(uint32_t* textureId, const vec2i size);
 	
 	XNOR_ENGINE static void AttachColorAttachementToFrameBuffer(uint32_t frameBufferId, uint32_t attachmentIndex,uint32_t textureId);
 	XNOR_ENGINE static void AttachDepthAndStencilToFrameBuffer(uint32_t frameBufferId,uint32_t textureId);

@@ -110,7 +110,7 @@ Editor::Editor(XnorCore::Window& window)
 
 	io.Fonts->AddFontDefault();
 
-	const char* const glslVersion = "#version 460";
+	constexpr const char* glslVersion = "#version 460";
 
 	ImGui_ImplGlfw_InitForOpenGL(const_cast<GLFWwindow*>(static_cast<const GLFWwindow*>(window.GetWindow())), true);
 	ImGui_ImplOpenGL3_Init(glslVersion);

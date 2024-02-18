@@ -17,7 +17,9 @@ public:
     // We keep both function overloads and only override one
     using Resource::Load;
 
-    ~Model();
+    DEFAULT_COPY_MOVE_OPERATIONS(Model)
+
+    XNOR_ENGINE ~Model() override;
     
     XNOR_ENGINE void Load(const uint8_t* buffer, int64_t length) override;
     

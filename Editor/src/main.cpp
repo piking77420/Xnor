@@ -7,6 +7,7 @@
 #include "file/file_manager.hpp"
 #include "resource/resource_manager.hpp"
 #include "resource/texture.hpp"
+#include "utils/utils.hpp"
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
@@ -33,8 +34,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	
 	Camera cam;
 	cam.pos = { 0, 0, -5 };
-	
-	RendererContext context;
 
 	while (!window.ShouldClose())
 	{
@@ -51,7 +50,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		ImGui::ColorPicker4("colorPickerTest", renderer.clearColor.Raw(), ImGuiColorEditFlags_PickerHueWheel);
 		editor.Update();
 		
-		context = 
+		RendererContext context
 		{
 			.camera = &cam,
 			.framebuffer = renderBuffer
@@ -59,7 +58,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		renderer.RenderScene(*Scene::scene, context);
 		
 		ImGui::Begin("Scene");
-		ImGui::Image(reinterpret_cast<ImTextureID>(mainRenderTexture->GetID()), ImGui::GetContentRegionAvail());
+		ImGui::Image(Utils::IntToPointer<ImTextureID>(mainRenderTexture->GetID()), ImGui::GetContentRegionAvail());
 		ImGui::End();
 		
 		editor.EndFrame();
