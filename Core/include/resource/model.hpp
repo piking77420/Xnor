@@ -13,9 +13,6 @@ class Model : public Resource
 public:
     // Use the base class' constructors
     using Resource::Resource;
-    
-    // Use the defined destructor from the base class instead of the deleted one from the interface
-    //using Resource::~Resource;
 
     // We keep both function overloads and only override one
     using Resource::Load;
@@ -26,7 +23,8 @@ public:
     
     XNOR_ENGINE void Unload() override;
 
-    uint32_t GetID() const;
+    [[nodiscard]]
+    uint32_t GetId() const;
     
 private:
     std::vector<Vertex> m_Vertices;

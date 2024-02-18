@@ -263,14 +263,14 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
 template <typename ReflectT>
 constexpr void TypeInfo::ParseParents(refl::type_descriptor<ReflectT> desc)
 {
-    if constexpr (desc.declared_bases.size == 0)
-        return;
-
-    refl::util::for_each(refl::util::reflect_types(desc.declared_bases), [&]<typename T>(const T t)
+    if constexpr (desc.declared_bases.size != 0)
     {
-        // We store the type hash of the parent class, so we can get it back from the list of type info later 
-        m_BaseClasses.push_back(typeid(T::type).hash_code());
-    });
+        refl::util::for_each(refl::util::reflect_types(desc.declared_bases), [&]<typename T>([[maybe_unused]] const T t)
+        {
+            // We store the type hash of the parent class, so we can get it back from the list of type info later 
+            m_BaseClasses.push_back(typeid(T::type).hash_code());
+        });
+    }
 }
 
 END_XNOR_CORE

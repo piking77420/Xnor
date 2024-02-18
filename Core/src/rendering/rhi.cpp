@@ -279,9 +279,9 @@ uint32_t RHI::TextureTypeToOpenglTexture(TextureType textureType)
 		return GL_TEXTURE_2D_MULTISAMPLE;
 	case TextureType::TEXTURE_2D_MULTISAMPLE_ARRAY:
 		return GL_TEXTURE_2D_MULTISAMPLE_ARRAY;
-	default:
-		break;
 	}
+	
+	return 0;
 }
 
 uint32_t RHI::GetOpenglFormatFromTextureFormat(TextureFormat textureFormat)

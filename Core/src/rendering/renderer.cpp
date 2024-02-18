@@ -19,7 +19,7 @@ Renderer::Renderer() : clearColor(0.5f)
 	model = ResourceManager::CreateAndLoad<Model>(modelFile);
 }
 
-void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererContext) const
+void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererContext& rendererContext) const
 {
 	m_Rhi.SetClearColor(clearColor);
 	m_Rhi.ClearColorAndDepth();
@@ -34,7 +34,7 @@ void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererCo
 	basicShader->Use();
 	
 	RHI::SetPolyGoneMode(FRONT_AND_BACK,FILL);
-	RHI::DrawModel(model->GetID());
+	RHI::DrawModel(model->GetId());
 
 	basicShader->UnUse();
 
