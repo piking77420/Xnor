@@ -26,7 +26,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	//Scene& scene = *Scene::scene;
 
 	FrameBuffer* renderBuffer = new FrameBuffer();
-	Texture* mainRenderTexture = new Texture(Attachements::COLOR,renderBuffer->GetSize());
+	Texture* mainRenderTexture = new Texture(Attachements::COLOR, renderBuffer->GetSize());
 	
 	std::vector<RenderTarget> renderTargets(1);
 	renderTargets[0].texture = mainRenderTexture;

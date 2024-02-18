@@ -36,7 +36,7 @@ public:
 
 private:
 	GLFWwindow* m_Window = nullptr;
-	Vector2i m_Size = { 1920,1080 };
+	Vector2i m_Size = { 1280, 720 };
 };
 	
 END_XNOR_CORE

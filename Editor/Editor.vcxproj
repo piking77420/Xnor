@@ -118,6 +118,7 @@
     <ClCompile Include="src\editor.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\windows\inspector.cpp" />
+    <ClCompile Include="src\windows\performance.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.vcxproj">
@@ -128,6 +129,7 @@
     <ClInclude Include="include\definitions.hpp" />
     <ClInclude Include="include\editor.hpp" />
     <ClInclude Include="include\windows\inspector.hpp" />
+    <ClInclude Include="include\windows\performance.hpp" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

@@ -3,10 +3,10 @@
 #include "definitions.hpp"
 #include "window.hpp"
 #include "windows/inspector.hpp"
+#include "windows/performance.hpp"
 
 BEGIN_XNOR_EDITOR
-
-class Editor
+	class Editor
 {
 public:
 	explicit Editor(XnorCore::Window& window);
@@ -22,6 +22,7 @@ public:
 private:
 	XnorCore::Window* m_Window;
 	Inspector m_Inspector;
+	Performance m_Performance;
 
 	void BeginDockSpace() const;
 

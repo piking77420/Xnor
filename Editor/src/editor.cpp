@@ -164,6 +164,8 @@ void Editor::BeginFrame()
 
 void Editor::Update()
 {
+	m_Performance.Update();
+	m_Performance.Display();
 }
 
 void Editor::EndFrame()
