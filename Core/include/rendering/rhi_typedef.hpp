@@ -40,6 +40,7 @@ struct ShaderCode
 
 enum class TextureWrapping: int
 {
+	NONE,
 	REPEAT,
 	MIRRORED_REPEAT,
 	CLAMP_TO_EDGE,
@@ -49,6 +50,7 @@ enum class TextureWrapping: int
 
 enum class TextureFiltering: int
 {
+	NONE,
 	LINEAR,
 	NEAREST,
 };
@@ -104,7 +106,7 @@ enum class AttachementHandle
 
 struct TextureCreateInfo
 {
-	void* data;
+	void* data = nullptr;
 	uint32_t textureSizeWidth;
 	uint32_t textureSizeHeight;
 	TextureFiltering textureFiltering;

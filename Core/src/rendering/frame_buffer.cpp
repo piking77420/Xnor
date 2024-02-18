@@ -15,39 +15,27 @@ FrameBuffer::~FrameBuffer()
 	RHI::DestroyFrameBuffer(&m_Id);
 }
 
+const vec2i FrameBuffer::GetSize() const
+{
+	return m_FrameBufferSize;
+}
+
 void FrameBuffer::CreateAttachement(std::vector<RenderTarget>& renderTargets)
 {
-	/*
-	for (RenderTarget& renderTarget : renderTargets)
+	for (size_t i = 0; i < renderTargets.size(); ++i)
 	{
-		TextureCreateInfo textureCreateInfo
-		{
-			nullptr,
-			static_cast<uint32_t>(m_FrameBufferSize.x),
-			static_cast<uint32_t>(m_FrameBufferSize.y),
-			TextureFiltering::LINEAR,
-			TextureWrapping::REPEAT,
-			TextureDataType::RGB_16
-		};
-		
-		switch (renderTarget.attachementHandle)
-		{
-		case AttachementHandle::COLOR :
-			textureCreateInfo.textureFormat = TextureDataType::RGB_16F;
-			break;
-		case AttachementHandle::POSITION :
-			textureCreateInfo.textureFormat = TextureDataType::RGB_16F;
-			break;
-		case AttachementHandle::NORMAL :
-			textureCreateInfo.textureFormat = TextureDataType::RGB_16F;
-			break;
-		case AttachementHandle::TEXTURECOORD :
-			textureCreateInfo.textureFormat = TextureDataType::RG_16F;
-			break;
-		}
+		RHI::AttachTexture2DToFrameBuffer(m_Id,i,renderTargets[i].texture->GetID());
+	}	
+}
 
-		renderTarget.texture = new Texture(textureCreateInfo);
-	}*/
+void FrameBuffer::BindFrameBuffer()
+{
+	RHI::BindFrameBuffer(m_Id);
+}
+
+void FrameBuffer::UnBindFrameBuffer()
+{
+	RHI::BindFrameBuffer(0);
 }
 
 

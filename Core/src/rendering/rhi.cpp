@@ -203,12 +203,16 @@ void RHI::CreateTexture(uint32_t* textureId,TextureCreateInfo textureCreateInfo)
 		static_cast<GLsizei>(textureCreateInfo.textureSizeWidth),
 		static_cast<GLsizei>(textureCreateInfo.textureSizeHeight));
 	
+	if(!textureCreateInfo.data)
+	{
+		return;
+	}
+
 	glTextureSubImage2D(*textureId, 0, 0, 0,
 		static_cast<GLsizei>(textureCreateInfo.textureSizeWidth),
 		static_cast<GLsizei>(textureCreateInfo.textureSizeHeight),
 		GetOpenGLTextureFormat(textureCreateInfo.textureFormat), GL_UNSIGNED_BYTE,textureCreateInfo.data);
 
-	
 	glGenerateTextureMipmap(*textureId);
 	
 }
@@ -238,6 +242,21 @@ void RHI::CreateFrameBuffer(uint32_t* frameBufferID)
 void RHI::DestroyFrameBuffer(uint32_t* frameBufferID)
 {
 	glDeleteFramebuffers(1,frameBufferID);
+}
+
+void RHI::BindFrameBuffer(const uint32_t frameBufferID)
+{
+	glBindFramebuffer(GL_FRAMEBUFFER,frameBufferID);
+}
+
+void RHI::UnBindFrameBuffer()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER,0);
+}
+
+void RHI::AttachTexture2DToFrameBuffer(uint32_t frameBufferID, uint32_t attachmentIndex,uint32_t textureId)
+{
+	glNamedFramebufferTexture(frameBufferID,GL_COLOR_ATTACHMENT0 + attachmentIndex,textureId,0);
 }
 
 uint32_t RHI::GetOpenglShaderType(ShaderType shaderType)
@@ -297,7 +316,8 @@ void RHI::ComputeTextureWrapper(uint32_t textureID, TextureWrapping textureWrapp
 			glTextureParameteri(textureID, GL_TEXTURE_WRAP_S,GL_CLAMP_TO_BORDER);
 			glTextureParameteri(textureID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 			break;
-		
+		case TextureWrapping::NONE:
+			break;
 	}
 
 	
@@ -312,9 +332,13 @@ void RHI::ComputeOpenglTextureFilter(uint32_t textureID, TextureFiltering textur
 		glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		break;
+		
 	case TextureFiltering::NEAREST:
 		glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		break;
+		
+	case TextureFiltering::NONE:
 		break;
 	}
 }

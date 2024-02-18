@@ -9,6 +9,11 @@
 
 using namespace XnorCore;
 
+Model::~Model()
+{
+    RHI::DestroyModel(m_ModelId);
+}
+
 void Model::Load(const uint8_t* buffer, const int64_t length)
 {
     Assimp::Importer importer;

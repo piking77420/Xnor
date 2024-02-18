@@ -50,6 +50,15 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 		renderer.RenderScene(*Scene::scene, context);
 
+		ImGui::Begin("Scene");
+
+		ImGui::Image((ImTextureID)renderer.mainRenderTexture->GetID(), ImGui::GetContentRegionAvail(),
+		ImVec2(0, 1),
+		ImVec2(1, 0));
+		
+		ImGui::End();
+
+
 		editor.EndFrame();
 		window.SwapBuffers(); 
 	}

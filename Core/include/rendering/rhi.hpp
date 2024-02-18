@@ -49,8 +49,12 @@ public:
 	// FrammeBuffer 
 	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferID);
 	XNOR_ENGINE static void DestroyFrameBuffer(uint32_t* frameBufferID);
-
 	
+	XNOR_ENGINE static void BindFrameBuffer(const uint32_t frameBufferID);
+	XNOR_ENGINE static void UnBindFrameBuffer();
+
+	XNOR_ENGINE static void AttachTexture2DToFrameBuffer(uint32_t frameBufferID, uint32_t attachmentIndex,uint32_t textureId);
+
 	
 private:
 

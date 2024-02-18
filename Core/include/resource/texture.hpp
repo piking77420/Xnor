@@ -18,9 +18,11 @@ public:
     // We keep both function overloads and only override one
     using Resource::Load;
 
-    Texture(TextureCreateInfo createInfo);
     
-    ~Texture();
+    XNOR_ENGINE ~Texture();
+
+    XNOR_ENGINE void Load(TextureCreateInfo& createInfo);
+
 
     XNOR_ENGINE void Load(File& file) override;
     
@@ -38,12 +40,19 @@ public:
     XNOR_ENGINE int GetChannels() const;
 
     XNOR_ENGINE virtual void BindTexture(uint32_t index);
+    
+    XNOR_ENGINE const uint32_t GetID() const;
+
 
 private:
     uint8_t* m_Data = nullptr;
     Vector2i m_Size;
     int32_t m_Channels = 0;
     uint32_t m_Id = 0;
+
+    TextureFiltering m_TextureFiltering = TextureFiltering::LINEAR;
+    TextureWrapping m_TextureWrapping = TextureWrapping::REPEAT;
+    TextureInternalFormat m_TextureInternalFormat = TextureInternalFormat::RGBA_8;
 
     TextureFormat GetFormat(uint32_t textureFormat);
 };

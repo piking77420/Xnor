@@ -4,21 +4,32 @@
 #include "resource/texture.hpp"
 
 BEGIN_XNOR_CORE
+
+
+struct RenderTarget
+{
+	Texture* texture;
+	AttachementHandle attachementHandle;
+};
+
 class FrameBuffer
 {
 public:
-	struct RenderTarget
-	{
-		Texture* texture;
-		AttachementHandle attachementHandle;
-	};
 
 	FrameBuffer();
 	
 	~FrameBuffer();
 
-	void CreateAttachement(std::vector<RenderTarget>& renderTargets);
-private:
+	XNOR_ENGINE	const vec2i GetSize() const;
+	
+	XNOR_ENGINE void CreateAttachement(std::vector<RenderTarget>& renderTargets);
+	
+	XNOR_ENGINE void BindFrameBuffer();
+
+	XNOR_ENGINE void UnBindFrameBuffer();
+	
+private : 
+	
 	vec2i m_FrameBufferSize = {800,600};
 	
 	uint32_t m_Id;

@@ -8,21 +8,46 @@ using namespace XnorCore;
 
 Renderer::Renderer() : clearColor(0.5f)
 {
+	
 	m_Rhi.SetClearColor(clearColor);
 
 	m_VertexPath = FileManager::Load("assets/shaders/vertex.vert");
 	m_FragmentPath = FileManager::Load("assets/shaders/fragment.frag");
-	m_DiamondPath = new File("assets/textures/DiamondBlock.jpg");
+	m_DiamondPath = new File("assets/textures/viking_room.png");
 
 	m_BasicShader = new Shader();
 	CompileShader();
 	
-	const Pointer<File> modelFile = FileManager::Load("assets/models/cube.obj");
+	const Pointer<File> modelFile = FileManager::Load("assets/models/viking_room.obj");
 	m_Model = ResourceManager::CreateAndLoad<Model>(modelFile);
 	m_Diamondtexture = new Texture();
 	m_Diamondtexture->Load(*m_DiamondPath);
 	m_Rhi.PrepareUniform();
 	m_BasicShader->SetInt("diffuseTexture",0);
+	
+	
+	renderBuffer = new FrameBuffer();
+	TextureCreateInfo createInfo
+	{
+		nullptr,
+		renderBuffer->GetSize().x,
+		renderBuffer->GetSize().y,
+		TextureFiltering::LINEAR,
+		TextureWrapping::NONE,
+		TextureFormat::RGB,
+		TextureInternalFormat::RGB_8
+	};
+
+
+	
+	mainRenderTexture = new Texture();
+	mainRenderTexture->Load(createInfo);
+
+	
+	std::vector<RenderTarget> renderTargets(1);
+	renderTargets[0].texture = mainRenderTexture;
+
+	renderBuffer->CreateAttachement(renderTargets);
 }
 
 Renderer::~Renderer()
@@ -30,6 +55,7 @@ Renderer::~Renderer()
 	delete m_BasicShader;
 	delete m_Diamondtexture;
 	delete m_DiamondPath;
+	delete mainRenderTexture;
 
 }
 
@@ -39,6 +65,11 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 	if (!rendererContext.IsValid())
 		return;//throw std::runtime_error("renderer Context is not valid");
 	*/
+	m_Rhi.ClearColorAndDepth();
+
+	renderBuffer->BindFrameBuffer();
+	m_Rhi.ClearColorAndDepth();
+
 	rendererContext.camera->pos = {0,0,-5};
 
 	m_Rhi.SetClearColor(clearColor);
@@ -68,7 +99,7 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 	RHI::DrawModel(m_Model->GetId());
 
 	m_BasicShader->UnUse();
-
+	renderBuffer->UnBindFrameBuffer();
 }
 
 void Renderer::CompileShader()

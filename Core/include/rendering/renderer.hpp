@@ -22,9 +22,13 @@ public:
     XNOR_ENGINE void RenderScene(const Scene& scene, const RendererContext& rendererContext) const;
 
     XNOR_ENGINE void CompileShader();
+
+    FrameBuffer* renderBuffer = nullptr;
+    Texture* mainRenderTexture = nullptr;
+
 private:
     RHI m_Rhi;
-    
+
     Pointer<File> m_VertexPath;
     Pointer<File> m_FragmentPath;
     Texture* m_Diamondtexture = nullptr;
@@ -32,7 +36,7 @@ private:
 
     Shader* m_BasicShader;
     Pointer<Model> m_Model;
-    
+
 };
 
 END_XNOR_CORE

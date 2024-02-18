@@ -6,15 +6,17 @@
 
 using namespace XnorCore;
 
-Texture::Texture(TextureCreateInfo createInfo)
-{
-    RHI::CreateTexture(&m_Id,createInfo);
-    m_Loaded = true;
-}
 
 Texture::~Texture()
 {
     RHI::DestroyTexture(&m_Id);
+}
+
+void Texture::Load(TextureCreateInfo& createInfo)
+{
+   
+    RHI::CreateTexture(&m_Id, createInfo);
+    m_Loaded = true;
 }
 
 void Texture::Load(File& file)
@@ -27,10 +29,10 @@ void Texture::Load(File& file)
         m_Data,
         static_cast<uint32_t>(m_Size.x),
         static_cast<uint32_t>(m_Size.y),
-        TextureFiltering::LINEAR,
-        TextureWrapping::REPEAT,
+        m_TextureFiltering,
+        m_TextureWrapping,
         GetFormat(m_Channels),
-        TextureInternalFormat::RGBA_8
+        m_TextureInternalFormat
     };
     
     RHI::CreateTexture(&m_Id,textureCreateInfo);
@@ -71,6 +73,11 @@ int Texture::GetChannels() const
 void Texture::BindTexture([[maybe_unused]] const uint32_t index)
 {
     RHI::BindTexture(index,m_Id);
+}
+
+const uint32_t Texture::GetID() const
+{
+    return m_Id;
 }
 
 TextureFormat Texture::GetFormat(uint32_t textureFormat)
