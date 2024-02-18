@@ -1,6 +1,7 @@
 ﻿#include "windows/inspector.hpp"
 
 #include "imgui/imgui.h"
+#include "Maths/quaternion.hpp"
 #include "Maths/vector2i.hpp"
 #include "Maths/vector2.hpp"
 #include "Maths/vector3.hpp"
@@ -111,8 +112,23 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
     {
         ImGui::InputFloat4(name, GetPointer<Vector4>(obj, fieldInfo.offset, element)->Raw());
     }
+    else if (fieldInfo.typeHash == typeid(Quaternion).hash_code())
+    {
+        ImGui::InputFloat4(name, GetPointer<Quaternion>(obj, fieldInfo.offset, element)->Raw());
+    }
     else
     {
-        // TODO handle more complex types
+        if (ImGui::CollapsingHeader(name))
+        {
+            const XnorCore::TypeInfo& subInfo = XnorCore::TypeInfo::Get(fieldInfo.typeHash);
+            void* const subPtr = GetPointer<uint8_t>(obj, fieldInfo.offset, element * subInfo.GetSize());
+            ImGui::PushID(subPtr);
+
+            for (const XnorCore::FieldInfo& m : subInfo.GetMembers())
+            {
+                DisplayMember(subPtr, m);
+            }
+            ImGui::PopID();
+        }
     }
 }

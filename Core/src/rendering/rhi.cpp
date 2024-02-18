@@ -159,27 +159,27 @@ void RHI::SetUniform(UniformType uniformType, const void* data,uint32_t shaderID
 
 	switch (uniformType)
 	{
-	case UniformType::INT:
-		glUniform1i(uniformLocation, *reinterpret_cast<const int*>(data));
-		break;
-	case UniformType::BOOL:
-		glUniform1i(uniformLocation, *reinterpret_cast<const bool*>(data));
-		break;
-	case UniformType::FLOAT:
-		glUniform1f(uniformLocation, *reinterpret_cast<const bool*>(data));
-		break;
-	case UniformType::VEC3:
-		glUniform3fv(uniformLocation,1, reinterpret_cast<const GLfloat*>(data));
-		break;
-	case UniformType::VEC4:
-		glUniform4fv(uniformLocation,1, reinterpret_cast<const GLfloat*>(data));
-		break;
-	case UniformType::MAT3:
-		glUniformMatrix3fv(uniformLocation,1,GL_FALSE, reinterpret_cast<const GLfloat*>(data));
-		break;
-	case UniformType::MAT4:
-		glUniformMatrix4fv(uniformLocation,1,GL_FALSE, reinterpret_cast<const GLfloat*>(data));
-		break;
+		case UniformType::INT:
+			glUniform1i(uniformLocation, *reinterpret_cast<const int*>(data));
+			break;
+		case UniformType::BOOL:
+			glUniform1i(uniformLocation, *reinterpret_cast<const bool*>(data));
+			break;
+		case UniformType::FLOAT:
+			glUniform1f(uniformLocation, *reinterpret_cast<const bool*>(data));
+			break;
+		case UniformType::VEC3:
+			glUniform3fv(uniformLocation,1, reinterpret_cast<const GLfloat*>(data));
+			break;
+		case UniformType::VEC4:
+			glUniform4fv(uniformLocation,1, reinterpret_cast<const GLfloat*>(data));
+			break;
+		case UniformType::MAT3:
+			glUniformMatrix3fv(uniformLocation,1,GL_FALSE, reinterpret_cast<const GLfloat*>(data));
+			break;
+		case UniformType::MAT4:
+			glUniformMatrix4fv(uniformLocation,1,GL_FALSE, reinterpret_cast<const GLfloat*>(data));
+			break;
 	}
 
 }
@@ -227,14 +227,14 @@ uint32_t RHI::GetOpenglShaderType(ShaderType shaderType)
 {
 	switch (shaderType)
 	{
-	case VERTEX :
-		return  GL_VERTEX_SHADER;
-	case FRAGMENT :
-		return  GL_FRAGMENT_SHADER;
-	case GEOMETRY :
-		return  GL_GEOMETRY_SHADER;
-	case COMPUTE :
-		return GL_COMPUTE_SHADER;
+		case VERTEX :
+			return  GL_VERTEX_SHADER;
+		case FRAGMENT :
+			return  GL_FRAGMENT_SHADER;
+		case GEOMETRY :
+			return  GL_GEOMETRY_SHADER;
+		case COMPUTE :
+			return GL_COMPUTE_SHADER;
 	}
 
 	return  GL_VERTEX_SHADER;
@@ -371,7 +371,7 @@ uint32_t RHI::GetOpenglFormatFromTextureFormat(TextureFormat textureFormat)
 
 void RHI::IsShaderValid(uint32_t shaderID)
 {
-	if(!m_ShaderMap.contains(shaderID))
+	if (!m_ShaderMap.contains(shaderID))
 	{
 		Logger::LogFatal("No shader with this id %d",shaderID);
 		throw std::runtime_error("No shader With this Id");

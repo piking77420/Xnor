@@ -12,6 +12,11 @@ constexpr const std::string& TypeInfo::GetName() const
     return m_Name;
 }
 
+constexpr const size_t TypeInfo::GetSize() const
+{
+    return m_Size;
+}
+
 constexpr const std::vector<FieldInfo>& TypeInfo::GetMembers() const
 {
     return m_Members;

@@ -107,6 +107,8 @@ public:
      * \return Name
      */
     XNOR_ENGINE constexpr const std::string& GetName() const;
+    
+    XNOR_ENGINE constexpr const size_t GetSize() const;
 
     /**
      * \brief Gets the members of the type
@@ -122,6 +124,7 @@ public:
 
 private:
     std::string m_Name;
+    size_t m_Size;
     std::vector<FieldInfo> m_Members;
     std::vector<size_t> m_BaseClasses;
 
@@ -188,6 +191,7 @@ constexpr TypeInfo::TypeInfo(const refl::type_descriptor<ReflectT> desc)
 {
     // Get type name
     m_Name = std::string(desc.name.c_str());
+    m_Size = sizeof(ReflectT);
 
     ParseMembers(desc);
     ParseParents(desc);
@@ -203,12 +207,13 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
         const size_t offset = GetMemberOffset(member);
 
         // Get metadata about the member
-        const bool isArray = std::is_array<typename T::value_type>();
-        const bool isPointer = std::is_pointer<typename T::value_type>();
-        const bool isStatic = member.is_static;
+        constexpr bool isArray = std::is_array<typename T::value_type>();
+        constexpr bool isPointer = std::is_pointer<typename T::value_type>();
+        constexpr bool isReflectable = std::is_base_of_v<Reflectable, typename T::value_type>;
+        constexpr bool isStatic = member.is_static;
         // A member is const if it can't be written to
-        const bool isConst = !member.is_writable;
-        const size_t fullSize = sizeof(T::value_type);
+        constexpr bool isConst = !member.is_writable;
+        constexpr size_t fullSize = sizeof(T::value_type);
 
         // Get names
         // Name of the variable
@@ -239,6 +244,11 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
             // "Trivial" type, simply get the hash
             hash = typeid(T::value_type).hash_code();
             elementSize = fullSize;
+
+            if constexpr (isReflectable)
+            {
+                // TODO call the CreateTypeInfo function directly here if possible
+            }
         }
 
         // Construct field info
