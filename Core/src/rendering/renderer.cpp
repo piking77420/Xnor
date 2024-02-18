@@ -12,7 +12,7 @@ Renderer::Renderer() : clearColor(0.5f)
 
 	m_VertexPath = FileManager::Load("assets/shaders/vertex.vert");
 	m_FragmentPath = FileManager::Load("assets/shaders/fragment.frag");
-	//diamondPath = FileManager::Load("assets/textures/DiamondBlock.jpg");
+	//m_DiamondPath = FileManager::Load("assets/textures/DiamondBlock.jpg");
 
 	m_BasicShader = new Shader();
 	CompileShader();

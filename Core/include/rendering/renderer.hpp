@@ -26,10 +26,10 @@ private:
     
     Pointer<File> m_VertexPath;
     Pointer<File> m_FragmentPath;
-    //Pointer<File> diamondPath;
+   // Pointer<File> m_DiamondPath;
 
     Shader* m_BasicShader;
-    //Pointer<Texture> diamondtexture;
+    //Pointer<Texture> m_Diamondtexture;
     Pointer<Model> m_Model;
     
     RHI m_Rhi;

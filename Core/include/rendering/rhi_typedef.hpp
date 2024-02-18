@@ -123,11 +123,11 @@ enum class UniformType
 {
 	INT,
 	BOOL,
-	Float,
-	Vec3,
-	Vec4,
-	Mat3,
-	Mat4,
+	FLOAT,
+	VEC3,
+	VEC4,
+	MAT3,
+	MAT4,
 };
 
 END_XNOR_CORE
