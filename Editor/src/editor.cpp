@@ -6,6 +6,42 @@
 
 using namespace XnorEditor;
 
+void Editor::BeginDockSpace() const
+{
+	static bool dockspaceOpen = true;
+	static bool opt_fullscreen_persistant = true;
+	bool opt_fullscreen = opt_fullscreen_persistant;
+	ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
+	if (opt_fullscreen)
+		dockspaceFlags |= ImGuiDockNodeFlags_PassthruCentralNode;
+	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+	if (opt_fullscreen)
+	{
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewport->WorkPos);
+		ImGui::SetNextWindowSize(viewport->WorkSize);
+		ImGui::SetNextWindowViewport(viewport->ID);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+		windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
+	}
+
+
+	// Begin docking layout
+	ImGui::Begin("DockSpace Demo", &dockspaceOpen, windowFlags);
+	if (opt_fullscreen)
+		ImGui::PopStyleVar(2);
+
+	ImGuiID dockspaceID = ImGui::GetID("DockSpace");
+	ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspaceFlags);
+}
+
+void Editor::EndDockSpace() const
+{
+	ImGui::End();
+}
+
 // ReSharper disable once CppMemberFunctionMayBeStatic
 void Editor::SetupImGuiStyle() const
 {
@@ -123,6 +159,7 @@ void Editor::BeginFrame()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
+	BeginDockSpace();
 }
 
 void Editor::Update()
@@ -131,6 +168,7 @@ void Editor::Update()
 
 void Editor::EndFrame()
 {
+	EndDockSpace();
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	ImGui::UpdatePlatformWindows();

@@ -28,7 +28,7 @@ public:
 	XNOR_ENGINE void UnBindFrameBuffer();
 	
 private:
-	Vector2i m_FrameBufferSize = {800,600};
+	Vector2i m_FrameBufferSize = {1920,1080};
 	uint32_t m_Id;
 };
 
