@@ -22,6 +22,8 @@ public:
 private:
 	XnorCore::Window* m_Window;
 	Inspector m_Inspector;
+
+	void SetupImGuiStyle() const;
 };
 
 END_XNOR_EDITOR

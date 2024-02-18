@@ -59,7 +59,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		renderer.RenderScene(*Scene::scene, context);
 		
 		ImGui::Begin("Scene");
-		ImGui::Image((ImTextureID)mainRenderTexture->GetID(), ImGui::GetContentRegionAvail());
+		ImGui::Image(reinterpret_cast<ImTextureID>(mainRenderTexture->GetID()), ImGui::GetContentRegionAvail());
 		ImGui::End();
 		
 		editor.EndFrame();
