@@ -126,8 +126,8 @@ enum class UniformType
 	Float,
 	Vec3,
 	Vec4,
-	mat3,
-	mat4,
+	Mat3,
+	Mat4,
 };
 
 END_XNOR_CORE
