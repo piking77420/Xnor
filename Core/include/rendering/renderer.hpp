@@ -24,13 +24,13 @@ public:
     XNOR_ENGINE void CompileShader();
 private:
     
-    Pointer<File> vertexPath;
-    Pointer<File> fragmentPath;
+    Pointer<File> m_VertexPath;
+    Pointer<File> m_FragmentPath;
     //Pointer<File> diamondPath;
 
-    Shader* basicShader;
+    Shader* m_BasicShader;
     //Pointer<Texture> diamondtexture;
-    Pointer<Model> model;
+    Pointer<Model> m_Model;
     
     RHI m_Rhi;
 };

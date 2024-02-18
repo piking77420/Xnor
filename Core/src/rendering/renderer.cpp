@@ -10,15 +10,15 @@ Renderer::Renderer() : clearColor(0.5f)
 {
 	m_Rhi.SetClearColor(clearColor);
 
-	vertexPath = FileManager::Load("assets/shaders/vertex.vert");
-	fragmentPath = FileManager::Load("assets/shaders/fragment.frag");
+	m_VertexPath = FileManager::Load("assets/shaders/vertex.vert");
+	m_FragmentPath = FileManager::Load("assets/shaders/fragment.frag");
 	//diamondPath = FileManager::Load("assets/textures/DiamondBlock.jpg");
 
-	basicShader = new Shader();
+	m_BasicShader = new Shader();
 	CompileShader();
 	
 	const Pointer<File> modelFile = FileManager::Load("assets/models/cube.obj");
-	model = ResourceManager::CreateAndLoad<Model>(modelFile);
+	m_Model = ResourceManager::CreateAndLoad<Model>(modelFile);
 	//diamondtexture = ResourceManager::CreateAndLoad<Texture>(diamondPath);
 	m_Rhi.PrepareUniform();
 }
@@ -34,8 +34,8 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 	m_Rhi.SetClearColor(clearColor);
 	m_Rhi.ClearColorAndDepth();
 
-	basicShader->Use();
-	basicShader->SetVec3("color",{clearColor.y,clearColor.x,clearColor.z});
+	m_BasicShader->Use();
+	m_BasicShader->SetVec3("color",{clearColor.y,clearColor.x,clearColor.z});
 	CameraUniformData cam;
 	cam.cameraPos = rendererContext.camera->pos;
 	rendererContext.camera->GetView(&cam.view);
@@ -54,21 +54,21 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 	m_Rhi.UpdateModelUniform(modelData);
 	
 	RHI::SetPolyGoneMode(FRONT_AND_BACK,FILL);
-	RHI::DrawModel(model->GetId());
+	RHI::DrawModel(m_Model->GetId());
 
-	basicShader->UnUse();
+	m_BasicShader->UnUse();
 
 }
 
 void Renderer::CompileShader()
 {
-	if(basicShader->IsLoaded())
+	if(m_BasicShader->IsLoaded())
 	{
-		basicShader->Recompile(*vertexPath, *fragmentPath);
+		m_BasicShader->Recompile(*m_VertexPath, *m_FragmentPath);
 	}
 	else
 	{
-		basicShader->Load(*vertexPath, *fragmentPath);
+		m_BasicShader->Load(*m_VertexPath, *m_FragmentPath);
 
 	}
 
