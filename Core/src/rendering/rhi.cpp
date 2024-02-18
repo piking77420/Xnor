@@ -386,7 +386,7 @@ int RHI::GetUniformInMap(uint32_t shaderID, const char* uniformKey)
 
 	if (shaderUniformMap.find(uniformKey) != shaderUniformMap.end())
 	{
-		return shaderUniformMap[uniformKey];
+		return static_cast<int>(shaderUniformMap[uniformKey]);
 	}
 
 	GLint location = glGetUniformLocation(shaderID, uniformKey);
@@ -396,6 +396,8 @@ int RHI::GetUniformInMap(uint32_t shaderID, const char* uniformKey)
 	}
 		
 	shaderUniformMap[uniformKey] = location;
+
+	return location;
 }
 
 RHI::RHI()

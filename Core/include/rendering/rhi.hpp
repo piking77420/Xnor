@@ -108,7 +108,7 @@ public:
 private:
 	
 	 mutable UniformBuffer* m_CameraUniform = nullptr;
-	 mutable  UniformBuffer* m_ModelUniform = nullptr;
+	 mutable UniformBuffer* m_ModelUniform = nullptr;
 };
 
 

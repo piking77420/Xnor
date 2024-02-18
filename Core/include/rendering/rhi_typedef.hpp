@@ -90,10 +90,10 @@ enum class TextureFormat
 
 enum class AttachementHandle
 {
-	Color,
-	Position,
-	Normal,
-	TextureCoord,
+	COLOR,
+	POSITION,
+	NORMAL,
+	TEXTURECOORD,
 };
 
 

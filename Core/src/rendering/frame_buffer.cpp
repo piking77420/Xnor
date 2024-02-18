@@ -31,16 +31,16 @@ void FrameBuffer::CreateAttachement(std::vector<RenderTarget>& renderTargets)
 		
 		switch (renderTarget.attachementHandle)
 		{
-		case AttachementHandle::Color :
+		case AttachementHandle::COLOR :
 			textureCreateInfo.textureFormat = TextureFormat::RGB_16F;
 			break;
-		case AttachementHandle::Position :
+		case AttachementHandle::POSITION :
 			textureCreateInfo.textureFormat = TextureFormat::RGB_16F;
 			break;
-		case AttachementHandle::Normal :
+		case AttachementHandle::NORMAL :
 			textureCreateInfo.textureFormat = TextureFormat::RGB_16F;
 			break;
-		case AttachementHandle::TextureCoord :
+		case AttachementHandle::TEXTURECOORD :
 			textureCreateInfo.textureFormat = TextureFormat::RG_16F;
 			break;
 		}
