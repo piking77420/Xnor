@@ -15,16 +15,16 @@ FrameBuffer::~FrameBuffer()
 	RHI::DestroyFrameBuffer(&m_Id);
 }
 
-const vec2i FrameBuffer::GetSize() const
+vec2i FrameBuffer::GetSize() const
 {
 	return m_FrameBufferSize;
 }
 
-void FrameBuffer::CreateAttachement(std::vector<RenderTarget>& renderTargets)
+void FrameBuffer::CreateAttachement(const std::vector<RenderTarget>& renderTargets)
 {
-	for (size_t i = 0; i < renderTargets.size(); ++i)
+	for (uint32_t i = 0; i < static_cast<uint32_t>(renderTargets.size()); i++)
 	{
-		RHI::AttachTexture2DToFrameBuffer(m_Id,i,renderTargets[i].texture->GetID());
+		RHI::AttachTexture2DToFrameBuffer(m_Id, i, renderTargets[i].texture->GetID());
 	}	
 }
 

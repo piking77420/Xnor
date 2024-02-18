@@ -24,10 +24,10 @@ void Shader::Load(const File& vertexShader, const File& fragmentShader)
 
     std::vector<ShaderCode> shaderCodes(2);
 
-    shaderCodes[0].shaderType = VERTEX;
+    shaderCodes[0].shaderType = ShaderType::VERTEX;
     shaderCodes[0].shaderCode = vShaderCode;
 
-    shaderCodes[1].shaderType = FRAGMENT;
+    shaderCodes[1].shaderType = ShaderType::FRAGMENT;
     shaderCodes[1].shaderCode = fShaderCode;
     
     m_Id = RHI::CreateShader(shaderCodes);

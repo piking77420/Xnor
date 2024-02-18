@@ -40,10 +40,9 @@ void Texture::Load(File& file)
     m_Loaded = true;
 }
 
-void Texture::Load(const uint8_t* buffer, int64_t length)
+void Texture::Load([[maybe_unused]] const uint8_t* buffer, [[maybe_unused]] const int64_t length)
 {
 }
-
 
 void Texture::Unload()
 {

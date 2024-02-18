@@ -20,9 +20,9 @@ public:
 	
 	~FrameBuffer();
 
-	XNOR_ENGINE	const vec2i GetSize() const;
+	XNOR_ENGINE vec2i GetSize() const;
 	
-	XNOR_ENGINE void CreateAttachement(std::vector<RenderTarget>& renderTargets);
+	XNOR_ENGINE void CreateAttachement(const std::vector<RenderTarget>& renderTargets);
 	
 	XNOR_ENGINE void BindFrameBuffer();
 

@@ -4,27 +4,28 @@
 #include "Maths/matrix.hpp"
 
 BEGIN_XNOR_CORE
-enum PolyGoneMode : int
+
+enum class PolyGoneMode : int32_t
 {
 	POINT = 0,
 	LINE,
 	FILL,
 };
 
-enum PolyGoneFace : int
+enum class PolyGoneFace : int32_t
 {
 	FRONT_LEFT = 1024,
 	FRONT_RIGHT,
-	BACK_LEFT ,
-	BACK_RIGHT ,
-	FRONT ,
-	BACK ,
-	LEFT ,
-	RIGHT ,
+	BACK_LEFT,
+	BACK_RIGHT,
+	FRONT,
+	BACK,
+	LEFT,
+	RIGHT,
 	FRONT_AND_BACK 
 };
 
-enum ShaderType : int
+enum class ShaderType : int32_t
 {
 	VERTEX,
 	FRAGMENT,
@@ -38,7 +39,7 @@ struct ShaderCode
 	ShaderType shaderType;
 };
 
-enum class TextureWrapping: int
+enum class TextureWrapping : int32_t
 {
 	NONE,
 	REPEAT,
@@ -47,15 +48,14 @@ enum class TextureWrapping: int
 	CLAMP_TO_BORDER
 };
 
-
-enum class TextureFiltering: int
+enum class TextureFiltering: int32_t
 {
 	NONE,
 	LINEAR,
 	NEAREST,
 };
 
-enum class TextureType: int
+enum class TextureType: int32_t
 {
 	TEXTURE_1D,
 	TEXTURE_2D,
@@ -94,7 +94,6 @@ enum class TextureFormat
 	RGBA,
 };
 
-
 enum class AttachementHandle
 {
 	COLOR,
@@ -102,7 +101,6 @@ enum class AttachementHandle
 	NORMAL,
 	TEXTURECOORD,
 };
-
 
 struct TextureCreateInfo
 {

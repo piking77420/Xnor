@@ -25,12 +25,11 @@ void Camera::GetVp(Matrix* matrix) const
 
 Vector2i Camera::ProjectOn(const Vector3& vertex, const Matrix& model) const
 {
-
 	Matrix mvp;
 	GetVp(&mvp);
 	mvp *= model;
 
-	Vector4&& vec = mvp * Vector4(vertex.x, vertex.y, vertex.z, vertex.y);
+	Vector4 vec = mvp * Vector4(vertex.x, vertex.y, vertex.z, vertex.y);
 
 	const float divide = 1.f / vec.w;
 
