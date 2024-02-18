@@ -23,10 +23,19 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	
 	Scene::CreateBasicScene();
 	//Scene& scene = *Scene::scene;
-	RendererContext context;
-	Camera cam;
-	context.camera = &cam;
+
+	FrameBuffer* renderBuffer = new FrameBuffer();
+	Texture* mainRenderTexture = new Texture(Attachements::COLOR,renderBuffer->GetSize());
 	
+	std::vector<RenderTarget> renderTargets(1);
+	renderTargets[0].texture = mainRenderTexture;
+	renderBuffer->AttachColorAttachement(renderTargets);
+	
+	Camera cam;
+	cam.pos = { 0, 0, -5 };
+	
+	RendererContext context;
+
 	while (!window.ShouldClose())
 	{
 		window.PollEvents();
@@ -41,21 +50,26 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		
 		ImGui::ColorPicker4("colorPickerTest", renderer.clearColor.Raw(), ImGuiColorEditFlags_PickerHueWheel);
 		editor.Update();
-
-		renderer.RenderScene(*Scene::scene, context);
-
-		ImGui::Begin("Scene");
-
-		ImGui::Image((ImTextureID)renderer.mainRenderTexture->GetID(), ImGui::GetContentRegionAvail());
 		
+		context = 
+		{
+			.camera = &cam,
+			.framebuffer = renderBuffer
+		};
+		renderer.RenderScene(*Scene::scene, context);
+		
+		ImGui::Begin("Scene");
+		ImGui::Image((ImTextureID)mainRenderTexture->GetID(), ImGui::GetContentRegionAvail());
 		ImGui::End();
-
+		
 		editor.EndFrame();
 		window.SwapBuffers(); 
 	}
 
 	ResourceManager::DeleteAll();
-	
+
+	delete mainRenderTexture;
+	delete renderBuffer;
 	delete Scene::scene;
 
 	FileManager::DeleteAll();

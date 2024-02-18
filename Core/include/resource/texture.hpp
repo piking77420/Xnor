@@ -18,12 +18,12 @@ public:
     // We keep both function overloads and only override one
     using Resource::Load;
 
+    XNOR_ENGINE Texture(TextureCreateInfo& createInfo);
+
+    XNOR_ENGINE Texture(Attachements attachements,vec2i size);
     
     XNOR_ENGINE ~Texture();
-
-    XNOR_ENGINE void Load(TextureCreateInfo& createInfo);
-
-
+    
     XNOR_ENGINE void Load(File& file) override;
     
     XNOR_ENGINE void Load(const uint8_t* buffer, int64_t length) override;

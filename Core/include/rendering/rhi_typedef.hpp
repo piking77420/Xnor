@@ -85,7 +85,15 @@ enum class TextureInternalFormat
 	RGB_16F,
 	RGBA_16F,
 	DEPTH_COMPONENT,
+	DEPTH_STENCIL
 };
+
+enum class DataType : int32_t
+{
+	FLOAT = 0,
+	UNSIGNED_INT,
+};
+
 
 enum class TextureFormat
 {
@@ -94,12 +102,13 @@ enum class TextureFormat
 	RGBA,
 };
 
-enum class AttachementHandle
+enum class Attachements
 {
 	COLOR,
 	POSITION,
 	NORMAL,
 	TEXTURECOORD,
+	DEPTH
 };
 
 struct TextureCreateInfo

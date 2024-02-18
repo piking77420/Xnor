@@ -23,9 +23,6 @@ public:
 
     XNOR_ENGINE void CompileShader();
 
-    FrameBuffer* renderBuffer = nullptr;
-    Texture* mainRenderTexture = nullptr;
-
 private:
     RHI m_Rhi;
 

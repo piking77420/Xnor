@@ -245,7 +245,18 @@ void RHI::UnBindFrameBuffer()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void RHI::AttachTexture2DToFrameBuffer(const uint32_t frameBufferId, const uint32_t attachmentIndex, const uint32_t textureId)
+void RHI::CreateColorAttachement(uint32_t* textureID, const vec2i size)
+{
+	TextureCreateInfo createInfo
+	{
+		nullptr,
+		static_cast<uint32_t>(size.x),
+		static_cast<uint32_t>(size.y),
+		
+	};
+}
+
+void RHI::AttachColorAttachementToFrameBuffer(const uint32_t frameBufferId, const uint32_t attachmentIndex, const uint32_t textureId)
 {
 	glNamedFramebufferTexture(frameBufferId, GL_COLOR_ATTACHMENT0 + attachmentIndex,textureId, 0);
 }
@@ -421,6 +432,10 @@ uint32_t RHI::GetOpenglInternalFormat(TextureInternalFormat textureFormat)
 
 		case TextureInternalFormat::DEPTH_COMPONENT:
 			return GL_DEPTH_COMPONENT;
+		
+		case TextureInternalFormat::DEPTH_STENCIL:
+			GL_DEPTH24_STENCIL8_EXT;
+			
 	}
 
 	return GL_RGB;

@@ -24,26 +24,6 @@ Renderer::Renderer()
 	m_Diamondtexture->Load(*m_DiamondPath);
 	m_Rhi.PrepareUniform();
 	m_BasicShader->SetInt("diffuseTexture", 0);
-	
-	renderBuffer = new FrameBuffer();
-	TextureCreateInfo createInfo
-	{
-		nullptr,
-		static_cast<uint32_t>(renderBuffer->GetSize().x),
-		static_cast<uint32_t>(renderBuffer->GetSize().y),
-		TextureFiltering::LINEAR,
-		TextureWrapping::NONE,
-		TextureFormat::RGB,
-		TextureInternalFormat::RGB_8
-	};
-	
-	mainRenderTexture = new Texture();
-	mainRenderTexture->Load(createInfo);
-	
-	std::vector<RenderTarget> renderTargets(1);
-	renderTargets[0].texture = mainRenderTexture;
-
-	renderBuffer->CreateAttachement(renderTargets);
 }
 
 Renderer::~Renderer()
@@ -51,7 +31,6 @@ Renderer::~Renderer()
 	delete m_BasicShader;
 	delete m_Diamondtexture;
 	delete m_DiamondPath;
-	delete mainRenderTexture;
 }
 
 void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererContext& rendererContext) const
@@ -62,10 +41,9 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 	*/
 	m_Rhi.ClearColorAndDepth();
 
-	renderBuffer->BindFrameBuffer();
+	rendererContext.framebuffer->BindFrameBuffer();
 	m_Rhi.ClearColorAndDepth();
 
-	rendererContext.camera->pos = { 0, 0, -5 };
 
 	m_Rhi.SetClearColor(clearColor);
 	m_Rhi.ClearColorAndDepth();
@@ -93,7 +71,7 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 	RHI::DrawModel(m_Model->GetId());
 
 	m_BasicShader->UnUse();
-	renderBuffer->UnBindFrameBuffer();
+	rendererContext.framebuffer->UnBindFrameBuffer();
 }
 
 void Renderer::CompileShader()

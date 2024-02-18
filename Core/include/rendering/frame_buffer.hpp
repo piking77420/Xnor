@@ -9,29 +9,26 @@ BEGIN_XNOR_CORE
 struct RenderTarget
 {
 	Texture* texture;
-	AttachementHandle attachementHandle;
+	Attachements attachementHandle;
 };
 
 class FrameBuffer
 {
 public:
-
-	FrameBuffer();
+	XNOR_ENGINE FrameBuffer();
 	
-	~FrameBuffer();
+	XNOR_ENGINE ~FrameBuffer();
 
-	XNOR_ENGINE vec2i GetSize() const;
+	XNOR_ENGINE	const Vector2i GetSize() const;
 	
-	XNOR_ENGINE void CreateAttachement(const std::vector<RenderTarget>& renderTargets);
+	XNOR_ENGINE void AttachColorAttachement(const std::vector<RenderTarget>& renderTargets);
 	
 	XNOR_ENGINE void BindFrameBuffer();
 
 	XNOR_ENGINE void UnBindFrameBuffer();
 	
-private : 
-	
-	vec2i m_FrameBufferSize = {800,600};
-	
+private:
+	Vector2i m_FrameBufferSize = {800,600};
 	uint32_t m_Id;
 };
 

@@ -3,20 +3,60 @@
 #include <stb/stb_image.h>
 
 #include "rendering/rhi.hpp"
+#include "utils/logger.hpp"
 
 using namespace XnorCore;
 
 
+
+Texture::Texture(TextureCreateInfo& createInfo) : m_Data(reinterpret_cast<uint8_t*>(createInfo.data))
+,m_Size({static_cast<int>(createInfo.textureSizeWidth),static_cast<int>(createInfo.textureSizeHeight)})
+,m_TextureFiltering(createInfo.textureFiltering),m_TextureWrapping(createInfo.textureWrapping)
+,m_TextureInternalFormat(createInfo.textureInternalFormat)
+{
+    RHI::CreateTexture(&m_Id, createInfo);
+    m_Loaded = true;
+}
+
+Texture::Texture(Attachements attachements,vec2i size)
+{
+    TextureCreateInfo createInfo
+   {
+       nullptr,
+       static_cast<uint32_t>(size.x),
+       static_cast<uint32_t>(size.y),
+       TextureFiltering::LINEAR,
+       TextureWrapping::NONE,
+       TextureFormat::RGB,
+       TextureInternalFormat::RGBA_16F
+   };
+
+    switch (attachements)
+    {
+        case Attachements::COLOR:
+            createInfo.textureInternalFormat = TextureInternalFormat::RGBA_16F;
+            break;
+        
+        case Attachements::POSITION:
+            createInfo.textureInternalFormat = TextureInternalFormat::RGBA_16F;
+            break;
+        
+        case Attachements::NORMAL:
+            createInfo.textureInternalFormat = TextureInternalFormat::RGBA_16F;
+            break;
+        
+        case Attachements::TEXTURECOORD:
+            createInfo.textureInternalFormat = TextureInternalFormat::RG_16;
+            break;
+    }
+    
+    RHI::CreateTexture(&m_Id,createInfo);
+    m_Loaded = true;
+}
+
 Texture::~Texture()
 {
     RHI::DestroyTexture(&m_Id);
-}
-
-void Texture::Load(TextureCreateInfo& createInfo)
-{
-   
-    RHI::CreateTexture(&m_Id, createInfo);
-    m_Loaded = true;
 }
 
 void Texture::Load(File& file)
