@@ -38,6 +38,8 @@ public:
 class Reflectable
 {
 public:
+    Reflectable() = default;
+    
     virtual ~Reflectable() = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(Reflectable)

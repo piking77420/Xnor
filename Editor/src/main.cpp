@@ -61,7 +61,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		ImGui::End();
 		
 		editor.EndFrame();
-		window.SwapBuffers(); 
+		window.SwapBuffers();
 	}
 
 	ResourceManager::DeleteAll();

@@ -27,7 +27,7 @@ public:
 
     XNOR_ENGINE Entity() = default;
 
-    XNOR_ENGINE ~Entity();
+    XNOR_ENGINE ~Entity() override;
 
     template<class ComponentT>
     void AddComponent();

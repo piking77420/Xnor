@@ -8,7 +8,7 @@
 
 BEGIN_XNOR_CORE
 
-class Transform final : public XnorCore::Reflectable
+class Transform final : public Reflectable
 {
 	REFLECTABLE_IMPL(Transform)
 	
