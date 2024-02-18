@@ -19,6 +19,7 @@ Texture::~Texture()
 
 void Texture::Load(File& file)
 {
+    stbi_set_flip_vertically_on_load(true);
     m_Data = stbi_load(file.GetFilepath().generic_string().c_str(), &m_Size.x, &m_Size.y, &m_Channels,0);
 
     TextureCreateInfo textureCreateInfo
@@ -28,7 +29,8 @@ void Texture::Load(File& file)
         static_cast<uint32_t>(m_Size.y),
         TextureFiltering::LINEAR,
         TextureWrapping::REPEAT,
-        GetFormat(m_Channels)
+        GetFormat(m_Channels),
+        TextureInternalFormat::RGBA_8
     };
     
     RHI::CreateTexture(&m_Id,textureCreateInfo);
@@ -68,7 +70,7 @@ int Texture::GetChannels() const
 
 void Texture::BindTexture([[maybe_unused]] const uint32_t index)
 {
-    RHI::BindTexture(TextureType::TEXTURE_2D,m_Id);
+    RHI::BindTexture(index,m_Id);
 }
 
 TextureFormat Texture::GetFormat(uint32_t textureFormat)

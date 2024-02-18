@@ -62,7 +62,8 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
         nameStr = std::string('[' + std::to_string(element) + ']');
         name = nameStr.c_str();
     }
-    
+
+ 
     if (fieldInfo.typeHash == typeid(int32_t).hash_code())
     {
         DisplayScalar<int32_t>(obj, fieldInfo.offset, name, element);

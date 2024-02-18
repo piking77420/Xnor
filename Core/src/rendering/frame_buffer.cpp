@@ -17,6 +17,7 @@ FrameBuffer::~FrameBuffer()
 
 void FrameBuffer::CreateAttachement(std::vector<RenderTarget>& renderTargets)
 {
+	/*
 	for (RenderTarget& renderTarget : renderTargets)
 	{
 		TextureCreateInfo textureCreateInfo
@@ -26,27 +27,27 @@ void FrameBuffer::CreateAttachement(std::vector<RenderTarget>& renderTargets)
 			static_cast<uint32_t>(m_FrameBufferSize.y),
 			TextureFiltering::LINEAR,
 			TextureWrapping::REPEAT,
-			TextureFormat::RGB_16
+			TextureDataType::RGB_16
 		};
 		
 		switch (renderTarget.attachementHandle)
 		{
 		case AttachementHandle::COLOR :
-			textureCreateInfo.textureFormat = TextureFormat::RGB_16F;
+			textureCreateInfo.textureFormat = TextureDataType::RGB_16F;
 			break;
 		case AttachementHandle::POSITION :
-			textureCreateInfo.textureFormat = TextureFormat::RGB_16F;
+			textureCreateInfo.textureFormat = TextureDataType::RGB_16F;
 			break;
 		case AttachementHandle::NORMAL :
-			textureCreateInfo.textureFormat = TextureFormat::RGB_16F;
+			textureCreateInfo.textureFormat = TextureDataType::RGB_16F;
 			break;
 		case AttachementHandle::TEXTURECOORD :
-			textureCreateInfo.textureFormat = TextureFormat::RG_16F;
+			textureCreateInfo.textureFormat = TextureDataType::RG_16F;
 			break;
 		}
 
 		renderTarget.texture = new Texture(textureCreateInfo);
-	}
+	}*/
 }
 
 

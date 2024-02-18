@@ -12,15 +12,25 @@ Renderer::Renderer() : clearColor(0.5f)
 
 	m_VertexPath = FileManager::Load("assets/shaders/vertex.vert");
 	m_FragmentPath = FileManager::Load("assets/shaders/fragment.frag");
-	//m_DiamondPath = FileManager::Load("assets/textures/DiamondBlock.jpg");
+	m_DiamondPath = new File("assets/textures/DiamondBlock.jpg");
 
 	m_BasicShader = new Shader();
 	CompileShader();
 	
 	const Pointer<File> modelFile = FileManager::Load("assets/models/cube.obj");
 	m_Model = ResourceManager::CreateAndLoad<Model>(modelFile);
-	//diamondtexture = ResourceManager::CreateAndLoad<Texture>(diamondPath);
+	m_Diamondtexture = new Texture();
+	m_Diamondtexture->Load(*m_DiamondPath);
 	m_Rhi.PrepareUniform();
+	m_BasicShader->SetInt("diffuseTexture",0);
+}
+
+Renderer::~Renderer()
+{
+	delete m_BasicShader;
+	delete m_Diamondtexture;
+	delete m_DiamondPath;
+
 }
 
 void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererContext& rendererContext) const
@@ -35,6 +45,7 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 	m_Rhi.ClearColorAndDepth();
 
 	m_BasicShader->Use();
+	m_Diamondtexture->BindTexture(0);
 	m_BasicShader->SetVec3("color",{clearColor.y,clearColor.x,clearColor.z});
 	CameraUniformData cam;
 	cam.cameraPos = rendererContext.camera->pos;

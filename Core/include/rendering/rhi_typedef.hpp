@@ -4,7 +4,7 @@
 #include "Maths/matrix.hpp"
 
 BEGIN_XNOR_CORE
-	enum PolyGoneMode : int
+enum PolyGoneMode : int
 {
 	POINT = 0,
 	LINE,
@@ -68,7 +68,7 @@ enum class TextureType: int
 	TEXTURE_2D_MULTISAMPLE_ARRAY,
 };
 
-enum class TextureFormat
+enum class TextureInternalFormat
 {
 	R_8,
 	R_16,
@@ -83,10 +83,15 @@ enum class TextureFormat
 	RGB_16F,
 	RGBA_16F,
 	DEPTH_COMPONENT,
+};
+
+enum class TextureFormat
+{
 	RED,
 	RGB,
 	RGBA,
 };
+
 
 enum class AttachementHandle
 {
@@ -105,6 +110,7 @@ struct TextureCreateInfo
 	TextureFiltering textureFiltering;
 	TextureWrapping textureWrapping;
 	TextureFormat textureFormat;
+	TextureInternalFormat textureInternalFormat;
 };
 
 struct CameraUniformData

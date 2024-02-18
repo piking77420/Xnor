@@ -43,7 +43,7 @@ public:
 	XNOR_ENGINE  static void DestroyTexture(const uint32_t* textureId);
 
 
-	XNOR_ENGINE  static void BindTexture(TextureType textureType,uint32_t textureID);
+	XNOR_ENGINE  static void BindTexture(uint32_t unit,uint32_t textureID);
 	XNOR_ENGINE  static void UnBindTexture(TextureType textureType);
 
 	// FrammeBuffer 
@@ -84,8 +84,10 @@ private:
 
 	static uint32_t TextureTypeToOpenglTexture(TextureType textureType);
 
-	static uint32_t GetOpenglFormatFromTextureFormat(TextureFormat textureFormat);
+	static uint32_t GetOpenglInternalFormat(TextureInternalFormat textureFormat);
 
+	static uint32_t GetOpenGLTextureFormat(TextureFormat textureFormat);
+	
 	static void IsShaderValid(uint32_t shaderID);
 	
 	static int GetUniformInMap(uint32_t shaderID, const char* uniformKey);
