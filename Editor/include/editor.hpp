@@ -23,7 +23,12 @@ private:
 	XnorCore::Window* m_Window;
 	Inspector m_Inspector;
 
+	void BeginDockSpace() const;
+
+	void EndDockSpace() const;
+		
 	void SetupImGuiStyle() const;
+	
 };
 
 END_XNOR_EDITOR

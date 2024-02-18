@@ -35,13 +35,15 @@ Renderer::~Renderer()
 
 void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererContext& rendererContext) const
 {
-	/*
-	if (!rendererContext.IsValid())
-		return;//throw std::runtime_error("renderer Context is not valid");
-	*/
+	
 	m_Rhi.ClearColorAndDepth();
 
-	rendererContext.framebuffer->BindFrameBuffer();
+	if(rendererContext.framebuffer != nullptr)
+	{
+		rendererContext.framebuffer->BindFrameBuffer();
+	}
+		
+	
 	m_Rhi.ClearColorAndDepth();
 
 
@@ -71,7 +73,11 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 	RHI::DrawModel(m_Model->GetId());
 
 	m_BasicShader->UnUse();
-	rendererContext.framebuffer->UnBindFrameBuffer();
+	
+	if (rendererContext.framebuffer != nullptr)
+	{
+		rendererContext.framebuffer->UnBindFrameBuffer();
+	}
 }
 
 void Renderer::CompileShader()

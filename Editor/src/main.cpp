@@ -48,7 +48,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		
 		ImGui::End();
 		
-		ImGui::ColorPicker4("colorPickerTest", renderer.clearColor.Raw(), ImGuiColorEditFlags_PickerHueWheel);
 		editor.Update();
 		
 		context = 
