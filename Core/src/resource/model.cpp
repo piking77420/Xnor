@@ -57,7 +57,7 @@ void Model::Load(const aiMesh& loadedData)
             Logger::LogError("Model data should be triangulated: %s", m_Name.c_str());
             return;
         }
-
+    
         const uint32_t baseIndex = i * 3;
         m_Indices[baseIndex + 0] = face.mIndices[0];
         m_Indices[baseIndex + 1] = face.mIndices[1];

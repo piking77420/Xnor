@@ -162,21 +162,27 @@ void RHI::SetUniform(UniformType uniformType, const void* data,uint32_t shaderID
 	case UniformType::INT:
 		glUniform1i(uniformLocation, *reinterpret_cast<const int*>(data));
 		break;
+		
 	case UniformType::BOOL:
 		glUniform1i(uniformLocation, *reinterpret_cast<const bool*>(data));
 		break;
+		
 	case UniformType::FLOAT:
 		glUniform1f(uniformLocation, *reinterpret_cast<const GLfloat*>(data));
 		break;
+		
 	case UniformType::VEC3:
 		glUniform3fv(uniformLocation,1, reinterpret_cast<const GLfloat*>(data));
 		break;
+		
 	case UniformType::VEC4:
 		glUniform4fv(uniformLocation,1, reinterpret_cast<const GLfloat*>(data));
 		break;
+		
 	case UniformType::MAT3:
 		glUniformMatrix3fv(uniformLocation,1,GL_FALSE, reinterpret_cast<const GLfloat*>(data));
 		break;
+		
 	case UniformType::MAT4:
 		glUniformMatrix4fv(uniformLocation,1,GL_FALSE, reinterpret_cast<const GLfloat*>(data));
 		break;
@@ -394,7 +400,7 @@ uint32_t RHI::GetOpenGLTextureFormat(TextureFormat textureFormat)
 
 void RHI::IsShaderValid(uint32_t shaderID)
 {
-	if(!m_ShaderMap.contains(shaderID))
+	if (!m_ShaderMap.contains(shaderID))
 	{
 		Logger::LogFatal("No shader with this id %d",shaderID);
 		throw std::runtime_error("No shader With this Id");

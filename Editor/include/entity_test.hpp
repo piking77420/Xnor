@@ -19,6 +19,9 @@ REFL_AUTO(type(EntityTest, bases<XnorCore::Entity>),
 
 class EntityDamage : public XnorCore::Entity
 {
+public:
+    EntityDamage();
+    
     REFLECTABLE_IMPL(EntityDamage)
 
 public:
@@ -32,6 +35,7 @@ public:
     Vector3 m_Vec3;
     int32_t m_ArrayInt[4];
     Vector2 m_ArrayVec2[4];
+    XnorCore::Transform m_ArrayTransform[2];
 };
 
 REFL_AUTO(type(EntityDamage, bases<XnorCore::Entity>),
@@ -41,5 +45,6 @@ REFL_AUTO(type(EntityDamage, bases<XnorCore::Entity>),
     field(m_Uint8),
     field(m_Vec3),
     field(m_ArrayInt),
-    field(m_ArrayVec2)
+    field(m_ArrayVec2),
+    field(m_ArrayTransform)
 )
