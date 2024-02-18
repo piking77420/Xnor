@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "core.hpp"
+#include "Maths/matrix.hpp"
 
 BEGIN_XNOR_CORE
 	enum PolyGoneMode : int
@@ -106,5 +107,16 @@ struct TextureCreateInfo
 	TextureFormat textureFormat;
 };
 
+struct CameraUniformData
+{
+	Matrix view = Matrix::Identity();
+	Matrix projection = Matrix::Identity();
+	Vector3 cameraPos;
+};
+struct ModelUniformData
+{
+	Matrix model = Matrix::Identity();
+	Matrix normalInvertMatrix = Matrix::Identity();
+};
 
 END_XNOR_CORE

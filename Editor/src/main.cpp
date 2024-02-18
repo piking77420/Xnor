@@ -43,7 +43,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	Scene::CreateBasicScene();
 	//Scene& scene = *Scene::scene;
 	RendererContext context;
+	Camera cam;
+	context.camera = &cam;
 
+	
 	while (!window.ShouldClose())
 	{
 		window.PollEvents();

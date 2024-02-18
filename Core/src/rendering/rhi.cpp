@@ -345,6 +345,8 @@ RHI::RHI()
 	gladLoadGL();
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+
+	
 }
 
 RHI::~RHI()
@@ -353,6 +355,20 @@ RHI::~RHI()
 	{
 		DestroyModel(it->first);
 	}
+	delete m_CameraUniform;
+	delete m_ModelUniform;
+}
+
+void RHI::PrepareUniform()
+{
+	m_CameraUniform = new UniformBuffer();
+	m_CameraUniform->Allocate(sizeof (m_CameraUniform), nullptr);
+	m_CameraUniform->Bind(0);
+
+
+	m_ModelUniform = new UniformBuffer();
+	m_ModelUniform->Allocate(sizeof(m_ModelUniform), nullptr);
+	m_ModelUniform->Bind(1);
 }
 
 
@@ -365,6 +381,17 @@ void RHI::SetClearColor(const Vector4& color) const
 void RHI::ClearColorAndDepth() const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void RHI::UpdateModelUniform(const ModelUniformData& modelUniformData) const
+{	
+	constexpr size_t size = sizeof(ModelUniformData);
+	m_ModelUniform->Update(size,0,modelUniformData.model.Raw());
+}
+
+void RHI::UpdateCameraUniform(const CameraUniformData& cameraUniformData) const
+{
+	m_CameraUniform->Update(sizeof(ModelUniformData),0,cameraUniformData.view.Raw());
 }
 
 

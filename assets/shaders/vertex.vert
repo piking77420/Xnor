@@ -2,20 +2,35 @@
 
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
-layout (location = 2) in vec2 aTexCoord;
+layout (location = 2) in vec2 aTexCoords;
 
-out vec2 TexCoord;
-out vec3 FragPos;
-out vec3 normal;
+layout (std140, binding = 0) uniform CameraUniform
+{
+    mat4 view;
+    mat4 projection;
+    vec3 cameraPos;
+};
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+layout (std140, binding = 1) uniform ModelUniform
+{
+    mat4 model;
+    mat4 normalInvertMatrix;
+};
+
+out VS_OUT {
+    vec3 FragPos;
+    vec3 Normal;
+    vec2 TexCoords;
+} vs_out;
 
 void main()
-{	
-	FragPos = vec3(model * vec4(aPos, 1.0f));
-	gl_Position = projection * view * model * vec4(aPos, 1.0f);
-	TexCoord = vec2(aTexCoord.x, aTexCoord.y);	
-	normal = normalize(mat3(model) * aNormal);
+ {
+
+    vec4 fragpos = projection * view * model * vec4(aPos, 1.0);
+    gl_Position = fragpos;
+
+    // Pass transformed position, normal, and texture coordinates to fragment shader
+    vs_out.FragPos = vec3(model * vec4(aPos, 1.0));
+    vs_out.Normal = mat3(normalInvertMatrix) * aNormal;
+    vs_out.TexCoords = aTexCoords;
 }

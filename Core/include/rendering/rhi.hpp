@@ -5,6 +5,7 @@
 
 #include "material.hpp"
 #include "rhi_typedef.hpp"
+#include "uniformBuffer.hpp"
 #include "Maths/vector4.hpp"
 #include "vertex.hpp"
 
@@ -46,6 +47,7 @@ public:
 	XNOR_ENGINE static void DestroyFrameBuffer(uint32_t* frameBufferID);
 
 	
+	
 private:
 
 	static uint32_t GetOpenglShaderType(ShaderType shaderType);
@@ -67,9 +69,15 @@ public:
 
 	XNOR_ENGINE ~RHI();
 
+	XNOR_ENGINE void PrepareUniform();
+
 	XNOR_ENGINE void SetClearColor(const Vector4& color) const;
 	
 	XNOR_ENGINE void ClearColorAndDepth() const;
+
+	void UpdateModelUniform(const ModelUniformData& modelUniformData) const;
+
+	void UpdateCameraUniform(const CameraUniformData& cameraUniformData) const;
 
 private:
 	
@@ -81,6 +89,9 @@ private:
 		uint32_t nbrOfVertex = 0;
 		uint32_t nbrOfIndicies = 0;
 	};
+
+	mutable UniformBuffer* m_CameraUniform;
+	mutable UniformBuffer* m_ModelUniform;
 
 
 	XNOR_ENGINE static inline std::unordered_map<uint32_t,ModelInternal> m_ModelMap;
