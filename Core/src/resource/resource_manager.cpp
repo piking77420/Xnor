@@ -7,7 +7,7 @@ bool ResourceManager::Contains(const std::string& name)
     return m_Resources.contains(name);
 }
 
-void ResourceManager::Delete(const std::string& name)
+void ResourceManager::Remove(const std::string& name)
 {
     const auto&& resource = m_Resources.find(name);
     
@@ -23,7 +23,7 @@ void ResourceManager::Delete(const std::string& name)
     m_Resources.erase(resource);
 }
 
-void ResourceManager::DeleteAll()
+void ResourceManager::RemoveAll()
 {
     for (auto& resource : m_Resources)
     {

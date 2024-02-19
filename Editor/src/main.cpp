@@ -26,7 +26,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	editor.GetInspector()->SetObject(&entity);
 	editor.Update();
 
-    ResourceManager::DeleteAll();
+    ResourceManager::RemoveAll();
     delete Scene::scene;
     FileManager::UnloadAll();
     Logger::Stop();

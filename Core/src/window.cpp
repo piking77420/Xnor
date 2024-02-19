@@ -1,5 +1,7 @@
 #include "window.hpp"
 
+#include "Maths/vector3.hpp"
+
 using namespace XnorCore;
 
 Window::Window()
@@ -77,7 +79,7 @@ double Window::GetTime() const
 	return glfwGetTime();
 }
 
-void Window::GlfwResizeFramebuffer(GLFWwindow* window, [[maybe_unused]] int width, [[maybe_unused]] int height)
+void Window::GlfwResizeFramebuffer([[maybe_unused]] GLFWwindow* window, [[maybe_unused]] int width, [[maybe_unused]] int height)
 {
 	m_ResizeFrameBuffer = true;
 }

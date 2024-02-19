@@ -48,7 +48,7 @@ void Performance::Update(const double currentTime)
 void Performance::Display()
 {
     // TODO time
-    Update(5);
+    Update(0.0);
     
     ImGui::Begin("Performance Summary");
 

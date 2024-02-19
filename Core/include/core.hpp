@@ -18,3 +18,9 @@
     XNOR_ENGINE type(type&& other) = default;                   \
     XNOR_ENGINE type& operator=(const type& other) = default;   \
     XNOR_ENGINE type& operator=(type&& other) = default;
+
+#define DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(type)    \
+    type(const type& other) = default;                  \
+    type(type&& other) = default;                       \
+    type& operator=(const type& other) = default;       \
+    type& operator=(type&& other) = default;

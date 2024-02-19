@@ -60,7 +60,8 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);$(ProjectDir)externals\libs\lib\Common;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;toolbox.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp.lib;zlibstatic.lib;toolbox.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/WHOLEARCHIVE:toolbox.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -88,7 +89,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);$(ProjectDir)externals\libs\lib\Common;%(AdditionalLibraryDirectories);$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;toolbox.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp.lib;zlibstatic.lib;toolbox.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/WHOLEARCHIVE:toolbox.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -254,6 +256,7 @@
     <ClInclude Include="externals\include\Maths\vector2i.hpp" />
     <ClInclude Include="externals\include\Maths\vector3.hpp" />
     <ClInclude Include="externals\include\Maths\vector4.hpp" />
+    <ClInclude Include="externals\include\refl\refl.hpp" />
     <ClInclude Include="externals\include\stb\stb_image.h" />
     <ClInclude Include="externals\include\ttf\ttfParser.h" />
     <ClInclude Include="include\applications\application.hpp" />
@@ -298,16 +301,19 @@
     <Content Include="externals\include\assimp\.editorconfig" />
     <Content Include="externals\include\assimp\config.h.in" />
     <Content Include="externals\libs\lib\Debug\assimp.lib" />
-    <Content Include="externals\libs\lib\Debug\assimp.pdb" />
+    <Content Include="externals\libs\lib\Debug\assimpd.pdb" />
     <Content Include="externals\libs\lib\Debug\glfw3.lib" />
     <Content Include="externals\libs\lib\Debug\glfw3.pdb" />
     <Content Include="externals\libs\lib\Debug\toolbox.lib" />
     <Content Include="externals\libs\lib\Debug\toolboxd.idb" />
     <Content Include="externals\libs\lib\Debug\toolboxd.pdb" />
+    <Content Include="externals\libs\lib\Debug\zlibstatic.lib" />
+    <Content Include="externals\libs\lib\Debug\zlibstaticd.pdb" />
     <Content Include="externals\libs\lib\Release\assimp.lib" />
     <Content Include="externals\libs\lib\Release\glfw3.lib" />
     <Content Include="externals\libs\lib\Release\toolbox.lib" />
     <Content Include="externals\libs\lib\Release\toolbox.pdb" />
+    <Content Include="externals\libs\lib\Release\zlibstatic.lib" />
     <Content Include="include\rendering\rhi_typedef.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

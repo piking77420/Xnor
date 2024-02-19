@@ -19,14 +19,15 @@ public:
     // You cannot instantiate this class
     ResourceManager() = delete;
     
+    /// @brief Creates the resource corresponding to the given @p name without loading it
     template<ResourceT T>
     [[nodiscard]]
-    static Pointer<T> Create(std::string name);
+    static Pointer<T> Add(std::string name);
 
-    /// @brief Creates the resource corresponding to the given @p file
+    /// @brief Creates the resource corresponding to the given @p file and loads it
     template<ResourceT T>
     [[nodiscard]]
-    static Pointer<T> CreateAndLoad(const Pointer<File>& file);
+    static Pointer<T> Load(const Pointer<File>& file);
 
     [[nodiscard]]
     XNOR_ENGINE static bool Contains(const std::string& name);
@@ -39,19 +40,19 @@ public:
     [[nodiscard]]
     static bool IsResourceOfType(const std::string& name);
 
-    XNOR_ENGINE static void Delete(const std::string& name);
+    XNOR_ENGINE static void Remove(const std::string& name);
 
     template<ResourceT T>
-    static void Delete(const Pointer<T>& resource);
+    static void Remove(const Pointer<T>& resource);
 
-    XNOR_ENGINE static void DeleteAll();
+    XNOR_ENGINE static void RemoveAll();
 
 private:
     XNOR_ENGINE static inline std::unordered_map<std::string, Pointer<Resource>> m_Resources;
 };
 
 template<ResourceT T>
-Pointer<T> ResourceManager::Create(std::string name)
+Pointer<T> ResourceManager::Add(std::string name)
 {
     Pointer<T> resource(std::forward<std::string>(name));
 
@@ -65,7 +66,7 @@ Pointer<T> ResourceManager::Create(std::string name)
 }
 
 template<ResourceT T>
-Pointer<T> ResourceManager::CreateAndLoad(const Pointer<File>& file)
+Pointer<T> ResourceManager::Load(const Pointer<File>& file)
 {
     Pointer<T> resource(file->GetFilepath().string());
 
@@ -105,7 +106,7 @@ bool ResourceManager::IsResourceOfType(const std::string& name)
 }
 
 template<ResourceT T>
-void ResourceManager::Delete(const Pointer<T>& resource)
+void ResourceManager::Remove(const Pointer<T>& resource)
 {
     const size_t oldSize = m_Resources.size();
     

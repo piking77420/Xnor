@@ -38,16 +38,16 @@ public:
 
 /// @brief Enables reflection for a class
 ///        A class that inherits from this class should implement the macro REFLECTABLE_IMPL(ClassName) in order to provide the ful implementation for the reflection
-class Reflectable
+class XNOR_ENGINE Reflectable
 {
 public:
     Reflectable() = default;
     
     virtual ~Reflectable() = default;
 
-    DEFAULT_COPY_MOVE_OPERATIONS(Reflectable)
+    DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(Reflectable)
     
-    XNOR_ENGINE virtual void CreateTypeInfo() const = 0;
+    virtual void CreateTypeInfo() const = 0;
 };
 
 template<class T>

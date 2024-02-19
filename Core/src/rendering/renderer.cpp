@@ -15,13 +15,13 @@ Renderer::Renderer()
 	m_FragmentPath = FileManager::Load("assets/shaders/fragment.frag");
 	m_DiamondPath = FileManager::Load("assets/textures/viking_room.png");
 
-	m_BasicShader = ResourceManager::Create<Shader>("assets/shaders/shader");
+	m_BasicShader = ResourceManager::Add<Shader>("assets/shaders/shader");
 	m_BasicShader->Load(*m_VertexPath, *m_FragmentPath);
 	CompileShader();
 	
 	const Pointer<File> modelFile = FileManager::Load("assets/models/viking_room.obj");
-	m_Model = ResourceManager::CreateAndLoad<Model>(modelFile);
-	m_Diamondtexture = ResourceManager::CreateAndLoad<Texture>(m_DiamondPath);
+	m_Model = ResourceManager::Load<Model>(modelFile);
+	m_Diamondtexture = ResourceManager::Load<Texture>(m_DiamondPath);
 	m_Rhi.PrepareUniform();
 	m_BasicShader->SetInt("diffuseTexture", 0);
 }
