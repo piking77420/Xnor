@@ -24,7 +24,7 @@ void FrameBuffer::AttachColorAttachement(const std::vector<RenderTarget>& render
 {
 	for (uint32_t i = 0; i < static_cast<uint32_t>(renderTargets.size()); i++)
 	{
-		RHI::AttachColorAttachementToFrameBuffer(m_Id, i, renderTargets[i].texture->GetID());
+		RHI::AttachColorAttachementToFrameBuffer(m_Id, i, renderTargets[i].texture->GetId());
 	}
 	
 }

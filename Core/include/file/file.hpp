@@ -40,11 +40,11 @@ public:
     [[nodiscard]]
     XNOR_ENGINE bool IsLoaded() const;
 
-    template<typename T>
+    template<typename T = int8_t>
     [[nodiscard]]
     const T* GetData() const;
 
-    template<typename T>
+    template<typename T = int8_t>
     [[nodiscard]]
     T* GetData();
     

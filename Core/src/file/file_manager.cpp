@@ -18,6 +18,8 @@ Pointer<File> FileManager::Load(std::filesystem::path filepath)
         return file;
     }
 
+    file->Load();
+
     m_Files[file->GetFilepath()] = file.CreateStrongReference();
 
     // Make sure to return a weak reference
@@ -44,7 +46,7 @@ Pointer<File> FileManager::Get(const std::filesystem::path& filepath)
     return file;
 }
 
-void FileManager::Delete(const std::filesystem::path& filepath)
+void FileManager::Unload(const std::filesystem::path& filepath)
 {
     const size_t oldSize = m_Files.size();
     
@@ -52,6 +54,7 @@ void FileManager::Delete(const std::filesystem::path& filepath)
     {
         if (equivalent(it->first, filepath))
         {
+            it->second->Unload();
             it = m_Files.erase(it);
 
             if (it == m_Files.end())
@@ -63,7 +66,7 @@ void FileManager::Delete(const std::filesystem::path& filepath)
         Logger::LogWarning("Attempt to delete an unknown file entry: %s", filepath.string().c_str());
 }
 
-void FileManager::Delete(const Pointer<File>& file)
+void FileManager::Unload(const Pointer<File>& file)
 {
     const size_t oldSize = m_Files.size();
     
@@ -71,6 +74,7 @@ void FileManager::Delete(const Pointer<File>& file)
     {
         if (it->second == file)
         {
+            it->second->Unload();
             it = m_Files.erase(it);
 
             if (it == m_Files.end())
@@ -82,8 +86,11 @@ void FileManager::Delete(const Pointer<File>& file)
         Logger::LogWarning("Attempt to delete an unknown file entry: %p", static_cast<File*>(file));
 }
 
-void FileManager::DeleteAll()
+void FileManager::UnloadAll()
 {
+    for (auto& entry : m_Files)
+        entry.second->Unload();
+    
     // Smart pointers are deleted automatically, we only need to clear the container
     m_Files.clear();
 }

@@ -5,7 +5,6 @@
 
 BEGIN_XNOR_CORE
 
-
 struct RenderTarget
 {
 	Texture* texture;
@@ -18,6 +17,8 @@ public:
 	XNOR_ENGINE FrameBuffer();
 	
 	XNOR_ENGINE ~FrameBuffer();
+	
+	DEFAULT_COPY_MOVE_OPERATIONS(FrameBuffer)
 
 	XNOR_ENGINE	const Vector2i GetSize() const;
 	
@@ -28,7 +29,7 @@ public:
 	XNOR_ENGINE void UnBindFrameBuffer();
 	
 private:
-	Vector2i m_FrameBufferSize = {1920,1080};
+	Vector2i m_FrameBufferSize = { 1920, 1080 };
 	uint32_t m_Id;
 };
 

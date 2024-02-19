@@ -11,18 +11,19 @@ BEGIN_XNOR_CORE
 class Texture : public Resource
 {
 public:
-    
     // Same constructor from base class
     using Resource::Resource;
+
+    DEFAULT_COPY_MOVE_OPERATIONS(Texture)
 
     // We keep both function overloads and only override one
     using Resource::Load;
 
-    XNOR_ENGINE Texture(TextureCreateInfo& createInfo);
+    XNOR_ENGINE Texture(const TextureCreateInfo& createInfo);
 
-    XNOR_ENGINE Texture(Attachements attachements,vec2i size);
+    XNOR_ENGINE Texture(Attachements attachements, vec2i size);
     
-    XNOR_ENGINE ~Texture();
+    XNOR_ENGINE ~Texture() override;
     
     XNOR_ENGINE void Load(File& file) override;
     
@@ -41,8 +42,7 @@ public:
 
     XNOR_ENGINE virtual void BindTexture(uint32_t index) const;
     
-    XNOR_ENGINE const uint32_t GetID() const;
-
+    XNOR_ENGINE uint32_t GetId() const;
 
 private:
     uint8_t* m_Data = nullptr;
@@ -54,7 +54,7 @@ private:
     TextureWrapping m_TextureWrapping = TextureWrapping::REPEAT;
     TextureInternalFormat m_TextureInternalFormat = TextureInternalFormat::RGBA_8;
 
-    TextureFormat GetFormat(uint32_t textureFormat);
+    static TextureFormat GetFormat(uint32_t textureFormat);
 };
 
 END_XNOR_CORE

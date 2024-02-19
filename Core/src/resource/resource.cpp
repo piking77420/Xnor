@@ -1,5 +1,7 @@
 ﻿#include "resource/resource.hpp"
 
+#include "utils/logger.hpp"
+
 using namespace XnorCore;
 
 Resource::Resource(std::string name)
@@ -9,14 +11,10 @@ Resource::Resource(std::string name)
 
 void Resource::Load(File& file)
 {
-    const bool wasLoaded = file.IsLoaded();
-    if (!wasLoaded)
-        file.Load();
+    if (!file.IsLoaded())
+        Logger::LogWarning("Tried to load resource %s with an unloaded file: %s", m_Name.c_str(), file.GetFilepath().string().c_str());
     
     Load(file.GetData<uint8_t>(), file.GetSize());
-
-    if (!wasLoaded)
-        file.Unload();
 }
 
 bool Resource::IsLoaded() const

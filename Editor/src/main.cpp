@@ -13,17 +13,14 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
 	using namespace XnorCore;
 	using namespace XnorEditor;
-
-	Logger::OpenDefaultFile();
 	
-	//MemoryLeakDetector detector;
+	Logger::OpenDefaultFile();
 
 	Window window;
 	Editor editor(window);
 	Renderer renderer;
 	
 	Scene::CreateBasicScene();
-	//Scene& scene = *Scene::scene;
 
 	FrameBuffer* renderBuffer = new FrameBuffer();
 	Texture* mainRenderTexture = new Texture(Attachements::COLOR, renderBuffer->GetSize());
@@ -57,7 +54,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		renderer.RenderScene(*Scene::scene, context);
 		
 		ImGui::Begin("Scene");
-		ImGui::Image(Utils::IntToPointer<ImTextureID>(mainRenderTexture->GetID()), ImGui::GetContentRegionAvail());
+		ImGui::Image(Utils::IntToPointer<ImTextureID>(mainRenderTexture->GetId()), ImGui::GetContentRegionAvail());
 		ImGui::End();
 		
 		editor.EndFrame();
@@ -70,7 +67,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	delete renderBuffer;
 	delete Scene::scene;
 
-	FileManager::DeleteAll();
+	FileManager::UnloadAll();
 
 	Logger::Stop();
 	

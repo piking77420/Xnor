@@ -17,7 +17,11 @@ public:
     // If XNOR_ENGINE so you can export it to the editor
     XNOR_ENGINE static inline Scene* scene = nullptr;
 
+    XNOR_ENGINE Scene() = default;
+
     XNOR_ENGINE ~Scene();
+
+    DEFAULT_COPY_MOVE_OPERATIONS(Scene)
 
     template<class ComponentT>
     void GetAllComponentOfType(std::vector<const ComponentT*>*) const ;

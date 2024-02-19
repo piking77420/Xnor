@@ -1,6 +1,7 @@
 ﻿#include "scene/scene.hpp"
 #include "utils/logger.hpp"
 #include "scene/component.hpp"
+#include "utils/memory_leak_detector.hpp"
 
 using namespace XnorCore;
 
@@ -30,7 +31,7 @@ Entity* Scene::GetEntityById(const Guid& xnorGuid)
         }
     }
 
-    Logger::LogWarning("There is no entity with this id return nullptr ! ");
+    Logger::LogWarning("No entity with id %s in scene", static_cast<std::string>(xnorGuid).c_str());
 
     return nullptr;
 }

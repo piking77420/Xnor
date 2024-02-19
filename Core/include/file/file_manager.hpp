@@ -24,11 +24,11 @@ public:
     [[nodiscard]]
     XNOR_ENGINE static Pointer<File> Get(const std::filesystem::path& filepath);
 
-    XNOR_ENGINE static void Delete(const std::filesystem::path& filepath);
+    XNOR_ENGINE static void Unload(const std::filesystem::path& filepath);
 
-    XNOR_ENGINE static void Delete(const Pointer<File>& file);
+    XNOR_ENGINE static void Unload(const Pointer<File>& file);
 
-    XNOR_ENGINE static void DeleteAll();
+    XNOR_ENGINE static void UnloadAll();
     
 private:
     XNOR_ENGINE static inline std::map<std::filesystem::path, Pointer<File>> m_Files;

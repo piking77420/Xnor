@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-#include "utils/logger.hpp"
-
 using namespace XnorCore;
 
 MemoryLeakDetector::MemoryLeakDetector()
@@ -15,7 +13,7 @@ MemoryLeakDetector::~MemoryLeakDetector()
 {
     _CrtMemState stateNow, stateDiff;
     _CrtMemCheckpoint(&stateNow);
-    if (const int diffResult = _CrtMemDifference(&stateDiff, &m_MemState, &stateNow))
+    if (_CrtMemDifference(&stateDiff, &m_MemState, &stateNow))
         ReportFailure(stateDiff.lSizes[1]);
 }
 

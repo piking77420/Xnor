@@ -7,46 +7,42 @@
 
 using namespace XnorCore;
 
-
-
-Texture::Texture(TextureCreateInfo& createInfo) : m_Data(reinterpret_cast<uint8_t*>(createInfo.data))
-,m_Size({static_cast<int>(createInfo.textureSizeWidth),static_cast<int>(createInfo.textureSizeHeight)})
-,m_TextureFiltering(createInfo.textureFiltering),m_TextureWrapping(createInfo.textureWrapping)
-,m_TextureInternalFormat(createInfo.textureInternalFormat)
+Texture::Texture(const TextureCreateInfo& createInfo)
+    : m_Data(static_cast<uint8_t*>(createInfo.data))
+    , m_Size(static_cast<int>(createInfo.textureSizeWidth), static_cast<int>(createInfo.textureSizeHeight))
+    , m_TextureFiltering(createInfo.textureFiltering), m_TextureWrapping(createInfo.textureWrapping)
+    , m_TextureInternalFormat(createInfo.textureInternalFormat)
 {
     RHI::CreateTexture(&m_Id, createInfo);
     m_Loaded = true;
 }
 
-Texture::Texture(Attachements attachements,vec2i size)
+Texture::Texture(const Attachements attachements, const vec2i size)
 {
     TextureCreateInfo createInfo
-   {
-       nullptr,
-       static_cast<uint32_t>(size.x),
-       static_cast<uint32_t>(size.y),
-       TextureFiltering::LINEAR,
-       TextureWrapping::NONE,
-       TextureFormat::RGB,
-       TextureInternalFormat::RGBA_16F
-   };
+    {
+        nullptr,
+        static_cast<uint32_t>(size.x),
+        static_cast<uint32_t>(size.y),
+        TextureFiltering::LINEAR,
+        TextureWrapping::NONE,
+        TextureFormat::RGB,
+        TextureInternalFormat::RGBA_16F
+    };
 
     switch (attachements)
     {
         case Attachements::COLOR:
-            createInfo.textureInternalFormat = TextureInternalFormat::RGBA_16F;
-            break;
-        
         case Attachements::POSITION:
-            createInfo.textureInternalFormat = TextureInternalFormat::RGBA_16F;
-            break;
-        
         case Attachements::NORMAL:
             createInfo.textureInternalFormat = TextureInternalFormat::RGBA_16F;
             break;
         
         case Attachements::TEXTURECOORD:
             createInfo.textureInternalFormat = TextureInternalFormat::RG_16;
+            break;
+        
+        case Attachements::DEPTH:
             break;
     }
     
@@ -56,15 +52,21 @@ Texture::Texture(Attachements attachements,vec2i size)
 
 Texture::~Texture()
 {
-    RHI::DestroyTexture(&m_Id);
+    if (m_Loaded)
+        Texture::Unload();
 }
 
 void Texture::Load(File& file)
 {
-    stbi_set_flip_vertically_on_load(true);
-    m_Data = stbi_load(file.GetFilepath().generic_string().c_str(), &m_Size.x, &m_Size.y, &m_Channels,0);
+    Load(file.GetData<uint8_t>(), file.GetSize());
+}
 
-    TextureCreateInfo textureCreateInfo
+void Texture::Load(const uint8_t* buffer, const int64_t length)
+{
+    stbi_set_flip_vertically_on_load(true);
+    m_Data = stbi_load_from_memory(buffer, static_cast<int32_t>(length), &m_Size.x, &m_Size.y, &m_Channels, 0);
+
+    const TextureCreateInfo textureCreateInfo
     {
         m_Data,
         static_cast<uint32_t>(m_Size.x),
@@ -75,17 +77,14 @@ void Texture::Load(File& file)
         m_TextureInternalFormat
     };
     
-    RHI::CreateTexture(&m_Id,textureCreateInfo);
+    RHI::CreateTexture(&m_Id, textureCreateInfo);
     
     m_Loaded = true;
 }
 
-void Texture::Load([[maybe_unused]] const uint8_t* buffer, [[maybe_unused]] const int64_t length)
-{
-}
-
 void Texture::Unload()
 {
+    RHI::DestroyTexture(&m_Id);
     
     stbi_image_free(m_Data);
     m_Data = nullptr;
@@ -114,23 +113,23 @@ void Texture::BindTexture([[maybe_unused]] const uint32_t index) const
     RHI::BindTexture(index,m_Id);
 }
 
-const uint32_t Texture::GetID() const
+uint32_t Texture::GetId() const
 {
     return m_Id;
 }
 
-TextureFormat Texture::GetFormat(uint32_t textureFormat)
+TextureFormat Texture::GetFormat(const uint32_t textureFormat)
 {
     switch (textureFormat)
     {
-    case 1:
-       return  TextureFormat::RED;
-    case 3:
-        return  TextureFormat::RGB;
-    case 4:
-         return  TextureFormat::RGBA;
-    default:
-        return  TextureFormat::RGB;
+        case 1:
+           return TextureFormat::RED;
+        case 3:
+            return TextureFormat::RGB;
+        case 4:
+             return TextureFormat::RGBA;
+        default:
+            return TextureFormat::RGB;
     }
     
 }
