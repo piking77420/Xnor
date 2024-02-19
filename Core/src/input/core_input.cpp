@@ -1,5 +1,7 @@
 ﻿#include "input/core_input.hpp"
 
+#include "utils/logger.hpp"
+
 using namespace XnorCore;
 
 
@@ -50,8 +52,7 @@ void CoreInput::HandleInputsEvents(const Window& window)
             }
         }
     }
-
-    
+   
 }
 
 void CoreInput::ClearEvents()

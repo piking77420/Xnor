@@ -38,7 +38,7 @@ public:
 	[[nodiscard]]
 	double GetTime() const;
 
-	std::vector<std::function<Vector2i>> OnFrameBufferResize;
+	//std::vector<std::function<Vector2i>> OnFrameBufferResize;
 
 private:
 	static void GlfwResizeFramebuffer(GLFWwindow* window,int width,int height);
