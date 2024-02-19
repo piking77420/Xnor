@@ -13,39 +13,27 @@ Renderer::Renderer()
 
 	m_VertexPath = FileManager::Load("assets/shaders/vertex.vert");
 	m_FragmentPath = FileManager::Load("assets/shaders/fragment.frag");
-	m_DiamondPath = new File("assets/textures/viking_room.png");
+	m_DiamondPath = FileManager::Load("assets/textures/viking_room.png");
 
-	m_BasicShader = new Shader();
+	m_BasicShader = ResourceManager::Create<Shader>("assets/shaders/shader");
+	m_BasicShader->Load(*m_VertexPath, *m_FragmentPath);
 	CompileShader();
 	
 	const Pointer<File> modelFile = FileManager::Load("assets/models/viking_room.obj");
 	m_Model = ResourceManager::CreateAndLoad<Model>(modelFile);
-	m_Diamondtexture = new Texture();
-	m_Diamondtexture->Load(*m_DiamondPath);
+	m_Diamondtexture = ResourceManager::CreateAndLoad<Texture>(m_DiamondPath);
 	m_Rhi.PrepareUniform();
 	m_BasicShader->SetInt("diffuseTexture", 0);
 }
 
-Renderer::~Renderer()
-{
-	delete m_BasicShader;
-	delete m_Diamondtexture;
-	delete m_DiamondPath;
-}
-
 void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererContext& rendererContext) const
 {
-	
 	m_Rhi.ClearColorAndDepth();
 
-	if(rendererContext.framebuffer != nullptr)
-	{
+	if (rendererContext.framebuffer != nullptr)
 		rendererContext.framebuffer->BindFrameBuffer();
-	}
-		
 	
 	m_Rhi.ClearColorAndDepth();
-
 
 	m_Rhi.SetClearColor(clearColor);
 	m_Rhi.ClearColorAndDepth();
@@ -75,9 +63,7 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 	m_BasicShader->UnUse();
 	
 	if (rendererContext.framebuffer != nullptr)
-	{
 		rendererContext.framebuffer->UnBindFrameBuffer();
-	}
 }
 
 void Renderer::CompileShader()

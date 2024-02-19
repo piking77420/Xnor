@@ -48,13 +48,14 @@ void Performance::Display()
 {
     ImGui::Begin("Performance Summary");
 
+    const ImVec2 available = ImGui::GetContentRegionAvail();
     std::string format = std::format("FPS: {:.0f}", lastFps);
     ImGui::PlotLines("##fps", frameRateArray.data(), static_cast<int32_t>(std::min(totalSamples, frameRateArray.size())), arrayIndex,
-        format.c_str(), 0, highestArrayFps, ImVec2(ImGui::GetContentRegionAvail().x, 50));
+        format.c_str(), 0.f, highestArrayFps, ImVec2(available.x, 50.f));
 
     format = std::format("Memory: {:.2f}MB", lastMemory);
     ImGui::PlotLines("##memory", memoryArray.data(), static_cast<int32_t>(std::min(totalSamples, memoryArray.size())), arrayIndex,
-        format.c_str(), 0, highestArrayMemory, ImVec2(ImGui::GetContentRegionAvail().x, 50));
+        format.c_str(), 0.f, highestArrayMemory, ImVec2(available.x, 50.f));
 
     ImGui::End();
 }

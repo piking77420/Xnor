@@ -39,7 +39,7 @@ public:
     [[nodiscard]]
     XNOR_ENGINE int GetChannels() const;
 
-    XNOR_ENGINE virtual void BindTexture(uint32_t index);
+    XNOR_ENGINE virtual void BindTexture(uint32_t index) const;
     
     XNOR_ENGINE const uint32_t GetID() const;
 

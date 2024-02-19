@@ -7,17 +7,13 @@
 #include "material.hpp"
 #include "rhi_typedef.hpp"
 #include "uniformBuffer.hpp"
-#include "Maths/vector4.hpp"
 #include "vertex.hpp"
 
-
 BEGIN_XNOR_CORE
-
 
 class RHI
 {
 public:
-
 	// Utils
 	XNOR_ENGINE static void SetPolyGoneMode(PolyGoneFace face, PolyGoneMode mode);
 	
@@ -45,7 +41,7 @@ public:
 	XNOR_ENGINE  static void BindTexture(uint32_t unit,uint32_t textureId);
 	XNOR_ENGINE  static void UnBindTexture(TextureType textureType);
 
-	// FrammeBuffer 
+	// FrameBuffer
 	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferId);
 	XNOR_ENGINE static void DestroyFrameBuffer(const uint32_t* frameBufferId);
 	

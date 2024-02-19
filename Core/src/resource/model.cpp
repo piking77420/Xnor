@@ -21,7 +21,7 @@ void Model::Load(const uint8_t* buffer, const int64_t length)
 
     if (!scene)
     {
-        Logger::LogError("An error occured while loading model: %s, error: %s", m_Name.c_str(), importer.GetErrorString());
+        Logger::LogError("An error occured while loading model: %s. Assimp error: %s", m_Name.c_str(), importer.GetErrorString());
         return;
     }
 

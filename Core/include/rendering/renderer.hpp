@@ -16,8 +16,6 @@ public:
     Vector4 clearColor;
 
     XNOR_ENGINE explicit Renderer();
-
-    XNOR_ENGINE  ~Renderer();
     
     XNOR_ENGINE void RenderScene(const Scene& scene, const RendererContext& rendererContext) const;
 
@@ -28,12 +26,11 @@ private:
 
     Pointer<File> m_VertexPath;
     Pointer<File> m_FragmentPath;
-    Texture* m_Diamondtexture = nullptr;
-    File* m_DiamondPath = nullptr;
+    Pointer<Texture> m_Diamondtexture;
+    Pointer<File> m_DiamondPath;
 
-    Shader* m_BasicShader;
+    Pointer<Shader> m_BasicShader;
     Pointer<Model> m_Model;
-
 };
 
 END_XNOR_CORE

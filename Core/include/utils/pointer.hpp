@@ -232,15 +232,15 @@ template<typename T>
 template<typename Ty>
 Pointer<T>& Pointer<T>::operator=(Pointer<Ty>&& other) noexcept
 {
-    if (this == &other)
+    if (reinterpret_cast<int8_t*>(this) == reinterpret_cast<int8_t*>(&other))
         return *this;
-    
-    m_ReferenceCounter = reinterpret_cast<ReferenceCounter<T>>(std::move(other.GetReferenceCounter()));
+
+    m_ReferenceCounter = reinterpret_cast<ReferenceCounter<T>*>(const_cast<ReferenceCounter<Ty>*>(std::move(other.GetReferenceCounter())));
     m_IsStrongReference = std::move(other.GetIsStrongReference());
 
     if (!m_IsStrongReference)
     {
-        m_ReferenceCounter->DecWeak(&other);
+        m_ReferenceCounter->DecWeak(reinterpret_cast<const Pointer*>(&other));
         m_ReferenceCounter->IncWeak(this);
     }
 

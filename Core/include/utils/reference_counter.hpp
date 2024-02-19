@@ -16,7 +16,7 @@ template<typename T>
 class ReferenceCounter
 {
 public:
-    ReferenceCounter();
+    ReferenceCounter() = default;
 
     template<typename... Args>
     explicit ReferenceCounter(Args... args);
@@ -38,7 +38,7 @@ public:
     // Returns whether the strong ref count becomes 0
     bool DecStrong();
 
-    void DecWeak(Pointer<T>* weakReferenceOwner);
+    void DecWeak(const Pointer<T>* weakReferenceOwner);
 
     [[nodiscard]]
     uint64_t GetStrong() const;
@@ -61,12 +61,7 @@ private:
 };
 
 template<typename T>
-ReferenceCounter<T>::ReferenceCounter()
-{
-}
-
-template<typename T>
-template<typename ... Args>
+template<typename... Args>
 ReferenceCounter<T>::ReferenceCounter(Args... args)
     : m_Pointer(new T(std::forward<Args>(args)...))
 {
@@ -103,7 +98,7 @@ bool ReferenceCounter<T>::DecStrong()
 }
 
 template<typename T>
-void ReferenceCounter<T>::DecWeak(Pointer<T>* weakReferenceOwner)
+void ReferenceCounter<T>::DecWeak(const Pointer<T>* const weakReferenceOwner)
 {
     const auto&& it = std::find(m_WeakReferenceOwners.begin(), m_WeakReferenceOwners.end(), weakReferenceOwner);
     

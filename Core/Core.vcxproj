@@ -262,7 +262,6 @@
     <ClInclude Include="include\rendering\material.hpp" />
     <ClInclude Include="include\rendering\renderer.hpp" />
     <ClInclude Include="include\rendering\renderer_context.hpp" />
-    <ClInclude Include="include\rendering\rhi_typedef.hpp" />
     <ClInclude Include="include\rendering\uniformBuffer.hpp" />
     <ClInclude Include="include\resource\model.hpp" />
     <ClInclude Include="include\resource\resource.hpp" />
