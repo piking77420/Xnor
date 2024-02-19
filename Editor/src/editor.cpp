@@ -4,35 +4,45 @@
 #include <ImGui/imgui_impl_opengl3.h>
 #include <ImGui/imgui_impl_glfw.h>
 
+#include "windows/inspector.hpp"
+#include "windows/performance.hpp"
+
 using namespace XnorEditor;
+
+void Editor::CreateDefaultWindows()
+{
+	m_UiWindows.push_back(new Performance);
+	m_UiWindows.push_back(new Inspector);
+}
 
 void Editor::BeginDockSpace() const
 {
 	static bool dockspaceOpen = true;
-	static bool opt_fullscreen_persistant = true;
-	bool opt_fullscreen = opt_fullscreen_persistant;
+	static bool optFullscreenPersistant = true;
+	const bool optFullscreen = optFullscreenPersistant;
+	
 	ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
-	if (opt_fullscreen)
+	if (optFullscreen)
 		dockspaceFlags |= ImGuiDockNodeFlags_PassthruCentralNode;
+	
 	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-	if (opt_fullscreen)
+	if (optFullscreen)
 	{
-		ImGuiViewport* viewport = ImGui::GetMainViewport();
+		const ImGuiViewport* viewport = ImGui::GetMainViewport();
 		ImGui::SetNextWindowPos(viewport->WorkPos);
 		ImGui::SetNextWindowSize(viewport->WorkSize);
 		ImGui::SetNextWindowViewport(viewport->ID);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0,0});
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 
 		windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 		windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
 	}
 
-
 	// Begin docking layout
 	ImGui::Begin("DockSpace Demo", &dockspaceOpen, windowFlags);
-	if (opt_fullscreen)
+	if (optFullscreen)
 		ImGui::PopStyleVar(3);
 
 	ImGuiID dockspaceID = ImGui::GetID("DockSpace");
@@ -154,6 +164,7 @@ Editor::Editor(XnorCore::Window& window)
 	ImGui_ImplOpenGL3_Init(glslVersion);
 
 	SetupImGuiStyle();
+	CreateDefaultWindows();
 }
 
 void Editor::BeginFrame()
@@ -166,8 +177,8 @@ void Editor::BeginFrame()
 
 void Editor::Update()
 {
-	m_Performance.Update(m_Window->GetTime());
-	m_Performance.Display();
+	for (UiWindow* w : m_UiWindows)
+		w->Display();
 }
 
 void Editor::EndFrame()
@@ -182,6 +193,9 @@ void Editor::EndFrame()
 
 Editor::~Editor()
 {
+	for (const UiWindow* w : m_UiWindows)
+		delete w;
+	
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyPlatformWindows();

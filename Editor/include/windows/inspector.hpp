@@ -1,18 +1,23 @@
 #pragma once
 
 #include "definitions.hpp"
+#include "ui_window.hpp"
 #include "ImGui/imgui.h"
 #include "utils/reflectable.hpp"
 #include "utils/utils.hpp"
 
 BEGIN_XNOR_EDITOR
 
-class Inspector
+class Inspector : public UiWindow
 {
 public:
-    void Display(XnorCore::Reflectable* obj);
+    void Display() override;
+
+    void SetObject(XnorCore::Reflectable* obj);
 
 private:
+    XnorCore::Reflectable* m_Object = nullptr;
+    
     void DisplayMember(void* obj, const XnorCore::FieldInfo& fieldInfo);
     void DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldInfo, size_t element);
 

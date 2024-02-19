@@ -7,6 +7,7 @@
 #undef max
 #include <psapi.h>
 
+#include "window.hpp"
 #include "GLFW/glfw3.h"
 #include "imgui/imgui.h"
 #include "Maths/calc.hpp"
@@ -46,10 +47,15 @@ void Performance::Update(const double currentTime)
 
 void Performance::Display()
 {
+    // TODO time
+    Update(5);
+    
     ImGui::Begin("Performance Summary");
 
     const ImVec2 available = ImGui::GetContentRegionAvail();
     std::string format = std::format("FPS: {:.0f}", lastFps);
+    FetchInfo();
+
     ImGui::PlotLines("##fps", frameRateArray.data(), static_cast<int32_t>(std::min(totalSamples, frameRateArray.size())), arrayIndex,
         format.c_str(), 0.f, highestArrayFps, ImVec2(available.x, 50.f));
 

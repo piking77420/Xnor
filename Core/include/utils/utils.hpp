@@ -9,9 +9,11 @@ BEGIN_XNOR_CORE
 namespace Utils
 {
     template<typename PtrT, typename IntT>
+    [[nodiscard]]
     constexpr PtrT IntToPointer(IntT number);
 
     template <typename T>
+    [[nodiscard]]
     constexpr T* GetObjectPointer(const void* obj, size_t offset, size_t element);
 }
 

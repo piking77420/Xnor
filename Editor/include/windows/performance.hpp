@@ -3,17 +3,18 @@
 #include <vector>
 
 #include "definitions.hpp"
+#include "windows/ui_window.hpp"
 
 BEGIN_XNOR_EDITOR
 
-class Performance
+class Performance : public UiWindow
 {
 public:
     Performance();
     
     void Update(double currentTime);
 
-    void Display();
+    void Display() override;
 
 private:
     // TEMPORARY
