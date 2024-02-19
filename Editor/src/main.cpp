@@ -18,18 +18,17 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 	Entity entity;
 	entity.Begin();
-	entity.AddComponent<Component>();
-	
-    Editor editor;
-    Scene::CreateBasicScene();
+
+	Editor editor;
+	Scene::CreateBasicScene();
 
 	editor.GetInspector()->SetObject(&entity);
 	editor.Update();
 
-    ResourceManager::RemoveAll();
-    delete Scene::scene;
-    FileManager::UnloadAll();
-    Logger::Stop();
+	ResourceManager::RemoveAll();
+	delete Scene::scene;
+	FileManager::UnloadAll();
+	Logger::Stop();
 	
 	return 0;
 }

@@ -18,8 +18,6 @@ class Entity : public Reflectable
     REFLECTABLE_IMPL(Entity)
     
 public:
-    Entity* parent = nullptr;
-
     Transform transform;
 
     XNOR_ENGINE explicit Entity(const Guid& entiyId);
@@ -32,6 +30,7 @@ public:
     void AddComponent();
     
     template<class ComponentT>
+    [[nodiscard]]
     const ComponentT* GetComponent() const;
 
     template<class ComponentT>
@@ -44,15 +43,20 @@ public:
     ComponentT* GetComponent();
     
     template<class ComponentT>
+    [[nodiscard]]
     bool TryGetComponent(ComponentT** output);
 
     template<class ComponentT>
     void RemoveComponent();
 
-    XNOR_ENGINE const Guid& GetId() const
-    {
-        return m_EntityId;
-    }
+    [[nodiscard]]
+    XNOR_ENGINE const Guid& GetId() const;
+
+    [[nodiscard]]
+    XNOR_ENGINE Entity* GetParent() const;
+    XNOR_ENGINE void SetParent(Entity* parent);
+    XNOR_ENGINE void AddChild(Entity* child);
+    XNOR_ENGINE void RemoveChild(Entity* child);
     
     XNOR_ENGINE void Begin() const;
 
@@ -61,10 +65,12 @@ public:
     XNOR_ENGINE bool operator==(const Entity& entity) const;
     
 private:
+    Entity* m_Parent = nullptr;
+    std::vector<Entity*> m_Children;
+    
     Guid m_EntityId;
 
     std::vector<Component*> m_Components;
-    mutable std::vector<uint32_t> m_Test;
 };
 
 template <class ComponentT>
@@ -153,6 +159,5 @@ END_XNOR_CORE
 REFL_AUTO(
     type(XnorCore::Entity),
     field(transform),
-    field(m_Test),
     field(m_Components)
 )

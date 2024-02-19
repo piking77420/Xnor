@@ -3,12 +3,14 @@
 #include "scene/scene.hpp"
 #include "scene/component.hpp"
 
-XnorCore::Entity::Entity(const Guid& entiyId)
+using namespace XnorCore;
+
+Entity::Entity(const Guid& entiyId)
     : m_EntityId(entiyId)
 {
 }
 
-XnorCore::Entity::~Entity()
+Entity::~Entity()
 {
     for (const Component* comp : m_Components)
     {
@@ -18,15 +20,10 @@ XnorCore::Entity::~Entity()
     m_Components.clear();
 }
 
-void XnorCore::Entity::Begin() const
+void Entity::Begin() const
 {
     Entity::CreateTypeInfo();
     transform.CreateTypeInfo();
-
-    m_Test.push_back(0);
-    m_Test.push_back(1);
-    m_Test.push_back(2);
-    m_Test.push_back(3);
 
     for (Component* comp : m_Components)
     {
@@ -34,7 +31,7 @@ void XnorCore::Entity::Begin() const
     }
 }
 
-void XnorCore::Entity::Update() const
+void Entity::Update() const
 {
     for (Component* comp : m_Components)
     {
@@ -42,7 +39,72 @@ void XnorCore::Entity::Update() const
     }
 }
 
-bool XnorCore::Entity::operator==(const Entity& entity) const
+const Guid& Entity::GetId() const
+{
+    return m_EntityId;
+}
+
+Entity* Entity::GetParent() const
+{
+    return m_Parent;
+}
+
+void Entity::SetParent(Entity* const parent)
+{
+    // Remove ourselves from our old parent if we had one
+    if (m_Parent)
+        m_Parent->m_Children.erase(std::ranges::find(m_Parent->m_Children, this));
+
+    // Set new parent
+    m_Parent = parent;
+
+    // Need to check if we actually have a parent, since a nullptr parent is valid
+    if (parent)
+    {
+        // Add ourselves to our new parent
+        parent->m_Children.push_back(this);
+    }
+}
+
+void Entity::AddChild(Entity* child)
+{
+    if (child == nullptr)
+    {
+        Logger::LogWarning("Trying to add a child that doesn't exists");
+        return;
+    }
+
+    // Add the enw child
+    m_Children.push_back(child);
+
+    // Check if the child add a parent
+    if (child->m_Parent != nullptr)
+    {
+        // If it had one, remove its old child affiliation
+        m_Parent->m_Children.erase(std::ranges::find(m_Parent->m_Children, this));
+    }
+
+    // Set the new parent of the child to ourselves
+    child->m_Parent = this;
+}
+
+void Entity::RemoveChild(Entity* const child)
+{
+    if (child == nullptr)
+    {
+        Logger::LogWarning("Trying to remove a child that doesn't exists");
+        return;
+    }
+    
+    // Remove from the list if the parent was indeed us
+    if (child->m_Parent == this)
+        m_Children.erase(std::ranges::find(m_Children, child));
+
+    // Orphan the child
+    child->m_Parent = nullptr;
+}
+
+bool Entity::operator==(const Entity& entity) const
 {
     return m_EntityId == entity.m_EntityId;
 }
