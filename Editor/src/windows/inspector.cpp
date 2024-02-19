@@ -76,9 +76,9 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
     {
         DisplayScalar<int16_t>(obj, fieldInfo.offset, name, element);
     }
-    else if (fieldInfo.typeHash == typeid(int16_t).hash_code())
+    else if (fieldInfo.typeHash == typeid(uint16_t).hash_code())
     {
-        DisplayScalar<int16_t>(obj, fieldInfo.offset, name, element);
+        DisplayScalar<uint16_t>(obj, fieldInfo.offset, name, element);
     }
     else if (fieldInfo.typeHash == typeid(int8_t).hash_code())
     {
@@ -95,6 +95,10 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
     else if (fieldInfo.typeHash == typeid(double_t).hash_code())
     {
         DisplayScalar<double_t>(obj, fieldInfo.offset, name, element);
+    }
+    else if (fieldInfo.typeHash == typeid(bool).hash_code())
+    {
+        ImGui::Checkbox(name, XnorCore::Utils::GetObjectPointer<bool>(obj, fieldInfo.offset, element));
     }
     else if (fieldInfo.typeHash == typeid(Vector2i).hash_code())
     {
@@ -114,7 +118,16 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
     }
     else if (fieldInfo.typeHash == typeid(Quaternion).hash_code())
     {
-        ImGui::InputFloat4(name, XnorCore::Utils::GetObjectPointer<Quaternion>(obj, fieldInfo.offset, element)->Raw());
+        Quaternion* const q = XnorCore::Utils::GetObjectPointer<Quaternion>(obj, fieldInfo.offset, element);
+        
+        Vector3 euler = Quaternion::ToEuler(*q);
+
+        ImGui::Text("%s", name);
+        ImGui::SliderAngle("X", &euler.x);
+        ImGui::SliderAngle("Y", &euler.y);
+        ImGui::SliderAngle("Z", &euler.z);
+        
+        *q = Quaternion::FromEuler(euler);
     }
     else
     {
@@ -128,6 +141,7 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
             {
                 DisplayMember(subPtr, m);
             }
+            
             ImGui::PopID();
         }
     }
