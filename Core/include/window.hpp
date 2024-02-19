@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <GLFW/glfw3.h>
 
 #include "core.hpp"
@@ -37,7 +38,13 @@ public:
 	[[nodiscard]]
 	double GetTime() const;
 
+	std::vector<std::function<Vector2i>> OnFrameBufferResize;
+
 private:
+	static void GlfwResizeFramebuffer(GLFWwindow* window,int width,int height);
+
+	
+	static inline bool m_ResizeFrameBuffer = false;
 	GLFWwindow* m_Window = nullptr;
 	Vector2i m_Size = { 1280, 720 };
 };

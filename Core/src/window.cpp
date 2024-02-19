@@ -13,6 +13,8 @@ Window::Window()
 
 	m_Window = glfwCreateWindow(m_Size.x, m_Size.y, "XNOR Engine", nullptr, nullptr);
 
+	glfwSetFramebufferSizeCallback(m_Window,GlfwResizeFramebuffer);
+
 	glfwMakeContextCurrent(m_Window);
 
 	glfwSwapInterval(1); // Enable vsync
@@ -48,10 +50,15 @@ bool Window::ShouldClose() const
 void Window::PollEvents() const
 {
 	glfwPollEvents();
+	
 }
 
 void Window::SwapBuffers() const
 {
+	if(m_ResizeFrameBuffer)
+	{
+		// TO DO TRIGGER On Resize callBacks	
+	}
 	glfwSwapBuffers(m_Window);
 }
 
@@ -68,4 +75,9 @@ void Window::SetCurrentContext() const
 double Window::GetTime() const
 {
 	return glfwGetTime();
+}
+
+void Window::GlfwResizeFramebuffer(GLFWwindow* window, [[maybe_unused]] int width, [[maybe_unused]] int height)
+{
+	m_ResizeFrameBuffer = true;
 }
