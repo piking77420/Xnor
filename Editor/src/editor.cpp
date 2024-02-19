@@ -169,6 +169,7 @@ Editor::Editor()
 void Editor::BeginFrame()
 {
 	coreInput.HandleInputsEvents(window);
+	
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
@@ -213,6 +214,12 @@ void Editor::Update()
 		ImGui::Begin("Scene");
 		ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(mainRenderTexture->GetId()), ImGui::GetContentRegionAvail());
 		ImGui::End();
+
+		if(XnorCore::CoreInput::GetKey(XnorCore::KeyCode::KEY_I,XnorCore::KeyStatus::RELEASE))
+		{
+			XnorCore::Logger::LogDebug("dasdadasd");
+		}
+	
 		
 		EndFrame();
 		window.SwapBuffers();
@@ -224,6 +231,8 @@ void Editor::Update()
 
 void Editor::EndFrame()
 {
+	coreInput.ClearEvents();
+	
 	EndDockSpace();
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
