@@ -10,11 +10,9 @@ void HeaderWindow::Display()
 {
     ImGui::Begin("HeaderWindow ");
 
- 
     XnorCore::Utils::CenterImguiObject();
-    ImGui::ArrowButton("Button Play",ImGuiDir_Right);
-
+    
+    ImGui::ArrowButton("Button Play", ImGuiDir_Right);
     
     ImGui::End();
-
 }

@@ -2,13 +2,15 @@
 
 #include <ImGui/imgui.h>
 
-void XnorCore::Utils::CenterImguiObject(float alignment)
-{
-    ImGuiStyle& style = ImGui::GetStyle();
-    float size = style.FramePadding.x * 2.0f;
-    float avail = ImGui::GetContentRegionAvail().x;
+using namespace XnorCore;
 
-    float off = (avail - size) * alignment;
+void Utils::CenterImguiObject(const float alignment)
+{
+    const ImGuiStyle& style = ImGui::GetStyle();
+    const float size = style.FramePadding.x * 2.0f;
+    const float avail = ImGui::GetContentRegionAvail().x;
+    const float off = (avail - size) * alignment;
+    
     if (off > 0.0f)
         ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
 }
