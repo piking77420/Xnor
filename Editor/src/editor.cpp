@@ -7,6 +7,7 @@
 #include "windows/header_window.hpp"
 #include "windows/inspector.hpp"
 #include "windows/performance.hpp"
+#include "windows/scene_graph.hpp"
 
 using namespace XnorEditor;
 
@@ -15,6 +16,7 @@ void Editor::CreateDefaultWindows()
 	m_UiWindows.push_back(new Performance);
 	m_UiWindows.push_back(new Inspector);
 	m_UiWindows.push_back(new HeaderWindow);
+	m_UiWindows.push_back(new SceneGraph);
 }
 
 void Editor::BeginDockSpace() const

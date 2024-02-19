@@ -49,10 +49,30 @@ Entity* Entity::GetParent() const
     return m_Parent;
 }
 
+bool Entity::HasParent() const
+{
+    return m_Parent != nullptr;
+}
+
+Entity* Entity::GetChild(const size_t index)
+{
+    return m_Children[index];
+}
+
+size_t Entity::GetChildCount() const
+{
+    return m_Children.size();
+}
+
+bool Entity::HasChildren() const
+{
+    return GetChildCount() != 0;
+}
+
 void Entity::SetParent(Entity* const parent)
 {
     // Remove ourselves from our old parent if we had one
-    if (m_Parent)
+    if (HasParent())
         m_Parent->m_Children.erase(std::ranges::find(m_Parent->m_Children, this));
 
     // Set new parent
@@ -78,7 +98,7 @@ void Entity::AddChild(Entity* child)
     m_Children.push_back(child);
 
     // Check if the child add a parent
-    if (child->m_Parent != nullptr)
+    if (child->HasParent())
     {
         // If it had one, remove its old child affiliation
         m_Parent->m_Children.erase(std::ranges::find(m_Parent->m_Children, this));

@@ -19,6 +19,7 @@ class Entity : public Reflectable
     
 public:
     Transform transform;
+    std::string name;
 
     XNOR_ENGINE explicit Entity(const Guid& entiyId);
 
@@ -54,6 +55,15 @@ public:
 
     [[nodiscard]]
     XNOR_ENGINE Entity* GetParent() const;
+    [[nodiscard]]
+    XNOR_ENGINE bool HasParent() const;
+    [[nodiscard]]
+    XNOR_ENGINE Entity* GetChild(size_t index);
+    [[nodiscard]]
+    XNOR_ENGINE size_t GetChildCount() const;
+    [[nodiscard]]
+    XNOR_ENGINE bool HasChildren() const;
+    
     XNOR_ENGINE void SetParent(Entity* parent);
     XNOR_ENGINE void AddChild(Entity* child);
     XNOR_ENGINE void RemoveChild(Entity* child);

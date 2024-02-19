@@ -34,6 +34,8 @@ public:
     XNOR_ENGINE void Update();
 
     XNOR_ENGINE Entity* GetEntityById(const Guid& xnorGuid);
+
+    XNOR_ENGINE std::vector<Entity*>& GetEntities();
     
 private:
     std::vector<Entity*> m_Entities;
