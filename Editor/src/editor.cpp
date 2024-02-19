@@ -23,6 +23,8 @@ void Editor::BeginDockSpace() const
 		ImGui::SetNextWindowViewport(viewport->ID);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0,0});
+
 		windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
 		windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
 	}
@@ -31,7 +33,7 @@ void Editor::BeginDockSpace() const
 	// Begin docking layout
 	ImGui::Begin("DockSpace Demo", &dockspaceOpen, windowFlags);
 	if (opt_fullscreen)
-		ImGui::PopStyleVar(2);
+		ImGui::PopStyleVar(3);
 
 	ImGuiID dockspaceID = ImGui::GetID("DockSpace");
 	ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspaceFlags);
