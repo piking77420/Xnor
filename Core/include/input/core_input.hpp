@@ -135,11 +135,25 @@ enum class KeyCode : uint32_t
     KEY_SIZE = 355,
 };
 
+enum class MouseButton : uint32_t
+{
+    Left,
+    Right,
+    Middle,
+    button3,
+    button4,
+    button5,
+    button6,
+    button7,
+    button8
+    
+};
+
 enum class KeyStatus : uint16_t
 {
     DOWN,
     RELEASE,
-    REPEAT
+    REPEAT,
 };
 
 
@@ -147,24 +161,49 @@ class CoreInput
 {
 public:
     XNOR_ENGINE static bool GetKey(KeyCode keyCode, KeyStatus keyStatus = KeyStatus::DOWN);
+    
+    XNOR_ENGINE static bool GetMouseButton(MouseButton mouseButton, KeyStatus keyStatus = KeyStatus::DOWN);
+    
+    template<class T>
+    T GetCursorPos();
+    
+    XNOR_ENGINE static void ClearKey();
+
+    XNOR_ENGINE static void InitCallBacks(const Window& window);
 
 private:
-    struct InputKey
+    struct InputKeyBoard
     {
         KeyCode keyCode;
         KeyStatus status;
     };
+    struct InputMouse
+    {
+        MouseButton mouseButton;
+        KeyStatus status;
+    };
 
-    XNOR_ENGINE static inline std::vector<InputKey>* m_InputQueue = nullptr;
+    XNOR_ENGINE static inline Vector2 m_MousePos;
+    static constexpr uint32_t ReserveKeySize = 100;
+    
+    XNOR_ENGINE static inline std::vector<InputKeyBoard>* m_InputKeyBoardQueue = nullptr;
+    XNOR_ENGINE static inline std::vector<InputMouse>* m_InputMouseButtonQueue = nullptr;
+
+    XNOR_ENGINE static void HandleKeyBoardButton(GLFWwindow* window, int key, int scancode, int action, int mods);
+    XNOR_ENGINE static void HandleMouseButton(GLFWwindow* window, int button, int action, int mods);
+    XNOR_ENGINE static void MouseCursorPos(GLFWwindow* window,double xpos, double ypos);
 
 public:
     XNOR_ENGINE CoreInput();
     
     XNOR_ENGINE ~CoreInput();
-
-    XNOR_ENGINE void HandleInputsEvents(const Window& window);
-
-    XNOR_ENGINE void ClearEvents();
+    
 };
+
+template <class T>
+T CoreInput::GetCursorPos()
+{
+    return  m_MousePos;
+}
 
 END_XNOR_CORE

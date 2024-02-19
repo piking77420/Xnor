@@ -4,6 +4,7 @@
 #include <ImGui/imgui_impl_opengl3.h>
 #include <ImGui/imgui_impl_glfw.h>
 
+#include "windows/header_window.hpp"
 #include "windows/inspector.hpp"
 #include "windows/performance.hpp"
 
@@ -13,6 +14,7 @@ void Editor::CreateDefaultWindows()
 {
 	m_UiWindows.push_back(new Performance);
 	m_UiWindows.push_back(new Inspector);
+	m_UiWindows.push_back(new HeaderWindow);
 }
 
 void Editor::BeginDockSpace() const
@@ -168,8 +170,6 @@ Editor::Editor()
 
 void Editor::BeginFrame()
 {
-	coreInput.HandleInputsEvents(window);
-	
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
@@ -220,7 +220,7 @@ void Editor::Update()
 			XnorCore::Logger::LogDebug("dasdadasd");
 		}
 	
-		
+		XnorCore::CoreInput::ClearKey();
 		EndFrame();
 		window.SwapBuffers();
 	}
@@ -231,7 +231,6 @@ void Editor::Update()
 
 void Editor::EndFrame()
 {
-	coreInput.ClearEvents();
 	
 	EndDockSpace();
 	ImGui::Render();

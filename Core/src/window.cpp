@@ -1,4 +1,5 @@
 #include "window.hpp"
+#include "input/core_input.hpp"
 
 #include "Maths/vector3.hpp"
 
@@ -63,7 +64,7 @@ void Window::SwapBuffers() const
 	}
 	glfwSwapBuffers(m_Window);
 }
-
+	
 void Window::SetCurrentContext()
 {
 	glfwMakeContextCurrent(m_Window);
