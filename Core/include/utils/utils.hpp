@@ -22,6 +22,8 @@ namespace Utils
 
     template<typename T, typename A>
     struct is_std_vector<std::vector<T, A>> : std::true_type {};
+
+    XNOR_ENGINE void CenterImguiObject(float alignment = 0.5f);
 }
 
 template<typename PtrT, typename IntT>

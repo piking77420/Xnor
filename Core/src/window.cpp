@@ -1,4 +1,5 @@
 #include "window.hpp"
+#include "input/core_input.hpp"
 
 using namespace XnorCore;
 
@@ -61,7 +62,7 @@ void Window::SwapBuffers() const
 	}
 	glfwSwapBuffers(m_Window);
 }
-
+	
 void Window::SetCurrentContext()
 {
 	glfwMakeContextCurrent(m_Window);
