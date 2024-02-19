@@ -6,7 +6,7 @@ const TypeInfo& TypeInfo::Get(const size_t typeHash)
 {
     if (!m_TypeInfo.contains(typeHash))
     {
-        Logger::LogError("Couldn't find type %u", typeHash);
+        Logger::LogError("Couldn't find type {}", typeHash);
     }
     
     return m_TypeInfo.at(typeHash);

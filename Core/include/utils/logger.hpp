@@ -7,14 +7,16 @@
 #include <utility>
 
 #include "core.hpp"
+#include "GLFW/glfw3native.h"
 #include "utils/tsqueue.hpp"
+#include "utils/formatter.hpp"
 
 BEGIN_XNOR_CORE
 
 class Logger final
 {
 public:
-    enum class LogLevel : unsigned char
+    enum class LogLevel : uint8_t
     {
         Debug,
         Info,
@@ -84,14 +86,17 @@ private:
 
     XNOR_ENGINE static inline std::condition_variable m_CondVar;
 
+    template<class... Types, size_t... Size>
+    static void PushLog(LogLevel level, const std::string_view& format, std::tuple<Types&&...>&& args, std::index_sequence<Size...>);
+
+    template<class... Args>
+    static void PushLog(LogLevel level, const std::string_view& format, Args&&... args);
+
     XNOR_ENGINE static void Run();
 
     XNOR_ENGINE static inline std::thread m_Thread = std::thread(&Logger::Run);
 
     static void PrintLog(const LogEntry& entry);
-
-    template<class... Args>
-    static std::string Format(const std::string& format, Args&&... args);
 };
 
 template class TsQueue<Logger::LogEntry>;
@@ -102,8 +107,9 @@ void Logger::Log(const LogLevel level, const std::string& format, Args&&... args
     if (level < minimumConsoleLevel && level < minimumFileLevel)
         return;
 
-    m_Lines.Push(LogEntry(Logger::Format(format, std::forward<Args>(args)...), level));
-    m_CondVar.notify_one();
+    // FIXME
+    //PushLog(level, format, std::forward_as_tuple(args...), std::make_index_sequence<sizeof...(Args)>());
+    PushLog(level, format, std::forward<Args>(args)...);
 }
 
 template<class... Args>
@@ -136,12 +142,29 @@ void Logger::LogFatal(const std::string& format, Args&&... args)
     Logger::Log(LogLevel::Fatal, format, std::forward<Args>(args)...);
 }
 
-template<class... Args>
-std::string Logger::Format(const std::string& format, Args&&... args)
+template<class... Types, size_t... Size>
+void Logger::PushLog(const LogLevel level, const std::string_view& format, std::tuple<Types&&...>&& args, std::index_sequence<Size...>)
 {
-    char buffer[0x800];
-    (void)sprintf_s(buffer, sizeof(buffer), format.c_str(), std::forward<Args>(args)...);
-    return buffer;
+    // Cast pointer types to void*
+    std::tuple<const LogLevel, const std::string_view&, Types&&...> out;
+
+    // FIXME
+    /*for (size_t i = 0; i < Size; i++)
+    {
+        if (std::is_pointer_v<std::tuple_element_t<i, decltype(args)>>)
+        {
+            
+        }
+    }*/
+}
+
+template<class ... Args>
+void Logger::PushLog(const LogLevel level, const std::string_view& format, Args&&... args)
+{
+    // FIXME
+    //m_Lines.Push(LogEntry(std::vformat(format, std::make_format_args(args...)), level));
+    m_Lines.Push(LogEntry(std::vformat(format, std::make_format_args(args...)), level));
+    m_CondVar.notify_one();
 }
 
 END_XNOR_CORE

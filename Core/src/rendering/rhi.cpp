@@ -97,7 +97,7 @@ void RHI::CheckCompilationError(const uint32_t shaderId, const std::string& type
 		if (!success)
 		{
 			glGetShaderInfoLog(shaderId, 1024, nullptr, infoLog);
-			Logger::LogError("Error while compiling shader of type %s: %s", type.c_str(), infoLog);
+			Logger::LogError("Error while compiling shader of type {}: {}", type.c_str(), infoLog);
 		}
 	}
 	else
@@ -106,7 +106,7 @@ void RHI::CheckCompilationError(const uint32_t shaderId, const std::string& type
 		if (!success)
 		{
 			glGetProgramInfoLog(shaderId, 1024, nullptr, infoLog);
-			Logger::LogError("Error while linking shader program of type %s: %s", type.c_str(), infoLog);
+			Logger::LogError("Error while linking shader program of type {}: {}", type.c_str(), infoLog);
 		}
 	}
 }
@@ -461,8 +461,8 @@ void RHI::IsShaderValid(const uint32_t shaderId)
 {
 	if (!m_ShaderMap.contains(shaderId))
 	{
-		Logger::LogFatal("No shader with this id %d", shaderId);
-		throw std::runtime_error("No shader With this Id");
+		Logger::LogFatal("No shader with id #{}", shaderId);
+		throw std::runtime_error("No shader with this id");
 	}
 }
 
@@ -478,7 +478,7 @@ int RHI::GetUniformInMap(uint32_t shaderId, const char* uniformKey)
 	const GLint location = glGetUniformLocation(shaderId, uniformKey);
 	if (location == NullUniformLocation)
 	{
-		Logger::LogWarning("There is no uniform with this key [%s] in the shader %d",uniformKey,shaderId);
+		Logger::LogWarning("No uniform with key [{}] in shader #{}", uniformKey, shaderId);
 	}
 		
 	shaderUniformMap[uniformKey] = location;

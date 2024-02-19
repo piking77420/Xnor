@@ -31,7 +31,7 @@ bool File::Load()
 
     if (!file.is_open() || !file.good())
     {
-        Logger::LogError("Couldn't open file for reading: %s", m_Filepath.string().c_str());
+        Logger::LogError("Couldn't open file for reading: {}", m_Filepath);
         return false;
     }
 

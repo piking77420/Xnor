@@ -5,7 +5,6 @@
 
 using namespace XnorCore;
 
-
 bool CoreInput::GetKey(KeyCode keyCode, KeyStatus keyStatus)
 {
     size_t size = m_InputKeyBoardQueue->size();
@@ -21,7 +20,6 @@ bool CoreInput::GetKey(KeyCode keyCode, KeyStatus keyStatus)
 
 bool CoreInput::GetMouseButton(MouseButton mouseButton, KeyStatus keyStatus)
 {
-    
     for (size_t i = 0 ; i < m_InputMouseButtonQueue->size() ; i++)
     {
         if (m_InputMouseButtonQueue->at(i).status == keyStatus && m_InputMouseButtonQueue->at(i).mouseButton == mouseButton)

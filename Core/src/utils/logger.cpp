@@ -32,11 +32,11 @@ void Logger::OpenFile(const std::filesystem::path &filename)
 
     if (!file.is_open() || !file.good())
     {
-        LogWarning("Could not open log file for writing: " + absolute(filename).string());
+        LogWarning("Could not open log file for writing: {}", absolute(filename));
         return;
     }
 
-    LogInfo("Logging to file: %s", filename.string().c_str());
+    LogInfo("Logging to file: {}", filename);
 
     // If the file already exists, add newlines to space from the last log
     if (!exists)
@@ -56,19 +56,19 @@ void Logger::OpenFile(const std::filesystem::path &filename)
 
         if (!in.is_open() || !in.good())
         {
-            LogWarning("Could not open log file for reading: " + absolute(filename).string());
+            LogWarning("Could not open log file for reading: {}", absolute(filename));
         }
         else
         {
             std::string line;
-            unsigned int count = 0;
+            uint32_t count = 0;
             while (!in.eof())
             {
                 std::getline(in, line);
                 if (line.empty() || line == "\n")
                     count++;
             }
-            LogInfo("Starting logging #%d", count - 1);
+            LogInfo("Starting logging #{}", 1);
         }
     }
 }

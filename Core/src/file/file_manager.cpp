@@ -6,6 +6,14 @@ using namespace XnorCore;
 
 Pointer<File> FileManager::Load(std::filesystem::path filepath)
 {
+    Logger::LogDebug("Loading file {}", filepath);
+
+    if (Contains(filepath))
+    {
+        Logger::LogWarning("This has already been loaded, consider using FileManager::Get instead");
+        return m_Files[filepath];
+    }
+
     Pointer<File> file;
     try
     {
@@ -13,7 +21,7 @@ Pointer<File> FileManager::Load(std::filesystem::path filepath)
     }
     catch (const std::invalid_argument& ex)
     {
-        Logger::LogError("Uncaught exception while creating File object: %s", ex.what());
+        Logger::LogError("Exception while creating File object with path {}. Exception message: {}", filepath, ex.what());
         // Return the already-constructed null Pointer
         return file;
     }
@@ -28,6 +36,48 @@ Pointer<File> FileManager::Load(std::filesystem::path filepath)
     return file;
 }
 
+void FileManager::LoadDirectory(const std::filesystem::path& path)
+{
+    Logger::LogDebug("Loading directory {}", path);
+
+    if (!is_directory(path))
+    {
+        Logger::LogError("Path does not point to a directory: {}", path);
+        return;
+    }
+
+    for (const auto& entry : std::filesystem::directory_iterator(path))
+    {
+        const std::filesystem::path& entryPath = entry.path();
+        
+        if (is_directory(entryPath))
+            continue;
+        
+        Load(entryPath);
+    }
+}
+
+void FileManager::LoadDirectoryRecursive(const std::filesystem::path& path)
+{
+    Logger::LogDebug("Recursively loading directory {}", path);
+
+    if (!is_directory(path))
+    {
+        Logger::LogError("Path does not point to a directory: {}", path);
+        return;
+    }
+
+    for (const auto& entry : std::filesystem::recursive_directory_iterator(path))
+    {
+        const std::filesystem::path& entryPath = entry.path();
+        
+        if (is_directory(entryPath))
+            continue;
+        
+        Load(entryPath);
+    }
+}
+
 bool FileManager::Contains(const std::filesystem::path& filepath)
 {
     return m_Files.contains(filepath);
@@ -37,7 +87,7 @@ Pointer<File> FileManager::Get(const std::filesystem::path& filepath)
 {
     if (!Contains(filepath))
     {
-        Logger::LogError("Attempt to get an unknown file entry: %s", filepath.c_str());
+        Logger::LogError("Attempt to get an unknown file entry: {}", filepath);
         return Pointer<File>();
     }
 
@@ -63,7 +113,7 @@ void FileManager::Unload(const std::filesystem::path& filepath)
     }
     
     if (oldSize == m_Files.size())
-        Logger::LogWarning("Attempt to delete an unknown file entry: %s", filepath.string().c_str());
+        Logger::LogWarning("Attempt to delete an unknown file entry: {}", filepath);
 }
 
 void FileManager::Unload(const Pointer<File>& file)
@@ -82,8 +132,8 @@ void FileManager::Unload(const Pointer<File>& file)
         }
     }
     
-    if (oldSize == m_Files.size())
-        Logger::LogWarning("Attempt to delete an unknown file entry: %p", static_cast<File*>(file));
+    /*if (oldSize == m_Files.size())
+        Logger::LogWarning("Attempt to delete an unknown file entry: {}", static_cast<File*>(file));*/ // FIXME
 }
 
 void FileManager::UnloadAll()

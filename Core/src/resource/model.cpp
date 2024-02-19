@@ -21,19 +21,19 @@ void Model::Load(const uint8_t* buffer, const int64_t length)
 
     if (!scene)
     {
-        Logger::LogError("An error occured while loading model: %s. Assimp error: %s", m_Name.c_str(), importer.GetErrorString());
+        Logger::LogError("An error occured while loading model: {}. Assimp error: {}", m_Name, importer.GetErrorString());
         return;
     }
 
     if (!scene->HasMeshes())
     {
-        Logger::LogError("Invalid mesh format, should contain a model: %s", m_Name.c_str());
+        Logger::LogError("Invalid mesh format, should contain a model: {}", m_Name);
         return;
     }
 
     if (scene->mNumMeshes > 1)
     {
-        Logger::LogError("Invalid mesh format, should only contain a single model: %s", m_Name.c_str());
+        Logger::LogError("Invalid mesh format, should only contain a single model: {}", m_Name);
         return;
     }
 
@@ -59,7 +59,7 @@ void Model::Load(const aiMesh& loadedData)
         const aiFace& face = loadedData.mFaces[i];
         if (face.mNumIndices != 3)
         {
-            Logger::LogError("Model data should be triangulated: %s", m_Name.c_str());
+            Logger::LogError("Model data should be triangulated: {}", m_Name);
             return;
         }
     

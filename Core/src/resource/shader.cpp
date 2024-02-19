@@ -96,7 +96,7 @@ void Shader::UnUse() const
 void Shader::GetShaderCode(const char* shaderPath, std::string* shaderCode)
 {
     if (!shaderCode || !shaderPath)
-        throw std::runtime_error("Shader Path or Shader are nullptr");
+        throw std::runtime_error("Shader path or code are invalid");
 
     std::ifstream shaderFile;
     shaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -109,13 +109,9 @@ void Shader::GetShaderCode(const char* shaderPath, std::string* shaderCode)
         shaderFile.close();
         *shaderCode = stream.str();
     }
-    catch (std::ifstream::failure& e)
+    catch (const std::ifstream::failure& e)
     {
-        const std::string what = e.what();
-        std::string message = "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ:";
-        message += what;
-        message += '\n';
-        Logger::LogError("%s", message.c_str());
+        Logger::LogError("An error occured while attempting to read shader file {}: {}", shaderPath, e.what());
     }
 }
 

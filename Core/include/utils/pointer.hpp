@@ -41,14 +41,14 @@ public:
 
     Pointer(Pointer&& other) noexcept;
 
-    template<typename Ty>
-    explicit Pointer(const Pointer<Ty>& other, bool strongReference = false);
+    template<typename U>
+    explicit Pointer(const Pointer<U>& other, bool strongReference = false);
 
-    template<typename Ty>
-    explicit Pointer(Pointer<Ty>&& other) noexcept;
+    template<typename U>
+    explicit Pointer(Pointer<U>&& other) noexcept;
 
     template<typename... Args>
-    explicit Pointer(Args... args);
+    explicit Pointer(Args&&... args);
 
     virtual ~Pointer();
 
@@ -58,11 +58,11 @@ public:
 
     Pointer& operator=(Pointer&& other) noexcept;
 
-    template<typename Ty>
-    Pointer& operator=(const Pointer<Ty>& other);
+    template<typename U>
+    Pointer& operator=(const Pointer<U>& other);
 
-    template<typename Ty>
-    Pointer& operator=(Pointer<Ty>&& other) noexcept;
+    template<typename U>
+    Pointer& operator=(Pointer<U>&& other) noexcept;
 
     explicit operator T*() const;
 
@@ -123,8 +123,8 @@ Pointer<T>::Pointer(Pointer&& other) noexcept
 }
 
 template<typename T>
-template<typename Ty>
-Pointer<T>::Pointer(const Pointer<Ty>& other, const bool strongReference)
+template<typename U>
+Pointer<T>::Pointer(const Pointer<U>& other, const bool strongReference)
     : m_ReferenceCounter(reinterpret_cast<ReferenceCounter<T>>(other.GetReferenceCounter()))
     , m_IsStrongReference(strongReference)
 {
@@ -135,9 +135,9 @@ Pointer<T>::Pointer(const Pointer<Ty>& other, const bool strongReference)
 }
 
 template<typename T>
-template<typename Ty>
-Pointer<T>::Pointer(Pointer<Ty>&& other) noexcept
-    : m_ReferenceCounter(reinterpret_cast<ReferenceCounter<T>*>(const_cast<ReferenceCounter<Ty>*>(std::move(other.GetReferenceCounter()))))
+template<typename U>
+Pointer<T>::Pointer(Pointer<U>&& other) noexcept  // NOLINT(cppcoreguidelines-rvalue-reference-param-not-moved)
+    : m_ReferenceCounter(reinterpret_cast<ReferenceCounter<T>*>(const_cast<ReferenceCounter<U>*>(std::move(other.GetReferenceCounter()))))
     , m_IsStrongReference(std::move(other.GetIsStrongReference()))
 {
     if (!m_IsStrongReference)
@@ -151,7 +151,7 @@ Pointer<T>::Pointer(Pointer<Ty>&& other) noexcept
 
 template<typename T>
 template<typename... Args>
-Pointer<T>::Pointer(Args... args)
+Pointer<T>::Pointer(Args&&... args)
     : m_ReferenceCounter(new ReferenceCounter<T>(std::forward<Args>(args)...))
     , m_IsStrongReference(true)
 {
@@ -180,7 +180,7 @@ Pointer<T> Pointer<T>::CreateStrongReference() const
 }
 
 template<typename T>
-Pointer<T>& Pointer<T>::operator=(const Pointer& other)
+Pointer<T>& Pointer<T>::operator=(const Pointer& other)  // NOLINT(bugprone-unhandled-self-assignment)
 {
     if (this == &other)
         return *this;
@@ -214,8 +214,8 @@ Pointer<T>& Pointer<T>::operator=(Pointer&& other) noexcept
 }
 
 template<typename T>
-template<typename Ty>
-Pointer<T>& Pointer<T>::operator=(const Pointer<Ty>& other)
+template<typename U>
+Pointer<T>& Pointer<T>::operator=(const Pointer<U>& other)
 {
     if (this == &other)
         return *this;
@@ -229,13 +229,13 @@ Pointer<T>& Pointer<T>::operator=(const Pointer<Ty>& other)
 }
 
 template<typename T>
-template<typename Ty>
-Pointer<T>& Pointer<T>::operator=(Pointer<Ty>&& other) noexcept
+template<typename U>
+Pointer<T>& Pointer<T>::operator=(Pointer<U>&& other) noexcept
 {
     if (reinterpret_cast<int8_t*>(this) == reinterpret_cast<int8_t*>(&other))
         return *this;
 
-    m_ReferenceCounter = reinterpret_cast<ReferenceCounter<T>*>(const_cast<ReferenceCounter<Ty>*>(std::move(other.GetReferenceCounter())));
+    m_ReferenceCounter = reinterpret_cast<ReferenceCounter<T>*>(const_cast<ReferenceCounter<U>*>(std::move(other.GetReferenceCounter())));
     m_IsStrongReference = std::move(other.GetIsStrongReference());
 
     if (!m_IsStrongReference)

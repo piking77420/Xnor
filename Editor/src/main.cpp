@@ -16,6 +16,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 	Logger::OpenDefaultFile();
 
+	FileManager::LoadDirectoryRecursive("assets");
+
 	Entity entity;
 	entity.Begin();
 

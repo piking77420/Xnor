@@ -13,7 +13,7 @@ void ResourceManager::Remove(const std::string& name)
     
     if (resource == m_Resources.end())
     {
-        Logger::LogWarning("Attempt to delete an unknown resource: %s", name.c_str());
+        Logger::LogWarning("Attempt to delete an unknown resource: {}", name);
         return;
     }
 

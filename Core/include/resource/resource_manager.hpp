@@ -21,12 +21,10 @@ public:
     
     /// @brief Creates the resource corresponding to the given @p name without loading it
     template<ResourceT T>
-    [[nodiscard]]
     static Pointer<T> Add(std::string name);
 
     /// @brief Creates the resource corresponding to the given @p file and loads it
     template<ResourceT T>
-    [[nodiscard]]
     static Pointer<T> Load(const Pointer<File>& file);
 
     [[nodiscard]]
@@ -54,6 +52,8 @@ private:
 template<ResourceT T>
 Pointer<T> ResourceManager::Add(std::string name)
 {
+    Logger::LogDebug("Adding resource {}", name);
+    
     Pointer<T> resource(std::forward<std::string>(name));
 
     // We cannot reuse the variable 'name' here in case it was moved inside the Resource constructor
@@ -68,6 +68,8 @@ Pointer<T> ResourceManager::Add(std::string name)
 template<ResourceT T>
 Pointer<T> ResourceManager::Load(const Pointer<File>& file)
 {
+    Logger::LogDebug("Loading resource {}", file->GetFilepath());
+    
     Pointer<T> resource(file->GetFilepath().string());
 
     m_Resources[resource->GetName()] = static_cast<Pointer<Resource>>(resource.CreateStrongReference());
@@ -85,7 +87,7 @@ Pointer<T> ResourceManager::Get(const std::string& name)
 {
     if (!Contains(name))
     {
-        Logger::LogError("Attempt to get an unknown resource: %s", name.c_str());
+        Logger::LogError("Attempt to get an unknown resource: {}", name);
         return Pointer<T>();
     }
 
@@ -126,7 +128,7 @@ void ResourceManager::Remove(const Pointer<T>& resource)
 
     // If no resources were deleted
     if (oldSize == m_Resources.size())
-        Logger::LogWarning("Attempt to delete an unknown file entry: %p", static_cast<T*>(resource));
+        Logger::LogWarning("Attempt to delete an unknown file entry: {}", static_cast<T*>(resource));
 }
 
 END_XNOR_CORE

@@ -32,7 +32,7 @@ Entity* Scene::GetEntityById(const Guid& xnorGuid)
         }
     }
 
-    Logger::LogWarning("No entity with id %s in scene", static_cast<std::string>(xnorGuid).c_str());
+    Logger::LogWarning("No entity with id {} in scene", static_cast<std::string>(xnorGuid));
 
     return nullptr;
 }

@@ -19,7 +19,7 @@ public:
     ReferenceCounter() = default;
 
     template<typename... Args>
-    explicit ReferenceCounter(Args... args);
+    explicit ReferenceCounter(Args&&... args);
 
     ReferenceCounter(const ReferenceCounter& other) = delete;
 
@@ -62,7 +62,7 @@ private:
 
 template<typename T>
 template<typename... Args>
-ReferenceCounter<T>::ReferenceCounter(Args... args)
+ReferenceCounter<T>::ReferenceCounter(Args&&... args)
     : m_Pointer(new T(std::forward<Args>(args)...))
 {
 }

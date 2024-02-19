@@ -15,8 +15,11 @@ public:
     // You cannot instantiate this class
     FileManager() = delete;
     
-    [[nodiscard]]
     XNOR_ENGINE static Pointer<File> Load(std::filesystem::path filepath);
+    
+    XNOR_ENGINE static void LoadDirectory(const std::filesystem::path& path);
+    
+    XNOR_ENGINE static void LoadDirectoryRecursive(const std::filesystem::path& path);
 
     [[nodiscard]]
     XNOR_ENGINE static bool Contains(const std::filesystem::path& filepath);
