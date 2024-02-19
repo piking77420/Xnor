@@ -1,12 +1,14 @@
 #pragma once
 
+#include <vector>
+
 #include "definitions.hpp"
 #include "window.hpp"
-#include "windows/inspector.hpp"
-#include "windows/performance.hpp"
+#include "windows/ui_window.hpp"
 
 BEGIN_XNOR_EDITOR
-	class Editor
+
+class Editor
 {
 public:
 	explicit Editor(XnorCore::Window& window);
@@ -21,15 +23,16 @@ public:
 
 private:
 	XnorCore::Window* m_Window;
-	Inspector m_Inspector;
-	Performance m_Performance;
 
+	std::vector<UiWindow*> m_UiWindows;
+
+	void CreateDefaultWindows();
+	
 	void BeginDockSpace() const;
 
 	void EndDockSpace() const;
 		
 	void SetupImGuiStyle() const;
-	
 };
 
 END_XNOR_EDITOR

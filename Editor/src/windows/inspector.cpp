@@ -9,21 +9,33 @@
 
 using namespace XnorEditor;
 
-void Inspector::Display(XnorCore::Reflectable* obj)
+void Inspector::Display()
 {
-    void* const ptr = obj;
+    void* const ptr = m_Object;
     ImGui::PushID(ptr);
-	const XnorCore::TypeInfo& info = XnorCore::TypeInfo::Get(typeid(*obj).hash_code());
 
-    ImGui::Begin(info.GetName().c_str());
+    ImGui::Begin("Inspector");
 
-    for (const XnorCore::FieldInfo& m : info.GetMembers())
+    FetchInfo();
+    
+    if (m_Object)
     {
-        DisplayMember(ptr, m);
+	    const XnorCore::TypeInfo& info = XnorCore::TypeInfo::Get(typeid(*m_Object).hash_code());
+        ImGui::Text("%s", info.GetName().c_str());
+        
+        for (const XnorCore::FieldInfo& m : info.GetMembers())
+        {
+            DisplayMember(ptr, m);
+        }
     }
 
     ImGui::End();
     ImGui::PopID();
+}
+
+void Inspector::SetObject(XnorCore::Reflectable* obj)
+{
+    m_Object = obj;
 }
 
 void Inspector::DisplayMember(void* obj, const XnorCore::FieldInfo& fieldInfo)
