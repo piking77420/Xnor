@@ -9,7 +9,9 @@ BEGIN_XNOR_EDITOR
 class Performance
 {
 public:
-    void Update();
+    Performance();
+    
+    void Update(double currentTime);
 
     void Display();
 

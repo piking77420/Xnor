@@ -64,3 +64,8 @@ void Window::SetCurrentContext() const
 {
 	glfwMakeContextCurrent(m_Window);
 }
+
+double Window::GetTime() const
+{
+	return glfwGetTime();
+}

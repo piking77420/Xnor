@@ -13,10 +13,14 @@
 
 using namespace XnorEditor;
 
-void Performance::Update()
+Performance::Performance()
 {
-    const double currentTime = glfwGetTime();
-    
+    frameRateArray.resize(50);
+    memoryArray.resize(50);
+}
+
+void Performance::Update(const double currentTime)
+{
     if (Calc::OnInterval(static_cast<float>(currentTime), static_cast<float>(totalTime), UpdateInterval))
     {
         const double deltaTime = currentTime - totalTime;
@@ -44,11 +48,11 @@ void Performance::Display()
 {
     ImGui::Begin("Performance Summary");
 
-    std::string format = std::format("FPS: {:.0}", lastFps);
+    std::string format = std::format("FPS: {:.0f}", lastFps);
     ImGui::PlotLines("##fps", frameRateArray.data(), static_cast<int32_t>(std::min(totalSamples, frameRateArray.size())), arrayIndex,
         format.c_str(), 0, highestArrayFps, ImVec2(ImGui::GetContentRegionAvail().x, 50));
 
-    format = std::format("Memory: {:.2}MB", lastMemory);
+    format = std::format("Memory: {:.2f}MB", lastMemory);
     ImGui::PlotLines("##memory", memoryArray.data(), static_cast<int32_t>(std::min(totalSamples, memoryArray.size())), arrayIndex,
         format.c_str(), 0, highestArrayMemory, ImVec2(ImGui::GetContentRegionAvail().x, 50));
 

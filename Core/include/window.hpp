@@ -34,6 +34,9 @@ public:
 
 	void SetCurrentContext() const;
 
+	[[nodiscard]]
+	double GetTime() const;
+
 private:
 	GLFWwindow* m_Window = nullptr;
 	Vector2i m_Size = { 1280, 720 };

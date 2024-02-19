@@ -166,7 +166,7 @@ void Editor::BeginFrame()
 
 void Editor::Update()
 {
-	m_Performance.Update();
+	m_Performance.Update(m_Window->GetTime());
 	m_Performance.Display();
 }
 
