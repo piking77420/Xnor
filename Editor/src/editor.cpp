@@ -146,8 +146,7 @@ void Editor::SetupImGuiStyle() const
 	style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.800000011920929f, 0.800000011920929f, 0.800000011920929f, 0.3499999940395355f);
 }
 
-Editor::Editor(XnorCore::Window& window)
-	: m_Window(&window)
+Editor::Editor()
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -169,6 +168,7 @@ Editor::Editor(XnorCore::Window& window)
 
 void Editor::BeginFrame()
 {
+	coreInput.HandleInputsEvents(window);
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
@@ -177,8 +177,49 @@ void Editor::BeginFrame()
 
 void Editor::Update()
 {
-	for (UiWindow* w : m_UiWindows)
-		w->Display();
+	XnorCore::FrameBuffer* renderBuffer = new XnorCore::FrameBuffer();
+	XnorCore::Texture* mainRenderTexture = new XnorCore::Texture(XnorCore::Attachements::COLOR, renderBuffer->GetSize());
+	
+	std::vector<XnorCore::RenderTarget> renderTargets(1);
+	renderTargets[0].texture = mainRenderTexture;
+	renderBuffer->AttachColorAttachement(renderTargets);
+
+	XnorCore::Camera cam;
+	cam.pos = { 0, 0, -5 };
+
+	XnorCore::RendererContext context
+	{
+			.camera = &cam,
+			.framebuffer = renderBuffer
+	};
+	
+	while (!window.ShouldClose())
+	{
+		window.PollEvents();
+		BeginFrame();
+
+		ImGui::Begin("Renderer Settings");
+		
+		if (ImGui::Button("Recompile Shader"))
+			renderer.CompileShader();
+		
+		ImGui::End();
+		
+		for (UiWindow* w : m_UiWindows)
+			w->Display();		
+		
+		renderer.RenderScene(*XnorCore::Scene::scene, context);
+		
+		ImGui::Begin("Scene");
+		ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(mainRenderTexture->GetId()), ImGui::GetContentRegionAvail());
+		ImGui::End();
+		
+		EndFrame();
+		window.SwapBuffers();
+	}
+
+	delete mainRenderTexture;
+	delete renderBuffer;
 }
 
 void Editor::EndFrame()
@@ -188,7 +229,7 @@ void Editor::EndFrame()
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	ImGui::UpdatePlatformWindows();
 	ImGui::RenderPlatformWindowsDefault();
-	m_Window->SetCurrentContext();
+	window.SetCurrentContext();
 }
 
 Editor::~Editor()

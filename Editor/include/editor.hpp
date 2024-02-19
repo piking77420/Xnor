@@ -4,27 +4,29 @@
 
 #include "definitions.hpp"
 #include "window.hpp"
+#include "applications/application.hpp"
+#include "rendering/renderer.hpp"
 #include "windows/ui_window.hpp"
 
 BEGIN_XNOR_EDITOR
 
-class Editor
+class Editor : public XnorCore::Application
 {
 public:
-	explicit Editor(XnorCore::Window& window);
+	
+	explicit Editor();
 
-	~Editor();
+	~Editor() override;
+	
+	void Update() override;
+
+private:
+
+	std::vector<UiWindow*> m_UiWindows;
 
 	void BeginFrame();
 
-	void Update();
-
 	void EndFrame();
-
-private:
-	XnorCore::Window* m_Window;
-
-	std::vector<UiWindow*> m_UiWindows;
 
 	void CreateDefaultWindows();
 	

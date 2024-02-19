@@ -108,6 +108,8 @@
     <ClCompile Include="externals\src\ImGui\imgui_tables.cpp" />
     <ClCompile Include="externals\src\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="externals\src\ttf\ttfParser.cpp" />
+    <ClCompile Include="src\applications\application.cpp" />
+    <ClCompile Include="src\input\core_input.cpp" />
     <ClCompile Include="src\rendering\material.cpp" />
     <ClCompile Include="src\rendering\rhi.cpp" />
     <ClCompile Include="src\rendering\uniformBuffer.cpp" />
@@ -254,9 +256,11 @@
     <ClInclude Include="externals\include\Maths\vector4.hpp" />
     <ClInclude Include="externals\include\stb\stb_image.h" />
     <ClInclude Include="externals\include\ttf\ttfParser.h" />
+    <ClInclude Include="include\applications\application.hpp" />
     <ClInclude Include="include\core.hpp" />
     <ClInclude Include="include\file\file.hpp" />
     <ClInclude Include="include\file\file_manager.hpp" />
+    <ClInclude Include="include\input\core_input.hpp" />
     <ClInclude Include="include\rendering\camera.hpp" />
     <ClInclude Include="include\rendering\frame_buffer.hpp" />
     <ClInclude Include="include\rendering\material.hpp" />
