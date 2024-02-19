@@ -5,7 +5,7 @@
 #include "definitions.hpp"
 #include "window.hpp"
 #include "applications/application.hpp"
-#include "rendering/renderer.hpp"
+#include "windows/inspector.hpp"
 #include "windows/ui_window.hpp"
 
 BEGIN_XNOR_EDITOR
@@ -13,21 +13,22 @@ BEGIN_XNOR_EDITOR
 class Editor : public XnorCore::Application
 {
 public:
-	
 	explicit Editor();
 
 	~Editor() override;
 	
 	void Update() override;
+	
+	Inspector* GetInspector();
 
 private:
-
 	std::vector<UiWindow*> m_UiWindows;
 
 	void BeginFrame();
 
 	void EndFrame();
 
+private:
 	void CreateDefaultWindows();
 	
 	void BeginDockSpace() const;

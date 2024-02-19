@@ -190,8 +190,8 @@ void Editor::Update()
 
 	XnorCore::RendererContext context
 	{
-			.camera = &cam,
-			.framebuffer = renderBuffer
+		.camera = &cam,
+		.framebuffer = renderBuffer
 	};
 	
 	while (!window.ShouldClose())
@@ -239,6 +239,11 @@ void Editor::EndFrame()
 	ImGui::UpdatePlatformWindows();
 	ImGui::RenderPlatformWindowsDefault();
 	window.SetCurrentContext();
+}
+
+Inspector* Editor::GetInspector()
+{
+	return dynamic_cast<Inspector*>(m_UiWindows[1]);
 }
 
 Editor::~Editor()

@@ -22,6 +22,12 @@ void XnorCore::Entity::Begin() const
 {
     Entity::CreateTypeInfo();
     transform.CreateTypeInfo();
+
+    m_Test.push_back(0);
+    m_Test.push_back(1);
+    m_Test.push_back(2);
+    m_Test.push_back(3);
+
     for (Component* comp : m_Components)
     {
         comp->Begin();

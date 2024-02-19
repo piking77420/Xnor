@@ -2,6 +2,7 @@
 #include "utils/logger.hpp"
 #include "scene/component.hpp"
 #include "utils/memory_leak_detector.hpp"
+#include "scene/entity.hpp"
 
 using namespace XnorCore;
 
@@ -43,7 +44,7 @@ void Scene::CreateBasicScene()
 
 Scene::~Scene()
 {
-    for (Entity* ent : m_Entities)
+    for (const Entity* ent : m_Entities)
     {
         delete ent;
     }

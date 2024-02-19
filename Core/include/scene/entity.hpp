@@ -4,17 +4,16 @@
 
 #include "core.hpp"
 #include "transform.hpp"
+#include "component.hpp"
 #include "utils/guid.hpp"
 #include "utils/reflectable.hpp"
 
 BEGIN_XNOR_CORE
 
-class Component;
-
 template<class T>
 concept ComponentT = std::is_base_of_v<Component, T>;
 
-class Entity : public XnorCore::Reflectable
+class Entity : public Reflectable
 {
     REFLECTABLE_IMPL(Entity)
     
@@ -55,9 +54,9 @@ public:
         return m_EntityId;
     }
     
-    XNOR_ENGINE virtual void Begin() const;
+    XNOR_ENGINE void Begin() const;
 
-    XNOR_ENGINE virtual void Update() const;
+    XNOR_ENGINE void Update() const;
 
     XNOR_ENGINE bool operator==(const Entity& entity) const;
     
@@ -65,6 +64,7 @@ private:
     Guid m_EntityId;
 
     std::vector<Component*> m_Components;
+    mutable std::vector<uint32_t> m_Test;
 };
 
 template <class ComponentT>
@@ -152,5 +152,7 @@ END_XNOR_CORE
 
 REFL_AUTO(
     type(XnorCore::Entity),
-    field(transform)
+    field(transform),
+    field(m_Test),
+    field(m_Components)
 )

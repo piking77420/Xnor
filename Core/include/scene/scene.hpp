@@ -14,7 +14,6 @@ public:
     // REMOVE IT LATER
     XNOR_ENGINE static void CreateBasicScene();
 
-    // If XNOR_ENGINE so you can export it to the editor
     XNOR_ENGINE static inline Scene* scene = nullptr;
 
     XNOR_ENGINE Scene() = default;
@@ -24,7 +23,7 @@ public:
     DEFAULT_COPY_MOVE_OPERATIONS(Scene)
 
     template<class ComponentT>
-    void GetAllComponentOfType(std::vector<const ComponentT*>*) const ;
+    void GetAllComponentOfType(std::vector<const ComponentT*>*) const;
 
     template<class ComponentT>
     void GetAllComponentOfType(std::vector<ComponentT*>*);
@@ -47,27 +46,21 @@ void Scene::GetAllComponentOfType(std::vector<const ComponentT*>* componentData)
     {
         const ComponentT* component = ent->GetComponent<ComponentT>();
 
-        if (dynamic_cast<const Component*>(component) == nullptr)
-            continue;
-        componentData->emplace_back(component);
-
+        if (component != nullptr)
+            componentData->emplace_back(component);
     }
-
 }
 
 template<class ComponentT>
 void Scene::GetAllComponentOfType(std::vector<ComponentT*>* componentData)
 {
-    for (Entity& ent : m_Entities)
+    for (Entity* ent : m_Entities)
     {
-        ComponentT* component = ent.GetComponent<ComponentT>();
+        ComponentT* component = ent->GetComponent<ComponentT>();
 
-        if (dynamic_cast<Component*>(component) == nullptr)
-            continue;
-        componentData->emplace_back(component);
-
+        if (component != nullptr)
+            componentData->emplace_back(component);
     }
-
 }
 
 END_XNOR_CORE

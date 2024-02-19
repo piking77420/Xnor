@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <type_traits>
+#include <vector>
 
 #include "core.hpp"
 
@@ -15,6 +16,12 @@ namespace Utils
     template <typename T>
     [[nodiscard]]
     constexpr T* GetObjectPointer(const void* obj, size_t offset, size_t element);
+
+    template<typename>
+    struct is_std_vector : std::false_type {};
+
+    template<typename T, typename A>
+    struct is_std_vector<std::vector<T, A>> : std::true_type {};
 }
 
 template<typename PtrT, typename IntT>

@@ -13,17 +13,23 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
 	using namespace XnorCore;
 	using namespace XnorEditor;
-	
+
 	Logger::OpenDefaultFile();
+
+	Entity entity;
+	entity.Begin();
+	entity.AddComponent<Component>();
 	
-	Editor editor;
-	Scene::CreateBasicScene();
+    Editor editor;
+    Scene::CreateBasicScene();
+
+	editor.GetInspector()->SetObject(&entity);
 	editor.Update();
-	
-	ResourceManager::DeleteAll();
-	delete Scene::scene;
-	FileManager::UnloadAll();
-	Logger::Stop();
+
+    ResourceManager::DeleteAll();
+    delete Scene::scene;
+    FileManager::UnloadAll();
+    Logger::Stop();
 	
 	return 0;
 }

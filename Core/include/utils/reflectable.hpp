@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include <typeinfo>
 
+#include "utils.hpp"
+
 BEGIN_XNOR_CORE
 
 class FieldInfo
@@ -19,10 +21,11 @@ public:
     size_t elementSize;
     size_t offset;
     bool isArray;
+    bool isVector;
     bool isPointer;
     bool isStatic;
     bool isConst;
-    
+
     [[nodiscard]]
     XNOR_ENGINE constexpr size_t GetArraySize() const
     {
@@ -112,7 +115,7 @@ public:
      */
     XNOR_ENGINE constexpr const std::string& GetName() const;
     
-    XNOR_ENGINE constexpr const size_t GetSize() const;
+    XNOR_ENGINE constexpr size_t GetSize() const;
 
     /**
      * \brief Gets the members of the type
@@ -215,6 +218,8 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
         constexpr bool isPointer = std::is_pointer<typename T::value_type>();
         constexpr bool isReflectable = std::is_base_of_v<Reflectable, typename T::value_type>;
         constexpr bool isStatic = member.is_static;
+        constexpr bool isVector = Utils::is_std_vector<typename T::value_type>::value;
+
         // A member is const if it can't be written to
         constexpr bool isConst = !member.is_writable;
         constexpr size_t fullSize = sizeof(T::value_type);
@@ -243,6 +248,11 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
             hash = typeid(std::remove_all_extents_t<typename T::value_type>).hash_code();
             elementSize = sizeof(std::remove_all_extents_t<typename T::value_type>);
         }
+        else if constexpr (isVector)
+        {
+            hash = typeid(T::value_type::value_type).hash_code();
+            elementSize = sizeof(T::value_type::value_type);
+        }
         else
         {
             // "Trivial" type, simply get the hash
@@ -264,6 +274,7 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
             .elementSize = elementSize,
             .offset = offset,
             .isArray = isArray,
+            .isVector = isVector,
             .isPointer = isPointer,
             .isStatic = isStatic,
             .isConst = isConst

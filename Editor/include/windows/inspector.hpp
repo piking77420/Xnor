@@ -20,6 +20,8 @@ private:
     
     void DisplayMember(void* obj, const XnorCore::FieldInfo& fieldInfo);
     void DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldInfo, size_t element);
+    void DisplayArrayMember(void* obj, const XnorCore::FieldInfo& fieldInfo);
+    void DisplayVectorMember(void* obj, const XnorCore::FieldInfo& fieldInfo);
 
     template <typename T>
     static void DisplayScalar(void* obj, size_t offset, const char* name, size_t element);

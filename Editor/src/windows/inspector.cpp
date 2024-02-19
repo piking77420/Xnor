@@ -48,12 +48,13 @@ void Inspector::DisplayMember(void* obj, const XnorCore::FieldInfo& fieldInfo)
 
     if (fieldInfo.isArray)
     {
-        if (ImGui::CollapsingHeader(fieldInfo.name.c_str()))
-        {
-            for (size_t i = 0; i < fieldInfo.GetArraySize(); i++)
-                DisplayScalarMember(obj, fieldInfo, i);
-        }
-        
+        DisplayArrayMember(obj, fieldInfo);        
+        return;
+    }
+
+    if (fieldInfo.isVector)
+    {
+        DisplayVectorMember(obj, fieldInfo);
         return;
     }
 
@@ -140,7 +141,8 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
         ImGui::SliderAngle("Y", &euler.y);
         ImGui::SliderAngle("Z", &euler.z);
         
-        *q = Quaternion::FromEuler(euler);*/
+        *q = Quaternion::FromEuler(euler);
+        */
     }
     else
     {
@@ -157,5 +159,26 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
             
             ImGui::PopID();
         }
+    }
+}
+
+void Inspector::DisplayArrayMember(void* const obj, const XnorCore::FieldInfo& fieldInfo)
+{
+    if (ImGui::CollapsingHeader(fieldInfo.name.c_str()))
+    {
+        for (size_t i = 0; i < fieldInfo.GetArraySize(); i++)
+            DisplayScalarMember(obj, fieldInfo, i);
+    }
+}
+
+void Inspector::DisplayVectorMember(void* const obj, const XnorCore::FieldInfo& fieldInfo)
+{
+    if (ImGui::CollapsingHeader(fieldInfo.name.c_str()))
+    {
+        std::vector<int>* const vec = XnorCore::Utils::GetObjectPointer<std::vector<int>>(obj, fieldInfo.offset, 0);
+        void* ptr = reinterpret_cast<uint8_t*>(vec->data()) - fieldInfo.offset;
+
+        for (size_t i = 0; i < vec->size(); i++)
+            DisplayScalarMember(ptr, fieldInfo, i);
     }
 }

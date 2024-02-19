@@ -1,16 +1,20 @@
 ﻿#pragma once
 
 #include "core.hpp"
-#include "entity.hpp"
+#include "utils/reflectable.hpp"
 
 BEGIN_XNOR_CORE
 
-class XNOR_ENGINE Component
+class Entity;
+
+class XNOR_ENGINE Component : public Reflectable
 {
+    REFLECTABLE_IMPL(Component)
+    
 public:
     Entity* entity = nullptr;
 
-    virtual ~Component() = default;
+    ~Component() override = default;
 
     virtual void Begin();
 
@@ -18,3 +22,5 @@ public:
 };
 
 END_XNOR_CORE
+
+REFL_AUTO(type(XnorCore::Component));
