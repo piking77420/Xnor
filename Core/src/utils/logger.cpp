@@ -111,11 +111,10 @@ void Logger::Synchronize()
 
 void Logger::Stop()
 {
+    LogDebug("Stopping logger");
+    
     running = false;
     m_CondVar.notify_one();
-
-    // Close the file while 
-    CloseFile();
 
     if (m_Thread.joinable())
         m_Thread.join();
@@ -181,6 +180,8 @@ void Logger::Run()
             m_CondVar.notify_one();
         }
     }
+    
+    CloseFile();
 }
 
 void Logger::PrintLog(const LogEntry& log)
