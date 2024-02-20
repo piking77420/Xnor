@@ -9,12 +9,31 @@ void SceneGraph::Display()
 
     // TODO fetch current loaded scene
     XnorCore::Scene* const scene = XnorCore::Scene::scene;
-    std::vector<XnorCore::Entity*>& entities = scene->GetEntities(); 
-    
-    for (XnorCore::Entity* e : entities)
+    const std::vector<XnorCore::Entity*>& entities = scene->GetEntities();
+
+    if (ImGui::TreeNodeEx("Entities", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_FramePadding))
     {
-        if (!e->HasParent())
-            DisplayEntity(e);
+        if (ImGui::BeginDragDropTarget())
+        {
+            const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("SG");
+            
+            if (payload)
+            {
+                XnorCore::Entity* const dragged = *static_cast<XnorCore::Entity**>(payload->Data);
+
+                dragged->SetParent(nullptr);
+            }
+            
+            ImGui::EndDragDropTarget();
+        }
+
+        for (XnorCore::Entity* e : entities)
+        {
+            if (!e->HasParent())
+                DisplayEntity(e);
+        }
+        
+        ImGui::TreePop();
     }
 
     ImGui::End();
@@ -29,6 +48,29 @@ void SceneGraph::DisplayEntity(XnorCore::Entity* const entity)
     
     if (ImGui::TreeNodeEx(entity->name.c_str(), flags))
     {
+        if (ImGui::BeginDragDropSource())
+        {
+            ImGui::SetDragDropPayload("SG", &entity, sizeof(entity));
+            ImGui::EndDragDropSource();
+        }
+
+        if (ImGui::BeginDragDropTarget())
+        {
+            const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("SG");
+            
+            if (payload)
+            {
+                XnorCore::Entity* const dragged = *static_cast<XnorCore::Entity**>(payload->Data);
+
+                if (!dragged->IsAParentOf(entity))
+                {
+                    dragged->SetParent(entity);
+                }
+            }
+            
+            ImGui::EndDragDropTarget();
+        }
+        
         for (size_t i = 0; i < entity->GetChildCount(); i++)
         {
             DisplayEntity(entity->GetChild(i));
