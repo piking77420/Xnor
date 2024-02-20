@@ -22,7 +22,7 @@ void SceneGraph::Display()
         {
             if (ImGui::Selectable("Add entity"))
             {
-                XnorCore::World::world->Scene.CreateEntity("Entity", nullptr);
+                scene.CreateEntity("Entity", nullptr);
             }
 
             ImGui::EndPopup();
@@ -68,58 +68,85 @@ void SceneGraph::DisplayEntity(XnorCore::Entity* const entity)
     ImGui::PushID(entity);
     
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+    const char* name = entity->name.c_str();
+    const bool isRenaming = m_EntityToRename == entity;
 
     if (!entity->HasChildren())
         flags |= ImGuiTreeNodeFlags_Leaf;
 
-    if (m_Editor->data.selectedEntity == entity)
+    if (m_Editor->data.selectedEntity == entity || isRenaming)
         flags |= ImGuiTreeNodeFlags_Selected;
+
+    if (isRenaming)
+        name = "##renaming";
     
-    if (ImGui::TreeNodeEx(entity->name.c_str(), flags))
+    if (ImGui::TreeNodeEx(name, flags))
     {
-        if (ImGui::IsItemClicked())
+        if (isRenaming)
         {
-            m_Editor->data.selectedEntity = entity;
-        }
-        
-        if (ImGui::BeginPopupContextItem())
-        {
-            if (ImGui::Selectable("Add empty child"))
-            {
-                XnorCore::World::world->Scene.CreateEntity("Entity", entity);                
-            }
-            
-            ImGui::Selectable("Rename");          
+            ImGui::SameLine();
 
-            if (ImGui::Selectable("Delete"))
+            ImGui::SetKeyboardFocusHere();
+
+            if (ImGui::InputText("##input", &entity->name, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_EscapeClearsAll))
             {
-                m_EntityToDelete = entity;
+                m_EntityToRename = nullptr;
             }
 
-            ImGui::EndPopup();
-        }
-        
-        if (ImGui::BeginDragDropSource())
-        {
-            ImGui::SetDragDropPayload("SG", &entity, sizeof(entity));
-            ImGui::EndDragDropSource();
-        }
-
-        if (ImGui::BeginDragDropTarget())
-        {
-            const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("SG");
-            
-            if (payload)
+            if (!ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
             {
-                XnorCore::Entity* const dragged = *static_cast<XnorCore::Entity**>(payload->Data);
-
-                if (!dragged->IsAParentOf(entity))
+                m_EntityToRename = nullptr;
+            }
+        }
+        else
+        {
+            if (ImGui::IsItemClicked())
+            {
+                m_Editor->data.selectedEntity = entity;
+            }
+            
+            if (ImGui::BeginPopupContextItem())
+            {
+                if (ImGui::Selectable("Add empty child"))
                 {
-                    dragged->SetParent(entity);
+                    XnorCore::World::world->Scene.CreateEntity("Entity", entity);                
                 }
+                
+                if (ImGui::Selectable("Rename"))
+                {
+                    m_EntityToRename = entity;
+                }
+
+                if (ImGui::Selectable("Delete"))
+                {
+                    m_EntityToDelete = entity;
+                }
+
+                ImGui::EndPopup();
             }
             
-            ImGui::EndDragDropTarget();
+            if (ImGui::BeginDragDropSource())
+            {
+                ImGui::SetDragDropPayload("SG", &entity, sizeof(entity));
+                ImGui::EndDragDropSource();
+            }
+
+            if (ImGui::BeginDragDropTarget())
+            {
+                const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("SG");
+                
+                if (payload)
+                {
+                    XnorCore::Entity* const dragged = *static_cast<XnorCore::Entity**>(payload->Data);
+
+                    if (!dragged->IsAParentOf(entity))
+                    {
+                        dragged->SetParent(entity);
+                    }
+                }
+                
+                ImGui::EndDragDropTarget();
+            }
         }
         
         for (size_t i = 0; i < entity->GetChildCount(); i++)
