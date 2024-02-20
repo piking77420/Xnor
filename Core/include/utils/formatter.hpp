@@ -7,6 +7,7 @@
 #include <sstream>
 
 #include "pointer.hpp"
+#include "utils/utils.hpp"
 
 // These definitions must be in the global namespace
 
@@ -31,9 +32,7 @@ struct std::formatter<std::filesystem::path>
     {
         std::ostringstream out;
 
-        std::string str = p.string();
-        ranges::replace(str, '\\', '/');
-        out << str;
+        out << XnorCore::Utils::PathToForwardSlashes(p);
         
         return std::ranges::copy(std::move(out).str(), ctx.out()).out;
     }
@@ -60,7 +59,7 @@ struct std::formatter<XnorCore::Pointer<T>>
     {
         std::ostringstream out;
         
-        out << reinterpret_cast<void*>(static_cast<T*>(p));
+        out << "0x" << reinterpret_cast<void*>(static_cast<T*>(p));
         
         return std::ranges::copy(std::move(out).str(), ctx.out()).out;
     }

@@ -1,7 +1,6 @@
 #include "utils/guid.hpp"
 
 #include <Windows.h>
-#include <Rpc.h>
 
 #include "utils/logger.hpp"
 
@@ -12,8 +11,7 @@ Guid::Guid()
 	, m_Data2(0)
 	, m_Data3(0)
 {
-	for (uint8_t& i : m_Data4)
-		i = 0;
+	std::fill_n(m_Data4, Data4Size, 0);
 
 	const HRESULT result = CoCreateGuid(reinterpret_cast<UUID*>(this));
 
@@ -24,10 +22,8 @@ Guid::Guid()
 bool Guid::operator==(const Guid& other) const
 {
 	return
-	    reinterpret_cast<const uint32_t*>(this)[0] == reinterpret_cast<const uint32_t*>(&other)[0] &&
-	    reinterpret_cast<const uint32_t*>(this)[1] == reinterpret_cast<const uint32_t*>(&other)[1] &&
-	    reinterpret_cast<const uint32_t*>(this)[2] == reinterpret_cast<const uint32_t*>(&other)[2] &&
-	    reinterpret_cast<const uint32_t*>(this)[3] == reinterpret_cast<const uint32_t*>(&other)[3]
+	    reinterpret_cast<const uint64_t*>(this)[0] == reinterpret_cast<const uint64_t*>(&other)[0] &&
+	    reinterpret_cast<const uint64_t*>(this)[1] == reinterpret_cast<const uint64_t*>(&other)[1]
 	;
 }
 

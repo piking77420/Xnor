@@ -111,12 +111,8 @@ void Logger::Synchronize()
 
 void Logger::Stop()
 {
-    Synchronize();
-    
     running = false;
     m_CondVar.notify_one();
-
-    m_Lines.Clear();
 
     if (m_Thread.joinable())
         m_Thread.join();

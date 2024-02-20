@@ -10,8 +10,8 @@ Pointer<File> FileManager::Load(std::filesystem::path filepath)
 
     if (Contains(filepath))
     {
-        Logger::LogWarning("This has already been loaded, consider using FileManager::Get instead");
-        return m_Files[filepath];
+        Logger::LogWarning("This file has already been loaded, consider using FileManager::Get instead");
+        return m_Files.at(filepath);
     }
 
     Pointer<File> file;
@@ -91,13 +91,19 @@ Pointer<File> FileManager::Get(const std::filesystem::path& filepath)
         return Pointer<File>();
     }
 
-    Pointer<File> file = m_Files.at(filepath);
-
-    return file;
+    return m_Files.at(filepath);
 }
 
 void FileManager::Unload(const std::filesystem::path& filepath)
 {
+    Logger::LogDebug("Unloading file {}", filepath);
+
+    if (!exists(filepath))
+    {
+        Logger::LogError("File path does not exist");
+        return;
+    }
+
     const size_t oldSize = m_Files.size();
     
     for (decltype(m_Files)::iterator it = m_Files.begin(); it != m_Files.end(); it++)
@@ -118,6 +124,8 @@ void FileManager::Unload(const std::filesystem::path& filepath)
 
 void FileManager::Unload(const Pointer<File>& file)
 {
+    Logger::LogDebug("Unloading file {}", file);
+    
     const size_t oldSize = m_Files.size();
     
     for (decltype(m_Files)::iterator it = m_Files.begin(); it != m_Files.end(); it++)
@@ -138,9 +146,15 @@ void FileManager::Unload(const Pointer<File>& file)
 
 void FileManager::UnloadAll()
 {
-    for (auto& entry : m_Files)
-        entry.second->Unload();
+    Logger::LogDebug("Unloading all files");
     
+    for (auto& entry : m_Files)
+    {
+        Logger::LogDebug("Unloading file {}", entry.first);
+        
+        entry.second->Unload();
+    }
+
     // Smart pointers are deleted automatically, we only need to clear the container
     m_Files.clear();
 }

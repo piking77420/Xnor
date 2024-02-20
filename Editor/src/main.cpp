@@ -23,6 +23,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	editor.Update();
 
 	ResourceManager::RemoveAll();
+
 	FileManager::UnloadAll();
 	Logger::Stop();
 	

@@ -14,3 +14,25 @@ void Utils::CenterImguiObject(const float alignment)
     if (off > 0.0f)
         ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
 }
+
+ImVec2 Utils::ToImVec(Vector2 v)
+{
+    return ImVec2(v.x, v.y);
+}
+
+Vector2 Utils::FromImVec(ImVec2 v)
+{
+    return Vector2(v.x, v.y);
+}
+
+std::string Utils::PathToForwardSlashes(const std::filesystem::path& path)
+{
+    return PathToForwardSlashes(path.string());
+}
+
+std::string Utils::PathToForwardSlashes(std::string path)
+{
+    std::ranges::replace(path, '\\', '/');
+    
+    return path;
+}

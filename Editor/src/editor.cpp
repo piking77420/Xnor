@@ -1,9 +1,10 @@
 #include "editor.hpp"
 
 #include <ImGui/imgui.h>
-#include <ImGui/imgui_impl_opengl3.h>
 #include <ImGui/imgui_impl_glfw.h>
+#include <ImGui/imgui_impl_opengl3.h>
 
+#include "windows/content_browser.hpp"
 #include "windows/header_window.hpp"
 #include "windows/inspector.hpp"
 #include "windows/performance.hpp"
@@ -13,10 +14,11 @@ using namespace XnorEditor;
 
 void Editor::CreateDefaultWindows()
 {
-	m_UiWindows.push_back(new Performance(this));
+	m_UiWindows.push_back(new Performance(this, 50));
 	m_UiWindows.push_back(new Inspector(this));
 	m_UiWindows.push_back(new HeaderWindow(this));
 	m_UiWindows.push_back(new SceneGraph(this));
+	m_UiWindows.push_back(new ContentBrowser(this, "assets"));
 }
 
 void Editor::BeginDockSpace() const

@@ -117,6 +117,7 @@
   <ItemGroup>
     <ClCompile Include="src\editor.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\windows\content_browser.cpp" />
     <ClCompile Include="src\windows\header_window.cpp" />
     <ClCompile Include="src\windows\inspector.cpp" />
     <ClCompile Include="src\windows\performance.cpp" />
@@ -132,6 +133,7 @@
     <ClInclude Include="include\definitions.hpp" />
     <ClInclude Include="include\editor.hpp" />
     <ClInclude Include="include\editor_data.hpp" />
+    <ClInclude Include="include\windows\content_browser.hpp" />
     <ClInclude Include="include\windows\header_window.hpp" />
     <ClInclude Include="include\windows\inspector.hpp" />
     <ClInclude Include="include\windows\performance.hpp" />
