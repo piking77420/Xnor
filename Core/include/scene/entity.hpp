@@ -63,6 +63,8 @@ public:
     XNOR_ENGINE size_t GetChildCount() const;
     [[nodiscard]]
     XNOR_ENGINE bool HasChildren() const;
+    [[nodiscard]]
+    XNOR_ENGINE bool IsAParentOf(const Entity* child) const;
     
     XNOR_ENGINE void SetParent(Entity* parent);
     XNOR_ENGINE void AddChild(Entity* child);

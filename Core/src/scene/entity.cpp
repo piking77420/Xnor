@@ -69,6 +69,21 @@ bool Entity::HasChildren() const
     return GetChildCount() != 0;
 }
 
+bool Entity::IsAParentOf(const Entity* child) const
+{
+    const Entity* e = child->m_Parent;
+
+    while (e)
+    {
+        if (e == this)
+            return true;
+
+        e = e->m_Parent;
+    }
+
+    return false;
+}
+
 void Entity::SetParent(Entity* const parent)
 {
     // Remove ourselves from our old parent if we had one

@@ -212,6 +212,8 @@ void Editor::Update()
 			w->Display();		
 		
 		renderer.RenderScene(*XnorCore::Scene::scene, context);
+
+		ImGui::ShowDemoWindow();
 		
 		ImGui::Begin("Scene");
 		ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(mainRenderTexture->GetId()), ImGui::GetContentRegionAvail());
