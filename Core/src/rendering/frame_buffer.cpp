@@ -8,7 +8,7 @@ using namespace XnorCore;
 void FrameBuffer::Create(const RenderPass& renderPass,const vec2i frameBufferSize)
 {
 	m_FrameBufferSize = frameBufferSize;
-	RHI::CreateFrameBuffer(&m_Id,renderPass.GetId());
+	//RHI::CreateFrameBuffer(&m_Id,renderPass.GetId());
 }
 
 void FrameBuffer::Destroy()
@@ -25,7 +25,7 @@ void FrameBuffer::AttachColorAttachement(const std::vector<RenderTarget>& render
 {
 	for (uint32_t i = 0; i < static_cast<uint32_t>(renderTargets.size()); i++)
 	{
-		RHI::AttachColorAttachementToFrameBuffer(m_Id, i, renderTargets[i].texture->GetId());
+		//RHI::AttachColorAttachementToFrameBuffer(m_Id, i, renderTargets[i].texture->GetId());
 	}
 	
 }

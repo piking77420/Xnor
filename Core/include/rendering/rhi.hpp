@@ -15,7 +15,7 @@ class RHI
 {
 public:
 	// Utils
-	XNOR_ENGINE static void SetPolyGoneMode(PolyGoneFace face, PolyGoneMode mode);
+	XNOR_ENGINE static void SetPolyGoneMode(PolygonFace face, PolygonMode mode);
 	
 	// Model
 	XNOR_ENGINE static uint32_t CreateModel(const std::vector<Vertex>& vertices,const std::vector<uint32_t>& indicies);

@@ -5,18 +5,18 @@
 
 BEGIN_XNOR_CORE
 
-static constexpr uint32_t MaxSpothLight = 10;
+static constexpr uint32_t MaxSpotLight = 10;
 static constexpr uint32_t MaxPointLight = 10;
 static constexpr uint32_t MaxDirectionalLight = 1;
 
-enum class PolyGoneMode : int32_t
+enum class PolygonMode : int32_t
 {
 	POINT = 0,
 	LINE,
 	FILL,
 };
 
-enum class PolyGoneFace : int32_t
+enum class PolygonFace : int32_t
 {
 	FRONT_LEFT = 1024,
 	FRONT_RIGHT,
@@ -98,7 +98,6 @@ enum class DataType : int32_t
 	UNSIGNED_INT,
 };
 
-
 enum class TextureFormat
 {
 	RED,
@@ -132,6 +131,7 @@ struct CameraUniformData
 	Matrix projection = Matrix::Identity();
 	Vector3 cameraPos;
 };
+
 struct ModelUniformData
 {
 	Matrix model = Matrix::Identity();
@@ -149,7 +149,6 @@ enum class UniformType
 	MAT4,
 };
 
-
 struct PointLightData
 {
 	Vector3 color;
@@ -158,7 +157,7 @@ struct PointLightData
 	float_t radius;
 };
 
-struct SpothLightData
+struct SpotLightData
 {
 	Vector3 color;
 	float_t intensity;
@@ -175,13 +174,13 @@ struct DirectionalData
 	Vector3 direction;
 };
 
-
 struct GpuLightData
 {
 	uint32_t nbrOfPointLight;
-	uint32_t nbrOfSpothLight;
+	uint32_t nbrOfSpotLight;
 	PointLightData pointLightData[MaxPointLight];
-	SpothLightData spothLightData[MaxSpothLight];
+	SpotLightData spotLightData[MaxSpotLight];
 	DirectionalData directionalData;
 };
+
 END_XNOR_CORE

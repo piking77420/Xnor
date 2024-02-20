@@ -2,9 +2,11 @@
 
 #include <format>
 
+#undef APIENTRY
 #include <windows.h>
 #undef min
 #undef max
+#undef APIENTRY
 #include <psapi.h>
 
 #include "GLFW/glfw3.h"

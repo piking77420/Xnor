@@ -57,7 +57,7 @@ uniform sampler2D diffuseTexture;
 void main()
 {
     vec4 ambiant = texture(diffuseTexture,fs_in.TexCoords);
-    FragColor = vec4(nbrOfPointLight,nbrOfPointLight,nbrOfPointLight,nbrOfPointLight);
+    FragColor = vec4(ambiant);
 }
     
 
