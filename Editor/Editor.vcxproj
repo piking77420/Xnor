@@ -131,6 +131,7 @@
   <ItemGroup>
     <ClInclude Include="include\definitions.hpp" />
     <ClInclude Include="include\editor.hpp" />
+    <ClInclude Include="include\editor_data.hpp" />
     <ClInclude Include="include\windows\header_window.hpp" />
     <ClInclude Include="include\windows\inspector.hpp" />
     <ClInclude Include="include\windows\performance.hpp" />

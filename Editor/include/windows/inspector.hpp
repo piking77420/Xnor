@@ -15,11 +15,7 @@ public:
     
     void Display() override;
 
-    void SetObject(XnorCore::Reflectable* obj);
-
 private:
-    XnorCore::Reflectable* m_Object = nullptr;
-    
     void DisplayMember(void* obj, const XnorCore::FieldInfo& fieldInfo);
     void DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldInfo, size_t element);
     void DisplayArrayMember(void* obj, const XnorCore::FieldInfo& fieldInfo);

@@ -177,6 +177,7 @@ void Editor::BeginFrame()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
+	
 	BeginDockSpace();
 }
 
@@ -261,7 +262,6 @@ void Editor::WorldBehaviours()
 		XnorCore::World::world->Update();
 	}
 }
-
 
 Editor::~Editor()
 {

@@ -43,6 +43,7 @@ Entity* Scene::CreateEntity(const std::string&& name, Entity* parent)
 
     e->name = name;
     e->SetParent(parent);
+    e->Begin();
 
     m_Entities.push_back(e);
 

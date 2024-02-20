@@ -12,16 +12,16 @@ using namespace XnorEditor;
 
 void Inspector::Display()
 {
-    void* const ptr = m_Object;
+    void* const ptr = m_Editor->data.selectedEntity;
     ImGui::PushID(ptr);
 
     ImGui::Begin("Inspector");
 
     FetchInfo();
     
-    if (m_Object)
+    if (m_Editor->data.selectedEntity)
     {
-	    const XnorCore::TypeInfo& info = XnorCore::TypeInfo::Get(typeid(*m_Object).hash_code());
+	    const XnorCore::TypeInfo& info = XnorCore::TypeInfo::Get(typeid(*m_Editor->data.selectedEntity).hash_code());
         ImGui::Text("%s", info.GetName().c_str());
         
         for (const XnorCore::FieldInfo& m : info.GetMembers())
@@ -32,11 +32,6 @@ void Inspector::Display()
 
     ImGui::End();
     ImGui::PopID();
-}
-
-void Inspector::SetObject(XnorCore::Reflectable* obj)
-{
-    m_Object = obj;
 }
 
 void Inspector::DisplayMember(void* obj, const XnorCore::FieldInfo& fieldInfo)
