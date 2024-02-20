@@ -1,7 +1,10 @@
 ﻿#include "windows/scene_graph.hpp"
 
 #include "ImGui/imgui.h"
+#include "ImGui/imgui_stdlib.h"
 #include "scene/scene.hpp"
+
+using namespace XnorEditor;
 
 void SceneGraph::Display()
 {

@@ -1,13 +1,18 @@
 #pragma once
 
 #include "core.hpp"
+#include "definitions.hpp"
+#include "editor.hpp"
 #include "Maths/vector2i.hpp"
+
+BEGIN_XNOR_EDITOR
 
 class UiWindow
 {
 public:
-    UiWindow() = default;
+    explicit UiWindow(Editor* editor);
     virtual ~UiWindow() = default;
+    
     DEFAULT_COPY_MOVE_OPERATIONS(UiWindow)
 
     virtual void Display() = 0;
@@ -22,4 +27,8 @@ protected:
     bool m_IsFocused;
     Vector2i m_Position;
     Vector2i m_Size;
+
+    Editor* m_Editor;
 };
+
+END_XNOR_EDITOR

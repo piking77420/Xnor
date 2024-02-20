@@ -170,6 +170,7 @@ END_XNOR_CORE
 
 REFL_AUTO(
     type(XnorCore::Entity),
+    field(name),
     field(transform),
     field(m_Components)
 )

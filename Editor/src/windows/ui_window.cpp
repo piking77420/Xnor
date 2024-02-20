@@ -2,6 +2,13 @@
 
 #include "ImGui/imgui.h"
 
+using namespace XnorEditor;
+
+UiWindow::UiWindow(Editor* const editor)
+    : m_IsFocused(false), m_Editor(editor)
+{
+}
+
 bool UiWindow::IsFocused() const
 {
     return m_IsFocused;

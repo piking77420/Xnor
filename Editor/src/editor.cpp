@@ -13,10 +13,10 @@ using namespace XnorEditor;
 
 void Editor::CreateDefaultWindows()
 {
-	m_UiWindows.push_back(new Performance);
-	m_UiWindows.push_back(new Inspector);
-	m_UiWindows.push_back(new HeaderWindow);
-	m_UiWindows.push_back(new SceneGraph);
+	m_UiWindows.push_back(new Performance(this));
+	m_UiWindows.push_back(new Inspector(this));
+	m_UiWindows.push_back(new HeaderWindow(this));
+	m_UiWindows.push_back(new SceneGraph(this));
 }
 
 void Editor::BeginDockSpace() const
@@ -212,8 +212,6 @@ void Editor::Update()
 			w->Display();		
 		
 		renderer.RenderScene(*XnorCore::Scene::scene, context);
-
-		ImGui::ShowDemoWindow();
 		
 		ImGui::Begin("Scene");
 		ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(mainRenderTexture->GetId()), ImGui::GetContentRegionAvail());
@@ -242,11 +240,6 @@ void Editor::EndFrame()
 	ImGui::UpdatePlatformWindows();
 	ImGui::RenderPlatformWindowsDefault();
 	window.SetCurrentContext();
-}
-
-Inspector* Editor::GetInspector()
-{
-	return dynamic_cast<Inspector*>(m_UiWindows[1]);
 }
 
 Editor::~Editor()

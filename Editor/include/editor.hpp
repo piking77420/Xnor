@@ -3,24 +3,23 @@
 #include <vector>
 
 #include "definitions.hpp"
-#include "window.hpp"
 #include "applications/application.hpp"
-#include "windows/inspector.hpp"
-#include "windows/ui_window.hpp"
 
 BEGIN_XNOR_EDITOR
+
+class UiWindow;
 
 class Editor : public XnorCore::Application
 {
 public:
 	explicit Editor();
 
+	DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(Editor)
+
 	~Editor() override;
 	
 	void Update() override;
 	
-	Inspector* GetInspector();
-
 private:
 	std::vector<UiWindow*> m_UiWindows;
 

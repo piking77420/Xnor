@@ -54,6 +54,8 @@ void Scene::CreateBasicScene()
         if (i != 0)
             scene->m_Entities[i]->SetParent(scene->m_Entities[i - 1]);
     }
+    
+    scene->m_Entities[0]->Begin();
 }
 
 Scene::~Scene()
