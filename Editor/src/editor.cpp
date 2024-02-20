@@ -210,6 +210,8 @@ void Editor::Update()
 		
 		ImGui::End();
 
+		ImGui::ShowDemoWindow();
+		
 		WorldBehaviours();
 	
 		for (UiWindow* w : m_UiWindows)

@@ -21,10 +21,6 @@ public:
     Transform transform;
     std::string name;
 
-    XNOR_ENGINE explicit Entity(const Guid& entiyId);
-
-    XNOR_ENGINE Entity() = default;
-
     XNOR_ENGINE ~Entity() override;
 
     template<class ComponentT>
@@ -77,12 +73,18 @@ public:
     XNOR_ENGINE bool operator==(const Entity& entity) const;
     
 private:
+    XNOR_ENGINE explicit Entity(const Guid& entiyId);
+
+    XNOR_ENGINE Entity() = default;
+    
     Entity* m_Parent = nullptr;
     std::vector<Entity*> m_Children;
     
     Guid m_EntityId;
 
     std::vector<Component*> m_Components;
+
+    friend class Scene;
 };
 
 template <class ComponentT>

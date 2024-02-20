@@ -37,7 +37,19 @@ Entity* Scene::GetEntityById(const Guid& xnorGuid)
     return nullptr;
 }
 
-std::vector<Entity*>& Scene::GetEntities()
+Entity* Scene::CreateEntity(const std::string&& name, Entity* parent)
+{
+    Entity* const e = new Entity();
+
+    e->name = name;
+    e->SetParent(parent);
+
+    m_Entities.push_back(e);
+
+    return e;
+}
+
+const std::vector<Entity*>& Scene::GetEntities()
 {
     return m_Entities;
 }
