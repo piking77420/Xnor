@@ -5,6 +5,9 @@
 
 #include "definitions.hpp"
 
+#undef min
+#undef max
+
 /// \file calc.hpp
 /// <summary>
 /// A collection of general-use constants and useful functions.

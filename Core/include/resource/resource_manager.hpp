@@ -70,7 +70,7 @@ Pointer<T> ResourceManager::Load(const Pointer<File>& file)
 {
     Logger::LogDebug("Loading resource {}", file->GetFilepath());
     
-    Pointer<T> resource(file->GetFilepath().string());
+    Pointer<T> resource(Utils::PathToForwardSlashes(file->GetFilepath()));
 
     m_Resources[resource->GetName()] = static_cast<Pointer<Resource>>(resource.CreateStrongReference());
 
@@ -110,6 +110,8 @@ bool ResourceManager::IsResourceOfType(const std::string& name)
 template<ResourceT T>
 void ResourceManager::Remove(const Pointer<T>& resource)
 {
+    Logger::LogDebug("Removing resource {}", resource);
+    
     const size_t oldSize = m_Resources.size();
     
     for (decltype(m_Resources)::iterator it = m_Resources.begin(); it != m_Resources.end(); it++)

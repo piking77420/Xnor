@@ -57,13 +57,21 @@ void SceneGraph::DisplayEntity(XnorCore::Entity* const entity)
 {
     ImGui::PushID(entity);
     
-    ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_FramePadding;
+    ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
     if (!entity->HasChildren())
         flags |= ImGuiTreeNodeFlags_Leaf;
+
+    if (m_Editor->data.selectedEntity == entity)
+        flags |= ImGuiTreeNodeFlags_Selected;
     
     if (ImGui::TreeNodeEx(entity->name.c_str(), flags))
     {
+        if (ImGui::IsItemClicked())
+        {
+            m_Editor->data.selectedEntity = entity;
+        }
+        
         if (ImGui::BeginPopupContextItem())
         {
             if (ImGui::Selectable("Add empty child"))
@@ -106,6 +114,10 @@ void SceneGraph::DisplayEntity(XnorCore::Entity* const entity)
         }
 
         ImGui::TreePop();
+    }
+    else if (ImGui::IsItemClicked())
+    {
+        m_Editor->data.selectedEntity = entity;
     }
 
     ImGui::PopID();

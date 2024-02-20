@@ -225,22 +225,46 @@ void RHI::UnBindTexture(const TextureType textureType)
 	glBindTextureUnit(TextureTypeToOpenglTexture(textureType), 0);
 }
 
-void RHI::CreateFrameBuffer(uint32_t* frameBufferId, uint32_t renderPassId,std::vector<Texture*> renderTarget)
+void RHI::CreateFrameBuffer(uint32_t* const frameBufferId, const uint32_t renderPassId,const std::vector<Texture*>& targets)
 {
-	if(!m_RenderPassMap.contains(renderPassId))
-	{
-		//Logger::LogError("There is no ")
-	}
+	
+	
+	if (!m_RenderPassMap.contains(renderPassId))
+		Logger::LogError("There is no renderPass with this id");
 	
 	glCreateFramebuffers(1, frameBufferId);
+	const RenderPassIternal& renderPassIternal = m_RenderPassMap.at(renderPassId);
 
-	RenderPassIternal& renderPassIternal = m_RenderPassMap.at(renderPassId);
-	
+	for (size_t i = 0; i < renderPassIternal.AttachementsType.size(); i++)
+	{
+		switch (renderPassIternal.AttachementsType[i])
+		{
+			case AttachementsType::COLOR:
+				glNamedFramebufferTexture(*frameBufferId, GL_COLOR_ATTACHMENT0 + i,targets.at(i)->GetId(), 0);
+				break;
+			
+			case AttachementsType::POSITION:
+				glNamedFramebufferTexture(*frameBufferId, GL_COLOR_ATTACHMENT0 + i,targets.at(i)->GetId(), 0);
+				break;
+			
+			case AttachementsType::NORMAL:
+				break;
+			
+			case AttachementsType::TEXTURECOORD:
+				break;
+			
+			case AttachementsType::DEPTH:
+				break;
+			
+			default: ;
+		}
+	}
 }
 
 
 void RHI::DestroyFrameBuffer(const uint32_t* const frameBufferId)
 {
+	if(glIsFramebuffer(*frameBufferId))
 	glDeleteFramebuffers(1, frameBufferId);
 }
 
@@ -254,26 +278,18 @@ void RHI::UnBindFrameBuffer()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void RHI::CreateColorAttachement(uint32_t*, const vec2i size)
-{
-	TextureCreateInfo createInfo
-	{
-		nullptr,
-		static_cast<uint32_t>(size.x),
-		static_cast<uint32_t>(size.y),
-	};
-}
-
+/*
 void RHI::AttachColorAttachementToFrameBuffer(const uint32_t frameBufferId, const uint32_t attachmentIndex, const uint32_t textureId)
 {
 	glNamedFramebufferTexture(frameBufferId, GL_COLOR_ATTACHMENT0 + attachmentIndex,textureId, 0);
-}
+}*/
 
 void RHI::CreateRenderPass(uint32_t* renderPassId, const std::vector<AttachementsType>& AttachementsType)
 {
 	*renderPassId = m_RenderPassMap.size();
 	m_RenderPassMap.emplace(*renderPassId,AttachementsType);
 }
+
 
 uint32_t RHI::GetOpenglShaderType(const ShaderType shaderType)
 {

@@ -1,14 +1,17 @@
 ﻿// ReSharper disable CppInconsistentNaming
 #pragma once
 
+#include <filesystem>
 #include <type_traits>
 #include <vector>
 
+#include "ImGui/imgui.h"
+
 #include "core.hpp"
+#include "Maths/vector2.hpp"
 
 BEGIN_XNOR_CORE
-
-namespace Utils
+    namespace Utils
 {
     template<typename PtrT, typename IntT>
     [[nodiscard]]
@@ -31,6 +34,14 @@ namespace Utils
     struct ptr_to_void_ptr<T*> { using type = void*; };
 
     XNOR_ENGINE void CenterImguiObject(float alignment = 0.5f);
+
+    XNOR_ENGINE ImVec2 ToImVec(Vector2 v);
+
+    XNOR_ENGINE Vector2 FromImVec(ImVec2 v);
+
+    XNOR_ENGINE std::string PathToForwardSlashes(const std::filesystem::path& path);
+
+    XNOR_ENGINE std::string PathToForwardSlashes(std::string path);
 }
 
 template<typename PtrT, typename IntT>

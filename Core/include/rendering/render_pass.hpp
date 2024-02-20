@@ -16,6 +16,9 @@ public:
     RenderPass(std::vector<AttachementsType> renderPass);
 
     ~RenderPass() = default;
+
+    uint32_t GetId() const;
+    
 private:
     uint32_t m_Id = 0;
 };

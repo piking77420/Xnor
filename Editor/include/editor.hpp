@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "definitions.hpp"
+#include "editor_data.hpp"
 #include "applications/application.hpp"
 
 BEGIN_XNOR_EDITOR
@@ -19,6 +20,8 @@ public:
 	~Editor() override;
 	
 	void Update() override;
+
+	EditorData data;
 	
 private:
 	std::vector<UiWindow*> m_UiWindows;
@@ -29,7 +32,6 @@ private:
 
 	void WorldBehaviours();
 
-private:
 	void CreateDefaultWindows();
 	
 	void BeginDockSpace() const;

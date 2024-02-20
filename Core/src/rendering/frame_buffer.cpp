@@ -5,12 +5,13 @@
 using namespace XnorCore;
 
 
-FrameBuffer::FrameBuffer()
+void FrameBuffer::Create(const RenderPass& renderPass,const vec2i frameBufferSize)
 {
-	//RHI::CreateFrameBuffer(&m_Id);
+	m_FrameBufferSize = frameBufferSize;
+	RHI::CreateFrameBuffer(&m_Id,renderPass.GetId());
 }
 
-FrameBuffer::~FrameBuffer()
+void FrameBuffer::Destroy()
 {
 	RHI::DestroyFrameBuffer(&m_Id);
 }

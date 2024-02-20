@@ -9,6 +9,8 @@ bool ResourceManager::Contains(const std::string& name)
 
 void ResourceManager::Remove(const std::string& name)
 {
+    Logger::LogDebug("Removing resource {}", name);
+    
     const auto&& resource = m_Resources.find(name);
     
     if (resource == m_Resources.end())
@@ -25,8 +27,12 @@ void ResourceManager::Remove(const std::string& name)
 
 void ResourceManager::RemoveAll()
 {
+    Logger::LogDebug("Removing all resources");
+    
     for (auto& resource : m_Resources)
     {
+        Logger::LogDebug("Unloading resource {}", resource.first);
+        
         if (resource.second->IsLoaded())
             resource.second->Unload();
     }

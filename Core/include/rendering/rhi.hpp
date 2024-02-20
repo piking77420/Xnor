@@ -42,19 +42,17 @@ public:
 	XNOR_ENGINE  static void UnBindTexture(TextureType textureType);
 
 	// FrameBuffer
-	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferId,uint32_t renderPassId,std::vector<Texture*> renderTarget);
+	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferId,uint32_t renderPassId,const std::vector<Texture*>& targets);
 	XNOR_ENGINE static void DestroyFrameBuffer(const uint32_t* frameBufferId);
 	
 	XNOR_ENGINE static void BindFrameBuffer(const uint32_t frameBufferId);
 	XNOR_ENGINE static void UnBindFrameBuffer();
 
-	XNOR_ENGINE static void CreateColorAttachement(uint32_t* textureId, const vec2i size);
 	
-	XNOR_ENGINE static void AttachColorAttachementToFrameBuffer(uint32_t frameBufferId, uint32_t attachmentIndex,uint32_t textureId);
-	XNOR_ENGINE static void AttachDepthAndStencilToFrameBuffer(uint32_t frameBufferId,uint32_t textureId);
-
 	// RenderPass 
 	XNOR_ENGINE static void CreateRenderPass(uint32_t* renderPassId,const std::vector<AttachementsType>& AttachementsType);
+
+	XNOR_ENGINE static void CreateColorAttachement(Texture* texture,const vec2i size);
 
 private:
 	struct ModelInternal
