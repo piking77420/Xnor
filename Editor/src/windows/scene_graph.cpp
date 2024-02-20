@@ -1,5 +1,6 @@
 ﻿#include "windows/scene_graph.hpp"
 
+#include "world.hpp"
 #include "ImGui/imgui.h"
 #include "scene/scene.hpp"
 
@@ -8,8 +9,8 @@ void SceneGraph::Display()
     ImGui::Begin("Scene graph");
 
     // TODO fetch current loaded scene
-    XnorCore::Scene* const scene = XnorCore::Scene::scene;
-    const std::vector<XnorCore::Entity*>& entities = scene->GetEntities();
+  
+    const std::vector<XnorCore::Entity*>& entities = XnorCore::World::world->Scene.GetEntities();
 
     if (ImGui::TreeNodeEx("Entities", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_FramePadding))
     {

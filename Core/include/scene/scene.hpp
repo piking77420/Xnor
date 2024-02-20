@@ -10,13 +10,7 @@ BEGIN_XNOR_CORE
 class Scene
 {
 public:
-    // TO DO test to virtual memory between dll and editor exe
-    // REMOVE IT LATER
-    XNOR_ENGINE static void CreateBasicScene();
-
-    XNOR_ENGINE static inline Scene* scene = nullptr;
-    XNOR_ENGINE static inline bool IsBegin = false;
-
+    
     XNOR_ENGINE Scene() = default;
 
     XNOR_ENGINE ~Scene();

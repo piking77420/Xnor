@@ -168,6 +168,8 @@ Editor::Editor()
 
 	SetupImGuiStyle();
 	CreateDefaultWindows();
+
+	XnorCore::World::world = new XnorCore::World();
 }
 
 void Editor::BeginFrame()
@@ -207,11 +209,13 @@ void Editor::Update()
 			renderer.CompileShader();
 		
 		ImGui::End();
-		
+
+		WorldBehaviours();
+	
 		for (UiWindow* w : m_UiWindows)
 			w->Display();		
 		
-		renderer.RenderScene(*XnorCore::Scene::scene, context);
+		renderer.RenderScene(XnorCore::World::world->Scene, context);
 
 		ImGui::ShowDemoWindow();
 		
@@ -229,6 +233,7 @@ void Editor::Update()
 		window.SwapBuffers();
 	}
 
+	delete XnorCore::World::world;
 	delete mainRenderTexture;
 	delete renderBuffer;
 }
@@ -242,6 +247,23 @@ void Editor::EndFrame()
 	ImGui::UpdatePlatformWindows();
 	ImGui::RenderPlatformWindowsDefault();
 	window.SetCurrentContext();
+}
+
+void Editor::WorldBehaviours()
+{
+	if(XnorCore::World::world == nullptr)
+		return;
+		
+	if (XnorCore::World::world->IsPlaying)
+	{
+		if (!XnorCore::World::world->HasBegin)
+		{
+			XnorCore::World::world->Begin();
+			XnorCore::World::world->HasBegin = true;
+		}
+			
+		XnorCore::World::world->Update();
+	}
 }
 
 Inspector* Editor::GetInspector()

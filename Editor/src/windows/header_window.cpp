@@ -2,6 +2,7 @@
 
 #include <ImGui/imgui.h>
 
+#include "world.hpp"
 #include "file/file_manager.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/scene.hpp"
@@ -56,7 +57,7 @@ void HeaderWindow::DisplayOnEditor()
     ImGui::SetCursorPos(CurrentimagePos);
     if (ImGui::ImageButton((ImTextureID)PlayButton->GetId(),{m_ImageSize,m_ImageSize},{0,0},{1.f,1.f}))
     {
-        Scene::IsBegin = true;
+        World::world->IsPlaying = true;
     }
     
 }
@@ -65,14 +66,14 @@ void HeaderWindow::DisplayOnPlay()
 {
     ImVec2 CurrentimagePos;
     
-    if(!Scene::IsBegin)
+    if(! World::world->IsPlaying)
         return;
     
     CurrentimagePos = {m_ImagePos[1].x,m_ImagePos[1].y};
     ImGui::SetCursorPos(CurrentimagePos);
     if(ImGui::ImageButton((ImTextureID)PauseButton->GetId(),{m_ImageSize,m_ImageSize},{0,0},{1.f,1.f}))
     {
-        Scene::IsBegin = false;
+         World::world->IsPlaying = false;
         return;
     }
     

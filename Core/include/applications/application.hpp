@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "window.hpp"
+#include "world.hpp"
 #include "input\core_input.hpp"
 #include "rendering/renderer.hpp"
 

@@ -22,13 +22,11 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	entity.Begin();
 
 	Editor editor;
-	Scene::CreateBasicScene();
 
 	editor.GetInspector()->SetObject(&entity);
 	editor.Update();
 
 	ResourceManager::RemoveAll();
-	delete Scene::scene;
 	FileManager::UnloadAll();
 	Logger::Stop();
 	

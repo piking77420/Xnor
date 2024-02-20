@@ -28,6 +28,8 @@ private:
 
 	void EndFrame();
 
+	void WorldBehaviours();
+
 private:
 	void CreateDefaultWindows();
 	
