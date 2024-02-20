@@ -107,9 +107,15 @@ void SceneGraph::DisplayEntity(XnorCore::Entity* const entity)
             
             if (ImGui::BeginPopupContextItem())
             {
-                if (ImGui::Selectable("Add empty child"))
+                if (ImGui::Selectable("Add child"))
                 {
                     XnorCore::World::world->Scene.CreateEntity("Entity", entity);                
+                }
+
+                if (ImGui::Selectable("Add parent"))
+                {
+                    XnorCore::Entity* const e = XnorCore::World::world->Scene.CreateEntity("Entity", entity->GetParent());
+                    e->AddChild(entity);
                 }
                 
                 if (ImGui::Selectable("Rename"))
