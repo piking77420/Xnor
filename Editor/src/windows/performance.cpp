@@ -14,7 +14,8 @@
 
 using namespace XnorEditor;
 
-Performance::Performance()
+Performance::Performance(Editor* editor)
+    : UiWindow(editor)
 {
     frameRateArray.resize(50);
     memoryArray.resize(50);

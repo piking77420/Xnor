@@ -18,12 +18,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 	FileManager::LoadDirectoryRecursive("assets");
 
-	Entity entity;
-	entity.Begin();
-
 	Editor editor;
 
-	editor.GetInspector()->SetObject(&entity);
 	editor.Update();
 
 	ResourceManager::RemoveAll();

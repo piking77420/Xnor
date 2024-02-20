@@ -42,6 +42,7 @@ std::vector<Entity*>& Scene::GetEntities()
     return m_Entities;
 }
 
+
 Scene::~Scene()
 {
     for (const Entity* ent : m_Entities)

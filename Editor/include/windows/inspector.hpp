@@ -11,6 +11,8 @@ BEGIN_XNOR_EDITOR
 class Inspector : public UiWindow
 {
 public:
+    using UiWindow::UiWindow;
+    
     void Display() override;
 
     void SetObject(XnorCore::Reflectable* obj);

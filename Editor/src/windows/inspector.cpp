@@ -1,6 +1,7 @@
 ﻿#include "windows/inspector.hpp"
 
 #include "imgui/imgui.h"
+#include "imgui/imgui_stdlib.h"
 #include "Maths/quaternion.hpp"
 #include "Maths/vector2i.hpp"
 #include "Maths/vector2.hpp"
@@ -141,6 +142,10 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
         ImGui::SliderAngle("Z", &euler.z);
         
         *q = Quaternion::FromEuler(euler);
+    }
+    else if (fieldInfo.typeHash == typeid(std::string).hash_code())
+    {
+        ImGui::InputText(name, XnorCore::Utils::GetObjectPointer<std::string>(obj, fieldInfo.offset, element));
     }
     else
     {

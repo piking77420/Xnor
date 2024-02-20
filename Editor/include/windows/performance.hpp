@@ -10,7 +10,7 @@ BEGIN_XNOR_EDITOR
 class Performance : public UiWindow
 {
 public:
-    Performance();
+    explicit Performance(Editor* editor);
     
     void Update(double currentTime);
 

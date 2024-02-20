@@ -6,13 +6,14 @@
 #include "utils/pointer.hpp"
 
 BEGIN_XNOR_EDITOR
-    class HeaderWindow : public UiWindow
+
+class HeaderWindow : public UiWindow
 {
 private:
-    static constexpr float_t m_TileBaseSize = 25.f; 
+    static constexpr float_t TileBaseSize = 25.f; 
     
 public:
-    HeaderWindow();
+    explicit HeaderWindow(Editor* editor);
     ~HeaderWindow() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(HeaderWindow)
@@ -20,23 +21,20 @@ public:
     void Display() override;
 
 private:
-
     void DisplayOnEditor();
     void DisplayOnPlay();
 
     Vector2 m_ImagePos[2];
     float_t m_ImageSize = 1.f;
     
-    
-    XnorCore::Pointer<XnorCore::File> PauseButtonPng;
-    XnorCore::Pointer<XnorCore::Texture> PauseButton;
+    XnorCore::Pointer<XnorCore::File> m_PauseButtonPng;
+    XnorCore::Pointer<XnorCore::Texture> m_PauseButton;
 
-    XnorCore::Pointer<XnorCore::File> PlayButtonPng;
-    XnorCore::Pointer<XnorCore::Texture> PlayButton;
+    XnorCore::Pointer<XnorCore::File> m_PlayButtonPng;
+    XnorCore::Pointer<XnorCore::Texture> m_PlayButton;
 
-    
-    XnorCore::Pointer<XnorCore::File> StopButtonPng;
-    XnorCore::Pointer<XnorCore::Texture> StopButton;
+    XnorCore::Pointer<XnorCore::File> m_StopButtonPng;
+    XnorCore::Pointer<XnorCore::Texture> m_StopButton;
 };
 
 END_XNOR_EDITOR

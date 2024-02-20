@@ -13,10 +13,10 @@ using namespace XnorEditor;
 
 void Editor::CreateDefaultWindows()
 {
-	m_UiWindows.push_back(new Performance);
-	m_UiWindows.push_back(new Inspector);
-	m_UiWindows.push_back(new HeaderWindow);
-	m_UiWindows.push_back(new SceneGraph);
+	m_UiWindows.push_back(new Performance(this));
+	m_UiWindows.push_back(new Inspector(this));
+	m_UiWindows.push_back(new HeaderWindow(this));
+	m_UiWindows.push_back(new SceneGraph(this));
 }
 
 void Editor::BeginDockSpace() const
@@ -218,15 +218,12 @@ void Editor::Update()
 		renderer.RenderScene(XnorCore::World::world->Scene, context);
 
 		ImGui::ShowDemoWindow();
+
 		
 		ImGui::Begin("Scene");
 		ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(mainRenderTexture->GetId()), ImGui::GetContentRegionAvail());
 		ImGui::End();
 
-		if(XnorCore::CoreInput::GetKey(XnorCore::KeyCode::KEY_I, XnorCore::KeyStatus::RELEASE))
-		{
-			XnorCore::Logger::LogDebug("dasdadasd");
-		}
 	
 		XnorCore::CoreInput::ClearKey();
 		EndFrame();
@@ -240,8 +237,8 @@ void Editor::Update()
 
 void Editor::EndFrame()
 {
-	
 	EndDockSpace();
+	
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	ImGui::UpdatePlatformWindows();
@@ -266,10 +263,6 @@ void Editor::WorldBehaviours()
 	}
 }
 
-Inspector* Editor::GetInspector()
-{
-	return dynamic_cast<Inspector*>(m_UiWindows[1]);
-}
 
 Editor::~Editor()
 {

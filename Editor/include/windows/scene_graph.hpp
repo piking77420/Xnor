@@ -5,11 +5,17 @@
 
 #include "scene/entity.hpp"
 
+BEGIN_XNOR_EDITOR
+
 class SceneGraph : public UiWindow
 {
 public:
+    using UiWindow::UiWindow;
+    
     void Display() override;
 
 private:
     void DisplayEntity(XnorCore::Entity* entity);
 };
+
+END_XNOR_EDITOR
