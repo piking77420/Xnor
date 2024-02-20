@@ -30,12 +30,18 @@ public:
     XNOR_ENGINE Entity* GetEntityById(const Guid& xnorGuid);
 
     XNOR_ENGINE Entity* CreateEntity(const std::string&& name, Entity* parent = nullptr);
+    XNOR_ENGINE void DestroyEntity(Entity* entity);
+    
+    [[nodiscard]]
+    XNOR_ENGINE bool HasEntity(const Entity* entity);
 
     [[nodiscard]]
     XNOR_ENGINE const std::vector<Entity*>& GetEntities();
     
 private:
     std::vector<Entity*> m_Entities;
+
+    XNOR_ENGINE void DestroyEntityChildren(Entity* const entity);
 };
 
 

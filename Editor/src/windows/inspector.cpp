@@ -111,19 +111,19 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
     }
     else if (fieldInfo.typeHash == typeid(Vector2i).hash_code())
     {
-        ImGui::InputInt2(name, XnorCore::Utils::GetObjectPointer<Vector2i>(obj, fieldInfo.offset, element)->Raw());
+        ImGui::DragInt2(name, XnorCore::Utils::GetObjectPointer<Vector2i>(obj, fieldInfo.offset, element)->Raw());
     }
     else if (fieldInfo.typeHash == typeid(Vector2).hash_code())
     {
-        ImGui::InputFloat2(name, XnorCore::Utils::GetObjectPointer<Vector2>(obj, fieldInfo.offset, element)->Raw());
+        ImGui::DragFloat2(name, XnorCore::Utils::GetObjectPointer<Vector2>(obj, fieldInfo.offset, element)->Raw());
     }
     else if (fieldInfo.typeHash == typeid(Vector3).hash_code())
     {
-        ImGui::InputFloat3(name, XnorCore::Utils::GetObjectPointer<Vector3>(obj, fieldInfo.offset, element)->Raw());
+        ImGui::DragFloat3(name, XnorCore::Utils::GetObjectPointer<Vector3>(obj, fieldInfo.offset, element)->Raw());
     }
     else if (fieldInfo.typeHash == typeid(Vector4).hash_code())
     {
-        ImGui::InputFloat4(name, XnorCore::Utils::GetObjectPointer<Vector4>(obj, fieldInfo.offset, element)->Raw());
+        ImGui::DragFloat4(name, XnorCore::Utils::GetObjectPointer<Vector4>(obj, fieldInfo.offset, element)->Raw());
     }
     else if (fieldInfo.typeHash == typeid(Quaternion).hash_code())
     {

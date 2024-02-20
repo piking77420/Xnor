@@ -21,8 +21,6 @@ public:
     Transform transform;
     std::string name;
 
-    XNOR_ENGINE ~Entity() override;
-
     template<class ComponentT>
     void AddComponent();
     
@@ -76,6 +74,8 @@ private:
     XNOR_ENGINE explicit Entity(const Guid& entiyId);
 
     XNOR_ENGINE Entity() = default;
+
+    XNOR_ENGINE ~Entity() override;
     
     Entity* m_Parent = nullptr;
     std::vector<Entity*> m_Children;

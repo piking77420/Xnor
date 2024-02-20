@@ -16,6 +16,8 @@ public:
 
 private:
     void DisplayEntity(XnorCore::Entity* entity);
+
+    XnorCore::Entity* m_EntityToDelete;
 };
 
 END_XNOR_EDITOR

@@ -50,11 +50,39 @@ Entity* Scene::CreateEntity(const std::string&& name, Entity* parent)
     return e;
 }
 
+void Scene::DestroyEntity(Entity* const entity)
+{
+    DestroyEntityChildren(entity);
+    
+    entity->SetParent(nullptr);
+    
+    delete entity;
+}
+
+bool Scene::HasEntity(const Entity* entity)
+{
+    return std::ranges::find(std::as_const(m_Entities), entity) != m_Entities.cend();
+}
+
+void Scene::DestroyEntityChildren(Entity* const entity)
+{
+    // Remove from array
+    m_Entities.erase(std::ranges::find(m_Entities, entity));
+    
+    for (size_t i = 0; i < entity->GetChildCount(); i++)
+    {
+        Entity* const child = entity->GetChild(i);
+            
+        DestroyEntityChildren(child);
+    }
+
+    entity->m_Children.clear();
+}
+
 const std::vector<Entity*>& Scene::GetEntities()
 {
     return m_Entities;
 }
-
 
 Scene::~Scene()
 {

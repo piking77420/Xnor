@@ -12,8 +12,9 @@ void SceneGraph::Display()
     ImGui::Begin("Scene graph");
 
     // TODO fetch current loaded scene
+    XnorCore::Scene& scene = XnorCore::World::world->Scene;
   
-    const std::vector<XnorCore::Entity*>& entities = XnorCore::World::world->Scene.GetEntities();
+    const std::vector<XnorCore::Entity*>& entities = scene.GetEntities();
 
     if (ImGui::TreeNodeEx("Entities", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_FramePadding))
     {
@@ -51,6 +52,15 @@ void SceneGraph::Display()
     }
 
     ImGui::End();
+
+    if (m_EntityToDelete)
+    {
+        scene.DestroyEntity(m_EntityToDelete);
+        m_EntityToDelete = nullptr;
+
+        if (!scene.HasEntity(m_Editor->data.selectedEntity))
+            m_Editor->data.selectedEntity = nullptr;
+    }
 }
 
 void SceneGraph::DisplayEntity(XnorCore::Entity* const entity)
@@ -80,7 +90,11 @@ void SceneGraph::DisplayEntity(XnorCore::Entity* const entity)
             }
             
             ImGui::Selectable("Rename");          
-            ImGui::Selectable("Delete");
+
+            if (ImGui::Selectable("Delete"))
+            {
+                m_EntityToDelete = entity;
+            }
 
             ImGui::EndPopup();
         }
