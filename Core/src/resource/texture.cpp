@@ -17,7 +17,7 @@ Texture::Texture(const TextureCreateInfo& createInfo)
     m_Loaded = true;
 }
 
-Texture::Texture(const Attachements attachements, const vec2i size)
+Texture::Texture(const AttachementsType attachements, const vec2i size)
 {
     TextureCreateInfo createInfo
     {
@@ -32,17 +32,17 @@ Texture::Texture(const Attachements attachements, const vec2i size)
 
     switch (attachements)
     {
-        case Attachements::COLOR:
-        case Attachements::POSITION:
-        case Attachements::NORMAL:
+        case AttachementsType::COLOR:
+        case AttachementsType::POSITION:
+        case AttachementsType::NORMAL:
             createInfo.textureInternalFormat = TextureInternalFormat::RGBA_16F;
             break;
         
-        case Attachements::TEXTURECOORD:
+        case AttachementsType::TEXTURECOORD:
             createInfo.textureInternalFormat = TextureInternalFormat::RG_16;
             break;
         
-        case Attachements::DEPTH:
+        case AttachementsType::DEPTH:
             break;
     }
     

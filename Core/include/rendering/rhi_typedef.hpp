@@ -106,7 +106,7 @@ enum class TextureFormat
 	RGBA,
 };
 
-enum class Attachements
+enum class AttachementsType
 {
 	COLOR,
 	POSITION,

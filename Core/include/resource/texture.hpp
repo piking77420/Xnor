@@ -21,7 +21,7 @@ public:
 
     XNOR_ENGINE Texture(const TextureCreateInfo& createInfo);
 
-    XNOR_ENGINE Texture(Attachements attachements, vec2i size);
+    XNOR_ENGINE Texture(AttachementsType attachements, vec2i size);
     
     XNOR_ENGINE ~Texture() override;
     

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core.hpp"
+#include "render_pass.hpp"
 #include "resource/texture.hpp"
 
 BEGIN_XNOR_CORE
@@ -8,7 +9,7 @@ BEGIN_XNOR_CORE
 struct RenderTarget
 {
 	Texture* texture;
-	Attachements attachementHandle;
+	AttachementsType attachementHandle;
 };
 
 class FrameBuffer
@@ -23,6 +24,9 @@ public:
 	XNOR_ENGINE	const Vector2i GetSize() const;
 	
 	XNOR_ENGINE void AttachColorAttachement(const std::vector<RenderTarget>& renderTargets);
+
+	XNOR_ENGINE void Create(const RenderPass&);
+
 	
 	XNOR_ENGINE void BindFrameBuffer();
 

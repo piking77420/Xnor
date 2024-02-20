@@ -183,7 +183,7 @@ void Editor::BeginFrame()
 void Editor::Update()
 {
 	XnorCore::FrameBuffer* renderBuffer = new XnorCore::FrameBuffer();
-	XnorCore::Texture* mainRenderTexture = new XnorCore::Texture(XnorCore::Attachements::COLOR, renderBuffer->GetSize());
+	XnorCore::Texture* mainRenderTexture = new XnorCore::Texture(XnorCore::AttachementsType::COLOR, renderBuffer->GetSize());
 	
 	std::vector<XnorCore::RenderTarget> renderTargets(1);
 	renderTargets[0].texture = mainRenderTexture;

@@ -7,7 +7,7 @@ using namespace XnorCore;
 
 FrameBuffer::FrameBuffer()
 {
-	RHI::CreateFrameBuffer(&m_Id);
+	//RHI::CreateFrameBuffer(&m_Id);
 }
 
 FrameBuffer::~FrameBuffer()
