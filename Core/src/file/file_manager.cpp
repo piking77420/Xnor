@@ -132,8 +132,8 @@ void FileManager::Unload(const Pointer<File>& file)
         }
     }
     
-    /*if (oldSize == m_Files.size())
-        Logger::LogWarning("Attempt to delete an unknown file entry: {}", static_cast<File*>(file));*/ // FIXME
+    if (oldSize == m_Files.size())
+        Logger::LogWarning("Attempt to delete an unknown file entry: {}", file);
 }
 
 void FileManager::UnloadAll()

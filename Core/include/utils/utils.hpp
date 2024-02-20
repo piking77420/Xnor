@@ -1,4 +1,5 @@
-﻿#pragma once
+﻿// ReSharper disable CppInconsistentNaming
+#pragma once
 
 #include <type_traits>
 #include <vector>
@@ -22,6 +23,12 @@ namespace Utils
 
     template<typename T, typename A>
     struct is_std_vector<std::vector<T, A>> : std::true_type {};
+
+    template<typename T>
+    struct ptr_to_void_ptr { using type = T; };
+
+    template<typename T>
+    struct ptr_to_void_ptr<T*> { using type = void*; };
 
     XNOR_ENGINE void CenterImguiObject(float alignment = 0.5f);
 }

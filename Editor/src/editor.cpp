@@ -233,8 +233,8 @@ void Editor::Update()
 
 void Editor::EndFrame()
 {
-	
 	EndDockSpace();
+	
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	ImGui::UpdatePlatformWindows();
