@@ -17,6 +17,16 @@ void SceneGraph::Display()
 
     if (ImGui::TreeNodeEx("Entities", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_FramePadding))
     {
+        if (ImGui::BeginPopupContextItem())
+        {
+            if (ImGui::Selectable("Add entity"))
+            {
+                XnorCore::World::world->Scene.CreateEntity("Entity", nullptr);
+            }
+
+            ImGui::EndPopup();
+        }
+        
         if (ImGui::BeginDragDropTarget())
         {
             const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("SG");
@@ -31,10 +41,10 @@ void SceneGraph::Display()
             ImGui::EndDragDropTarget();
         }
 
-        for (XnorCore::Entity* e : entities)
+        for (size_t i = 0; i < entities.size(); i++)
         {
-            if (!e->HasParent())
-                DisplayEntity(e);
+            if (!entities[i]->HasParent())
+                DisplayEntity(entities[i]);
         }
         
         ImGui::TreePop();
@@ -45,6 +55,8 @@ void SceneGraph::Display()
 
 void SceneGraph::DisplayEntity(XnorCore::Entity* const entity)
 {
+    ImGui::PushID(entity);
+    
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_FramePadding;
 
     if (!entity->HasChildren())
@@ -52,6 +64,19 @@ void SceneGraph::DisplayEntity(XnorCore::Entity* const entity)
     
     if (ImGui::TreeNodeEx(entity->name.c_str(), flags))
     {
+        if (ImGui::BeginPopupContextItem())
+        {
+            if (ImGui::Selectable("Add empty child"))
+            {
+                XnorCore::World::world->Scene.CreateEntity("Entity", entity);                
+            }
+            
+            ImGui::Selectable("Rename");          
+            ImGui::Selectable("Delete");
+
+            ImGui::EndPopup();
+        }
+        
         if (ImGui::BeginDragDropSource())
         {
             ImGui::SetDragDropPayload("SG", &entity, sizeof(entity));
@@ -82,4 +107,6 @@ void SceneGraph::DisplayEntity(XnorCore::Entity* const entity)
 
         ImGui::TreePop();
     }
+
+    ImGui::PopID();
 }

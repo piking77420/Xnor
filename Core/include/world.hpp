@@ -14,7 +14,7 @@ public:
     
     bool IsPlaying = false;
     
-    bool HasBegin = false;
+    bool HasStarted = false;
     
     Scene Scene;
     

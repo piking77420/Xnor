@@ -1,12 +1,15 @@
 ﻿#pragma once
 #include "light.hpp"
 
-class XNOR_ENGINE Directionalight : public XnorCore::Light
+BEGIN_XNOR_CORE
+
+class Directionalight : public XnorCore::Light
 {
 public:
 
     Vector3 direction = Vector3::UnitZ();
     
-    Directionalight() = default;
-    ~Directionalight() = default;
+   XNOR_ENGINE Directionalight() = default;
+   XNOR_ENGINE ~Directionalight() = default;
 };
+END_XNOR_CORE

@@ -211,6 +211,8 @@ void Editor::Update()
 		
 		ImGui::End();
 
+		ImGui::ShowDemoWindow();
+		
 		WorldBehaviours();
 	
 		for (UiWindow* w : m_UiWindows)
@@ -218,9 +220,6 @@ void Editor::Update()
 		
 		renderer.RenderScene(XnorCore::World::world->Scene, context);
 
-		ImGui::ShowDemoWindow();
-
-		
 		ImGui::Begin("Scene");
 		ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(mainRenderTexture->GetId()), ImGui::GetContentRegionAvail());
 		ImGui::End();
@@ -249,17 +248,17 @@ void Editor::EndFrame()
 
 void Editor::WorldBehaviours()
 {
-	if(XnorCore::World::world == nullptr)
+	if (XnorCore::World::world == nullptr)
 		return;
 		
 	if (XnorCore::World::world->IsPlaying)
 	{
-		if (!XnorCore::World::world->HasBegin)
+		if (!XnorCore::World::world->HasStarted)
 		{
 			XnorCore::World::world->Begin();
-			XnorCore::World::world->HasBegin = true;
+			XnorCore::World::world->HasStarted = true;
 		}
-			
+
 		XnorCore::World::world->Update();
 	}
 }

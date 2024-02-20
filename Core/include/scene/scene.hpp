@@ -10,7 +10,6 @@ BEGIN_XNOR_CORE
 class Scene
 {
 public:
-    
     XNOR_ENGINE Scene() = default;
 
     XNOR_ENGINE ~Scene();
@@ -27,9 +26,13 @@ public:
 
     XNOR_ENGINE void Update();
 
+    [[nodiscard]]
     XNOR_ENGINE Entity* GetEntityById(const Guid& xnorGuid);
 
-    XNOR_ENGINE std::vector<Entity*>& GetEntities();
+    XNOR_ENGINE Entity* CreateEntity(const std::string&& name, Entity* parent);
+
+    [[nodiscard]]
+    XNOR_ENGINE const std::vector<Entity*>& GetEntities();
     
 private:
     std::vector<Entity*> m_Entities;

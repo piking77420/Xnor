@@ -12,9 +12,9 @@ public:
     Vector3 color = 1.f;
     float_t intensity = 1.f;
 
-    Light() = default;
+    XNOR_ENGINE Light() = default;
 
-    ~Light() = default;
+    XNOR_ENGINE ~Light() = default;
 };
 
 END_XNOR_CORE

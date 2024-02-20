@@ -4,11 +4,11 @@
 #include "light.hpp"
 
 BEGIN_XNOR_CORE
-class XNOR_ENGINE PointLight :  public Light
+class PointLight :  public Light
 {
 public:
-    PointLight() = default;
+    XNOR_ENGINE PointLight() = default;
 
-    ~PointLight() = default;
+   XNOR_ENGINE ~PointLight() = default;
 };
 END_XNOR_CORE

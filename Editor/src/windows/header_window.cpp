@@ -27,18 +27,20 @@ HeaderWindow::HeaderWindow(Editor* editor)
 void HeaderWindow::Display()
 {
     ImGui::Begin("HeaderWindow", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
+
+    FetchInfo();
     
     // Value to offset the little gray image from imgui
-    constexpr int nbrOffImage = 2;
+    constexpr size_t nbrOfImages = 2;
 
     m_ImageSize = TileBaseSize;
     
-    for (int i = 0; i < nbrOffImage; i++)
+    for (size_t i = 0; i < nbrOfImages; i++)
     {
-        constexpr float constantOffsetValue = 1.5f;
-        const float offSet = m_ImageSize * (nbrOffImage - (i + 1)) * constantOffsetValue;
-        const float x = ((ImGui::GetWindowSize().x - m_ImageSize) * 0.5f);
-        const float y = ((ImGui::GetWindowSize().y - m_ImageSize) * 0.5f);
+        constexpr float_t constantOffsetValue = 1.5f;
+        const float_t offSet = m_ImageSize * static_cast<float_t>(nbrOfImages - (i + 1)) * constantOffsetValue;
+        const float_t x = (static_cast<float_t>(m_Size.x) - m_ImageSize) * 0.5f;
+        const float_t y = (static_cast<float_t>(m_Size.y) - m_ImageSize) * 0.5f;
 
         m_ImagePos[i].x = x - offSet;
         m_ImagePos[i].y = y;
@@ -63,24 +65,21 @@ void HeaderWindow::DisplayOnEditor()
 
 void HeaderWindow::DisplayOnPlay()
 {
-    
-    if(!World::world->IsPlaying)
-    {
+    if (!World::world->IsPlaying)
         return;
-    }
     
-    ImVec2 CurrentimagePos = {m_ImagePos[1].x, m_ImagePos[1].y};
+    ImVec2 currentimagePos = { m_ImagePos[1].x, m_ImagePos[1].y };
 
-    ImGui::SetCursorPos(CurrentimagePos);
+    ImGui::SetCursorPos(currentimagePos);
 
     if (ImGui::ImageButton(Utils::IntToPointer<ImTextureID>(m_PauseButton->GetId()), { m_ImageSize, m_ImageSize }))
     {
-         World::world->IsPlaying = false;
+        World::world->IsPlaying = false;
         return;
     }
     
-    CurrentimagePos = { m_ImagePos[0].x, m_ImagePos[0].y };
-    ImGui::SetCursorPos(CurrentimagePos);
+    currentimagePos = { m_ImagePos[0].x, m_ImagePos[0].y };
+    ImGui::SetCursorPos(currentimagePos);
     
     if (ImGui::ImageButton(Utils::IntToPointer<ImTextureID>(m_StopButton->GetId()), { m_ImageSize, m_ImageSize }))
     {
