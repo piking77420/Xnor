@@ -114,10 +114,11 @@ void Logger::Stop()
     running = false;
     m_CondVar.notify_one();
 
+    // Close the file while 
+    CloseFile();
+
     if (m_Thread.joinable())
         m_Thread.join();
-
-    CloseFile();
 }
 
 Logger::LogEntry::LogEntry(std::string&& message, const LogLevel level)
@@ -160,6 +161,7 @@ void Logger::Run()
 {
     // Set thread name for easier debugging
     (void) SetThreadDescription(m_Thread.native_handle(), L"Logger Thread");
+    
     std::unique_lock lock(mutex);
     while (running || !m_Lines.Empty())
     {
@@ -179,18 +181,17 @@ void Logger::Run()
             m_CondVar.notify_one();
         }
     }
-    CloseFile();
 }
 
-void Logger::PrintLog(const LogEntry& entry)
+void Logger::PrintLog(const LogEntry& log)
 {
     // Get the message time and format it in [hh:mm:ss:ms]
-    const auto&& t = std::chrono::duration_cast<std::chrono::milliseconds, long long>(entry.time.time_since_epoch());
+    const auto&& t = std::chrono::duration_cast<std::chrono::milliseconds, long long>(log.time.time_since_epoch());
     const std::string time = std::format("[{:%T}] ", t);
 
     // Setup the base text message
-    std::string baseMessage = entry.message + '\n';
-    const LogLevel level = entry.level;
+    std::string baseMessage = log.message + '\n';
+    const LogLevel level = log.level;
 
     const char* color = ANSI_RESET;
     switch (level)
@@ -220,9 +221,9 @@ void Logger::PrintLog(const LogEntry& entry)
             break;
     }
 
-    if (entry.printToConsole)
+    if (log.printToConsole)
         std::cout << color + baseMessage + ANSI_RESET;
 
-    if (entry.printToFile && file.is_open())
+    if (log.printToFile && file.is_open())
         file << baseMessage;
 }

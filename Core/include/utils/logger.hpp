@@ -90,7 +90,7 @@ private:
 
     XNOR_ENGINE static inline std::thread m_Thread = std::thread(&Logger::Run);
 
-    static void PrintLog(const LogEntry& entry);
+    static void PrintLog(const LogEntry& log);
 };
 
 template class TsQueue<Logger::LogEntry>;
