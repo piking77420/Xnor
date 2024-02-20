@@ -5,6 +5,10 @@
 
 BEGIN_XNOR_CORE
 
+static constexpr uint32_t MaxSpothLight = 10;
+static constexpr uint32_t MaxPointLight = 10;
+static constexpr uint32_t MaxDirectionalLight = 1;
+
 enum class PolyGoneMode : int32_t
 {
 	POINT = 0,
@@ -145,4 +149,39 @@ enum class UniformType
 	MAT4,
 };
 
+
+struct PointLightData
+{
+	Vector3 color;
+	float_t intensity;
+	Vector3 position;
+	float_t radius;
+};
+
+struct SpothLightData
+{
+	Vector3 color;
+	float_t intensity;
+	Vector3 position;
+	float_t cutOff;
+	Vector3 direction;
+	float_t outerCutOff;
+};
+
+struct DirectionalData
+{
+	Vector3 color;
+	float_t intensity;
+	Vector3 direction;
+};
+
+
+struct GpuLightData
+{
+	uint32_t nbrOfPointLight;
+	uint32_t nbrOfSpothLight;
+	PointLightData pointLightData[MaxPointLight];
+	SpothLightData spothLightData[MaxSpothLight];
+	DirectionalData directionalData;
+};
 END_XNOR_CORE

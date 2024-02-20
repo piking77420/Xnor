@@ -1,10 +1,45 @@
 #version 460 core
 
-/*
-readonly restrict layout(std430) buffer u_textureSamplerers
+const int MaxSpothLight = 100;
+const int MaxPointLight = 100;
+
+struct PointLightData
 {
-    uvec2 textureSamplerers[];
-};*/
+    vec3 color;
+    float intensity;
+    vec3 position;
+    float radius;
+};
+
+struct SpothLightData
+{
+    vec3 color;
+    float intensity;
+    vec3 position;
+    float cutOff;
+    vec3 direction;
+    float outerCutOff;
+};
+
+struct DirectionalData
+{
+    vec3 color;
+    float intensity;
+    vec3 position;
+    float cutOff;
+    vec3 direction;
+    float outerCutOff;
+};
+
+
+layout (std140, binding = 2) uniform LightData
+{
+    int nbrOfPointLight;
+    int nbrOfSpothLight;
+    PointLightData pointLightData[MaxPointLight];
+    SpothLightData spothLightData[MaxSpothLight];
+    DirectionalData directionalData;
+};
 
 
 in VS_OUT 
@@ -22,7 +57,7 @@ uniform sampler2D diffuseTexture;
 void main()
 {
     vec4 ambiant = texture(diffuseTexture,fs_in.TexCoords);
-    FragColor = vec4(ambiant);
+    FragColor = vec4(nbrOfPointLight,nbrOfPointLight,nbrOfPointLight,nbrOfPointLight);
 }
     
 

@@ -502,17 +502,22 @@ RHI::~RHI()
 
 	delete m_CameraUniform;
 	delete m_ModelUniform;
+	delete m_LightUniform;
 }
 
 void RHI::PrepareUniform()
 {
-	m_CameraUniform = new UniformBuffer();
+	m_CameraUniform = new UniformBuffer;
 	m_CameraUniform->Allocate(sizeof(CameraUniformData), nullptr);
 	m_CameraUniform->Bind(0);
-
-	m_ModelUniform = new UniformBuffer();
+	
+	m_ModelUniform = new UniformBuffer;
 	m_ModelUniform->Allocate(sizeof(ModelUniformData), nullptr);
 	m_ModelUniform->Bind(1);
+	
+	m_LightUniform = new UniformBuffer;
+	m_LightUniform->Allocate(sizeof(GpuLightData),nullptr);
+	m_LightUniform->Bind(2);
 }
 
 void RHI::SetClearColor(const Vector4& color) const
@@ -534,4 +539,9 @@ void RHI::UpdateModelUniform(const ModelUniformData& modelUniformData) const
 void RHI::UpdateCameraUniform(const CameraUniformData& cameraUniformData) const
 {
 	m_CameraUniform->Update(sizeof(CameraUniformData),0,cameraUniformData.view.Raw());
+}
+
+void RHI::UpdateLight(const GpuLightData& lightData) const
+{
+	m_LightUniform->Update(sizeof(GpuLightData),0,&lightData.nbrOfPointLight);
 }
