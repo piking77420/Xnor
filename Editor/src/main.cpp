@@ -1,13 +1,7 @@
-#include "imgui/imgui.h"
-#include "rendering/renderer.hpp"
-#include "scene/scene.hpp"
-#include "utils/logger.hpp"
 #include "editor.hpp"
-#include "window.hpp"
 #include "file/file_manager.hpp"
 #include "resource/resource_manager.hpp"
-#include "resource/texture.hpp"
-#include "utils/utils.hpp"
+#include "utils/logger.hpp"
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {

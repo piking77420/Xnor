@@ -6,7 +6,7 @@
 
 using namespace XnorCore;
 
-void RHI::SetPolyGoneMode(const PolyGoneFace face, const PolyGoneMode mode)
+void RHI::SetPolyGoneMode(const PolygonFace face, const PolygonMode mode)
 {
 	glPolygonMode(static_cast<GLenum>(face), GL_POINT + static_cast<GLenum>(mode));
 }

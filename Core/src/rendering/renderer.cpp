@@ -3,7 +3,7 @@
 #include "GLFW/glfw3.h"
 #include "rendering/light/directiona_light.hpp"
 #include "rendering/light/point_light.hpp"
-#include "rendering/light/spoth_light.hpp"
+#include "..\..\include\rendering\light\spot_light.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/component/mesh_renderer.hpp"
 
@@ -65,7 +65,7 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 
 	m_Rhi.UpdateModelUniform(modelData);
 	
-	RHI::SetPolyGoneMode(PolyGoneFace::FRONT_AND_BACK, PolyGoneMode::FILL);
+	RHI::SetPolyGoneMode(PolygonFace::FRONT_AND_BACK, PolygonMode::FILL);
 	RHI::DrawModel(m_Model->GetId());
 
 	m_BasicShader->UnUse();
@@ -86,13 +86,13 @@ void Renderer::CompileShader()
 	}
 }
 
-void Renderer::UpdateLight(const Scene& scene, const RendererContext& rendererContext) const
+void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 {
 	std::vector<const PointLight*> pointLightComponents;
 	scene.GetAllComponentOfType<PointLight>(&pointLightComponents);
 
-	std::vector<const SpothLight*> spothLightsComponents;
-	scene.GetAllComponentOfType<SpothLight>(&spothLightsComponents);
+	std::vector<const SpotLight*> spothLightsComponents;
+	scene.GetAllComponentOfType<SpotLight>(&spothLightsComponents);
 
 	std::vector<const Directionalight*> directionalComponent;
 	scene.GetAllComponentOfType<Directionalight>(&directionalComponent);
@@ -103,54 +103,57 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext& rendererCo
 	}
 	
 
-	GpuLightData gpuLightData;
-	gpuLightData.nbrOfPointLight = static_cast<uint32_t>(pointLightComponents.size());
-	gpuLightData.nbrOfSpothLight = static_cast<uint32_t>(spothLightsComponents.size());
+	GpuLightData gpuLightData
+	{
+		.nbrOfPointLight = static_cast<uint32_t>(pointLightComponents.size()),
+		.nbrOfSpotLight = static_cast<uint32_t>(spothLightsComponents.size())
+	};
 
 	size_t nbrOfpointLight = pointLightComponents.size();
-	nbrOfpointLight = std::clamp(nbrOfpointLight,static_cast<size_t>(0),static_cast<size_t>(MaxPointLight));
+	nbrOfpointLight = std::clamp(nbrOfpointLight, static_cast<size_t>(0), static_cast<size_t>(MaxPointLight));
 
 	size_t nbrOfspothLight = spothLightsComponents.size();
-	nbrOfspothLight = std::clamp(nbrOfspothLight,static_cast<size_t>(0),static_cast<size_t>(MaxSpothLight));
+	nbrOfspothLight = std::clamp(nbrOfspothLight, static_cast<size_t>(0), static_cast<size_t>(MaxSpotLight));
 
-	for (size_t i = 0 ; i < nbrOfpointLight ; i++)
+	for (size_t i = 0; i < nbrOfpointLight; i++)
 	{
 		const PointLight* pointLight = pointLightComponents[i];
 		
 		gpuLightData.pointLightData[i] =
 		{
-			pointLight->color ,
-			pointLight->intensity,
-			pointLight->entity->transform.position,
-			30.f * sqrt(pointLight->intensity)
+			.color = pointLight->color,
+			.intensity = pointLight->intensity,
+			.position = pointLight->entity->transform.position,
+			.radius = 30.f * sqrt(pointLight->intensity),
 		};
 	}
 	gpuLightData.nbrOfPointLight = static_cast<uint32_t>(nbrOfpointLight);
-	
 
 	for (size_t i = 0 ; i < nbrOfspothLight ; i++)
 	{
-		const SpothLight* spothLight = spothLightsComponents[i];
+		const SpotLight* spotLight = spothLightsComponents[i];
 		
-		gpuLightData.spothLightData[i] =  {
-			spothLight->color,
-			spothLight->intensity,
-			spothLight->entity->transform.position,
-			spothLight->cutOff,
-			spothLight->outerCutOff
+		gpuLightData.spotLightData[i] =
+		{
+			.color = spotLight->color,
+			.intensity = spotLight->intensity,
+			.position = spotLight->entity->transform.position,
+			.cutOff = spotLight->cutOff,
+			//.direction = ,
+			.outerCutOff = spotLight->outerCutOff,
 		};
 	}
-	gpuLightData.nbrOfSpothLight = static_cast<uint32_t>(nbrOfspothLight);
+	gpuLightData.nbrOfSpotLight = static_cast<uint32_t>(nbrOfspothLight);
 
-	if(!directionalComponent.empty())
-	gpuLightData.directionalData =
+	if (!directionalComponent.empty())
+	{
+		gpuLightData.directionalData =
 		{
-		.color = directionalComponent[0]->color,
-		.intensity = directionalComponent[0]->intensity,
-		.direction = directionalComponent[0]->direction,
+			.color = directionalComponent[0]->color,
+			.intensity = directionalComponent[0]->intensity,
+			.direction = directionalComponent[0]->direction,
 		};
-	
+	}
 
 	m_Rhi.UpdateLight(gpuLightData);
-	
 }

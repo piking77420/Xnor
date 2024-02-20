@@ -11,7 +11,7 @@ Guid::Guid()
 	, m_Data2(0)
 	, m_Data3(0)
 {
-	std::fill_n(m_Data4, Data4Size, 0);
+	std::fill_n(m_Data4, Data4Size, static_cast<uint8_t>(0));
 
 	const HRESULT result = CoCreateGuid(reinterpret_cast<UUID*>(this));
 

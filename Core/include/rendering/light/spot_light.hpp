@@ -3,7 +3,7 @@
 
 BEGIN_XNOR_CORE
 
-class SpothLight : public XnorCore::Light
+class SpotLight : public XnorCore::Light
 {
 public:
     Vector3 direction = Vector3::UnitZ();
@@ -11,9 +11,9 @@ public:
     float_t cutOff = 12.5f * Calc::Deg2Rad;	
     float_t outerCutOff = 15.f * Calc::Deg2Rad;
     
-    XNOR_ENGINE SpothLight() = default;
+    XNOR_ENGINE SpotLight() = default;
     
-    XNOR_ENGINE ~SpothLight() = default;
+    XNOR_ENGINE ~SpotLight() = default;
 };
 
 END_XNOR_CORE
