@@ -217,7 +217,7 @@ void Editor::Update()
 		ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(mainRenderTexture->GetId()), ImGui::GetContentRegionAvail());
 		ImGui::End();
 
-		if(XnorCore::CoreInput::GetKey(XnorCore::KeyCode::KEY_I,XnorCore::KeyStatus::RELEASE))
+		if(XnorCore::CoreInput::GetKey(XnorCore::KeyCode::KEY_I, XnorCore::KeyStatus::RELEASE))
 		{
 			XnorCore::Logger::LogDebug("dasdadasd");
 		}

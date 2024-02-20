@@ -140,13 +140,12 @@ enum class MouseButton : uint32_t
     Left,
     Right,
     Middle,
-    button3,
-    button4,
-    button5,
-    button6,
-    button7,
-    button8
-    
+    Button3,
+    Button4,
+    Button5,
+    Button6,
+    Button7,
+    Button8
 };
 
 enum class KeyStatus : uint16_t
@@ -165,13 +164,15 @@ public:
     XNOR_ENGINE static bool GetMouseButton(MouseButton mouseButton, KeyStatus keyStatus = KeyStatus::DOWN);
     
     template<class T>
-    T GetCursorPos();
+    static T GetCursorPos();
     
     XNOR_ENGINE static void ClearKey();
 
     XNOR_ENGINE static void InitCallBacks(const Window& window);
 
 private:
+    DEFAULT_COPY_MOVE_OPERATIONS(CoreInput)
+    
     struct InputKeyBoard
     {
         KeyCode keyCode;
@@ -186,24 +187,26 @@ private:
     XNOR_ENGINE static inline Vector2 m_MousePos;
     static constexpr uint32_t ReserveKeySize = 100;
     
-    XNOR_ENGINE static inline std::vector<InputKeyBoard>* m_InputKeyBoardQueue = nullptr;
-    XNOR_ENGINE static inline std::vector<InputMouse>* m_InputMouseButtonQueue = nullptr;
+    XNOR_ENGINE static inline std::vector<InputKeyBoard> m_InputKeyBoardQueue;
+    XNOR_ENGINE static inline std::vector<InputMouse> m_InputMouseButtonQueue;
 
-    XNOR_ENGINE static void HandleKeyBoardButton(GLFWwindow* window, int key, int scancode, int action, int mods);
-    XNOR_ENGINE static void HandleMouseButton(GLFWwindow* window, int button, int action, int mods);
-    XNOR_ENGINE static void MouseCursorPos(GLFWwindow* window,double xpos, double ypos);
+    XNOR_ENGINE static void HandleKeyBoardButton(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
+    XNOR_ENGINE static void HandleMouseButton(GLFWwindow* window, int32_t button, int32_t action, int32_t mods);
+    XNOR_ENGINE static void MouseCursorPos(GLFWwindow* window, double_t xpos, double_t ypos);
 
 public:
     XNOR_ENGINE CoreInput();
     
-    XNOR_ENGINE ~CoreInput();
-    
+    XNOR_ENGINE ~CoreInput() = default;
 };
 
 template <class T>
 T CoreInput::GetCursorPos()
 {
-    return  m_MousePos;
+    static_assert(std::is_same_v<T, Vector2>);
+    static_assert(std::is_same_v<T, Vector2i>);
+    
+    return static_cast<T>(m_MousePos);
 }
 
 END_XNOR_CORE
