@@ -32,17 +32,20 @@ Texture::Texture(const AttachementsType attachements, const vec2i size)
 
     switch (attachements)
     {
-        case AttachementsType::COLOR:
-        case AttachementsType::POSITION:
-        case AttachementsType::NORMAL:
+        case AttachementsType::Color:
+        case AttachementsType::Position:
+        case AttachementsType::Normal:
             createInfo.textureInternalFormat = TextureInternalFormat::RGBA_16F;
             break;
-        
-        case AttachementsType::TEXTURECOORD:
+        case AttachementsType::Texturecoord:
             createInfo.textureInternalFormat = TextureInternalFormat::RG_16;
             break;
-        
-        case AttachementsType::DEPTH:
+        case AttachementsType::Depth:
+            break;
+        case AttachementsType::Stencil:
+            break;
+        case AttachementsType::DepthAndStencil:
+            createInfo.textureInternalFormat = TextureInternalFormat::DEPTH_STENCIL;
             break;
     }
     

@@ -14,38 +14,31 @@ Renderer::Renderer()
 {
 	m_Rhi.SetClearColor(clearColor);
 
-	m_VertexPath = FileManager::Load("assets/shaders/vertex.vert");
-	m_FragmentPath = FileManager::Load("assets/shaders/fragment.frag");
-	m_DiamondPath = FileManager::Load("assets/textures/viking_room.png");
+	m_VertexPath = FileManager::Get("assets/shaders/vertex.vert");
+	m_FragmentPath = FileManager::Get("assets/shaders/fragment.frag");
 
 	m_BasicShader = ResourceManager::Add<Shader>("assets/shaders/shader");
 	m_BasicShader->Load(*m_VertexPath, *m_FragmentPath);
 	CompileShader();
-	
-	const Pointer<File> modelFile = FileManager::Load("assets/models/viking_room.obj");
-	m_Model = ResourceManager::Load<Model>(modelFile);
-	m_Diamondtexture = ResourceManager::Load<Texture>(m_DiamondPath);
+
 	m_Rhi.PrepareUniform();
-	m_BasicShader->SetInt("diffuseTexture", 0);
+	
 }
 
 void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererContext& rendererContext) const
 {
-	
+	m_Rhi.SetClearColor(clearColor);
 	
 	m_Rhi.ClearColorAndDepth();
 
 	if (rendererContext.framebuffer != nullptr)
+	{
 		rendererContext.framebuffer->BindFrameBuffer();
+		m_Rhi.ClearColorAndDepth();
+	}
 	
-	m_Rhi.ClearColorAndDepth();
-
-	m_Rhi.SetClearColor(clearColor);
-	m_Rhi.ClearColorAndDepth();
-
 	m_BasicShader->Use();
-	m_Diamondtexture->BindTexture(0);
-	m_BasicShader->SetVec3("color", {clearColor.y, clearColor.x, clearColor.z});
+	
 	CameraUniformData cam;
 	cam.cameraPos = rendererContext.camera->pos;
 	rendererContext.camera->GetView(&cam.view);
@@ -53,20 +46,8 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 	m_Rhi.UpdateCameraUniform(cam);
 
 	UpdateLight(scene,rendererContext);
-	
+	DrawMeshRenders(scene,rendererContext);
 
-	std::vector<const MeshRenderer*> meshrenderer;
-	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderer);
-
-	const float_t time = static_cast<float_t>(glfwGetTime());
-
-	ModelUniformData modelData;
-	modelData.model = Matrix::Trs(Vector3::Zero(), Vector3(0, time, time), Vector3(1.f));
-
-	m_Rhi.UpdateModelUniform(modelData);
-	
-	RHI::SetPolyGoneMode(PolygonFace::FRONT_AND_BACK, PolygonMode::FILL);
-	RHI::DrawModel(m_Model->GetId());
 
 	m_BasicShader->UnUse();
 	
@@ -156,4 +137,27 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 	}
 
 	m_Rhi.UpdateLight(gpuLightData);
+}
+
+void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext& rendererContext) const 
+{
+	std::vector<const MeshRenderer*> meshrenderers;
+	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderers);
+	RHI::SetPolyGoneMode(PolygonFace::FRONT_AND_BACK, PolygonMode::FILL);
+
+	for (const MeshRenderer* meshRenderer : meshrenderers)
+	{
+		const Transform& transform =  meshRenderer->entity->transform;
+		
+		ModelUniformData modelData;
+		modelData.model = Matrix::Trs(transform.position, transform.rotation,transform.scale);
+		m_Rhi.UpdateModelUniform(modelData);
+
+		continue;
+		//if(meshRenderer->texture == nullptr)
+		meshRenderer->texture->BindTexture(0);
+			
+		RHI::DrawModel(meshRenderer->model->GetId());
+	}
+	
 }

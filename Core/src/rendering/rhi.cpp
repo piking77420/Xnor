@@ -228,7 +228,6 @@ void RHI::UnBindTexture(const TextureType textureType)
 void RHI::CreateFrameBuffer(uint32_t* const frameBufferId, const uint32_t renderPassId,const std::vector<Texture*>& targets)
 {
 	
-	
 	if (!m_RenderPassMap.contains(renderPassId))
 		Logger::LogError("There is no renderPass with this id");
 	
@@ -237,27 +236,39 @@ void RHI::CreateFrameBuffer(uint32_t* const frameBufferId, const uint32_t render
 
 	for (size_t i = 0; i < renderPassIternal.AttachementsType.size(); i++)
 	{
+		uint32_t openglAttachment = 0;
 		switch (renderPassIternal.AttachementsType[i])
 		{
-			case AttachementsType::COLOR:
-				glNamedFramebufferTexture(*frameBufferId, GL_COLOR_ATTACHMENT0 + i,targets.at(i)->GetId(), 0);
+		case AttachementsType::Color:
+				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
+			break;
+			
+			case AttachementsType::Position:
+				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
+			break;
+			
+			case AttachementsType::Normal:
+				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
 				break;
 			
-			case AttachementsType::POSITION:
-				glNamedFramebufferTexture(*frameBufferId, GL_COLOR_ATTACHMENT0 + i,targets.at(i)->GetId(), 0);
+			case AttachementsType::Texturecoord:
+				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
 				break;
 			
-			case AttachementsType::NORMAL:
+			case AttachementsType::Depth:
+				openglAttachment = GL_DEPTH_ATTACHMENT;
 				break;
 			
-			case AttachementsType::TEXTURECOORD:
+			case AttachementsType::Stencil:
+				openglAttachment = GL_STENCIL_ATTACHMENT;
 				break;
 			
-			case AttachementsType::DEPTH:
+			case AttachementsType::DepthAndStencil:
+				openglAttachment = GL_DEPTH_STENCIL_ATTACHMENT;
 				break;
 			
-			default: ;
 		}
+		glNamedFramebufferTexture(*frameBufferId, openglAttachment,targets.at(i)->GetId(), 0);
 	}
 }
 
@@ -464,10 +475,14 @@ uint32_t RHI::GetOpenglInternalFormat(TextureInternalFormat textureFormat)
 			return GL_DEPTH_COMPONENT;
 		
 		case TextureInternalFormat::DEPTH_STENCIL:
-			GL_DEPTH24_STENCIL8_EXT;
+			return GL_DEPTH24_STENCIL8;
 			
 	}
 
+
+	
+	Logger::LogError("Texture InternalFormat not supported !!!!");
+	
 	return GL_RGB;
 }
 

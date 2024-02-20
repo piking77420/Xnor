@@ -22,17 +22,18 @@ public:
     XNOR_ENGINE void CompileShader();
 
 private:
-    void UpdateLight(const Scene& scene, const RendererContext& rendererContext) const;
-    
+
     RHI m_Rhi;
-
+    
     Pointer<File> m_VertexPath;
+    
     Pointer<File> m_FragmentPath;
-    Pointer<Texture> m_Diamondtexture;
-    Pointer<File> m_DiamondPath;
-
+    
     Pointer<Shader> m_BasicShader;
-    Pointer<Model> m_Model;
+    
+    void UpdateLight(const Scene& scene, const RendererContext& rendererContext) const;
+
+    void DrawMeshRenders(const Scene& scene, const RendererContext& rendererContext) const;
 };
 
 END_XNOR_CORE

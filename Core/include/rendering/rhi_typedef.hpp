@@ -107,11 +107,13 @@ enum class TextureFormat
 
 enum class AttachementsType
 {
-	COLOR,
-	POSITION,
-	NORMAL,
-	TEXTURECOORD,
-	DEPTH
+	Color,
+	Position,
+	Normal,
+	Texturecoord,
+	Depth,
+	Stencil,
+	DepthAndStencil
 };
 
 struct TextureCreateInfo

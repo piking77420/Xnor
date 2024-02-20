@@ -42,7 +42,7 @@ public:
 	XNOR_ENGINE  static void UnBindTexture(TextureType textureType);
 
 	// FrameBuffer
-	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferId,uint32_t renderPassId,const std::vector<Texture*>& targets);
+	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferId,uint32_t renderPassId,const std::vector<Texture*>& outTargets);
 	XNOR_ENGINE static void DestroyFrameBuffer(const uint32_t* frameBufferId);
 	
 	XNOR_ENGINE static void BindFrameBuffer(const uint32_t frameBufferId);

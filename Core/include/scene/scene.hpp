@@ -29,7 +29,7 @@ public:
     [[nodiscard]]
     XNOR_ENGINE Entity* GetEntityById(const Guid& xnorGuid);
 
-    XNOR_ENGINE Entity* CreateEntity(const std::string&& name, Entity* parent);
+    XNOR_ENGINE Entity* CreateEntity(const std::string&& name, Entity* parent = nullptr);
 
     [[nodiscard]]
     XNOR_ENGINE const std::vector<Entity*>& GetEntities();

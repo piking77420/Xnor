@@ -4,6 +4,8 @@
 #include <ImGui/imgui_impl_glfw.h>
 #include <ImGui/imgui_impl_opengl3.h>
 
+#include "resource/resource_manager.hpp"
+#include "scene/component/mesh_renderer.hpp"
 #include "windows/content_browser.hpp"
 #include "windows/header_window.hpp"
 #include "windows/inspector.hpp"
@@ -185,15 +187,38 @@ void Editor::BeginFrame()
 
 void Editor::Update()
 {
-	XnorCore::FrameBuffer* renderBuffer = new XnorCore::FrameBuffer();
-	XnorCore::Texture* mainRenderTexture = new XnorCore::Texture(XnorCore::AttachementsType::COLOR, renderBuffer->GetSize());
+	using namespace XnorCore;
 	
-	std::vector<XnorCore::RenderTarget> renderTargets(1);
-	renderTargets[0].texture = mainRenderTexture;
-	renderBuffer->AttachColorAttachement(renderTargets);
+	FrameBuffer* renderBuffer = new FrameBuffer(window.GetSize());
+	// Init RenderTarget
+	Texture* mainRenderTexture = new Texture(AttachementsType::Color, renderBuffer->GetSize());
+	Texture* colortexture = new Texture(AttachementsType::DepthAndStencil,renderBuffer->GetSize());
+
+	std::vector attachementsType =
+	{
+		AttachementsType::Color,
+		AttachementsType::DepthAndStencil
+	};
+	RenderPass renderPass(attachementsType);
+	std::vector targets = { mainRenderTexture, colortexture };
+
+	renderBuffer->Create(renderPass,targets);
 
 	XnorCore::Camera cam;
 	cam.pos = { 0, 0, -5 };
+
+	// init Scene //
+	Entity& ent1 = *World::world->Scene.CreateEntity("entity1");
+	ent1.AddComponent<MeshRenderer>();
+
+	/*
+	Pointer<File> viking_roomPath = FileManager::Load("assets/models/viking_room.obj");
+	Pointer<File> viking_roomPathTexture = FileManager::Load("viking_room.png");
+	MeshRenderer& meshRenderer = *ent1.GetComponent<MeshRenderer>();
+
+	meshRenderer.model = ResourceManager::Get<Model>(viking_roomPath);
+	meshRenderer.texture = ResourceManager::Get<Texture>(viking_roomPathTexture);
+*/
 	
 
 	XnorCore::RendererContext context
