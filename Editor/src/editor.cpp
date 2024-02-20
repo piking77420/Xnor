@@ -191,6 +191,7 @@ void Editor::Update()
 
 	XnorCore::Camera cam;
 	cam.pos = { 0, 0, -5 };
+	
 
 	XnorCore::RendererContext context
 	{

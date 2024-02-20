@@ -22,6 +22,8 @@ public:
     XNOR_ENGINE void CompileShader();
 
 private:
+    void UpdateLight(const Scene& scene, const RendererContext& rendererContext) const;
+    
     RHI m_Rhi;
 
     Pointer<File> m_VertexPath;

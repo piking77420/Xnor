@@ -1,6 +1,9 @@
 #include "rendering/renderer.hpp"
 
 #include "GLFW/glfw3.h"
+#include "rendering/light/directiona_light.hpp"
+#include "rendering/light/point_light.hpp"
+#include "rendering/light/spoth_light.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/component/mesh_renderer.hpp"
 
@@ -28,6 +31,8 @@ Renderer::Renderer()
 
 void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererContext& rendererContext) const
 {
+	
+	
 	m_Rhi.ClearColorAndDepth();
 
 	if (rendererContext.framebuffer != nullptr)
@@ -46,6 +51,9 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 	rendererContext.camera->GetView(&cam.view);
 	rendererContext.camera->GetProjection(&cam.projection);
 	m_Rhi.UpdateCameraUniform(cam);
+
+	UpdateLight(scene,rendererContext);
+	
 
 	std::vector<const MeshRenderer*> meshrenderer;
 	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderer);
@@ -76,4 +84,73 @@ void Renderer::CompileShader()
 	{
 		m_BasicShader->Load(*m_VertexPath, *m_FragmentPath);
 	}
+}
+
+void Renderer::UpdateLight(const Scene& scene, const RendererContext& rendererContext) const
+{
+	std::vector<const PointLight*> pointLightComponents;
+	scene.GetAllComponentOfType<PointLight>(&pointLightComponents);
+
+	std::vector<const SpothLight*> spothLightsComponents;
+	scene.GetAllComponentOfType<SpothLight>(&spothLightsComponents);
+
+	std::vector<const Directionalight*> directionalComponent;
+	scene.GetAllComponentOfType<Directionalight>(&directionalComponent);
+
+	if(directionalComponent.size() > MaxDirectionalLight)
+	{
+		Logger::LogWarning("You cannot have more than 1 directional light in the scene");
+	}
+	
+
+	GpuLightData gpuLightData;
+	gpuLightData.nbrOfPointLight = static_cast<uint32_t>(pointLightComponents.size());
+	gpuLightData.nbrOfSpothLight = static_cast<uint32_t>(spothLightsComponents.size());
+
+	size_t nbrOfpointLight = pointLightComponents.size();
+	nbrOfpointLight = std::clamp(nbrOfpointLight,static_cast<size_t>(0),static_cast<size_t>(MaxPointLight));
+
+	size_t nbrOfspothLight = spothLightsComponents.size();
+	nbrOfspothLight = std::clamp(nbrOfspothLight,static_cast<size_t>(0),static_cast<size_t>(MaxSpothLight));
+
+	for (size_t i = 0 ; i < nbrOfpointLight ; i++)
+	{
+		const PointLight* pointLight = pointLightComponents[i];
+		
+		gpuLightData.pointLightData[i] =
+		{
+			pointLight->color ,
+			pointLight->intensity,
+			pointLight->entity->transform.position,
+			30.f * sqrt(pointLight->intensity)
+		};
+	}
+	gpuLightData.nbrOfPointLight = static_cast<uint32_t>(nbrOfpointLight);
+	
+
+	for (size_t i = 0 ; i < nbrOfspothLight ; i++)
+	{
+		const SpothLight* spothLight = spothLightsComponents[i];
+		
+		gpuLightData.spothLightData[i] =  {
+			spothLight->color,
+			spothLight->intensity,
+			spothLight->entity->transform.position,
+			spothLight->cutOff,
+			spothLight->outerCutOff
+		};
+	}
+	gpuLightData.nbrOfSpothLight = static_cast<uint32_t>(nbrOfspothLight);
+
+	if(!directionalComponent.empty())
+	gpuLightData.directionalData =
+		{
+		.color = directionalComponent[0]->color,
+		.intensity = directionalComponent[0]->intensity,
+		.direction = directionalComponent[0]->direction,
+		};
+	
+
+	m_Rhi.UpdateLight(gpuLightData);
+	
 }

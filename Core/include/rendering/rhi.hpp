@@ -107,9 +107,13 @@ public:
 
 	XNOR_ENGINE void UpdateCameraUniform(const CameraUniformData& cameraUniformData) const;
 
+	XNOR_ENGINE void UpdateLight(const GpuLightData& lightData) const;
+
+
 private:
-	 mutable UniformBuffer* m_CameraUniform = nullptr;
-	 mutable UniformBuffer* m_ModelUniform = nullptr;
+	 mutable UniformBuffer* m_CameraUniform;
+	 mutable UniformBuffer* m_ModelUniform;
+	 mutable UniformBuffer* m_LightUniform;
 };
 
 END_XNOR_CORE
