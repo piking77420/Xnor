@@ -210,17 +210,12 @@ void Editor::Update()
 	// init Scene //
 	Entity& ent1 = *World::world->Scene.CreateEntity("entity1");
 	ent1.AddComponent<MeshRenderer>();
-
-	/*
-	Pointer<File> viking_roomPath = FileManager::Load("assets/models/viking_room.obj");
-	Pointer<File> viking_roomPathTexture = FileManager::Load("viking_room.png");
-	MeshRenderer& meshRenderer = *ent1.GetComponent<MeshRenderer>();
-
-	meshRenderer.model = ResourceManager::Get<Model>(viking_roomPath);
-	meshRenderer.texture = ResourceManager::Get<Texture>(viking_roomPathTexture);
-*/
 	
-
+	MeshRenderer& meshRenderer = *ent1.GetComponent<MeshRenderer>();
+	
+	meshRenderer.model = ResourceManager::Load<Model>(FileManager::Get("assets/models/viking_room.obj"));
+	meshRenderer.texture = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/viking_room.png"));
+	
 	XnorCore::RendererContext context
 	{
 		.camera = &cam,

@@ -153,10 +153,10 @@ void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext& render
 		modelData.model = Matrix::Trs(transform.position, transform.rotation,transform.scale);
 		m_Rhi.UpdateModelUniform(modelData);
 
-		continue;
-		//if(meshRenderer->texture == nullptr)
+		if(meshRenderer->texture.IsValid())
 		meshRenderer->texture->BindTexture(0);
-			
+
+		if(meshRenderer->model.IsValid())
 		RHI::DrawModel(meshRenderer->model->GetId());
 	}
 	

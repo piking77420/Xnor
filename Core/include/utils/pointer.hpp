@@ -45,6 +45,9 @@ public:
     explicit Pointer(const Pointer<U>& other, bool strongReference = false);
 
     template<typename U>
+    explicit Pointer(Pointer<U>& other, bool strongReference = false);
+
+    template<typename U>
     explicit Pointer(Pointer<U>&& other) noexcept;
 
     template<typename... Args>
@@ -77,7 +80,7 @@ public:
     const T* operator->() const;
 
     [[nodiscard]]
-    bool IsValid();
+    bool IsValid() const;
 
     [[nodiscard]]
     const ReferenceCounter<T>* GetReferenceCounter() const;
@@ -125,13 +128,20 @@ Pointer<T>::Pointer(Pointer&& other) noexcept
 template<typename T>
 template<typename U>
 Pointer<T>::Pointer(const Pointer<U>& other, const bool strongReference)
-    : m_ReferenceCounter(reinterpret_cast<ReferenceCounter<T>>(other.GetReferenceCounter()))
+    : m_ReferenceCounter(reinterpret_cast<ReferenceCounter<T>*>(const_cast<ReferenceCounter<U>*>(other.GetReferenceCounter())))
     , m_IsStrongReference(strongReference)
 {
     if (strongReference)
         m_ReferenceCounter->IncStrong();
     else
         m_ReferenceCounter->IncWeak(this);
+}
+
+template<typename T>
+template<typename U>
+Pointer<T>::Pointer(Pointer<U>& other, const bool strongReference)
+    : Pointer(const_cast<const Pointer<U>&>(other), strongReference)
+{
 }
 
 template<typename T>
@@ -151,7 +161,7 @@ Pointer<T>::Pointer(Pointer<U>&& other) noexcept  // NOLINT(cppcoreguidelines-rv
 
 template<typename T>
 template<typename... Args>
-Pointer<T>::Pointer(Args&&... args)
+Pointer<T>::Pointer(Args&&... args)  // NOLINT(cppcoreguidelines-missing-std-forward)
     : m_ReferenceCounter(new ReferenceCounter<T>(std::forward<Args>(args)...))
     , m_IsStrongReference(true)
 {
@@ -220,7 +230,7 @@ Pointer<T>& Pointer<T>::operator=(const Pointer<U>& other)
     if (this == &other)
         return *this;
     
-    m_ReferenceCounter = reinterpret_cast<ReferenceCounter<T>>(other.GetReferenceCounter());
+    m_ReferenceCounter = reinterpret_cast<ReferenceCounter<T>*>(other.GetReferenceCounter());
     m_ReferenceCounter->IncWeak(this);
     
     m_ReferenceCounter->DecWeak(&other);
@@ -268,7 +278,7 @@ template<typename T>
 const T* Pointer<T>::operator->() const { return m_ReferenceCounter->GetPointer(); }
 
 template <typename T>
-bool Pointer<T>::IsValid() { return m_ReferenceCounter != nullptr; }
+bool Pointer<T>::IsValid() const { return m_ReferenceCounter != nullptr; }
 
 template<typename T>
 bool Pointer<T>::GetIsStrongReference() const { return m_IsStrongReference; }

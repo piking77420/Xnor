@@ -91,9 +91,7 @@ Pointer<T> ResourceManager::Get(const std::string& name)
         return Pointer<T>();
     }
 
-    Pointer<T> resource = m_Resources.at(name);
-
-    return resource;
+    return Pointer<T>(m_Resources.at(name));
 }
 
 template<ResourceT T>
