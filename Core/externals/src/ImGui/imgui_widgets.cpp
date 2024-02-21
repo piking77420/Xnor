@@ -3155,6 +3155,40 @@ bool ImGui::SliderAngle(const char* label, float* v_rad, float v_degrees_min, fl
     return value_changed;
 }
 
+bool ImGui::SliderAngle3(const char* label, float v_rad[3], float v_degrees_min, float v_degrees_max, const char* format, ImGuiSliderFlags flags)
+{
+    ImGuiWindow* window = GetCurrentWindow();
+    if (window->SkipItems)
+        return false;
+
+    ImGuiContext& g = *GImGui;
+    bool value_changed = false;
+    const size_t components = 3;
+    BeginGroup();
+    PushID(label);
+    PushMultiItemsWidths(components, CalcItemWidth());
+    for (int i = 0; i < components; i++)
+    {
+        PushID(i);
+        if (i > 0)
+            SameLine(0, g.Style.ItemInnerSpacing.x);
+        value_changed |= SliderAngle("", &v_rad[i], v_degrees_min, v_degrees_max, format, flags);
+        PopID();
+        PopItemWidth();
+    }
+    PopID();
+
+    const char* label_end = FindRenderedTextEnd(label);
+    if (label != label_end)
+    {
+        SameLine(0, g.Style.ItemInnerSpacing.x);
+        TextEx(label, label_end);
+    }
+
+    EndGroup();
+    return value_changed;
+}
+
 bool ImGui::SliderInt(const char* label, int* v, int v_min, int v_max, const char* format, ImGuiSliderFlags flags)
 {
     return SliderScalar(label, ImGuiDataType_S32, v, &v_min, &v_max, format, flags);
