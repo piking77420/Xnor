@@ -1,12 +1,11 @@
 #pragma once
 
 #include "core.hpp"
-#include "Maths/vector4.hpp"
 #include "renderer_context.hpp"
 #include "file/file_manager.hpp"
-#include "scene/scene.hpp"
+#include "Maths/vector4.hpp"
 #include "rendering/rhi.hpp"
-#include "resource/model.hpp"
+#include "scene/scene.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -22,7 +21,6 @@ public:
     XNOR_ENGINE void CompileShader();
 
 private:
-
     RHI m_Rhi;
     
     Pointer<File> m_VertexPath;
@@ -35,7 +33,7 @@ private:
 
     void DrawMeshRenders(const Scene& scene, const RendererContext& rendererContext) const;
 
-    void SetViewPort(const Camera& camera);
+    void SetViewport(const Camera& camera);
 };
 
 END_XNOR_CORE

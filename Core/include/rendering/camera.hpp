@@ -4,7 +4,6 @@
 
 #include "Maths/vector2i.hpp"
 #include "Maths/vector3.hpp"
-#include "Maths/matrix.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -19,14 +18,14 @@ public:
 	float fov = 90.f;
 	Vector3 right = Vector3::UnitX();
 
-	void GetProjection(const Vector2i screenSize,Matrix* matrix) const;
+	void GetProjection(Vector2i screenSize,Matrix* matrix) const;
 
 	void GetView(Matrix* matrix) const;
 
-	void GetVp(const Vector2i screenSize,Matrix* matrix) const;
+	void GetVp(Vector2i screenSize,Matrix* matrix) const;
 
 	[[nodiscard]]
-	Vector2i ProjectOn(const Vector3& vertex,const Vector2i screenSize, const Matrix& model) const;
+	Vector2i ProjectOn(const Vector3& vertex, Vector2i screenSize, const Matrix& model) const;
 };
 
 END_XNOR_CORE

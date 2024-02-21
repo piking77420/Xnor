@@ -4,7 +4,7 @@
 
 BEGIN_XNOR_CORE
 
-class DirectionalLight : public XnorCore::Light
+class DirectionalLight : public Light
 {
 public:
     Vector3 direction = Vector3::UnitZ();

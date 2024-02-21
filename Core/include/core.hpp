@@ -25,14 +25,17 @@
     type& operator=(const type& other) = default;       \
     type& operator=(type&& other) = default;
 
-#define DELETE_COPY_MOVE_OPERATIONS(type)                      \
-    XNOR_ENGINE type(const type& other) = delete;              \
-    XNOR_ENGINE type(type&& other) = delete;                   \
-    XNOR_ENGINE type& operator=(const type& other) = delete;   \
-    XNOR_ENGINE type& operator=(type&& other) = delete;
-
-#define DELETE_COPY_MOVE_OPERATIONS_NO_ENGINE(type)    \
-    type(const type& other) = delete;                  \
-    type(type&& other) = delete;                       \
-    type& operator=(const type& other) = delete;       \
+#define DELETE_COPY_MOVE_OPERATIONS(type)          \
+    type(const type& other) = delete;              \
+    type(type&& other) = delete;                   \
+    type& operator=(const type& other) = delete;   \
     type& operator=(type&& other) = delete;
+
+// Macro used to declare a static class, e.g. a class that cannot be instantiated
+// This should be the first statement inside of the class definition
+#define STATIC_CLASS(type)              \
+    public:                             \
+    type() = delete;                    \
+    ~type() = delete;                   \
+    DELETE_COPY_MOVE_OPERATIONS(type)   \
+    private:

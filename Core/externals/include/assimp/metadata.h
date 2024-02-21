@@ -311,7 +311,7 @@ struct aiMetadata {
      *  @brief Allocates property fields + keys.
      *  @param  numProperties   Number of requested properties.
      */
-    static inline aiMetadata *Alloc(unsigned int numProperties) {
+    static aiMetadata *Alloc(unsigned int numProperties) {
         if (0 == numProperties) {
             return nullptr;
         }
@@ -327,12 +327,12 @@ struct aiMetadata {
     /**
      *  @brief Deallocates property fields + keys.
      */
-    static inline void Dealloc(aiMetadata *metadata) {
+    static void Dealloc(aiMetadata *metadata) {
         delete metadata;
     }
 
     template <typename T>
-    inline void Add(const std::string &key, const T &value) {
+    void Add(const std::string &key, const T &value) {
         aiString *new_keys = new aiString[mNumProperties + 1];
         aiMetadataEntry *new_values = new aiMetadataEntry[mNumProperties + 1];
 
@@ -353,7 +353,7 @@ struct aiMetadata {
     }
 
     template <typename T>
-    inline bool Set(unsigned index, const std::string &key, const T &value) {
+    bool Set(unsigned index, const std::string &key, const T &value) {
         // In range assertion
         if (index >= mNumProperties) {
             return false;
@@ -387,7 +387,7 @@ struct aiMetadata {
     }
 
     template <typename T>
-    inline bool Set(const std::string &key, const T &value) {
+    bool Set(const std::string &key, const T &value) {
         if (key.empty()) {
             return false;
         }
@@ -405,7 +405,7 @@ struct aiMetadata {
     }
 
     template <typename T>
-    inline bool Get(unsigned index, T &value) const {
+    bool Get(unsigned index, T &value) const {
         // In range assertion
         if (index >= mNumProperties) {
             return false;
@@ -425,7 +425,7 @@ struct aiMetadata {
     }
 
     template <typename T>
-    inline bool Get(const aiString &key, T &value) const {
+    bool Get(const aiString &key, T &value) const {
         // Search for the given key
         for (unsigned int i = 0; i < mNumProperties; ++i) {
             if (mKeys[i] == key) {
@@ -436,7 +436,7 @@ struct aiMetadata {
     }
 
     template <typename T>
-    inline bool Get(const std::string &key, T &value) const {
+    bool Get(const std::string &key, T &value) const {
         return Get(aiString(key), value);
     }
 
@@ -445,7 +445,7 @@ struct aiMetadata {
     /// \param [out] pKey - pointer to the key value.
     /// \param [out] pEntry - pointer to the entry: type and value.
     /// \return false - if pIndex is out of range, else - true.
-    inline bool Get(size_t index, const aiString *&key, const aiMetadataEntry *&entry) const {
+    bool Get(size_t index, const aiString *&key, const aiMetadataEntry *&entry) const {
         if (index >= mNumProperties) {
             return false;
         }
@@ -458,7 +458,7 @@ struct aiMetadata {
 
     /// Check whether there is a metadata entry for the given key.
     /// \param [in] Key - the key value value to check for.
-    inline bool HasKey(const char *key) const {
+    bool HasKey(const char *key) const {
         if (nullptr == key) {
             return false;
         }

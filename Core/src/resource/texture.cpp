@@ -24,10 +24,10 @@ Texture::Texture(const AttachementsType attachements, const vec2i size)
         nullptr,
         static_cast<uint32_t>(size.x),
         static_cast<uint32_t>(size.y),
-        TextureFiltering::LINEAR,
-        TextureWrapping::NONE,
-        TextureFormat::RGB,
-        TextureInternalFormat::RGBA_16F
+        TextureFiltering::Linear,
+        TextureWrapping::None,
+        TextureFormat::Rgb,
+        TextureInternalFormat::Rgba16F
     };
 
     switch (attachements)
@@ -35,17 +35,17 @@ Texture::Texture(const AttachementsType attachements, const vec2i size)
         case AttachementsType::Color:
         case AttachementsType::Position:
         case AttachementsType::Normal:
-            createInfo.textureInternalFormat = TextureInternalFormat::RGBA_16F;
+            createInfo.textureInternalFormat = TextureInternalFormat::Rgba16F;
             break;
         case AttachementsType::Texturecoord:
-            createInfo.textureInternalFormat = TextureInternalFormat::RG_16;
+            createInfo.textureInternalFormat = TextureInternalFormat::Rg16;
             break;
         case AttachementsType::Depth:
             break;
         case AttachementsType::Stencil:
             break;
         case AttachementsType::DepthAndStencil:
-            createInfo.textureInternalFormat = TextureInternalFormat::DEPTH_STENCIL;
+            createInfo.textureInternalFormat = TextureInternalFormat::DepthStencil;
             break;
     }
     
@@ -126,13 +126,13 @@ TextureFormat Texture::GetFormat(const uint32_t textureFormat)
     switch (textureFormat)
     {
         case 1:
-           return TextureFormat::RED;
+           return TextureFormat::Red;
         case 3:
-            return TextureFormat::RGB;
+            return TextureFormat::Rgb;
         case 4:
-             return TextureFormat::RGBA;
+             return TextureFormat::Rgba;
         default:
-            return TextureFormat::RGB;
+            return TextureFormat::Rgb;
     }
     
 }

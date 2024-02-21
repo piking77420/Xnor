@@ -41,7 +41,7 @@ public:
 private:
     std::vector<Entity*> m_Entities;
 
-    XNOR_ENGINE void DestroyEntityChildren(Entity* const entity);
+    XNOR_ENGINE void DestroyEntityChildren(Entity* entity);
 };
 
 

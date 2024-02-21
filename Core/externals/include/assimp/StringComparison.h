@@ -121,7 +121,7 @@ inline unsigned int ASSIMP_itoa10(char *out, unsigned int max, int32_t number) {
  *  size of the array automatically.
  */
 template <size_t length>
-inline unsigned int ASSIMP_itoa10(char (&out)[length], int32_t number) {
+unsigned int ASSIMP_itoa10(char (&out)[length], int32_t number) {
     return ASSIMP_itoa10(out, length, number);
 }
 

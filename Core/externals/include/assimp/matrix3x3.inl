@@ -61,7 +61,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // ------------------------------------------------------------------------------------------------
 // Construction from a 4x4 matrix. The remaining parts of the matrix are ignored.
 template <typename TReal>
-AI_FORCE_INLINE
 aiMatrix3x3t<TReal>::aiMatrix3x3t( const aiMatrix4x4t<TReal>& pMatrix) {
     a1 = pMatrix.a1; a2 = pMatrix.a2; a3 = pMatrix.a3;
     b1 = pMatrix.b1; b2 = pMatrix.b2; b3 = pMatrix.b3;
@@ -70,7 +69,6 @@ aiMatrix3x3t<TReal>::aiMatrix3x3t( const aiMatrix4x4t<TReal>& pMatrix) {
 
 // ------------------------------------------------------------------------------------------------
 template <typename TReal>
-AI_FORCE_INLINE
 aiMatrix3x3t<TReal>& aiMatrix3x3t<TReal>::operator *= (const aiMatrix3x3t<TReal>& m) {
     *this = aiMatrix3x3t<TReal>(m.a1 * a1 + m.b1 * a2 + m.c1 * a3,
         m.a2 * a1 + m.b2 * a2 + m.c2 * a3,
@@ -95,7 +93,6 @@ aiMatrix3x3t<TReal>::operator aiMatrix3x3t<TOther> () const {
 
 // ------------------------------------------------------------------------------------------------
 template <typename TReal>
-AI_FORCE_INLINE
 aiMatrix3x3t<TReal> aiMatrix3x3t<TReal>::operator* (const aiMatrix3x3t<TReal>& m) const {
     aiMatrix3x3t<TReal> temp( *this);
     temp *= m;
@@ -104,7 +101,6 @@ aiMatrix3x3t<TReal> aiMatrix3x3t<TReal>::operator* (const aiMatrix3x3t<TReal>& m
 
 // ------------------------------------------------------------------------------------------------
 template <typename TReal>
-AI_FORCE_INLINE
 TReal* aiMatrix3x3t<TReal>::operator[] (unsigned int p_iIndex) {
     switch ( p_iIndex ) {
         case 0:
@@ -121,7 +117,6 @@ TReal* aiMatrix3x3t<TReal>::operator[] (unsigned int p_iIndex) {
 
 // ------------------------------------------------------------------------------------------------
 template <typename TReal>
-AI_FORCE_INLINE
 const TReal* aiMatrix3x3t<TReal>::operator[] (unsigned int p_iIndex) const {
     switch ( p_iIndex ) {
         case 0:
@@ -138,7 +133,6 @@ const TReal* aiMatrix3x3t<TReal>::operator[] (unsigned int p_iIndex) const {
 
 // ------------------------------------------------------------------------------------------------
 template <typename TReal>
-AI_FORCE_INLINE
 bool aiMatrix3x3t<TReal>::operator== (const aiMatrix3x3t<TReal>& m) const {
     return a1 == m.a1 && a2 == m.a2 && a3 == m.a3 &&
            b1 == m.b1 && b2 == m.b2 && b3 == m.b3 &&
@@ -147,14 +141,12 @@ bool aiMatrix3x3t<TReal>::operator== (const aiMatrix3x3t<TReal>& m) const {
 
 // ------------------------------------------------------------------------------------------------
 template <typename TReal>
-AI_FORCE_INLINE
 bool aiMatrix3x3t<TReal>::operator!= (const aiMatrix3x3t<TReal>& m) const {
     return !(*this == m);
 }
 
 // ---------------------------------------------------------------------------
 template<typename TReal>
-AI_FORCE_INLINE
 bool aiMatrix3x3t<TReal>::Equal(const aiMatrix3x3t<TReal>& m, TReal epsilon) const {
     return
         std::abs(a1 - m.a1) <= epsilon &&
@@ -170,7 +162,6 @@ bool aiMatrix3x3t<TReal>::Equal(const aiMatrix3x3t<TReal>& m, TReal epsilon) con
 
 // ------------------------------------------------------------------------------------------------
 template <typename TReal>
-AI_FORCE_INLINE
 aiMatrix3x3t<TReal>& aiMatrix3x3t<TReal>::Transpose() {
     // (TReal&) don't remove, GCC complains cause of packed fields
     std::swap( (TReal&)a2, (TReal&)b1);
@@ -181,14 +172,12 @@ aiMatrix3x3t<TReal>& aiMatrix3x3t<TReal>::Transpose() {
 
 // ----------------------------------------------------------------------------------------
 template <typename TReal>
-AI_FORCE_INLINE
 TReal aiMatrix3x3t<TReal>::Determinant() const {
     return a1*b2*c3 - a1*b3*c2 + a2*b3*c1 - a2*b1*c3 + a3*b1*c2 - a3*b2*c1;
 }
 
 // ----------------------------------------------------------------------------------------
 template <typename TReal>
-AI_FORCE_INLINE
 aiMatrix3x3t<TReal>& aiMatrix3x3t<TReal>::Inverse() {
     // Compute the reciprocal determinant
     TReal det = Determinant();
@@ -223,7 +212,6 @@ aiMatrix3x3t<TReal>& aiMatrix3x3t<TReal>::Inverse() {
 
 // ------------------------------------------------------------------------------------------------
 template <typename TReal>
-AI_FORCE_INLINE
 aiMatrix3x3t<TReal>& aiMatrix3x3t<TReal>::RotationZ(TReal a, aiMatrix3x3t<TReal>& out) {
     out.a1 = out.b2 = std::cos(a);
     out.b1 = std::sin(a);
@@ -238,7 +226,6 @@ aiMatrix3x3t<TReal>& aiMatrix3x3t<TReal>::RotationZ(TReal a, aiMatrix3x3t<TReal>
 // ------------------------------------------------------------------------------------------------
 // Returns a rotation matrix for a rotation around an arbitrary axis.
 template <typename TReal>
-AI_FORCE_INLINE
 aiMatrix3x3t<TReal>& aiMatrix3x3t<TReal>::Rotation( TReal a, const aiVector3t<TReal>& axis, aiMatrix3x3t<TReal>& out) {
   TReal c = std::cos( a), s = std::sin( a), t = 1 - c;
   TReal x = axis.x, y = axis.y, z = axis.z;
@@ -253,7 +240,6 @@ aiMatrix3x3t<TReal>& aiMatrix3x3t<TReal>::Rotation( TReal a, const aiVector3t<TR
 
 // ------------------------------------------------------------------------------------------------
 template <typename TReal>
-AI_FORCE_INLINE
 aiMatrix3x3t<TReal>& aiMatrix3x3t<TReal>::Translation( const aiVector2t<TReal>& v, aiMatrix3x3t<TReal>& out) {
     out = aiMatrix3x3t<TReal>();
     out.a3 = v.x;
@@ -272,8 +258,8 @@ aiMatrix3x3t<TReal>& aiMatrix3x3t<TReal>::Translation( const aiVector2t<TReal>& 
  */
 // ----------------------------------------------------------------------------------------
 template <typename TReal>
-AI_FORCE_INLINE aiMatrix3x3t<TReal>& aiMatrix3x3t<TReal>::FromToMatrix(const aiVector3t<TReal>& from,
-        const aiVector3t<TReal>& to, aiMatrix3x3t<TReal>& mtx) {
+aiMatrix3x3t<TReal>& aiMatrix3x3t<TReal>::FromToMatrix(const aiVector3t<TReal>& from,
+                                                       const aiVector3t<TReal>& to, aiMatrix3x3t<TReal>& mtx) {
     const TReal e = from * to;
     const TReal f = (e < 0)? -e:e;
 

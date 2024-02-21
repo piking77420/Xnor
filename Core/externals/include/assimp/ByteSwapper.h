@@ -73,7 +73,7 @@ public:
     // ----------------------------------------------------------------------
     /** Swap two bytes of data
      *  @param[inout] _szOut A void* to save the reintcasts for the caller. */
-    static inline void Swap2(void* _szOut)
+    static void Swap2(void* _szOut)
     {
         ai_assert(_szOut);
 
@@ -89,7 +89,7 @@ public:
     // ----------------------------------------------------------------------
     /** Swap four bytes of data
      *  @param[inout] _szOut A void* to save the reintcasts for the caller. */
-    static inline void Swap4(void* _szOut)
+    static void Swap4(void* _szOut)
     {
         ai_assert(_szOut);
 
@@ -106,7 +106,7 @@ public:
     // ----------------------------------------------------------------------
     /** Swap eight bytes of data
      *  @param[inout] _szOut A void* to save the reintcasts for the caller. */
-    static inline void Swap8(void* _szOut)
+    static void Swap8(void* _szOut)
     {
     ai_assert(_szOut);
 
@@ -125,14 +125,14 @@ public:
     // ----------------------------------------------------------------------
     /** ByteSwap a float. Not a joke.
      *  @param[inout] fOut ehm. .. */
-    static inline void Swap(float* fOut) {
+    static void Swap(float* fOut) {
         Swap4(fOut);
     }
 
     // ----------------------------------------------------------------------
     /** ByteSwap a double. Not a joke.
      *  @param[inout] fOut ehm. .. */
-    static inline void Swap(double* fOut) {
+    static void Swap(double* fOut) {
         Swap8(fOut);
     }
 
@@ -140,33 +140,33 @@ public:
     // ----------------------------------------------------------------------
     /** ByteSwap an int16t. Not a joke.
      *  @param[inout] fOut ehm. .. */
-    static inline void Swap(int16_t* fOut) {
+    static void Swap(int16_t* fOut) {
         Swap2(fOut);
     }
 
-    static inline void Swap(uint16_t* fOut) {
+    static void Swap(uint16_t* fOut) {
         Swap2(fOut);
     }
 
     // ----------------------------------------------------------------------
     /** ByteSwap an int32t. Not a joke.
      *  @param[inout] fOut ehm. .. */
-    static inline void Swap(int32_t* fOut){
+    static void Swap(int32_t* fOut){
         Swap4(fOut);
     }
 
-    static inline void Swap(uint32_t* fOut){
+    static void Swap(uint32_t* fOut){
         Swap4(fOut);
     }
 
     // ----------------------------------------------------------------------
     /** ByteSwap an int64t. Not a joke.
      *  @param[inout] fOut ehm. .. */
-    static inline void Swap(int64_t* fOut) {
+    static void Swap(int64_t* fOut) {
         Swap8(fOut);
     }
 
-    static inline void Swap(uint64_t* fOut) {
+    static void Swap(uint64_t* fOut) {
         Swap8(fOut);
     }
 
@@ -174,7 +174,7 @@ public:
     //! Templatized ByteSwap
     //! \returns param tOut as swapped
     template<typename Type>
-    static inline Type Swapped(Type tOut)
+    static Type Swapped(Type tOut)
     {
         return _swapper<Type,sizeof(Type)>()(tOut);
     }

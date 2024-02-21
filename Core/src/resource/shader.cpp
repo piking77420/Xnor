@@ -24,10 +24,10 @@ void Shader::Load(const File& vertexShader, const File& fragmentShader)
 
     std::vector<ShaderCode> shaderCodes(2);
 
-    shaderCodes[0].shaderType = ShaderType::VERTEX;
+    shaderCodes[0].shaderType = ShaderType::Vertex;
     shaderCodes[0].shaderCode = vShaderCode;
 
-    shaderCodes[1].shaderType = ShaderType::FRAGMENT;
+    shaderCodes[1].shaderType = ShaderType::Fragment;
     shaderCodes[1].shaderCode = fShaderCode;
     
     m_Id = RHI::CreateShader(shaderCodes);
@@ -49,32 +49,32 @@ void Shader::Unload()
 
 void Shader::SetInt(const std::string& keyName, int value) const
 {
-    RHI::SetUniform(UniformType::INT,&value,m_Id,keyName.c_str());
+    RHI::SetUniform(UniformType::Int,&value,m_Id,keyName.c_str());
 }
 
 void Shader::SetBool(const std::string& keyName, bool value) const
 {
-    RHI::SetUniform(UniformType::BOOL,&value,m_Id,keyName.c_str());
+    RHI::SetUniform(UniformType::Bool,&value,m_Id,keyName.c_str());
 }
 
 void Shader::SetFloat(const std::string& keyName, float value) const
 {
-    RHI::SetUniform(UniformType::FLOAT,&value,m_Id,keyName.c_str());
+    RHI::SetUniform(UniformType::Float,&value,m_Id,keyName.c_str());
 }
 
 void Shader::SetVec3(const std::string& keyName, const Vector3& value) const
 {
-    RHI::SetUniform(UniformType::VEC3,&value,m_Id,keyName.c_str());
+    RHI::SetUniform(UniformType::Vec3,&value,m_Id,keyName.c_str());
 }
 
 void Shader::SetVec4(const std::string& keyName, const Vector4& value) const
 {
-    RHI::SetUniform(UniformType::VEC4,&value,m_Id,keyName.c_str());
+    RHI::SetUniform(UniformType::Vec4,&value,m_Id,keyName.c_str());
 }
 
 void Shader::SetMat4(const std::string& keyName, const Matrix& value) const
 {
-    RHI::SetUniform(UniformType::MAT4,&value,m_Id,keyName.c_str());
+    RHI::SetUniform(UniformType::Mat4,&value,m_Id,keyName.c_str());
 }
 
 uint32_t Shader::GetId() const
@@ -89,7 +89,7 @@ void Shader::Use() const
 
 void Shader::UnUse() const
 {
-    RHI::UnUseShader();
+    RHI::UnuseShader();
 }
 
 
@@ -114,5 +114,3 @@ void Shader::GetShaderCode(const char* shaderPath, std::string* shaderCode)
         Logger::LogError("An error occured while attempting to read shader file {}: {}", shaderPath, e.what());
     }
 }
-
-

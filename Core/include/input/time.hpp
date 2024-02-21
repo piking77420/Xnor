@@ -10,13 +10,9 @@ BEGIN_XNOR_CORE
 
 class Time
 {
+    STATIC_CLASS(Time)
+    
 public:
-    Time() = delete;
-    
-    ~Time() = delete;
-
-    DELETE_COPY_MOVE_OPERATIONS(Time)
-    
     template<typename T = float>
     static T GetTime();
 

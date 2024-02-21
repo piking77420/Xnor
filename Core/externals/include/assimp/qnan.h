@@ -149,7 +149,7 @@ AI_FORCE_INLINE bool is_special_float(double in) {
 /** Check whether a float is NOT qNaN.
  *  @param in Input value */
 template<class TReal>
-AI_FORCE_INLINE bool is_not_qnan(TReal in) {
+bool is_not_qnan(TReal in) {
     return !is_qnan(in);
 }
 

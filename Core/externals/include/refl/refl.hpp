@@ -2626,13 +2626,13 @@ namespace refl
              * The name of the reflected type.
              * \copydetails refl::descriptor::get_name
              */
-            static constexpr const auto name{ type_info::name };
+            static constexpr auto name{ type_info::name };
 
             /**
              * The attributes of the reflected type.
              * \copydetails refl::descriptor::get_attributes
               */
-            static constexpr const auto attributes{ type_info::attributes };
+            static constexpr auto attributes{ type_info::attributes };
 
         };
 

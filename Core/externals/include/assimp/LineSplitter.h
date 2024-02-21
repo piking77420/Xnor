@@ -216,7 +216,7 @@ AI_FORCE_INLINE const char *LineSplitter::operator[] (size_t idx) const {
 }
 
 template <size_t N>
-AI_FORCE_INLINE void LineSplitter::get_tokens(const char* (&tokens)[N]) const {
+void LineSplitter::get_tokens(const char* (&tokens)[N]) const {
     const char* s = operator->()->c_str();
 
     SkipSpaces(&s);

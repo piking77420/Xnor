@@ -46,8 +46,8 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 	}
 
 	
-	// SetViewPort
-	RHI::SetViewPort(screenSize);
+	// SetViewport
+	RHI::SetViewport(screenSize);
 	
 	m_BasicShader->Use();
 	
@@ -90,7 +90,7 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 	std::vector<const DirectionalLight*> directionalComponent;
 	scene.GetAllComponentOfType<DirectionalLight>(&directionalComponent);
 
-	if (directionalComponent.size() > MaxDirectionalLight)
+	if (directionalComponent.size() > MaxDirectionalLights)
 	{
 		Logger::LogWarning("You cannot have more than 1 directional light in the scene");
 	}
@@ -102,10 +102,10 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 	};
 
 	size_t nbrOfpointLight = pointLightComponents.size();
-	nbrOfpointLight = std::clamp(nbrOfpointLight, static_cast<size_t>(0), static_cast<size_t>(MaxPointLight));
+	nbrOfpointLight = std::clamp(nbrOfpointLight, static_cast<size_t>(0), static_cast<size_t>(MaxPointLights));
 
 	size_t nbrOfspothLight = spothLightsComponents.size();
-	nbrOfspothLight = std::clamp(nbrOfspothLight, static_cast<size_t>(0), static_cast<size_t>(MaxSpotLight));
+	nbrOfspothLight = std::clamp(nbrOfspothLight, static_cast<size_t>(0), static_cast<size_t>(MaxSpotLights));
 
 	for (size_t i = 0; i < nbrOfpointLight; i++)
 	{
@@ -154,7 +154,7 @@ void Renderer::DrawMeshRenders(const Scene& scene, [[maybe_unused]] const Render
 {
 	std::vector<const MeshRenderer*> meshrenderers;
 	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderers);
-	RHI::SetPolyGoneMode(PolygonFace::FRONT_AND_BACK, PolygonMode::FILL);
+	RHI::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 
 	for (const MeshRenderer* meshRenderer : meshrenderers)
 	{

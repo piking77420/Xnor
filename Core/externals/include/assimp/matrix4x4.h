@@ -138,7 +138,7 @@ public:
     /** @brief Returns true of the matrix is the identity matrix.
      *  The check is performed against a not so small epsilon.
      */
-    inline bool IsIdentity() const;
+    bool IsIdentity() const;
 
     // -------------------------------------------------------------------
     /** @brief Decompose a trafo matrix into its original components

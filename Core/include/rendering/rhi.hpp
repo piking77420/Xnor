@@ -4,7 +4,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include "camera.hpp"
 #include "material.hpp"
 #include "rhi_typedef.hpp"
 #include "uniformBuffer.hpp"
@@ -16,8 +15,8 @@ class RHI
 {
 public:
 	// Utils
-	XNOR_ENGINE static void SetPolyGoneMode(PolygonFace face, PolygonMode mode);
-	XNOR_ENGINE static void SetViewPort(const Vector2i screenSize);
+	XNOR_ENGINE static void SetPolygonMode(PolygonFace face, PolygonMode mode);
+	XNOR_ENGINE static void SetViewport(Vector2i screenSize);
 	
 	// Model
 	XNOR_ENGINE static uint32_t CreateModel(const std::vector<Vertex>& vertices,const std::vector<uint32_t>& indicies);
@@ -32,7 +31,7 @@ public:
 	XNOR_ENGINE static void CheckCompilationError(uint32_t shaderId,const std::string& type);
 	XNOR_ENGINE static uint32_t CreateShader(const std::vector<ShaderCode>& shaderCodes);
 	XNOR_ENGINE static void UseShader(uint32_t shaderId);
-	XNOR_ENGINE static void UnUseShader();
+	XNOR_ENGINE static void UnuseShader();
 
 	XNOR_ENGINE static void SetUniform(UniformType uniformType, const void* data, uint32_t shaderId, const char* uniformKey);
 	
@@ -41,20 +40,19 @@ public:
 	XNOR_ENGINE  static void DestroyTexture(const uint32_t* textureId);
 
 	XNOR_ENGINE  static void BindTexture(uint32_t unit,uint32_t textureId);
-	XNOR_ENGINE  static void UnBindTexture(TextureType textureType);
+	XNOR_ENGINE  static void UnbindTexture(TextureType textureType);
 
 	// FrameBuffer
 	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferId,uint32_t renderPassId,const std::vector<Texture*>& outTargets);
 	XNOR_ENGINE static void DestroyFrameBuffer(const uint32_t* frameBufferId);
 	
-	XNOR_ENGINE static void BindFrameBuffer(const uint32_t frameBufferId);
-	XNOR_ENGINE static void UnBindFrameBuffer();
+	XNOR_ENGINE static void BindFrameBuffer(uint32_t frameBufferId);
+	XNOR_ENGINE static void UnbindFrameBuffer();
 
-	
 	// RenderPass 
 	XNOR_ENGINE static void CreateRenderPass(uint32_t* renderPassId,const std::vector<AttachementsType>& attachementsType);
 
-	XNOR_ENGINE static void CreateColorAttachement(Texture* texture,const vec2i size);
+	XNOR_ENGINE static void CreateColorAttachement(Texture* texture, vec2i size);
 
 private:
 	struct ModelInternal
@@ -74,7 +72,7 @@ private:
 
 	struct RenderPassIternal
 	{
-		std::vector<AttachementsType> AttachementsType;
+		std::vector<AttachementsType> attachementsType;
 	};
 
 	static constexpr int32_t NullUniformLocation = -1;
@@ -117,7 +115,6 @@ public:
 	XNOR_ENGINE void UpdateCameraUniform(const CameraUniformData& cameraUniformData) const;
 
 	XNOR_ENGINE void UpdateLight(const GpuLightData& lightData) const;
-
 
 private:
 	 mutable UniformBuffer* m_CameraUniform;

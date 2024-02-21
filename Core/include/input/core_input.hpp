@@ -173,6 +173,8 @@ enum class MouseButtonStatus : uint8_t
 
 class CoreInput
 {
+    STATIC_CLASS(CoreInput)
+    
 public:
     XNOR_ENGINE static bool GetKey(Key key, KeyStatus status = KeyStatus::Down);
     
@@ -186,21 +188,18 @@ public:
     XNOR_ENGINE static void Reset();
 
 private:
-    using KeyStatuses = std::array<bool, static_cast<size_t>(KeyStatus::Count)>;
-    using MouseStatuses = std::array<bool, static_cast<size_t>(MouseButtonStatus::Count)>;
+    using KeyStatuses = std::array<bool, static_cast<uint8_t>(KeyStatus::Count)>;
+    using MouseStatuses = std::array<bool, static_cast<uint8_t>(MouseButtonStatus::Count)>;
     
-    XNOR_ENGINE static inline std::array<KeyStatuses, static_cast<size_t>(Key::Count) - 1> m_Keyboard;
+    XNOR_ENGINE static inline std::array<KeyStatuses, static_cast<uint16_t>(Key::Count) - 1> m_Keyboard;
 
-    XNOR_ENGINE static inline std::array<MouseStatuses, static_cast<size_t>(MouseButton::Count) - 1> m_Mouse;
+    XNOR_ENGINE static inline std::array<MouseStatuses, static_cast<uint8_t>(MouseButton::Count) - 1> m_Mouse;
 
     XNOR_ENGINE static void HandleKeyboard(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
     XNOR_ENGINE static void HandleMouseButton(GLFWwindow* window, int32_t mouseButton, int32_t action, int32_t mods);
     XNOR_ENGINE static void MouseCursorPos(GLFWwindow* window, double_t xpos, double_t ypos);
 
     XNOR_ENGINE static inline Vector2 m_MousePos;
-    
-public:
-    CoreInput() = delete;
 };
 
 template <class T>
