@@ -32,5 +32,7 @@ private:
     void EditorCameraRotation();
     
     void EditorCameraMovement();
+
+    void ResetCameraRotation();
 };
 END_XNOR_EDITOR

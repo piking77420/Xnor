@@ -229,9 +229,9 @@ void Editor::Update()
 		ImGui::End();
 		
 		WorldBehaviours();
+		UpdateWindow();
 		renderer.RenderScene(XnorCore::World::world->Scene, m_EditorRenderContext);
 		renderer.RenderScene(XnorCore::World::world->Scene, m_GameRenderContext);
-		UpdateWindow();
 	
 		XnorCore::CoreInput::ClearKey();
 		EndFrame();

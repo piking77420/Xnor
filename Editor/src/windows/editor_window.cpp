@@ -22,7 +22,7 @@ void EditorWindow::Display()
 
         if(XnorCore::CoreInput::GetMouseButton(XnorCore::MouseButton::Right,XnorCore::KeyStatus::RELEASE))
         {
-            m_IsMoving = false;
+            ResetCameraRotation();
         }
 
         if(m_IsMoving)
@@ -34,8 +34,7 @@ void EditorWindow::Display()
     }
     else
     {
-        m_FirstMove = false;
-        m_IsMoving = false;
+        ResetCameraRotation();
     }
 }
 
@@ -58,8 +57,8 @@ void EditorWindow::EditorCameraRotation()
         m_FirstMove = true;
     } 
     
-    const float xoffset = mousePos.x - lastX;
-    const float yoffset = lastY - mousePos.y; // reversed since y-coordinates range from bottom to top
+    const float xoffset = lastX - mousePos.x ;
+    const float yoffset = mousePos.y - lastY ; // reversed since y-coordinates range from bottom to top
     lastX = mousePos.x;
     lastY = mousePos.y;
     
@@ -85,36 +84,46 @@ void EditorWindow::EditorCameraRotation()
 void EditorWindow::EditorCameraMovement()
 {
     using namespace XnorCore;
-    float_t cameraSpeed = m_Editor->data.cameraSpeed;
+    constexpr float_t fakeDeltatime = 0.03f;
+    float_t cameraSpeed = m_Editor->data.cameraSpeed * fakeDeltatime;
 
-    if(CoreInput::GetKey(KeyCode::KEY_W))
+    if(CoreInput::GetKey(KeyCode::KEY_W,KeyStatus::REPEAT) || CoreInput::GetKey(KeyCode::KEY_W,KeyStatus::DOWN))
     {
         m_Camera.pos += m_Camera.front * cameraSpeed ;
     }
 
-    if(CoreInput::GetKey(KeyCode::KEY_S))
+    if(CoreInput::GetKey(KeyCode::KEY_S,KeyStatus::REPEAT) || CoreInput::GetKey(KeyCode::KEY_S,KeyStatus::DOWN))
     {
         m_Camera.pos -= m_Camera.front * cameraSpeed ;
     }
 
-    if(CoreInput::GetKey(KeyCode::KEY_D))
+    if(CoreInput::GetKey(KeyCode::KEY_D,KeyStatus::REPEAT) || CoreInput::GetKey(KeyCode::KEY_D,KeyStatus::DOWN))
     {
         m_Camera.pos +=  m_Camera.right * cameraSpeed ;
     }
 
-    if(CoreInput::GetKey(KeyCode::KEY_A))
+    if(CoreInput::GetKey(KeyCode::KEY_A,KeyStatus::REPEAT) || CoreInput::GetKey(KeyCode::KEY_A,KeyStatus::DOWN))
     {
         m_Camera.pos -= m_Camera.right * cameraSpeed ;
     }
 
-    if(CoreInput::GetKey(KeyCode::KEY_SPACE))
+    if(CoreInput::GetKey(KeyCode::KEY_SPACE,KeyStatus::REPEAT) || CoreInput::GetKey(KeyCode::KEY_SPACE,KeyStatus::DOWN))
     {
+        
         m_Camera.pos += m_Camera.up * cameraSpeed ;
     }
 
-    if(CoreInput::GetKey(KeyCode::KEY_LEFT_CONTROL))
+    if(CoreInput::GetKey(KeyCode::KEY_LEFT_CONTROL,KeyStatus::REPEAT) || CoreInput::GetKey(KeyCode::KEY_LEFT_CONTROL,KeyStatus::DOWN))
     {
         m_Camera.pos -= m_Camera.up * cameraSpeed ;
     }
+}
+
+void EditorWindow::ResetCameraRotation()
+{
+    m_FirstMove = false;
+    m_IsMoving = false;
+    lastX = 0;
+    lastY = 0;
 }
 

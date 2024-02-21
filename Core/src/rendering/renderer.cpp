@@ -34,6 +34,7 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 
 	if (rendererContext.framebuffer != nullptr)
 	{
+		m_Rhi.ClearColorAndDepth();
 		rendererContext.framebuffer->BindFrameBuffer();
 		m_Rhi.ClearColorAndDepth();
 		screenSize = Window::GetSize();
