@@ -8,15 +8,18 @@
 
 BEGIN_XNOR_CORE
 
+
+
+
 class XNOR_ENGINE Camera
 {
 public:
 	Vector3 pos;
-	float near = 0.1f;
+	float_t near = 0.1f;
 	Vector3 front = Vector3::UnitZ();
-	float far = 1000.f;
+	float_t far = 1000.f;
 	Vector3 up = Vector3::UnitY();
-	float fov = 90.f;
+	float_t fov = 90.f;
 	Vector3 right = Vector3::UnitX();
 
 	void GetProjection(const Vector2i screenSize,Matrix* matrix) const;
@@ -27,6 +30,7 @@ public:
 
 	[[nodiscard]]
 	Vector2i ProjectOn(const Vector3& vertex,const Vector2i screenSize, const Matrix& model) const;
+	
 };
 
 END_XNOR_CORE

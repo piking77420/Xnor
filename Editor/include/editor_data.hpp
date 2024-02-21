@@ -8,7 +8,7 @@ BEGIN_XNOR_EDITOR
 struct EditorData
 {
     XnorCore::Entity* selectedEntity;
-    float_t cameraSpeed = 1.f;
+    float_t cameraSpeed = 3;
 };
 
 END_XNOR_EDITOR

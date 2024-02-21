@@ -4,6 +4,7 @@
 #include <ImGui/imgui_impl_glfw.h>
 #include <ImGui/imgui_impl_opengl3.h>
 
+#include "input/time.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/component/mesh_renderer.hpp"
 #include "windows/content_browser.hpp"
@@ -219,6 +220,7 @@ void Editor::Update()
 	while (!window.ShouldClose())
 	{
 		window.PollEvents();
+		Time::ComputeDeltaTime();
 		BeginFrame();
 
 		ImGui::Begin("Renderer Settings");

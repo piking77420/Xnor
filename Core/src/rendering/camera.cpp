@@ -39,3 +39,4 @@ Vector2i Camera::ProjectOn(const Vector3& vertex,const Vector2i screenSize, cons
 
 	return Vector2i(static_cast<int>(vec.x), static_cast<int>(vec.y));
 }
+

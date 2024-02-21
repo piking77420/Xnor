@@ -20,7 +20,6 @@ public:
     float_t lastY = 0.f;
 
 private:
-
     bool m_FirstMove = false;
     float_t m_MouseSensityvity = 0.1f;
     float_t m_Yaw = 0.f;
@@ -34,5 +33,8 @@ private:
     void EditorCameraMovement();
 
     void ResetCameraRotation();
+
+    void EditCameraEditor();
 };
+
 END_XNOR_EDITOR
