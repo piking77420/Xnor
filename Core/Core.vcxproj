@@ -101,6 +101,16 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="externals\src\glad.c" />
+    <ClCompile Include="externals\src\ImGui\imgui.cpp" />
+    <ClCompile Include="externals\src\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="externals\src\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="externals\src\ImGui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="externals\src\ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="externals\src\ImGui\imgui_stdlib.cpp" />
+    <ClCompile Include="externals\src\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="externals\src\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="externals\src\ttf\ttfParser.cpp" />
     <ClCompile Include="src\applications\application.cpp" />
     <ClCompile Include="src\input\core_input.cpp" />
     <ClCompile Include="src\input\time.cpp" />

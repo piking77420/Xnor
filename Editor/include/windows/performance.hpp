@@ -12,15 +12,13 @@ class Performance : public UiWindow
 public:
     explicit Performance(Editor* editor, size_t sampleSize);
     
-    void Update(double_t currentTime);
+    void Update();
 
     void Display() override;
 
 private:
-    // TEMPORARY
-    double_t m_TotalTime = 0;
-    
-    static constexpr inline float_t UpdateInterval = 0.5f;
+    static constexpr inline float_t UpdateInterval = 0.1f;
+    static constexpr inline float_t GraphsHeight = 50.f;
     
     size_t m_TotalSamples = 0;
     static constexpr inline uint32_t MaxSamples = 50;

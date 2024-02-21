@@ -1,6 +1,8 @@
 #include "rendering/camera.hpp"
 #include "Maths/matrix.hpp"
 
+#include <Maths/matrix.hpp>
+
 using namespace XnorCore;
 
 void Camera::GetProjection(const Vector2i screenSize, Matrix* const matrix) const
