@@ -239,20 +239,11 @@ void RHI::CreateFrameBuffer(uint32_t* const frameBufferId, const uint32_t render
 		uint32_t openglAttachment = 0;
 		switch (renderPassIternal.AttachementsType[i])
 		{
-		case AttachementsType::Color:
-				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
-			break;
-			
+			case AttachementsType::Color:
 			case AttachementsType::Position:
-				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
-			break;
-			
 			case AttachementsType::Normal:
-				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
-				break;
-			
 			case AttachementsType::Texturecoord:
-				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
+				openglAttachment = static_cast<const uint32_t>(GL_COLOR_ATTACHMENT0 + i);
 				break;
 			
 			case AttachementsType::Depth:
@@ -266,8 +257,8 @@ void RHI::CreateFrameBuffer(uint32_t* const frameBufferId, const uint32_t render
 			case AttachementsType::DepthAndStencil:
 				openglAttachment = GL_DEPTH_STENCIL_ATTACHMENT;
 				break;
-			
 		}
+		
 		glNamedFramebufferTexture(*frameBufferId, openglAttachment,targets.at(i)->GetId(), 0);
 	}
 }
@@ -275,8 +266,8 @@ void RHI::CreateFrameBuffer(uint32_t* const frameBufferId, const uint32_t render
 
 void RHI::DestroyFrameBuffer(const uint32_t* const frameBufferId)
 {
-	if(glIsFramebuffer(*frameBufferId))
-	glDeleteFramebuffers(1, frameBufferId);
+	if (glIsFramebuffer(*frameBufferId))
+		glDeleteFramebuffers(1, frameBufferId);
 }
 
 void RHI::BindFrameBuffer(const uint32_t frameBufferId)
@@ -295,10 +286,10 @@ void RHI::AttachColorAttachementToFrameBuffer(const uint32_t frameBufferId, cons
 	glNamedFramebufferTexture(frameBufferId, GL_COLOR_ATTACHMENT0 + attachmentIndex,textureId, 0);
 }*/
 
-void RHI::CreateRenderPass(uint32_t* renderPassId, const std::vector<AttachementsType>& AttachementsType)
+void RHI::CreateRenderPass(uint32_t* const renderPassId, const std::vector<AttachementsType>& attachementsType)
 {
-	*renderPassId = m_RenderPassMap.size();
-	m_RenderPassMap.emplace(*renderPassId,AttachementsType);
+	*renderPassId = static_cast<uint32_t>(m_RenderPassMap.size());
+	m_RenderPassMap.emplace(*renderPassId, attachementsType);
 }
 
 
@@ -322,7 +313,7 @@ uint32_t RHI::GetOpenglShaderType(const ShaderType shaderType)
 	return GL_VERTEX_SHADER;
 }
 
-std::string RHI::GetShaderTypeToString(ShaderType shaderType)
+std::string RHI::GetShaderTypeToString(const ShaderType shaderType)
 {
 	switch (shaderType)
 	{
@@ -431,7 +422,7 @@ uint32_t RHI::TextureTypeToOpenglTexture(const TextureType textureType)
 	return 0;
 }
 
-uint32_t RHI::GetOpenglInternalFormat(TextureInternalFormat textureFormat)
+uint32_t RHI::GetOpenglInternalFormat(const TextureInternalFormat textureFormat)
 {
 	switch (textureFormat)
 	{
@@ -476,12 +467,9 @@ uint32_t RHI::GetOpenglInternalFormat(TextureInternalFormat textureFormat)
 		
 		case TextureInternalFormat::DEPTH_STENCIL:
 			return GL_DEPTH24_STENCIL8;
-			
 	}
 
-
-	
-	Logger::LogError("Texture InternalFormat not supported !!!!");
+	Logger::LogError("Texture InternalFormat not supported, defaulting to RGB");
 	
 	return GL_RGB;
 }

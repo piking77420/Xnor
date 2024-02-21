@@ -78,12 +78,11 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 	std::vector<const Directionalight*> directionalComponent;
 	scene.GetAllComponentOfType<Directionalight>(&directionalComponent);
 
-	if(directionalComponent.size() > MaxDirectionalLight)
+	if (directionalComponent.size() > MaxDirectionalLight)
 	{
 		Logger::LogWarning("You cannot have more than 1 directional light in the scene");
 	}
 	
-
 	GpuLightData gpuLightData
 	{
 		.nbrOfPointLight = static_cast<uint32_t>(pointLightComponents.size()),
@@ -120,7 +119,7 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 			.intensity = spotLight->intensity,
 			.position = spotLight->entity->transform.position,
 			.cutOff = spotLight->cutOff,
-			//.direction = ,
+			.direction = Vector3::Zero(),
 			.outerCutOff = spotLight->outerCutOff,
 		};
 	}
@@ -139,7 +138,7 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 	m_Rhi.UpdateLight(gpuLightData);
 }
 
-void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext& rendererContext) const 
+void Renderer::DrawMeshRenders(const Scene& scene, [[maybe_unused]] const RendererContext& rendererContext) const 
 {
 	std::vector<const MeshRenderer*> meshrenderers;
 	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderers);
@@ -150,14 +149,13 @@ void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext& render
 		const Transform& transform =  meshRenderer->entity->transform;
 		
 		ModelUniformData modelData;
-		modelData.model = Matrix::Trs(transform.position, transform.rotation,transform.scale);
+		modelData.model = Matrix::Trs(transform.position, transform.rotation, transform.scale);
 		m_Rhi.UpdateModelUniform(modelData);
 
-		if(meshRenderer->texture.IsValid())
-		meshRenderer->texture->BindTexture(0);
+		if (meshRenderer->texture.IsValid())
+			meshRenderer->texture->BindTexture(0);
 
-		if(meshRenderer->model.IsValid())
-		RHI::DrawModel(meshRenderer->model->GetId());
+		if (meshRenderer->model.IsValid())
+			RHI::DrawModel(meshRenderer->model->GetId());
 	}
-	
 }

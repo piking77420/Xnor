@@ -50,7 +50,7 @@ public:
 
 	
 	// RenderPass 
-	XNOR_ENGINE static void CreateRenderPass(uint32_t* renderPassId,const std::vector<AttachementsType>& AttachementsType);
+	XNOR_ENGINE static void CreateRenderPass(uint32_t* renderPassId,const std::vector<AttachementsType>& attachementsType);
 
 	XNOR_ENGINE static void CreateColorAttachement(Texture* texture,const vec2i size);
 
