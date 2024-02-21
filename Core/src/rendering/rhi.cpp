@@ -2,6 +2,8 @@
 
 #include <glad/glad.h>
 
+#include "window.hpp"
+#include "GLFW/glfw3.h"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -295,6 +297,11 @@ void RHI::CreateRenderPass(uint32_t* const renderPassId, const std::vector<Attac
 {
 	*renderPassId = static_cast<uint32_t>(m_RenderPassMap.size());
 	m_RenderPassMap.emplace(*renderPassId, attachementsType);
+}
+
+void RHI::SwapBuffers()
+{
+	glfwSwapBuffers(reinterpret_cast<GLFWwindow*>(Window::GetWindow()));
 }
 
 

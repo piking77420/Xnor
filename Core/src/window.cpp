@@ -40,10 +40,6 @@ void* Window::GetWindow()
 	return m_Window;
 }
 
-const void* Window::GetWindow() const
-{
-	return m_Window;
-}
 
 bool Window::ShouldClose() const
 {
@@ -56,15 +52,6 @@ void Window::PollEvents() const
 	
 }
 
-void Window::SwapBuffers() const
-{
-	if(m_ResizeFrameBuffer)
-	{
-		// TO DO TRIGGER On Resize callBacks	
-	}
-	glfwSwapBuffers(m_Window);
-}
-	
 void Window::SetCurrentContext()
 {
 	glfwMakeContextCurrent(m_Window);
@@ -82,5 +69,5 @@ double Window::GetTime() const
 
 void Window::GlfwResizeFramebuffer([[maybe_unused]] GLFWwindow* window, [[maybe_unused]] int width, [[maybe_unused]] int height)
 {
-	m_ResizeFrameBuffer = true;
+	resizeFrameBuffer = true;
 }

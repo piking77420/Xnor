@@ -11,6 +11,9 @@ BEGIN_XNOR_CORE
 class XNOR_ENGINE Window
 {
 public:
+
+	static inline bool resizeFrameBuffer = false;
+	
 	Window();
 
 	~Window();
@@ -19,18 +22,13 @@ public:
 	static Vector2i GetSize();
 
 	[[nodiscard]]
-	void* GetWindow();
-
-	[[nodiscard]]
-	const void* GetWindow() const;
+	static void* GetWindow();
 
 	[[nodiscard]]
 	bool ShouldClose() const;
 
 	void PollEvents() const;
-
-	void SwapBuffers() const;
-
+	
 	void SetCurrentContext();
 
 	void SetCurrentContext() const;
@@ -38,14 +36,11 @@ public:
 	[[nodiscard]]
 	double GetTime() const;
 
-	//std::vector<std::function<Vector2i>> OnFrameBufferResize;
-
 private:
 	static void GlfwResizeFramebuffer(GLFWwindow* window,int width,int height);
 
 	
-	static inline bool m_ResizeFrameBuffer = false;
-	GLFWwindow* m_Window = nullptr;
+	static inline GLFWwindow* m_Window = nullptr;
 	static inline Vector2i m_Size = { 1280, 720 };
 };
 	

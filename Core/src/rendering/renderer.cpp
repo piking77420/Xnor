@@ -16,41 +16,50 @@ Renderer::Renderer()
 
 	m_VertexPath = FileManager::Get("assets/shaders/vertex.vert");
 	m_FragmentPath = FileManager::Get("assets/shaders/fragment.frag");
-
-	m_BasicShader = ResourceManager::Add<Shader>("assets/shaders/shader");
+	m_BasicShader = ResourceManager::Add<Shader>("mainShader");
 	m_BasicShader->Load(*m_VertexPath, *m_FragmentPath);
-	CompileShader();
 
-	m_Rhi.PrepareUniform();
+	m_VertexDrawTextureToScreenPath = FileManager::Get("assets/shaders/DrawTextureToScreen/DrawTextureToScreen.vert");
+	DrawTextureToScreen = FileManager::Get("assets/shaders/DrawTextureToScreen/DrawTextureToScreen.frag");
+	m_DrawTextureToScreenShader = ResourceManager::Add<Shader>("DrawTextureToScreenShader");
+	m_DrawTextureToScreenShader->Load(*m_VertexDrawTextureToScreenPath, *DrawTextureToScreen);
+
+	m_DrawTextureToScreenShader->Use();
+	m_DrawTextureToScreenShader->SetInt("BufferTextureId",0);
+	m_DrawTextureToScreenShader->UnUse();
 	
+	m_Rhi.PrepareUniform();
+
+
+	m_Quad = ResourceManager::Load<Model>(FileManager::Get("assets/models/quad.obj"));
+}
+
+Renderer::~Renderer()
+{
+	delete m_RenderBuffer;
 }
 
 void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererContext& rendererContext) const
 {
-	Vector2i screenSize;
+	// Clear MainWindow // 
+	Vector2i screenSize = Window::GetSize();
+	m_Rhi.SetClearColor(clearColor);
+	m_Rhi.ClearColorAndDepth();
+
+	if(rendererContext.framebuffer != nullptr)
+	{
+		m_RenderBuffer->BindFrameBuffer();
+	}
 	
 	m_Rhi.SetClearColor(clearColor);
-	
-
-	if (rendererContext.framebuffer != nullptr)
-	{
-		m_Rhi.ClearColorAndDepth();
-		rendererContext.framebuffer->BindFrameBuffer();
-		m_Rhi.ClearColorAndDepth();
-		screenSize = Window::GetSize();
-	}
-	else
-	{
-		m_Rhi.ClearColorAndDepth();
-		screenSize = rendererContext.framebuffer->GetSize();
-	}
+	m_Rhi.ClearColorAndDepth();
 
 	
+	// Render To Attachment //  
 	// SetViewPort
 	RHI::SetViewPort(screenSize);
-	
+
 	m_BasicShader->Use();
-	
 	CameraUniformData cam;
 	cam.cameraPos = rendererContext.camera->pos;
 	rendererContext.camera->GetView(&cam.view);
@@ -59,12 +68,22 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 
 	UpdateLight(scene,rendererContext);
 	DrawMeshRenders(scene,rendererContext);
-
-
 	m_BasicShader->UnUse();
-	
-	if (rendererContext.framebuffer != nullptr)
+
+	if(rendererContext.framebuffer != nullptr)
+	{
+		m_RenderBuffer->UnBindFrameBuffer();
+		
+		rendererContext.framebuffer->BindFrameBuffer();
+		// Render To Imgui frame buffer
+		m_DrawTextureToScreenShader->Use();
+		m_ColorAttachment.BindTexture(0);
+		
+		RHI::DrawModel(m_Quad->GetId());
+		m_DrawTextureToScreenShader->UnUse();
 		rendererContext.framebuffer->UnBindFrameBuffer();
+	}
+
 }
 
 void Renderer::CompileShader()
@@ -77,6 +96,37 @@ void Renderer::CompileShader()
 	{
 		m_BasicShader->Load(*m_VertexPath, *m_FragmentPath);
 	}
+}
+
+void Renderer::OnResizeWindow()
+{
+	
+}
+
+void Renderer::SwapBuffers()
+{
+	RHI::SwapBuffers();
+}
+
+void Renderer::PrepareRendering(vec2i windowSize)
+{
+	
+	m_RenderBuffer = new FrameBuffer(windowSize);
+	
+	const std::vector attachementsType =
+	{
+		AttachementsType::Color,
+		AttachementsType::DepthAndStencil
+	};
+	
+	m_DepthAttachment = Texture(AttachementsType::Color, m_RenderBuffer->GetSize());
+	m_ColorAttachment = Texture(AttachementsType::DepthAndStencil,m_RenderBuffer->GetSize());
+    
+	// Set Up renderPass
+	const RenderPass renderPass(attachementsType);
+	const std::vector targets = { &m_ColorAttachment, &m_DepthAttachment };
+	m_RenderBuffer->Create(renderPass,targets);
+	
 }
 
 void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const

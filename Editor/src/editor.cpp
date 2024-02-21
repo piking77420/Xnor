@@ -5,6 +5,7 @@
 #include <ImGui/imgui_impl_opengl3.h>
 
 #include "input/time.hpp"
+#include "rendering/light/directional_light.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/component/mesh_renderer.hpp"
 #include "windows/content_browser.hpp"
@@ -205,15 +206,19 @@ void Editor::BeginFrame()
 void Editor::Update()
 {
 	using namespace XnorCore;
+
+	renderer.PrepareRendering(window.GetSize());
 	
 	// init Scene //
 	Entity& ent1 = *World::world->Scene.CreateEntity("entity1");
 	ent1.AddComponent<MeshRenderer>();
-	
 	MeshRenderer& meshRenderer = *ent1.GetComponent<MeshRenderer>();
-	
 	meshRenderer.model = ResourceManager::Load<Model>(FileManager::Get("assets/models/viking_room.obj"));
 	meshRenderer.texture = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/viking_room.png"));
+
+	Entity& ent2 = *World::world->Scene.CreateEntity("Directional Light");
+	ent2.AddComponent<DirectionalLight>();
+	ent2.GetComponent<DirectionalLight>()->color = {1,0,1};
 	
 	while (!window.ShouldClose())
 	{
@@ -235,7 +240,7 @@ void Editor::Update()
 	
 		CoreInput::Reset();
 		EndFrame();
-		window.SwapBuffers();
+		renderer.SwapBuffers();
 	}
 
 	delete World::world;

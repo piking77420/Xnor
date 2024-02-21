@@ -180,6 +180,8 @@ struct GpuLightData
 {
 	uint32_t nbrOfPointLight;
 	uint32_t nbrOfSpotLight;
+	uint32_t padding1;
+	uint32_t padding2;
 	PointLightData pointLightData[MaxPointLight];
 	SpotLightData spotLightData[MaxSpotLight];
 	DirectionalData directionalData;

@@ -56,6 +56,8 @@ public:
 
 	XNOR_ENGINE static void CreateColorAttachement(Texture* texture,const vec2i size);
 
+	XNOR_ENGINE static void SwapBuffers();
+
 private:
 	struct ModelInternal
 	{
