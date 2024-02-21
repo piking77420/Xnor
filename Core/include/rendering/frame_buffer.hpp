@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "render_pass.hpp"
+#include "window.hpp"
 #include "resource/texture.hpp"
 
 BEGIN_XNOR_CORE
@@ -29,7 +30,7 @@ public:
 	XNOR_ENGINE void UnBindFrameBuffer() const ;
 	
 private:
-	Vector2i m_FrameBufferSize = { 1920, 1080 };
+	Vector2i m_FrameBufferSize = Window::GetSize();
 	uint32_t m_Id;
 };
 

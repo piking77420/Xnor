@@ -25,6 +25,7 @@ private:
     float_t m_MouseSensityvity = 0.1f;
     float_t m_Yaw = 0.f;
     float_t m_Pitch = 0.f;
+    bool m_IsMoving = false;
     
     void EditorCameraUpdate();
 

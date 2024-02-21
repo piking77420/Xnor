@@ -72,6 +72,7 @@ void CoreInput::MouseCursorPos([[maybe_unused]] GLFWwindow* window, const double
 
 void CoreInput::ClearKey()
 {
+    m_InputMouseButtonQueue.clear();
     m_InputKeyBoardQueue.clear();
 }
 

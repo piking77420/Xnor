@@ -18,16 +18,15 @@ public:
 	Vector3 up = Vector3::UnitY();
 	float fov = 90.f;
 	Vector3 right = Vector3::UnitX();
-	Vector2i screenSize = {800,600};
 
-	void GetProjection(Matrix* matrix) const;
+	void GetProjection(const Vector2i screenSize,Matrix* matrix) const;
 
 	void GetView(Matrix* matrix) const;
 
-	void GetVp(Matrix* matrix) const;
+	void GetVp(const Vector2i screenSize,Matrix* matrix) const;
 
 	[[nodiscard]]
-	Vector2i ProjectOn(const Vector3& vertex, const Matrix& model) const;
+	Vector2i ProjectOn(const Vector3& vertex,const Vector2i screenSize, const Matrix& model) const;
 };
 
 END_XNOR_CORE

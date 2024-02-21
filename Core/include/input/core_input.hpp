@@ -185,7 +185,7 @@ private:
         KeyStatus status;
     };
 
-    static constexpr uint32_t ReserveKeySize = 100;
+    static constexpr uint32_t ReserveKeySize = 10;
 
     
     XNOR_ENGINE static inline std::vector<InputKeyBoard> m_InputKeyBoardQueue;

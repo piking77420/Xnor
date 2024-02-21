@@ -27,24 +27,33 @@ Renderer::Renderer()
 
 void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererContext& rendererContext) const
 {
+	Vector2i screenSize;
+	
 	m_Rhi.SetClearColor(clearColor);
 	
-	m_Rhi.ClearColorAndDepth();
 
 	if (rendererContext.framebuffer != nullptr)
 	{
 		rendererContext.framebuffer->BindFrameBuffer();
 		m_Rhi.ClearColorAndDepth();
+		screenSize = Window::GetSize();
 	}
+	else
+	{
+		m_Rhi.ClearColorAndDepth();
+		screenSize = rendererContext.framebuffer->GetSize();
+	}
+
+	
 	// SetViewPort
-	RHI::SetViewPort(*rendererContext.camera);
+	RHI::SetViewPort(screenSize);
 	
 	m_BasicShader->Use();
 	
 	CameraUniformData cam;
 	cam.cameraPos = rendererContext.camera->pos;
 	rendererContext.camera->GetView(&cam.view);
-	rendererContext.camera->GetProjection(&cam.projection);
+	rendererContext.camera->GetProjection(rendererContext.framebuffer->GetSize(),&cam.projection);
 	m_Rhi.UpdateCameraUniform(cam);
 
 	UpdateLight(scene,rendererContext);
@@ -162,7 +171,3 @@ void Renderer::DrawMeshRenders(const Scene& scene, [[maybe_unused]] const Render
 	}
 }
 
-void Renderer::SetViewPort([[maybe_unused]] const Camera& camera)
-{
-	RHI::SetViewPort(camera);
-}

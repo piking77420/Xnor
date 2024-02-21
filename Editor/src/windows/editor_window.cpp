@@ -15,13 +15,27 @@ void EditorWindow::Display()
     
     if (IsFocused())
     {
-       
+        if(XnorCore::CoreInput::GetMouseButton(XnorCore::MouseButton::Right,XnorCore::KeyStatus::DOWN) &&  m_IsMoving == false)
+        {
+            m_IsMoving = true;
+        }
+
+        if(XnorCore::CoreInput::GetMouseButton(XnorCore::MouseButton::Right,XnorCore::KeyStatus::RELEASE))
+        {
+            m_IsMoving = false;
+        }
+
+        if(m_IsMoving)
+            EditorCameraRotation();
         
-        EditorCameraUpdate();
+        EditorCameraMovement();
+
+
     }
     else
     {
         m_FirstMove = false;
+        m_IsMoving = false;
     }
 }
 
@@ -63,6 +77,9 @@ void EditorWindow::EditorCameraRotation()
     m_Camera.front.y = std::sin(m_Pitch * Calc::Deg2Rad);
     m_Camera.front.z = std::sin(m_Yaw * Calc::Deg2Rad) * std::cos(m_Pitch * Calc::Deg2Rad);
     m_Camera.front = m_Camera.front.Normalized();
+
+    m_Camera.right = Vector3::Cross(m_Camera.front,Vector3::UnitY()).Normalized();
+    m_Camera.up = Vector3::Cross(m_Camera.right,m_Camera.front).Normalized();
 }
 
 void EditorWindow::EditorCameraMovement()
@@ -82,7 +99,7 @@ void EditorWindow::EditorCameraMovement()
 
     if(CoreInput::GetKey(KeyCode::KEY_D))
     {
-        m_Camera.pos += m_Camera.right * cameraSpeed ;
+        m_Camera.pos +=  m_Camera.right * cameraSpeed ;
     }
 
     if(CoreInput::GetKey(KeyCode::KEY_A))

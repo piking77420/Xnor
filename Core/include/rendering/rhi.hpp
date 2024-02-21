@@ -17,7 +17,7 @@ class RHI
 public:
 	// Utils
 	XNOR_ENGINE static void SetPolyGoneMode(PolygonFace face, PolygonMode mode);
-	XNOR_ENGINE static void SetViewPort(const Camera& cam);
+	XNOR_ENGINE static void SetViewPort(const Vector2i screenSize);
 	
 	// Model
 	XNOR_ENGINE static uint32_t CreateModel(const std::vector<Vertex>& vertices,const std::vector<uint32_t>& indicies);
