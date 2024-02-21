@@ -130,11 +130,7 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
         Quaternion* const q = XnorCore::Utils::GetObjectPointer<Quaternion>(obj, fieldInfo.offset, element);
         
         Vector3 euler = Quaternion::ToEuler(*q);
-
-        ImGui::Text("%s", name);
-        ImGui::SliderAngle("X", &euler.x);
-        ImGui::SliderAngle("Y", &euler.y);
-        ImGui::SliderAngle("Z", &euler.z);
+        ImGui::SliderAngle3(name, euler.Raw());
         
         *q = Quaternion::FromEuler(euler);
     }
