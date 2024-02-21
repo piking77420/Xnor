@@ -11,6 +11,7 @@
 
 #include "GLFW/glfw3.h"
 #include "imgui/imgui.h"
+#include "input/time.hpp"
 #include "Maths/calc.hpp"
 
 using namespace XnorEditor;
@@ -22,13 +23,11 @@ Performance::Performance(Editor* const editor, const size_t sampleSize)
     m_MemoryArray.resize(sampleSize);
 }
 
-void Performance::Update(const double_t currentTime)
+void Performance::Update()
 {
-    if (Calc::OnInterval(static_cast<float_t>(currentTime), static_cast<float_t>(m_TotalTime), UpdateInterval))
+    if (Calc::OnInterval(XnorCore::Time::GetTotalTime(), XnorCore::Time::GetLastTotalTime(), UpdateInterval))
     {
-        const double_t deltaTime = currentTime - m_TotalTime;
-        
-        m_LastFps = static_cast<float_t>(1.0 / deltaTime);
+        m_LastFps = 1.f / XnorCore::Time::GetDeltaTime();
         m_FrameRateArray[m_ArrayIndex] = m_LastFps;
         m_HighestArrayFps = std::max(*std::ranges::max_element(m_FrameRateArray), MinHighestArrayFps);
 
@@ -43,23 +42,20 @@ void Performance::Update(const double_t currentTime)
         if (m_TotalSamples < MaxSamples)
             m_TotalSamples++;
     }
-    
-    m_TotalTime = currentTime;
 }
 
 void Performance::Display()
 {
-    // TODO time
-    Update(0.0);
+    Update();
     
     const ImVec2 available = ImGui::GetContentRegionAvail();
     std::string format = std::format("FPS: {:.0f}", m_LastFps);
     FetchInfo();
 
     ImGui::PlotLines("##fps", m_FrameRateArray.data(), static_cast<int32_t>(std::min(m_TotalSamples, m_FrameRateArray.size())), m_ArrayIndex,
-        format.c_str(), 0.f, m_HighestArrayFps, ImVec2(available.x, 50.f));
+        format.c_str(), 0.f, m_HighestArrayFps, ImVec2(available.x, GraphsHeight));
 
     format = std::format("Memory: {:.2f}MB", m_LastMemory);
     ImGui::PlotLines("##memory", m_MemoryArray.data(), static_cast<int32_t>(std::min(m_TotalSamples, m_MemoryArray.size())), m_ArrayIndex,
-        format.c_str(), 0.f, m_HighestArrayMemory, ImVec2(available.x, 50.f));
+        format.c_str(), 0.f, m_HighestArrayMemory, ImVec2(available.x, GraphsHeight));
 }
