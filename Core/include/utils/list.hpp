@@ -2,7 +2,6 @@
 
 #include <functional>
 #include "core.hpp"
-#include "utils/utils.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -67,8 +66,10 @@ public:
 
     T& operator[](size_t index);
     T operator[](size_t index) const;
-    
+
+#ifndef UNIT_TEST
 private:
+#endif
     T* m_Data;
     size_t m_Size;
     size_t m_Capacity;
@@ -94,7 +95,7 @@ template <typename T>
 List<T>::List(const size_t size)
     : m_Size(size)
 {
-    m_Capacity = Utils::GetNextPowerOfTwo(m_Size);
+    m_Capacity = std::bit_ceil(m_Size);
     
     Malloc(m_Capacity);
 
@@ -106,7 +107,7 @@ template <typename T>
 List<T>::List(const size_t size, T&& defaultValue)
     : m_Size(size)
 {
-    m_Capacity = Utils::GetNextPowerOfTwo(m_Size);
+    m_Capacity = std::bit_ceil(m_Size);
     
     Malloc(m_Capacity);
 
@@ -118,7 +119,7 @@ template <typename T>
 List<T>::List(const size_t size, const T values[])
     : m_Size(size)
 {
-    m_Capacity = Utils::GetNextPowerOfTwo(m_Size);
+    m_Capacity = std::bit_ceil(m_Size);
     
     Malloc(m_Capacity);
 
@@ -130,7 +131,7 @@ template <typename T>
 List<T>::List(const std::initializer_list<T>& values)
 {
     m_Size = values.size();
-    m_Capacity = Utils::GetNextPowerOfTwo(m_Size);
+    m_Capacity = std::bit_ceil(m_Size);
     
     Malloc(m_Capacity);
     
@@ -371,7 +372,7 @@ void List<T>::CheckGrow(const size_t newSize)
 {
     if (newSize > m_Capacity)
     {
-        m_Capacity = Utils::GetNextPowerOfTwo(newSize);
+        m_Capacity = std::bit_ceil(newSize);
 
         Realloc(m_Capacity);
     }
@@ -382,19 +383,10 @@ void List<T>::CheckShrink(const size_t newSize)
 {
     if (newSize < m_Capacity)
     {
-        m_Capacity = Utils::GetNextPowerOfTwo(newSize);
+        m_Capacity = std::bit_ceil(newSize);
 
         Realloc(m_Capacity);
     }
-}
-
-namespace Utils
-{
-    template<typename>
-    struct is_xnor_list : std::false_type {};
-
-    template<typename T>
-    struct is_xnor_list<List<T>> : std::true_type {};
 }
 
 END_XNOR_CORE

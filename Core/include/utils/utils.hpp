@@ -10,6 +10,8 @@
 #include "core.hpp"
 #include "Maths/vector2.hpp"
 
+#include "utils/list.hpp"
+
 BEGIN_XNOR_CORE
 
 namespace Utils
@@ -20,7 +22,7 @@ namespace Utils
 
     template <typename T>
     [[nodiscard]]
-    constexpr T* GetObjectPointer(const void* obj, size_t offset, size_t element);
+    constexpr T* GetAddress(const void* obj, size_t offset, size_t element);
 
     template<typename>
     struct is_std_vector : std::false_type {};
@@ -50,9 +52,6 @@ namespace Utils
 
     [[nodiscard]]
     XNOR_ENGINE std::string HumanizeString(const std::string& str);
-
-    [[nodiscard]]
-    XNOR_ENGINE constexpr size_t GetNextPowerOfTwo(size_t value);
 }
 
 template<typename PtrT, typename IntT>
@@ -65,7 +64,7 @@ constexpr PtrT Utils::IntToPointer(const IntT number)
 }
 
 template <typename T>
-constexpr T* Utils::GetObjectPointer(const void* const obj, const size_t offset, const size_t element)
+constexpr T* Utils::GetAddress(const void* const obj, const size_t offset, const size_t element)
 {
     return const_cast<T* const>(reinterpret_cast<const T* const>(static_cast<const uint8_t* const>(obj) + offset + sizeof(T) * element));
 }

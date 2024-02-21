@@ -60,8 +60,3 @@ std::string Utils::HumanizeString(const std::string& str)
     // correctly, we should cast the input to unsigned char and the output to char
     return static_cast<char>(std::toupper(static_cast<uint8_t>(str[0]))) + str.substr(1);
 }
-
-constexpr size_t Utils::GetNextPowerOfTwo(const size_t value)
-{
-    return std::bit_ceil(value);
-}

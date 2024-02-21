@@ -107,27 +107,27 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
     }
     else if (fieldInfo.typeHash == typeid(bool).hash_code())
     {
-        ImGui::Checkbox(name, XnorCore::Utils::GetObjectPointer<bool>(obj, fieldInfo.offset, element));
+        ImGui::Checkbox(name, XnorCore::Utils::GetAddress<bool>(obj, fieldInfo.offset, element));
     }
     else if (fieldInfo.typeHash == typeid(Vector2i).hash_code())
     {
-        ImGui::DragInt2(name, XnorCore::Utils::GetObjectPointer<Vector2i>(obj, fieldInfo.offset, element)->Raw());
+        ImGui::DragInt2(name, XnorCore::Utils::GetAddress<Vector2i>(obj, fieldInfo.offset, element)->Raw());
     }
     else if (fieldInfo.typeHash == typeid(Vector2).hash_code())
     {
-        ImGui::DragFloat2(name, XnorCore::Utils::GetObjectPointer<Vector2>(obj, fieldInfo.offset, element)->Raw());
+        ImGui::DragFloat2(name, XnorCore::Utils::GetAddress<Vector2>(obj, fieldInfo.offset, element)->Raw());
     }
     else if (fieldInfo.typeHash == typeid(Vector3).hash_code())
     {
-        ImGui::DragFloat3(name, XnorCore::Utils::GetObjectPointer<Vector3>(obj, fieldInfo.offset, element)->Raw());
+        ImGui::DragFloat3(name, XnorCore::Utils::GetAddress<Vector3>(obj, fieldInfo.offset, element)->Raw());
     }
     else if (fieldInfo.typeHash == typeid(Vector4).hash_code())
     {
-        ImGui::DragFloat4(name, XnorCore::Utils::GetObjectPointer<Vector4>(obj, fieldInfo.offset, element)->Raw());
+        ImGui::DragFloat4(name, XnorCore::Utils::GetAddress<Vector4>(obj, fieldInfo.offset, element)->Raw());
     }
     else if (fieldInfo.typeHash == typeid(Quaternion).hash_code())
     {
-        Quaternion* const q = XnorCore::Utils::GetObjectPointer<Quaternion>(obj, fieldInfo.offset, element);
+        Quaternion* const q = XnorCore::Utils::GetAddress<Quaternion>(obj, fieldInfo.offset, element);
         
         Vector3 euler = Quaternion::ToEuler(*q);
         ImGui::SliderAngle3(name, euler.Raw());
@@ -136,14 +136,14 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
     }
     else if (fieldInfo.typeHash == typeid(std::string).hash_code())
     {
-        ImGui::InputText(name, XnorCore::Utils::GetObjectPointer<std::string>(obj, fieldInfo.offset, element));
+        ImGui::InputText(name, XnorCore::Utils::GetAddress<std::string>(obj, fieldInfo.offset, element));
     }
     else
     {
         if (ImGui::CollapsingHeader(name))
         {
             const XnorCore::TypeInfo& subInfo = XnorCore::TypeInfo::Get(fieldInfo.typeHash);
-            void* const subPtr = XnorCore::Utils::GetObjectPointer<uint8_t>(obj, fieldInfo.offset, element * subInfo.GetSize());
+            void* const subPtr = XnorCore::Utils::GetAddress<uint8_t>(obj, fieldInfo.offset, element * subInfo.GetSize());
             ImGui::PushID(subPtr);
 
             for (const XnorCore::FieldInfo& m : subInfo.GetMembers())
@@ -167,7 +167,7 @@ void Inspector::DisplayVectorMember(void* const obj, const XnorCore::FieldInfo& 
 {
     if (ImGui::CollapsingHeader(fieldInfo.name.c_str()))
     {
-        std::vector<int>* const vec = XnorCore::Utils::GetObjectPointer<std::vector<int>>(obj, fieldInfo.offset, 0);
+        std::vector<int>* const vec = XnorCore::Utils::GetAddress<std::vector<int>>(obj, fieldInfo.offset, 0);
         void* ptr = reinterpret_cast<uint8_t*>(vec->data()) - fieldInfo.offset;
 
         for (size_t i = 0; i < vec->size(); i++)

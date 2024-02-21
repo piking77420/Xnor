@@ -49,7 +49,7 @@ void Inspector::DisplayScalar(void* const obj, const size_t offset, const char* 
     else if constexpr (std::is_same_v<T, double_t>)
         type = ImGuiDataType_Double;
 
-    ImGui::InputScalar(name, type, XnorCore::Utils::GetObjectPointer<T>(obj, offset, element));
+    ImGui::InputScalar(name, type, XnorCore::Utils::GetAddress<T>(obj, offset, element));
 }
 
 END_XNOR_EDITOR
