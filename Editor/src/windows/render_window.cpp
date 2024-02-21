@@ -3,21 +3,12 @@
 using namespace XnorCore;
 using namespace XnorEditor;
 
-RenderWindow::RenderWindow(Editor* editor,XnorCore::RendererContext* rendererContext) : UiWindow(editor)
+RenderWindow::RenderWindow(Editor* editor,const std::string& name,XnorCore::RendererContext* rendererContext) : UiWindow(editor,name)
 {
     if(rendererContext == nullptr)
     {
         Logger::LogError("renderPass Context is Null");
         throw std::runtime_error("renderPass Context is Null");
-    }
-
-    if(rendererContext->IsEditor)
-    {
-        m_DisplayName = "Editor Window";
-    }
-    else
-    {
-        m_DisplayName = "GameWindow";
     }
     
     std::vector attachementsType =
@@ -50,7 +41,5 @@ RenderWindow::~RenderWindow()
 
 void RenderWindow::Display()
 {
-    ImGui::Begin(m_DisplayName.c_str());
     ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_ColorTexture->GetId()), ImGui::GetContentRegionAvail());
-    ImGui::End();
 }

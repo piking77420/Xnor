@@ -11,8 +11,8 @@
 using namespace XnorEditor;
 using namespace XnorCore;
 
-HeaderWindow::HeaderWindow(Editor* editor)
-    : UiWindow(editor)
+HeaderWindow::HeaderWindow(Editor* editor,const std::string& name)
+    : UiWindow(editor,name)
 {
     m_PauseButtonPng = FileManager::Get("assets/editor/PauseButton.png");
     m_PauseButton =  ResourceManager::Load<Texture>(m_PauseButtonPng);
@@ -26,10 +26,6 @@ HeaderWindow::HeaderWindow(Editor* editor)
 
 void HeaderWindow::Display()
 {
-    ImGui::Begin("HeaderWindow", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
-
-    FetchInfo();
-    
     // Value to offset the little gray image from imgui
     constexpr size_t nbrOfImages = 2;
 
@@ -49,7 +45,6 @@ void HeaderWindow::Display()
     DisplayOnEditor();
     DisplayOnPlay();
  
-    ImGui::End();
 }
 
 void HeaderWindow::DisplayOnEditor()

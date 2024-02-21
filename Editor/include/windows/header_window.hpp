@@ -13,7 +13,7 @@ private:
     static constexpr float_t TileBaseSize = 25.f; 
     
 public:
-    explicit HeaderWindow(Editor* editor);
+    explicit HeaderWindow(Editor* editor,const std::string& name);
     ~HeaderWindow() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(HeaderWindow)

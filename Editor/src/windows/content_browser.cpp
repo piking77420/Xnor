@@ -4,8 +4,8 @@
 
 using namespace XnorEditor;
 
-ContentBrowser::ContentBrowser(Editor* editor, std::filesystem::path&& rootDirectory)
-    : UiWindow(editor)
+ContentBrowser::ContentBrowser(Editor* editor,const std::string& name, std::filesystem::path&& rootDirectory)
+    : UiWindow(editor,name)
     , m_RootDirectory(std::move(rootDirectory))
     , m_CurrentDirectory(m_RootDirectory)
 {
@@ -14,7 +14,6 @@ ContentBrowser::ContentBrowser(Editor* editor, std::filesystem::path&& rootDirec
 
 void ContentBrowser::Display()
 {
-    ImGui::Begin("Content Browser");
     
     FetchInfo();
 
@@ -30,7 +29,6 @@ void ContentBrowser::Display()
     ImGui::Text("Browse resources here");
     ImGui::EndChild();
     
-    ImGui::End();
 }
 
 const std::filesystem::path& ContentBrowser::GetRootDirectory() const

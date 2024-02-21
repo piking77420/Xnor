@@ -10,19 +10,23 @@ BEGIN_XNOR_EDITOR
 class UiWindow
 {
 public:
-    explicit UiWindow(Editor* editor);
+    explicit UiWindow(Editor* editor,const std::string& name);
     virtual ~UiWindow() = default;
     
     DEFAULT_COPY_MOVE_OPERATIONS(UiWindow)
 
+    const char* GetName() const;
+    
     virtual void Display() = 0;
     
     [[nodiscard]] bool IsFocused() const;
     [[nodiscard]] Vector2i GetPosition() const;
     [[nodiscard]] Vector2i GetSize() const;
+    void FetchInfo();
 
 protected:
-    void FetchInfo();
+
+    std::string m_WindowName = "No Name";
     
     bool m_IsFocused;
     Vector2i m_Position;

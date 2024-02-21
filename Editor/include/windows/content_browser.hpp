@@ -12,7 +12,7 @@ class ContentBrowser : public UiWindow
 public:
     using UiWindow::UiWindow;
 
-    ContentBrowser(Editor* editor, std::filesystem::path&& rootDirectory);
+    ContentBrowser(Editor* editor,const std::string& name, std::filesystem::path&& rootDirectory);
     
     void Display() override;
 

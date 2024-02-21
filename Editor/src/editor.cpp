@@ -7,25 +7,25 @@
 #include "resource/resource_manager.hpp"
 #include "scene/component/mesh_renderer.hpp"
 #include "windows/content_browser.hpp"
+#include "windows/editor_window.hpp"
 #include "windows/header_window.hpp"
 #include "windows/inspector.hpp"
 #include "windows/performance.hpp"
 #include "windows/scene_graph.hpp"
 #include "windows/render_window.hpp"
-#include "user_input.hpp"
 
 
 using namespace XnorEditor;
 
 void Editor::CreateDefaultWindows()
 {
-	m_UiWindows.push_back(new Performance(this, 50));
-	m_UiWindows.push_back(new Inspector(this));
-	m_UiWindows.push_back(new HeaderWindow(this));
-	m_UiWindows.push_back(new SceneGraph(this));
-	m_UiWindows.push_back(new ContentBrowser(this, "assets"));
-	m_UiWindows.push_back(new RenderWindow(this,&data.userInput.userRenderContext));
-	m_UiWindows.push_back(new RenderWindow(this,&m_GameRenderContext));
+	m_UiWindows.push_back(new Performance(this, "Performance",50));
+	m_UiWindows.push_back(new Inspector(this,"Inspector"));
+	m_UiWindows.push_back(new HeaderWindow(this,"HeaderWindow"));
+	m_UiWindows.push_back(new SceneGraph(this,"SceneGraph"));
+	m_UiWindows.push_back(new ContentBrowser(this,"ContentBrowser", "assets"));
+	m_UiWindows.push_back(new EditorWindow(this,"EditorWindow",&m_EditorRenderContext));
+	m_UiWindows.push_back(new RenderWindow(this,"GameWindow",&m_GameRenderContext));
 
 }
 
@@ -182,6 +182,17 @@ Editor::Editor()
 	XnorCore::World::world = new XnorCore::World();
 }
 
+void Editor::UpdateWindow()
+{
+	for (UiWindow* w : m_UiWindows)
+	{
+		ImGui::Begin(w->GetName());
+		w->FetchInfo();
+		w->Display();
+		ImGui::End();
+	}
+}
+
 void Editor::BeginFrame()
 {
 	ImGui_ImplOpenGL3_NewFrame();
@@ -194,7 +205,6 @@ void Editor::BeginFrame()
 void Editor::Update()
 {
 	using namespace XnorCore;
-	
 	
 	// init Scene //
 	Entity& ent1 = *World::world->Scene.CreateEntity("entity1");
@@ -219,13 +229,9 @@ void Editor::Update()
 		ImGui::End();
 		
 		WorldBehaviours();
-	
-		for (UiWindow* w : m_UiWindows)
-			w->Display();		
-		
-		renderer.RenderScene(XnorCore::World::world->Scene, data.userInput.userRenderContext);
+		renderer.RenderScene(XnorCore::World::world->Scene, m_EditorRenderContext);
 		renderer.RenderScene(XnorCore::World::world->Scene, m_GameRenderContext);
-		
+		UpdateWindow();
 	
 		XnorCore::CoreInput::ClearKey();
 		EndFrame();

@@ -15,8 +15,8 @@
 
 using namespace XnorEditor;
 
-Performance::Performance(Editor* const editor, const size_t sampleSize)
-    : UiWindow(editor)
+Performance::Performance(Editor* const editor,const std::string& name, const size_t sampleSize)
+    : UiWindow(editor,name)
 {
     m_FrameRateArray.resize(sampleSize);
     m_MemoryArray.resize(sampleSize);
@@ -52,7 +52,6 @@ void Performance::Display()
     // TODO time
     Update(0.0);
     
-    ImGui::Begin("Performance Summary");
 
     const ImVec2 available = ImGui::GetContentRegionAvail();
     std::string format = std::format("FPS: {:.0f}", m_LastFps);
@@ -65,5 +64,4 @@ void Performance::Display()
     ImGui::PlotLines("##memory", m_MemoryArray.data(), static_cast<int32_t>(std::min(m_TotalSamples, m_MemoryArray.size())), m_ArrayIndex,
         format.c_str(), 0.f, m_HighestArrayMemory, ImVec2(available.x, 50.f));
 
-    ImGui::End();
 }

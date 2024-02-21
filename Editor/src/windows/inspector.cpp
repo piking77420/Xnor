@@ -14,10 +14,6 @@ void Inspector::Display()
 {
     void* const ptr = m_Editor->data.selectedEntity;
     ImGui::PushID(ptr);
-
-    ImGui::Begin("Inspector");
-
-    FetchInfo();
     
     if (m_Editor->data.selectedEntity)
     {
@@ -30,7 +26,6 @@ void Inspector::Display()
         }
     }
 
-    ImGui::End();
     ImGui::PopID();
 }
 

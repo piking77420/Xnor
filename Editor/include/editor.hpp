@@ -4,7 +4,6 @@
 
 #include "definitions.hpp"
 #include "editor_data.hpp"
-#include "user_input.hpp"
 #include "applications/application.hpp"
 
 BEGIN_XNOR_EDITOR
@@ -28,9 +27,12 @@ public:
 private:
 	
 	XnorCore::RendererContext m_GameRenderContext;
+	XnorCore::RendererContext m_EditorRenderContext;
 
 	std::vector<UiWindow*> m_UiWindows;
 
+	void UpdateWindow();
+	
 	void BeginFrame();
 
 	void EndFrame();

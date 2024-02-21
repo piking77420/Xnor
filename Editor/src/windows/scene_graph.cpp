@@ -9,7 +9,6 @@ using namespace XnorEditor;
 
 void SceneGraph::Display()
 {
-    ImGui::Begin("Scene graph");
 
     // TODO fetch current loaded scene
     XnorCore::Scene& scene = XnorCore::World::world->Scene;
@@ -51,7 +50,6 @@ void SceneGraph::Display()
         ImGui::TreePop();
     }
 
-    ImGui::End();
     
     CheckDeleteEntity(scene);
 }

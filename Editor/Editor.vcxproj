@@ -117,7 +117,8 @@
   <ItemGroup>
     <ClCompile Include="src\editor.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\user_input.cpp">
+    <ClCompile Include="src\windows\content_browser.cpp" />
+    <ClCompile Include="src\windows\editor_window.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <Optimization>Disabled</Optimization>
@@ -191,7 +192,6 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
-    <ClCompile Include="src\windows\content_browser.cpp" />
     <ClCompile Include="src\windows\header_window.cpp" />
     <ClCompile Include="src\windows\inspector.cpp" />
     <ClCompile Include="src\windows\performance.cpp" />
@@ -278,11 +278,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\user_input.hpp" />
     <ClInclude Include="include\definitions.hpp" />
     <ClInclude Include="include\editor.hpp" />
     <ClInclude Include="include\editor_data.hpp" />
     <ClInclude Include="include\windows\content_browser.hpp" />
+    <ClInclude Include="include\windows\editor_window.hpp" />
     <ClInclude Include="include\windows\header_window.hpp" />
     <ClInclude Include="include\windows\inspector.hpp" />
     <ClInclude Include="include\windows\performance.hpp" />

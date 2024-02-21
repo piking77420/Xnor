@@ -162,7 +162,7 @@ void Renderer::DrawMeshRenders(const Scene& scene, [[maybe_unused]] const Render
 	}
 }
 
-void Renderer::SetViewPort(const Camera& camera)
+void Renderer::SetViewPort([[maybe_unused]] const Camera& camera)
 {
-	
+	RHI::SetViewPort(camera);
 }

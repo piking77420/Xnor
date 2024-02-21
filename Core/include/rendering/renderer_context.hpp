@@ -11,6 +11,9 @@ public:
 	const FrameBuffer* framebuffer;
 	const RenderPass* renderPass;
 	bool IsEditor = false;
+
+	bool IsValid();
+	
 };
 
 END_XNOR_CORE
