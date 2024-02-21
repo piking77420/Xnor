@@ -1,7 +1,5 @@
 #include "pch.h"
 
-/*#include "utils/list.hpp"
-
 using namespace XnorCore;
 
 namespace TestSize
@@ -17,4 +15,4 @@ namespace TestSize
 		EXPECT_EQ(list.GetSize(), 5);
 	}
 }
-*/
+
