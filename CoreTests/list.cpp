@@ -1,7 +1,5 @@
 #include "pch.h"
 
-using namespace XnorCore;
-
 namespace TestSize
 {
 	List<int> list;
