@@ -1,9 +1,8 @@
 #include "rendering/renderer.hpp"
 
-#include "GLFW/glfw3.h"
-#include "..\..\include\rendering\light\directional_light.hpp"
+#include "rendering\light\directional_light.hpp"
 #include "rendering/light/point_light.hpp"
-#include "..\..\include\rendering\light\spot_light.hpp"
+#include "rendering\light\spot_light.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/component/mesh_renderer.hpp"
 
@@ -48,7 +47,7 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 
 	if(rendererContext.framebuffer != nullptr)
 	{
-		m_RenderBuffer->BindFrameBuffer();
+		rendererContext.framebuffer->BindFrameBuffer();
 	}
 	
 	m_Rhi.SetClearColor(clearColor);
@@ -69,6 +68,7 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 
 	if(rendererContext.framebuffer != nullptr)
 	{
+		/*
 		m_RenderBuffer->UnBindFrameBuffer();
 		
 		rendererContext.framebuffer->BindFrameBuffer();
@@ -78,6 +78,7 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 		
 		RHI::DrawModel(m_Quad->GetId());
 		m_DrawTextureToScreenShader->UnUse();
+		rendererContext.framebuffer->UnBindFrameBuffer();rendererContext*/
 		rendererContext.framebuffer->UnBindFrameBuffer();
 	}
 
@@ -116,8 +117,8 @@ void Renderer::PrepareRendering(vec2i windowSize)
 		AttachementsType::DepthAndStencil
 	};
 	
-	m_DepthAttachment = Texture(AttachementsType::Color, m_RenderBuffer->GetSize());
-	m_ColorAttachment = Texture(AttachementsType::DepthAndStencil,m_RenderBuffer->GetSize());
+	m_ColorAttachment = Texture(AttachementsType::Color, m_RenderBuffer->GetSize());
+	m_DepthAttachment = Texture(AttachementsType::DepthAndStencil,m_RenderBuffer->GetSize());
     
 	// Set Up renderPass
 	const RenderPass renderPass(attachementsType);

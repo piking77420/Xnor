@@ -49,11 +49,11 @@ private:
     Pointer<Model> m_Quad;
 
     
-    void UpdateLight(const Scene& scene, const RendererContext& rendererContext) const;
+    XNOR_ENGINE void UpdateLight(const Scene& scene, const RendererContext& rendererContext) const;
 
-    void DrawMeshRenders(const Scene& scene, const RendererContext& rendererContext) const;
+    XNOR_ENGINE void DrawMeshRenders(const Scene& scene, const RendererContext& rendererContext) const;
 
-    void SetViewport(const Camera& camera);
+    XNOR_ENGINE void SetViewport(const Camera& camera);
 };
 
 END_XNOR_CORE
