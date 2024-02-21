@@ -45,14 +45,146 @@ void SceneGraph::Display()
         for (size_t i = 0; i < entities.size(); i++)
         {
             if (!entities[i]->HasParent())
-                DisplayEntity(entities[i]);
+                DisplayEntity(scene, entities[i]);
         }
         
         ImGui::TreePop();
     }
 
     ImGui::End();
+    
+    CheckDeleteEntity(scene);
+}
 
+void SceneGraph::DisplayEntity(XnorCore::Scene& scene, XnorCore::Entity* const entity)
+{
+    ImGui::PushID(entity);
+    
+    const char* name = entity->name.c_str();
+    const bool isRenaming = IsRenamingEntity(entity);
+    
+    const ImGuiTreeNodeFlags flags = GetEntityNodeFlags(entity);
+    
+    if (isRenaming)
+        name = "##renaming";
+    
+    if (ImGui::TreeNodeEx(name, flags))
+    {
+        if (isRenaming)
+        {
+            DisplayEntityRenaming(entity);
+        }
+        else
+        {
+            ProcessEntitySelection(entity);
+            
+            DisplayEntityContextMenu(scene, entity);
+            ProcessEntityDragDrop(entity);
+        }
+        
+        for (size_t i = 0; i < entity->GetChildCount(); i++)
+        {
+            DisplayEntity(scene, entity->GetChild(i));
+        }
+
+        ImGui::TreePop();
+    }
+    else
+    {
+        ProcessEntitySelection(entity);
+    }
+
+    ImGui::PopID();
+}
+
+void SceneGraph::DisplayEntityContextMenu(XnorCore::Scene& scene, XnorCore::Entity* const entity)
+{
+    if (ImGui::BeginPopupContextItem())
+    {
+        if (ImGui::Selectable("Add child"))
+        {
+            scene.CreateEntity("Entity", entity);
+        }
+
+        if (ImGui::Selectable("Add parent"))
+        {
+            XnorCore::Entity* const e = scene.CreateEntity("Entity", entity->GetParent());
+            e->AddChild(entity);
+        }
+                    
+        if (ImGui::Selectable("Rename"))
+        {
+            m_EntityToRename = entity;
+        }
+
+        if (ImGui::Selectable("Delete"))
+        {
+            m_EntityToDelete = entity;
+        }
+
+        ImGui::EndPopup();
+    }
+}
+
+void SceneGraph::DisplayEntityRenaming(XnorCore::Entity* const entity)
+{
+    ImGui::SameLine();
+    ImGui::SetKeyboardFocusHere();
+
+    if (ImGui::InputText("##input", &entity->name, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_EscapeClearsAll))
+    {
+        m_EntityToRename = nullptr;
+    }
+
+    if (!ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+    {
+        m_EntityToRename = nullptr;
+    }
+}
+
+void SceneGraph::ProcessEntityDragDrop(XnorCore::Entity* const entity)
+{
+    if (ImGui::BeginDragDropSource())
+    {
+        ImGui::SetDragDropPayload("SG", &entity, sizeof(XnorCore::Entity*));
+        ImGui::EndDragDropSource();
+    }
+
+    if (ImGui::BeginDragDropTarget())
+    {
+        // ReSharper disable once CppTooWideScope
+        const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("SG");
+                
+        if (payload)
+        {
+            XnorCore::Entity* const dragged = *static_cast<XnorCore::Entity**>(payload->Data);
+
+            if (!dragged->IsAParentOf(entity))
+                dragged->SetParent(entity);
+        }
+                
+        ImGui::EndDragDropTarget();
+    }
+}
+
+void SceneGraph::ProcessEntitySelection(XnorCore::Entity* const entity) const
+{
+    if (ImGui::IsItemClicked())
+    {
+        m_Editor->data.selectedEntity = entity;
+    }
+}
+
+void SceneGraph::ProcessEntityDoubleClik([[maybe_unused]] XnorCore::Scene& scene, [[maybe_unused]] XnorCore::Entity* const entity)
+{
+    if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+    {
+        // TODO focus object on camera
+    }
+}
+
+void SceneGraph::CheckDeleteEntity(XnorCore::Scene& scene)
+{
     if (m_EntityToDelete)
     {
         scene.DestroyEntity(m_EntityToDelete);
@@ -63,109 +195,25 @@ void SceneGraph::Display()
     }
 }
 
-void SceneGraph::DisplayEntity(XnorCore::Entity* const entity)
+ImGuiTreeNodeFlags SceneGraph::GetEntityNodeFlags(const XnorCore::Entity* const entity) const
 {
-    ImGui::PushID(entity);
-    
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
-    const char* name = entity->name.c_str();
-    const bool isRenaming = m_EntityToRename == entity;
 
     if (!entity->HasChildren())
         flags |= ImGuiTreeNodeFlags_Leaf;
 
-    if (m_Editor->data.selectedEntity == entity || isRenaming)
+    if (IsEntitySelected(entity) || IsRenamingEntity(entity))
         flags |= ImGuiTreeNodeFlags_Selected;
 
-    if (isRenaming)
-        name = "##renaming";
-    
-    if (ImGui::TreeNodeEx(name, flags))
-    {
-        if (isRenaming)
-        {
-            ImGui::SameLine();
+    return flags;
+}
 
-            ImGui::SetKeyboardFocusHere();
+bool SceneGraph::IsRenamingEntity(const XnorCore::Entity* entity) const
+{
+    return m_EntityToRename == entity;
+}
 
-            if (ImGui::InputText("##input", &entity->name, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_EscapeClearsAll))
-            {
-                m_EntityToRename = nullptr;
-            }
-
-            if (!ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
-            {
-                m_EntityToRename = nullptr;
-            }
-        }
-        else
-        {
-            if (ImGui::IsItemClicked())
-            {
-                m_Editor->data.selectedEntity = entity;
-            }
-            
-            if (ImGui::BeginPopupContextItem())
-            {
-                if (ImGui::Selectable("Add child"))
-                {
-                    XnorCore::World::world->Scene.CreateEntity("Entity", entity);                
-                }
-
-                if (ImGui::Selectable("Add parent"))
-                {
-                    XnorCore::Entity* const e = XnorCore::World::world->Scene.CreateEntity("Entity", entity->GetParent());
-                    e->AddChild(entity);
-                }
-                
-                if (ImGui::Selectable("Rename"))
-                {
-                    m_EntityToRename = entity;
-                }
-
-                if (ImGui::Selectable("Delete"))
-                {
-                    m_EntityToDelete = entity;
-                }
-
-                ImGui::EndPopup();
-            }
-            
-            if (ImGui::BeginDragDropSource())
-            {
-                ImGui::SetDragDropPayload("SG", &entity, sizeof(entity));
-                ImGui::EndDragDropSource();
-            }
-
-            if (ImGui::BeginDragDropTarget())
-            {
-                const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("SG");
-                
-                if (payload)
-                {
-                    XnorCore::Entity* const dragged = *static_cast<XnorCore::Entity**>(payload->Data);
-
-                    if (!dragged->IsAParentOf(entity))
-                    {
-                        dragged->SetParent(entity);
-                    }
-                }
-                
-                ImGui::EndDragDropTarget();
-            }
-        }
-        
-        for (size_t i = 0; i < entity->GetChildCount(); i++)
-        {
-            DisplayEntity(entity->GetChild(i));
-        }
-
-        ImGui::TreePop();
-    }
-    else if (ImGui::IsItemClicked())
-    {
-        m_Editor->data.selectedEntity = entity;
-    }
-
-    ImGui::PopID();
+bool SceneGraph::IsEntitySelected(const XnorCore::Entity* entity) const
+{
+    return m_Editor->data.selectedEntity == entity;
 }
