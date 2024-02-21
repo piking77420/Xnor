@@ -159,6 +159,7 @@ enum class KeyStatus : uint16_t
 class CoreInput
 {
 public:
+    
     XNOR_ENGINE static bool GetKey(KeyCode keyCode, KeyStatus keyStatus = KeyStatus::DOWN);
     
     XNOR_ENGINE static bool GetMouseButton(MouseButton mouseButton, KeyStatus keyStatus = KeyStatus::DOWN);
@@ -184,8 +185,8 @@ private:
         KeyStatus status;
     };
 
-    XNOR_ENGINE static inline Vector2 m_MousePos;
     static constexpr uint32_t ReserveKeySize = 100;
+
     
     XNOR_ENGINE static inline std::vector<InputKeyBoard> m_InputKeyBoardQueue;
     XNOR_ENGINE static inline std::vector<InputMouse> m_InputMouseButtonQueue;
@@ -195,6 +196,8 @@ private:
     XNOR_ENGINE static void MouseCursorPos(GLFWwindow* window, double_t xpos, double_t ypos);
 
 public:
+    XNOR_ENGINE static inline Vector2 m_MousePos;
+    
     XNOR_ENGINE CoreInput();
     
     XNOR_ENGINE ~CoreInput() = default;
@@ -203,8 +206,7 @@ public:
 template <class T>
 T CoreInput::GetCursorPos()
 {
-    static_assert(std::is_same_v<T, Vector2>);
-    static_assert(std::is_same_v<T, Vector2i>);
+    static_assert(std::is_same_v<T, Vector2> || std::is_same_v<T, Vector2i>);
     
     return static_cast<T>(m_MousePos);
 }
