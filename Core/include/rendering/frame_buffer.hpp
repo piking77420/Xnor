@@ -24,9 +24,9 @@ public:
 	
 	XNOR_ENGINE	const Vector2i GetSize() const;
 	
-	XNOR_ENGINE void BindFrameBuffer();
+	XNOR_ENGINE void BindFrameBuffer() const ;
 
-	XNOR_ENGINE void UnBindFrameBuffer();
+	XNOR_ENGINE void UnBindFrameBuffer() const ;
 	
 private:
 	Vector2i m_FrameBufferSize = { 1920, 1080 };

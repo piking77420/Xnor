@@ -27,12 +27,12 @@ const Vector2i FrameBuffer::GetSize() const
 
 
 
-void FrameBuffer::BindFrameBuffer()
+void FrameBuffer::BindFrameBuffer() const 
 {
 	RHI::BindFrameBuffer(m_Id);
 }
 
-void FrameBuffer::UnBindFrameBuffer()
+void FrameBuffer::UnBindFrameBuffer() const 
 {
 	RHI::BindFrameBuffer(0);
 }

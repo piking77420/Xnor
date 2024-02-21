@@ -34,6 +34,8 @@ private:
     void UpdateLight(const Scene& scene, const RendererContext& rendererContext) const;
 
     void DrawMeshRenders(const Scene& scene, const RendererContext& rendererContext) const;
+
+    void SetViewPort(const Camera& camera);
 };
 
 END_XNOR_CORE

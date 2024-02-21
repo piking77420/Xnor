@@ -36,6 +36,8 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 		rendererContext.framebuffer->BindFrameBuffer();
 		m_Rhi.ClearColorAndDepth();
 	}
+	// SetViewPort
+	RHI::SetViewPort(*rendererContext.camera);
 	
 	m_BasicShader->Use();
 	
@@ -158,4 +160,9 @@ void Renderer::DrawMeshRenders(const Scene& scene, [[maybe_unused]] const Render
 		if (meshRenderer->model.IsValid())
 			RHI::DrawModel(meshRenderer->model->GetId());
 	}
+}
+
+void Renderer::SetViewPort(const Camera& camera)
+{
+	
 }

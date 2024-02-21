@@ -7,13 +7,10 @@ BEGIN_XNOR_CORE
 class RendererContext
 {
 public:
-	Camera* camera = nullptr;
-	FrameBuffer* framebuffer = nullptr;
-
-	bool IsValid() const
-	{
-		return camera != nullptr && framebuffer != nullptr;
-	}
+	const Camera* camera;
+	const FrameBuffer* framebuffer;
+	const RenderPass* renderPass;
+	bool IsEditor = false;
 };
 
 END_XNOR_CORE

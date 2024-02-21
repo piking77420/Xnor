@@ -11,6 +11,11 @@ void RHI::SetPolyGoneMode(const PolygonFace face, const PolygonMode mode)
 	glPolygonMode(static_cast<GLenum>(face), GL_POINT + static_cast<GLenum>(mode));
 }
 
+void RHI::SetViewPort(const Camera& cam)
+{
+	glViewport(0,0,cam.screenSize.x,cam.screenSize.y);
+}
+
 uint32_t RHI::CreateModel(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indicies)
 {
 	ModelInternal modelInternal;

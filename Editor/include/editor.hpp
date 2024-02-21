@@ -4,11 +4,13 @@
 
 #include "definitions.hpp"
 #include "editor_data.hpp"
+#include "user_input.hpp"
 #include "applications/application.hpp"
 
 BEGIN_XNOR_EDITOR
-
 class UiWindow;
+class RenderWindow;
+class UserInput;
 
 class Editor : public XnorCore::Application
 {
@@ -24,6 +26,9 @@ public:
 	EditorData data;
 	
 private:
+	
+	XnorCore::RendererContext m_GameRenderContext;
+
 	std::vector<UiWindow*> m_UiWindows;
 
 	void BeginFrame();

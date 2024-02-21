@@ -11,6 +11,9 @@
 #include "windows/inspector.hpp"
 #include "windows/performance.hpp"
 #include "windows/scene_graph.hpp"
+#include "windows/render_window.hpp"
+#include "user_input.hpp"
+
 
 using namespace XnorEditor;
 
@@ -21,6 +24,9 @@ void Editor::CreateDefaultWindows()
 	m_UiWindows.push_back(new HeaderWindow(this));
 	m_UiWindows.push_back(new SceneGraph(this));
 	m_UiWindows.push_back(new ContentBrowser(this, "assets"));
+	m_UiWindows.push_back(new RenderWindow(this,&data.userInput.userRenderContext));
+	m_UiWindows.push_back(new RenderWindow(this,&m_GameRenderContext));
+
 }
 
 void Editor::BeginDockSpace() const
@@ -189,24 +195,7 @@ void Editor::Update()
 {
 	using namespace XnorCore;
 	
-	FrameBuffer* renderBuffer = new FrameBuffer(window.GetSize());
-	// Init RenderTarget
-	Texture* mainRenderTexture = new Texture(AttachementsType::Color, renderBuffer->GetSize());
-	Texture* colortexture = new Texture(AttachementsType::DepthAndStencil,renderBuffer->GetSize());
-
-	std::vector attachementsType =
-	{
-		AttachementsType::Color,
-		AttachementsType::DepthAndStencil
-	};
-	RenderPass renderPass(attachementsType);
-	std::vector targets = { mainRenderTexture, colortexture };
-
-	renderBuffer->Create(renderPass,targets);
-
-	XnorCore::Camera cam;
-	cam.pos = { 0, 0, -5 };
-
+	
 	// init Scene //
 	Entity& ent1 = *World::world->Scene.CreateEntity("entity1");
 	ent1.AddComponent<MeshRenderer>();
@@ -216,11 +205,6 @@ void Editor::Update()
 	meshRenderer.model = ResourceManager::Load<Model>(FileManager::Get("assets/models/viking_room.obj"));
 	meshRenderer.texture = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/viking_room.png"));
 	
-	XnorCore::RendererContext context
-	{
-		.camera = &cam,
-		.framebuffer = renderBuffer
-	};
 	
 	while (!window.ShouldClose())
 	{
@@ -233,20 +217,15 @@ void Editor::Update()
 			renderer.CompileShader();
 		
 		ImGui::End();
-
-		ImGui::ShowDemoWindow();
 		
 		WorldBehaviours();
 	
 		for (UiWindow* w : m_UiWindows)
 			w->Display();		
 		
-		renderer.RenderScene(XnorCore::World::world->Scene, context);
-
-		ImGui::Begin("Scene");
-		ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(mainRenderTexture->GetId()), ImGui::GetContentRegionAvail());
-		ImGui::End();
-
+		renderer.RenderScene(XnorCore::World::world->Scene, data.userInput.userRenderContext);
+		renderer.RenderScene(XnorCore::World::world->Scene, m_GameRenderContext);
+		
 	
 		XnorCore::CoreInput::ClearKey();
 		EndFrame();
@@ -254,8 +233,6 @@ void Editor::Update()
 	}
 
 	delete XnorCore::World::world;
-	delete mainRenderTexture;
-	delete renderBuffer;
 }
 
 void Editor::EndFrame()

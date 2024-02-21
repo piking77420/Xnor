@@ -30,7 +30,7 @@ Window::~Window()
 	glfwTerminate();
 }
 
-Vector2i Window::GetSize() const
+Vector2i Window::GetSize()
 {
 	return m_Size;
 }

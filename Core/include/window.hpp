@@ -16,7 +16,7 @@ public:
 	~Window();
 
 	[[nodiscard]]
-	Vector2i GetSize() const;
+	static Vector2i GetSize();
 
 	[[nodiscard]]
 	void* GetWindow();
@@ -46,7 +46,7 @@ private:
 	
 	static inline bool m_ResizeFrameBuffer = false;
 	GLFWwindow* m_Window = nullptr;
-	Vector2i m_Size = { 1280, 720 };
+	static inline Vector2i m_Size = { 1280, 720 };
 };
 	
 END_XNOR_CORE

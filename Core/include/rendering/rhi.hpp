@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "camera.hpp"
 #include "material.hpp"
 #include "rhi_typedef.hpp"
 #include "uniformBuffer.hpp"
@@ -16,6 +17,7 @@ class RHI
 public:
 	// Utils
 	XNOR_ENGINE static void SetPolyGoneMode(PolygonFace face, PolygonMode mode);
+	XNOR_ENGINE static void SetViewPort(const Camera& cam);
 	
 	// Model
 	XNOR_ENGINE static uint32_t CreateModel(const std::vector<Vertex>& vertices,const std::vector<uint32_t>& indicies);
@@ -32,7 +34,7 @@ public:
 	XNOR_ENGINE static void UseShader(uint32_t shaderId);
 	XNOR_ENGINE static void UnUseShader();
 
-	static void SetUniform(UniformType uniformType, const void* data, uint32_t shaderId, const char* uniformKey);
+	XNOR_ENGINE static void SetUniform(UniformType uniformType, const void* data, uint32_t shaderId, const char* uniformKey);
 	
 	// TEXTURE
 	XNOR_ENGINE  static void CreateTexture(uint32_t* textureId, const TextureCreateInfo& textureCreateInfo);
