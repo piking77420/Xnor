@@ -11,8 +11,8 @@
 using namespace XnorEditor;
 using namespace XnorCore;
 
-HeaderWindow::HeaderWindow(Editor* editor,const std::string& name)
-    : UiWindow(editor,name)
+HeaderWindow::HeaderWindow(Editor* editor)
+    : UiWindow(editor, "Header")
 {
     m_PauseButtonPng = FileManager::Get("assets/editor/PauseButton.png");
     m_PauseButton =  ResourceManager::Load<Texture>(m_PauseButtonPng);
@@ -44,7 +44,6 @@ void HeaderWindow::Display()
     
     DisplayOnEditor();
     DisplayOnPlay();
- 
 }
 
 void HeaderWindow::DisplayOnEditor()
@@ -53,9 +52,7 @@ void HeaderWindow::DisplayOnEditor()
     ImGui::SetCursorPos(currentimagePos);
 
     if (ImGui::ImageButton(Utils::IntToPointer<ImTextureID>(m_PlayButton->GetId()), { m_ImageSize, m_ImageSize }))
-    {
         World::world->IsPlaying = true;
-    }
 }
 
 void HeaderWindow::DisplayOnPlay()

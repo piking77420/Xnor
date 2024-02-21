@@ -1,5 +1,6 @@
 ﻿#include "utils/utils.hpp"
 
+#include <regex>
 #include <ImGui/imgui.h>
 
 using namespace XnorCore;
@@ -35,4 +36,26 @@ std::string Utils::PathToForwardSlashes(std::string path)
     std::ranges::replace(path, '\\', '/');
     
     return path;
+}
+
+std::string Utils::HumanizeString(const std::string& str)
+{
+    // Regex: https://regex101.com/r/3rQ25V/1
+    // Matches any uppercase letter that has a lowercase variant,
+    // that is not the first character in the string,
+    // and that is either preceded or followed by a lowercase letter that has an uppercase variant
+    std::regex regex(R"(?:(?<=\p{Ll})\p{Lu})|(?:\p{Lu}(?=\p{Ll}))(?<!^.)");
+
+    std::string format(
+            "$`"   // $` means characters before the match
+            " $&"  // $& means the matched characters
+            "$'"); // $' means characters following the match
+    
+    std::string result;
+    std::regex_replace(result.begin(), str.begin(), str.end(), regex, format);
+
+    // According to https://en.cppreference.com/w/cpp/string/byte/toupper,
+    // when using the std::toupper function, to make sure the operation is executed
+    // correctly, we should cast the input to unsigned char and the output to char
+    return static_cast<char>(std::toupper(static_cast<uint8_t>(str[0]))) + str.substr(1);
 }

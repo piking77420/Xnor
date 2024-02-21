@@ -9,11 +9,11 @@ BEGIN_XNOR_EDITOR
 
 class HeaderWindow : public UiWindow
 {
-private:
     static constexpr float_t TileBaseSize = 25.f; 
     
 public:
-    explicit HeaderWindow(Editor* editor,const std::string& name);
+    explicit HeaderWindow(Editor* editor);
+    
     ~HeaderWindow() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(HeaderWindow)

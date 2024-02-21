@@ -7,9 +7,13 @@
 
 using namespace XnorEditor;
 
+SceneGraph::SceneGraph(Editor* editor)
+    : UiWindow(editor, "Scene Graph")
+{
+}
+
 void SceneGraph::Display()
 {
-
     // TODO fetch current loaded scene
     XnorCore::Scene& scene = XnorCore::World::world->Scene;
   
@@ -20,9 +24,7 @@ void SceneGraph::Display()
         if (ImGui::BeginPopupContextItem())
         {
             if (ImGui::Selectable("Add entity"))
-            {
                 scene.CreateEntity("Entity", nullptr);
-            }
 
             ImGui::EndPopup();
         }
@@ -41,7 +43,7 @@ void SceneGraph::Display()
             ImGui::EndDragDropTarget();
         }
 
-        for (size_t i = 0; i < entities.size(); i++)
+        for (size_t i = 0; i < entities.size(); i++)  // NOLINT(modernize-loop-convert)
         {
             if (!entities[i]->HasParent())
                 DisplayEntity(scene, entities[i]);
@@ -81,9 +83,7 @@ void SceneGraph::DisplayEntity(XnorCore::Scene& scene, XnorCore::Entity* const e
         }
         
         for (size_t i = 0; i < entity->GetChildCount(); i++)
-        {
             DisplayEntity(scene, entity->GetChild(i));
-        }
 
         ImGui::TreePop();
     }
@@ -100,9 +100,7 @@ void SceneGraph::DisplayEntityContextMenu(XnorCore::Scene& scene, XnorCore::Enti
     if (ImGui::BeginPopupContextItem())
     {
         if (ImGui::Selectable("Add child"))
-        {
             scene.CreateEntity("Entity", entity);
-        }
 
         if (ImGui::Selectable("Add parent"))
         {
@@ -111,14 +109,10 @@ void SceneGraph::DisplayEntityContextMenu(XnorCore::Scene& scene, XnorCore::Enti
         }
                     
         if (ImGui::Selectable("Rename"))
-        {
             m_EntityToRename = entity;
-        }
 
         if (ImGui::Selectable("Delete"))
-        {
             m_EntityToDelete = entity;
-        }
 
         ImGui::EndPopup();
     }
@@ -130,14 +124,10 @@ void SceneGraph::DisplayEntityRenaming(XnorCore::Entity* const entity)
     ImGui::SetKeyboardFocusHere();
 
     if (ImGui::InputText("##input", &entity->name, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_EscapeClearsAll))
-    {
         m_EntityToRename = nullptr;
-    }
 
     if (!ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
-    {
         m_EntityToRename = nullptr;
-    }
 }
 
 void SceneGraph::ProcessEntityDragDrop(XnorCore::Entity* const entity)
@@ -168,9 +158,7 @@ void SceneGraph::ProcessEntityDragDrop(XnorCore::Entity* const entity)
 void SceneGraph::ProcessEntitySelection(XnorCore::Entity* const entity) const
 {
     if (ImGui::IsItemClicked())
-    {
         m_Editor->data.selectedEntity = entity;
-    }
 }
 
 void SceneGraph::ProcessEntityDoubleClik([[maybe_unused]] XnorCore::Scene& scene, [[maybe_unused]] XnorCore::Entity* const entity)

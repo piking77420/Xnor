@@ -12,6 +12,8 @@ class Inspector : public UiWindow
 {
 public:
     using UiWindow::UiWindow;
+
+    explicit Inspector(Editor* editor);
     
     void Display() override;
 

@@ -10,10 +10,9 @@ public:
 	const Camera* camera;
 	const FrameBuffer* framebuffer;
 	const RenderPass* renderPass;
-	bool IsEditor = false;
+	bool isEditor = false;
 
 	bool IsValid();
-	
 };
 
 END_XNOR_CORE

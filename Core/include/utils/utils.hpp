@@ -42,6 +42,8 @@ BEGIN_XNOR_CORE
     XNOR_ENGINE std::string PathToForwardSlashes(const std::filesystem::path& path);
 
     XNOR_ENGINE std::string PathToForwardSlashes(std::string path);
+
+    XNOR_ENGINE std::string HumanizeString(const std::string& str);
 }
 
 template<typename PtrT, typename IntT>
