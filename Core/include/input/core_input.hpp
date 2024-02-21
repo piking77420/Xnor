@@ -1,141 +1,143 @@
 ﻿#pragma once
 
+#include <array>
 #include <queue>
 
 #include "core.hpp"
 #include "window.hpp"
 
-
 BEGIN_XNOR_CORE
-enum class KeyCode : uint32_t
+
+enum class Key : uint16_t
 {
        /* Printable keys */
-    KEY_SPACE              = 32,
-    KEY_APOSTROPHE         = 39  ,/* ' */
-    KEY_COMMA              = 44  ,/* , */
-    KEY_MINUS              = 45  ,/* - */
-    KEY_PERIOD             = 46  ,/* . */
-    KEY_SLASH              = 47  ,/* / */
-    KEY_0                  = 48,
-    KEY_1                  = 49,
-    KEY_2                  = 50,
-    KEY_3                  = 51,
-    KEY_4                  = 52,
-    KEY_5                  = 53,
-    KEY_6                  = 54,
-    KEY_7                  = 55,
-    KEY_8                  = 56,
-    KEY_9                  = 57,
-    KEY_SEMICOLON          = 59  ,/* ; */
-    KEY_EQUAL              = 61  ,/* = */
-    KEY_A                  = 65,
-    KEY_B                  = 66,
-    KEY_C                  = 67,
-    KEY_D                  = 68,
-    KEY_E                  = 69,
-    KEY_F                  = 70,
-    KEY_G                  = 71,
-    KEY_H                  = 72,
-    KEY_I                  = 73,
-    KEY_J                  = 74,
-    KEY_K                  = 75,
-    KEY_L                  = 76,
-    KEY_M                  = 77,
-    KEY_N                  = 78,
-    KEY_O                  = 79,
-    KEY_P                  = 80,
-    KEY_Q                  = 81,
-    KEY_R                  = 82,
-    KEY_S                  = 83,
-    KEY_T                  = 84,
-    KEY_U                  = 85,
-    KEY_V                  = 86,
-    KEY_W                  = 87,
-    KEY_X                  = 88,
-    KEY_Y                  = 89,
-    KEY_Z                  = 90,
-    KEY_LEFT_BRACKET       = 91  ,/* [ */
-    KEY_BACKSLASH          = 92  ,/* \ */
-    KEY_RIGHT_BRACKET      = 93  ,/* ] */
-    KEY_GRAVE_ACCENT       = 96  ,/* ` */
-    KEY_WORLD_1            = 161 ,/* non-US #1 */
-    KEY_WORLD_2            = 162 ,/* non-US #2 */
+    Space              = 32,
+    Apostrophe         = 39,  /* ' */
+    Comma              = 44,  /* , */
+    Minus              = 45,  /* - */
+    Period             = 46,  /* . */
+    Slash              = 47,  /* / */
+    Key0               = 48,
+    Key1               = 49,
+    Key2               = 50,
+    Key3               = 51,
+    Key4               = 52,
+    Key5               = 53,
+    Key6               = 54,
+    Key7               = 55,
+    Key8               = 56,
+    Key9               = 57,
+    Semicolon          = 59, /* ; */
+    Equal              = 61, /* = */
+    A                  = 65,
+    B                  = 66,
+    C                  = 67,
+    D                  = 68,
+    E                  = 69,
+    F                  = 70,
+    G                  = 71,
+    H                  = 72,
+    I                  = 73,  // NOLINT(misc-confusable-identifiers)
+    J                  = 74,
+    K                  = 75,
+    L                  = 76,
+    M                  = 77,
+    N                  = 78,
+    O                  = 79,  // NOLINT(misc-confusable-identifiers)
+    P                  = 80,
+    Q                  = 81,
+    R                  = 82,
+    S                  = 83,
+    T                  = 84,
+    U                  = 85,
+    V                  = 86,
+    W                  = 87,
+    X                  = 88,
+    Y                  = 89,
+    Z                  = 90,
+    LeftBracket        = 91 ,  /* [ */
+    Backslash          = 92 ,  /* \ */
+    RightBracket       = 93 ,  /* ] */
+    GraveAccent        = 96 ,  /* ` */
+    World1             = 161,  /* non-US #1 */
+    World2             = 162,  /* non-US #2 */
 
     /* Function keys */
-    KEY_ESCAPE             = 256,
-    KEY_ENTER              = 257,
-    KEY_TAB                = 258,
-    KEY_BACKSPACE          = 259,
-    KEY_INSERT             = 260,
-    KEY_DELETE             = 261,
-    KEY_RIGHT              = 262,
-    KEY_LEFT               = 263,
-    KEY_DOWN               = 264,
-    KEY_UP                 = 265,
-    KEY_PAGE_UP            = 266,
-    KEY_PAGE_DOWN          = 267,
-    KEY_HOME               = 268,
-    KEY_END                = 269,
-    KEY_CAPS_LOCK          = 280,
-    KEY_SCROLL_LOCK        = 281,
-    KEY_NUM_LOCK           = 282,
-    KEY_PRINT_SCREEN       = 283,
-    KEY_PAUSE              = 284,
-    KEY_F1                 = 290,
-    KEY_F2                 = 291,
-    KEY_F3                 = 292,
-    KEY_F4                 = 293,
-    KEY_F5                 = 294,
-    KEY_F6                 = 295,
-    KEY_F7                 = 296,
-    KEY_F8                 = 297,
-    KEY_F9                 = 298,
-    KEY_F10                = 299,
-    KEY_F11                = 300,
-    KEY_F12                = 301,
-    KEY_F13                = 302,
-    KEY_F14                = 303,
-    KEY_F15                = 304,
-    KEY_F16                = 305,
-    KEY_F17                = 306,
-    KEY_F18                = 307,
-    KEY_F19                = 308,
-    KEY_F20                = 309,
-    KEY_F21                = 310,
-    KEY_F22                = 311,
-    KEY_F23                = 312,
-    KEY_F24                = 313,
-    KEY_F25                = 314,
-    KEY_KP_0               = 320,
-    KEY_KP_1               = 321,
-    KEY_KP_2               = 322,
-    KEY_KP_3               = 323,
-    KEY_KP_4               = 324,
-    KEY_KP_5               = 325,
-    KEY_KP_6               = 326,
-    KEY_KP_7               = 327,
-    KEY_KP_8               = 328,
-    KEY_KP_9               = 329,
-    KEY_KP_DECIMAL         = 330,
-    KEY_KP_DIVIDE          = 331,
-    KEY_KP_MULTIPLY        = 332,
-    KEY_KP_SUBTRACT        = 333,
-    KEY_KP_ADD             = 334,
-    KEY_KP_ENTER           = 335,
-    KEY_KP_EQUAL           = 336,
-    KEY_LEFT_SHIFT         = 340,
-    KEY_LEFT_CONTROL       = 341,
-    KEY_LEFT_ALT           = 342,
-    KEY_LEFT_SUPER         = 343,
-    KEY_RIGHT_SHIFT        = 344,
-    KEY_RIGHT_CONTROL      = 345,
-    KEY_RIGHT_ALT          = 346,
-    KEY_RIGHT_SUPER        = 347,
-    KEY_MENU               = 348,
-    KEY_SIZE = 355,
+    Escape             = 256,
+    Enter              = 257,
+    Tab                = 258,
+    Backspace          = 259,
+    Insert             = 260,
+    Delete             = 261,
+    Right              = 262,
+    Left               = 263,
+    Down               = 264,
+    Up                 = 265,
+    PageUp             = 266,
+    PageDown           = 267,
+    Home               = 268,
+    End                = 269,
+    CapsLock           = 280,
+    ScrollLock         = 281,
+    NumLock            = 282,
+    PrintScreen        = 283,
+    Pause              = 284,
+    F1                 = 290,
+    F2                 = 291,
+    F3                 = 292,
+    F4                 = 293,
+    F5                 = 294,
+    F6                 = 295,
+    F7                 = 296,
+    F8                 = 297,
+    F9                 = 298,
+    F10                = 299,
+    F11                = 300,
+    F12                = 301,
+    F13                = 302,
+    F14                = 303,
+    F15                = 304,
+    F16                = 305,
+    F17                = 306,
+    F18                = 307,
+    F19                = 308,
+    F20                = 309,
+    F21                = 310,
+    F22                = 311,
+    F23                = 312,
+    F24                = 313,
+    F25                = 314,
+    Kp0                = 320,
+    Kp1                = 321,
+    Kp2                = 322,
+    Kp3                = 323,
+    Kp4                = 324,
+    Kp5                = 325,
+    Kp6                = 326,
+    Kp7                = 327,
+    Kp8                = 328,
+    Kp9                = 329,
+    KpDecimal          = 330,
+    KpDivide           = 331,
+    KpMultiply         = 332,
+    KpSubtract         = 333,
+    KpAdd              = 334,
+    KpEnter            = 335,
+    KpEqual            = 336,
+    LeftShift          = 340,
+    LeftControl        = 341,
+    LeftAlt            = 342,
+    LeftSuper          = 343,
+    RightShift         = 344,
+    RightControl       = 345,
+    RightAlt           = 346,
+    RightSuper         = 347,
+    Menu               = 348,
+    
+    Count              = 355,
 };
 
-enum class MouseButton : uint32_t
+enum class MouseButton : uint8_t
 {
     Left,
     Right,
@@ -145,68 +147,66 @@ enum class MouseButton : uint32_t
     Button5,
     Button6,
     Button7,
-    Button8
+    Button8,
+    
+    Count
 };
 
-enum class KeyStatus : uint16_t
+enum class KeyStatus : uint8_t
 {
-    DOWN,
-    RELEASE,
-    REPEAT,
+    Press,
+    Down,
+    Release,
+    Repeat,
+    
+    Count
 };
 
+enum class MouseButtonStatus : uint8_t
+{
+    Press,
+    Down,
+    Release,
+    
+    Count
+};
 
 class CoreInput
 {
 public:
+    XNOR_ENGINE static bool GetKey(Key key, KeyStatus status = KeyStatus::Down);
     
-    XNOR_ENGINE static bool GetKey(KeyCode keyCode, KeyStatus keyStatus = KeyStatus::DOWN);
-    
-    XNOR_ENGINE static bool GetMouseButton(MouseButton mouseButton, KeyStatus keyStatus = KeyStatus::DOWN);
+    XNOR_ENGINE static bool GetMouseButton(MouseButton mouseButton, MouseButtonStatus status = MouseButtonStatus::Down);
     
     template<class T>
     static T GetCursorPos();
     
-    XNOR_ENGINE static void ClearKey();
+    XNOR_ENGINE static void Initialize(const Window& window);
 
-    XNOR_ENGINE static void InitCallBacks(const Window& window);
+    XNOR_ENGINE static void Reset();
 
 private:
-    DEFAULT_COPY_MOVE_OPERATIONS(CoreInput)
+    using KeyStatuses = std::array<bool, static_cast<size_t>(KeyStatus::Count)>;
+    using MouseStatuses = std::array<bool, static_cast<size_t>(MouseButtonStatus::Count)>;
     
-    struct InputKeyBoard
-    {
-        KeyCode keyCode;
-        KeyStatus status;
-    };
-    struct InputMouse
-    {
-        MouseButton mouseButton;
-        KeyStatus status;
-    };
+    XNOR_ENGINE static inline std::array<KeyStatuses, static_cast<size_t>(Key::Count) - 1> m_Keyboard;
 
-    static constexpr uint32_t ReserveKeySize = 10;
+    XNOR_ENGINE static inline std::array<MouseStatuses, static_cast<size_t>(MouseButton::Count) - 1> m_Mouse;
 
-    
-    XNOR_ENGINE static inline std::vector<InputKeyBoard> m_InputKeyBoardQueue;
-    XNOR_ENGINE static inline std::vector<InputMouse> m_InputMouseButtonQueue;
-
-    XNOR_ENGINE static void HandleKeyBoardButton(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
-    XNOR_ENGINE static void HandleMouseButton(GLFWwindow* window, int32_t button, int32_t action, int32_t mods);
+    XNOR_ENGINE static void HandleKeyboard(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
+    XNOR_ENGINE static void HandleMouseButton(GLFWwindow* window, int32_t mouseButton, int32_t action, int32_t mods);
     XNOR_ENGINE static void MouseCursorPos(GLFWwindow* window, double_t xpos, double_t ypos);
 
-public:
     XNOR_ENGINE static inline Vector2 m_MousePos;
     
-    XNOR_ENGINE CoreInput();
-    
-    XNOR_ENGINE ~CoreInput() = default;
+public:
+    CoreInput() = delete;
 };
 
 template <class T>
 T CoreInput::GetCursorPos()
 {
-    static_assert(std::is_same_v<T, Vector2> || std::is_same_v<T, Vector2i>);
+    static_assert(std::is_same_v<T, Vector2> || std::is_same_v<T, Vector2i>, "Mouse pos must be a valid Vector2 type");
     
     return static_cast<T>(m_MousePos);
 }

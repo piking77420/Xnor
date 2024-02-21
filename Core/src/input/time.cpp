@@ -4,21 +4,11 @@
 
 using namespace XnorCore;
 
-double Time::GetTimeDouble()
+void Time::Update()
 {
-    return glfwGetTime();
-}
-
-float Time::GetTime()
-{
-    return static_cast<float>(glfwGetTime());
-}
-
-void Time::ComputeDeltaTime()
-{
-    float m_CurrentFrame = static_cast<float>(glfwGetTime());
-    m_DeltaTime = m_CurrentFrame - m_LastFrame;
-    m_LastFrame = m_CurrentFrame;
+    m_TotalTime = glfwGetTime();
+    m_DeltaTime = m_TotalTime - m_LastTotalTime;
+    m_LastTotalTime = m_TotalTime;
 }
 
 float_t Time::GetDeltaTime()

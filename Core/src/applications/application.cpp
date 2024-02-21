@@ -5,5 +5,5 @@ using namespace XnorCore;
 Application::Application()
 {
     m_ApplicationInstance = this;
-    coreInput.InitCallBacks(window);
+    CoreInput::Initialize(window);
 }

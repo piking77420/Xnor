@@ -219,7 +219,7 @@ void Editor::Update()
 	while (!window.ShouldClose())
 	{
 		window.PollEvents();
-		Time::ComputeDeltaTime();
+		Time::Update();
 		BeginFrame();
 
 		ImGui::Begin("Renderer Settings");
@@ -231,15 +231,15 @@ void Editor::Update()
 		
 		WorldBehaviours();
 		UpdateWindow();
-		renderer.RenderScene(XnorCore::World::world->Scene, m_EditorRenderContext);
-		renderer.RenderScene(XnorCore::World::world->Scene, m_GameRenderContext);
+		renderer.RenderScene(World::world->Scene, m_EditorRenderContext);
+		renderer.RenderScene(World::world->Scene, m_GameRenderContext);
 	
-		XnorCore::CoreInput::ClearKey();
+		CoreInput::Reset();
 		EndFrame();
 		window.SwapBuffers();
 	}
 
-	delete XnorCore::World::world;
+	delete World::world;
 }
 
 void Editor::EndFrame()

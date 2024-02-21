@@ -114,7 +114,7 @@
     <ClCompile Include="src\applications\application.cpp" />
     <ClCompile Include="src\input\core_input.cpp" />
     <ClCompile Include="src\input\time.cpp" />
-    <ClCompile Include="src\rendering\light\directiona_light.cpp">
+    <ClCompile Include="src\rendering\light\directional_light.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <Optimization>Disabled</Optimization>
@@ -641,7 +641,7 @@
     <ClInclude Include="include\input\time.hpp" />
     <ClInclude Include="include\rendering\camera.hpp" />
     <ClInclude Include="include\rendering\frame_buffer.hpp" />
-    <ClInclude Include="include\rendering\light\directiona_light.hpp" />
+    <ClInclude Include="include\rendering\light\directional_light.hpp" />
     <ClInclude Include="include\rendering\light\light.hpp" />
     <ClInclude Include="include\rendering\light\point_light.hpp" />
     <ClInclude Include="include\rendering\light\spot_light.hpp" />

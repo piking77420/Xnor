@@ -1,7 +1,7 @@
 #include "rendering/renderer.hpp"
 
 #include "GLFW/glfw3.h"
-#include "rendering/light/directiona_light.hpp"
+#include "..\..\include\rendering\light\directional_light.hpp"
 #include "rendering/light/point_light.hpp"
 #include "..\..\include\rendering\light\spot_light.hpp"
 #include "resource/resource_manager.hpp"
@@ -87,8 +87,8 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 	std::vector<const SpotLight*> spothLightsComponents;
 	scene.GetAllComponentOfType<SpotLight>(&spothLightsComponents);
 
-	std::vector<const Directionalight*> directionalComponent;
-	scene.GetAllComponentOfType<Directionalight>(&directionalComponent);
+	std::vector<const DirectionalLight*> directionalComponent;
+	scene.GetAllComponentOfType<DirectionalLight>(&directionalComponent);
 
 	if (directionalComponent.size() > MaxDirectionalLight)
 	{

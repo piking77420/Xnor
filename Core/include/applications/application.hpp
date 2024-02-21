@@ -17,8 +17,6 @@ public:
     Window window;
 
     Renderer renderer;
-
-    CoreInput coreInput;
     
     XNOR_ENGINE Application();
 
