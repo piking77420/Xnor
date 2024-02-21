@@ -2,13 +2,13 @@
 
 using namespace XnorCore;
 
-void Camera::GetProjection(const Vector2i screenSize,Matrix* matrix) const
+void Camera::GetProjection(const Vector2i screenSize, Matrix* const matrix) const
 {
 	const float ratio = static_cast<float>(screenSize.x) / static_cast<float>(screenSize.y);
 	Matrix::Perspective(fov * Calc::Deg2Rad, ratio, near, far, matrix);
 }
 
-void Camera::GetView(Matrix* matrix) const
+void Camera::GetView(Matrix* const matrix) const
 {
 	Matrix::LookAt(pos, pos + front, up, matrix);
 }

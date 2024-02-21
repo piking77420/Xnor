@@ -59,8 +59,8 @@ void Editor::BeginDockSpace() const
 	if (optFullscreen)
 		ImGui::PopStyleVar(3);
 
-	ImGuiID dockspaceID = ImGui::GetID("DockSpace");
-	ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspaceFlags);
+	const ImGuiID dockspaceId = ImGui::GetID("DockSpace");
+	ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), dockspaceFlags);
 }
 
 void Editor::EndDockSpace() const
@@ -215,7 +215,6 @@ void Editor::Update()
 	meshRenderer.model = ResourceManager::Load<Model>(FileManager::Get("assets/models/viking_room.obj"));
 	meshRenderer.texture = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/viking_room.png"));
 	
-	
 	while (!window.ShouldClose())
 	{
 		window.PollEvents();
@@ -230,16 +229,16 @@ void Editor::Update()
 		ImGui::End();
 		
 		WorldBehaviours();
+		renderer.RenderScene(World::world->Scene, m_EditorRenderContext);
+		renderer.RenderScene(World::world->Scene, m_GameRenderContext);
 		UpdateWindow();
-		renderer.RenderScene(XnorCore::World::world->Scene, m_EditorRenderContext);
-		renderer.RenderScene(XnorCore::World::world->Scene, m_GameRenderContext);
 	
-		XnorCore::CoreInput::ClearKey();
+		CoreInput::ClearKey();
 		EndFrame();
 		window.SwapBuffers();
 	}
 
-	delete XnorCore::World::world;
+	delete World::world;
 }
 
 void Editor::EndFrame()
