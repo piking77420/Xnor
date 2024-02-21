@@ -11,6 +11,8 @@ class SceneGraph : public UiWindow
 {
 public:
     using UiWindow::UiWindow;
+
+    explicit SceneGraph(Editor* editor);
     
     void Display() override;
 

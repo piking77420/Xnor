@@ -4,8 +4,8 @@
 
 using namespace XnorEditor;
 
-ContentBrowser::ContentBrowser(Editor* editor,const std::string& name, std::filesystem::path&& rootDirectory)
-    : UiWindow(editor,name)
+ContentBrowser::ContentBrowser(Editor* editor, std::filesystem::path&& rootDirectory)
+    : UiWindow(editor, "Content Browser")
     , m_RootDirectory(std::move(rootDirectory))
     , m_CurrentDirectory(m_RootDirectory)
 {

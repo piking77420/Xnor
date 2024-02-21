@@ -10,7 +10,7 @@ BEGIN_XNOR_EDITOR
 class Performance : public UiWindow
 {
 public:
-    explicit Performance(Editor* editor,const std::string& name, size_t sampleSize);
+    explicit Performance(Editor* editor, size_t sampleSize);
     
     void Update(double_t currentTime);
 

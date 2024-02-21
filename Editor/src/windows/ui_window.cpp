@@ -4,14 +4,16 @@
 
 using namespace XnorEditor;
 
-UiWindow::UiWindow(Editor* const editor,const std::string& name)
-    : m_IsFocused(false), m_Editor(editor) , m_WindowName(name)
+UiWindow::UiWindow(Editor* const editor, std::string title)
+    : m_WindowTitle(std::move(title))
+    , m_IsFocused(false)
+    , m_Editor(editor)
 {
 }
 
 const char* UiWindow::GetName() const
 {
-    return m_WindowName.c_str();
+    return m_WindowTitle.c_str();
 }
 
 bool UiWindow::IsFocused() const

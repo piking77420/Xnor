@@ -11,22 +11,21 @@
 #include "windows/header_window.hpp"
 #include "windows/inspector.hpp"
 #include "windows/performance.hpp"
-#include "windows/scene_graph.hpp"
 #include "windows/render_window.hpp"
+#include "windows/scene_graph.hpp"
 
 
 using namespace XnorEditor;
 
 void Editor::CreateDefaultWindows()
 {
-	m_UiWindows.push_back(new Performance(this, "Performance",50));
-	m_UiWindows.push_back(new Inspector(this,"Inspector"));
-	m_UiWindows.push_back(new HeaderWindow(this,"HeaderWindow"));
-	m_UiWindows.push_back(new SceneGraph(this,"SceneGraph"));
-	m_UiWindows.push_back(new ContentBrowser(this,"ContentBrowser", "assets"));
-	m_UiWindows.push_back(new EditorWindow(this,"EditorWindow",&m_EditorRenderContext));
-	m_UiWindows.push_back(new RenderWindow(this,"GameWindow",&m_GameRenderContext));
-
+	m_UiWindows.push_back(new Performance(this,50));
+	m_UiWindows.push_back(new Inspector(this));
+	m_UiWindows.push_back(new HeaderWindow(this));
+	m_UiWindows.push_back(new SceneGraph(this));
+	m_UiWindows.push_back(new ContentBrowser(this, static_cast<std::filesystem::path>("assets")));
+	m_UiWindows.push_back(new EditorWindow(this, &m_EditorRenderContext));
+	m_UiWindows.push_back(new RenderWindow(this, &m_GameRenderContext));
 }
 
 void Editor::BeginDockSpace() const

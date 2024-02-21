@@ -10,6 +10,11 @@
 
 using namespace XnorEditor;
 
+Inspector::Inspector(Editor* editor)
+    : UiWindow(editor, "Inspector")
+{
+}
+
 void Inspector::Display()
 {
     void* const ptr = m_Editor->data.selectedEntity;
@@ -142,9 +147,7 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
             ImGui::PushID(subPtr);
 
             for (const XnorCore::FieldInfo& m : subInfo.GetMembers())
-            {
                 DisplayMember(subPtr, m);
-            }
             
             ImGui::PopID();
         }
