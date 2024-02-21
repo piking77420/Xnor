@@ -55,8 +55,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // ------------------------------------------------------------------------------------------------
 template <class T>
-inline bool SetGenericProperty(std::map<unsigned int, T> &list,
-        const char *szName, const T &value) {
+bool SetGenericProperty(std::map<unsigned int, T> &list,
+                        const char *szName, const T &value) {
     ai_assert(nullptr != szName);
     const uint32_t hash = SuperFastHash(szName);
 
@@ -72,8 +72,8 @@ inline bool SetGenericProperty(std::map<unsigned int, T> &list,
 
 // ------------------------------------------------------------------------------------------------
 template <class T>
-inline const T &GetGenericProperty(const std::map<unsigned int, T> &list,
-        const char *szName, const T &errorReturn) {
+const T &GetGenericProperty(const std::map<unsigned int, T> &list,
+                            const char *szName, const T &errorReturn) {
     ai_assert(nullptr != szName);
     const uint32_t hash = SuperFastHash(szName);
 
@@ -89,8 +89,8 @@ inline const T &GetGenericProperty(const std::map<unsigned int, T> &list,
 // Special version for pointer types - they will be deleted when replaced with another value
 // passing nullptr removes the whole property
 template <class T>
-inline void SetGenericPropertyPtr(std::map<unsigned int, T *> &list,
-        const char *szName, T *value, bool *bWasExisting = nullptr) {
+void SetGenericPropertyPtr(std::map<unsigned int, T *> &list,
+                           const char *szName, T *value, bool *bWasExisting = nullptr) {
     ai_assert(nullptr != szName);
     const uint32_t hash = SuperFastHash(szName);
 
@@ -117,8 +117,8 @@ inline void SetGenericPropertyPtr(std::map<unsigned int, T *> &list,
 
 // ------------------------------------------------------------------------------------------------
 template <class T>
-inline bool HasGenericProperty(const std::map<unsigned int, T> &list,
-        const char *szName) {
+bool HasGenericProperty(const std::map<unsigned int, T> &list,
+                        const char *szName) {
     ai_assert(nullptr != szName);
     const uint32_t hash = SuperFastHash(szName);
 

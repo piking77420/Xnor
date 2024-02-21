@@ -50,9 +50,9 @@ private:
     int32_t m_Channels = 0;
     uint32_t m_Id = 0;
 
-    TextureFiltering m_TextureFiltering = TextureFiltering::LINEAR;
-    TextureWrapping m_TextureWrapping = TextureWrapping::REPEAT;
-    TextureInternalFormat m_TextureInternalFormat = TextureInternalFormat::RGBA_8;
+    TextureFiltering m_TextureFiltering = TextureFiltering::Linear;
+    TextureWrapping m_TextureWrapping = TextureWrapping::Repeat;
+    TextureInternalFormat m_TextureInternalFormat = TextureInternalFormat::Rgba8;
 
     static TextureFormat GetFormat(uint32_t textureFormat);
 };

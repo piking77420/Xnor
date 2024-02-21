@@ -185,7 +185,7 @@ inline unsigned int strtoul_cppstyle( const char* in, const char** out=0) {
 // It is mainly used by fast_atof to prevent ugly and unwanted integer overflows.
 // ------------------------------------------------------------------------------------
 template<typename ExceptionType = DeadlyImportError>
-inline uint64_t strtoul10_64( const char* in, const char** out=0, unsigned int* max_inout=0) {
+uint64_t strtoul10_64( const char* in, const char** out=0, unsigned int* max_inout=0) {
     unsigned int cur = 0;
     uint64_t value = 0;
 
@@ -238,7 +238,7 @@ inline uint64_t strtoul10_64( const char* in, const char** out=0, unsigned int* 
 // signed variant of strtoul10_64
 // ------------------------------------------------------------------------------------
 template<typename ExceptionType = DeadlyImportError>
-inline int64_t strtol10_64(const char* in, const char** out = 0, unsigned int* max_inout = 0) {
+int64_t strtol10_64(const char* in, const char** out = 0, unsigned int* max_inout = 0) {
     bool inv = (*in == '-');
     if ( inv || *in == '+' ) {
         ++in;
@@ -260,7 +260,7 @@ inline int64_t strtol10_64(const char* in, const char** out = 0, unsigned int* m
 // If you find any bugs, please send them to me, niko (at) irrlicht3d.org.
 // ------------------------------------------------------------------------------------
 template<typename Real, typename ExceptionType = DeadlyImportError>
-inline const char* fast_atoreal_move(const char* c, Real& out, bool check_comma = true) {
+const char* fast_atoreal_move(const char* c, Real& out, bool check_comma = true) {
     Real f = 0;
 
     bool inv = (*c == '-');
@@ -349,7 +349,7 @@ inline const char* fast_atoreal_move(const char* c, Real& out, bool check_comma 
 // ------------------------------------------------------------------------------------
 // The same but more human.
 template<typename ExceptionType = DeadlyImportError>
-inline ai_real fast_atof(const char* c) {
+ai_real fast_atof(const char* c) {
     ai_real ret(0.0);
     fast_atoreal_move<ai_real, ExceptionType>(c, ret);
 
@@ -357,7 +357,6 @@ inline ai_real fast_atof(const char* c) {
 }
 
 template<typename ExceptionType = DeadlyImportError>
-inline
 ai_real fast_atof( const char* c, const char** cout) {
     ai_real ret(0.0);
     *cout = fast_atoreal_move<ai_real, ExceptionType>(c, ret);
@@ -366,7 +365,7 @@ ai_real fast_atof( const char* c, const char** cout) {
 }
 
 template<typename ExceptionType = DeadlyImportError>
-inline ai_real fast_atof( const char** inout) {
+ai_real fast_atof( const char** inout) {
     ai_real ret(0.0);
     *inout = fast_atoreal_move<ai_real, ExceptionType>(*inout, ret);
 

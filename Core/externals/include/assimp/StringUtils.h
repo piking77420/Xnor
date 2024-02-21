@@ -112,7 +112,7 @@ inline int ai_snprintf(char *outBuf, size_t size, const char *format, ...) {
 ///	@return	The value as a std::string
 // ---------------------------------------------------------------------------------
 template <typename T>
-AI_FORCE_INLINE std::string ai_to_string(T value) {
+std::string ai_to_string(T value) {
     std::ostringstream os;
     os << value;
 
@@ -150,7 +150,7 @@ float ai_strtof(const char *begin, const char *end) {
 ///	@return	The hexadecimal string, is empty in case of an error.
 // ---------------------------------------------------------------------------------
 template <class T>
-AI_FORCE_INLINE std::string ai_decimal_to_hexa(T toConvert) {
+std::string ai_decimal_to_hexa(T toConvert) {
     std::string result;
     std::stringstream ss;
     ss << std::hex << toConvert;
@@ -216,7 +216,7 @@ AI_FORCE_INLINE std::string ai_trim(std::string &s) {
 
 // ---------------------------------------------------------------------------------
 template <class char_t>
-AI_FORCE_INLINE char_t ai_tolower(char_t in) {
+char_t ai_tolower(char_t in) {
     return (in >= (char_t)'A' && in <= (char_t)'Z') ? (char_t)(in + 0x20) : in;
 }
 
@@ -235,7 +235,7 @@ AI_FORCE_INLINE std::string ai_tolower(const std::string &in) {
 
 // ---------------------------------------------------------------------------------
 template <class char_t>
-AI_FORCE_INLINE char_t ai_toupper(char_t in) {
+char_t ai_toupper(char_t in) {
     return (in >= (char_t)'a' && in <= (char_t)'z') ? (char_t)(in - 0x20) : in;
 }
 

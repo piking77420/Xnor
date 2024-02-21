@@ -476,7 +476,22 @@ We don't use `constinit` and `consteval` because their use cases are very rare a
 
 ### Integer types
 
-We use typedefs from the `<cstdint>` header for integer types, e.g. `int32_t` for `int` or `uint8_t` for `unsigned char`.
+We use typedefs from the `<cstdint>` header for integer and floating point types.
+
+```cpp
+int32_t num;  // Good
+int num;      // Bad
+```
+
+```cpp
+uint8_t num;        // Good
+unsigned char num;  // Bad
+```
+
+```cpp
+double_t num; // Good
+double num;   // Bad
+```
 
 ### 64-bit portability
 

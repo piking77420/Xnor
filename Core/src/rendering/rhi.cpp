@@ -8,12 +8,12 @@
 
 using namespace XnorCore;
 
-void RHI::SetPolyGoneMode(const PolygonFace face, const PolygonMode mode)
+void RHI::SetPolygonMode(const PolygonFace face, const PolygonMode mode)
 {
 	glPolygonMode(static_cast<GLenum>(face), GL_POINT + static_cast<GLenum>(mode));
 }
 
-void RHI::SetViewPort(const Vector2i screenSize)
+void RHI::SetViewport(const Vector2i screenSize)
 {
 	glViewport(0,0,screenSize.x,screenSize.y);
 }
@@ -151,7 +151,7 @@ void RHI::UseShader(const uint32_t shaderId)
 	glUseProgram(shaderId);
 }
 
-void RHI::UnUseShader()
+void RHI::UnuseShader()
 {
 	glUseProgram(0);
 }
@@ -162,31 +162,31 @@ void RHI::SetUniform(const UniformType uniformType, const void* data, const uint
 
 	switch (uniformType)
 	{
-		case UniformType::INT:
+		case UniformType::Int:
 			glUniform1i(uniformLocation, *static_cast<const int32_t*>(data));
 			break;
 			
-		case UniformType::BOOL:
+		case UniformType::Bool:
 			glUniform1i(uniformLocation, *static_cast<const bool*>(data));
 			break;
 			
-		case UniformType::FLOAT:
+		case UniformType::Float:
 			glUniform1f(uniformLocation, *static_cast<const GLfloat*>(data));
 			break;
 			
-		case UniformType::VEC3:
+		case UniformType::Vec3:
 			glUniform3fv(uniformLocation, 1, static_cast<const GLfloat*>(data));
 			break;
 			
-		case UniformType::VEC4:
+		case UniformType::Vec4:
 			glUniform4fv(uniformLocation, 1, static_cast<const GLfloat*>(data));
 			break;
 			
-		case UniformType::MAT3:
+		case UniformType::Mat3:
 			glUniformMatrix3fv(uniformLocation, 1, GL_FALSE, static_cast<const GLfloat*>(data));
 			break;
 			
-		case UniformType::MAT4:
+		case UniformType::Mat4:
 			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, static_cast<const GLfloat*>(data));
 			break;
 	}
@@ -227,7 +227,7 @@ void RHI::BindTexture(const uint32_t unit, const uint32_t textureId)
 	glBindTextureUnit(unit, textureId);
 }
 
-void RHI::UnBindTexture(const TextureType textureType)
+void RHI::UnbindTexture(const TextureType textureType)
 {
 	glBindTextureUnit(TextureTypeToOpenglTexture(textureType), 0);
 }
@@ -241,10 +241,10 @@ void RHI::CreateFrameBuffer(uint32_t* const frameBufferId, const uint32_t render
 	glCreateFramebuffers(1, frameBufferId);
 	const RenderPassIternal& renderPassIternal = m_RenderPassMap.at(renderPassId);
 
-	for (size_t i = 0; i < renderPassIternal.AttachementsType.size(); i++)
+	for (size_t i = 0; i < renderPassIternal.attachementsType.size(); i++)
 	{
 		uint32_t openglAttachment = 0;
-		switch (renderPassIternal.AttachementsType[i])
+		switch (renderPassIternal.attachementsType[i])
 		{
 			case AttachementsType::Color:
 			case AttachementsType::Position:
@@ -282,7 +282,7 @@ void RHI::BindFrameBuffer(const uint32_t frameBufferId)
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
 }
 
-void RHI::UnBindFrameBuffer()
+void RHI::UnbindFrameBuffer()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -309,16 +309,16 @@ uint32_t RHI::GetOpenglShaderType(const ShaderType shaderType)
 {
 	switch (shaderType)
 	{
-		case ShaderType::VERTEX:
+		case ShaderType::Vertex:
 			return GL_VERTEX_SHADER;
 			
-		case ShaderType::FRAGMENT:
+		case ShaderType::Fragment:
 			return GL_FRAGMENT_SHADER;
 			
-		case ShaderType::GEOMETRY:
+		case ShaderType::Geometry:
 			return GL_GEOMETRY_SHADER;
 			
-		case ShaderType::COMPUTE:
+		case ShaderType::Compute:
 			return GL_COMPUTE_SHADER;
 	}
 
@@ -329,16 +329,16 @@ std::string RHI::GetShaderTypeToString(const ShaderType shaderType)
 {
 	switch (shaderType)
 	{
-		case ShaderType::VERTEX:
+		case ShaderType::Vertex:
 			return "VERTEX_SHADER";
 
-		case ShaderType::FRAGMENT:
+		case ShaderType::Fragment:
 			return "FRAGMENT_SHADER";
 
-		case ShaderType::GEOMETRY:
+		case ShaderType::Geometry:
 			return "GEOMETRY_SHADER";
 
-		case ShaderType::COMPUTE:
+		case ShaderType::Compute:
 			return "COMPUTE_SHADER";
 	}
 	
@@ -349,27 +349,27 @@ void RHI::ComputeTextureWrapper(const uint32_t textureId, const TextureWrapping 
 {
 	switch (textureWrapping)
 	{
-		case TextureWrapping::REPEAT:
+		case TextureWrapping::Repeat:
 			glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, GL_REPEAT);
 			glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, GL_REPEAT);
 			break;
 		
-		case TextureWrapping::MIRRORED_REPEAT:
+		case TextureWrapping::MirroredRepeat:
 			glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 			glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 			break;
 		
-		case TextureWrapping::CLAMP_TO_EDGE:
+		case TextureWrapping::ClampToEdge:
 			glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			break;
 		
-		case TextureWrapping::CLAMP_TO_BORDER:
+		case TextureWrapping::ClampToBorder:
 			glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 			glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 			break;
 
-		case TextureWrapping::NONE:
+		case TextureWrapping::None:
 			break;
 	}
 }
@@ -378,17 +378,17 @@ void RHI::ComputeOpenglTextureFilter(const uint32_t textureId, const TextureFilt
 {
 	switch (textureFilter)
 	{
-		case TextureFiltering::LINEAR:
+		case TextureFiltering::Linear:
 			glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			break;
 			
-		case TextureFiltering::NEAREST:
+		case TextureFiltering::Nearest:
 			glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			break;
 			
-		case TextureFiltering::NONE:
+		case TextureFiltering::None:
 			break;
 	}
 }
@@ -397,37 +397,37 @@ uint32_t RHI::TextureTypeToOpenglTexture(const TextureType textureType)
 {
 	switch (textureType)
 	{
-		case TextureType::TEXTURE_1D:
+		case TextureType::Texture1D:
 			return GL_TEXTURE_1D;
 
-		case TextureType::TEXTURE_2D:
+		case TextureType::Texture2D:
 			return GL_TEXTURE_2D;
 
-		case TextureType::TEXTURE_3D:
+		case TextureType::Texture3D:
 			return GL_TEXTURE_3D;
 
-		case TextureType::TEXTURE_1D_ARRAY:
+		case TextureType::Texture1DArray:
 			return GL_TEXTURE_1D_ARRAY;
 
-		case TextureType::TEXTURE_2D_ARRAY:
+		case TextureType::Texture2DArray:
 			return GL_TEXTURE_2D_ARRAY;
 
-		case TextureType::TEXTURE_RECTANGLE:
+		case TextureType::TextureRectangle:
 			return GL_TEXTURE_RECTANGLE;
 
-		case TextureType::TEXTURE_CUBE_MAP:
+		case TextureType::TextureCubeMap:
 			return GL_TEXTURE_CUBE_MAP;
 
-		case TextureType::TEXTURE_CUBE_MAP_ARRAY:
+		case TextureType::TextureCubeMapArray:
 			return GL_TEXTURE_CUBE_MAP_ARRAY;
 
-		case TextureType::TEXTURE_BUFFER:
+		case TextureType::TextureBuffer:
 			return GL_TEXTURE_BUFFER;
 
-		case TextureType::TEXTURE_2D_MULTISAMPLE:
+		case TextureType::Texture2DMultisample:
 			return GL_TEXTURE_2D_MULTISAMPLE;
 
-		case TextureType::TEXTURE_2D_MULTISAMPLE_ARRAY:
+		case TextureType::Texture2DMultisampleArray:
 			return GL_TEXTURE_2D_MULTISAMPLE_ARRAY;
 	}
 
@@ -438,46 +438,46 @@ uint32_t RHI::GetOpenglInternalFormat(const TextureInternalFormat textureFormat)
 {
 	switch (textureFormat)
 	{
-		case TextureInternalFormat::R_8:
+		case TextureInternalFormat::R8:
 			return GL_R8;
 
-		case TextureInternalFormat::R_16:
+		case TextureInternalFormat::R16:
 			return GL_R16;
 
-		case TextureInternalFormat::RG_8:
+		case TextureInternalFormat::Rg8:
 			return GL_RG8;
 
-		case TextureInternalFormat::RG_16:
+		case TextureInternalFormat::Rg16:
 			return GL_RG16;
 
-		case TextureInternalFormat::RGB_8:
+		case TextureInternalFormat::Rgb8:
 			return GL_RGB8;
 
-		case TextureInternalFormat::RGB_16:
+		case TextureInternalFormat::Rgb16:
 			return GL_RGB16;
 
-		case TextureInternalFormat::RGBA_8:
+		case TextureInternalFormat::Rgba8:
 			return GL_RGBA8;
 
-		case TextureInternalFormat::RGBA_16:
+		case TextureInternalFormat::Rgba16:
 			return GL_RGBA16;
 
-		case TextureInternalFormat::R_16F:
+		case TextureInternalFormat::R16F:
 			return GL_R16F;
 
-		case TextureInternalFormat::RG_16F:
+		case TextureInternalFormat::Rg16F:
 			return GL_RG16F;
 
-		case TextureInternalFormat::RGB_16F:
+		case TextureInternalFormat::Rgb16F:
 			return GL_RGB16F;
 
-		case TextureInternalFormat::RGBA_16F:
+		case TextureInternalFormat::Rgba16F:
 			return GL_RGBA16F;
 
-		case TextureInternalFormat::DEPTH_COMPONENT:
+		case TextureInternalFormat::DepthComponent:
 			return GL_DEPTH_COMPONENT;
 		
-		case TextureInternalFormat::DEPTH_STENCIL:
+		case TextureInternalFormat::DepthStencil:
 			return GL_DEPTH24_STENCIL8;
 	}
 
@@ -490,13 +490,13 @@ uint32_t RHI::GetOpenGlTextureFormat(const TextureFormat textureFormat)
 {
 	switch (textureFormat)
 	{
-		case TextureFormat::RED: 
+		case TextureFormat::Red: 
 			return GL_RED;
 	
-		case TextureFormat::RGB:
+		case TextureFormat::Rgb:
 			return GL_RGB;
 	
-		case TextureFormat::RGBA:
+		case TextureFormat::Rgba:
 			return GL_RGBA;
 	}
 	

@@ -7,13 +7,12 @@
 
 BEGIN_XNOR_CORE
 
-
 class FrameBuffer
 {
 public:
 	XNOR_ENGINE FrameBuffer() = default;
 	
-	XNOR_ENGINE FrameBuffer(const vec2i size);
+	XNOR_ENGINE explicit FrameBuffer(vec2i size);
 
 	XNOR_ENGINE ~FrameBuffer() = default;
 	

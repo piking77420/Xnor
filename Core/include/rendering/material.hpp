@@ -3,12 +3,12 @@
 #include <vector>
 
 #include "core.hpp"
+#include "resource/shader.hpp"
 #include "resource/texture.hpp"
 #include "utils/pointer.hpp"
-#include "resource/shader.hpp"
-
 
 BEGIN_XNOR_CORE
+
 struct Material
 {
     Pointer<Shader> shader;

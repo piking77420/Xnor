@@ -5,36 +5,36 @@
 
 BEGIN_XNOR_CORE
 
-static constexpr uint32_t MaxSpotLight = 10;
-static constexpr uint32_t MaxPointLight = 10;
-static constexpr uint32_t MaxDirectionalLight = 1;
+static constexpr uint32_t MaxSpotLights = 10;
+static constexpr uint32_t MaxPointLights = 10;
+static constexpr uint32_t MaxDirectionalLights = 1;
 
 enum class PolygonMode : int32_t
 {
-	POINT = 0,
-	LINE,
-	FILL,
+	Point = 0,
+	Line,
+	Fill,
 };
 
 enum class PolygonFace : int32_t
 {
-	FRONT_LEFT = 1024,
-	FRONT_RIGHT,
-	BACK_LEFT,
-	BACK_RIGHT,
-	FRONT,
-	BACK,
-	LEFT,
-	RIGHT,
-	FRONT_AND_BACK 
+	FrontLeft = 1024,
+	FrontRight,
+	BackLeft,
+	BackRight,
+	Front,
+	Back,
+	Left,
+	Right,
+	FrontAndBack 
 };
 
 enum class ShaderType : int32_t
 {
-	VERTEX,
-	FRAGMENT,
-	GEOMETRY,
-	COMPUTE,
+	Vertex,
+	Fragment,
+	Geometry,
+	Compute,
 };
 
 struct ShaderCode
@@ -45,64 +45,64 @@ struct ShaderCode
 
 enum class TextureWrapping : int32_t
 {
-	NONE,
-	REPEAT,
-	MIRRORED_REPEAT,
-	CLAMP_TO_EDGE,
-	CLAMP_TO_BORDER
+	None,
+	Repeat,
+	MirroredRepeat,
+	ClampToEdge,
+	ClampToBorder
 };
 
 enum class TextureFiltering: int32_t
 {
-	NONE,
-	LINEAR,
-	NEAREST,
+	None,
+	Linear,
+	Nearest,
 };
 
 enum class TextureType: int32_t
 {
-	TEXTURE_1D,
-	TEXTURE_2D,
-	TEXTURE_3D,
-	TEXTURE_1D_ARRAY,
-	TEXTURE_2D_ARRAY,
-	TEXTURE_RECTANGLE,
-	TEXTURE_CUBE_MAP,
-	TEXTURE_CUBE_MAP_ARRAY,
-	TEXTURE_BUFFER,
-	TEXTURE_2D_MULTISAMPLE,
-	TEXTURE_2D_MULTISAMPLE_ARRAY,
+	Texture1D,
+	Texture2D,
+	Texture3D,
+	Texture1DArray,
+	Texture2DArray,
+	TextureRectangle,
+	TextureCubeMap,
+	TextureCubeMapArray,
+	TextureBuffer,
+	Texture2DMultisample,
+	Texture2DMultisampleArray,
 };
 
 enum class TextureInternalFormat
 {
-	R_8,
-	R_16,
-	RG_8,
-	RG_16,
-	RGB_8,
-	RGB_16,
-	RGBA_8,
-	RGBA_16,
-	R_16F,
-	RG_16F,
-	RGB_16F,
-	RGBA_16F,
-	DEPTH_COMPONENT,
-	DEPTH_STENCIL
+	R8,
+	R16,
+	Rg8,
+	Rg16,
+	Rgb8,
+	Rgb16,
+	Rgba8,
+	Rgba16,
+	R16F,
+	Rg16F,
+	Rgb16F,
+	Rgba16F,
+	DepthComponent,
+	DepthStencil
 };
 
 enum class DataType : int32_t
 {
-	FLOAT = 0,
-	UNSIGNED_INT,
+	Float = 0,
+	UnsignedInt,
 };
 
 enum class TextureFormat
 {
-	RED,
-	RGB,
-	RGBA,
+	Red,
+	Rgb,
+	Rgba,
 };
 
 enum class AttachementsType
@@ -142,13 +142,13 @@ struct ModelUniformData
 
 enum class UniformType
 {
-	INT,
-	BOOL,
-	FLOAT,
-	VEC3,
-	VEC4,
-	MAT3,
-	MAT4,
+	Int,
+	Bool,
+	Float,
+	Vec3,
+	Vec4,
+	Mat3,
+	Mat4,
 };
 
 struct PointLightData
@@ -182,8 +182,9 @@ struct GpuLightData
 	uint32_t nbrOfSpotLight;
 	uint32_t padding1;
 	uint32_t padding2;
-	PointLightData pointLightData[MaxPointLight];
-	SpotLightData spotLightData[MaxSpotLight];
+	PointLightData pointLightData[MaxPointLights];
+	SpotLightData spotLightData[MaxSpotLights];
+
 	DirectionalData directionalData;
 };
 

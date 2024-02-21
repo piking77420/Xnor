@@ -3,7 +3,7 @@
 
 BEGIN_XNOR_CORE
 
-class SpotLight : public XnorCore::Light
+class SpotLight : public Light
 {
 public:
     Vector3 direction = Vector3::UnitZ();
@@ -13,7 +13,9 @@ public:
     
     XNOR_ENGINE SpotLight() = default;
     
-    XNOR_ENGINE ~SpotLight() = default;
+    XNOR_ENGINE ~SpotLight() override = default;
+
+    DEFAULT_COPY_MOVE_OPERATIONS(SpotLight)
 };
 
 END_XNOR_CORE

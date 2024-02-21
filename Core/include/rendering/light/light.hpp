@@ -5,6 +5,7 @@
 #include "scene/component.hpp"
 
 BEGIN_XNOR_CORE
+
 class Light : public Component
 {
 public:
@@ -14,6 +15,8 @@ public:
     XNOR_ENGINE Light() = default;
 
     XNOR_ENGINE ~Light() override = default;
+
+    DEFAULT_COPY_MOVE_OPERATIONS(Light)
 };
 
 END_XNOR_CORE

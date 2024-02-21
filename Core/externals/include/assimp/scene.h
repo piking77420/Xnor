@@ -148,12 +148,10 @@ struct ASSIMP_API aiNode {
      *  @param name Name to search for
      *  @return nullptr or a valid Node if the search was successful.
      */
-    inline
     const aiNode* FindNode(const aiString& name) const {
         return FindNode(name.data);
     }
 
-    inline
     aiNode* FindNode(const aiString& name) {
         return FindNode(name.data);
     }
@@ -362,33 +360,33 @@ struct aiScene
 
     //! Check whether the scene contains meshes
     //! Unless no special scene flags are set this will always be true.
-    inline bool HasMeshes() const {
+    bool HasMeshes() const {
         return mMeshes != nullptr && mNumMeshes > 0;
     }
 
     //! Check whether the scene contains materials
     //! Unless no special scene flags are set this will always be true.
-    inline bool HasMaterials() const {
+    bool HasMaterials() const {
         return mMaterials != nullptr && mNumMaterials > 0;
     }
 
     //! Check whether the scene contains lights
-    inline bool HasLights() const {
+    bool HasLights() const {
         return mLights != nullptr && mNumLights > 0;
     }
 
     //! Check whether the scene contains textures
-    inline bool HasTextures() const {
+    bool HasTextures() const {
         return mTextures != nullptr && mNumTextures > 0;
     }
 
     //! Check whether the scene contains cameras
-    inline bool HasCameras() const {
+    bool HasCameras() const {
         return mCameras != nullptr && mNumCameras > 0;
     }
 
     //! Check whether the scene contains animations
-    inline bool HasAnimations() const {
+    bool HasAnimations() const {
         return mAnimations != nullptr && mNumAnimations > 0;
     }
 

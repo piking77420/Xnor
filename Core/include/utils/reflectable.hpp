@@ -106,7 +106,7 @@ private:
      * \return Offset
      */
     template <typename T>
-    static size_t GetMemberOffset(const T member);
+    static size_t GetMemberOffset(T member);
 
 public:
     /**

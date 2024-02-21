@@ -7,10 +7,11 @@ BEGIN_XNOR_CORE
 class UniformBuffer
 {
 public:
-
     UniformBuffer();
     
     ~UniformBuffer();
+
+    DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(UniformBuffer)
 
     void Allocate(size_t size,const void* data);
 

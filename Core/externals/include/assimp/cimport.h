@@ -582,7 +582,7 @@ ASSIMP_API int aiVector2AreEqual(
 ASSIMP_API int aiVector2AreEqualEpsilon(
         const C_STRUCT aiVector2D *a,
         const C_STRUCT aiVector2D *b,
-        const float epsilon);
+        float epsilon);
 
 // --------------------------------------------------------------------------------
 /** Add 2D vectors.
@@ -609,7 +609,7 @@ ASSIMP_API void aiVector2Subtract(
  */
 ASSIMP_API void aiVector2Scale(
         C_STRUCT aiVector2D *dst,
-        const float s);
+        float s);
 
 // --------------------------------------------------------------------------------
 /** Multiply each component of a 2D vector with
@@ -628,7 +628,7 @@ ASSIMP_API void aiVector2SymMul(
  */
 ASSIMP_API void aiVector2DivideByScalar(
         C_STRUCT aiVector2D *dst,
-        const float s);
+        float s);
 
 // --------------------------------------------------------------------------------
 /** Divide each component of a 2D vector by
@@ -700,7 +700,7 @@ ASSIMP_API int aiVector3AreEqual(
 ASSIMP_API int aiVector3AreEqualEpsilon(
         const C_STRUCT aiVector3D *a,
         const C_STRUCT aiVector3D *b,
-        const float epsilon);
+        float epsilon);
 
 // --------------------------------------------------------------------------------
 /** Check if vector \p a is less than vector \p b.
@@ -739,7 +739,7 @@ ASSIMP_API void aiVector3Subtract(
  */
 ASSIMP_API void aiVector3Scale(
         C_STRUCT aiVector3D *dst,
-        const float s);
+        float s);
 
 // --------------------------------------------------------------------------------
 /** Multiply each component of a 3D vector with
@@ -758,7 +758,7 @@ ASSIMP_API void aiVector3SymMul(
  */
 ASSIMP_API void aiVector3DivideByScalar(
         C_STRUCT aiVector3D *dst,
-        const float s);
+        float s);
 
 // --------------------------------------------------------------------------------
 /** Divide each component of a 3D vector by
@@ -876,7 +876,7 @@ ASSIMP_API int aiMatrix3AreEqual(
 ASSIMP_API int aiMatrix3AreEqualEpsilon(
         const C_STRUCT aiMatrix3x3 *a,
         const C_STRUCT aiMatrix3x3 *b,
-        const float epsilon);
+        float epsilon);
 
 // --------------------------------------------------------------------------------
 /** Invert a 3x3 matrix.
@@ -899,7 +899,7 @@ ASSIMP_API float aiMatrix3Determinant(
  */
 ASSIMP_API void aiMatrix3RotationZ(
         C_STRUCT aiMatrix3x3 *mat,
-        const float angle);
+        float angle);
 
 // --------------------------------------------------------------------------------
 /** Returns a 3x3 rotation matrix for a rotation around an arbitrary axis.
@@ -910,7 +910,7 @@ ASSIMP_API void aiMatrix3RotationZ(
 ASSIMP_API void aiMatrix3FromRotationAroundAxis(
         C_STRUCT aiMatrix3x3 *mat,
         const C_STRUCT aiVector3D *axis,
-        const float angle);
+        float angle);
 
 // --------------------------------------------------------------------------------
 /** Get a 3x3 translation matrix.
@@ -985,7 +985,7 @@ ASSIMP_API int aiMatrix4AreEqual(
 ASSIMP_API int aiMatrix4AreEqualEpsilon(
         const C_STRUCT aiMatrix4x4 *a,
         const C_STRUCT aiMatrix4x4 *b,
-        const float epsilon);
+        float epsilon);
 
 // --------------------------------------------------------------------------------
 /** Invert a 4x4 matrix.
@@ -1075,7 +1075,7 @@ ASSIMP_API void aiMatrix4FromEulerAngles(
  */
 ASSIMP_API void aiMatrix4RotationX(
         C_STRUCT aiMatrix4x4 *mat,
-        const float angle);
+        float angle);
 
 // --------------------------------------------------------------------------------
 /** Get a 4x4 rotation matrix around the Y axis.
@@ -1084,7 +1084,7 @@ ASSIMP_API void aiMatrix4RotationX(
  */
 ASSIMP_API void aiMatrix4RotationY(
         C_STRUCT aiMatrix4x4 *mat,
-        const float angle);
+        float angle);
 
 // --------------------------------------------------------------------------------
 /** Get a 4x4 rotation matrix around the Z axis.
@@ -1093,7 +1093,7 @@ ASSIMP_API void aiMatrix4RotationY(
  */
 ASSIMP_API void aiMatrix4RotationZ(
         C_STRUCT aiMatrix4x4 *mat,
-        const float angle);
+        float angle);
 
 // --------------------------------------------------------------------------------
 /** Returns a 4x4 rotation matrix for a rotation around an arbitrary axis.
@@ -1104,7 +1104,7 @@ ASSIMP_API void aiMatrix4RotationZ(
 ASSIMP_API void aiMatrix4FromRotationAroundAxis(
         C_STRUCT aiMatrix4x4 *mat,
         const C_STRUCT aiVector3D *axis,
-        const float angle);
+        float angle);
 
 // --------------------------------------------------------------------------------
 /** Get a 4x4 translation matrix.
@@ -1155,7 +1155,7 @@ ASSIMP_API void aiQuaternionFromEulerAngles(
 ASSIMP_API void aiQuaternionFromAxisAngle(
         C_STRUCT aiQuaternion *q,
         const C_STRUCT aiVector3D *axis,
-        const float angle);
+        float angle);
 
 // --------------------------------------------------------------------------------
 /** Create a Quaternion from a normalized quaternion stored
@@ -1189,7 +1189,7 @@ ASSIMP_API int aiQuaternionAreEqual(
 ASSIMP_API int aiQuaternionAreEqualEpsilon(
         const C_STRUCT aiQuaternion *a,
         const C_STRUCT aiQuaternion *b,
-        const float epsilon);
+        float epsilon);
 
 // --------------------------------------------------------------------------------
 /** Normalize a quaternion.
@@ -1226,7 +1226,7 @@ ASSIMP_API void aiQuaternionInterpolate(
         C_STRUCT aiQuaternion *dst,
         const C_STRUCT aiQuaternion *start,
         const C_STRUCT aiQuaternion *end,
-        const float factor);
+        float factor);
 
 #ifdef __cplusplus
 }

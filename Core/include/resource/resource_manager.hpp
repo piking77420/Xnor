@@ -1,12 +1,11 @@
 ﻿#pragma once
 
-#include <iostream>
 #include <type_traits>
 #include <unordered_map>
 
-#include "utils/pointer.hpp"
 #include "resource.hpp"
 #include "utils/logger.hpp"
+#include "utils/pointer.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -15,10 +14,9 @@ concept ResourceT = std::is_base_of_v<Resource, T>;
 
 class ResourceManager final
 {
-public:
-    // You cannot instantiate this class
-    ResourceManager() = delete;
+    STATIC_CLASS(ResourceManager)
     
+public:
     /// @brief Creates the resource corresponding to the given @p name without loading it
     template<ResourceT T>
     static Pointer<T> Add(std::string name);

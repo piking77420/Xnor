@@ -11,10 +11,9 @@ BEGIN_XNOR_CORE
 
 class FileManager final
 {
-public:
-    // You cannot instantiate this class
-    FileManager() = delete;
+    STATIC_CLASS(FileManager)
     
+public:
     XNOR_ENGINE static Pointer<File> Load(std::filesystem::path filepath);
     
     XNOR_ENGINE static void LoadDirectory(const std::filesystem::path& path);

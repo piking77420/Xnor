@@ -1,6 +1,7 @@
 #pragma once
-#include "rendering/camera.hpp"
+
 #include "frame_buffer.hpp"
+#include "rendering/camera.hpp"
 
 BEGIN_XNOR_CORE
 

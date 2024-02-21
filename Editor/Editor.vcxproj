@@ -110,11 +110,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Folder Include="externals\libs\dll\" />
-    <Folder Include="externals\libs\lib\Debug\" />
-    <Folder Include="externals\libs\lib\Release\" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="src\editor.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\windows\content_browser.cpp" />

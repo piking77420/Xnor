@@ -360,7 +360,7 @@ public: // static utilities
     *  @param out The output pointer to the allocated array.
     *  @param numOut The output count of elements copied. */
     template <typename T>
-    AI_FORCE_INLINE static void CopyVector(
+    static void CopyVector(
             std::vector<T> &vec,
             T *&out,
             unsigned int &outLength) {
@@ -377,7 +377,7 @@ public: // static utilities
     *  @param out The output pointer to the allocated array.
     *  @param numOut The output count of elements copied. */
     template <typename T>
-    AI_FORCE_INLINE static void CopyVector(
+    static void CopyVector(
             std::vector<std::unique_ptr<T> > &vec,
             T **&out,
             unsigned int &outLength) {
