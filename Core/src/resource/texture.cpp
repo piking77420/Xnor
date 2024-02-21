@@ -91,7 +91,7 @@ void Texture::Unload()
     
     stbi_image_free(m_Data);
     m_Data = nullptr;
-    m_Size = 0;
+    m_Size = Vector2i::Zero();
     
     m_Loaded = false;
 }

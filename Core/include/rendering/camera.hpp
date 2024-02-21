@@ -11,9 +11,7 @@ BEGIN_XNOR_CORE
 class XNOR_ENGINE Camera
 {
 public:
-
-
-	Vector3 pos = 0.f;
+	Vector3 pos;
 	float near = 0.1f;
 	Vector3 front = Vector3::UnitZ();
 	float far = 1000.f;
@@ -27,9 +25,8 @@ public:
 
 	void GetVp(Matrix* matrix) const;
 
+	[[nodiscard]]
 	Vector2i ProjectOn(const Vector3& vertex, const Matrix& model) const;
-
-
 };
 
 END_XNOR_CORE

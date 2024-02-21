@@ -5,9 +5,6 @@
 
 #include "definitions.hpp"
 
-#undef min
-#undef max
-
 /// \file calc.hpp
 /// <summary>
 /// A collection of general-use constants and useful functions.
@@ -138,6 +135,9 @@ namespace Calc
 constexpr float Calc::Sign(const float number) noexcept { return number < 0.f ? -1.f : 1.f; }
 
 constexpr float Calc::Abs(const float number) noexcept { return number < 0.f ? -number : number; }
+
+// Undef windows macro to be able to use std::min without conflicts
+#undef min
 
 constexpr void Calc::Approach(float &value, const float target, const float step) noexcept
 {

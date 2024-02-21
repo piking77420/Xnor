@@ -1,6 +1,9 @@
 #pragma once
 
-#include <ostream>
+#ifdef MATH_DEFINE_FORMATTER
+#include <format>
+#include <sstream>
+#endif
 
 #include "calc.hpp"
 #include "vector2.hpp"
@@ -87,11 +90,11 @@ public:
 	/// Constructs a Vector3 with both its components set to 'xy'.
 	/// </summary>
 	/// <param name="xyz">The value to set this vector's x, y and z components to.</param>
-	constexpr Vector3(float xyz) noexcept;
+	constexpr explicit Vector3(float xyz) noexcept;
 	
 	/// <summary>
-	/// Constructs a Vector3 with its components set to the data pointed by <code>data</code>.
-	/// This constructor assumes that <code>data</code> is a valid pointer pointing to at least 3 float values.
+	/// Constructs a Vector2 with its components set to the data pointed by <code>data</code>.
+	/// This constructor assumes that <code>data</code> is a valid pointer pointing to at least 2 float values.
 	/// </summary>
 	/// <param name="data">The data where the values for this vector's components are located.</param>
 	constexpr explicit Vector3(const float* data) noexcept;
@@ -350,5 +353,43 @@ std::ostream& operator<<(std::ostream& out, const Vector3& v) noexcept;
 constexpr Vector3 Vector3::Lerp(const Vector3& value, const Vector3& target, const float t) noexcept { return value + (target - value) * t; }
 
 constexpr void Vector3::Lerp(const Vector3& value, const Vector3& target, const float t, Vector3& result) noexcept { result = value + (target - value) * t; }
+
+#ifdef MATH_DEFINE_FORMATTER
+template<>
+struct std::formatter<Vector3>
+{
+    template<class ParseContext>
+    constexpr typename ParseContext::iterator parse(ParseContext& ctx);
+
+    template<class FmtContext>
+    typename FmtContext::iterator format(Vector3 v, FmtContext& ctx) const;
+
+private:
+    std::string m_Format;
+};
+
+template<class ParseContext>
+constexpr typename ParseContext::iterator std::formatter<Vector3, char>::parse(ParseContext& ctx)
+{
+    auto it = ctx.begin();
+    if (it == ctx.end())
+        return it;
+
+    while (*it != '}' && it != ctx.end())
+        m_Format += *it++;
+
+    return it;
+}
+
+template<class FmtContext>
+typename FmtContext::iterator std::formatter<Vector3>::format(Vector3 v, FmtContext &ctx) const
+{
+    std::ostringstream out;
+
+    out << std::vformat("{:" + m_Format + "} ; {:" + m_Format + "} ; {:" + m_Format + '}', std::make_format_args(v.x, v.y, v.z));
+
+    return std::ranges::copy(std::move(out).str(), ctx.out()).out;
+}
+#endif
 
 using vec3 = Vector3;
