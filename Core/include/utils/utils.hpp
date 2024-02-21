@@ -8,7 +8,6 @@
 #include "ImGui/imgui.h"
 
 #include "core.hpp"
-#include "list.hpp"
 #include "Maths/vector2.hpp"
 
 BEGIN_XNOR_CORE
@@ -35,23 +34,25 @@ namespace Utils
     template<typename T>
     struct ptr_to_void_ptr<T*> { using type = void*; };
 
-    template<typename>
-    struct is_xnor_list : std::false_type {};
-
-    template<typename T>
-    struct is_xnor_list<List<T>> : std::true_type {};
-
     XNOR_ENGINE void CenterImguiObject(float alignment = 0.5f);
 
+    [[nodiscard]]
     XNOR_ENGINE ImVec2 ToImVec(Vector2 v);
 
+    [[nodiscard]]
     XNOR_ENGINE Vector2 FromImVec(ImVec2 v);
 
+    [[nodiscard]]
     XNOR_ENGINE std::string PathToForwardSlashes(const std::filesystem::path& path);
 
+    [[nodiscard]]
     XNOR_ENGINE std::string PathToForwardSlashes(std::string path);
 
+    [[nodiscard]]
     XNOR_ENGINE std::string HumanizeString(const std::string& str);
+
+    [[nodiscard]]
+    XNOR_ENGINE constexpr size_t GetNextPowerOfTwo(size_t value);
 }
 
 template<typename PtrT, typename IntT>

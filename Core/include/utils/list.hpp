@@ -1,8 +1,8 @@
 #pragma once
 
 #include <functional>
-
 #include "core.hpp"
+#include "utils/utils.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -26,15 +26,23 @@ public:
     ~List();
 
     void Reserve(size_t capacity);
+    void Clear();
 
     void Add(T& element);
     void Add(T&& element);
+    
+    void AddRange(const T* data, size_t number);
+    void AddRange(const std::initializer_list<T>& values);
 
     template <class... Args>
     void Emplace(Args&&... args);
 
+    void Insert(const T& elemnt, size_t index);
+    void Insert(const T&& elemnt, size_t index);
+
     void Remove(const T& element);
     void Remove(const T&& element);
+    void RemoveAt(size_t index);
 
     [[nodiscard]]
     bool Contains(const T& element) const;
@@ -42,6 +50,8 @@ public:
     bool Contains(const T&& element) const;
 
     void Iterate(std::function<void(T*, size_t)> lambda);
+    bool Exists(std::function<bool(const T*, size_t)> lambda);
+    T* Find(std::function<bool(const T*, size_t)> lambda);
 
     [[nodiscard]]
     bool IsValid() const;
@@ -66,6 +76,9 @@ private:
     void Malloc(size_t size);
     void Calloc(size_t size);
     void Realloc(size_t size);
+
+    void CheckGrow(size_t newSize);
+    void CheckShrink(size_t newSize);
 };
 
 template <typename T>
@@ -79,9 +92,11 @@ List<T>::List()
 
 template <typename T>
 List<T>::List(const size_t size)
-    : m_Size(size), m_Capacity(size)
+    : m_Size(size)
 {
-    Malloc(m_Size);
+    m_Capacity = Utils::GetNextPowerOfTwo(m_Size);
+    
+    Malloc(m_Capacity);
 
     for (size_t i = 0; i < m_Size; i++)
         m_Data[i] = T();
@@ -89,9 +104,11 @@ List<T>::List(const size_t size)
 
 template <typename T>
 List<T>::List(const size_t size, T&& defaultValue)
-    : m_Size(size), m_Capacity(size)
+    : m_Size(size)
 {
-    Malloc(m_Size);
+    m_Capacity = Utils::GetNextPowerOfTwo(m_Size);
+    
+    Malloc(m_Capacity);
 
     for (size_t i = 0; i < m_Size; i++)
         m_Data[i] = defaultValue;
@@ -99,9 +116,11 @@ List<T>::List(const size_t size, T&& defaultValue)
 
 template <typename T>
 List<T>::List(const size_t size, const T values[])
-    : m_Size(size), m_Capacity(size)
+    : m_Size(size)
 {
-    Malloc(m_Size);
+    m_Capacity = Utils::GetNextPowerOfTwo(m_Size);
+    
+    Malloc(m_Capacity);
 
     for (size_t i = 0; i < m_Size; i++)
         m_Data[i] = values[i];
@@ -111,9 +130,9 @@ template <typename T>
 List<T>::List(const std::initializer_list<T>& values)
 {
     m_Size = values.size();
-    m_Capacity = m_Size;
-
-    Malloc(m_Size);
+    m_Capacity = Utils::GetNextPowerOfTwo(m_Size);
+    
+    Malloc(m_Capacity);
     
     const T* const it = values.begin();
 
@@ -144,14 +163,14 @@ void List<T>::Reserve(const size_t capacity)
 }
 
 template <typename T>
+void List<T>::Clear()
+{
+}
+
+template <typename T>
 void List<T>::Add(T& element)
 {
-    if (m_Size == m_Capacity)
-    {
-        m_Capacity++;
-
-        Realloc(m_Capacity);
-    }
+    CheckGrow(m_Size + 1);
 
     m_Data[m_Size] = element;
     m_Size++;
@@ -160,20 +179,47 @@ void List<T>::Add(T& element)
 template <typename T>
 void List<T>::Add(T&& element)
 {
-    if (m_Size == m_Capacity)
-    {
-        m_Capacity++;
-
-        Realloc(m_Capacity);
-    }
+    CheckGrow(m_Size + 1);
 
     m_Data[m_Size] = element;
     m_Size++;
 }
 
 template <typename T>
+void List<T>::AddRange(const T* const data, const size_t number)
+{
+    CheckGrow(m_Size + number);
+
+    std::memcpy(&m_Data[m_Size], data, number * sizeof(T));
+
+    m_Size += number;
+}
+
+template <typename T>
+void List<T>::AddRange(const std::initializer_list<T>& values)
+{
+    const size_t number = values.size();
+
+    CheckGrow(m_Size + number);
+
+    std::memcpy(&m_Data[m_Size], values.begin(), number * sizeof(T));
+
+    m_Size += number;
+}
+
+template <typename T>
 template <class... Args>
 void List<T>::Emplace(Args&&... args)
+{
+}
+
+template <typename T>
+void List<T>::Insert(const T& elemnt, size_t index)
+{
+}
+
+template <typename T>
+void List<T>::Insert(const T&& elemnt, size_t index)
 {
 }
 
@@ -184,6 +230,11 @@ void List<T>::Remove(const T& element)
 
 template <typename T>
 void List<T>::Remove(const T&& element)
+{
+}
+
+template <typename T>
+void List<T>::RemoveAt(const size_t index)
 {
 }
 
@@ -216,6 +267,30 @@ void List<T>::Iterate(std::function<void(T*, size_t)> lambda)
 {
     for (size_t i = 0; i < m_Size; i++)
         lambda(&m_Data[i], i);
+}
+
+template <typename T>
+bool List<T>::Exists(std::function<bool(const T*, size_t)> lambda)
+{
+    for (size_t i = 0; i < m_Size; i++)
+    {
+        if (lambda(&m_Data[i], i))
+            return true;
+    }
+
+    return false;
+}
+
+template <typename T>
+T* List<T>::Find(std::function<bool(const T*, size_t)> lambda)
+{
+    for (size_t i = 0; i < m_Size; i++)
+    {
+        if (lambda(&m_Data[i], i))
+            return &m_Data[i];
+    }
+
+    return nullptr;
 }
 
 template <typename T>
@@ -289,6 +364,37 @@ template <typename T>
 void List<T>::Realloc(const size_t size)
 {
     m_Data = static_cast<T*>(std::realloc(m_Data, size * sizeof(T)));
+}
+
+template <typename T>
+void List<T>::CheckGrow(const size_t newSize)
+{
+    if (newSize > m_Capacity)
+    {
+        m_Capacity = Utils::GetNextPowerOfTwo(newSize);
+
+        Realloc(m_Capacity);
+    }
+}
+
+template <typename T>
+void List<T>::CheckShrink(const size_t newSize)
+{
+    if (newSize < m_Capacity)
+    {
+        m_Capacity = Utils::GetNextPowerOfTwo(newSize);
+
+        Realloc(m_Capacity);
+    }
+}
+
+namespace Utils
+{
+    template<typename>
+    struct is_xnor_list : std::false_type {};
+
+    template<typename T>
+    struct is_xnor_list<List<T>> : std::true_type {};
 }
 
 END_XNOR_CORE
