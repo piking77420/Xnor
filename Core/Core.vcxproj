@@ -660,6 +660,7 @@
     <ClInclude Include="include\scene\entity.hpp" />
     <ClInclude Include="include\scene\scene.hpp" />
     <ClInclude Include="include\utils\formatter.hpp" />
+    <ClInclude Include="include\utils\list.hpp" />
     <ClInclude Include="include\utils\logger.hpp" />
     <ClInclude Include="include\utils\memory_leak_detector.hpp" />
     <ClInclude Include="include\utils\pointer.hpp" />

@@ -20,7 +20,7 @@ private:
     void DisplayEntity(XnorCore::Scene& scene, XnorCore::Entity* entity);
     void DisplayEntityContextMenu(XnorCore::Scene& scene, XnorCore::Entity* entity);
     void DisplayEntityRenaming(XnorCore::Entity* entity);
-    
+
     void ProcessEntityDragDrop(XnorCore::Entity* entity);
     void ProcessEntitySelection(XnorCore::Entity* entity) const;
     void ProcessEntityDoubleClik(XnorCore::Scene& scene, XnorCore::Entity* entity);
