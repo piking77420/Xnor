@@ -12,7 +12,8 @@
 #include "Maths/vector2.hpp"
 
 BEGIN_XNOR_CORE
-    namespace Utils
+
+namespace Utils
 {
     template<typename PtrT, typename IntT>
     [[nodiscard]]

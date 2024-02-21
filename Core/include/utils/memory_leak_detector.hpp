@@ -8,6 +8,9 @@ BEGIN_XNOR_CORE
 
 class MemoryLeakDetector
 {
+    // The functions we use in this class come from the windows API and are
+    // disabled in optimized builds
+#ifdef _DEBUG
 public:
     XNOR_ENGINE MemoryLeakDetector();
 
@@ -25,6 +28,7 @@ private:
     static void ReportFailure(size_t unfreedBytes);
 
     _CrtMemState m_MemState;
+#endif
 };
 
 END_XNOR_CORE
