@@ -7,6 +7,7 @@
 #include "component.hpp"
 #include "utils/guid.hpp"
 #include "utils/reflectable.hpp"
+#include "utils/list.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -82,7 +83,7 @@ private:
     
     Guid m_EntityId;
 
-    std::vector<Component*> m_Components;
+    List<Component*> m_Components;
 
     friend class Scene;
 };
@@ -93,16 +94,16 @@ void Entity::AddComponent()
     Component* newT = new ComponentT();
     newT->entity = this;
     
-    m_Components.emplace_back(newT);
+    m_Components.Add(newT);
 }
 
 template <class ComponentT>
 const ComponentT* Entity::GetComponent() const
 {
-    for (Component* comp: m_Components)
+    for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        if (dynamic_cast<ComponentT*>(comp))
-            return reinterpret_cast<ComponentT*>(comp);
+        if (dynamic_cast<ComponentT*>(m_Components[i]))
+            return reinterpret_cast<ComponentT*>(m_Components[i]);
     }
 
     return nullptr;
@@ -111,30 +112,30 @@ const ComponentT* Entity::GetComponent() const
 template <class ComponentT>
 void Entity::GetComponents(std::vector<ComponentT*>* components)
 {
-    for (int i = 0; i < m_Components.size(); ++i)
+    for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
         if (dynamic_cast<ComponentT*>(m_Components[i]))
-            components->push_back(reinterpret_cast<ComponentT*>(&m_Components[i]));
+            components->push_back(reinterpret_cast<ComponentT*>(m_Components[i]));
     }
 }
 
 template <class ComponentT>
 void Entity::GetComponents(std::vector<const ComponentT*>* components) const
 {
-    for (int i = 0; i < m_Components.size(); ++i)
+    for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
         if (dynamic_cast<ComponentT*>(m_Components[i]))
-            components->push_back(reinterpret_cast<const ComponentT*>(&m_Components[i]));
+            components->push_back(reinterpret_cast<const ComponentT*>(m_Components[i]));
     }
 }
 
 template <class ComponentT>
 ComponentT* Entity::GetComponent()
 {
-    for (Component* comp : m_Components)
+    for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        if (dynamic_cast<ComponentT*>(comp))
-            return reinterpret_cast<ComponentT*>(comp);
+        if (dynamic_cast<ComponentT*>(m_Components[i]))
+            return reinterpret_cast<ComponentT*>(m_Components[i]);
     }
     return nullptr;
 }
@@ -142,12 +143,11 @@ ComponentT* Entity::GetComponent()
 template <class ComponentT>
 void Entity::RemoveComponent()
 {
-    for (int i = 0; i < m_Components.size(); ++i)
+    for (int i = 0; i < m_Components.GetSize(); i++)
     {
         if (dynamic_cast<ComponentT*>(m_Components[i]))
         {
-            const std::vector<Component*>::iterator iterator = std::vector<Component*>::begin() + i;
-            m_Components.erase(iterator);
+            m_Components.RemoveAt(i);
             break;
         }
     }

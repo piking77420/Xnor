@@ -2,7 +2,7 @@
 
 void XnorCore::Component::Begin()
 {
-    // CreateTypeInfo();
+    CreateTypeInfo();
 }
 
 void XnorCore::Component::Update()

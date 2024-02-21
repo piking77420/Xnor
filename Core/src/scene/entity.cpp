@@ -12,30 +12,30 @@ Entity::Entity(const Guid& entiyId)
 
 Entity::~Entity()
 {
-    for (const Component* comp : m_Components)
+    for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-       delete comp;
+        delete m_Components[i];
     }
 
-    m_Components.clear();
+    m_Components.Clear();
 }
 
 void Entity::Begin() const
 {
     Entity::CreateTypeInfo();
     transform.CreateTypeInfo();
-
-    for (Component* comp : m_Components)
+    
+    for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        comp->Begin();
+        m_Components[i]->Begin();
     }
 }
 
 void Entity::Update() const
 {
-    for (Component* comp : m_Components)
+    for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        comp->Update();
+        m_Components[i]->Update();
     }
 }
 
@@ -143,4 +143,3 @@ bool Entity::operator==(const Entity& entity) const
 {
     return m_EntityId == entity.m_EntityId;
 }
-

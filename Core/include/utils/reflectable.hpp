@@ -218,7 +218,7 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
         constexpr bool isPointer = std::is_pointer<typename T::value_type>();
         constexpr bool isReflectable = std::is_base_of_v<Reflectable, typename T::value_type>;
         constexpr bool isStatic = member.is_static;
-        constexpr bool isVector = Utils::is_std_vector<typename T::value_type>::value;
+        constexpr bool isVector = Utils::is_xnor_vector<typename T::value_type>::value;
 
         // A member is const if it can't be written to
         constexpr bool isConst = !member.is_writable;

@@ -6,6 +6,8 @@ BEGIN_XNOR_CORE
 
 class DirectionalLight : public Light
 {
+    REFLECTABLE_IMPL(DirectionalLight)
+
 public:
     Vector3 direction = Vector3::UnitZ();
     
@@ -16,3 +18,7 @@ public:
 };
 
 END_XNOR_CORE
+
+REFL_AUTO(type(XnorCore::DirectionalLight, bases<XnorCore::Component>),
+    field(direction)
+);

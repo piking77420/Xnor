@@ -167,10 +167,10 @@ void Inspector::DisplayVectorMember(void* const obj, const XnorCore::FieldInfo& 
 {
     if (ImGui::CollapsingHeader(fieldInfo.name.c_str()))
     {
-        std::vector<int>* const vec = XnorCore::Utils::GetAddress<std::vector<int>>(obj, fieldInfo.offset, 0);
-        void* ptr = reinterpret_cast<uint8_t*>(vec->data()) - fieldInfo.offset;
+        XnorCore::List<int>* const vec = XnorCore::Utils::GetAddress<XnorCore::List<int>>(obj, fieldInfo.offset, 0);
+        void* ptr = reinterpret_cast<uint8_t*>(vec->GetData()) - fieldInfo.offset;
 
-        for (size_t i = 0; i < vec->size(); i++)
+        for (size_t i = 0; i < vec->GetSize(); i++)
             DisplayScalarMember(ptr, fieldInfo, i);
     }
 }
