@@ -10,6 +10,7 @@
 
 #include "transform.hpp"
 #include "utils/list.hpp"
+#include "utils/pointer.hpp"
 #include "utils/utils.hpp"
 
-using namespace XnorCore;
+using namespace XnorCore;  // NOLINT(clang-diagnostic-header-hygiene)

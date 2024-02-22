@@ -197,8 +197,6 @@ Pointer<T>& Pointer<T>::operator=(const Pointer& other)  // NOLINT(bugprone-unha
     
     m_ReferenceCounter = other.m_ReferenceCounter;
     m_ReferenceCounter->IncWeak(this);
-
-    m_ReferenceCounter->DecWeak(&other);
     
     return *this;
 }
@@ -232,8 +230,6 @@ Pointer<T>& Pointer<T>::operator=(const Pointer<U>& other)
     
     m_ReferenceCounter = reinterpret_cast<ReferenceCounter<T>*>(other.GetReferenceCounter());
     m_ReferenceCounter->IncWeak(this);
-    
-    m_ReferenceCounter->DecWeak(&other);
     
     return *this;
 }
