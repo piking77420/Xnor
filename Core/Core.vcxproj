@@ -184,6 +184,7 @@
     <ClInclude Include="include\utils\logger.hpp" />
     <ClInclude Include="include\utils\memory_leak_detector.hpp" />
     <ClInclude Include="include\utils\pointer.hpp" />
+    <ClInclude Include="include\utils\poly_ptr.hpp" />
     <ClInclude Include="include\utils\reference_counter.hpp" />
     <ClInclude Include="include\utils\reflectable.hpp" />
     <ClInclude Include="include\utils\tsqueue.hpp" />

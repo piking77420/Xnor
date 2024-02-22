@@ -27,6 +27,7 @@ public:
     void Reserve(size_t capacity);
     void Clear();
 
+    void Add();
     void Add(T& element);
     void Add(T&& element);
     
@@ -166,6 +167,15 @@ void List<T>::Reserve(const size_t capacity)
 template <typename T>
 void List<T>::Clear()
 {
+}
+
+template <typename T>
+void List<T>::Add()
+{
+    CheckGrow(m_Size + 1);
+
+    m_Data[m_Size] = T();
+    m_Size++;
 }
 
 template <typename T>

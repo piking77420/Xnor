@@ -11,6 +11,7 @@
 #include "Maths/vector2.hpp"
 
 #include "utils/list.hpp"
+#include "utils/poly_ptr.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -35,6 +36,12 @@ namespace Utils
 
     template<typename T>
     struct is_xnor_vector<List<T>> : std::true_type {};
+
+    template<typename>
+    struct is_poly_ptr : std::false_type {};
+
+    template<typename T>
+    struct is_poly_ptr<PolyPtr<T>> : std::true_type {};
 
     template<typename T>
     struct ptr_to_void_ptr { using type = T; };

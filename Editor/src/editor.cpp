@@ -259,18 +259,19 @@ void Editor::EndFrame()
 
 void Editor::WorldBehaviours()
 {
-	if (XnorCore::World::world == nullptr)
+	XnorCore::World* const w = XnorCore::World::world;
+	if (w == nullptr)
 		return;
 		
-	if (XnorCore::World::world->IsPlaying)
+	if (w->IsPlaying)
 	{
-		if (!XnorCore::World::world->HasStarted)
+		if (!w->HasStarted)
 		{
-			XnorCore::World::world->Begin();
-			XnorCore::World::world->HasStarted = true;
+			w->Begin();
+			w->HasStarted = true;
 		}
 
-		XnorCore::World::world->Update();
+		w->Update();
 	}
 }
 

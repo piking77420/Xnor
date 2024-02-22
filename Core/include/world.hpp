@@ -9,7 +9,6 @@ BEGIN_XNOR_CORE
 class World
 {
 public:
-    
     XNOR_ENGINE static inline World* world = nullptr;
     
     bool IsPlaying = false;

@@ -14,7 +14,7 @@ Entity::~Entity()
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        delete m_Components[i];
+        m_Components[i].Destroy();
     }
 
     m_Components.Clear();

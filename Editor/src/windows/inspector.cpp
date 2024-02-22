@@ -7,6 +7,7 @@
 #include "Maths/vector2.hpp"
 #include "Maths/vector3.hpp"
 #include "Maths/vector4.hpp"
+#include "scene/component/mesh_renderer.hpp"
 
 using namespace XnorEditor;
 
@@ -142,8 +143,24 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
     {
         if (ImGui::CollapsingHeader(name))
         {
-            const XnorCore::TypeInfo& subInfo = XnorCore::TypeInfo::Get(fieldInfo.typeHash);
-            void* const subPtr = XnorCore::Utils::GetAddress<uint8_t>(obj, fieldInfo.offset, element * subInfo.GetSize());
+            size_t hash = fieldInfo.typeHash;
+            const bool isPoly = fieldInfo.isPolyPointer; 
+
+            PolyPtr<void*>* polyPtr = nullptr;
+            if (isPoly)
+            {
+                polyPtr = XnorCore::Utils::GetAddress<PolyPtr<void*>>(obj, fieldInfo.offset, element); 
+                hash = polyPtr->GetHash();
+            }
+
+            const XnorCore::TypeInfo& subInfo = XnorCore::TypeInfo::Get(hash);
+
+            void* subPtr;
+            if (isPoly)
+                subPtr = polyPtr->AsVoid();
+            else
+                subPtr = XnorCore::Utils::GetAddress<uint8_t>(obj, fieldInfo.offset, element * subInfo.GetSize());
+            
             ImGui::PushID(subPtr);
 
             for (const XnorCore::FieldInfo& m : subInfo.GetMembers())
@@ -167,10 +184,13 @@ void Inspector::DisplayVectorMember(void* const obj, const XnorCore::FieldInfo& 
 {
     if (ImGui::CollapsingHeader(fieldInfo.name.c_str()))
     {
-        XnorCore::List<int>* const vec = XnorCore::Utils::GetAddress<XnorCore::List<int>>(obj, fieldInfo.offset, 0);
-        void* ptr = reinterpret_cast<uint8_t*>(vec->GetData()) - fieldInfo.offset;
+        if (fieldInfo.isPolyPointer)
+        {
+            XnorCore::List<PolyPtr<int>>* const vec = XnorCore::Utils::GetAddress<XnorCore::List<PolyPtr<int>>>(obj, fieldInfo.offset, 0);
+            void* ptr = reinterpret_cast<uint8_t*>(vec->GetData()) - fieldInfo.offset;
 
-        for (size_t i = 0; i < vec->GetSize(); i++)
-            DisplayScalarMember(ptr, fieldInfo, i);
+            for (size_t i = 0; i < vec->GetSize(); i++)
+                DisplayScalarMember(ptr, fieldInfo, i);
+        }
     }
 }

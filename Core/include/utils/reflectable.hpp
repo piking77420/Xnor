@@ -23,6 +23,7 @@ public:
     bool isArray;
     bool isVector;
     bool isPointer;
+    bool isPolyPointer;
     bool isStatic;
     bool isConst;
 
@@ -198,6 +199,7 @@ constexpr TypeInfo::TypeInfo(const refl::type_descriptor<ReflectT> desc)
 {
     // Get type name
     m_Name = std::string(desc.name.c_str());
+    Logger::LogDebug("Creating type info for : {}", m_Name);
     m_Size = sizeof(ReflectT);
 
     ParseMembers(desc);
@@ -216,6 +218,7 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
         // Get metadata about the member
         constexpr bool isArray = std::is_array<typename T::value_type>();
         constexpr bool isPointer = std::is_pointer<typename T::value_type>();
+        bool isPolyPointer = Utils::is_poly_ptr<typename T::value_type>();
         constexpr bool isReflectable = std::is_base_of_v<Reflectable, typename T::value_type>;
         constexpr bool isStatic = member.is_static;
         constexpr bool isVector = Utils::is_xnor_vector<typename T::value_type>::value;
@@ -250,8 +253,10 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
         }
         else if constexpr (isVector)
         {
-            hash = typeid(T::value_type::value_type).hash_code();
-            elementSize = sizeof(T::value_type::value_type);
+            using ListT = typename T::value_type::value_type; 
+            hash = typeid(ListT).hash_code();
+            elementSize = sizeof(ListT);
+            isPolyPointer = Utils::is_poly_ptr<ListT>();
         }
         else
         {
@@ -276,6 +281,7 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
             .isArray = isArray,
             .isVector = isVector,
             .isPointer = isPointer,
+            .isPolyPointer = isPolyPointer,
             .isStatic = isStatic,
             .isConst = isConst
         };

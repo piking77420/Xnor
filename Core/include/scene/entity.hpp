@@ -8,6 +8,7 @@
 #include "utils/guid.hpp"
 #include "utils/reflectable.hpp"
 #include "utils/list.hpp"
+#include "utils/poly_ptr.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -83,7 +84,7 @@ private:
     
     Guid m_EntityId;
 
-    List<Component*> m_Components;
+    List<PolyPtr<Component>> m_Components;
 
     friend class Scene;
 };
@@ -91,10 +92,11 @@ private:
 template <class ComponentT>
 void Entity::AddComponent()
 {
-    Component* newT = new ComponentT();
-    newT->entity = this;
+    m_Components.Add();
     
-    m_Components.Add(newT);
+    ComponentT* newT = new ComponentT();
+    newT->entity = this;
+    m_Components[m_Components.GetSize() - 1].Create(newT);
 }
 
 template <class ComponentT>
@@ -102,8 +104,8 @@ const ComponentT* Entity::GetComponent() const
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        if (dynamic_cast<ComponentT*>(m_Components[i]))
-            return reinterpret_cast<ComponentT*>(m_Components[i]);
+        if (m_Components[i].IsOfType<ComponentT>())
+            return m_Components[i].Cast<ComponentT>();
     }
 
     return nullptr;
@@ -114,8 +116,8 @@ void Entity::GetComponents(std::vector<ComponentT*>* components)
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        if (dynamic_cast<ComponentT*>(m_Components[i]))
-            components->push_back(reinterpret_cast<ComponentT*>(m_Components[i]));
+        if (m_Components[i].IsOfType<ComponentT>())
+            components->push_back(m_Components[i].Cast<ComponentT>());
     }
 }
 
@@ -124,7 +126,7 @@ void Entity::GetComponents(std::vector<const ComponentT*>* components) const
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        if (dynamic_cast<ComponentT*>(m_Components[i]))
+        if (m_Components[i].IsOfType<ComponentT>())
             components->push_back(reinterpret_cast<const ComponentT*>(m_Components[i]));
     }
 }
@@ -134,9 +136,10 @@ ComponentT* Entity::GetComponent()
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        if (dynamic_cast<ComponentT*>(m_Components[i]))
-            return reinterpret_cast<ComponentT*>(m_Components[i]);
+        if (m_Components[i].IsOfType<ComponentT>())
+            return m_Components[i].Cast<ComponentT>();
     }
+    
     return nullptr;
 }
 
@@ -145,7 +148,7 @@ void Entity::RemoveComponent()
 {
     for (int i = 0; i < m_Components.GetSize(); i++)
     {
-        if (dynamic_cast<ComponentT*>(m_Components[i]))
+        if (m_Components[i].IsOfType<ComponentT>())
         {
             m_Components.RemoveAt(i);
             break;
@@ -156,11 +159,11 @@ void Entity::RemoveComponent()
 template <class ComponentT>
 bool Entity::TryGetComponent(ComponentT** output)
 {
-    for (Component* comp: m_Components)
+    for (int i = 0; i < m_Components.GetSize(); i++)
     {
-        if (dynamic_cast<ComponentT*>(comp) != nullptr)
+        if (m_Components[i].IsOfType<ComponentT>())
         {
-            *output = reinterpret_cast<ComponentT*>(comp);
+            *output = m_Components[i].Cast<ComponentT>();
             return true;
         }
     }
