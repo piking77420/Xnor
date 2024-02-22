@@ -38,5 +38,6 @@ TEST(Utils, PathToForwardSlashes)
 
 TEST(Utils, HumanizeString)
 {
-    
+    EXPECT_EQ(Utils::HumanizeString("stringToHumanize"), "String To Humanize");
+    EXPECT_EQ(Utils::HumanizeString("RequiresUIReload"), "Requires UI Reload");
 }

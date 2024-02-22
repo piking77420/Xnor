@@ -40,23 +40,42 @@ std::string Utils::PathToForwardSlashes(std::string path)
 
 std::string Utils::HumanizeString(const std::string& str)
 {
-    // Regex: https://regex101.com/r/3rQ25V/1
+    // Regex: https://regex101.com/r/3rQ25V/5
     // Matches any uppercase letter that has a lowercase variant,
     // that is not the first character in the string,
     // and that is either preceded or followed by a lowercase letter that has an uppercase variant
-    const std::regex regex(R"(?:(?<=\p{Ll})\p{Lu})|(?:\p{Lu}(?=\p{Ll}))(?<!^.)");
-
-    const std::string format(
-        "$`"   // $` means characters before the match
-        " $&"  // $& means the matched characters
-        "$'"   // $' means characters following the match
-    );
-    
-    std::string result;
-    std::regex_replace(result.begin(), str.begin(), str.end(), regex, format);
+    static const std::regex Regex(R"((?:[a-z])([A-Z])|(?:.)([A-Z])(?:[a-z]))");
 
     // According to https://en.cppreference.com/w/cpp/string/byte/toupper,
     // when using the std::toupper function, to make sure the operation is executed
     // correctly, we should cast the input to unsigned char and the output to char
-    return static_cast<char>(std::toupper(static_cast<uint8_t>(str[0]))) + str.substr(1);
+    const char_t firstCharUpper = static_cast<char_t>(std::toupper(static_cast<uint8_t>(str[0])));
+
+    std::sregex_iterator begin(str.begin(), str.end(), Regex);
+    std::sregex_iterator end;
+
+    std::string result = firstCharUpper + str.substr(1);
+    
+    // Early return if nothing matches
+    if (std::distance(begin, end) == 0)
+        return result;
+
+    const std::string::const_iterator& sBegin = str.begin();
+    std::string::iterator rBegin = result.begin();
+    for (std::sregex_iterator it = begin; it != end; ++it)
+    {
+        const std::smatch& match = *it;
+        // Get results for capture groups 1 and 2
+        for (int i = 1; i < 3; i++)
+        {
+            std::ssub_match subMatch = match[i];
+            if (subMatch.matched)
+            {
+                result.replace(subMatch.first - sBegin + rBegin, subMatch.second - sBegin + rBegin, ' ' + subMatch.str());
+                rBegin++;
+            }
+        }
+    }
+
+    return result;
 }
