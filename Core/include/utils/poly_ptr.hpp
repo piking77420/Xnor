@@ -87,10 +87,11 @@ void PolyPtr<T>::Create(U* value)
 template <typename T>
 void PolyPtr<T>::Destroy()
 {
-    if (!m_Ptr)
+    if (m_Ptr)
     {
         delete m_Ptr;
         m_Hash = 0;
+        m_Ptr = nullptr;
     }
 }
 

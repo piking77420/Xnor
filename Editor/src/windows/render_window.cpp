@@ -44,7 +44,7 @@ void RenderWindow::Initialize(XnorCore::RendererContext* rendererContext)
     // Init Rendering
     m_FrameBuffer = FrameBuffer(Window::GetSize());
     m_ColorTexture = new Texture(AttachementsType::Color, m_FrameBuffer.GetSize());
-    m_DepthTexture = new Texture(AttachementsType::DepthAndStencil,m_FrameBuffer.GetSize());
+    m_DepthTexture = new Texture(AttachementsType::DepthAndStencil, m_FrameBuffer.GetSize());
     
     // Set Up renderPass
     const RenderPass renderPass(attachementsType);
