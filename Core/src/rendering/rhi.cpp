@@ -241,33 +241,36 @@ void RHI::CreateFrameBuffer(uint32_t* const frameBufferId, const uint32_t render
 	glCreateFramebuffers(1, frameBufferId);
 	const RenderPassIternal& renderPassIternal = m_RenderPassMap.at(renderPassId);
 
+	std::vector<GLenum> openglAttachments(targets.size());
+
 	for (size_t i = 0; i < renderPassIternal.attachementsType.size(); i++)
 	{
-		uint32_t openglAttachment = 0;
 		switch (renderPassIternal.attachementsType[i])
 		{
 			case AttachementsType::Color:
 			case AttachementsType::Position:
 			case AttachementsType::Normal:
 			case AttachementsType::Texturecoord:
-				openglAttachment = static_cast<const uint32_t>(GL_COLOR_ATTACHMENT0 + i);
+				openglAttachments[i] = GL_COLOR_ATTACHMENT0 + i;
 				break;
 			
 			case AttachementsType::Depth:
-				openglAttachment = GL_DEPTH_ATTACHMENT;
+				openglAttachments[i] = GL_DEPTH_ATTACHMENT;
 				break;
 			
 			case AttachementsType::Stencil:
-				openglAttachment = GL_STENCIL_ATTACHMENT;
+				openglAttachments[i] = GL_STENCIL_ATTACHMENT;
 				break;
 			
 			case AttachementsType::DepthAndStencil:
-				openglAttachment = GL_DEPTH_STENCIL_ATTACHMENT;
+				openglAttachments[i] = GL_DEPTH_STENCIL_ATTACHMENT;
 				break;
 		}
 		
-		glNamedFramebufferTexture(*frameBufferId, openglAttachment,targets.at(i)->GetId(), 0);
+		glNamedFramebufferTexture(*frameBufferId, openglAttachments[i],targets.at(i)->GetId(), 0);
 	}
+	glNamedFramebufferDrawBuffers(*frameBufferId,openglAttachments.size(),openglAttachments.data());
+	
 }
 
 

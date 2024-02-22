@@ -32,8 +32,8 @@ public:
 private:
 
     FrameBuffer* m_RenderBuffer = nullptr;
-    Texture m_ColorAttachment;
-    Texture m_DepthAttachment;
+    Texture* m_ColorAttachment = nullptr;
+    Texture* m_DepthAttachment = nullptr;
     
     RHI m_Rhi;
 

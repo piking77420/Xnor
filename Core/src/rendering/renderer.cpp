@@ -36,6 +36,8 @@ Renderer::Renderer()
 Renderer::~Renderer()
 {
 	delete m_RenderBuffer;
+	delete m_ColorAttachment;
+	delete m_DepthAttachment;
 }
 
 void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererContext& rendererContext) const
@@ -45,15 +47,15 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 	m_Rhi.SetClearColor(clearColor);
 	m_Rhi.ClearColorAndDepth();
 
-	if(rendererContext.framebuffer != nullptr)
-	{
-		rendererContext.framebuffer->BindFrameBuffer();
-	}
-	
+	rendererContext.framebuffer->BindFrameBuffer();
+	m_Rhi.SetClearColor(clearColor);
+	m_Rhi.ClearColorAndDepth();
+
+	m_RenderBuffer->BindFrameBuffer();
 	m_Rhi.SetClearColor(clearColor);
 	m_Rhi.ClearColorAndDepth();
 	
-	RHI::SetViewport(screenSize);
+	RHI::SetViewport(m_RenderBuffer->GetSize());
 	
 	m_BasicShader->Use();
 	CameraUniformData cam;
@@ -65,20 +67,22 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 	UpdateLight(scene,rendererContext);
 	DrawMeshRenders(scene,rendererContext);
 	m_BasicShader->UnUse();
-
+	m_RenderBuffer->UnBindFrameBuffer();
+	
 	if(rendererContext.framebuffer != nullptr)
 	{
-		/*
-		m_RenderBuffer->UnBindFrameBuffer();
+		
+	
 		
 		rendererContext.framebuffer->BindFrameBuffer();
+		RHI::SetViewport(rendererContext.framebuffer->GetSize());
+
 		// Render To Imgui frame buffer
 		m_DrawTextureToScreenShader->Use();
-		m_ColorAttachment.BindTexture(0);
+		m_ColorAttachment->BindTexture(0);
 		
 		RHI::DrawModel(m_Quad->GetId());
 		m_DrawTextureToScreenShader->UnUse();
-		rendererContext.framebuffer->UnBindFrameBuffer();rendererContext*/
 		rendererContext.framebuffer->UnBindFrameBuffer();
 	}
 
@@ -117,12 +121,12 @@ void Renderer::PrepareRendering(vec2i windowSize)
 		AttachementsType::DepthAndStencil
 	};
 	
-	m_ColorAttachment = Texture(AttachementsType::Color, m_RenderBuffer->GetSize());
-	m_DepthAttachment = Texture(AttachementsType::DepthAndStencil,m_RenderBuffer->GetSize());
+	m_ColorAttachment = new Texture(AttachementsType::Color, m_RenderBuffer->GetSize());
+	m_DepthAttachment = new Texture(AttachementsType::DepthAndStencil,m_RenderBuffer->GetSize());
     
 	// Set Up renderPass
 	const RenderPass renderPass(attachementsType);
-	const std::vector targets = { &m_ColorAttachment, &m_DepthAttachment };
+	const std::vector targets = { m_ColorAttachment, m_DepthAttachment };
 	m_RenderBuffer->Create(renderPass,targets);
 	
 }

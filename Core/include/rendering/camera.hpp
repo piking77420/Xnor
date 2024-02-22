@@ -10,7 +10,7 @@ BEGIN_XNOR_CORE
 class XNOR_ENGINE Camera
 {
 public:
-	Vector3 pos;
+	Vector3 pos = {0,0,2};
 	float near = 0.1f;
 	Vector3 front = -Vector3::UnitZ();
 	float far = 1000.f;
