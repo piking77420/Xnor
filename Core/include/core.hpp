@@ -3,6 +3,16 @@
 
 #include <cstdint>
 
+// ReSharper disable once CppEnforceTypeAliasCodeStyle
+/// <summary>
+/// We use a typedef here instead of a type alias for consistency
+/// with how the other integral types are defined in the <c>cstdint</c> header.
+/// Also, we need to manually add this type because it is considered
+/// different to <c>int8_t</c> as the latter is the equivalent of <c>signed char</c>
+/// and not <c>char</c>.
+/// </summary>
+typedef char char_t;
+
 #ifdef XNOR_EXPORT
 #define XNOR_ENGINE __declspec(dllexport)
 #else
