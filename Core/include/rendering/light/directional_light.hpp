@@ -19,6 +19,6 @@ public:
 
 END_XNOR_CORE
 
-REFL_AUTO(type(XnorCore::DirectionalLight, bases<XnorCore::Component>),
+REFL_AUTO(type(XnorCore::DirectionalLight, bases<XnorCore::Light>),
     field(direction)
 );
