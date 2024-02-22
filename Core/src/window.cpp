@@ -67,6 +67,11 @@ double Window::GetTime() const
 	return glfwGetTime();
 }
 
+GLFWwindow* Window::GetHandle()
+{
+	return m_Window;
+}
+
 void Window::GlfwResizeFramebuffer([[maybe_unused]] GLFWwindow* window, [[maybe_unused]] int width, [[maybe_unused]] int height)
 {
 	resizeFrameBuffer = true;

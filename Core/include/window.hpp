@@ -11,12 +11,13 @@ BEGIN_XNOR_CORE
 class XNOR_ENGINE Window
 {
 public:
-
 	static inline bool resizeFrameBuffer = false;
 	
 	Window();
 
 	~Window();
+
+	DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(Window)
 
 	[[nodiscard]]
 	static Vector2i GetSize();
@@ -36,9 +37,11 @@ public:
 	[[nodiscard]]
 	double GetTime() const;
 
-private:
-	static void GlfwResizeFramebuffer(GLFWwindow* window,int width,int height);
+	[[nodiscard]]
+	GLFWwindow* GetHandle();
 
+private:
+	static void GlfwResizeFramebuffer(GLFWwindow* window, int width, int height);
 	
 	static inline GLFWwindow* m_Window = nullptr;
 	static inline Vector2i m_Size = { 1280, 720 };

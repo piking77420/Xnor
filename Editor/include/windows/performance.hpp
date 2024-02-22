@@ -11,21 +11,23 @@ class Performance : public UiWindow
 {
     // Constants
     static constexpr inline float_t GraphsHeight = 50.f;
-    static constexpr inline uint32_t MaxSamples = 50;
-    static constexpr inline float_t MinHighestArrayFps = 60.f;
+    static constexpr inline uint32_t DefaultSampleCount = 50;
     static constexpr inline float_t MinHighestArrayMemory = 50.f;
     
 public:
-    explicit Performance(Editor* editor, size_t sampleSize);
+    explicit Performance(Editor* editor, size_t sampleCount);
     
     void Update();
 
     void Display() override;
 
+    void SetSampleCount(size_t sampleCount);
+
 private:
     float_t m_UpdateInterval = 0.25f;
     
     size_t m_TotalSamples = 0;
+    size_t m_MaxTotalSamples = 0;
     int32_t m_ArrayIndex = 0;
 
     float_t m_LastFps = 0.f;

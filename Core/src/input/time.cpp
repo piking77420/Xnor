@@ -11,4 +11,6 @@ void Time::Update()
     m_TotalTime = glfwGetTime();
     
     m_DeltaTime = m_TotalTime - m_LastTotalTime;
+
+    m_TotalFrameCount++;
 }

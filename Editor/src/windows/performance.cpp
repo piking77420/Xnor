@@ -9,6 +9,7 @@
 #undef APIENTRY
 #include <psapi.h>
 
+#include "screen.hpp"
 #include "GLFW/glfw3.h"
 #include "imgui/imgui.h"
 #include "input/time.hpp"
@@ -16,18 +17,20 @@
 
 using namespace XnorEditor;
 
-Performance::Performance(Editor* const editor, const size_t sampleSize)
+Performance::Performance(Editor* const editor, const size_t sampleCount)
     : UiWindow(editor, "Performance Graphs")
 {
-    m_FrameRateArray.resize(sampleSize);
-    m_MemoryArray.resize(sampleSize);
+    SetSampleCount(sampleCount);
 }
 
 void Performance::Update()
 {
+    if (m_ArrayIndex > m_FrameRateArray.size())
+        m_ArrayIndex %= m_FrameRateArray.size();
+    
     m_LastFps = 1.f / XnorCore::Time::GetDeltaTime();
     m_FrameRateArray[m_ArrayIndex] = m_LastFps;
-    m_HighestArrayFps = std::max(*std::ranges::max_element(m_FrameRateArray), MinHighestArrayFps);
+    m_HighestArrayFps = std::max(*std::ranges::max_element(m_FrameRateArray), static_cast<float_t>(XnorCore::Screen::RefreshRate()));
 
     PROCESS_MEMORY_COUNTERS memory;
     GetProcessMemoryInfo(GetCurrentProcess(), &memory, sizeof(memory));
@@ -37,7 +40,7 @@ void Performance::Update()
     m_HighestArrayMemory = std::max(*std::ranges::max_element(m_MemoryArray), MinHighestArrayMemory);
 
     m_ArrayIndex = static_cast<int32_t>((m_ArrayIndex + 1) % m_FrameRateArray.size());
-    if (m_TotalSamples < MaxSamples)
+    if (m_TotalSamples < m_MaxTotalSamples)
         m_TotalSamples++;
 }
 
@@ -58,5 +61,25 @@ void Performance::Display()
         format.c_str(), 0.f, m_HighestArrayMemory, ImVec2(available.x, GraphsHeight));
 
     if (ImGui::CollapsingHeader("Settings"))
-        ImGui::SliderFloat("Update rate", &m_UpdateInterval, 0.f, 2.f);
+    {
+        ImGui::SliderFloat("Update interval", &m_UpdateInterval, 0.f, 2.f);
+
+        size_t newSampleCount = m_MaxTotalSamples;
+        
+        static constexpr size_t MinSamples = 1;
+        static constexpr size_t MaxSamples = 0xFFFF;
+        
+        ImGui::SliderScalar("Sample count", ImGuiDataType_U64, &newSampleCount, &MinSamples, &MaxSamples);
+
+        if (newSampleCount != m_MaxTotalSamples)
+            SetSampleCount(newSampleCount);
+    }
+}
+
+void Performance::SetSampleCount(const size_t sampleCount)
+{
+    m_FrameRateArray.resize(sampleCount);
+    m_MemoryArray.resize(sampleCount);
+
+    m_MaxTotalSamples = sampleCount;
 }

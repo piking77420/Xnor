@@ -69,7 +69,7 @@ namespace TestLambda
 {
     List<int> list{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-    TEST()
+    TEST(List, Lambda)
     {
         EXPECT_EQ(list[4], 4);
         list.Iterate([](int* v, size_t idx) -> void

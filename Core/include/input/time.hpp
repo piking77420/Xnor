@@ -9,7 +9,7 @@ BEGIN_XNOR_CORE
 class Time
 {
     STATIC_CLASS(Time)
-    
+
 public:
     template<typename T = float>
     static T GetTotalTime();
@@ -20,12 +20,20 @@ public:
     template<typename T = float>
     static T GetDeltaTime();
 
-    XNOR_ENGINE static void Update();
+    template<typename T = uint32_t>
+    static T GetTotalFrameCount();
     
+    /// <summary>
+    /// Updates the time variables using GLFW.
+    /// This function should be called exactly once each frame.
+    /// </summary>
+    XNOR_ENGINE static void Update();
+
 private:
     XNOR_ENGINE static inline double_t m_TotalTime = 0.0;
     XNOR_ENGINE static inline double_t m_LastTotalTime = 0.0;
     XNOR_ENGINE static inline double_t m_DeltaTime = 0.0;
+    XNOR_ENGINE static inline uint64_t m_TotalFrameCount = 0;
 };
 
 template float_t Time::GetTotalTime<float_t>();
@@ -59,6 +67,18 @@ T Time::GetDeltaTime()
     static_assert(std::is_floating_point_v<T>, "You can only get delta time as a floating point type");
     
     return static_cast<T>(m_DeltaTime);
+}
+
+template uint32_t Time::GetTotalFrameCount<uint32_t>();
+template uint64_t Time::GetTotalFrameCount<uint64_t>();
+template int32_t Time::GetTotalFrameCount<int32_t>();
+
+template<typename T>
+T Time::GetTotalFrameCount()
+{
+    static_assert(std::is_integral_v<T>, "You can only get total frame count as an integral type");
+    
+    return static_cast<T>(m_TotalFrameCount);
 }
 
 END_XNOR_CORE
