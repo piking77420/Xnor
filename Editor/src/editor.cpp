@@ -226,12 +226,12 @@ void Editor::Update()
 		Time::Update();
 		BeginFrame();
 
-		ImGui::Begin("Renderer Settings");
+		/*ImGui::Begin("Renderer Settings");
 		
 		if (ImGui::Button("Recompile Shader"))
 			renderer.CompileShader();
 		
-		ImGui::End();
+		ImGui::End();*/
 		
 		WorldBehaviours();
 		UpdateWindow();

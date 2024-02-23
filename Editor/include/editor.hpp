@@ -7,6 +7,7 @@
 #include "applications/application.hpp"
 
 BEGIN_XNOR_EDITOR
+
 class UiWindow;
 class RenderWindow;
 class UserInput;

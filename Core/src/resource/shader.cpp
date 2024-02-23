@@ -44,7 +44,6 @@ XNOR_ENGINE void Shader::Recompile(const File& vertexShader, const File& fragmen
 
 void Shader::Unload()
 {
-    return void();
 }
 
 void Shader::SetInt(const std::string& keyName, int value) const
@@ -79,7 +78,7 @@ void Shader::SetMat4(const std::string& keyName, const Matrix& value) const
 
 uint32_t Shader::GetId() const
 {
-    return  m_Id;
+    return m_Id;
 }
 
 void Shader::Use() const
