@@ -53,7 +53,7 @@ void Scene::GetAllComponentOfType(std::vector<const ComponentT*>* componentData)
         const ComponentT* component = ent->GetComponent<ComponentT>();
 
         if (component != nullptr)
-            componentData->emplace_back(component);
+            componentData->push_back(component);
     }
 }
 
@@ -65,7 +65,7 @@ void Scene::GetAllComponentOfType(std::vector<ComponentT*>* componentData)
         ComponentT* component = ent->GetComponent<ComponentT>();
 
         if (component != nullptr)
-            componentData->emplace_back(component);
+            componentData->push_back(component);
     }
 }
 

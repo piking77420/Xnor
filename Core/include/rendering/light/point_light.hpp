@@ -7,6 +7,8 @@ BEGIN_XNOR_CORE
 
 class PointLight :  public Light
 {
+    REFLECTABLE_IMPL(PointLight)
+    
 public:
     XNOR_ENGINE PointLight() = default;
 
@@ -14,4 +16,9 @@ public:
 
     DEFAULT_COPY_MOVE_OPERATIONS(PointLight)
 };
+
 END_XNOR_CORE
+
+REFL_AUTO(type(XnorCore::PointLight, bases<XnorCore::Light>)
+);
+

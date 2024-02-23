@@ -5,6 +5,8 @@ BEGIN_XNOR_CORE
 
 class SpotLight : public Light
 {
+    REFLECTABLE_IMPL(SpotLight)
+
 public:
     Vector3 direction = Vector3::UnitZ();
 
@@ -19,3 +21,9 @@ public:
 };
 
 END_XNOR_CORE
+
+REFL_AUTO(type(XnorCore::SpotLight, bases<XnorCore::Light>),
+    field(direction),
+    field(cutOff),
+    field(outerCutOff)
+);
