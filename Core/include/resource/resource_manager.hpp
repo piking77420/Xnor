@@ -86,7 +86,7 @@ Pointer<T> ResourceManager::Get(const std::string& name)
     if (!Contains(name))
     {
         Logger::LogError("Attempt to get an unknown resource: {}", name);
-        return Pointer<T>();
+        return {};
     }
 
     return Pointer<T>(m_Resources.at(name));
