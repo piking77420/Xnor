@@ -4,6 +4,9 @@
 #include <filesystem>
 #include <type_traits>
 #include <vector>
+#include <Maths/quaternion.hpp>
+#include <Maths/vector3.hpp>
+#include <Maths/vector4.hpp>
 
 #include "ImGui/imgui.h"
 
@@ -59,6 +62,57 @@ namespace Utils
 
     [[nodiscard]]
     XNOR_ENGINE std::string HumanizeString(const std::string& str);
+
+    XNOR_ENGINE inline float NormalizeAngle(float angle)
+    {
+        while (angle > Calc::Pi * 2.f)
+            angle -= Calc::Pi * 2.f;
+        
+        while (angle < 0)
+            angle += Calc::Pi * 2.f;
+        
+        return angle;
+    }
+    
+    XNOR_ENGINE inline Vector3 NormalizeAngles(Vector3 angles)
+    {
+        angles.x = NormalizeAngle(angles.x);
+        angles.y = NormalizeAngle(angles.y);
+        angles.z = NormalizeAngle(angles.z);
+        return angles;
+    }
+
+    XNOR_ENGINE inline Vector3 GetQuaternionEulerAngles(Quaternion rot)
+    {
+        float sqw = rot.W() * rot.W();
+        float sqx = rot.X() * rot.X();
+        float sqy = rot.Y() * rot.Y();
+        float sqz = rot.Z() * rot.Z();
+        float unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
+        float test = rot.X() * rot.W() - rot.Y() * rot.Z();
+        Vector3 v;
+ 
+        if (test > 0.4995f * unit)
+        { // singularity at north pole
+            v.y = 2.f * std::atan2f(rot.Y(), rot.X());
+            v.x = Calc::PiOver2;
+            v.z = 0;
+            return NormalizeAngles(v);
+        }
+        if (test < -0.4995f * unit)
+        { // singularity at south pole
+            v.y = -2.f * std::atan2f(rot.Y(), rot.X());
+            v.x = -Calc::PiOver2;
+            v.z = 0;
+            return NormalizeAngles(v);
+        }
+ 
+        rot = Quaternion(rot.Z(), rot.X(), rot.Y(), rot.W());
+        v.y = std::atan2f(2.f * rot.X() * rot.W() + 2.f * rot.Y() * rot.Z(), 1 - 2.f * (rot.Z() * rot.Z() + rot.W() * rot.W()));     // Yaw
+        v.x = std::asinf(2.f * (rot.X() * rot.Z() - rot.W() * rot.Y()));                             // Pitch
+        v.z = std::atan2f(2.f * rot.X() * rot.Y() + 2.f * rot.Z() * rot.W(), 1 - 2.f * (rot.Y() * rot.Y() + rot.Z() * rot.Z()));      // Roll
+        return NormalizeAngles(v);
+    }
 }
 
 template<typename PtrT, typename IntT>

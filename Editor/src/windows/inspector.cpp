@@ -129,9 +129,10 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
     else if (fieldInfo.typeHash == typeid(Quaternion).hash_code())
     {
         Quaternion* const q = XnorCore::Utils::GetAddress<Quaternion>(obj, fieldInfo.offset, element);
-        
-        Vector3 euler = Quaternion::ToEuler(*q);
-        ImGui::SliderAngle3(name, euler.Raw());
+
+        Vector3 euler = XnorCore::Utils::GetQuaternionEulerAngles(*q);
+        euler *= Calc::Deg2Rad;
+        ImGui::DragFloat3(name, euler.Raw());
         
         *q = Quaternion::FromEuler(euler);
     }

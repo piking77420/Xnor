@@ -14,8 +14,9 @@ class Transform final : public Reflectable
 	
 public:
 	Vector3 position;
-	Quaternion rotation = Quaternion::Identity();
+	Vector3 rotation; 
 	Vector3 scale = Vector3(1.f);
+	Quaternion quaternion = Quaternion::Identity();
 };
 
 END_XNOR_CORE
