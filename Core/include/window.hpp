@@ -5,6 +5,7 @@
 
 #include "core.hpp"
 #include "Maths/vector2i.hpp"
+#include "resource/texture.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -23,9 +24,6 @@ public:
 	static Vector2i GetSize();
 
 	[[nodiscard]]
-	static void* GetWindow();
-
-	[[nodiscard]]
 	static bool ShouldClose();
 
 	static void PollEvents();
@@ -37,6 +35,8 @@ public:
 
 	[[nodiscard]]
 	static GLFWwindow* GetHandle();
+
+	static void SetIcon(Texture& icon);
 
 private:
 	static void GlfwResizeFramebuffer(GLFWwindow* window, int width, int height);

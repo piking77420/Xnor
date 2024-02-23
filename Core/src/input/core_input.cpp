@@ -88,7 +88,7 @@ void CoreInput::HandleGamePad()
 
 void CoreInput::Initialize()
 {
-    GLFWwindow* const windowPtr = static_cast<GLFWwindow*>(Window::GetWindow());
+    GLFWwindow* const windowPtr = static_cast<GLFWwindow*>(Window::GetHandle());
 
     glfwSetKeyCallback(windowPtr, HandleKeyboard);
     glfwSetMouseButtonCallback(windowPtr, HandleMouseButton);

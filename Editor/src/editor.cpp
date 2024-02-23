@@ -163,6 +163,12 @@ void Editor::SetupImGuiStyle() const
 
 Editor::Editor()
 {
+	XnorCore::Pointer<XnorCore::File> logoFile = XnorCore::FileManager::Get("assets/editor/logo.png");
+	XnorCore::Pointer<XnorCore::Texture> logo = XnorCore::ResourceManager::Add<XnorCore::Texture>(logoFile);
+	logo->loadData = { .desiredChannels = 4, .flipVertically = false };
+	logo->Load(*logoFile);
+	XnorCore::Window::SetIcon(*logo);
+	
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
@@ -174,7 +180,7 @@ Editor::Editor()
 
 	constexpr const char* glslVersion = "#version 460";
 
-	ImGui_ImplGlfw_InitForOpenGL(const_cast<GLFWwindow*>(static_cast<const GLFWwindow*>(XnorCore::Window::GetWindow())), true);
+	ImGui_ImplGlfw_InitForOpenGL(XnorCore::Window::GetHandle(), true);
 	ImGui_ImplOpenGL3_Init(glslVersion);
 
 	SetupImGuiStyle();

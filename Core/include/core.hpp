@@ -14,6 +14,12 @@
 /// and not <c>char</c>.
 typedef char char_t;
 
+// ReSharper disable once CppEnforceTypeAliasCodeStyle
+/// @brief Equivalent to <c>bool</c>.
+///
+/// @see @ref char_t for reason
+typedef bool bool_t;
+
 #ifdef XNOR_EXPORT
 #define XNOR_ENGINE __declspec(dllexport)
 #else

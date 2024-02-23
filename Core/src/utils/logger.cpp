@@ -111,7 +111,7 @@ void Logger::Synchronize()
 
 void Logger::Stop()
 {
-    LogDebug("Stopping logger");
+    LogInfo("Stopping logger");
     
     running = false;
     m_CondVar.notify_one();

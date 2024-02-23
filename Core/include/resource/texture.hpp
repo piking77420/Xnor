@@ -8,9 +8,17 @@
 
 BEGIN_XNOR_CORE
 
+struct TextureLoadData
+{
+    int32_t desiredChannels = 0;
+    bool_t flipVertically = true;
+};
+
 class Texture : public Resource
 {
 public:
+    TextureLoadData loadData;
+    
     // Same constructor from base class
     using Resource::Resource;
 
@@ -19,7 +27,7 @@ public:
     // We keep both function overloads and only override one
     using Resource::Load;
 
-    XNOR_ENGINE Texture(const TextureCreateInfo& createInfo);
+    XNOR_ENGINE explicit Texture(const TextureCreateInfo& createInfo);
 
     XNOR_ENGINE Texture(AttachementsType attachements, vec2i size);
     
@@ -31,14 +39,22 @@ public:
     
     XNOR_ENGINE void Unload() override;
 
+    template<typename T = char_t>
     [[nodiscard]]
-    XNOR_ENGINE const uint8_t* GetData() const;
+    const T* GetData() const;
+
+    template<typename T = char_t>
+    [[nodiscard]]
+    T* GetData();
 
     [[nodiscard]]
     XNOR_ENGINE Vector2i GetSize() const;
 
     [[nodiscard]]
-    XNOR_ENGINE int GetChannels() const;
+    XNOR_ENGINE int32_t GetDataChannels() const;
+
+    [[nodiscard]]
+    XNOR_ENGINE int32_t GetChannels() const;
 
     XNOR_ENGINE virtual void BindTexture(uint32_t index) const;
     
@@ -47,7 +63,7 @@ public:
 private:
     uint8_t* m_Data = nullptr;
     Vector2i m_Size;
-    int32_t m_Channels = 0;
+    int32_t m_DataChannels = 0;
     uint32_t m_Id = 0;
 
     TextureFiltering m_TextureFiltering = TextureFiltering::Linear;
@@ -56,5 +72,17 @@ private:
 
     static TextureFormat GetFormat(uint32_t textureFormat);
 };
+
+template<typename T>
+const T* Texture::GetData() const
+{
+    return reinterpret_cast<const T*>(m_Data);
+}
+
+template<typename T>
+T* Texture::GetData()
+{
+    return reinterpret_cast<T*>(m_Data);
+}
 
 END_XNOR_CORE

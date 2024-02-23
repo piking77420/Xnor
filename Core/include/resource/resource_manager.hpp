@@ -20,6 +20,10 @@ public:
     /// @brief Creates the @ref Resource corresponding to the given @p name without loading it.
     template<ResourceT T>
     static Pointer<T> Add(std::string name);
+    
+    /// @brief Creates the @ref Resource corresponding to the given @p file without loading it.
+    template<ResourceT T>
+    static Pointer<T> Add(const Pointer<File>& file);
 
     /// @brief Creates the @ref Resource corresponding to the given @p file and loads it.
     template<ResourceT T>
@@ -61,6 +65,12 @@ Pointer<T> ResourceManager::Add(std::string name)
     resource.ToWeakReference();
 
     return resource;
+}
+
+template<ResourceT T>
+Pointer<T> ResourceManager::Add(const Pointer<File>& file)
+{
+    return Add<T>(file->GetPath().generic_string());
 }
 
 template<ResourceT T>

@@ -1,5 +1,7 @@
 #include "window.hpp"
 
+#include "utils/logger.hpp"
+
 using namespace XnorCore;
 
 void Window::Initialize()
@@ -32,12 +34,6 @@ Vector2i Window::GetSize()
 	return m_Size;
 }
 
-void* Window::GetWindow()
-{
-	return m_Window;
-}
-
-
 bool Window::ShouldClose()
 {
 	return glfwWindowShouldClose(m_Window);
@@ -46,7 +42,6 @@ bool Window::ShouldClose()
 void Window::PollEvents()
 {
 	glfwPollEvents();
-	
 }
 
 void Window::MakeContextCurrent()
@@ -62,6 +57,26 @@ double Window::GetTime()
 GLFWwindow* Window::GetHandle()
 {
 	return m_Window;
+}
+
+void Window::SetIcon(Texture& icon)
+{
+	if (icon.GetChannels() != 4)
+	{
+		Logger::LogError("Invalid texture for window icon {}", icon.GetName());
+		return;
+	}
+	
+	const Vector2i size = icon.GetSize();
+
+	const GLFWimage image
+	{
+		.width = size.x,
+		.height = size.y,
+		.pixels = icon.GetData<uint8_t>()
+	};
+	
+	glfwSetWindowIcon(m_Window, 1, &image);
 }
 
 void Window::GlfwResizeFramebuffer(GLFWwindow*, int, int)

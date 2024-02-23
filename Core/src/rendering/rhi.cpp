@@ -226,7 +226,7 @@ void RHI::CreateTexture(uint32_t* const textureId, const TextureCreateInfo& text
 
 void RHI::DestroyTexture(const uint32_t* textureId)
 {
-	glDeleteTextures(1,textureId);
+	glDeleteTextures(1, textureId);
 }
 
 void RHI::BindTexture(const uint32_t unit, const uint32_t textureId)
@@ -308,7 +308,7 @@ void RHI::CreateRenderPass(uint32_t* const renderPassId, const std::vector<Attac
 
 void RHI::SwapBuffers()
 {
-	glfwSwapBuffers(reinterpret_cast<GLFWwindow*>(Window::GetWindow()));
+	glfwSwapBuffers(reinterpret_cast<GLFWwindow*>(Window::GetHandle()));
 }
 
 
