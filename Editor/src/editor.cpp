@@ -207,7 +207,7 @@ void Editor::Update()
 {
 	using namespace XnorCore;
 
-	renderer.PrepareRendering(window.GetSize());
+	renderer.PrepareRendering(Window::GetSize());
 	
 	// init Scene //
 	Entity& ent1 = *World::world->Scene.CreateEntity("entity1");
@@ -220,18 +220,18 @@ void Editor::Update()
 	ent2.AddComponent<DirectionalLight>();
 	ent2.GetComponent<DirectionalLight>()->color = {1, 0, 1};
 	
-	while (!window.ShouldClose())
+	while (!Window::ShouldClose())
 	{
-		window.PollEvents();
+		Window::PollEvents();
 		Time::Update();
 		BeginFrame();
 
-		/*ImGui::Begin("Renderer Settings");
+		ImGui::Begin("Renderer Settings");
 		
 		if (ImGui::Button("Recompile Shader"))
 			renderer.CompileShader();
 		
-		ImGui::End();*/
+		ImGui::End();
 		
 		WorldBehaviours();
 		UpdateWindow();
@@ -252,7 +252,7 @@ void Editor::EndFrame()
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	ImGui::UpdatePlatformWindows();
 	ImGui::RenderPlatformWindowsDefault();
-	window.SetCurrentContext();
+	XnorCore::Window::MakeContextCurrent();
 }
 
 void Editor::WorldBehaviours()

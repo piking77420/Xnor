@@ -7,8 +7,9 @@
 
 using namespace XnorCore;
 
-void Shader::Load([[maybe_unused]] const uint8_t* buffer, [[maybe_unused]] const int64_t length) 
+void Shader::Load(const uint8_t*, const int64_t)
 {
+    Logger::LogError("Shader unimplemented Load function called");
 }
 
 void Shader::Load(const File& vertexShader, const File& fragmentShader)
@@ -44,6 +45,7 @@ XNOR_ENGINE void Shader::Recompile(const File& vertexShader, const File& fragmen
 
 void Shader::Unload()
 {
+    Logger::LogError("Shader unimplemented Unload function called");
 }
 
 void Shader::SetInt(const std::string& keyName, int value) const
@@ -91,7 +93,6 @@ void Shader::UnUse() const
     RHI::UnuseShader();
 }
 
-
 void Shader::GetShaderCode(const char* shaderPath, std::string* shaderCode)
 {
     if (!shaderCode || !shaderPath)
@@ -112,4 +113,9 @@ void Shader::GetShaderCode(const char* shaderPath, std::string* shaderCode)
     {
         Logger::LogError("An error occured while attempting to read shader file {}: {}", shaderPath, e.what());
     }
+}
+
+void Shader::Load(File&)
+{
+    Logger::LogError("Shader unimplemented Load function called");
 }

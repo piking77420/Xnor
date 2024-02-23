@@ -1,11 +1,8 @@
 #include "window.hpp"
-#include "input/core_input.hpp"
-
-#include "Maths/vector3.hpp"
 
 using namespace XnorCore;
 
-Window::Window()
+void Window::Initialize()
 {
 	glfwInit();
 
@@ -16,14 +13,14 @@ Window::Window()
 
 	m_Window = glfwCreateWindow(m_Size.x, m_Size.y, "XNOR Engine", nullptr, nullptr);
 
-	glfwSetFramebufferSizeCallback(m_Window,GlfwResizeFramebuffer);
+	glfwSetFramebufferSizeCallback(m_Window, GlfwResizeFramebuffer);
 
 	glfwMakeContextCurrent(m_Window);
 
 	glfwSwapInterval(1); // Enable vsync
 }
 
-Window::~Window()
+void Window::Shutdown()
 {
 	glfwDestroyWindow(m_Window);
 
@@ -41,28 +38,23 @@ void* Window::GetWindow()
 }
 
 
-bool Window::ShouldClose() const
+bool Window::ShouldClose()
 {
 	return glfwWindowShouldClose(m_Window);
 }
 
-void Window::PollEvents() const
+void Window::PollEvents()
 {
 	glfwPollEvents();
 	
 }
 
-void Window::SetCurrentContext()
+void Window::MakeContextCurrent()
 {
 	glfwMakeContextCurrent(m_Window);
 }
 
-void Window::SetCurrentContext() const
-{
-	glfwMakeContextCurrent(m_Window);
-}
-
-double Window::GetTime() const
+double Window::GetTime()
 {
 	return glfwGetTime();
 }
@@ -72,7 +64,7 @@ GLFWwindow* Window::GetHandle()
 	return m_Window;
 }
 
-void Window::GlfwResizeFramebuffer([[maybe_unused]] GLFWwindow* window, [[maybe_unused]] int width, [[maybe_unused]] int height)
+void Window::GlfwResizeFramebuffer(GLFWwindow*, int, int)
 {
 	resizeFrameBuffer = true;
 }

@@ -40,10 +40,9 @@ Renderer::~Renderer()
 	delete m_DepthAttachment;
 }
 
-void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererContext& rendererContext) const
+void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererContext) const
 {
 	// Clear MainWindow // 
-	Vector2i screenSize = Window::GetSize();
 	m_Rhi.SetClearColor(clearColor);
 	m_Rhi.ClearColorAndDepth();
 
@@ -199,7 +198,7 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 	m_Rhi.UpdateLight(gpuLightData);
 }
 
-void Renderer::DrawMeshRenders(const Scene& scene, [[maybe_unused]] const RendererContext& rendererContext) const 
+void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext&) const 
 {
 	std::vector<const MeshRenderer*> meshrenderers;
 	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderers);

@@ -167,7 +167,7 @@ void SceneGraph::ProcessEntitySelection(XnorCore::Entity* const entity) const
         m_Editor->data.selectedEntity = entity;
 }
 
-void SceneGraph::ProcessEntityDoubleClik([[maybe_unused]] XnorCore::Scene& scene, [[maybe_unused]] XnorCore::Entity* const entity)
+void SceneGraph::ProcessEntityDoubleClick(XnorCore::Scene&, XnorCore::Entity* const)
 {
     if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
     {

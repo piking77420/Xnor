@@ -10,14 +10,14 @@ BEGIN_XNOR_CORE
 
 class XNOR_ENGINE Window
 {
+	STATIC_CLASS(Window)
+	
 public:
 	static inline bool resizeFrameBuffer = false;
-	
-	Window();
 
-	~Window();
+	static void Initialize();
 
-	DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(Window)
+	static void Shutdown();
 
 	[[nodiscard]]
 	static Vector2i GetSize();
@@ -26,19 +26,17 @@ public:
 	static void* GetWindow();
 
 	[[nodiscard]]
-	bool ShouldClose() const;
+	static bool ShouldClose();
 
-	void PollEvents() const;
+	static void PollEvents();
 	
-	void SetCurrentContext();
-
-	void SetCurrentContext() const;
+	static void MakeContextCurrent();
 
 	[[nodiscard]]
-	double GetTime() const;
+	static double GetTime();
 
 	[[nodiscard]]
-	GLFWwindow* GetHandle();
+	static GLFWwindow* GetHandle();
 
 private:
 	static void GlfwResizeFramebuffer(GLFWwindow* window, int width, int height);

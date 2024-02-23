@@ -183,7 +183,7 @@ public:
     template<class T>
     static T GetCursorPos();
     
-    XNOR_ENGINE static void Initialize(const Window& window);
+    XNOR_ENGINE static void Initialize();
 
     XNOR_ENGINE static void Reset();
 

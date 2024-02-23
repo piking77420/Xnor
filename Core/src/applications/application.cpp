@@ -7,6 +7,12 @@ using namespace XnorCore;
 Application::Application()
 {
     m_ApplicationInstance = this;
-    CoreInput::Initialize(window);
+    Window::Initialize();
+    CoreInput::Initialize();
     Screen::Initialize();
+}
+
+Application::~Application()
+{
+    Window::Shutdown();
 }

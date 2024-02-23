@@ -6,7 +6,7 @@
 #include "utils/list.hpp"
 #include "utils/logger.hpp"
 
-int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
+int main(int, char**)
 {
 	using namespace XnorCore;
 	using namespace XnorEditor;
@@ -22,7 +22,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	ResourceManager::RemoveAll();
 
 	FileManager::UnloadAll();
-	Logger::Stop(); 
+	Logger::Stop();
 
 	return 0;
 }

@@ -13,6 +13,8 @@ class Shader : public Resource
 public:
 	using Resource::Resource;
 	
+	XNOR_ENGINE void Load(File& vertexShader) override;
+	
 	XNOR_ENGINE void Load(const File& vertexShader, const File& fragmentShader);
 	
 	XNOR_ENGINE void Load(const uint8_t* buffer, int64_t length) override;

@@ -15,7 +15,7 @@ bool CoreInput::GetMouseButton(const MouseButton mouseButton, const MouseButtonS
     return m_Mouse.at(static_cast<uint8_t>(mouseButton)).at(static_cast<uint8_t>(status));
 }
 
-void CoreInput::HandleKeyboard([[maybe_unused]] GLFWwindow* window, const int32_t key, [[maybe_unused]] const int32_t scancode, const int32_t action, [[maybe_unused]] const int32_t mods)
+void CoreInput::HandleKeyboard(GLFWwindow*, const int32_t key, const int32_t, const int32_t action, const int32_t)
 {
     KeyStatuses& keyStatuses = m_Keyboard.at(key);
     
@@ -41,7 +41,7 @@ void CoreInput::HandleKeyboard([[maybe_unused]] GLFWwindow* window, const int32_
     }
 }
 
-void CoreInput::HandleMouseButton([[maybe_unused]] GLFWwindow* window, const int32_t mouseButton, const int32_t action, [[maybe_unused]] int32_t mods)
+void CoreInput::HandleMouseButton(GLFWwindow*, const int32_t mouseButton, const int32_t action, int32_t)
 {
     MouseStatuses& keyStatuses = m_Mouse.at(mouseButton);
     
@@ -62,14 +62,14 @@ void CoreInput::HandleMouseButton([[maybe_unused]] GLFWwindow* window, const int
     }
 }
 
-void CoreInput::MouseCursorPos([[maybe_unused]] GLFWwindow* window, const double_t xpos, const double_t ypos)
+void CoreInput::MouseCursorPos(GLFWwindow*, const double_t xpos, const double_t ypos)
 {
     m_MousePos = Vector2(static_cast<float_t>(xpos), static_cast<float_t>(ypos));
 }
 
-void CoreInput::Initialize(const Window& window)
+void CoreInput::Initialize()
 {
-    GLFWwindow* const windowPtr = const_cast<GLFWwindow*>(static_cast<const GLFWwindow*>(window.GetWindow()));
+    GLFWwindow* const windowPtr = static_cast<GLFWwindow*>(Window::GetWindow());
 
     glfwSetKeyCallback(windowPtr, HandleKeyboard);
     glfwSetMouseButtonCallback(windowPtr, HandleMouseButton);

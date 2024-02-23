@@ -241,7 +241,6 @@ void RHI::UnbindTexture(const TextureType textureType)
 
 void RHI::CreateFrameBuffer(uint32_t* const frameBufferId, const uint32_t renderPassId,const std::vector<Texture*>& targets)
 {
-	
 	if (!m_RenderPassMap.contains(renderPassId))
 		Logger::LogError("There is no renderPass with this id");
 	
@@ -258,7 +257,7 @@ void RHI::CreateFrameBuffer(uint32_t* const frameBufferId, const uint32_t render
 			case AttachementsType::Position:
 			case AttachementsType::Normal:
 			case AttachementsType::Texturecoord:
-				openglAttachments[i] = GL_COLOR_ATTACHMENT0 + i;
+				openglAttachments[i] = static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + i);
 				break;
 			
 			case AttachementsType::Depth:
@@ -274,12 +273,10 @@ void RHI::CreateFrameBuffer(uint32_t* const frameBufferId, const uint32_t render
 				break;
 		}
 		
-		glNamedFramebufferTexture(*frameBufferId, openglAttachments[i],targets.at(i)->GetId(), 0);
+		glNamedFramebufferTexture(*frameBufferId, openglAttachments[i], targets.at(i)->GetId(), 0);
 	}
-	glNamedFramebufferDrawBuffers(*frameBufferId,openglAttachments.size(),openglAttachments.data());
-	
+	glNamedFramebufferDrawBuffers(*frameBufferId, static_cast<int32_t>(openglAttachments.size()), openglAttachments.data());
 }
-
 
 void RHI::DestroyFrameBuffer(const uint32_t* const frameBufferId)
 {
