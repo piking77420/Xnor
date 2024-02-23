@@ -83,22 +83,39 @@ namespace TestRemove
 {
     List<int> list{0, 1, 2, 3, 4, 5, 6, 7, 8};
 
-    TEST(List, Remove)
+    TEST(List, RemoveNormal)
     {
         EXPECT_EQ(list.GetSize(), 9);
         EXPECT_EQ(list.GetCapacity(), 16);
-        EXPECT_EQ(list[3], 3);
-        list.Remove(3);
-        EXPECT_EQ(list.GetSize(), 8);
-        EXPECT_EQ(list.GetCapacity(), 8);
-        EXPECT_EQ(list[3], 4);
-
-        list.Insert(3, 3);
         EXPECT_EQ(list[3], 3);
         list.RemoveAt(3);
         EXPECT_EQ(list.GetSize(), 8);
         EXPECT_EQ(list.GetCapacity(), 8);
         EXPECT_EQ(list[3], 4);
+
+        list.RemoveAt(3);
+        EXPECT_EQ(list.GetSize(), 7);
+        EXPECT_EQ(list.GetCapacity(), 8);
+        EXPECT_EQ(list[3], 5);
+    }
+    
+    List<int> list_{0, 1, 2, 3, 4, 5, 6, 7, 8};
+    List<char>* ptr = static_cast<List<char>*>(static_cast<void*>(&list_));
+
+    TEST(List, RemovePtr)
+    {
+        EXPECT_EQ(ptr->GetSize(), 9);
+        EXPECT_EQ(ptr->GetCapacity(), 16);
+        EXPECT_EQ((*ptr)[3], 3);
+        ptr->RemoveAt(3);
+        EXPECT_EQ(ptr->GetSize(), 8);
+        EXPECT_EQ(ptr->GetCapacity(), 8);
+        EXPECT_EQ((*ptr)[3], 4);
+
+        ptr->RemoveAt(3);
+        EXPECT_EQ(ptr->GetSize(), 7);
+        EXPECT_EQ(ptr->GetCapacity(), 8);
+        EXPECT_EQ((*ptr)[3], 5);
     }
 }
 

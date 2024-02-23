@@ -459,7 +459,7 @@ void List<T>::RemoveAt(const size_t index)
     if (index >= m_Size)
         throw std::invalid_argument("List remove at subscript out of range");
     
-    std::memcpy(&m_Data[index], &m_Data[index + 1], (m_Size - index - 1) * m_TypeSize);
+    std::memcpy(Access(index), Access(index + 1), (m_Size - index - 1) * m_TypeSize);
 
     CheckShrink(m_Size - 1);
     m_Size--;
@@ -479,7 +479,7 @@ void List<T>::RemoveRange(const size_t start, const size_t end)
 
     const size_t removedSize = end - start;
 
-    std::memcpy(&m_Data[start], &m_Data[end + 1], (m_Size - end - 1) * m_TypeSize);
+    std::memcpy(Access(start), Access(end + 1), (m_Size - end - 1) * m_TypeSize);
 
     CheckShrink(m_Size - removedSize);
     m_Size -= removedSize;
