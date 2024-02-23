@@ -22,6 +22,7 @@ int main(int, char**)
 	ResourceManager::RemoveAll();
 
 	FileManager::UnloadAll();
+	
 	Logger::Stop();
 
 	return 0;

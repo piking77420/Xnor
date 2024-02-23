@@ -16,8 +16,10 @@ public:
     Vector4 clearColor;
 
     XNOR_ENGINE explicit Renderer();
-
+    
     XNOR_ENGINE ~Renderer();
+    
+    XNOR_ENGINE void Initialize();
     
     XNOR_ENGINE void RenderScene(const Scene& scene, const RendererContext& rendererContext) const;
 

@@ -539,14 +539,14 @@ int RHI::GetUniformInMap(uint32_t shaderId, const char* uniformKey)
 	return location;
 }
 
-RHI::RHI()
+void RHI::Initialize()
 {
 	gladLoadGL();
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 }
 
-RHI::~RHI()
+void RHI::ShutDown()
 {
 	for (std::unordered_map<uint32_t, ModelInternal>::iterator it = m_ModelMap.begin() ; it != m_ModelMap.end(); it++)
 	{

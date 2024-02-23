@@ -104,9 +104,13 @@ private:
 	static int GetUniformInMap(uint32_t shaderId, const char* uniformKey);
 
 public:
-	XNOR_ENGINE RHI();
+	XNOR_ENGINE RHI() = default;
 
-	XNOR_ENGINE ~RHI();
+	XNOR_ENGINE ~RHI() = default;
+
+	XNOR_ENGINE static void Initialize();
+
+	XNOR_ENGINE static void ShutDown();
 
 	XNOR_ENGINE void PrepareUniform();
 
@@ -121,9 +125,9 @@ public:
 	XNOR_ENGINE void UpdateLight(const GpuLightData& lightData) const;
 
 private:
-	 mutable UniformBuffer* m_CameraUniform;
-	 mutable UniformBuffer* m_ModelUniform;
-	 mutable UniformBuffer* m_LightUniform;
+	 static inline UniformBuffer* m_CameraUniform;
+	 static inline UniformBuffer* m_ModelUniform;
+	 static inline UniformBuffer* m_LightUniform;
 };
 
 END_XNOR_CORE

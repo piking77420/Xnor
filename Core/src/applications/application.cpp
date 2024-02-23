@@ -8,6 +8,7 @@ Application::Application()
 {
     m_ApplicationInstance = this;
     Window::Initialize();
+    renderer.Initialize();
     CoreInput::Initialize();
     Screen::Initialize();
 }

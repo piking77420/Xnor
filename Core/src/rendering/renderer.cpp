@@ -11,6 +11,20 @@ using namespace XnorCore;
 Renderer::Renderer()
 	: clearColor(0.5f)
 {
+}
+
+Renderer::~Renderer()
+{
+	delete m_RenderBuffer;
+	delete m_ColorAttachment;
+	delete m_DepthAttachment;
+	RHI::ShutDown();
+}
+
+void Renderer::Initialize()
+{
+	m_Rhi.Initialize();
+	
 	m_Rhi.SetClearColor(clearColor);
 
 	m_VertexPath = FileManager::Get("assets/shaders/vertex.vert");
@@ -34,13 +48,6 @@ Renderer::Renderer()
 
 	m_Cube = ResourceManager::Load<Model>(FileManager::Get("assets/models/cube.obj"));
 	m_Quad = ResourceManager::Load<Model>(FileManager::Get("assets/models/quad.obj"));
-}
-
-Renderer::~Renderer()
-{
-	delete m_RenderBuffer;
-	delete m_ColorAttachment;
-	delete m_DepthAttachment;
 }
 
 void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererContext) const
