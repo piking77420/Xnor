@@ -66,7 +66,7 @@ public:
     size_t GetCapacity() const;
 
     T& operator[](size_t index);
-    T operator[](size_t index) const;
+    const T& operator[](size_t index) const;
 
 #ifndef UNIT_TEST
 private:
@@ -349,7 +349,7 @@ T& List<T>::operator[](const size_t index)
 }
 
 template <typename T>
-T List<T>::operator[](const size_t index) const
+const T& List<T>::operator[](const size_t index) const
 {
     if (index >= m_Size)
     {

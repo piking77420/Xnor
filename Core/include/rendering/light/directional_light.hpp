@@ -11,7 +11,7 @@ class DirectionalLight : public Light
 public:
     Vector3 direction = Vector3::UnitZ();
     
-    XNOR_ENGINE DirectionalLight() = default;
+    XNOR_ENGINE DirectionalLight();
     XNOR_ENGINE ~DirectionalLight() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(DirectionalLight)

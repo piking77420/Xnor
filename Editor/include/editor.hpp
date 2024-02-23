@@ -25,7 +25,6 @@ public:
 	EditorData data;
 	
 private:
-	
 	XnorCore::RendererContext m_GameRenderContext;
 	XnorCore::RendererContext m_EditorRenderContext;
 

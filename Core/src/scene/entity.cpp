@@ -26,7 +26,7 @@ Entity::~Entity()
     m_Components.Clear();
 }
 
-void Entity::Begin() const
+void Entity::Begin()
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
@@ -34,7 +34,7 @@ void Entity::Begin() const
     }
 }
 
-void Entity::Update() const
+void Entity::Update()
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {

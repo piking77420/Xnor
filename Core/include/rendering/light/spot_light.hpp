@@ -13,7 +13,7 @@ public:
     float_t cutOff = 12.5f * Calc::Deg2Rad;	
     float_t outerCutOff = 15.f * Calc::Deg2Rad;
     
-    XNOR_ENGINE SpotLight() = default;
+    XNOR_ENGINE SpotLight();
     
     XNOR_ENGINE ~SpotLight() override = default;
 

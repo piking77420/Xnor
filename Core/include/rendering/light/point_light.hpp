@@ -10,7 +10,7 @@ class PointLight :  public Light
     REFLECTABLE_IMPL(PointLight)
     
 public:
-    XNOR_ENGINE PointLight() = default;
+    XNOR_ENGINE PointLight();
 
     XNOR_ENGINE ~PointLight() override = default;
 

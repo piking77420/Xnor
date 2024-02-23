@@ -69,11 +69,8 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 	m_BasicShader->UnUse();
 	m_RenderBuffer->UnBindFrameBuffer();
 	
-	if(rendererContext.framebuffer != nullptr)
+	if (rendererContext.framebuffer != nullptr)
 	{
-		
-	
-		
 		rendererContext.framebuffer->BindFrameBuffer();
 		RHI::SetViewport(rendererContext.framebuffer->GetSize());
 
@@ -136,8 +133,8 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 	std::vector<const PointLight*> pointLightComponents;
 	scene.GetAllComponentOfType<PointLight>(&pointLightComponents);
 
-	std::vector<const SpotLight*> spothLightsComponents;
-	scene.GetAllComponentOfType<SpotLight>(&spothLightsComponents);
+	std::vector<const SpotLight*> spotLightsComponents;
+	scene.GetAllComponentOfType<SpotLight>(&spotLightsComponents);
 
 	std::vector<const DirectionalLight*> directionalComponent;
 	scene.GetAllComponentOfType<DirectionalLight>(&directionalComponent);
@@ -150,13 +147,13 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 	GpuLightData gpuLightData
 	{
 		.nbrOfPointLight = static_cast<uint32_t>(pointLightComponents.size()),
-		.nbrOfSpotLight = static_cast<uint32_t>(spothLightsComponents.size())
+		.nbrOfSpotLight = static_cast<uint32_t>(spotLightsComponents.size())
 	};
 
 	size_t nbrOfpointLight = pointLightComponents.size();
 	nbrOfpointLight = std::clamp(nbrOfpointLight, static_cast<size_t>(0), static_cast<size_t>(MaxPointLights));
 
-	size_t nbrOfspothLight = spothLightsComponents.size();
+	size_t nbrOfspothLight = spotLightsComponents.size();
 	nbrOfspothLight = std::clamp(nbrOfspothLight, static_cast<size_t>(0), static_cast<size_t>(MaxSpotLights));
 
 	for (size_t i = 0; i < nbrOfpointLight; i++)
@@ -175,7 +172,7 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 
 	for (size_t i = 0 ; i < nbrOfspothLight ; i++)
 	{
-		const SpotLight* spotLight = spothLightsComponents[i];
+		const SpotLight* spotLight = spotLightsComponents[i];
 		
 		gpuLightData.spotLightData[i] =
 		{

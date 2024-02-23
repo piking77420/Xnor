@@ -11,6 +11,8 @@ class MeshRenderer : public Component
     REFLECTABLE_IMPL(MeshRenderer)
     
 public:
+    XNOR_ENGINE MeshRenderer();
+
     Pointer<Model> model;
     Pointer<Texture> texture;
 };
