@@ -46,7 +46,12 @@ private:
     Pointer<File> DrawTextureToScreen;
     Pointer<Shader> m_DrawTextureToScreenShader;
 
+    //
+    Pointer<Shader> m_GizmoShader;
+
+    
     Pointer<Model> m_Quad;
+    Pointer<Model> m_Cube;
 
     
     XNOR_ENGINE void UpdateLight(const Scene& scene, const RendererContext& rendererContext) const;

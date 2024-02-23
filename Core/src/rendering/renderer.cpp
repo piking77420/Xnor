@@ -22,6 +22,9 @@ Renderer::Renderer()
 	DrawTextureToScreen = FileManager::Get("assets/shaders/DrawTextureToScreen/DrawTextureToScreen.frag");
 	m_DrawTextureToScreenShader = ResourceManager::Add<Shader>("DrawTextureToScreenShader");
 	m_DrawTextureToScreenShader->Load(*m_VertexDrawTextureToScreenPath, *DrawTextureToScreen);
+	
+	m_GizmoShader = ResourceManager::Add<Shader>("GizmoShader");
+	m_GizmoShader->Load(*FileManager::Get("assets/shaders/GizmoShader/GizmoShader.vert"),*FileManager::Get("assets/shaders/GizmoShader/GizmoShader.frag"));
 
 	m_DrawTextureToScreenShader->Use();
 	m_DrawTextureToScreenShader->SetInt("BufferTextureId",0);
@@ -29,7 +32,7 @@ Renderer::Renderer()
 	
 	m_Rhi.PrepareUniform();
 
-
+	m_Cube = ResourceManager::Load<Model>(FileManager::Get("assets/models/cube.obj"));
 	m_Quad = ResourceManager::Load<Model>(FileManager::Get("assets/models/quad.obj"));
 }
 
@@ -218,6 +221,27 @@ void Renderer::DrawMeshRenders(const Scene& scene, [[maybe_unused]] const Render
 
 		if (meshRenderer->model.IsValid())
 			RHI::DrawModel(meshRenderer->model->GetId());
+		
 	}
+	/*
+	m_GizmoShader->Use();
+	RHI::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Line);
+	// Draw AABB 
+	for (const MeshRenderer* meshRenderer : meshrenderers)
+	{
+		if (!meshRenderer->model.IsValid())
+			continue;
+
+		if(!meshRenderer->m_DrawModelAABB)
+			continue;
+		const Transform& transform =  meshRenderer->entity->transform;
+
+		ModelUniformData modelData;
+		modelData.model = Matrix::Trs(transform.position, transform.rotation, transform.scale);
+		m_Rhi.UpdateModelUniform(modelData);
+		
+		RHI::DrawModel(m_Cube->GetId());
+	}
+	m_GizmoShader->UnUse();*/
 }
 

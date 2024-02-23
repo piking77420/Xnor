@@ -56,7 +56,7 @@ uint32_t RHI::CreateModel(const std::vector<Vertex>& vertices, const std::vector
 	glVertexArrayVertexBuffer(modelInternal.vao, 0, modelInternal.vbo, 0, sizeof(Vertex));
 	glVertexArrayElementBuffer(modelInternal.vao, modelInternal.ebo);
 	
-	const uint32_t modelId = static_cast<uint32_t>(m_ModelMap.size());
+	const uint32_t modelId = modelInternal.vao;
 	
 	m_ModelMap.emplace(modelId, modelInternal);
 	

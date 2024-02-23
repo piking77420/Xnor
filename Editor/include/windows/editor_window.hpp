@@ -21,11 +21,17 @@ public:
     float_t lastY = 0.f;
 
 private:
+    XnorCore::Camera* m_EditorCamRef;
+    
     bool m_FirstMove = false;
     float_t m_MouseSensitivity = 0.1f;
     float_t m_Yaw = 0.f;
     float_t m_Pitch = 0.f;
     bool m_IsMoving = false;
+
+    void CameraControl();
+    
+    void OnGotoObject();
     
     void EditorCameraUpdate();
 

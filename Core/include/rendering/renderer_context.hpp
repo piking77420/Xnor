@@ -14,6 +14,8 @@ public:
 	bool isEditor = false;
 
 	bool IsValid();
+
+
 };
 
 END_XNOR_CORE

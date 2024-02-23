@@ -15,6 +15,7 @@ public:
 
     Pointer<Model> model;
     Pointer<Texture> texture;
+    bool m_DrawModelAABB = true;
 };
 
 END_XNOR_CORE

@@ -36,7 +36,7 @@ void Model::Load(const uint8_t* buffer, const int64_t length)
         Logger::LogError("Invalid mesh format, should only contain a single model: {}", m_Name);
         return;
     }
-
+   
     Load(*scene->mMeshes[0]);
 }
 
@@ -72,6 +72,9 @@ void Model::Load(const aiMesh& loadedData)
     m_Loaded = true;
 
     m_ModelId = RHI::CreateModel(m_Vertices, m_Indices);
+
+    m_Aabb.min = Vector3(&loadedData.mAABB.mMin.x);
+    m_Aabb.max = Vector3(&loadedData.mAABB.mMax.x);
 }
 
 void Model::Unload()

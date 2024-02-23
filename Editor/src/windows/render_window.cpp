@@ -54,7 +54,7 @@ void RenderWindow::Initialize(XnorCore::RendererContext* rendererContext)
     m_FrameBuffer.Create(renderPass,targets);
 
     // Init rendererContext
-    rendererContext->camera = &m_Camera;
+    rendererContext->camera = &m_Editor->data.gameCam;
     rendererContext->framebuffer = &m_FrameBuffer;
     rendererContext->renderPass = &m_RenderPass;
 }
