@@ -14,13 +14,13 @@ using namespace XnorCore;
 HeaderWindow::HeaderWindow(Editor* editor)
     : UiWindow(editor, "Header")
 {
-    m_PauseButtonPng = FileManager::Get("assets/editor/PauseButton.png");
+    m_PauseButtonPng = FileManager::Get("assets/editor/pause_button.png");
     m_PauseButton =  ResourceManager::Load<Texture>(m_PauseButtonPng);
     
-    m_PlayButtonPng = FileManager::Get("assets/editor/PlayButton.png");
+    m_PlayButtonPng = FileManager::Get("assets/editor/play_button.png");
     m_PlayButton = ResourceManager::Load<Texture>(m_PlayButtonPng);
 
-    m_StopButtonPng = FileManager::Get("assets/editor/StopButton.png");
+    m_StopButtonPng = FileManager::Get("assets/editor/stop_button.png");
     m_StopButton = ResourceManager::Load<Texture>(m_StopButtonPng);
 }
 

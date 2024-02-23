@@ -29,16 +29,16 @@ void Renderer::Initialize()
 
 	m_VertexPath = FileManager::Get("assets/shaders/vertex.vert");
 	m_FragmentPath = FileManager::Get("assets/shaders/fragment.frag");
-	m_BasicShader = ResourceManager::Add<Shader>("mainShader");
+	m_BasicShader = ResourceManager::Add<Shader>("phong_shader");
 	m_BasicShader->Load(*m_VertexPath, *m_FragmentPath);
 
-	m_VertexDrawTextureToScreenPath = FileManager::Get("assets/shaders/DrawTextureToScreen/DrawTextureToScreen.vert");
-	DrawTextureToScreen = FileManager::Get("assets/shaders/DrawTextureToScreen/DrawTextureToScreen.frag");
-	m_DrawTextureToScreenShader = ResourceManager::Add<Shader>("DrawTextureToScreenShader");
+	m_VertexDrawTextureToScreenPath = FileManager::Get("assets/shaders/draw_texture_to_screen/draw_texture_to_screen.vert");
+	DrawTextureToScreen = FileManager::Get("assets/shaders/draw_texture_to_screen/draw_texture_to_screen.frag");
+	m_DrawTextureToScreenShader = ResourceManager::Add<Shader>("draw_texture_to_screen");
 	m_DrawTextureToScreenShader->Load(*m_VertexDrawTextureToScreenPath, *DrawTextureToScreen);
 	
-	m_GizmoShader = ResourceManager::Add<Shader>("GizmoShader");
-	m_GizmoShader->Load(*FileManager::Get("assets/shaders/GizmoShader/GizmoShader.vert"),*FileManager::Get("assets/shaders/GizmoShader/GizmoShader.frag"));
+	m_GizmoShader = ResourceManager::Add<Shader>("gizmo_shader");
+	m_GizmoShader->Load(*FileManager::Get("assets/shaders/gizmo_shader/gizmo_shader.vert"),*FileManager::Get("assets/shaders/gizmo_shader/gizmo_shader.frag"));
 
 	m_DrawTextureToScreenShader->Use();
 	m_DrawTextureToScreenShader->SetInt("BufferTextureId",0);

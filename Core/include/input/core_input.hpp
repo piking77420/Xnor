@@ -171,6 +171,7 @@ enum class MouseButtonStatus : uint8_t
     Count
 };
 
+
 class CoreInput
 {
     STATIC_CLASS(CoreInput)
@@ -190,14 +191,21 @@ public:
 private:
     using KeyStatuses = std::array<bool, static_cast<uint8_t>(KeyStatus::Count)>;
     using MouseStatuses = std::array<bool, static_cast<uint8_t>(MouseButtonStatus::Count)>;
+
+    XNOR_ENGINE static constexpr uint32_t JoyStickMax = 15;
     
     XNOR_ENGINE static inline std::array<KeyStatuses, static_cast<uint16_t>(Key::Count) - 1> m_Keyboard;
 
     XNOR_ENGINE static inline std::array<MouseStatuses, static_cast<uint8_t>(MouseButton::Count) - 1> m_Mouse;
 
+    XNOR_ENGINE static inline std::array<bool,JoyStickMax> m_GamePads;
+    XNOR_ENGINE static inline uint32_t m_GamePadCount;
+
     XNOR_ENGINE static void HandleKeyboard(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
     XNOR_ENGINE static void HandleMouseButton(GLFWwindow* window, int32_t mouseButton, int32_t action, int32_t mods);
     XNOR_ENGINE static void MouseCursorPos(GLFWwindow* window, double_t xpos, double_t ypos);
+    XNOR_ENGINE static void HandleGamePad();
+    XNOR_ENGINE static void HandleJoyStick(int jid, int event);
 
     XNOR_ENGINE static inline Vector2 m_MousePos;
 };
