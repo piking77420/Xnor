@@ -20,8 +20,6 @@ public:
     void Display() override;
 
 protected:
-    XnorCore::Camera m_Camera;
-    
     XnorCore::RendererContext m_RendererContext;
     
     XnorCore::FrameBuffer m_FrameBuffer;

@@ -8,10 +8,10 @@
 #include "rhi_typedef.hpp"
 #include "uniformBuffer.hpp"
 #include "vertex.hpp"
+#include "resource/model.hpp"
 
 BEGIN_XNOR_CORE
-
-class RHI
+	class RHI
 {
 public:
 	// Utils
@@ -65,6 +65,7 @@ private:
 		uint32_t ebo = 0;
 		uint32_t nbrOfVertex = 0;
 		uint32_t nbrOfIndicies = 0;
+		ModelAABB aabb;
 	};
 
 	struct ShaderInternal

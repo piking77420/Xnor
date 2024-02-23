@@ -8,6 +8,13 @@
 
 BEGIN_XNOR_CORE
 
+// ReSharper disable once CppInconsistentNaming
+struct ModelAABB
+{
+    Vector3 min {std::numeric_limits<float_t>::max()};
+    Vector3 max {std::numeric_limits<float_t>::min()};
+};
+
 class Model : public Resource
 {
 public:
@@ -34,6 +41,8 @@ private:
     std::vector<Vertex> m_Vertices;
     std::vector<uint32_t> m_Indices;
     uint32_t m_ModelId = 0;
+    
+    ModelAABB m_Aabb;
 };
 
 END_XNOR_CORE

@@ -8,12 +8,24 @@ EditorWindow::EditorWindow(Editor* editor)
     : RenderWindow(editor, "Editor")
 {
     m_RendererContext.isEditor = true;
+    m_RendererContext.camera = &editor->data.editorCam;
+    m_EditorCamRef = &editor->data.editorCam;
 }
 
 void EditorWindow::Display()
 {
     RenderWindow::Display();
+    CameraControl();
     
+    if (!m_Editor->data.selectedEntity)
+        return;
+
+    
+    
+}
+
+void EditorWindow::CameraControl()
+{
     if (IsFocused())
     {
         if (XnorCore::CoreInput::GetMouseButton(XnorCore::MouseButton::Right, XnorCore::MouseButtonStatus::Down) && m_IsMoving == false)
@@ -31,6 +43,14 @@ void EditorWindow::Display()
     {
         ResetCameraRotation();
     }
+}
+
+void EditorWindow::OnGotoObject()
+{
+    if (!XnorCore::CoreInput::GetKey(m_Editor->data.goToObjectKey, XnorCore::KeyStatus::Down))
+        return;
+
+    
 }
 
 void EditorWindow::EditorCameraUpdate()
@@ -65,13 +85,13 @@ void EditorWindow::EditorCameraRotation()
     if(m_Pitch < -MaxPitch)
         m_Pitch = -MaxPitch;
 
-    m_Camera.front.x = std::cos(m_Yaw * Calc::Deg2Rad) * std::cos(m_Pitch * Calc::Deg2Rad);
-    m_Camera.front.y = std::sin(m_Pitch * Calc::Deg2Rad);
-    m_Camera.front.z = std::sin(m_Yaw * Calc::Deg2Rad) * std::cos(m_Pitch * Calc::Deg2Rad);
-    m_Camera.front = m_Camera.front.Normalized();
+    m_EditorCamRef->front.x = std::cos(m_Yaw * Calc::Deg2Rad) * std::cos(m_Pitch * Calc::Deg2Rad);
+    m_EditorCamRef->front.y = std::sin(m_Pitch * Calc::Deg2Rad);
+    m_EditorCamRef->front.z = std::sin(m_Yaw * Calc::Deg2Rad) * std::cos(m_Pitch * Calc::Deg2Rad);
+    m_EditorCamRef->front = m_EditorCamRef->front.Normalized();
 
-    m_Camera.right = Vector3::Cross(m_Camera.front,Vector3::UnitY()).Normalized();
-    m_Camera.up = Vector3::Cross(m_Camera.right,m_Camera.front).Normalized();
+    m_EditorCamRef->right = Vector3::Cross(m_EditorCamRef->front,Vector3::UnitY()).Normalized();
+    m_EditorCamRef->up = Vector3::Cross(m_EditorCamRef->right,m_EditorCamRef->front).Normalized();
 }
 
 void EditorWindow::EditorCameraMovement()
@@ -81,22 +101,22 @@ void EditorWindow::EditorCameraMovement()
     const float_t cameraSpeed = m_Editor->data.cameraSpeed * dt;
 
     if (CoreInput::GetKey(Key::W, KeyStatus::Down))
-        m_Camera.pos -= m_Camera.front * cameraSpeed;
+        m_EditorCamRef->pos -= m_EditorCamRef->front * cameraSpeed;
 
     if (CoreInput::GetKey(Key::S, KeyStatus::Down))
-        m_Camera.pos += m_Camera.front * cameraSpeed;
+        m_EditorCamRef->pos += m_EditorCamRef->front * cameraSpeed;
 
     if (CoreInput::GetKey(Key::D, KeyStatus::Down))
-        m_Camera.pos +=  m_Camera.right * cameraSpeed;
+        m_EditorCamRef->pos +=  m_EditorCamRef->right * cameraSpeed;
 
     if (CoreInput::GetKey(Key::A, KeyStatus::Down))
-        m_Camera.pos -= m_Camera.right * cameraSpeed;
+        m_EditorCamRef->pos -= m_EditorCamRef->right * cameraSpeed;
 
     if (CoreInput::GetKey(Key::Space, KeyStatus::Down))
-        m_Camera.pos += Vector3::UnitY() * cameraSpeed;
+        m_EditorCamRef->pos += Vector3::UnitY() * cameraSpeed;
 
     if (CoreInput::GetKey(Key::LeftControl, KeyStatus::Down))
-        m_Camera.pos -= Vector3::UnitY() * cameraSpeed;
+        m_EditorCamRef->pos -= Vector3::UnitY() * cameraSpeed;
 }
 
 void EditorWindow::ResetCameraRotation()
