@@ -10,6 +10,12 @@ Entity::Entity(const Guid& entiyId)
 {
 }
 
+Entity::Entity()
+{
+    Entity::CreateTypeInfo();
+    transform.CreateTypeInfo();
+}
+
 Entity::~Entity()
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
@@ -22,9 +28,6 @@ Entity::~Entity()
 
 void Entity::Begin() const
 {
-    Entity::CreateTypeInfo();
-    transform.CreateTypeInfo();
-    
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
         m_Components[i]->Begin();
@@ -54,7 +57,7 @@ bool Entity::HasParent() const
     return m_Parent != nullptr;
 }
 
-Entity* Entity::GetChild(const size_t index)
+Entity* Entity::GetChild(const size_t index) const
 {
     return m_Children[index];
 }

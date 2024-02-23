@@ -5,7 +5,6 @@ using namespace XnorCore;
 
 World::World()
 {
-    IsPlaying = true;
 }
 
 void World::Begin()

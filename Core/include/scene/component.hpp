@@ -14,6 +14,7 @@ class XNOR_ENGINE Component : public Reflectable
 public:
     Entity* entity = nullptr;
 
+    Component();
     ~Component() override = default;
 
     virtual void Begin();

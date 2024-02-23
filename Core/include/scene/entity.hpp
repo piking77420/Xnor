@@ -54,7 +54,7 @@ public:
     [[nodiscard]]
     XNOR_ENGINE bool HasParent() const;
     [[nodiscard]]
-    XNOR_ENGINE Entity* GetChild(size_t index);
+    XNOR_ENGINE Entity* GetChild(size_t index) const;
     [[nodiscard]]
     XNOR_ENGINE size_t GetChildCount() const;
     [[nodiscard]]
@@ -75,7 +75,7 @@ public:
 private:
     XNOR_ENGINE explicit Entity(const Guid& entiyId);
 
-    XNOR_ENGINE Entity() = default;
+    XNOR_ENGINE Entity();
 
     XNOR_ENGINE ~Entity() override;
     
