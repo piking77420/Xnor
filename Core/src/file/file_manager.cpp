@@ -1,34 +1,30 @@
 #include "file/file_manager.hpp"
 
-#include "utils/logger.hpp"
-
 using namespace XnorCore;
 
-Pointer<File> FileManager::Load(std::filesystem::path filepath)
+Pointer<File> FileManager::Add(std::filesystem::path path)
 {
-    Logger::LogDebug("Loading file {}", filepath);
+    Logger::LogDebug("Adding file {}", path);
 
-    if (Contains(filepath))
+    if (Contains(path))
     {
-        Logger::LogWarning("This file has already been loaded, consider using FileManager::Get instead");
-        return m_Files.at(filepath);
+        Logger::LogWarning("This file has already been added, consider using FileManager::Get instead");
+        return static_cast<Pointer<File>>(m_Entries.at(path));
     }
 
     Pointer<File> file;
     try
     {
-        file = Pointer<File>(std::forward<std::filesystem::path>(filepath));
+        file = Pointer<File>(std::forward<std::filesystem::path>(path));
     }
     catch (const std::invalid_argument& ex)
     {
-        Logger::LogError("Exception while creating File object with path {}. Exception message: {}", filepath, ex.what());
+        Logger::LogError("Exception while creating file with path {}: {}", path, ex.what());
         // Return the already-constructed null Pointer
         return file;
     }
 
-    file->Load();
-
-    m_Files[file->GetFilepath()] = file.CreateStrongReference();
+    m_Entries[file->GetPath()] = file.CreateStrongReference();
 
     // Make sure to return a weak reference
     file.ToWeakReference();
@@ -36,125 +32,182 @@ Pointer<File> FileManager::Load(std::filesystem::path filepath)
     return file;
 }
 
-void FileManager::LoadDirectory(const std::filesystem::path& path)
+Pointer<File> FileManager::Load(std::filesystem::path path)
+{
+    Logger::LogDebug("Loading file {}", path);
+
+    if (Contains(path))
+    {
+        Pointer<File> file = static_cast<Pointer<File>>(m_Entries.at(path));
+        const bool loaded = file->GetLoaded();
+        Logger::LogWarning(
+            "This file has already been {}, consider using FileManager::Get instead{}",
+            loaded ? "loaded" : "added but isn't loaded",
+            loaded ? "" : ". Loading it"
+        );
+        if (!loaded)
+            file->Load();
+        return file;
+    }
+
+    Pointer<File> file;
+    try
+    {
+        file = Pointer<File>(std::forward<std::filesystem::path>(path));
+    }
+    catch (const std::invalid_argument& ex)
+    {
+        Logger::LogError("Exception while creating file with path {}: {}", path, ex.what());
+        // Return the already-constructed null Pointer
+        return file;
+    }
+
+    file->Load();
+
+    m_Entries[file->GetPath()] = file.CreateStrongReference();
+
+    // Make sure to return a weak reference
+    file.ToWeakReference();
+
+    return file;
+}
+
+Pointer<Directory> FileManager::AddDirectory(std::filesystem::path path)
+{
+    Logger::LogDebug("Adding directory {}", path);
+
+    if (Contains(path))
+    {
+        Logger::LogWarning("This directory has already been added, consider using FileManager::Get instead");
+        return static_cast<Pointer<Directory>>(m_Entries.at(path));
+    }
+
+    Pointer<Directory> directory;
+    try
+    {
+        directory = Pointer<Directory>(std::forward<std::filesystem::path>(path));
+    }
+    catch (const std::invalid_argument& ex)
+    {
+        Logger::LogError("Exception while creating directory with path {}: {}", path, ex.what());
+        // Return the already-constructed null Pointer
+        return directory;
+    }
+
+    m_Entries[directory->GetPath()] = directory.CreateStrongReference();
+
+    // Make sure to return a weak reference
+    directory.ToWeakReference();
+
+    return directory;
+}
+
+Pointer<Directory> FileManager::LoadDirectory(std::filesystem::path path)
 {
     Logger::LogDebug("Loading directory {}", path);
 
-    if (!is_directory(path))
+    if (Contains(path))
     {
-        Logger::LogError("Path does not point to a directory: {}", path);
+        Pointer<Directory> directory = static_cast<Pointer<Directory>>(m_Entries.at(path));
+        const bool loaded = directory->GetLoaded();
+        Logger::LogWarning(
+            "This directory has already been {}, consider using FileManager::Get instead{}",
+            loaded ? "loaded" : "added but isn't loaded",
+            loaded ? "" : ". Loading it"
+        );
+        if (!loaded)
+            directory->Load();
+        return directory;
+    }
+
+    Pointer<Directory> directory;
+    try
+    {
+        directory = Pointer<Directory>(std::forward<std::filesystem::path>(path));
+    }
+    catch (const std::invalid_argument& ex)
+    {
+        Logger::LogError("Exception while creating directory with path {}: {}", path, ex.what());
+        // Return the already-constructed null Pointer
+        return directory;
+    }
+
+    directory->Load();
+
+    m_Entries[directory->GetPath()] = directory.CreateStrongReference();
+
+    // Make sure to return a weak reference
+    directory.ToWeakReference();
+
+    return directory;
+}
+
+bool FileManager::Contains(const std::filesystem::path& path)
+{
+    return m_Entries.contains(path);
+}
+
+void FileManager::Unload(const std::filesystem::path& path)
+{
+    Logger::LogDebug("Unloading FileManager entry {}", path);
+
+    if (!exists(path))
+    {
+        Logger::LogError("Path does not exist");
         return;
     }
 
-    for (const auto& entry : std::filesystem::directory_iterator(path))
-    {
-        const std::filesystem::path& entryPath = entry.path();
-        
-        if (is_directory(entryPath))
-            continue;
-        
-        Load(entryPath);
-    }
-}
-
-void FileManager::LoadDirectoryRecursive(const std::filesystem::path& path)
-{
-    Logger::LogDebug("Recursively loading directory {}", path);
-
-    if (!is_directory(path))
-    {
-        Logger::LogError("Path does not point to a directory: {}", path);
-        return;
-    }
-
-    for (const auto& entry : std::filesystem::recursive_directory_iterator(path))
-    {
-        const std::filesystem::path& entryPath = entry.path();
-        
-        if (is_directory(entryPath))
-            continue;
-        
-        Load(entryPath);
-    }
-}
-
-bool FileManager::Contains(const std::filesystem::path& filepath)
-{
-    return m_Files.contains(filepath);
-}
-
-Pointer<File> FileManager::Get(const std::filesystem::path& filepath)
-{
-    if (!Contains(filepath))
-    {
-        Logger::LogError("Attempt to get an unknown file entry: {}", filepath);
-        return Pointer<File>();
-    }
-
-    return m_Files.at(filepath);
-}
-
-void FileManager::Unload(const std::filesystem::path& filepath)
-{
-    Logger::LogDebug("Unloading file {}", filepath);
-
-    if (!exists(filepath))
-    {
-        Logger::LogError("File path does not exist");
-        return;
-    }
-
-    const size_t oldSize = m_Files.size();
+    const size_t oldSize = m_Entries.size();
     
-    for (decltype(m_Files)::iterator it = m_Files.begin(); it != m_Files.end(); it++)
+    for (decltype(m_Entries)::iterator it = m_Entries.begin(); it != m_Entries.end(); it++)
     {
-        if (equivalent(it->first, filepath))
+        if (equivalent(it->first, path))
         {
             it->second->Unload();
-            it = m_Files.erase(it);
+            it = m_Entries.erase(it);
 
-            if (it == m_Files.end())
+            if (it == m_Entries.end())
                 break;
         }
     }
     
-    if (oldSize == m_Files.size())
-        Logger::LogWarning("Attempt to delete an unknown file entry: {}", filepath);
+    if (oldSize == m_Entries.size())
+        Logger::LogWarning("Attempt to delete an unknown FileManager entry: {}", path);
 }
 
-void FileManager::Unload(const Pointer<File>& file)
+void FileManager::Unload(const Pointer<Entry>& entry)
 {
-    Logger::LogDebug("Unloading file {}", file);
+    Logger::LogDebug("Unloading FileManager entry {}", entry);
     
-    const size_t oldSize = m_Files.size();
+    const size_t oldSize = m_Entries.size();
     
-    for (decltype(m_Files)::iterator it = m_Files.begin(); it != m_Files.end(); it++)
+    for (decltype(m_Entries)::iterator it = m_Entries.begin(); it != m_Entries.end(); it++)
     {
-        if (it->second == file)
+        if (it->second == entry)
         {
             it->second->Unload();
-            it = m_Files.erase(it);
+            it = m_Entries.erase(it);
 
-            if (it == m_Files.end())
+            if (it == m_Entries.end())
                 break;
         }
     }
     
-    if (oldSize == m_Files.size())
-        Logger::LogWarning("Attempt to delete an unknown file entry: {}", file);
+    if (oldSize == m_Entries.size())
+        Logger::LogWarning("Attempt to delete an unknown FileManager entry: {}", entry);
 }
 
 void FileManager::UnloadAll()
 {
-    Logger::LogDebug("Unloading all files");
+    Logger::LogDebug("Unloading all FileManager entries");
     
-    for (auto& entry : m_Files)
+    for (auto& entry : m_Entries)
     {
-        Logger::LogDebug("Unloading file {}", entry.first);
+        Logger::LogDebug("Unloading FileManager entry {}", entry.first);
         
         entry.second->Unload();
     }
 
     // Smart pointers are deleted automatically, we only need to clear the container
-    m_Files.clear();
+    m_Entries.clear();
 }

@@ -32,7 +32,7 @@ struct std::formatter<std::filesystem::path>
     {
         std::ostringstream out;
 
-        out << XnorCore::Utils::PathToForwardSlashes(p);
+        out << p.generic_string();
         
         return std::ranges::copy(std::move(out).str(), ctx.out()).out;
     }

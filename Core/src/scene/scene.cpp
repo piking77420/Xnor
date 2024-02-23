@@ -1,8 +1,6 @@
 ﻿#include "scene/scene.hpp"
-#include "utils/logger.hpp"
-#include "scene/component.hpp"
-#include "utils/memory_leak_detector.hpp"
 #include "scene/entity.hpp"
+#include "utils/logger.hpp"
 
 using namespace XnorCore;
 

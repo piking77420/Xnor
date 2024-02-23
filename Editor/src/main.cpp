@@ -11,9 +11,15 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	using namespace XnorCore;
 	using namespace XnorEditor;
 
+#ifdef _DEBUG
+	// Enable Visual Studio memory leak detection
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	//_CrtSetBreakAlloc(POS);
+#endif
+
 	Logger::OpenDefaultFile();
 
-	FileManager::LoadDirectoryRecursive("assets");
+	FileManager::LoadDirectory("assets");
 
 	Editor editor;
 
@@ -23,6 +29,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 	FileManager::UnloadAll();
 	Logger::Stop();
+
+#ifdef _DEBUG
+	_CrtDumpMemoryLeaks();
+#endif
 	
 	return 0;
 }

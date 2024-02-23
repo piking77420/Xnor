@@ -1,7 +1,7 @@
 ﻿#include "scene/entity.hpp"
 
-#include "scene/scene.hpp"
 #include "scene/component.hpp"
+#include "scene/scene.hpp"
 
 using namespace XnorCore;
 

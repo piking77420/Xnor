@@ -1,50 +1,33 @@
 #pragma once
 
 #include <filesystem>
-#include <string>
 
 #include "core.hpp"
+#include "file/entry.hpp"
 
 BEGIN_XNOR_CORE
-
-class File
+    class File : public Entry
 {
 public:
     [[nodiscard]]
     XNOR_ENGINE explicit File(std::filesystem::path&& filepath);
 
-    XNOR_ENGINE ~File();
+    XNOR_ENGINE ~File() override;
 
-    XNOR_ENGINE File(const File& other) = default;
+    DEFAULT_COPY_MOVE_OPERATIONS(File)
 
-    XNOR_ENGINE File(File&& other) = default;
+    XNOR_ENGINE bool Load() override;
 
-    XNOR_ENGINE File& operator=(const File& other) = default;
-
-    XNOR_ENGINE File& operator=(File&& other) = default;
-
-    /// @brief Returns <c>false</c> if an error occured while loading.
-    XNOR_ENGINE bool Load();
-
-    XNOR_ENGINE void Unload();
-    
-    [[nodiscard]]
-    XNOR_ENGINE const std::filesystem::path& GetFilepath() const;
-    
-    [[nodiscard]]
-    XNOR_ENGINE const std::filesystem::path& GetFilename() const;
+    XNOR_ENGINE void Unload() override;
     
     [[nodiscard]]
     XNOR_ENGINE const std::filesystem::path& GetFilenameNoExtension() const;
-    
-    [[nodiscard]]
-    XNOR_ENGINE bool IsLoaded() const;
 
-    template<typename T = int8_t>
+    template<typename T = char_t>
     [[nodiscard]]
     const T* GetData() const;
 
-    template<typename T = int8_t>
+    template<typename T = char_t>
     [[nodiscard]]
     T* GetData();
     
@@ -52,11 +35,8 @@ public:
     XNOR_ENGINE int64_t GetSize() const;
     
 private:
-    std::filesystem::path m_Filepath;
-    std::filesystem::path m_Filename;
-    std::filesystem::path m_FilenameNoExtension;
+    std::filesystem::path m_NameNoExtension;
     
-    bool m_Loaded = false;
     int8_t* m_Data = nullptr;
     int64_t m_Size = 0;
 };

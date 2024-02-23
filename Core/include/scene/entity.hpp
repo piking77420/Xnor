@@ -2,13 +2,13 @@
 
 #include <vector>
 
+#include "component.hpp"
 #include "core.hpp"
 #include "transform.hpp"
-#include "component.hpp"
 #include "utils/guid.hpp"
-#include "utils/reflectable.hpp"
 #include "utils/list.hpp"
 #include "utils/poly_ptr.hpp"
+#include "utils/reflectable.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -94,7 +94,7 @@ void Entity::AddComponent()
 {
     m_Components.Add();
     
-    ComponentT* newT = new ComponentT();
+    ComponentT* newT = new ComponentT;
     newT->entity = this;
     m_Components[m_Components.GetSize() - 1].Create(newT);
 }

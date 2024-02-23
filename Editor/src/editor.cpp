@@ -21,7 +21,7 @@ using namespace XnorEditor;
 
 void Editor::CreateDefaultWindows()
 {
-	m_UiWindows.push_back(new Performance(this,50));
+	m_UiWindows.push_back(new Performance(this, 50));
 	m_UiWindows.push_back(new Inspector(this));
 	m_UiWindows.push_back(new HeaderWindow(this));
 	m_UiWindows.push_back(new SceneGraph(this));
@@ -218,7 +218,7 @@ void Editor::Update()
 
 	Entity& ent2 = *World::world->Scene.CreateEntity("Directional Light");
 	ent2.AddComponent<DirectionalLight>();
-	ent2.GetComponent<DirectionalLight>()->color = {1,0,1};
+	ent2.GetComponent<DirectionalLight>()->color = {1, 0, 1};
 	
 	while (!window.ShouldClose())
 	{
@@ -242,7 +242,7 @@ void Editor::Update()
 		EndFrame();
 		renderer.SwapBuffers();
 	}
-
+	
 	delete World::world;
 }
 

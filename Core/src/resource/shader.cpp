@@ -14,10 +14,10 @@ void Shader::Load([[maybe_unused]] const uint8_t* buffer, [[maybe_unused]] const
 void Shader::Load(const File& vertexShader, const File& fragmentShader)
 {
     std::string vertexCode;
-    GetShaderCode(vertexShader.GetFilepath().generic_string().c_str(), &vertexCode);
+    GetShaderCode(vertexShader.GetPath().generic_string().c_str(), &vertexCode);
 
     std::string fragmentCode;
-    GetShaderCode(fragmentShader.GetFilepath().generic_string().c_str(), &fragmentCode);
+    GetShaderCode(fragmentShader.GetPath().generic_string().c_str(), &fragmentCode);
 
     const char* vShaderCode = vertexCode.c_str();
     const char* fShaderCode = fragmentCode.c_str();

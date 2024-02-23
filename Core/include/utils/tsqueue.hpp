@@ -1,64 +1,50 @@
 ﻿#pragma once
 
 #include <mutex>
-#include <functional>
 #include <queue>
 
 BEGIN_XNOR_CORE
 
-/// <summary>
-/// Thread-Safe Queue
-/// </summary>
-/// <typeparam name="T">The type of data to store</typeparam>
+/// @brief Thread-Safe Queue
+/// @tparam T The type of data to store.
 template <typename T>
-class TsQueue
+class TsQueue  // NOLINT(cppcoreguidelines-special-member-functions)
 {
 public:
-    // Default constructor
     TsQueue() = default;
 
     // Prevent copy construction because of the mutex
     TsQueue(const TsQueue&) = delete;
 
-    /// <summary>
-    /// Gets a reference to the front item in the queue
-    /// </summary>
-    /// <returns>Item</returns>
+    /// @brief Gets a reference to the front item in the queue
+    /// @returns Item
     const T& Front();
 
-    /// <summary>
-    /// Gets a reference to the back item in the queue
-    /// </summary>
-    /// <returns>Item</returns>
+    /// @brief Gets a reference to the back item in the queue
+    /// @returns Item
     const T& Back();
 
-    /// <summary>
-    /// Pushes a new item on the back of the queue
-    /// </summary>
-    /// <param name="item">Item</param>
+    /// @brief Pushes a new item on the back of the queue by copying it
+    /// @param item Item
     void Push(const T& item);
 
-    /// <summary>
-    /// Checks if the queue is empty
-    /// </summary>
-    /// <returns>Empty</returns>
+    /// @brief Pushes a new item on the back of the queue by moving it
+    /// @param item Item
+    void Push(T&& item);
+
+    /// @brief Checks if the queue is empty
+    /// @returns Empty
     bool Empty();
 
-    /// <summary>
-    /// Get the number of items in the queue
-    /// </summary>
-    /// <returns>Count</returns>
+    /// @brief Get the number of items in the queue
+    /// @returns Count
     size_t Count();
 
-    /// <summary>
-    /// Pops the item on the front of the queue
-    /// </summary>
-    /// <returns>Item</returns>
+    /// @brief Pops the item on the front of the queue
+    /// @returns Item
     T Pop();
     
-    /// <summary>
-    /// Clears the queue
-    /// </summary>
+    /// @brief Clears the queue
     void Clear();
 
 private:
@@ -84,6 +70,13 @@ const T& TsQueue<T>::Back()
 
 template <typename T>
 void TsQueue<T>::Push(const T& item)
+{
+    std::scoped_lock lock(mQueueMutex);
+    mQueue.push(item);
+}
+
+template<typename T>
+void TsQueue<T>::Push(T&& item)
 {
     std::scoped_lock lock(mQueueMutex);
     mQueue.push(std::move(item));

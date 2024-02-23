@@ -79,7 +79,7 @@ void Logger::OpenDefaultFile()
     const std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     std::tm ltime;
     (void) localtime_s(&ltime, &t);
-    const std::_Timeobj<char, const tm *> timeFormatter = std::put_time(&ltime, "%F.log");
+    const std::_Timeobj<char_t, const tm *> timeFormatter = std::put_time(&ltime, "%F.log");
     const std::string date = (std::ostringstream() << timeFormatter).str();
     OpenFile("logs/" + date);
 }

@@ -1,15 +1,15 @@
 ﻿// ReSharper disable CppClangTidyCppcoreguidelinesMissingStdForward
 #pragma once
 
+#include <condition_variable>
 #include <filesystem>
 #include <thread>
-#include <condition_variable>
 #include <utility>
 
 #include "core.hpp"
 #include "utils.hpp"
-#include "utils/tsqueue.hpp"
 #include "utils/formatter.hpp"
+#include "utils/tsqueue.hpp"
 
 BEGIN_XNOR_CORE
 

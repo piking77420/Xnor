@@ -26,18 +26,6 @@ Vector2 Utils::FromImVec(const ImVec2 v)
     return Vector2(v.x, v.y);
 }
 
-std::string Utils::PathToForwardSlashes(const std::filesystem::path& path)
-{
-    return PathToForwardSlashes(path.string());
-}
-
-std::string Utils::PathToForwardSlashes(std::string path)
-{
-    std::ranges::replace(path, '\\', '/');
-    
-    return path;
-}
-
 std::string Utils::HumanizeString(const std::string& str)
 {
     // Regex: https://regex101.com/r/3rQ25V/5

@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+﻿#include "pch.hpp"
 
 TEST(Utils, IntToPointer)
 {
@@ -18,22 +18,6 @@ TEST(Utils, ConversionVectorImVec)
 {
     constexpr Vector2 v(2.4f);
     EXPECT_EQ(v, Utils::FromImVec(Utils::ToImVec(v)));
-}
-
-TEST(Utils, PathToForwardSlashes)
-{
-    constexpr const char* filepath = __FILE__;
-    
-    const std::string sPath = filepath;
-    const std::filesystem::path pPath = filepath;
-
-    const std::string fsPath = Utils::PathToForwardSlashes(sPath);
-    const std::string fpPath = Utils::PathToForwardSlashes(pPath);
-
-    EXPECT_FALSE(fsPath.contains('\\'));
-    EXPECT_FALSE(fpPath.contains('\\'));
-
-    EXPECT_EQ(fsPath, fpPath);
 }
 
 TEST(Utils, HumanizeString)

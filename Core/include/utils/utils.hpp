@@ -58,12 +58,6 @@ namespace Utils
     XNOR_ENGINE Vector2 FromImVec(ImVec2 v);
 
     [[nodiscard]]
-    XNOR_ENGINE std::string PathToForwardSlashes(const std::filesystem::path& path);
-
-    [[nodiscard]]
-    XNOR_ENGINE std::string PathToForwardSlashes(std::string path);
-
-    [[nodiscard]]
     XNOR_ENGINE std::string HumanizeString(const std::string& str);
 }
 

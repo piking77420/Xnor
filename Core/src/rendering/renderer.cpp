@@ -1,7 +1,7 @@
 #include "rendering/renderer.hpp"
 
-#include "rendering\light\directional_light.hpp"
 #include "rendering/light/point_light.hpp"
+#include "rendering\light\directional_light.hpp"
 #include "rendering\light\spot_light.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/component/mesh_renderer.hpp"

@@ -7,31 +7,27 @@
 using namespace XnorCore;
 
 File::File(std::filesystem::path&& filepath)
-    : m_Filepath(std::move(filepath))
+    : Entry(std::move(filepath))
 {
-    if (!exists(m_Filepath))
-        throw std::invalid_argument("Filepath does not exist");
+    if (!is_regular_file(m_Path))
+        throw std::invalid_argument("Path does not point to a file");
     
-    if (!is_regular_file(m_Filepath))
-        throw std::invalid_argument("Filepath does not point to a file");
-    
-    m_Filename = m_Filepath.filename();
-    m_FilenameNoExtension = m_Filepath.stem();
+    m_NameNoExtension = m_Path.stem();
 }
 
 File::~File()
 {
     if (m_Loaded)
-        Unload();
+        File::Unload();
 }
 
 bool File::Load()
 {
-    std::ifstream file(m_Filepath, std::ios::in | std::ios::ate | std::ios::binary);
+    std::ifstream file(m_Path, std::ios::in | std::ios::ate | std::ios::binary);
 
     if (!file.is_open() || !file.good())
     {
-        Logger::LogError("Couldn't open file for reading: {}", m_Filepath);
+        Logger::LogError("Couldn't open file for reading: {}", m_Path);
         return false;
     }
 
@@ -54,24 +50,9 @@ void File::Unload()
     m_Loaded = false;
 }
 
-const std::filesystem::path& File::GetFilepath() const
-{
-    return m_Filepath;
-}
-
-const std::filesystem::path& File::GetFilename() const
-{
-    return m_Filename;
-}
-
 const std::filesystem::path& File::GetFilenameNoExtension() const
 {
-    return m_FilenameNoExtension;
-}
-
-bool File::IsLoaded() const
-{
-    return m_Loaded;
+    return m_NameNoExtension;
 }
 
 int64_t File::GetSize() const

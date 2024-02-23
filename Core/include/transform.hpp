@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Maths/vector3.hpp"
 #include "Maths/quaternion.hpp"
+#include "Maths/vector3.hpp"
 
 #include "core.hpp"
 #include "utils/reflectable.hpp"

@@ -11,8 +11,8 @@ Resource::Resource(std::string name)
 
 void Resource::Load(File& file)
 {
-    if (!file.IsLoaded())
-        Logger::LogWarning("Tried to load resource {} with an unloaded file: {}", m_Name, file.GetFilepath());
+    if (!file.GetLoaded())
+        Logger::LogWarning("Tried to load resource {} with an unloaded file: {}", m_Name, file.GetPath());
     
     Load(file.GetData<uint8_t>(), file.GetSize());
 }

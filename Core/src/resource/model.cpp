@@ -1,11 +1,11 @@
 #include "resource/model.hpp"
 
 #include <assimp/Importer.hpp>
-#include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <assimp/scene.h>
 
-#include "utils/logger.hpp"
 #include "rendering/rhi.hpp"
+#include "utils/logger.hpp"
 
 using namespace XnorCore;
 

@@ -10,20 +10,20 @@
 BEGIN_XNOR_CORE
 
 /// @brief Custom XNOR smart pointer.
-///        Represents both a <c>std::shared_ptr</c> and a <c>std::weak_ptr</c>.
+///        Represents both a @c std::shared_ptr and a @c std::weak_ptr.
 ///
 /// @paragraph reason Reason
-/// While using <c>std::weak_ptr</c>, we realized that it was not very practical because a <c>std::shared_ptr</c> needs to be
-/// constructed from the former for the pointed type to be used. The <c>Pointer</c> type is meant to fix this issue
+/// While using @c std::weak_ptr, we realized that it was not very practical because a @c std::shared_ptr needs to be
+/// constructed from the former for the pointed type to be used. The @ref Pointer type is meant to fix this issue
 /// by being both a strong and a weak shared pointer.
 ///
 /// @paragraph references Weak and Strong References
-/// By default, creating a <c>Pointer</c> with constructor arguments from the pointed type allocates this type on the heap.
-/// Copying this instance of <c>Pointer</c> creates a new weak reference by default, meaning that the copy won't keep the raw
+/// By default, creating a @ref Pointer with constructor arguments from the pointed type allocates this type on the heap.
+/// Copying this instance of @ref Pointer creates a new weak reference by default, meaning that the copy won't keep the raw
 /// pointer alive. When all the strong references go out of scope or are destroyed, the underlying pointed type is freed.
-/// A strong reference can still be created if needed, by calling either <c>Pointer<T>::CreateStrongReference() const</c>,
-/// <c>Pointer::ToStrongReference()</c>, or by creating a copy with <c>Pointer::Pointer(const Pointer&, bool)</c>
-/// and giving a <c>true</c> value to the second argument.
+/// A strong reference can still be created if needed, by calling either @ref "Pointer::CreateStrongReference() const" "Pointer::CreateStrongReference()",
+/// @ref Pointer::ToStrongReference(), or by creating a copy using @ref Pointer::Pointer(const Pointer&, bool) "the copy constructor"
+/// and giving a @c true value to the second argument.
 ///
 /// @tparam T The type to point to. Most of the time, this shouldn't be a pointer type.
 /// 
@@ -34,9 +34,10 @@ template<typename T>
 class Pointer
 {
 public:
-    /// @brief Creates an empty <c>Pointer</c> without a reference counter and pointing to <c>nullptr</c>.
+    /// @brief Creates an empty @ref Pointer without a reference counter and pointing to @c nullptr.
     Pointer() = default;
-    
+
+    /// @brief Creates a copy of another @ref Pointer, specifying whether it is a weak or strong reference.
     Pointer(const Pointer& other, bool strongReference = false);
 
     Pointer(Pointer&& other) noexcept;
@@ -55,6 +56,7 @@ public:
 
     virtual ~Pointer();
 
+    /// @brief Creates a new strong reference to this pointer
     Pointer CreateStrongReference() const;
 
     Pointer& operator=(const Pointer& other);
@@ -88,10 +90,13 @@ public:
     [[nodiscard]]
     bool GetIsStrongReference() const;
 
+    /// @brief Converts this @ref Pointer to a strong reference.
     void ToStrongReference();
 
+    /// @brief Converts this @ref Pointer to a weak reference.
     void ToWeakReference();
-    
+
+    /// @brief Resets this @ref Pointer to a @c nullptr.
     void Reset();
     
 private:
@@ -256,7 +261,12 @@ Pointer<T>& Pointer<T>::operator=(Pointer<U>&& other) noexcept
 }
 
 template<typename T>
-Pointer<T>::operator T*() const { return m_ReferenceCounter->GetPointer(); }
+Pointer<T>::operator T*() const
+{
+    if (m_ReferenceCounter)
+        return m_ReferenceCounter->GetPointer();
+    return nullptr;
+}
 
 template<typename T>
 Pointer<T>::operator std::string() const { return std::format("{{ ptr={:p}, sRefs={:d}, wRefs={:d}, isSRef={} }}", static_cast<const T*>(this), m_ReferenceCounter->GetStrong(), m_ReferenceCounter->GetWeak(), m_IsStrongReference); }

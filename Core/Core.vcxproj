@@ -111,6 +111,8 @@
     <ClCompile Include="externals\src\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="externals\src\ttf\ttfParser.cpp" />
     <ClCompile Include="src\applications\application.cpp" />
+    <ClCompile Include="src\file\directory.cpp" />
+    <ClCompile Include="src\file\entry.cpp" />
     <ClCompile Include="src\input\core_input.cpp" />
     <ClCompile Include="src\input\time.cpp" />
     <ClCompile Include="src\rendering\light\directional_light.cpp" />
@@ -141,7 +143,6 @@
     <ClCompile Include="src\transform.cpp" />
     <ClCompile Include="src\utils\formatter.cpp" />
     <ClCompile Include="src\utils\logger.cpp" />
-    <ClCompile Include="src\utils\memory_leak_detector.cpp" />
     <ClCompile Include="src\utils\pointer.cpp" />
     <ClCompile Include="src\utils\reference_counter.cpp" />
     <ClCompile Include="src\utils\reflectable.cpp" />
@@ -154,6 +155,8 @@
   <ItemGroup>
     <ClInclude Include="include\applications\application.hpp" />
     <ClInclude Include="include\core.hpp" />
+    <ClInclude Include="include\file\directory.hpp" />
+    <ClInclude Include="include\file\entry.hpp" />
     <ClInclude Include="include\file\file.hpp" />
     <ClInclude Include="include\file\file_manager.hpp" />
     <ClInclude Include="include\input\core_input.hpp" />
@@ -182,7 +185,6 @@
     <ClInclude Include="include\utils\formatter.hpp" />
     <ClInclude Include="include\utils\list.hpp" />
     <ClInclude Include="include\utils\logger.hpp" />
-    <ClInclude Include="include\utils\memory_leak_detector.hpp" />
     <ClInclude Include="include\utils\pointer.hpp" />
     <ClInclude Include="include\utils\poly_ptr.hpp" />
     <ClInclude Include="include\utils\reference_counter.hpp" />

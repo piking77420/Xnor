@@ -17,11 +17,11 @@ class ResourceManager final
     STATIC_CLASS(ResourceManager)
     
 public:
-    /// @brief Creates the resource corresponding to the given @p name without loading it
+    /// @brief Creates the @ref Resource corresponding to the given @p name without loading it.
     template<ResourceT T>
     static Pointer<T> Add(std::string name);
 
-    /// @brief Creates the resource corresponding to the given @p file and loads it
+    /// @brief Creates the @ref Resource corresponding to the given @p file and loads it.
     template<ResourceT T>
     static Pointer<T> Load(const Pointer<File>& file);
 
@@ -66,9 +66,9 @@ Pointer<T> ResourceManager::Add(std::string name)
 template<ResourceT T>
 Pointer<T> ResourceManager::Load(const Pointer<File>& file)
 {
-    Logger::LogDebug("Loading resource {}", file->GetFilepath());
+    Logger::LogDebug("Loading resource {}", file->GetPath());
     
-    Pointer<T> resource(Utils::PathToForwardSlashes(file->GetFilepath()));
+    Pointer<T> resource(file->GetPath().generic_string());
 
     m_Resources[resource->GetName()] = static_cast<Pointer<Resource>>(resource.CreateStrongReference());
 

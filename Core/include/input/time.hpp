@@ -23,10 +23,8 @@ public:
     template<typename T = uint32_t>
     static T GetTotalFrameCount();
     
-    /// <summary>
-    /// Updates the time variables using GLFW.
-    /// This function should be called exactly once each frame.
-    /// </summary>
+    /// @brief Updates the time variables using GLFW.
+    ///        This function should be called exactly once each frame.
     XNOR_ENGINE static void Update();
 
 private:

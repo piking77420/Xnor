@@ -1,8 +1,8 @@
 ﻿#pragma once
 
+#include <stdexcept>
 #include <utility>
 #include <vector>
-#include <stdexcept>
 
 #include "core.hpp"
 
@@ -117,7 +117,7 @@ uint64_t ReferenceCounter<T>::GetStrong() const
 template<typename T>
 uint64_t ReferenceCounter<T>::GetWeak() const
 {
-    return m_WeakReferenceOwners.fullSize();
+    return m_WeakReferenceOwners.size();
 }
 
 template<typename T>
