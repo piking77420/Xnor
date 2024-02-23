@@ -17,7 +17,8 @@ public:
 	// Utils
 	XNOR_ENGINE static void SetPolygonMode(PolygonFace face, PolygonMode mode);
 	XNOR_ENGINE static void SetViewport(Vector2i screenSize);
-	
+	XNOR_ENGINE static void DrawQuad(uint32_t quadID);
+
 	// Model
 	XNOR_ENGINE static uint32_t CreateModel(const std::vector<Vertex>& vertices,const std::vector<uint32_t>& indicies);
 	XNOR_ENGINE static bool DestroyModel(uint32_t modelId);

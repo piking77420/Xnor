@@ -4,10 +4,10 @@
 
 using namespace XnorEditor; 
 
-EditorWindow::EditorWindow(Editor* editor, XnorCore::RendererContext* rendererContext)
-    : RenderWindow(editor, rendererContext, "Editor")
+EditorWindow::EditorWindow(Editor* editor)
+    : RenderWindow(editor, "Editor")
 {
-    rendererContext->isEditor = true;
+    m_RendererContext.isEditor = true;
 }
 
 void EditorWindow::Display()

@@ -16,6 +16,22 @@ enum class PolygonMode : int32_t
 	Fill,
 };
 
+enum class DrawMode : uint8_t
+{
+	Point = 0,
+	Line_Strip,
+	Line_Loop,
+	LineLoop,
+	LineStripAdjency,
+	TrianglesStrip,
+	TrianglesFan,
+	Triangles,
+	TrianglesStripAdjency,
+	TrianglesAdjency,
+	Patches 
+	
+};
+
 enum class PolygonFace : int32_t
 {
 	FrontLeft = 1024,

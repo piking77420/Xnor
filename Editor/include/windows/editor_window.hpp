@@ -9,7 +9,7 @@ class EditorWindow : public RenderWindow
     static constexpr float_t MaxPitch = 89.0f;
     
 public:
-    EditorWindow(Editor* editor, XnorCore::RendererContext* rendererContext);
+    EditorWindow(Editor* editor);
 
     ~EditorWindow() override = default;
 

@@ -26,8 +26,8 @@ void Editor::CreateDefaultWindows()
 	m_UiWindows.push_back(new HeaderWindow(this));
 	m_UiWindows.push_back(new SceneGraph(this));
 	m_UiWindows.push_back(new ContentBrowser(this, static_cast<std::filesystem::path>("assets")));
-	m_UiWindows.push_back(new EditorWindow(this, &m_EditorRenderContext));
-	m_UiWindows.push_back(new RenderWindow(this, &m_GameRenderContext));
+	m_UiWindows.push_back(new EditorWindow(this));
+	m_UiWindows.push_back(new RenderWindow(this));
 }
 
 void Editor::BeginDockSpace() const
@@ -234,8 +234,6 @@ void Editor::Update()
 		ImGui::End();
 		
 		WorldBehaviours();
-		renderer.RenderScene(World::world->Scene, m_EditorRenderContext);
-		renderer.RenderScene(World::world->Scene, m_GameRenderContext);
 		UpdateWindow();
 	
 		CoreInput::Reset();

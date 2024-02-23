@@ -18,6 +18,13 @@ void RHI::SetViewport(const Vector2i screenSize)
 	glViewport(0,0,screenSize.x,screenSize.y);
 }
 
+void RHI::DrawQuad(uint32_t quadID)
+{
+	const ModelInternal model = m_ModelMap.at(quadID);
+	glBindVertexArray(model.vao);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}
+
 uint32_t RHI::CreateModel(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indicies)
 {
 	ModelInternal modelInternal;

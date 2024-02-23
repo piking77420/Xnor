@@ -11,9 +11,9 @@ class RenderWindow : public UiWindow
 {
 public:
 
-    RenderWindow(Editor* editor, XnorCore::RendererContext* rendererContext);
+    RenderWindow(Editor* editor);
     
-    RenderWindow(Editor* editor, XnorCore::RendererContext* rendererContext, const std::string& title);
+    RenderWindow(Editor* editor, const std::string& title);
 
     ~RenderWindow() override;
 
@@ -22,14 +22,13 @@ public:
 protected:
     XnorCore::Camera m_Camera;
     
+    XnorCore::RendererContext m_RendererContext;
+    
     XnorCore::FrameBuffer m_FrameBuffer;
     
     XnorCore::RenderPass m_RenderPass;
     
     XnorCore::Texture* m_ColorTexture = nullptr;
-    
-    XnorCore::Texture* m_DepthTexture = nullptr;
-
 private:
     void Initialize(XnorCore::RendererContext* rendererContext);
 };

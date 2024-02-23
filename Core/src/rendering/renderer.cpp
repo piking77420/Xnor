@@ -78,7 +78,7 @@ void Renderer::RenderScene(const Scene& scene, [[maybe_unused]] const RendererCo
 		m_DrawTextureToScreenShader->Use();
 		m_ColorAttachment->BindTexture(0);
 		
-		RHI::DrawModel(m_Quad->GetId());
+		RHI::DrawQuad(m_Quad->GetId());
 		m_DrawTextureToScreenShader->UnUse();
 		rendererContext.framebuffer->UnBindFrameBuffer();
 	}

@@ -2,26 +2,30 @@
 
 using namespace XnorEditor;
 
-RenderWindow::RenderWindow(Editor* editor, XnorCore::RendererContext* rendererContext)
+RenderWindow::RenderWindow(Editor* editor)
     : UiWindow(editor, "Game Preview")
 {
-    Initialize(rendererContext);
+    Initialize(&m_RendererContext);
 }
 
-RenderWindow::RenderWindow(Editor* editor, XnorCore::RendererContext* rendererContext, const std::string& title)
+RenderWindow::RenderWindow(Editor* editor, const std::string& title)
     : UiWindow(editor, title)
 {
-    Initialize(rendererContext);
+    Initialize(&m_RendererContext);
 }
 
 RenderWindow::~RenderWindow()
 {
     delete m_ColorTexture;
-    delete m_DepthTexture;
 }
 
 void RenderWindow::Display()
 {
+    if (XnorCore::World::world != nullptr)
+    {
+        m_Editor->renderer.RenderScene(XnorCore::World::world->Scene, m_RendererContext);
+    }
+    
     ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_ColorTexture->GetId()), ImGui::GetContentRegionAvail());
 }
 
@@ -38,17 +42,15 @@ void RenderWindow::Initialize(XnorCore::RendererContext* rendererContext)
     const std::vector attachementsType =
     {
         AttachementsType::Color,
-        AttachementsType::DepthAndStencil
     };
     
     // Init Rendering
     m_FrameBuffer = FrameBuffer(Window::GetSize());
     m_ColorTexture = new Texture(AttachementsType::Color, m_FrameBuffer.GetSize());
-    m_DepthTexture = new Texture(AttachementsType::DepthAndStencil, m_FrameBuffer.GetSize());
     
     // Set Up renderPass
     const RenderPass renderPass(attachementsType);
-    const std::vector targets = { m_ColorTexture, m_DepthTexture };
+    const std::vector targets = { m_ColorTexture };
     m_FrameBuffer.Create(renderPass,targets);
 
     // Init rendererContext
