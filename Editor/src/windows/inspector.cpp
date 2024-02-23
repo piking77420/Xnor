@@ -203,7 +203,7 @@ void Inspector::DisplayVectorMember(void* const obj, const XnorCore::FieldInfo& 
             ImGui::PushID(static_cast<int32_t>(i));
             if (ImGui::Button("-"))
             {
-                vec->RemoveAt(i);
+                vec->RemoveAt(i); // TODO FIXME Memory leak
                 ptr = vec->GetData() - fieldInfo.offset;
                 size--;
             }

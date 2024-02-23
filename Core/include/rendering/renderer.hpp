@@ -45,7 +45,7 @@ private:
     Pointer<Shader> m_BasicShader;
     // DrawTextureToScreen
     Pointer<File> m_VertexDrawTextureToScreenPath;
-    Pointer<File> DrawTextureToScreen;
+    Pointer<File> m_DrawTextureToScreen;
     Pointer<Shader> m_DrawTextureToScreenShader;
 
     //

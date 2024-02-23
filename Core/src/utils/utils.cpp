@@ -5,12 +5,12 @@
 
 using namespace XnorCore;
 
-void Utils::CenterImguiObject(const float alignment)
+void Utils::CenterImguiObject(const float_t alignment)
 {
     const ImGuiStyle& style = ImGui::GetStyle();
-    const float size = style.FramePadding.x * 2.0f;
-    const float avail = ImGui::GetContentRegionAvail().x;
-    const float off = (avail - size) * alignment;
+    const float_t size = style.FramePadding.x * 2.0f;
+    const float_t avail = ImGui::GetContentRegionAvail().x;
+    const float_t off = (avail - size) * alignment;
     
     if (off > 0.0f)
         ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
@@ -66,4 +66,55 @@ std::string Utils::HumanizeString(const std::string& str)
     }
 
     return result;
+}
+
+float_t Utils::NormalizeAngle(float_t angle)
+{
+    while (angle > Calc::Pi * 2.f)
+        angle -= Calc::Pi * 2.f;
+        
+    while (angle < 0)
+        angle += Calc::Pi * 2.f;
+        
+    return angle;
+}
+
+Vector3 Utils::NormalizeAngles(Vector3 angles)
+{
+    angles.x = NormalizeAngle(angles.x);
+    angles.y = NormalizeAngle(angles.y);
+    angles.z = NormalizeAngle(angles.z);
+    return angles;
+}
+
+Vector3 Utils::GetQuaternionEulerAngles(const Quaternion& rot)
+{
+    const float_t sqw = rot.W() * rot.W();
+    const float_t sqx = rot.X() * rot.X();
+    const float_t sqy = rot.Y() * rot.Y();
+    const float_t sqz = rot.Z() * rot.Z();
+    const float_t unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
+    const float_t test = rot.X() * rot.W() - rot.Y() * rot.Z();
+    Vector3 v;
+ 
+    if (test > 0.4995f * unit)
+    { // singularity at north pole
+        v.y = 2.f * std::atan2f(rot.Y(), rot.X());
+        v.x = Calc::PiOver2;
+        v.z = 0;
+        return NormalizeAngles(v);
+    }
+    if (test < -0.4995f * unit)
+    { // singularity at south pole
+        v.y = -2.f * std::atan2f(rot.Y(), rot.X());
+        v.x = -Calc::PiOver2;
+        v.z = 0;
+        return NormalizeAngles(v);
+    }
+ 
+    Quaternion q = Quaternion(rot.Z(), rot.X(), rot.Y(), rot.W());
+    v.y = std::atan2f(2.f * q.X() * q.W() + 2.f * q.Y() * q.Z(), 1 - 2.f * (q.Z() * q.Z() + q.W() * q.W()));    // Yaw
+    v.x = std::asinf(2.f * (q.X() * q.Z() - q.W() * q.Y()));                                                    // Pitch
+    v.z = std::atan2f(2.f * q.X() * q.Y() + 2.f * q.Z() * q.W(), 1 - 2.f * (q.Y() * q.Y() + q.Z() * q.Z()));    // Roll
+    return NormalizeAngles(v);
 }

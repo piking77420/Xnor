@@ -25,8 +25,8 @@ Performance::Performance(Editor* const editor, const size_t sampleCount)
 
 void Performance::Update()
 {
-    if (m_ArrayIndex > m_FrameRateArray.size())
-        m_ArrayIndex %= m_FrameRateArray.size();
+    if (static_cast<uint32_t>(m_ArrayIndex) > m_FrameRateArray.size())
+        m_ArrayIndex %= static_cast<int32_t>(m_FrameRateArray.size());
     
     m_LastFps = 1.f / XnorCore::Time::GetDeltaTime();
     m_FrameRateArray[m_ArrayIndex] = m_LastFps;
