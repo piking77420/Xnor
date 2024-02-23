@@ -65,6 +65,43 @@ namespace TestValues
     }
 }
 
+namespace TestInsert
+{
+    List<int> list{0, 1, 3, 4};
+
+    TEST(List, Insert)
+    {
+        EXPECT_EQ(list[2], 3);
+        EXPECT_EQ(list.GetSize(), 4);
+        list.Insert(2, 2);
+        EXPECT_EQ(list[2], 2);
+        EXPECT_EQ(list.GetSize(), 5);
+    }
+}
+
+namespace TestRemove
+{
+    List<int> list{0, 1, 2, 3, 4, 5, 6, 7, 8};
+
+    TEST(List, Remove)
+    {
+        EXPECT_EQ(list.GetSize(), 9);
+        EXPECT_EQ(list.GetCapacity(), 16);
+        EXPECT_EQ(list[3], 3);
+        list.Remove(3);
+        EXPECT_EQ(list.GetSize(), 8);
+        EXPECT_EQ(list.GetCapacity(), 8);
+        EXPECT_EQ(list[3], 4);
+
+        list.Insert(3, 3);
+        EXPECT_EQ(list[3], 3);
+        list.RemoveAt(3);
+        EXPECT_EQ(list.GetSize(), 8);
+        EXPECT_EQ(list.GetCapacity(), 8);
+        EXPECT_EQ(list[3], 4);
+    }
+}
+
 namespace TestLambda
 {
     List<int> list{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};

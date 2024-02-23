@@ -142,6 +142,7 @@
     <ClCompile Include="src\screen.cpp" />
     <ClCompile Include="src\transform.cpp" />
     <ClCompile Include="src\utils\formatter.cpp" />
+    <ClCompile Include="src\utils\list.cpp" />
     <ClCompile Include="src\utils\logger.cpp" />
     <ClCompile Include="src\utils\pointer.cpp" />
     <ClCompile Include="src\utils\reference_counter.cpp" />
