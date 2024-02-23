@@ -205,7 +205,7 @@ private:
     XNOR_ENGINE static void HandleMouseButton(GLFWwindow* window, int32_t mouseButton, int32_t action, int32_t mods);
     XNOR_ENGINE static void MouseCursorPos(GLFWwindow* window, double_t xpos, double_t ypos);
     XNOR_ENGINE static void HandleGamePad();
-    XNOR_ENGINE static void HandleJoyStick(int jid, int event);
+    XNOR_ENGINE static void HandleJoyStick(int32_t jid, int32_t event);
 
     XNOR_ENGINE static inline Vector2 m_MousePos;
 };

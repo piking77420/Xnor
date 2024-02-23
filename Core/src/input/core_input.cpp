@@ -67,28 +67,22 @@ void CoreInput::MouseCursorPos(GLFWwindow*, const double_t xpos, const double_t 
     m_MousePos = Vector2(static_cast<float_t>(xpos), static_cast<float_t>(ypos));
 }
 
-void CoreInput::HandleJoyStick(int jid, int event)
+void CoreInput::HandleJoyStick([[maybe_unused]] int32_t jid, [[maybe_unused]] int32_t event)
 {
-    switch (event)
-    {
-        
-    }
 }
 
 void CoreInput::HandleGamePad()
 {
-    
     for (uint32_t i = 0; i < JoyStickMax; i++)
     {
-        const uint32_t present = glfwJoystickPresent(static_cast<uint32_t>(i));
-        m_GamePads[i] = static_cast<bool>(present);
+        const uint32_t present = glfwJoystickPresent(i);
+        m_GamePads[i] = static_cast<bool_t>(present);
     }
-    
 }
 
 void CoreInput::Initialize()
 {
-    GLFWwindow* const windowPtr = static_cast<GLFWwindow*>(Window::GetHandle());
+    GLFWwindow* const windowPtr = Window::GetHandle();
 
     glfwSetKeyCallback(windowPtr, HandleKeyboard);
     glfwSetMouseButtonCallback(windowPtr, HandleMouseButton);
@@ -123,4 +117,3 @@ void CoreInput::Reset()
         statuses.at(static_cast<uint8_t>(KeyStatus::Repeat)) = false;
     }
 }
-

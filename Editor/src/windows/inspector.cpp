@@ -200,7 +200,7 @@ void Inspector::DisplayVectorMember(void* const obj, const XnorCore::FieldInfo& 
         size_t size = vec->GetSize();
         for (size_t i = 0; i < size; i++)
         {
-            ImGui::PushID(i);
+            ImGui::PushID(static_cast<int32_t>(i));
             if (ImGui::Button("-"))
             {
                 vec->RemoveAt(i);
