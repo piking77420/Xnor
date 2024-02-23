@@ -22,7 +22,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	ResourceManager::RemoveAll();
 
 	FileManager::UnloadAll();
-	Logger::Stop();
+	Logger::Stop(); 
 
 	return 0;
 }
