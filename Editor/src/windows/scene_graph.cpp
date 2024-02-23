@@ -10,6 +10,8 @@ using namespace XnorEditor;
 SceneGraph::SceneGraph(Editor* editor)
     : UiWindow(editor, "Scene Graph")
 {
+    m_EntityToDelete = nullptr;
+    m_EntityToRename = nullptr;
 }
 
 void SceneGraph::Display()
@@ -31,6 +33,7 @@ void SceneGraph::Display()
         
         if (ImGui::BeginDragDropTarget())
         {
+            // ReSharper disable once CppTooWideScope
             const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("SG");
             
             if (payload)
@@ -107,6 +110,9 @@ void SceneGraph::DisplayEntityContextMenu(XnorCore::Scene& scene, XnorCore::Enti
             XnorCore::Entity* const e = scene.CreateEntity("Entity", entity->GetParent());
             e->AddChild(entity);
         }
+
+        if (ImGui::Selectable("Parent to root"))
+            entity->SetParent(nullptr);
                     
         if (ImGui::Selectable("Rename"))
             m_EntityToRename = entity;

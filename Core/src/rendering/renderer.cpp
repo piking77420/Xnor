@@ -210,10 +210,12 @@ void Renderer::DrawMeshRenders(const Scene& scene, [[maybe_unused]] const Render
 
 	for (const MeshRenderer* meshRenderer : meshrenderers)
 	{
-		const Transform& transform =  meshRenderer->entity->transform;
+		Transform& transform = meshRenderer->entity->transform;
 		
 		ModelUniformData modelData;
-		modelData.model = Matrix::Trs(transform.position, transform.rotation, transform.scale);
+		
+		transform.quaternion = Quaternion::FromEuler(transform.rotation);
+		modelData.model = Matrix::Trs(transform.position, transform.quaternion, transform.scale);
 		m_Rhi.UpdateModelUniform(modelData);
 
 		if (meshRenderer->texture.IsValid())

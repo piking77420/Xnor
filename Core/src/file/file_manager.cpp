@@ -89,7 +89,7 @@ Pointer<Directory> FileManager::AddDirectory(std::filesystem::path path)
     }
     catch (const std::invalid_argument& ex)
     {
-        Logger::LogError("Exception while creating directory with path {}: {}", path, ex.what());
+        Logger::LogError("Exception while creating directory with path {}: {}", directory->GetPath(), ex.what());
         // Return the already-constructed null Pointer
         return directory;
     }
@@ -104,7 +104,9 @@ Pointer<Directory> FileManager::AddDirectory(std::filesystem::path path)
 
 Pointer<Directory> FileManager::LoadDirectory(std::filesystem::path path)
 {
-    Logger::LogDebug("Loading directory {}", path);
+    Logger::LogDebug("Loading directory {}...", path);
+
+    auto&& start = std::chrono::system_clock::now();
 
     if (Contains(path))
     {
@@ -127,7 +129,7 @@ Pointer<Directory> FileManager::LoadDirectory(std::filesystem::path path)
     }
     catch (const std::invalid_argument& ex)
     {
-        Logger::LogError("Exception while creating directory with path {}: {}", path, ex.what());
+        Logger::LogError("Exception while creating directory with path {}: {}", directory->GetPath(), ex.what());
         // Return the already-constructed null Pointer
         return directory;
     }
@@ -138,6 +140,8 @@ Pointer<Directory> FileManager::LoadDirectory(std::filesystem::path path)
 
     // Make sure to return a weak reference
     directory.ToWeakReference();
+
+    Logger::LogDebug("Directory {} load successful. Took {}", directory->GetPath(), std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start));
 
     return directory;
 }
@@ -199,7 +203,9 @@ void FileManager::Unload(const Pointer<Entry>& entry)
 
 void FileManager::UnloadAll()
 {
-    Logger::LogDebug("Unloading all FileManager entries");
+    Logger::LogDebug("Unloading all FileManager entries...");
+
+    auto&& start = std::chrono::system_clock::now();
     
     for (auto& entry : m_Entries)
     {
@@ -210,4 +216,6 @@ void FileManager::UnloadAll()
 
     // Smart pointers are deleted automatically, we only need to clear the container
     m_Entries.clear();
+
+    Logger::LogDebug("FileManager unload successful. Took {}", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start));
 }
