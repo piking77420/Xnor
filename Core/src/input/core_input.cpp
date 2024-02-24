@@ -125,7 +125,7 @@ void CoreInput::HandleGamePad()
             switch (state.buttons[k])
             {
                 case GLFW_RELEASE :
-                    if(isDown || isPress)
+                    if (isDown || isPress)
                     {
                         statuses.at(static_cast<uint8_t>(GameButtonStatus::Release)) = true;
                         statuses.at(static_cast<uint8_t>(GameButtonStatus::Down)) = false;
