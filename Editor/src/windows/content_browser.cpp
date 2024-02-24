@@ -12,7 +12,8 @@ ContentBrowser::ContentBrowser(Editor* editor, XnorCore::Pointer<XnorCore::Direc
     , m_RootDirectory(std::move(rootDirectory))
     , m_CurrentDirectory(m_RootDirectory)
 {
-    m_UnknownFileTypeTexture = XnorCore::ResourceManager::Load<XnorCore::Texture>(XnorCore::FileManager::Get(ASSETS_PATH "unknown_file_type.png"));
+    m_FileTexture = XnorCore::ResourceManager::Load<XnorCore::Texture>(XnorCore::FileManager::Get(ASSETS_PATH "file.png"));
+    m_DirectoryTexture = XnorCore::ResourceManager::Load<XnorCore::Texture>(XnorCore::FileManager::Get(ASSETS_PATH "directory.png"));
 }
 
 void ContentBrowser::Display()
@@ -22,14 +23,14 @@ void ContentBrowser::Display()
     ImVec2 available = ImGui::GetContentRegionAvail();
 
     ImGui::BeginChild("##left", ImVec2(available.x * 0.5f, 0.f), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeX);
-    DisplayEntry(static_cast<XnorCore::Pointer<XnorCore::Entry>>(m_RootDirectory));
+    DisplayDirectoryHierarchy(static_cast<XnorCore::Pointer<XnorCore::Entry>>(m_RootDirectory));
     ImGui::EndChild();
 
     ImGui::SameLine();
 
     ImGui::BeginChild("##right");
     
-    const std::string title = m_CurrentDirectory->GetPath().generic_string();
+    const std::string title = m_CurrentDirectory->GetPathString();
     const char* const titleStr = title.c_str();
     //available = ImGui::GetContentRegionAvail();
     const ImVec2 textSize = ImGui::CalcTextSize(titleStr);
@@ -37,10 +38,11 @@ void ContentBrowser::Display()
     ImGui::Text("%s", titleStr);
     // TODO Add child window around title for visual border
 
-    for ([[maybe_unused]] const XnorCore::Pointer<XnorCore::Entry>& entry : m_CurrentDirectory->GetChildEntries())
-    {
-        ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_UnknownFileTypeTexture->GetId()), ImVec2(64.f, 64.f));
-    }
+    for ([[maybe_unused]] const XnorCore::Pointer<XnorCore::Directory>& directory : m_CurrentDirectory->GetChildDirectories())
+        DisplayEntry(static_cast<XnorCore::Pointer<XnorCore::Entry>>(directory), m_DirectoryTexture);
+
+    for ([[maybe_unused]] const XnorCore::Pointer<XnorCore::File>& file : m_CurrentDirectory->GetChildFiles())
+        DisplayEntry(static_cast<XnorCore::Pointer<XnorCore::Entry>>(file), m_FileTexture);
     
     ImGui::EndChild();
 }
@@ -60,7 +62,7 @@ void ContentBrowser::SetRootDirectory(const XnorCore::Pointer<XnorCore::Director
         m_CurrentDirectory = m_RootDirectory;
 }
 
-void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entry)
+void ContentBrowser::DisplayDirectoryHierarchy(const XnorCore::Pointer<XnorCore::Entry>& entry)
 {
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_FramePadding;
 
@@ -80,7 +82,7 @@ void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entr
         if (isDirectory)
         {
             for (const XnorCore::Pointer<XnorCore::Entry>& childEntry : directory->GetChildEntries())
-                DisplayEntry(childEntry);
+                DisplayDirectoryHierarchy(childEntry);
         }
         ImGui::TreePop();
     }
@@ -88,4 +90,31 @@ void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entr
     {
         m_CurrentDirectory = directory;
     }
+}
+
+void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entry, const XnorCore::Pointer<XnorCore::Texture>& texture)
+{
+    const float_t oldCursorPos = ImGui::GetCursorPosX();
+
+    const float_t textWidth = ImGui::CalcTextSize(entry->GetName().c_str()).x;
+    ImGui::BeginChild(entry->GetPathString().c_str(), ImVec2(std::max(textWidth, static_cast<float_t>(texture->GetSize().x)), 0.f));
+    const ImVec4 color = m_SelectedEntry == entry ? XnorCore::Utils::ToImCol(SelectedEntryColor) : ImVec4(1.f, 1.f, 1.f, 1.f);
+    ImGui::Image(
+        XnorCore::Utils::IntToPointer<ImTextureID>(texture->GetId()), XnorCore::Utils::ToImVec(static_cast<Vector2>(texture->GetSize())),
+        ImVec2(),
+        ImVec2(1.f, 1.f),
+        color
+    );
+    XnorCore::Utils::CenterImguiObject(textWidth);
+    ImGui::TextColored(color, "%s", entry->GetName().c_str());
+    ImGui::EndChild();
+
+    if (ImGui::IsItemClicked())
+        m_SelectedEntry = entry;
+    
+    ImGui::SameLine();
+    
+    const float_t newCursorPos = ImGui::GetCursorPosX();
+    if (newCursorPos + (newCursorPos - oldCursorPos) > ImGui::GetContentRegionAvail().x)
+        ImGui::Dummy(ImVec2());
 }

@@ -8,12 +8,12 @@ using namespace XnorCore;
 void Utils::CenterImguiObject(const float_t objectWidth, const float_t alignment)
 {
     const ImGuiStyle& style = ImGui::GetStyle();
-    const float_t size = style.FramePadding.x * 2.0f;
+    const float_t size = style.FramePadding.x * 2.f + objectWidth;
     const float_t avail = ImGui::GetContentRegionAvail().x;
-    const float_t off = (avail - size) * alignment;
+    const float_t off = (avail - size / 2.f) * alignment;
     
     if (off > 0.0f)
-        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off - objectWidth / 2.f);
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
 }
 
 ImVec2 Utils::ToImVec(const Vector2 v)
