@@ -4,6 +4,9 @@ template <typename T>
 class PolyPtr
 {
 public:
+    static void Destroy(PolyPtr* ptr);
+    
+public:
     using value_type = T;
     
     PolyPtr();
@@ -14,8 +17,6 @@ public:
 
     template <typename U>
     void Create(U* value);
-
-    void Destroy();
 
     T& operator*();
     
@@ -52,6 +53,17 @@ private:
 };
 
 template <typename T>
+void PolyPtr<T>::Destroy(PolyPtr* const ptr)
+{
+    if (ptr->m_Ptr)
+    {
+        delete ptr->m_Ptr;
+        ptr->m_Hash = 0;
+        ptr->m_Ptr = nullptr;
+    }
+}
+
+template <typename T>
 PolyPtr<T>::PolyPtr()
 {
     m_Ptr = nullptr;
@@ -61,7 +73,7 @@ PolyPtr<T>::PolyPtr()
 template <typename T>
 PolyPtr<T>::~PolyPtr()
 {
-    Destroy();
+    PolyPtr::Destroy(this);
 }
 
 template <typename T>
@@ -82,17 +94,6 @@ void PolyPtr<T>::Create(U* value)
     
     m_Ptr = value;
     m_Hash = typeid(U).hash_code();
-}
-
-template <typename T>
-void PolyPtr<T>::Destroy()
-{
-    if (m_Ptr)
-    {
-        delete m_Ptr;
-        m_Hash = 0;
-        m_Ptr = nullptr;
-    }
 }
 
 template <typename T>
