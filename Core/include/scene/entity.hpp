@@ -85,7 +85,7 @@ private:
     Guid m_EntityId;
 
     List<PolyPtr<Component>> m_Components;
-    List<float_t> m_Test;
+    List<int> m_Test;
 
     friend class Scene;
 };
