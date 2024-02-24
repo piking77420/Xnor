@@ -12,7 +12,7 @@ File::File(std::filesystem::path&& filepath)
     if (!is_regular_file(m_Path))
         throw std::invalid_argument("Path does not point to a file");
     
-    m_NameNoExtension = m_Path.stem();
+    m_NameNoExtension = m_Path.stem().generic_string();
 }
 
 File::~File()
@@ -50,7 +50,7 @@ void File::Unload()
     m_Loaded = false;
 }
 
-const std::filesystem::path& File::GetFilenameNoExtension() const
+std::string File::GetNameNoExtension() const
 {
     return m_NameNoExtension;
 }

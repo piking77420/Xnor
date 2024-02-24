@@ -8,6 +8,7 @@ BEGIN_XNOR_CORE
 
 class Directory;
 
+/// @brief File system entry. Can be either a @ref File or a @ref Directory.
 class Entry
 {
 public:
@@ -27,7 +28,7 @@ public:
     XNOR_ENGINE const std::filesystem::path& GetPath() const;
     
     [[nodiscard]]
-    XNOR_ENGINE const std::filesystem::path& GetName() const;
+    XNOR_ENGINE std::string GetName() const;
     
     [[nodiscard]]
     XNOR_ENGINE bool GetLoaded() const;
@@ -40,7 +41,7 @@ public:
 
 protected:
     std::filesystem::path m_Path;
-    std::filesystem::path m_Name;
+    std::string m_Name;
     
     bool m_Loaded = false;
 

@@ -21,7 +21,7 @@ public:
     XNOR_ENGINE void Unload() override;
     
     [[nodiscard]]
-    XNOR_ENGINE const std::filesystem::path& GetFilenameNoExtension() const;
+    XNOR_ENGINE std::string GetNameNoExtension() const;
 
     template<typename T = char_t>
     [[nodiscard]]
@@ -35,7 +35,7 @@ public:
     XNOR_ENGINE int64_t GetSize() const;
     
 private:
-    std::filesystem::path m_NameNoExtension;
+    std::string m_NameNoExtension;
     
     int8_t* m_Data = nullptr;
     int64_t m_Size = 0;

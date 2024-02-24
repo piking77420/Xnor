@@ -20,14 +20,14 @@ bool Directory::Load()
         if (is_directory(entryPath))
         {
             Pointer<Directory> directory = FileManager::LoadDirectory(entryPath);
-            m_Directories.push_back(directory);
-            m_Entries.push_back(static_cast<Pointer<Entry>>(directory));
+            m_ChildDirectories.push_back(directory);
+            m_ChildEntries.push_back(static_cast<Pointer<Entry>>(directory));
             continue;
         }
 
         Pointer<File> file = FileManager::Load(entryPath);
-        m_Files.push_back(file);
-        m_Entries.push_back(static_cast<Pointer<Entry>>(file));
+        m_ChildFiles.push_back(file);
+        m_ChildEntries.push_back(static_cast<Pointer<Entry>>(file));
     }
     
     m_Loaded = true;
@@ -36,38 +36,38 @@ bool Directory::Load()
 
 void Directory::Unload()
 {
-    m_Entries.clear();
-    m_Files.clear();
-    m_Directories.clear();
+    m_ChildEntries.clear();
+    m_ChildFiles.clear();
+    m_ChildDirectories.clear();
     m_Loaded = false;
 }
 
-const std::vector<Pointer<Entry>>& Directory::GetEntries() const
+const std::vector<Pointer<Entry>>& Directory::GetChildEntries() const
 {
-    return m_Entries;
+    return m_ChildEntries;
 }
 
-std::vector<Pointer<Entry>>& Directory::GetEntries()
+std::vector<Pointer<Entry>>& Directory::GetChildEntries()
 {
-    return m_Entries;
+    return m_ChildEntries;
 }
 
-const std::vector<Pointer<File>>& Directory::GetFiles() const
+const std::vector<Pointer<File>>& Directory::GetChildFiles() const
 {
-    return m_Files;
+    return m_ChildFiles;
 }
 
-std::vector<Pointer<File>>& Directory::GetFiles()
+std::vector<Pointer<File>>& Directory::GetChildFiles()
 {
-    return m_Files;
+    return m_ChildFiles;
 }
 
-const std::vector<Pointer<Directory>>& Directory::GetDirectories() const
+const std::vector<Pointer<Directory>>& Directory::GetChildDirectories() const
 {
-    return m_Directories;
+    return m_ChildDirectories;
 }
 
-std::vector<Pointer<Directory>>& Directory::GetDirectories()
+std::vector<Pointer<Directory>>& Directory::GetChildDirectories()
 {
-    return m_Directories;
+    return m_ChildDirectories;
 }

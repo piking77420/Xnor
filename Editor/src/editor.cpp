@@ -27,7 +27,7 @@ void Editor::CreateDefaultWindows()
 	m_UiWindows.push_back(new Inspector(this));
 	m_UiWindows.push_back(new HeaderWindow(this));
 	m_UiWindows.push_back(new SceneGraph(this));
-	m_UiWindows.push_back(new ContentBrowser(this, static_cast<std::filesystem::path>("assets")));
+	m_UiWindows.push_back(new ContentBrowser(this, XnorCore::FileManager::Get<XnorCore::Directory>("assets")));
 	m_UiWindows.push_back(new EditorWindow(this));
 	m_UiWindows.push_back(new RenderWindow(this));
 }

@@ -11,7 +11,7 @@ Entry::Entry(std::filesystem::path&& path)
     if (!exists(m_Path))
         throw std::invalid_argument("Path does not exist");
     
-    m_Name = m_Path.filename();
+    m_Name = m_Path.filename().generic_string();
     const std::filesystem::path parent = m_Path.parent_path();
     if (FileManager::Contains(parent))
         m_Parent = static_cast<Directory*>(FileManager::Get<Directory>(parent));
@@ -22,7 +22,7 @@ const std::filesystem::path& Entry::GetPath() const
     return m_Path;
 }
 
-const std::filesystem::path& Entry::GetName() const
+std::string Entry::GetName() const
 {
     return m_Name;
 }
