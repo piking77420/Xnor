@@ -6,8 +6,10 @@
 
 #include "input/time.hpp"
 #include "rendering/light/directional_light.hpp"
+#include "rendering/light/point_light.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/component/mesh_renderer.hpp"
+#include "scene/component/test_component.hpp"
 #include "windows/content_browser.hpp"
 #include "windows/editor_window.hpp"
 #include "windows/header_window.hpp"
@@ -161,6 +163,46 @@ void Editor::SetupImGuiStyle() const
 	style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.800000011920929f, 0.800000011920929f, 0.800000011920929f, 0.3499999940395355f);
 }
 
+void Editor::CreateTestScene()
+{
+	using namespace XnorCore;
+	
+	// init Scene //
+	Entity& ent1 = *World::world->Scene.CreateEntity("viking_Room");
+	ent1.AddComponent<MeshRenderer>();
+
+	ent1.transform.rotation = {90.f * Calc::Deg2Rad, 0.f, 0.f};
+	
+	MeshRenderer& meshRenderer = *ent1.GetComponent<MeshRenderer>();
+	meshRenderer.model = ResourceManager::Load<Model>(FileManager::Get("assets/models/viking_room.obj"));
+	meshRenderer.texture = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/viking_room.png"));
+
+	Entity& ent2 = *World::world->Scene.CreateEntity("PointLight");
+	ent2.AddComponent<PointLight>();
+	ent2.GetComponent<PointLight>()->color = {1.f, 0.f, 1.f};
+	ent2.AddComponent<TestComponent>();
+	ent2.transform.position = {0.f,1.f,0.f};
+	
+	Entity& ent3 = *World::world->Scene.CreateEntity("Plane");
+	ent3.AddComponent<MeshRenderer>();
+	MeshRenderer& meshRenderer2 = *ent3.GetComponent<MeshRenderer>();
+	meshRenderer2.model = ResourceManager::Get<Model>("assets/models/cube.obj");
+	meshRenderer2.texture = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/wood.jpg"));
+	ent3.transform.scale = {10.f,0.1f,10.f};
+	ent3.transform.position -= {0.f, -0.2f, 0.f};
+	
+	
+	Entity& ent4 = *World::world->Scene.CreateEntity("CubeMinecraft");
+	ent4.transform.position = {2.f, 0, 2.f};
+	ent4.AddComponent<MeshRenderer>();
+	MeshRenderer& meshRenderer3 = *ent4.GetComponent<MeshRenderer>();
+	meshRenderer3 = *ent4.GetComponent<MeshRenderer>();
+	meshRenderer3.model = ResourceManager::Get<Model>("assets/models/cube.obj");
+	meshRenderer3.texture = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/diamond_block.jpg"));
+	
+	
+}
+
 Editor::Editor()
 {
 	XnorCore::Pointer<XnorCore::File> logoFile = XnorCore::FileManager::Get("assets/editor/logo.png");
@@ -214,17 +256,7 @@ void Editor::Update()
 	using namespace XnorCore;
 
 	renderer.PrepareRendering(Window::GetSize());
-	
-	// init Scene //
-	Entity& ent1 = *World::world->Scene.CreateEntity("entity1");
-	ent1.AddComponent<MeshRenderer>();
-	MeshRenderer& meshRenderer = *ent1.GetComponent<MeshRenderer>();
-	meshRenderer.model = ResourceManager::Load<Model>(FileManager::Get("assets/models/viking_room.obj"));
-	meshRenderer.texture = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/viking_room.png"));
-
-	Entity& ent2 = *World::world->Scene.CreateEntity("Directional Light");
-	ent2.AddComponent<DirectionalLight>();
-	ent2.GetComponent<DirectionalLight>()->color = {1, 0, 1};
+	CreateTestScene();
 	
 	while (!Window::ShouldClose())
 	{

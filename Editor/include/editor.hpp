@@ -46,6 +46,8 @@ private:
 	void EndDockSpace() const;
 		
 	void SetupImGuiStyle() const;
+
+	void CreateTestScene();
 };
 
 END_XNOR_EDITOR

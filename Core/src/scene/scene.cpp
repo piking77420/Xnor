@@ -17,7 +17,6 @@ void Scene::Update()
     for (Entity* ent : m_Entities)
     {
         ent->Update();
-        // ent->transform.quaternion = Utils::GetQuaternionEulerAngles(ent->transform.rotation);
     }
 }
 

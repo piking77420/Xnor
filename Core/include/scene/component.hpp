@@ -15,6 +15,7 @@ public:
     Entity* entity = nullptr;
 
     Component();
+    
     ~Component() override = default;
 
     virtual void Begin();
