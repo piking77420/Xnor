@@ -222,12 +222,12 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
         // Get metadata about the member
         constexpr bool_t isArray = std::is_array<typename T::value_type>();
         constexpr bool_t isPointer = std::is_pointer<typename T::value_type>();
-        bool_t isPolyPointer = Utils::is_poly_ptr<typename T::value_type>();
+        bool_t isPolyPointer = Utils::IsPolyPtr<typename T::value_type>();
         bool_t isNativeType = Utils::IsNativeType<typename T::value_type>();
         bool_t isMathType = Utils::IsMathType<typename T::value_type>();
         constexpr bool_t isReflectable = std::is_base_of_v<Reflectable, typename T::value_type>;
         constexpr bool_t isStatic = member.is_static;
-        constexpr bool_t isVector = Utils::is_xnor_vector<typename T::value_type>::value;
+        constexpr bool_t isVector = Utils::IsXnorVector<typename T::value_type>::value;
 
         // A member is const if it can't be written to
         constexpr bool_t isConst = !member.is_writable;
@@ -262,7 +262,7 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
             using ListT = typename T::value_type::value_type; 
             hash = typeid(ListT).hash_code();
             elementSize = sizeof(ListT);
-            isPolyPointer = Utils::is_poly_ptr<ListT>();
+            isPolyPointer = Utils::IsPolyPtr<ListT>();
         }
         else
         {

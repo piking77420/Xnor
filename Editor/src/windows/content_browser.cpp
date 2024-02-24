@@ -1,6 +1,9 @@
 #include "windows/content_browser.hpp"
 
 #include "ImGui/imgui.h"
+#include "resource/resource_manager.hpp"
+
+#define ASSETS_PATH "assets/editor/content_browser/"
 
 using namespace XnorEditor;
 
@@ -9,14 +12,14 @@ ContentBrowser::ContentBrowser(Editor* editor, XnorCore::Pointer<XnorCore::Direc
     , m_RootDirectory(std::move(rootDirectory))
     , m_CurrentDirectory(m_RootDirectory)
 {
-    CheckRootDirectory();
+    m_UnknownFileTypeTexture = XnorCore::ResourceManager::Load<XnorCore::Texture>(XnorCore::FileManager::Get(ASSETS_PATH "unknown_file_type.png"));
 }
 
 void ContentBrowser::Display()
 {
     FetchInfo();
 
-    const ImVec2 available = ImGui::GetContentRegionAvail();
+    ImVec2 available = ImGui::GetContentRegionAvail();
 
     ImGui::BeginChild("##left", ImVec2(available.x * 0.5f, 0.f), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeX);
     DisplayEntry(static_cast<XnorCore::Pointer<XnorCore::Entry>>(m_RootDirectory));
@@ -24,11 +27,22 @@ void ContentBrowser::Display()
 
     ImGui::SameLine();
 
-    ImGui::PushID("##right");
-    ImGui::BeginChild(m_CurrentDirectory->GetName().c_str());
-    ImGui::Text("Browse resources here");
+    ImGui::BeginChild("##right");
+    
+    const std::string title = m_CurrentDirectory->GetPath().generic_string();
+    const char* const titleStr = title.c_str();
+    //available = ImGui::GetContentRegionAvail();
+    const ImVec2 textSize = ImGui::CalcTextSize(titleStr);
+    XnorCore::Utils::CenterImguiObject(textSize.x);
+    ImGui::Text("%s", titleStr);
+    // TODO Add child window around title for visual border
+
+    for ([[maybe_unused]] const XnorCore::Pointer<XnorCore::Entry>& entry : m_CurrentDirectory->GetChildEntries())
+    {
+        ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_UnknownFileTypeTexture->GetId()), ImVec2(64.f, 64.f));
+    }
+    
     ImGui::EndChild();
-    ImGui::PopID();
 }
 
 const XnorCore::Pointer<XnorCore::Directory>& ContentBrowser::GetRootDirectory() const
@@ -44,14 +58,6 @@ void ContentBrowser::SetRootDirectory(const XnorCore::Pointer<XnorCore::Director
     const std::string currentDirRelativeToRoot = relative(m_CurrentDirectory->GetPath(), m_RootDirectory->GetPath()).string();
     if (currentDirRelativeToRoot.find("..") != std::string::npos)
         m_CurrentDirectory = m_RootDirectory;
-    
-    CheckRootDirectory();
-}
-
-void ContentBrowser::CheckRootDirectory() const
-{
-    if (!is_directory(m_RootDirectory->GetPath()))
-        throw std::invalid_argument("ContentBrowser root directory does not point to a directory");
 }
 
 void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entry)

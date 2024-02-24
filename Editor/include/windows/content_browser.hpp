@@ -25,7 +25,7 @@ private:
     XnorCore::Pointer<XnorCore::Directory> m_RootDirectory;
     XnorCore::Pointer<XnorCore::Directory> m_CurrentDirectory;
 
-    void CheckRootDirectory() const;
+    XnorCore::Pointer<XnorCore::Texture> m_UnknownFileTypeTexture;
 
     void DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entry);
 };

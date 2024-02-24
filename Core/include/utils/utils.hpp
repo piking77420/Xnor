@@ -4,14 +4,16 @@
 #include <filesystem>
 #include <type_traits>
 #include <vector>
+
 #include <Maths/quaternion.hpp>
+#include <Maths/vector2.hpp>
 #include <Maths/vector3.hpp>
 
-#include "ImGui/imgui.h"
+#include <ImGui/imgui.h>
 
 #include "core.hpp"
-#include "Maths/vector2.hpp"
 
+#include "utils/color.hpp"
 #include "utils/list.hpp"
 #include "utils/pointer.hpp"
 #include "utils/poly_ptr.hpp"
@@ -29,28 +31,28 @@ namespace Utils
     constexpr T* GetAddress(const void* obj, size_t offset, size_t element);
 
     template<typename>
-    struct is_std_vector : std::false_type {};
+    struct IsStdVector : std::false_type {};
 
     template<typename T, typename A>
-    struct is_std_vector<std::vector<T, A>> : std::true_type {};
+    struct IsStdVector<std::vector<T, A>> : std::true_type {};
 
     template<typename>
-    struct is_xnor_vector : std::false_type {};
+    struct IsXnorVector : std::false_type {};
 
     template<typename T>
-    struct is_xnor_vector<List<T>> : std::true_type {};
+    struct IsXnorVector<List<T>> : std::true_type {};
 
     template<typename>
-    struct is_poly_ptr : std::false_type {};
+    struct IsPolyPtr : std::false_type {};
 
     template<typename T>
-    struct is_poly_ptr<PolyPtr<T>> : std::true_type {};
+    struct IsPolyPtr<PolyPtr<T>> : std::true_type {};
 
     template<typename T>
-    struct ptr_to_void_ptr { using type = T; };
+    struct PtrToVoidPtr { using type = T; };
 
     template<typename T>
-    struct ptr_to_void_ptr<T*> { using type = void*; };
+    struct PtrToVoidPtr<T*> { using type = void*; };
 
     /// @brief Checks if T is a native type \n
     /// A native type is one of the following types:
@@ -82,13 +84,25 @@ namespace Utils
     [[nodiscard]]
     constexpr bool IsMathType(); 
 
-    XNOR_ENGINE void CenterImguiObject(float_t alignment = 0.5f);
+    XNOR_ENGINE void CenterImguiObject(float_t objectWidth, float_t alignment = 0.5f);
 
     [[nodiscard]]
     XNOR_ENGINE ImVec2 ToImVec(Vector2 v);
 
     [[nodiscard]]
     XNOR_ENGINE Vector2 FromImVec(ImVec2 v);
+
+    [[nodiscard]]
+    XNOR_ENGINE ImVec4 ToImCol(Color color);
+
+    [[nodiscard]]
+    XNOR_ENGINE ImVec4 ToImCol(const Colorf& color);
+
+    [[nodiscard]]
+    XNOR_ENGINE ImVec4 ToImCol(ColorHsv color);
+
+    [[nodiscard]]
+    XNOR_ENGINE Colorf FromImCol(const ImVec4& color);
 
     [[nodiscard]]
     XNOR_ENGINE std::string HumanizeString(const std::string& str);
@@ -153,6 +167,7 @@ constexpr bool Utils::IsMathType()
         std::is_same_v<T, Vector4> ||
         std::is_same_v<T, Quaternion>);
 }
+
 
 template<typename T, typename U>
 Pointer<T> Utils::DynamicPointerCast(const Pointer<U>& value)

@@ -5,7 +5,7 @@
 
 using namespace XnorCore;
 
-void Utils::CenterImguiObject(const float_t alignment)
+void Utils::CenterImguiObject(const float_t objectWidth, const float_t alignment)
 {
     const ImGuiStyle& style = ImGui::GetStyle();
     const float_t size = style.FramePadding.x * 2.0f;
@@ -13,7 +13,7 @@ void Utils::CenterImguiObject(const float_t alignment)
     const float_t off = (avail - size) * alignment;
     
     if (off > 0.0f)
-        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off - objectWidth / 2.f);
 }
 
 ImVec2 Utils::ToImVec(const Vector2 v)
@@ -24,6 +24,28 @@ ImVec2 Utils::ToImVec(const Vector2 v)
 Vector2 Utils::FromImVec(const ImVec2 v)
 {
     return Vector2(v.x, v.y);
+}
+
+ImVec4 Utils::ToImCol(const Color color)
+{
+    const Colorf c = static_cast<Colorf>(color);
+    return ImVec4(c.r, c.g, c.b, c.a);
+}
+
+ImVec4 Utils::ToImCol(const Colorf& color)
+{
+    return ImVec4(color.r, color.g, color.b, color.a);
+}
+
+ImVec4 Utils::ToImCol(const ColorHsv color)
+{
+    const Colorf c = static_cast<Colorf>(static_cast<Color>(color));
+    return ImVec4(c.r, c.g, c.b, c.a);
+}
+
+Colorf Utils::FromImCol(const ImVec4& color)
+{
+    return Colorf(color.x, color.y, color.z, color.w);
 }
 
 std::string Utils::HumanizeString(const std::string& str)

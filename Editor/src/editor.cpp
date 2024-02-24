@@ -5,7 +5,6 @@
 #include <ImGui/imgui_impl_opengl3.h>
 
 #include "input/time.hpp"
-#include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/component/mesh_renderer.hpp"
@@ -170,44 +169,43 @@ void Editor::CreateTestScene()
 	// init Scene //
 	Entity& ent1 = *World::world->Scene.CreateEntity("viking_Room");
 	ent1.AddComponent<MeshRenderer>();
-	ent1.transform.position = {0.f, 3.f,0.f };
-
+	ent1.transform.position = { 0.f, 3.f, 0.f };
 	
 	MeshRenderer& meshRenderer = *ent1.GetComponent<MeshRenderer>();
 	meshRenderer.model = ResourceManager::Load<Model>(FileManager::Get("assets/models/viking_room.obj"));
-	meshRenderer.texture = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/viking_room.png"));
+	Pointer<File>&& vikingRoomTexture = FileManager::Get("assets/textures/viking_room.png");
+	meshRenderer.texture = ResourceManager::Add<Texture>(vikingRoomTexture);
+	meshRenderer.texture->loadData.flipVertically = true;
+	meshRenderer.texture->Load(*vikingRoomTexture);
 
 	Entity& ent2 = *World::world->Scene.CreateEntity("PointLight");
 	ent2.AddComponent<PointLight>();
-	ent2.GetComponent<PointLight>()->color = {1.f, 0.f, 1.f};
+	ent2.GetComponent<PointLight>()->color = { 1.f, 0.f, 1.f };
 	ent2.AddComponent<TestComponent>();
-	ent2.transform.position = {0.f,1.f,0.f};
+	ent2.transform.position = { 0.f, 1.f, 0.f };
 	
 	Entity& ent3 = *World::world->Scene.CreateEntity("Plane");
 	ent3.AddComponent<MeshRenderer>();
 	MeshRenderer& meshRenderer2 = *ent3.GetComponent<MeshRenderer>();
 	meshRenderer2.model = ResourceManager::Get<Model>("assets/models/cube.obj");
 	meshRenderer2.texture = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/wood.jpg"));
-	ent3.transform.scale = {10.f,0.1f,10.f};
-	ent3.transform.position -= {0.f, -0.2f, 0.f};
-	
+	ent3.transform.scale = { 10.f, 0.1f, 10.f };
+	ent3.transform.position -= { 0.f, -0.2f, 0.f};
 	
 	Entity& ent4 = *World::world->Scene.CreateEntity("CubeMinecraft");
-	ent4.transform.position = {2.f, 0, 2.f};
+	ent4.transform.position = { 2.f, 0, 2.f};
 	ent4.AddComponent<MeshRenderer>();
 	MeshRenderer& meshRenderer3 = *ent4.GetComponent<MeshRenderer>();
 	meshRenderer3 = *ent4.GetComponent<MeshRenderer>();
 	meshRenderer3.model = ResourceManager::Get<Model>("assets/models/cube.obj");
 	meshRenderer3.texture = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/diamond_block.jpg"));
-	
-	
 }
 
 Editor::Editor()
 {
 	XnorCore::Pointer<XnorCore::File> logoFile = XnorCore::FileManager::Get("assets/editor/logo.png");
 	XnorCore::Pointer<XnorCore::Texture> logo = XnorCore::ResourceManager::Add<XnorCore::Texture>(logoFile);
-	logo->loadData = { .desiredChannels = 4, .flipVertically = false };
+	logo->loadData.desiredChannels = 4;
 	logo->Load(*logoFile);
 	XnorCore::Window::SetIcon(*logo);
 	
@@ -260,8 +258,8 @@ void Editor::Update()
 	
 	while (!Window::ShouldClose())
 	{
-		Window::PollEvents();
 		Time::Update();
+		Window::PollEvents();
 		CoreInput::HandleEvent();
 		BeginFrame();
 
