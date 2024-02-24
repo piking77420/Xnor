@@ -5,6 +5,7 @@
 #include "scene/component/mesh_renderer.hpp"
 #include "utils/list.hpp"
 #include "utils/logger.hpp"
+#include <iostream>
 
 int main(int, char**)
 {

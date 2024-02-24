@@ -49,7 +49,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;IMGUI_EXPORT;STB_IMAGE_IMPLEMENTATION</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;IMGUI_EXPORT;STB_IMAGE_IMPLEMENTATION;RAPID_XML_EXPORT</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);include;externals\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -109,6 +109,7 @@
     <ClCompile Include="externals\src\ImGui\imgui_stdlib.cpp" />
     <ClCompile Include="externals\src\ImGui\imgui_tables.cpp" />
     <ClCompile Include="externals\src\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="externals\src\RapidXMLSTD.cpp" />
     <ClCompile Include="externals\src\ttf\ttfParser.cpp" />
     <ClCompile Include="src\applications\application.cpp" />
     <ClCompile Include="src\file\directory.cpp" />
@@ -229,6 +230,11 @@
     <ClCompile Include="src\world.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="externals\include\RapidXML\rapidxml.hpp" />
+    <ClInclude Include="externals\include\RapidXML\RapidXMLSTD.hpp" />
+    <ClInclude Include="externals\include\RapidXML\rapidxml_iterators.hpp" />
+    <ClInclude Include="externals\include\RapidXML\rapidxml_print.hpp" />
+    <ClInclude Include="externals\include\RapidXML\rapidxml_utils.hpp" />
     <ClInclude Include="include\applications\application.hpp" />
     <ClInclude Include="include\core.hpp" />
     <ClInclude Include="include\file\directory.hpp" />
