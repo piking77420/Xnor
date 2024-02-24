@@ -120,6 +120,10 @@ public:
     /// @param index Index
     void Insert(T&& element, size_t index);
 
+    /// @brief [T SAFE] Inserts an zeroed element in the list at the given position
+    /// @param index Index
+    void InsertZeroed(size_t index);
+
     /// @brief Removes an element from the list (only removes the first occurence it finds)
     /// @param element Element
     void Remove(const T& element);
@@ -457,6 +461,20 @@ void List<T>::Insert(T&& element, const size_t index)
 
     std::memcpy(&m_Data[index + 1], &m_Data[index], (m_Size - index) * m_TypeSize);
     m_Data[index] = std::move(element);
+    
+    m_Size++;
+}
+
+template <typename T>
+void List<T>::InsertZeroed(const size_t index)
+{
+    if (index >= m_Size)
+        throw std::invalid_argument("List insert index out of range");
+
+    CheckGrow(m_Size + 1);
+
+    std::memcpy(Access(index + 1), Access(index), (m_Size - index) * m_TypeSize);
+    std::memset(Access(index), 0, m_TypeSize);
     
     m_Size++;
 }

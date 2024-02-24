@@ -18,19 +18,25 @@ Inspector::Inspector(Editor* editor)
 
 void Inspector::Display()
 {
-    void* const ptr = m_Editor->data.selectedEntity;
-    ImGui::PushID(ptr);
-    
-    if (m_Editor->data.selectedEntity)
+    // Check if an entity was selected
+    if (!m_Editor->data.selectedEntity)
     {
-	    const XnorCore::TypeInfo& info = XnorCore::TypeInfo::Get(typeid(*m_Editor->data.selectedEntity).hash_code());
-        ImGui::Text("%s", info.GetName().c_str());
-        
-        for (const XnorCore::FieldInfo& m : info.GetMembers())
-        {
-            DisplayMember(ptr, m);
-        }
+        ImGui::Text("Nothing selected");
+        return;
     }
+    
+    // Get the base address of the selected entity, we'll use this pointer to do arithmetic on it to get the address of the different fields
+    void* const ptr = m_Editor->data.selectedEntity;
+    
+    ImGui::PushID(ptr);
+
+    // Request the type info of the object
+	const XnorCore::TypeInfo& info = XnorCore::TypeInfo::Get(typeid(*m_Editor->data.selectedEntity).hash_code());
+    ImGui::Text("%s", info.GetName().c_str());
+
+    // Display each member
+    for (const XnorCore::FieldInfo& m : info.GetMembers())
+        DisplayMember(ptr, m);
 
     ImGui::PopID();
 }
@@ -55,6 +61,7 @@ void Inspector::DisplayMember(void* obj, const XnorCore::FieldInfo& fieldInfo)
         return;
     }
 
+    // It's just a normal member, display as scalar, use the max value to indicate we're not in an array
     DisplayScalarMember(obj, fieldInfo, std::numeric_limits<size_t>::max());
 }
 
@@ -74,102 +81,25 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
         name = nameStr.c_str();
     }
 
-    if (fieldInfo.typeHash == typeid(int32_t).hash_code())
+    if (fieldInfo.isNativeType)
     {
-        DisplayScalar<int32_t>(obj, fieldInfo.offset, name, element);
+        DisplayNativeType(obj, fieldInfo, name, element);
+        return;
     }
-    else if (fieldInfo.typeHash == typeid(uint32_t).hash_code())
-    {
-        DisplayScalar<uint32_t>(obj, fieldInfo.offset, name, element);
-    }
-    else if (fieldInfo.typeHash == typeid(int16_t).hash_code())
-    {
-        DisplayScalar<int16_t>(obj, fieldInfo.offset, name, element);
-    }
-    else if (fieldInfo.typeHash == typeid(uint16_t).hash_code())
-    {
-        DisplayScalar<uint16_t>(obj, fieldInfo.offset, name, element);
-    }
-    else if (fieldInfo.typeHash == typeid(int8_t).hash_code())
-    {
-        DisplayScalar<int8_t>(obj, fieldInfo.offset, name, element);
-    }
-    else if (fieldInfo.typeHash == typeid(uint8_t).hash_code())
-    {
-        DisplayScalar<uint8_t>(obj, fieldInfo.offset, name, element);
-    }
-    else if (fieldInfo.typeHash == typeid(float_t).hash_code())
-    {
-        DisplayScalar<float_t>(obj, fieldInfo.offset, name, element);
-    }
-    else if (fieldInfo.typeHash == typeid(double_t).hash_code())
-    {
-        DisplayScalar<double_t>(obj, fieldInfo.offset, name, element);
-    }
-    else if (fieldInfo.typeHash == typeid(bool).hash_code())
-    {
-        ImGui::Checkbox(name, XnorCore::Utils::GetAddress<bool>(obj, fieldInfo.offset, element));
-    }
-    else if (fieldInfo.typeHash == typeid(Vector2i).hash_code())
-    {
-        ImGui::DragInt2(name, XnorCore::Utils::GetAddress<Vector2i>(obj, fieldInfo.offset, element)->Raw());
-    }
-    else if (fieldInfo.typeHash == typeid(Vector2).hash_code())
-    {
-        ImGui::DragFloat2(name, XnorCore::Utils::GetAddress<Vector2>(obj, fieldInfo.offset, element)->Raw());
-    }
-    else if (fieldInfo.typeHash == typeid(Vector3).hash_code())
-    {
-        ImGui::DragFloat3(name, XnorCore::Utils::GetAddress<Vector3>(obj, fieldInfo.offset, element)->Raw());
-    }
-    else if (fieldInfo.typeHash == typeid(Vector4).hash_code())
-    {
-        ImGui::DragFloat4(name, XnorCore::Utils::GetAddress<Vector4>(obj, fieldInfo.offset, element)->Raw());
-    }
-    else if (fieldInfo.typeHash == typeid(Quaternion).hash_code())
-    {
-        Quaternion* const q = XnorCore::Utils::GetAddress<Quaternion>(obj, fieldInfo.offset, element);
 
-        Vector3 euler = XnorCore::Utils::GetQuaternionEulerAngles(*q);
-        euler *= Calc::Deg2Rad;
-        ImGui::DragFloat3(name, euler.Raw());
-        
-        *q = Quaternion::FromEuler(euler);
+    if (fieldInfo.isMathType)
+    {
+        DisplayMathType(obj, fieldInfo, name, element);
+        return;
     }
-    else if (fieldInfo.typeHash == typeid(std::string).hash_code())
+
+    if (fieldInfo.typeHash == typeid(std::string).hash_code())
     {
         ImGui::InputText(name, XnorCore::Utils::GetAddress<std::string>(obj, fieldInfo.offset, element));
+        return;
     }
-    else
-    {
-        if (ImGui::CollapsingHeader(name))
-        {
-            size_t hash = fieldInfo.typeHash;
-            const bool isPoly = fieldInfo.isPolyPointer; 
 
-            PolyPtr<void*>* polyPtr = nullptr;
-            if (isPoly)
-            {
-                polyPtr = XnorCore::Utils::GetAddress<PolyPtr<void*>>(obj, fieldInfo.offset, element); 
-                hash = polyPtr->GetHash();
-            }
-
-            const XnorCore::TypeInfo& subInfo = XnorCore::TypeInfo::Get(hash);
-
-            void* subPtr;
-            if (isPoly)
-                subPtr = polyPtr->AsVoid();
-            else
-                subPtr = XnorCore::Utils::GetAddress<uint8_t>(obj, fieldInfo.offset, element * subInfo.GetSize());
-            
-            ImGui::PushID(subPtr);
-
-            for (const XnorCore::FieldInfo& m : subInfo.GetMembers())
-                DisplayMember(subPtr, m);
-            
-            ImGui::PopID();
-        }
-    }
+    DisplayNestedType(obj, fieldInfo, name, element);
 }
 
 void Inspector::DisplayArrayMember(void* const obj, const XnorCore::FieldInfo& fieldInfo)
@@ -214,4 +144,111 @@ void Inspector::DisplayVectorMember(void* const obj, const XnorCore::FieldInfo& 
             ImGui::PopID();
         }
     }
+}
+
+void Inspector::DisplayNativeType(void* const obj, const XnorCore::FieldInfo& fieldInfo, const char* const name, const size_t element)
+{
+    if (fieldInfo.typeHash == typeid(int32_t).hash_code())
+    {
+        DisplayScalar<int32_t>(obj, fieldInfo.offset, name, element);
+    }
+    else if (fieldInfo.typeHash == typeid(uint32_t).hash_code())
+    {
+        DisplayScalar<uint32_t>(obj, fieldInfo.offset, name, element);
+    }
+    else if (fieldInfo.typeHash == typeid(int16_t).hash_code())
+    {
+        DisplayScalar<int16_t>(obj, fieldInfo.offset, name, element);
+    }
+    else if (fieldInfo.typeHash == typeid(uint16_t).hash_code())
+    {
+        DisplayScalar<uint16_t>(obj, fieldInfo.offset, name, element);
+    }
+    else if (fieldInfo.typeHash == typeid(int8_t).hash_code())
+    {
+        DisplayScalar<int8_t>(obj, fieldInfo.offset, name, element);
+    }
+    else if (fieldInfo.typeHash == typeid(uint8_t).hash_code())
+    {
+        DisplayScalar<uint8_t>(obj, fieldInfo.offset, name, element);
+    }
+    else if (fieldInfo.typeHash == typeid(float_t).hash_code())
+    {
+        DisplayScalar<float_t>(obj, fieldInfo.offset, name, element);
+    }
+    else if (fieldInfo.typeHash == typeid(double_t).hash_code())
+    {
+        DisplayScalar<double_t>(obj, fieldInfo.offset, name, element);
+    }
+    else if (fieldInfo.typeHash == typeid(bool_t).hash_code())
+    {
+        ImGui::Checkbox(name, XnorCore::Utils::GetAddress<bool>(obj, fieldInfo.offset, element));
+    }
+}
+
+void Inspector::DisplayMathType(void* const obj, const XnorCore::FieldInfo& fieldInfo, const char* const name, const size_t element)
+{
+    if (fieldInfo.typeHash == typeid(Vector2i).hash_code())
+    {
+        ImGui::DragInt2(name, XnorCore::Utils::GetAddress<Vector2i>(obj, fieldInfo.offset, element)->Raw());
+    }
+    else if (fieldInfo.typeHash == typeid(Vector2).hash_code())
+    {
+        ImGui::DragFloat2(name, XnorCore::Utils::GetAddress<Vector2>(obj, fieldInfo.offset, element)->Raw());
+    }
+    else if (fieldInfo.typeHash == typeid(Vector3).hash_code())
+    {
+        ImGui::DragFloat3(name, XnorCore::Utils::GetAddress<Vector3>(obj, fieldInfo.offset, element)->Raw());
+    }
+    else if (fieldInfo.typeHash == typeid(Vector4).hash_code())
+    {
+        ImGui::DragFloat4(name, XnorCore::Utils::GetAddress<Vector4>(obj, fieldInfo.offset, element)->Raw());
+    }
+    else if (fieldInfo.typeHash == typeid(Quaternion).hash_code())
+    {
+        Quaternion* const q = XnorCore::Utils::GetAddress<Quaternion>(obj, fieldInfo.offset, element);
+
+        Vector3 euler = XnorCore::Utils::GetQuaternionEulerAngles(*q);
+        euler *= Calc::Deg2Rad;
+        ImGui::DragFloat3(name, euler.Raw());
+        
+        *q = Quaternion::FromEuler(euler);
+    }
+}
+
+void Inspector::DisplayNestedType(void* const obj, const XnorCore::FieldInfo& fieldInfo, const char* name, const size_t element)
+{
+    if (!ImGui::CollapsingHeader(name))
+        return;
+
+    size_t hash = fieldInfo.typeHash;
+    const bool isPoly = fieldInfo.isPolyPointer; 
+
+    PolyPtr<void*>* polyPtr = nullptr;
+    if (isPoly)
+    {
+        polyPtr = XnorCore::Utils::GetAddress<PolyPtr<void*>>(obj, fieldInfo.offset, element); 
+        hash = polyPtr->GetHash();
+    }
+
+    if (!XnorCore::TypeInfo::Contains(hash))
+    {
+        ImGui::Text("Type isn't supported");
+        return;
+    }
+    
+    const XnorCore::TypeInfo& subInfo = XnorCore::TypeInfo::Get(hash);
+
+    void* subPtr;
+    if (isPoly)
+        subPtr = polyPtr->AsVoid();
+    else
+        subPtr = XnorCore::Utils::GetAddress<uint8_t>(obj, fieldInfo.offset, element * subInfo.GetSize());
+    
+    ImGui::PushID(subPtr);
+
+    for (const XnorCore::FieldInfo& m : subInfo.GetMembers())
+        DisplayMember(subPtr, m);
+    
+    ImGui::PopID();
 }

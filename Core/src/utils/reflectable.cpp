@@ -12,6 +12,11 @@ const TypeInfo& TypeInfo::Get(const size_t typeHash)
     return m_TypeInfo.at(typeHash);
 }
 
+bool TypeInfo::Contains(size_t typeHash)
+{
+    return m_TypeInfo.contains(typeHash);
+}
+
 constexpr const std::string& TypeInfo::GetName() const
 {
     return m_Name;

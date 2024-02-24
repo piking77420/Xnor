@@ -52,6 +52,36 @@ namespace Utils
     template<typename T>
     struct ptr_to_void_ptr<T*> { using type = void*; };
 
+    /// @brief Checks if T is a native type \n
+    /// A native type is one of the following types:
+    /// - uint8_t \n
+    /// - int8_t \n
+    /// - uint16_t \n
+    /// - int16_t \n
+    /// - uint32_t \n
+    /// - int32_t \n
+    /// - float_t \n
+    /// - double_t \n
+    /// - bool_t \n
+    /// @tparam T Type
+    /// @return Is native type
+    template <typename T>
+    [[nodiscard]]
+    constexpr bool IsNativeType();
+    
+    /// @brief Checks if T is a math type \n
+    /// A native type is one of the following types:
+    /// - Vector2 \n
+    /// - Vector2i \n
+    /// - Vector3 \n
+    /// - Vector4 \n
+    /// - Quaternion \n
+    /// @tparam T Type
+    /// @return Is native type
+    template <typename T>
+    [[nodiscard]]
+    constexpr bool IsMathType(); 
+
     XNOR_ENGINE void CenterImguiObject(float_t alignment = 0.5f);
 
     [[nodiscard]]
@@ -97,6 +127,60 @@ template <typename T>
 constexpr T* Utils::GetAddress(const void* const obj, const size_t offset, const size_t element)
 {
     return const_cast<T* const>(reinterpret_cast<const T* const>(static_cast<const uint8_t* const>(obj) + offset + sizeof(T) * element));
+}
+
+template <typename T>
+constexpr bool Utils::IsNativeType()
+{
+    if constexpr (std::is_same_v<T, uint8_t>)
+        return true;
+
+    if constexpr (std::is_same_v<T, int8_t>)
+        return true;
+
+    if constexpr (std::is_same_v<T, uint16_t>)
+        return true;
+
+    if constexpr (std::is_same_v<T, int16_t>)
+        return true;
+
+    if constexpr (std::is_same_v<T, uint32_t>)
+        return true;
+
+    if constexpr (std::is_same_v<T, int32_t>)
+        return true;
+
+    if constexpr (std::is_same_v<T, float_t>)
+        return true;
+
+    if constexpr (std::is_same_v<T, double_t>)
+        return true;
+
+    if constexpr (std::is_same_v<T, bool_t>)
+        return true;
+
+    return false;
+}
+
+template <typename T>
+constexpr bool Utils::IsMathType()
+{
+    if constexpr (std::is_same_v<T, Vector2>)
+        return true;
+
+    if constexpr (std::is_same_v<T, Vector2i>)
+        return true;
+
+    if constexpr (std::is_same_v<T, Vector3>)
+        return true;
+
+    if constexpr (std::is_same_v<T, Vector4>)
+        return true;
+
+    if constexpr (std::is_same_v<T, Quaternion>)
+        return true;
+
+    return false;
 }
 
 template<typename T, typename U>

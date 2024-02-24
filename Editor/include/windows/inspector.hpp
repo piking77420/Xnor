@@ -23,6 +23,10 @@ private:
     void DisplayArrayMember(void* obj, const XnorCore::FieldInfo& fieldInfo);
     void DisplayVectorMember(void* obj, const XnorCore::FieldInfo& fieldInfo);
 
+    void DisplayNativeType(void* obj, const XnorCore::FieldInfo& fieldInfo, const char* name, size_t element);
+    void DisplayMathType(void* obj, const XnorCore::FieldInfo& fieldInfo, const char* name, size_t element);
+    void DisplayNestedType(void* obj, const XnorCore::FieldInfo& fieldInfo, const char* name, size_t element);
+
     template <typename T>
     static void DisplayScalar(void* obj, size_t offset, const char* name, size_t element);
 };

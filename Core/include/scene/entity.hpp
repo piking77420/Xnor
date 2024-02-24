@@ -85,7 +85,6 @@ private:
     Guid m_EntityId;
 
     List<PolyPtr<Component>> m_Components;
-    List<int> m_Test;
 
     friend class Scene;
 };
@@ -178,6 +177,5 @@ REFL_AUTO(
     type(XnorCore::Entity),
     field(name),
     field(transform),
-    field(m_Components),
-    field(m_Test)
+    field(m_Components)
 )

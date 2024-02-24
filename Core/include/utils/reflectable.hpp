@@ -20,12 +20,14 @@ public:
     size_t fullSize;
     size_t elementSize;
     size_t offset;
-    bool isArray;
-    bool isVector;
-    bool isPointer;
-    bool isPolyPointer;
-    bool isStatic;
-    bool isConst;
+    bool_t isNativeType;
+    bool_t isMathType;
+    bool_t isArray;
+    bool_t isVector;
+    bool_t isPointer;
+    bool_t isPolyPointer;
+    bool_t isStatic;
+    bool_t isConst;
 
     [[nodiscard]]
     XNOR_ENGINE constexpr size_t GetArraySize() const
@@ -93,6 +95,8 @@ public:
      * \return Type info
      */
     XNOR_ENGINE static const TypeInfo& Get(size_t typeHash);
+
+    XNOR_ENGINE static bool Contains(size_t typeHash);
 
 private:
     /**
@@ -216,15 +220,17 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
         const size_t offset = GetMemberOffset(member);
 
         // Get metadata about the member
-        constexpr bool isArray = std::is_array<typename T::value_type>();
-        constexpr bool isPointer = std::is_pointer<typename T::value_type>();
-        bool isPolyPointer = Utils::is_poly_ptr<typename T::value_type>();
-        constexpr bool isReflectable = std::is_base_of_v<Reflectable, typename T::value_type>;
-        constexpr bool isStatic = member.is_static;
-        constexpr bool isVector = Utils::is_xnor_vector<typename T::value_type>::value;
+        constexpr bool_t isArray = std::is_array<typename T::value_type>();
+        constexpr bool_t isPointer = std::is_pointer<typename T::value_type>();
+        bool_t isPolyPointer = Utils::is_poly_ptr<typename T::value_type>();
+        bool_t isNativeType = Utils::IsNativeType<typename T::value_type>();
+        bool_t isMathType = Utils::IsMathType<typename T::value_type>();
+        constexpr bool_t isReflectable = std::is_base_of_v<Reflectable, typename T::value_type>;
+        constexpr bool_t isStatic = member.is_static;
+        constexpr bool_t isVector = Utils::is_xnor_vector<typename T::value_type>::value;
 
         // A member is const if it can't be written to
-        constexpr bool isConst = !member.is_writable;
+        constexpr bool_t isConst = !member.is_writable;
         constexpr size_t fullSize = sizeof(T::value_type);
 
         // Get names
@@ -278,6 +284,8 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
             .fullSize = fullSize,
             .elementSize = elementSize,
             .offset = offset,
+            .isNativeType = isNativeType,
+            .isMathType = isMathType,
             .isArray = isArray,
             .isVector = isVector,
             .isPointer = isPointer,

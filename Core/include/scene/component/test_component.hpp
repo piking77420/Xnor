@@ -4,6 +4,7 @@
 #include "scene/component.hpp"
 
 BEGIN_XNOR_CORE
+
 class TestComponent : public Component
 {
     REFLECTABLE_IMPL(TestComponent)
