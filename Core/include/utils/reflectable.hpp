@@ -182,7 +182,7 @@ constexpr void TypeInfo::Create()
         return;
     }
     
-    // FIXME TODO constexpr TypeInfo ti(refl::reflect<ReflectT>());
+    // TODO FIXME constexpr TypeInfo ti(refl::reflect<ReflectT>());
     TypeInfo ti(refl::reflect<ReflectT>());
         
     m_TypeInfo.emplace(typeid(ReflectT).hash_code(), ti);

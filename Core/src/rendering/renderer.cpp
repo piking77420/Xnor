@@ -33,9 +33,9 @@ void Renderer::Initialize()
 	m_BasicShader->Load(*m_VertexPath, *m_FragmentPath);
 
 	m_VertexDrawTextureToScreenPath = FileManager::Get("assets/shaders/draw_texture_to_screen/draw_texture_to_screen.vert");
-	DrawTextureToScreen = FileManager::Get("assets/shaders/draw_texture_to_screen/draw_texture_to_screen.frag");
+	m_DrawTextureToScreen = FileManager::Get("assets/shaders/draw_texture_to_screen/draw_texture_to_screen.frag");
 	m_DrawTextureToScreenShader = ResourceManager::Add<Shader>("draw_texture_to_screen");
-	m_DrawTextureToScreenShader->Load(*m_VertexDrawTextureToScreenPath, *DrawTextureToScreen);
+	m_DrawTextureToScreenShader->Load(*m_VertexDrawTextureToScreenPath, *m_DrawTextureToScreen);
 	
 	m_GizmoShader = ResourceManager::Add<Shader>("gizmo_shader");
 	m_GizmoShader->Load(*FileManager::Get("assets/shaders/gizmo_shader/gizmo_shader.vert"),*FileManager::Get("assets/shaders/gizmo_shader/gizmo_shader.frag"));

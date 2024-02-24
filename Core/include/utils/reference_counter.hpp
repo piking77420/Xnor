@@ -16,8 +16,6 @@ template<typename T>
 class ReferenceCounter
 {
 public:
-    ReferenceCounter() = default;
-
     template<typename... Args>
     explicit ReferenceCounter(Args&&... args);
 
@@ -62,7 +60,7 @@ private:
 
 template<typename T>
 template<typename... Args>
-ReferenceCounter<T>::ReferenceCounter(Args&&... args)
+ReferenceCounter<T>::ReferenceCounter(Args&&... args) // NOLINT(cppcoreguidelines-missing-std-forward)
     : m_Pointer(new T(std::forward<Args>(args)...))
 {
 }

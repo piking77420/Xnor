@@ -23,7 +23,7 @@ public:
     
     XNOR_ENGINE void RenderScene(const Scene& scene, const RendererContext& rendererContext) const;
 
-    XNOR_ENGINE void CompileShader();
+    XNOR_ENGINE void CompileShader(); 
     
     XNOR_ENGINE void OnResizeWindow();
     
@@ -45,7 +45,7 @@ private:
     Pointer<Shader> m_BasicShader;
     // DrawTextureToScreen
     Pointer<File> m_VertexDrawTextureToScreenPath;
-    Pointer<File> DrawTextureToScreen;
+    Pointer<File> m_DrawTextureToScreen;
     Pointer<Shader> m_DrawTextureToScreenShader;
 
     //

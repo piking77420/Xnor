@@ -185,13 +185,33 @@ void Inspector::DisplayVectorMember(void* const obj, const XnorCore::FieldInfo& 
 {
     if (ImGui::CollapsingHeader(fieldInfo.name.c_str()))
     {
-        if (fieldInfo.isPolyPointer)
-        {
-            XnorCore::List<PolyPtr<int>>* const vec = XnorCore::Utils::GetAddress<XnorCore::List<PolyPtr<int>>>(obj, fieldInfo.offset, 0);
-            void* ptr = reinterpret_cast<uint8_t*>(vec->GetData()) - fieldInfo.offset;
+        XnorCore::List<uint8_t>* const vec = XnorCore::Utils::GetAddress<XnorCore::List<uint8_t>>(obj, fieldInfo.offset, 0);
 
-            for (size_t i = 0; i < vec->GetSize(); i++)
-                DisplayScalarMember(ptr, fieldInfo, i);
+        if (!fieldInfo.isPolyPointer)
+        {
+            if (ImGui::Selectable("Add"))
+            {
+                vec->AddZeroed();
+            }
+        }
+        
+        void* ptr = vec->GetData() - fieldInfo.offset;
+
+        size_t size = vec->GetSize();
+        for (size_t i = 0; i < size; i++)
+        {
+            ImGui::PushID(static_cast<int32_t>(i));
+            if (ImGui::Button("-"))
+            {
+                vec->RemoveAt(i); // TODO FIXME Memory leak
+                ptr = vec->GetData() - fieldInfo.offset;
+                size--;
+            }
+        
+            ImGui::SameLine();
+            
+            DisplayScalarMember(ptr, fieldInfo, i);
+            ImGui::PopID();
         }
     }
 }

@@ -20,6 +20,10 @@ public:
     /// @brief Creates the @ref Resource corresponding to the given @p name without loading it.
     template<ResourceT T>
     static Pointer<T> Add(std::string name);
+    
+    /// @brief Creates the @ref Resource corresponding to the given @p file without loading it.
+    template<ResourceT T>
+    static Pointer<T> Add(const Pointer<File>& file);
 
     /// @brief Creates the @ref Resource corresponding to the given @p file and loads it.
     template<ResourceT T>
@@ -31,6 +35,30 @@ public:
     template<ResourceT T>
     [[nodiscard]]
     static Pointer<T> Get(const std::string& name);
+
+    /// @brief Finds a specific @ref Resource based on a predicate.
+    /// @tparam T The type of @ref Resource to find.
+    /// @param predicate The predicate used to find the correct @ref Resource. This function will be
+    /// called for each stored @ref Resource.
+    /// @return The first @ref Resource for which the @p predicate returned @c true. If every @ref Resource
+    /// returned @c false, instead return a null @ref Pointer.
+    template<ResourceT T>
+    [[nodiscard]]
+    static Pointer<T> Find(std::function<bool(Pointer<T>)>&& predicate);
+    
+    /// @brief Finds a list of @ref Resource "Resources" based on a predicate.
+    /// @tparam T The type of @ref Resource to find.
+    /// @param predicate The predicate used to find the correct @ref Resource. This function will be
+    /// called for each stored @ref Resource.
+    /// @return The first @ref Resource for which the @p predicate returned @c true. If every @ref Resource
+    /// returned @c false, instead return a null @ref Pointer.
+    template<ResourceT T>
+    [[nodiscard]]
+    static std::vector<Pointer<T>> FindAll(std::function<bool(Pointer<T>)>&& predicate);
+
+    /// @see @ref FileManager::FindAll(std::function<bool(Pointer<T>)>&&)
+    template<ResourceT T>
+    static void FindAll(std::function<bool(Pointer<T>)>&& predicate, std::vector<Pointer<T>>* result);
 
     template<ResourceT T>
     [[nodiscard]]
@@ -64,6 +92,12 @@ Pointer<T> ResourceManager::Add(std::string name)
 }
 
 template<ResourceT T>
+Pointer<T> ResourceManager::Add(const Pointer<File>& file)
+{
+    return Add<T>(file->GetPath().generic_string());
+}
+
+template<ResourceT T>
 Pointer<T> ResourceManager::Load(const Pointer<File>& file)
 {
     Logger::LogDebug("Loading resource {}", file->GetPath());
@@ -86,10 +120,46 @@ Pointer<T> ResourceManager::Get(const std::string& name)
     if (!Contains(name))
     {
         Logger::LogError("Attempt to get an unknown resource: {}", name);
-        return {};
+        return nullptr;
     }
 
     return Pointer<T>(m_Resources.at(name));
+}
+
+template<ResourceT T>
+Pointer<T> ResourceManager::Find(std::function<bool(Pointer<T>)>&& predicate)
+{
+    for (auto&& mapResource : m_Resources)
+    {
+        Pointer<Resource> resource = mapResource.second;
+        
+        if (Utils::DynamicPointerCast<T>(resource) && predicate(resource))
+            return resource;
+    }
+
+    return nullptr;
+}
+
+template<ResourceT T>
+std::vector<Pointer<T>> ResourceManager::FindAll(std::function<bool(Pointer<T>)>&& predicate)
+{
+    std::vector<Pointer<T>> result;
+    FindAll<T>(predicate, &result);
+    return result;
+}
+
+template<ResourceT T>
+void ResourceManager::FindAll(std::function<bool(Pointer<T>)>&& predicate, std::vector<Pointer<T>>* result)
+{
+    result->clear();
+    
+    for (auto&& mapResource : m_Resources)
+    {
+        Pointer<Resource> resource = mapResource.second;
+        
+        if (Utils::DynamicPointerCast<T>(resource) && predicate(resource))
+            result->push_back(resource);
+    }
 }
 
 template<ResourceT T>
@@ -112,7 +182,7 @@ void ResourceManager::Remove(const Pointer<T>& resource)
     
     for (decltype(m_Resources)::iterator it = m_Resources.begin(); it != m_Resources.end(); it++)
     {
-        if (it->second == *reinterpret_cast<const Pointer<Resource>*>(&resource)) // TODO Change this to a static_cast
+        if (it->second == Utils::DynamicPointerCast<Resource>(resource))
         {
             if (it->second->IsLoaded())
                 it->second->Unload();

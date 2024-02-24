@@ -12,7 +12,7 @@ class Performance : public UiWindow
     // Constants
     static constexpr inline float_t GraphsHeight = 50.f;
     static constexpr inline uint32_t DefaultSampleCount = 50;
-    static constexpr inline float_t MinHighestArrayMemory = 50.f;
+    static constexpr inline float_t MemoryArrayBoundsFactor = 1.1f;
     
 public:
     explicit Performance(Editor* editor, size_t sampleCount);
@@ -37,6 +37,7 @@ private:
     float_t m_LastMemory = 0.f;
     std::vector<float_t> m_MemoryArray;
     float_t m_HighestArrayMemory = 0.f;
+    float_t m_LowestArrayMemory = 0.f;
 };
 
 END_XNOR_EDITOR

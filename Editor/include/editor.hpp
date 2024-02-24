@@ -17,9 +17,9 @@ class Editor : public XnorCore::Application
 public:
 	explicit Editor();
 
-	DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(Editor)
-
 	~Editor() override;
+
+	DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(Editor)
 	
 	void Update() override;
 

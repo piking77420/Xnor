@@ -175,6 +175,7 @@ enum class MouseButtonStatus : uint8_t
 enum class GameButtonStatus : uint8_t
 {
     Press,
+    Down,
     Release,
     
     Count
@@ -230,6 +231,8 @@ private:
     XNOR_ENGINE static void HandleGamePad();
 
     XNOR_ENGINE static void ResetKey();
+
+    XNOR_ENGINE static void CheckGamePadAtLaunch();
     
     XNOR_ENGINE static inline Vector2 m_MousePos;
 };
