@@ -132,55 +132,26 @@ constexpr T* Utils::GetAddress(const void* const obj, const size_t offset, const
 template <typename T>
 constexpr bool Utils::IsNativeType()
 {
-    if constexpr (std::is_same_v<T, uint8_t>)
-        return true;
-
-    if constexpr (std::is_same_v<T, int8_t>)
-        return true;
-
-    if constexpr (std::is_same_v<T, uint16_t>)
-        return true;
-
-    if constexpr (std::is_same_v<T, int16_t>)
-        return true;
-
-    if constexpr (std::is_same_v<T, uint32_t>)
-        return true;
-
-    if constexpr (std::is_same_v<T, int32_t>)
-        return true;
-
-    if constexpr (std::is_same_v<T, float_t>)
-        return true;
-
-    if constexpr (std::is_same_v<T, double_t>)
-        return true;
-
-    if constexpr (std::is_same_v<T, bool_t>)
-        return true;
-
-    return false;
+    return (std::is_same_v<T, uint8_t> ||
+        std::is_same_v<T, int8_t> ||
+        std::is_same_v<T, uint16_t> ||
+        std::is_same_v<T, int16_t> ||
+        std::is_same_v<T, uint32_t> ||
+        std::is_same_v<T, int32_t> ||
+        std::is_same_v<T, float_t> ||
+        std::is_same_v<T, double_t> ||
+        std::is_same_v<T, bool_t>
+    );
 }
 
 template <typename T>
 constexpr bool Utils::IsMathType()
 {
-    if constexpr (std::is_same_v<T, Vector2>)
-        return true;
-
-    if constexpr (std::is_same_v<T, Vector2i>)
-        return true;
-
-    if constexpr (std::is_same_v<T, Vector3>)
-        return true;
-
-    if constexpr (std::is_same_v<T, Vector4>)
-        return true;
-
-    if constexpr (std::is_same_v<T, Quaternion>)
-        return true;
-
-    return false;
+    return (std::is_same_v<T, Vector2> ||
+        std::is_same_v<T, Vector2i> ||
+        std::is_same_v<T, Vector3> ||
+        std::is_same_v<T, Vector4> ||
+        std::is_same_v<T, Quaternion>);
 }
 
 template<typename T, typename U>
