@@ -35,7 +35,7 @@ void Performance::Update()
     m_LastMemory = static_cast<float_t>(memory.WorkingSetSize) / 0x100000; // Convert to MB
     m_MemoryArray[m_ArrayIndex] = m_LastMemory;
     
-    const decltype(m_MemoryArray)::const_iterator last = m_MemoryArray.cbegin() + static_cast<long long>(m_TotalSamples);
+    const decltype(m_MemoryArray)::const_iterator last = m_TotalSamples == m_MaxTotalSamples ? m_MemoryArray.end() : m_MemoryArray.cbegin() + static_cast<long long>(m_TotalSamples);
     m_HighestArrayMemory = *std::ranges::max_element(m_MemoryArray.cbegin(), last) * MemoryArrayBoundsFactor;
     m_LowestArrayMemory = *std::ranges::min_element(m_MemoryArray.cbegin(), last) / MemoryArrayBoundsFactor;
 
