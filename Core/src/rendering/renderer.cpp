@@ -71,6 +71,7 @@ void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererCo
 	cam.cameraPos = rendererContext.camera->pos;
 	rendererContext.camera->GetView(&cam.view);
 	rendererContext.camera->GetProjection(rendererContext.framebuffer->GetSize(),&cam.projection);
+	
 	m_Rhi.UpdateCameraUniform(cam);
 
 	UpdateLight(scene,rendererContext);
@@ -220,7 +221,7 @@ void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext&) const
 		
 		ModelUniformData modelData;
 		
-		transform.quaternion = Quaternion::FromEuler(transform.rotation);
+		transform.quaternion = Quaternion::FromEuler(transform.rotation).Normalized();
 		modelData.model = Matrix::Trs(transform.position, transform.quaternion, transform.scale);
 		m_Rhi.UpdateModelUniform(modelData);
 

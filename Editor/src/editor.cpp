@@ -170,8 +170,8 @@ void Editor::CreateTestScene()
 	// init Scene //
 	Entity& ent1 = *World::world->Scene.CreateEntity("viking_Room");
 	ent1.AddComponent<MeshRenderer>();
+	ent1.transform.position = {0.f, 3.f,0.f };
 
-	ent1.transform.rotation = {90.f * Calc::Deg2Rad, 0.f, 0.f};
 	
 	MeshRenderer& meshRenderer = *ent1.GetComponent<MeshRenderer>();
 	meshRenderer.model = ResourceManager::Load<Model>(FileManager::Get("assets/models/viking_room.obj"));

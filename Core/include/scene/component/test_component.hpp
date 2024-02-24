@@ -28,6 +28,9 @@ private:
 END_XNOR_CORE
 
 REFL_AUTO(
-    type(XnorCore::TestComponent, bases<XnorCore::Component>)
-        ,field(m_Rotate),field(m_CurrentAngle),field(m_RotationSpeed),field(m_Radius)
+    type(XnorCore::TestComponent, bases<XnorCore::Component>),
+    field(m_Rotate),
+    field(m_CurrentAngle),
+    field(m_RotationSpeed),
+    field(m_Radius)
 );
