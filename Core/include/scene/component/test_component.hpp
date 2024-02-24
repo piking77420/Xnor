@@ -7,13 +7,15 @@ BEGIN_XNOR_CORE
 class TestComponent : public Component
 {
     REFLECTABLE_IMPL(TestComponent)
+    
 public:
-   XNOR_ENGINE void Begin() override;
+    XNOR_ENGINE TestComponent();
+    
+    XNOR_ENGINE void Begin() override;
 
-   XNOR_ENGINE void Update() override;
+    XNOR_ENGINE void Update() override;
     
 private:
-
     float_t m_RotationSpeed = 1.0f;
     
     float_t m_Radius = 1.0f;

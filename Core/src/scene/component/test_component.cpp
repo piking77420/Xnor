@@ -5,6 +5,11 @@
 
 using namespace XnorCore;
 
+TestComponent::TestComponent()
+{
+    CreateTypeInfo();
+}
+
 void TestComponent::Begin()
 {
     Component::Begin();
@@ -21,6 +26,4 @@ void TestComponent::Update()
     m_CurrentAngle += m_RotationSpeed * Time::GetDeltaTime();
     entity->transform.position.x = (std::cos(m_CurrentAngle) - std::sin(m_CurrentAngle)) * m_Radius;
     entity->transform.position.z = (std::cos(m_CurrentAngle) + std::sin(m_CurrentAngle)) * m_Radius;
-
-    
 }
