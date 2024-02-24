@@ -12,22 +12,22 @@ class ContentBrowser : public UiWindow
 public:
     using UiWindow::UiWindow;
 
-    ContentBrowser(Editor* editor, std::filesystem::path&& rootDirectory);
+    ContentBrowser(Editor* editor, XnorCore::Pointer<XnorCore::Directory>&& rootDirectory);
     
     void Display() override;
 
     [[nodiscard]]
-    const std::filesystem::path& GetRootDirectory() const;
+    const XnorCore::Pointer<XnorCore::Directory>& GetRootDirectory() const;
 
-    void SetRootDirectory(const std::filesystem::path& rootDirectory);
+    void SetRootDirectory(const XnorCore::Pointer<XnorCore::Directory>& rootDirectory);
 
 private:
-    std::filesystem::path m_RootDirectory;
-    std::filesystem::path m_CurrentDirectory;
+    XnorCore::Pointer<XnorCore::Directory> m_RootDirectory;
+    XnorCore::Pointer<XnorCore::Directory> m_CurrentDirectory;
 
     void CheckRootDirectory() const;
 
-    void DisplayPath(const std::filesystem::path& path);
+    void DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entry);
 };
 
 END_XNOR_EDITOR

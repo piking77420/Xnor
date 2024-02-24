@@ -105,7 +105,7 @@ Pointer<T> Utils::DynamicPointerCast(const Pointer<U>& value)
     if (!value)
         return nullptr;
 
-    if (std::is_base_of_v<U, T> || std::is_base_of_v<T, U>)
+    if (dynamic_cast<T*>(static_cast<U*>(value)))
         return Pointer<T>(value, value.GetIsStrongReference());
 
     return nullptr;

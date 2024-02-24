@@ -33,6 +33,8 @@ struct A
     A() = default;
 
     explicit A(const int32_t i) : i(i) {}
+
+    virtual ~A() = default;
 };
 
 struct B : A
@@ -47,5 +49,5 @@ TEST(Utils, DynamicPointerCast)
     const Pointer<A> a = Utils::DynamicPointerCast<A>(b);
     EXPECT_EQ(a->i, 2);
     b = Utils::DynamicPointerCast<B>(Pointer<A>(Construct{}));
-    EXPECT_EQ(b->i, 1);
+    EXPECT_FALSE(b.IsValid());
 }

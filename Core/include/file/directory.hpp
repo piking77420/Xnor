@@ -26,27 +26,27 @@ public:
     XNOR_ENGINE void Unload() override;
 
     [[nodiscard]]
-    XNOR_ENGINE const std::vector<Pointer<Entry>>& GetEntries() const;
+    XNOR_ENGINE const std::vector<Pointer<Entry>>& GetChildEntries() const;
 
     [[nodiscard]]
-    XNOR_ENGINE std::vector<Pointer<Entry>>& GetEntries();
+    XNOR_ENGINE std::vector<Pointer<Entry>>& GetChildEntries();
     
     [[nodiscard]]
-    XNOR_ENGINE const std::vector<Pointer<File>>& GetFiles() const;
+    XNOR_ENGINE const std::vector<Pointer<File>>& GetChildFiles() const;
     
     [[nodiscard]]
-    XNOR_ENGINE std::vector<Pointer<File>>& GetFiles();
+    XNOR_ENGINE std::vector<Pointer<File>>& GetChildFiles();
     
     [[nodiscard]]
-    XNOR_ENGINE const std::vector<Pointer<Directory>>& GetDirectories() const;
+    XNOR_ENGINE const std::vector<Pointer<Directory>>& GetChildDirectories() const;
     
     [[nodiscard]]
-    XNOR_ENGINE std::vector<Pointer<Directory>>& GetDirectories();
+    XNOR_ENGINE std::vector<Pointer<Directory>>& GetChildDirectories();
 
 private:
-    std::vector<Pointer<Entry>> m_Entries;
-    std::vector<Pointer<File>> m_Files;
-    std::vector<Pointer<Directory>> m_Directories;
+    std::vector<Pointer<Entry>> m_ChildEntries;
+    std::vector<Pointer<File>> m_ChildFiles;
+    std::vector<Pointer<Directory>> m_ChildDirectories;
 };
 
 END_XNOR_CORE

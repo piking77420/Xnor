@@ -101,7 +101,36 @@ public:
     virtual ~Pointer();
 
     /// @brief Creates a new strong reference to this pointer
+    [[nodiscard]]
     Pointer CreateStrongReference() const;
+
+    [[nodiscard]]
+    const T* Get() const;
+
+    [[nodiscard]]
+    T* Get();
+
+    [[nodiscard]]
+    bool_t IsValid() const;
+
+    /// @brief Converts this @ref Pointer to a strong reference.
+    void ToStrongReference();
+
+    /// @brief Converts this @ref Pointer to a weak reference.
+    void ToWeakReference();
+
+    [[nodiscard]]
+    const ReferenceCounter<T>* GetReferenceCounter() const;
+
+    [[nodiscard]]
+    bool_t GetIsStrongReference() const;
+
+    /// @brief Resets this @ref Pointer to a @c nullptr.
+    ///
+    /// @warning
+    /// This function is used internally and is not meant to be used except if you really know what you
+    /// are doing. This doesn't free the potentially allocated memory. Use it at your own risks.
+    void Reset();
 
     Pointer& operator=(const Pointer& other);
 
@@ -115,38 +144,28 @@ public:
     template<typename U>
     Pointer& operator=(Pointer<U>&& other) noexcept;
 
+    [[nodiscard]]
     explicit operator T*() const;
 
+    [[nodiscard]]
     explicit operator std::string() const;
 
     // ReSharper disable once CppNonExplicitConversionOperator
-    operator bool() const;
+    /// @brief Converts this @ref Pointer to a @c bool_t the same way a raw pointer would.
+    [[nodiscard]]
+    operator bool_t() const;
 
+    [[nodiscard]]
     T& operator*();
     
+    [[nodiscard]]
     const T& operator*() const;
 
+    [[nodiscard]]
     T* operator->();
     
+    [[nodiscard]]
     const T* operator->() const;
-
-    [[nodiscard]]
-    bool IsValid() const;
-
-    [[nodiscard]]
-    const ReferenceCounter<T>* GetReferenceCounter() const;
-
-    [[nodiscard]]
-    bool GetIsStrongReference() const;
-
-    /// @brief Converts this @ref Pointer to a strong reference.
-    void ToStrongReference();
-
-    /// @brief Converts this @ref Pointer to a weak reference.
-    void ToWeakReference();
-
-    /// @brief Resets this @ref Pointer to a @c nullptr.
-    void Reset();
     
 private:
     ReferenceCounter<T>* m_ReferenceCounter = nullptr;
@@ -250,13 +269,26 @@ Pointer<T> Pointer<T>::CreateStrongReference() const
 }
 
 template<typename T>
+const T* Pointer<T>::Get() const
+{
+    return m_ReferenceCounter->GetPointer();
+}
+
+template<typename T>
+T* Pointer<T>::Get()
+{
+    return m_ReferenceCounter->GetPointer();
+}
+
+template<typename T>
 Pointer<T>& Pointer<T>::operator=(const Pointer& other)  // NOLINT(bugprone-unhandled-self-assignment)
 {
     if (this == &other)
         return *this;
     
     SetReferenceCounter(other.m_ReferenceCounter);
-    m_ReferenceCounter->IncWeak(this);
+    if (m_ReferenceCounter)
+        m_ReferenceCounter->IncWeak(this);
     
     return *this;
 }
@@ -266,11 +298,11 @@ Pointer<T>& Pointer<T>::operator=(Pointer&& other) noexcept
 {
     if (this == &other)
         return *this;
-    
+
     SetReferenceCounter(std::move(other.m_ReferenceCounter));
     m_IsStrongReference = std::move(other.m_IsStrongReference);
 
-    if (!m_IsStrongReference)
+    if (m_ReferenceCounter && !m_IsStrongReference)
     {
         m_ReferenceCounter->DecWeak(&other);
         m_ReferenceCounter->IncWeak(this);
@@ -285,6 +317,7 @@ template<typename T>
 Pointer<T>& Pointer<T>::operator=(nullptr_t)
 {
     SetReferenceCounter(nullptr);
+    m_IsStrongReference = false;
     
     return *this;
 }
@@ -312,7 +345,7 @@ Pointer<T>& Pointer<T>::operator=(Pointer<U>&& other) noexcept
     SetReferenceCounter(reinterpret_cast<ReferenceCounter<T>*>(const_cast<ReferenceCounter<U>*>(other.GetReferenceCounter())));
     m_IsStrongReference = std::move(other.GetIsStrongReference());
 
-    if (!m_IsStrongReference)
+    if (m_ReferenceCounter && !m_IsStrongReference)
     {
         m_ReferenceCounter->DecWeak(reinterpret_cast<const Pointer*>(&other));
         m_ReferenceCounter->IncWeak(this);
@@ -344,7 +377,7 @@ Pointer<T>::operator std::string() const
 }
 
 template<typename T>
-Pointer<T>::operator bool() const { return IsValid(); }
+Pointer<T>::operator bool_t() const { return IsValid(); }
 
 template<typename T>
 T& Pointer<T>::operator*() { return *m_ReferenceCounter->GetPointer(); }
@@ -359,10 +392,10 @@ template<typename T>
 const T* Pointer<T>::operator->() const { return m_ReferenceCounter->GetPointer(); }
 
 template <typename T>
-bool Pointer<T>::IsValid() const { return m_ReferenceCounter != nullptr; }
+bool_t Pointer<T>::IsValid() const { return m_ReferenceCounter != nullptr; }
 
 template<typename T>
-bool Pointer<T>::GetIsStrongReference() const { return m_IsStrongReference; }
+bool_t Pointer<T>::GetIsStrongReference() const { return m_IsStrongReference; }
 
 template<typename T>
 void Pointer<T>::ToStrongReference()
@@ -435,6 +468,14 @@ bool operator==(const Pointer<T>& a, const Pointer<T>& b) { return static_cast<c
 /// @brief Compares two @ref Pointer "Pointers" by checking if they point to the same address.
 template<typename T>
 bool operator!=(const Pointer<T>& a, const Pointer<T>& b) { return !(a == b); }
+
+/// @brief Compares two @ref Pointer "Pointers" by checking if they point to the same address.
+template<typename T, typename U>
+bool operator==(const Pointer<T>& a, const Pointer<U>& b) { return static_cast<const T*>(a) == reinterpret_cast<const T*>(static_cast<const U*>(b)); }
+
+/// @brief Compares two @ref Pointer "Pointers" by checking if they point to the same address.
+template<typename T, typename U>
+bool operator!=(const Pointer<T>& a, const Pointer<U>& b) { return !(a == b); }
 
 /// @brief Checks if a @ref Pointer is null.
 template<typename T>
