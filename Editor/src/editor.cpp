@@ -224,6 +224,7 @@ void Editor::Update()
 	{
 		Window::PollEvents();
 		Time::Update();
+		CoreInput::HandleEvent();
 		BeginFrame();
 
 		ImGui::Begin("Renderer Settings");
@@ -232,6 +233,11 @@ void Editor::Update()
 			renderer.CompileShader();
 		
 		ImGui::End();
+
+		if (CoreInput::GetGamePadButton(0, GamepadButton::GamepadButtonA, GameButtonStatus::Press))
+		{
+			Logger::LogDebug("On chie sur cyril");
+		}
 		
 		WorldBehaviours();
 		UpdateWindow();

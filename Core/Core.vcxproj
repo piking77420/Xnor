@@ -114,6 +114,7 @@
     <ClCompile Include="src\file\directory.cpp" />
     <ClCompile Include="src\file\entry.cpp" />
     <ClCompile Include="src\input\core_input.cpp" />
+    <ClCompile Include="src\input\gamepad_input.cpp" />
     <ClCompile Include="src\input\time.cpp" />
     <ClCompile Include="src\rendering\light\directional_light.cpp" />
     <ClCompile Include="src\rendering\light\light.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="include\file\file.hpp" />
     <ClInclude Include="include\file\file_manager.hpp" />
     <ClInclude Include="include\input\core_input.hpp" />
+    <ClInclude Include="include\input\gamepad_input.hpp" />
     <ClInclude Include="include\input\time.hpp" />
     <ClInclude Include="include\rendering\camera.hpp" />
     <ClInclude Include="include\rendering\frame_buffer.hpp" />

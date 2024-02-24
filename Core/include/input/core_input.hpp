@@ -4,6 +4,7 @@
 #include <queue>
 
 #include "core.hpp"
+#include "gamepad_input.hpp"
 #include "window.hpp"
 
 BEGIN_XNOR_CORE
@@ -171,6 +172,13 @@ enum class MouseButtonStatus : uint8_t
     Count
 };
 
+enum class GameButtonStatus : uint8_t
+{
+    Press,
+    Release,
+    
+    Count
+};
 
 class CoreInput
 {
@@ -180,6 +188,10 @@ public:
     XNOR_ENGINE static bool GetKey(Key key, KeyStatus status = KeyStatus::Down);
     
     XNOR_ENGINE static bool GetMouseButton(MouseButton mouseButton, MouseButtonStatus status = MouseButtonStatus::Down);
+    
+    XNOR_ENGINE static bool GetGamePadButton(uint32_t gamePadId, GamepadButton gamepadButton, GameButtonStatus buttonStatus);
+
+    XNOR_ENGINE static void HandleEvent();
     
     template<class T>
     static T GetCursorPos();
@@ -192,21 +204,33 @@ private:
     using KeyStatuses = std::array<bool, static_cast<uint8_t>(KeyStatus::Count)>;
     using MouseStatuses = std::array<bool, static_cast<uint8_t>(MouseButtonStatus::Count)>;
 
-    XNOR_ENGINE static constexpr uint32_t JoyStickMax = 15;
+    XNOR_ENGINE static constexpr uint32_t GamePadMax = 15;
     
     XNOR_ENGINE static inline std::array<KeyStatuses, static_cast<uint16_t>(Key::Count) - 1> m_Keyboard;
 
     XNOR_ENGINE static inline std::array<MouseStatuses, static_cast<uint8_t>(MouseButton::Count) - 1> m_Mouse;
+    
+    XNOR_ENGINE static inline std::array<GamepadInput,GamePadMax> m_GamePads;
 
-    XNOR_ENGINE static inline std::array<bool,JoyStickMax> m_GamePads;
-    XNOR_ENGINE static inline uint32_t m_GamePadCount;
+    // For each Status
+    using GameButtonStatuses = std::array<bool, static_cast<uint8_t>(GameButtonStatus::Count)>;
+    // For each Button
+    using GamePadsButton = std::array<GameButtonStatuses, static_cast<uint32_t>(GamepadButton::Count)>;
+    // For each Gamepad
+    XNOR_ENGINE static inline std::array<GamePadsButton, GamePadMax> m_GamePadsButton;
 
     XNOR_ENGINE static void HandleKeyboard(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
+    
     XNOR_ENGINE static void HandleMouseButton(GLFWwindow* window, int32_t mouseButton, int32_t action, int32_t mods);
+    
     XNOR_ENGINE static void MouseCursorPos(GLFWwindow* window, double_t xpos, double_t ypos);
+    
+    XNOR_ENGINE static void HandleJoyStickCallBack(int jid, int event);
+    
     XNOR_ENGINE static void HandleGamePad();
-    XNOR_ENGINE static void HandleJoyStick(int jid, int event);
 
+    XNOR_ENGINE static void ResetKey();
+    
     XNOR_ENGINE static inline Vector2 m_MousePos;
 };
 
