@@ -15,11 +15,14 @@ public:
 
     Pointer<Model> model;
     Pointer<Texture> texture;
-    bool m_DrawModelAABB = true;
+    bool drawModelAabb = true;
 };
 
 END_XNOR_CORE
 
 REFL_AUTO(
-    type(XnorCore::MeshRenderer, bases<XnorCore::Component>)
+    type(XnorCore::MeshRenderer, bases<XnorCore::Component>),
+    field(model),
+    field(texture),
+    field(drawModelAabb)
 );

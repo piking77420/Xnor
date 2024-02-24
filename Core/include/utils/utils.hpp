@@ -48,6 +48,12 @@ namespace Utils
     template<typename T>
     struct IsPolyPtr<PolyPtr<T>> : std::true_type {};
 
+    template<typename>
+    struct IsXnorPointer : std::false_type {};
+
+    template<typename T>
+    struct IsXnorPointer<Pointer<T>> : std::true_type {};
+
     template<typename T>
     struct PtrToVoidPtr { using type = T; };
 

@@ -49,13 +49,19 @@ void Inspector::DisplayMember(void* obj, const XnorCore::FieldInfo& fieldInfo)
         return;
     }
 
+    if (fieldInfo.isXnorPointer)
+    {
+        DisplayXnorPointerMember(obj, fieldInfo);
+        return;
+    }
+
     if (fieldInfo.isArray)
     {
         DisplayArrayMember(obj, fieldInfo);        
         return;
     }
 
-    if (fieldInfo.isVector)
+    if (fieldInfo.isList)
     {
         DisplayVectorMember(obj, fieldInfo);
         return;
@@ -142,6 +148,30 @@ void Inspector::DisplayVectorMember(void* const obj, const XnorCore::FieldInfo& 
             
             DisplayScalarMember(ptr, fieldInfo, i);
             ImGui::PopID();
+        }
+    }
+}
+
+void Inspector::DisplayXnorPointerMember(void* obj, const XnorCore::FieldInfo& fieldInfo)
+{
+    // TODO support anything other than resource
+    XnorCore::Pointer<XnorCore::Resource>* ptr = XnorCore::Utils::GetAddress<XnorCore::Pointer<XnorCore::Resource>>(obj, fieldInfo.offset, 0);
+    
+    if (ImGui::Selectable(ptr->Get()->GetName().c_str()))
+    {
+        if (ImGui::BeginDragDropTarget())
+        {
+            // ReSharper disable once CppTooWideScope
+            const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("CB");
+                
+            if (payload)
+            {
+                XnorCore::Resource* const dragged = *static_cast<XnorCore::Resource**>(payload->Data);
+
+                XnorCore::Logger::LogInfo("Dropped resource {} ", typeid(*dragged).hash_code());
+            }
+                
+            ImGui::EndDragDropTarget();
         }
     }
 }

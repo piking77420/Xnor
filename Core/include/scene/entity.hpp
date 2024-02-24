@@ -24,7 +24,7 @@ public:
     std::string name;
 
     template<class ComponentT>
-    void AddComponent();
+    ComponentT* AddComponent();
     
     template<class ComponentT>
     [[nodiscard]]
@@ -90,13 +90,15 @@ private:
 };
 
 template <class ComponentT>
-void Entity::AddComponent()
+ComponentT* Entity::AddComponent()
 {
     m_Components.Add();
     
     ComponentT* newT = new ComponentT;
     newT->entity = this;
     m_Components[m_Components.GetSize() - 1].Create(newT);
+
+    return newT;
 }
 
 template <class ComponentT>
