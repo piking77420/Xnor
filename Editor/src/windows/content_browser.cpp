@@ -107,6 +107,7 @@ void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entr
             static_cast<float_t>(texture->GetSize().y) + textSize.y + ImGui::GetStyle().FramePadding.y * 2.f
         )
     );
+    XnorCore::Utils::CenterImguiObject(static_cast<float_t>(texture->GetSize().x));
     ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(texture->GetId()), XnorCore::Utils::ToImVec(static_cast<Vector2>(texture->GetSize())));
     XnorCore::Utils::CenterImguiObject(textSize.x);
     ImGui::Text("%s", entry->GetName().c_str());
@@ -116,8 +117,17 @@ void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entr
         ImGui::PopStyleColor();
 
     if (ImGui::IsItemClicked())
+    {
         m_SelectedEntry = entry;
-    
+
+        const XnorCore::Pointer<XnorCore::Directory>&& directory = XnorCore::Utils::DynamicPointerCast<XnorCore::Directory>(entry);
+        if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && directory)
+        {
+            m_CurrentDirectory = directory;
+            m_SelectedEntry = nullptr;
+        }
+    }
+
     ImGui::SameLine();
     
     const float_t newCursorPos = ImGui::GetCursorPosX();
