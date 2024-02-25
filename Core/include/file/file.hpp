@@ -6,7 +6,7 @@
 #include "file/entry.hpp"
 
 BEGIN_XNOR_CORE
-    class File : public Entry
+class File : public Entry
 {
 public:
     [[nodiscard]]

@@ -1,3 +1,5 @@
+#pragma warning(push, 1)
+
 #include "RapidXML/RapidXMLSTD.hpp"
 #include "RapidXML/rapidxml_print.hpp"
 
@@ -443,3 +445,5 @@ const bool AddAttributeToElement(XMLElement* parent, XMLAttributte* child, std::
 	parent->append_attribute(child);
 	return true;
 }
+
+#pragma warning(pop)

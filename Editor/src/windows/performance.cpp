@@ -67,7 +67,7 @@ void Performance::Display()
         size_t newSampleCount = m_MaxTotalSamples;
         
         static constexpr size_t MinSamples = 1;
-        static constexpr size_t MaxSamples = 0xFFFF;
+        static constexpr size_t MaxSamples = 1000;
         
         ImGui::SliderScalar("Sample count", ImGuiDataType_U64, &newSampleCount, &MinSamples, &MaxSamples);
 

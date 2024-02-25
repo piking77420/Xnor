@@ -6,6 +6,7 @@
 #include <format>
 #include <sstream>
 
+#include "guid.hpp"
 #include "pointer.hpp"
 #include "utils/utils.hpp"
 
@@ -60,6 +61,34 @@ struct std::formatter<XnorCore::Pointer<T>>
         std::ostringstream out;
         
         out << "0x" << reinterpret_cast<void*>(static_cast<T*>(p));
+        
+        return std::ranges::copy(std::move(out).str(), ctx.out()).out;
+    }
+};
+
+
+template<>
+struct std::formatter<XnorCore::Guid>
+{
+    template<class ParseContext>
+    constexpr typename ParseContext::iterator parse(ParseContext& ctx)
+    {
+        auto it = ctx.begin();
+        if (it == ctx.end())
+            return it;
+ 
+        if (*it != '}')
+            throw std::format_error("Invalid format args for std::filesystem::path");
+ 
+        return it;
+    }
+    
+    template<class FormatContext>
+    typename FormatContext::iterator format(const XnorCore::Guid& guid, FormatContext& ctx) const
+    {
+        std::ostringstream out;
+
+        out << static_cast<std::string>(guid);
         
         return std::ranges::copy(std::move(out).str(), ctx.out()).out;
     }

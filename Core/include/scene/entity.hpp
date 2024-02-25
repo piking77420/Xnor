@@ -17,14 +17,15 @@ concept ComponentT = std::is_base_of_v<Component, T>;
 
 class Entity : public Reflectable
 {
+private:
     REFLECTABLE_IMPL(Entity)
-    
+
 public:
     Transform transform;
     std::string name;
 
     template<class ComponentT>
-    void AddComponent();
+    ComponentT* AddComponent();
     
     template<class ComponentT>
     [[nodiscard]]
@@ -71,7 +72,11 @@ public:
     XNOR_ENGINE void Update();
 
     XNOR_ENGINE bool operator==(const Entity& entity) const;
+
+    void Serialize() const override;
     
+    void Deserialize() override;
+
 private:
     XNOR_ENGINE explicit Entity(const Guid& entiyId);
 
@@ -90,13 +95,15 @@ private:
 };
 
 template <class ComponentT>
-void Entity::AddComponent()
+ComponentT* Entity::AddComponent()
 {
     m_Components.Add();
     
     ComponentT* newT = new ComponentT;
     newT->entity = this;
     m_Components[m_Components.GetSize() - 1].Create(newT);
+
+    return newT;
 }
 
 template <class ComponentT>

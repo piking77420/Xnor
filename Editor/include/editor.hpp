@@ -48,6 +48,10 @@ private:
 	void SetupImGuiStyle() const;
 
 	void CreateTestScene();
+
+	void MenueBar() const;
+
+	void Serialize(const XnorCore::Scene& scene) const;
 };
 
 END_XNOR_EDITOR

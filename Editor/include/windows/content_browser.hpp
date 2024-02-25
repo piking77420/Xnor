@@ -10,6 +10,10 @@ BEGIN_XNOR_EDITOR
 class ContentBrowser : public UiWindow
 {
 public:
+    static constexpr XnorCore::Colorf SelectedEntryColor = XnorCore::Colorf(0.5f, 0.5f, 0.5f);
+    static constexpr XnorCore::Colorf HoveredEntryColor = SelectedEntryColor * 0.5f;
+    static constexpr uint8_t MaxEntryTextLines = 3;
+    
     using UiWindow::UiWindow;
 
     ContentBrowser(Editor* editor, XnorCore::Pointer<XnorCore::Directory>&& rootDirectory);
@@ -24,10 +28,16 @@ public:
 private:
     XnorCore::Pointer<XnorCore::Directory> m_RootDirectory;
     XnorCore::Pointer<XnorCore::Directory> m_CurrentDirectory;
+    
+    XnorCore::Pointer<XnorCore::Entry> m_SelectedEntry;
+    XnorCore::Pointer<XnorCore::Entry> m_HoveredEntry;
 
-    void CheckRootDirectory() const;
+    XnorCore::Pointer<XnorCore::Texture> m_DirectoryTexture;
+    XnorCore::Pointer<XnorCore::Texture> m_FileTexture;
 
-    void DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entry);
+    void DisplayDirectoryHierarchy(const XnorCore::Pointer<XnorCore::Entry>& entry);
+
+    void DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entry, const XnorCore::Pointer<XnorCore::Texture>& texture);
 };
 
 END_XNOR_EDITOR

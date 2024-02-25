@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Scene>
+	<Entity>
+		<Transform t1="0.4" t2="45.0525" t2="caca">Transform</Transform>
+		<Entity>
+			<Transform t1="0.4" t2="45.0525" t2="caca">Transform</Transform>
+		</Entity>
+		<Entity>
+			<Transform t1="0.4" t2="45.0525" t2="caca">Transform</Transform>
+		</Entity>
+		<Entity>
+			<Transform t1="0.4" t2="45.0525" t2="caca">Transform</Transform>
+		</Entity>
+	</Entity>
+</Scene>
+

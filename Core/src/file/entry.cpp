@@ -22,6 +22,11 @@ const std::filesystem::path& Entry::GetPath() const
     return m_Path;
 }
 
+std::string Entry::GetPathString() const
+{
+    return m_Path.generic_string();
+}
+
 std::string Entry::GetName() const
 {
     return m_Name;

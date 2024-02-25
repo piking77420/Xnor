@@ -4,14 +4,17 @@
 #include <filesystem>
 #include <type_traits>
 #include <vector>
+
 #include <Maths/quaternion.hpp>
+#include <Maths/vector2.hpp>
 #include <Maths/vector3.hpp>
 
-#include "ImGui/imgui.h"
+#include <ImGui/imgui.h>
 
 #include "core.hpp"
-#include "Maths/vector2.hpp"
+#include "file/entry.hpp"
 
+#include "utils/color.hpp"
 #include "utils/list.hpp"
 #include "utils/pointer.hpp"
 #include "utils/poly_ptr.hpp"
@@ -29,30 +32,31 @@ namespace Utils
     constexpr T* GetAddress(const void* obj, size_t offset, size_t element);
 
     template<typename>
-    struct is_std_vector : std::false_type {};
+    constexpr bool IsStdVector = false;
 
     template<typename T, typename A>
-    struct is_std_vector<std::vector<T, A>> : std::true_type {};
+    constexpr bool IsStdVector<std::vector<T, A>> = true;
 
     template<typename>
-    struct is_xnor_vector : std::false_type {};
+    constexpr bool IsXnorVector = false;
 
     template<typename T>
-    struct is_xnor_vector<List<T>> : std::true_type {};
+    constexpr bool IsXnorVector<List<T>> = true;
 
     template<typename>
-    struct is_poly_ptr : std::false_type {};
+    constexpr bool IsPolyPtr = false;
 
     template<typename T>
-    struct is_poly_ptr<PolyPtr<T>> : std::true_type {};
+    constexpr bool IsPolyPtr<PolyPtr<T>> = true;
+
+    template<typename>
+    constexpr bool IsXnorPointer = false;
 
     template<typename T>
-    struct ptr_to_void_ptr { using type = T; };
+    constexpr bool IsXnorPointer<Pointer<T>> = true;
 
-    template<typename T>
-    struct ptr_to_void_ptr<T*> { using type = void*; };
-
-    /// @brief Checks if T is a native type \n
+    /// @brief Checks if T is a native type.
+    /// 
     /// A native type is one of the following types:
     /// - uint8_t \n
     /// - int8_t \n
@@ -62,33 +66,49 @@ namespace Utils
     /// - int32_t \n
     /// - float_t \n
     /// - double_t \n
-    /// - bool_t \n
+    /// - bool_t
+    /// 
     /// @tparam T Type
-    /// @return Is native type
-    template <typename T>
-    [[nodiscard]]
-    constexpr bool IsNativeType();
-    
-    /// @brief Checks if T is a math type \n
+    /// @return Whether @p T is a native type.
+    template<typename T>
+    constexpr bool IsNativeType = std::is_same_v<T, uint8_t> || std::is_same_v<T, int8_t> || std::is_same_v<T, uint16_t> ||
+                                    std::is_same_v<T, int16_t> || std::is_same_v<T, uint32_t> || std::is_same_v<T, int32_t> ||
+                                    std::is_same_v<T, float_t> || std::is_same_v<T, double_t> || std::is_same_v<T, bool_t>;
+
+    /// @brief Checks if T is a math type.
+    /// 
     /// A native type is one of the following types:
     /// - Vector2 \n
     /// - Vector2i \n
     /// - Vector3 \n
     /// - Vector4 \n
-    /// - Quaternion \n
+    /// - Quaternion
+    /// 
     /// @tparam T Type
-    /// @return Is native type
-    template <typename T>
-    [[nodiscard]]
-    constexpr bool IsMathType(); 
-
-    XNOR_ENGINE void CenterImguiObject(float_t alignment = 0.5f);
+    /// @return Whether @p T is a native type
+    template<typename T>
+    constexpr bool IsMathType = std::is_same_v<T, Vector2> || std::is_same_v<T, Vector2i> || std::is_same_v<T, Vector3> ||
+                                std::is_same_v<T, Vector4> || std::is_same_v<T, Quaternion>;
+    
+    XNOR_ENGINE void CenterImguiObject(float_t objectWidth, float_t alignment = 0.5f);
 
     [[nodiscard]]
     XNOR_ENGINE ImVec2 ToImVec(Vector2 v);
 
     [[nodiscard]]
     XNOR_ENGINE Vector2 FromImVec(ImVec2 v);
+
+    [[nodiscard]]
+    XNOR_ENGINE ImVec4 ToImCol(Color color);
+
+    [[nodiscard]]
+    XNOR_ENGINE ImVec4 ToImCol(const Colorf& color);
+
+    [[nodiscard]]
+    XNOR_ENGINE ImVec4 ToImCol(ColorHsv color);
+
+    [[nodiscard]]
+    XNOR_ENGINE Colorf FromImCol(const ImVec4& color);
 
     [[nodiscard]]
     XNOR_ENGINE std::string HumanizeString(const std::string& str);
@@ -112,6 +132,10 @@ namespace Utils
     template<typename T, typename U>
     [[nodiscard]]
     Pointer<T> DynamicPointerCast(const Pointer<U>& value);
+
+    XNOR_ENGINE void OpenInExplorer(const Entry& entry);
+
+    XNOR_ENGINE void OpenInExplorer(const std::filesystem::path& path);
 }
 
 template<typename PtrT, typename IntT>
@@ -127,31 +151,6 @@ template <typename T>
 constexpr T* Utils::GetAddress(const void* const obj, const size_t offset, const size_t element)
 {
     return const_cast<T* const>(reinterpret_cast<const T* const>(static_cast<const uint8_t* const>(obj) + offset + sizeof(T) * element));
-}
-
-template <typename T>
-constexpr bool Utils::IsNativeType()
-{
-    return (std::is_same_v<T, uint8_t> ||
-        std::is_same_v<T, int8_t> ||
-        std::is_same_v<T, uint16_t> ||
-        std::is_same_v<T, int16_t> ||
-        std::is_same_v<T, uint32_t> ||
-        std::is_same_v<T, int32_t> ||
-        std::is_same_v<T, float_t> ||
-        std::is_same_v<T, double_t> ||
-        std::is_same_v<T, bool_t>
-    );
-}
-
-template <typename T>
-constexpr bool Utils::IsMathType()
-{
-    return (std::is_same_v<T, Vector2> ||
-        std::is_same_v<T, Vector2i> ||
-        std::is_same_v<T, Vector3> ||
-        std::is_same_v<T, Vector4> ||
-        std::is_same_v<T, Quaternion>);
 }
 
 template<typename T, typename U>

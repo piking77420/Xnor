@@ -79,7 +79,7 @@ void Window::SetIcon(Texture& icon)
 	glfwSetWindowIcon(m_Window, 1, &image);
 }
 
-void Window::GlfwResizeFramebuffer(GLFWwindow* window, int widht, int height)
+void Window::GlfwResizeFramebuffer(GLFWwindow*, int, int)
 {
 	resizeFrameBuffer = true;
 }

@@ -2,6 +2,7 @@
 
 #include "definitions.hpp"
 #include "input/core_input.hpp"
+#include "RapidXML/rapidxml_utils.hpp"
 #include "rendering/camera.hpp"
 #include "scene/entity.hpp"
 
@@ -15,7 +16,8 @@ struct EditorData
 
     XnorCore::Camera gameCam;
     XnorCore::Camera editorCam;
-    
+
+    XnorCore::Pointer<XnorCore::File> Currentscene;
 };
 
 END_XNOR_EDITOR

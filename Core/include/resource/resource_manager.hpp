@@ -94,7 +94,7 @@ Pointer<T> ResourceManager::Add(std::string name)
 template<ResourceT T>
 Pointer<T> ResourceManager::Add(const Pointer<File>& file)
 {
-    return Add<T>(file->GetPath().generic_string());
+    return Add<T>(file->GetPathString());
 }
 
 template<ResourceT T>
@@ -102,7 +102,7 @@ Pointer<T> ResourceManager::Load(const Pointer<File>& file)
 {
     Logger::LogDebug("Loading resource {}", file->GetPath());
     
-    Pointer<T> resource(file->GetPath().generic_string());
+    Pointer<T> resource(file->GetPathString());
 
     m_Resources[resource->GetName()] = static_cast<Pointer<Resource>>(resource.CreateStrongReference());
 

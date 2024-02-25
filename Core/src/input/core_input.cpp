@@ -33,6 +33,9 @@ void CoreInput::HandleEvent()
 
 void CoreInput::HandleKeyboard(GLFWwindow*, const int32_t key, const int32_t, const int32_t action, const int32_t)
 {
+    if (key > m_Keyboard.size())
+        return;
+    
     KeyStatuses& keyStatuses = m_Keyboard.at(key);
     
     switch (action)

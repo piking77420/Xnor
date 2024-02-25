@@ -28,6 +28,9 @@ public:
     XNOR_ENGINE const std::filesystem::path& GetPath() const;
     
     [[nodiscard]]
+    XNOR_ENGINE std::string GetPathString() const;
+    
+    [[nodiscard]]
     XNOR_ENGINE std::string GetName() const;
     
     [[nodiscard]]

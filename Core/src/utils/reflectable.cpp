@@ -2,6 +2,16 @@
 
 using namespace XnorCore;
 
+void Reflectable::Serialize() const
+{
+    Serializable::Serialize();
+}
+
+void Reflectable::Deserialize()
+{
+    Serializable::Deserialize();
+}
+
 const TypeInfo& TypeInfo::Get(const size_t typeHash)
 {
     if (!m_TypeInfo.contains(typeHash))

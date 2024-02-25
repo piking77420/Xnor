@@ -7,11 +7,11 @@ TEST(Utils, IntToPointer)
 
 TEST(Utils, MetaProgramming)
 {
-    EXPECT_FALSE(Utils::is_std_vector<bool>::value);
-    EXPECT_TRUE(Utils::is_std_vector<std::vector<bool>>::value);
+    EXPECT_FALSE(Utils::IsStdVector<bool>::value);
+    EXPECT_TRUE(Utils::IsStdVector<std::vector<bool>>::value);
     
-    EXPECT_TRUE((std::is_same_v<Utils::ptr_to_void_ptr<bool>::type, bool>));
-    EXPECT_TRUE((std::is_same_v<Utils::ptr_to_void_ptr<bool*>::type, void*>));
+    EXPECT_TRUE((std::is_same_v<Utils::PtrToVoidPtr<bool>::type, bool>));
+    EXPECT_TRUE((std::is_same_v<Utils::PtrToVoidPtr<bool*>::type, void*>));
 }
 
 TEST(Utils, ConversionVectorImVec)

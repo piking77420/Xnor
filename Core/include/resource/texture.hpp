@@ -11,7 +11,7 @@ BEGIN_XNOR_CORE
 struct TextureLoadData
 {
     int32_t desiredChannels = 0;
-    bool_t flipVertically = true;
+    bool_t flipVertically = false;
 };
 
 class Texture : public Resource
