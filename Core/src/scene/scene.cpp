@@ -1,5 +1,6 @@
 ﻿#include "scene/scene.hpp"
 #include "scene/entity.hpp"
+#include "serialization/serializer.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -62,6 +63,11 @@ bool Scene::HasEntity(const Entity* entity)
     return std::ranges::find(std::as_const(m_Entities), entity) != m_Entities.cend();
 }
 
+const std::vector<Entity*>& Scene::GetEntities()
+{
+    return m_Entities;
+}
+
 void Scene::DestroyEntityChildren(Entity* const entity)
 {
     // Remove from array
@@ -77,9 +83,36 @@ void Scene::DestroyEntityChildren(Entity* const entity)
     entity->m_Children.clear();
 }
 
-const std::vector<Entity*>& Scene::GetEntities()
+
+void Scene::GetEntities(std::vector<const Entity*>* entities) const
 {
-    return m_Entities;
+    if (entities == nullptr)
+    {
+        Logger::LogError("GetEntities entity vector is nullPtr");
+        throw std::runtime_error("Entity vector is nullPtr");
+    }
+    
+    for (const Entity* entPtr : m_Entities)
+    {
+        entities->push_back(entPtr);
+    }
+    
+}
+
+void Scene::Serialize() const
+{
+    Serializer::BeginRootElement("Scene", "SceneCaca");
+    for (const Entity* ent : m_Entities)
+    {
+        ent->Serialize();
+    }
+    
+    Serializer::EndRootElement();
+}
+
+void Scene::Deserialize()
+{
+   
 }
 
 Scene::~Scene()

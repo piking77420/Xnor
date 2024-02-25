@@ -1,7 +1,8 @@
 #pragma once
 
 #include "definitions.hpp"
-#include "..\..\Core\include\input\input.hpp"
+#include "input/input.hpp"
+#include "RapidXML/rapidxml_utils.hpp"
 #include "rendering/camera.hpp"
 #include "scene/entity.hpp"
 
@@ -15,7 +16,8 @@ struct EditorData
 
     XnorCore::Camera gameCam;
     XnorCore::Camera editorCam;
-    
+
+    XnorCore::Pointer<XnorCore::File> currentScene;
 };
 
 END_XNOR_EDITOR

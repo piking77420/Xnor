@@ -8,10 +8,10 @@
 #include "refl/refl.hpp"
 
 #include "utils.hpp"
+#include "serialization/serializable.hpp"
 
 BEGIN_XNOR_CORE
-
-class FieldInfo
+    class FieldInfo
 {
 public:
     std::string name;
@@ -42,7 +42,7 @@ public:
 
 /// @brief Enables reflection for a class
 ///        A class that inherits from this class should implement the macro REFLECTABLE_IMPL(ClassName) in order to provide the ful implementation for the reflection
-class XNOR_ENGINE Reflectable
+class XNOR_ENGINE Reflectable : public Serializable
 {
 public:
     Reflectable() = default;
@@ -52,6 +52,10 @@ public:
     DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(Reflectable)
     
     virtual void CreateTypeInfo() const = 0;
+
+    void Serialize() const override;
+    
+    void Deserialize() override;
 };
 
 template<class T>
@@ -169,6 +173,7 @@ private:
 template <typename T>
 size_t TypeInfo::GetMemberOffset(const T member)
 {
+    // TODO fix this awful hack
     char buffer[50];
     (void) sprintf_s(buffer, sizeof(buffer), "%p", member.pointer);
     char* end = &buffer[sizeof(buffer)];

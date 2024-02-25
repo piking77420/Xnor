@@ -113,7 +113,7 @@ enum class TextureInternalFormat
 enum class DataType : int32_t
 {
 	Float = 0,
-	UnsignedInt,
+	UnsignedByte,
 };
 
 enum class TextureFormat
@@ -143,6 +143,7 @@ struct TextureCreateInfo
 	TextureWrapping textureWrapping;
 	TextureFormat textureFormat;
 	TextureInternalFormat textureInternalFormat;
+	DataType dataType = DataType::UnsignedByte;
 };
 
 struct CameraUniformData

@@ -10,6 +10,7 @@
 #include "resource/resource_manager.hpp"
 #include "scene/component/mesh_renderer.hpp"
 #include "scene/component/test_component.hpp"
+#include "serialization/serializer.hpp"
 #include "windows/content_browser.hpp"
 #include "windows/editor_window.hpp"
 #include "windows/header_window.hpp"
@@ -71,6 +72,8 @@ void Editor::CreateDefaultWindows()
 	m_UiWindows.push_back(new ContentBrowser(this, XnorCore::FileManager::Get<XnorCore::Directory>("assets")));
 	m_UiWindows.push_back(new EditorWindow(this));
 	m_UiWindows.push_back(new RenderWindow(this));
+
+	data.currentScene = XnorCore::FileManager::Get<XnorCore::File>("assets/scenes/basic_scene.scene.xml");
 }
 
 void Editor::BeginDockSpace() const
@@ -241,6 +244,26 @@ void Editor::CreateTestScene()
 	meshRenderer->texture = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/diamond_block.jpg"));
 }
 
+void Editor::MenuBar() const
+{
+	if (ImGui::BeginMainMenuBar())
+	{	
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Save"))
+			{
+				XnorCore::Serializer::StartSerialization(data.currentScene->GetPath().generic_string());
+				XnorCore::World::world->Scene.Serialize();
+				XnorCore::Serializer::EndSerialization();
+			}
+			
+			ImGui::EndMenu();
+		}
+		
+		ImGui::EndMainMenuBar();
+	}
+}
+
 void Editor::UpdateWindow()
 {
 	for (UiWindow* w : m_UiWindows)
@@ -259,6 +282,7 @@ void Editor::BeginFrame()
 	ImGui::NewFrame();
 	
 	BeginDockSpace();
+	MenuBar();
 }
 
 void Editor::Update()
@@ -276,12 +300,10 @@ void Editor::Update()
 		BeginFrame();
 
 		ImGui::Begin("Renderer Settings");
-		
 		if (ImGui::Button("Recompile Shader"))
 			renderer.CompileShader();
-		
 		ImGui::End();
-
+		
 		WorldBehaviours();
 		UpdateWindow();
 	

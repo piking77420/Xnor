@@ -74,8 +74,10 @@ public:
     [[nodiscard]]
     XNOR_ENGINE int32_t GetChannels() const;
 
-    XNOR_ENGINE virtual void BindTexture(uint32_t index) const;
+    XNOR_ENGINE void BindTexture(uint32_t index) const;
     
+    XNOR_ENGINE void UnbindTexture(uint32_t index) const;
+
     [[nodiscard]]
     XNOR_ENGINE uint32_t GetId() const;
 

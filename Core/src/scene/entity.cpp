@@ -2,6 +2,7 @@
 
 #include "scene/component.hpp"
 #include "scene/scene.hpp"
+#include "serialization/serializer.hpp"
 
 using namespace XnorCore;
 
@@ -146,3 +147,16 @@ bool Entity::operator==(const Entity& entity) const
 {
     return m_EntityId == entity.m_EntityId;
 }
+
+void Entity::Serialize() const
+{
+    Serializer::BeginXmlElement("Entity", std::format("{}", m_EntityId));
+    transform.Serialize();
+    Serializer::EndXmlElement();
+}
+
+void Entity::Deserialize()
+{
+    
+}
+

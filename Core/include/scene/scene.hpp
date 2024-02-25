@@ -7,9 +7,10 @@
 
 BEGIN_XNOR_CORE
 
-class Scene
+class Scene : public Serializable
 {
 public:
+    
     XNOR_ENGINE Scene() = default;
 
     XNOR_ENGINE ~Scene();
@@ -37,6 +38,12 @@ public:
 
     [[nodiscard]]
     XNOR_ENGINE const std::vector<Entity*>& GetEntities();
+
+    XNOR_ENGINE void GetEntities(std::vector<const Entity*>* entities) const ;
+
+    XNOR_ENGINE void Serialize() const override;
+    
+    XNOR_ENGINE void Deserialize() override;
     
 private:
     std::vector<Entity*> m_Entities;

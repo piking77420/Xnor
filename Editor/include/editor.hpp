@@ -48,6 +48,8 @@ private:
 	void SetupImGuiStyle() const;
 
 	void CreateTestScene();
+	
+	void MenuBar() const;
 };
 
 END_XNOR_EDITOR
