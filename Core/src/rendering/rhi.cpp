@@ -84,15 +84,6 @@ void RHI::DrawModel(const uint32_t modelId)
 	glDrawElements(GL_TRIANGLES,  static_cast<GLsizei>(model.nbrOfIndicies), GL_UNSIGNED_INT, nullptr);
 }
 
-/*
-void RHI::BindMaterial(const Material& material)
-{
-	material.shader->Use();
-	
-	
-	
-	material.shader->UnUse();
-}*/
 
 void RHI::DestroyShader(const uint32_t shaderId)
 {
@@ -218,7 +209,7 @@ void RHI::CreateTexture(uint32_t* const textureId, const TextureCreateInfo& text
 	glTextureSubImage2D(*textureId, 0, 0, 0,
 		static_cast<GLsizei>(textureCreateInfo.textureSizeWidth),
 		static_cast<GLsizei>(textureCreateInfo.textureSizeHeight),
-		GetOpenGlTextureFormat(textureCreateInfo.textureFormat), GL_UNSIGNED_BYTE, textureCreateInfo.data
+		GetOpenGlTextureFormat(textureCreateInfo.textureFormat), GetOpenglDataType(textureCreateInfo.dataType), textureCreateInfo.data
 	);
 
 	glGenerateTextureMipmap(*textureId);
@@ -232,11 +223,6 @@ void RHI::DestroyTexture(const uint32_t* textureId)
 void RHI::BindTexture(const uint32_t unit, const uint32_t textureId)
 {
 	glBindTextureUnit(unit, textureId);
-}
-
-void RHI::UnbindTexture(const TextureType textureType)
-{
-	glBindTextureUnit(TextureTypeToOpenglTexture(textureType), 0);
 }
 
 void RHI::CreateFrameBuffer(uint32_t* const frameBufferId, const uint32_t renderPassId,const std::vector<Texture*>& targets)
@@ -294,11 +280,6 @@ void RHI::UnbindFrameBuffer()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-/*
-void RHI::AttachColorAttachementToFrameBuffer(const uint32_t frameBufferId, const uint32_t attachmentIndex, const uint32_t textureId)
-{
-	glNamedFramebufferTexture(frameBufferId, GL_COLOR_ATTACHMENT0 + attachmentIndex,textureId, 0);
-}*/
 
 void RHI::CreateRenderPass(uint32_t* const renderPassId, const std::vector<AttachementsType>& attachementsType)
 {
@@ -537,6 +518,20 @@ int RHI::GetUniformInMap(uint32_t shaderId, const char* uniformKey)
 	shaderUniformMap[uniformKey] = location;
 
 	return location;
+}
+
+uint32_t RHI::GetOpenglDataType(DataType dataType)
+{
+	switch (dataType)
+	{
+		case DataType::Float:
+			GL_FLOAT;
+			break;
+		case DataType::UnsignedByte:
+			GL_UNSIGNED_BYTE;
+			break;
+	}
+	return GL_UNSIGNED_BYTE;
 }
 
 void RHI::Initialize()

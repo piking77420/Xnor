@@ -75,7 +75,8 @@ void Texture::Load(const uint8_t* buffer, const int64_t length)
         m_TextureFiltering,
         m_TextureWrapping,
         GetFormat(m_DataChannels),
-        m_TextureInternalFormat
+        m_TextureInternalFormat,
+        DataType::UnsignedByte
     };
     
     RHI::CreateTexture(&m_Id, textureCreateInfo);
@@ -112,6 +113,11 @@ int32_t Texture::GetChannels() const
 void Texture::BindTexture([[maybe_unused]] const uint32_t index) const
 {
     RHI::BindTexture(index,m_Id);
+}
+
+void Texture::UnBindTexture(uint32_t index) const
+{
+    RHI::BindTexture(index,0);
 }
 
 uint32_t Texture::GetId() const

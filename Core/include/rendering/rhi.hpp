@@ -41,7 +41,6 @@ public:
 	XNOR_ENGINE  static void DestroyTexture(const uint32_t* textureId);
 
 	XNOR_ENGINE  static void BindTexture(uint32_t unit,uint32_t textureId);
-	XNOR_ENGINE  static void UnbindTexture(TextureType textureType);
 
 	// FrameBuffer
 	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferId,uint32_t renderPassId,const std::vector<Texture*>& outTargets);
@@ -101,7 +100,9 @@ private:
 	
 	static void IsShaderValid(uint32_t shaderId);
 	
-	static int GetUniformInMap(uint32_t shaderId, const char* uniformKey);
+	static int32_t GetUniformInMap(uint32_t shaderId, const char* uniformKey);
+
+	static uint32_t GetOpenglDataType(DataType dataType);
 
 public:
 	XNOR_ENGINE RHI() = default;
