@@ -60,10 +60,11 @@ void Serializer::FetchAttribute(const std::string& attributeName, const T& value
         FetchAttributeInternal(attributeName, value);
         return;
     }
-    
-    const std::string valueString = std::format("{}", value);
-    
-    FetchAttributeInternal(attributeName, valueString);
+    else
+    {
+        const std::string valueString = std::format("{}", value);
+        FetchAttributeInternal(attributeName, valueString);
+    }
 }
 
 END_XNOR_CORE

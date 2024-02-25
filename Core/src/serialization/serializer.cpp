@@ -59,7 +59,7 @@ void Serializer::BeginXmlElement(const std::string& elementName, const std::stri
 {
     std::string error;
     
-    XMLElement* element = ::CreateElement(m_XMLDoc, elementName, elementValue, error);
+    XMLElement* element = CreateElement(m_XMLDoc, elementName, elementValue, error);
     if (element == nullptr)
     {
         Logger::LogError(error);
