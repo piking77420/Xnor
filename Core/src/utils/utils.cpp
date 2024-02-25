@@ -8,9 +8,8 @@ using namespace XnorCore;
 void Utils::CenterImguiObject(const float_t objectWidth, const float_t alignment)
 {
     const ImGuiStyle& style = ImGui::GetStyle();
-    const float_t size = style.FramePadding.x * 2.f + objectWidth;
     const float_t avail = ImGui::GetContentRegionAvail().x;
-    const float_t off = avail * alignment - size / 2.f;
+    const float_t off = avail * alignment - objectWidth / 2.f;
     
     if (off > 0.0f)
         ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);

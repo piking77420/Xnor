@@ -108,25 +108,47 @@ void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entr
 {
     const float_t oldCursorPos = ImGui::GetCursorPosX();
 
+    bool pushedStyleVar = false;
     if (m_SelectedEntry == entry)
+    {
         ImGui::PushStyleColor(ImGuiCol_ChildBg, XnorCore::Utils::ToImCol(SelectedEntryColor));
-    
+        pushedStyleVar = true;
+    }
+    else if (m_HoveredEntry == entry)
+    {
+        ImGui::PushStyleColor(ImGuiCol_ChildBg, XnorCore::Utils::ToImCol(HoveredEntryColor));
+        pushedStyleVar = true;
+    }
+
     const ImVec2 textSize = ImGui::CalcTextSize(entry->GetName().c_str());
+    const ImVec2 framePadding = ImGui::GetStyle().FramePadding;
     ImGui::BeginChild(
         entry->GetPathString().c_str(),
         ImVec2(
-            std::max(textSize.x, static_cast<float_t>(texture->GetSize().x)),
-            static_cast<float_t>(texture->GetSize().y) + textSize.y + ImGui::GetStyle().FramePadding.y * 2.f
+            64.f + framePadding.x * 2.f,
+            64.f + textSize.y + framePadding.y * 2.f
         )
     );
-    XnorCore::Utils::CenterImguiObject(static_cast<float_t>(texture->GetSize().x));
-    ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(texture->GetId()), XnorCore::Utils::ToImVec(static_cast<Vector2>(texture->GetSize())));
+    
+    XnorCore::Utils::CenterImguiObject(64.f);
+    ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(texture->GetId()), ImVec2(64.f, 64.f));
+    
+    /*if (ImGui::BeginDragDropSource())
+    {
+        ImGui::SetDragDropPayload("", , sizeof(XnorCore::Pointer<XnorCore::Resource>));
+        ImGui::EndDragDropSource();
+    }*/
+    
     XnorCore::Utils::CenterImguiObject(textSize.x);
     ImGui::Text("%s", entry->GetName().c_str());
-    ImGui::EndChild();
     
-    if (m_SelectedEntry == entry)
+    ImGui::EndChild();
+
+    if (pushedStyleVar)
         ImGui::PopStyleColor();
+
+    if (ImGui::IsItemHovered())
+        m_HoveredEntry = entry;
 
     if (ImGui::IsItemClicked())
     {

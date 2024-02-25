@@ -10,7 +10,9 @@ BEGIN_XNOR_EDITOR
 class ContentBrowser : public UiWindow
 {
 public:
-    static constexpr XnorCore::Colorf SelectedEntryColor = XnorCore::Colorf(0.5f, 0.5f, 0.5f, 1.f);
+    static constexpr XnorCore::Colorf SelectedEntryColor = XnorCore::Colorf(0.5f, 0.5f, 0.5f);
+    static constexpr XnorCore::Colorf HoveredEntryColor = SelectedEntryColor * 0.5f;
+    static constexpr uint8_t MaxEntryTextLines = 3;
     
     using UiWindow::UiWindow;
 
@@ -28,6 +30,7 @@ private:
     XnorCore::Pointer<XnorCore::Directory> m_CurrentDirectory;
     
     XnorCore::Pointer<XnorCore::Entry> m_SelectedEntry;
+    XnorCore::Pointer<XnorCore::Entry> m_HoveredEntry;
 
     XnorCore::Pointer<XnorCore::Texture> m_DirectoryTexture;
     XnorCore::Pointer<XnorCore::Texture> m_FileTexture;

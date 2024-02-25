@@ -190,7 +190,8 @@ constexpr Color operator*(const Color c1, const Color c2)
     const uint16_t g = c1.g * c2.g;
     const uint16_t b = c1.b * c2.b;
     const uint16_t a = c1.a * c2.a;
-    
+
+    // Check for overflow before setting the value
     return Color(
         r > 0xFF ? 0xFF : static_cast<uint8_t>(r),
         g > 0xFF ? 0xFF : static_cast<uint8_t>(g),
@@ -198,6 +199,15 @@ constexpr Color operator*(const Color c1, const Color c2)
         a > 0xFF ? 0xFF : static_cast<uint8_t>(a)
     );
 }
+
+[[nodiscard]]
+constexpr Color operator*(const Color color, const float_t alphaFactor) { return Color(color.r, color.g, color.b, static_cast<uint8_t>(static_cast<float_t>(color.a) * alphaFactor)); }
+
+[[nodiscard]]
+constexpr Colorf operator*(const Colorf c1, const Colorf c2) { return Colorf(c1.r * c2.r, c1.g * c2.g, c1.b * c2.b, c1.a * c2.a); }
+
+[[nodiscard]]
+constexpr Colorf operator*(const Colorf color, const float_t alphaFactor) { return Colorf(color.r, color.g, color.b, color.a * alphaFactor); }
 
 constexpr Colorf::operator Color() const
 {
