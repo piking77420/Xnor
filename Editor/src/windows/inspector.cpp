@@ -285,7 +285,7 @@ void Inspector::DisplayNestedType(void* const obj, const XnorCore::FieldInfo& fi
     const XnorCore::TypeInfo& subInfo = XnorCore::TypeInfo::Get(hash);
 
     const char* const className = subInfo.GetName().c_str(); 
-    XnorCore::Utils::CenterImguiObject(ImGui::CalcTextSize(className).x);
+    XnorCore::Utils::AlignImGuiCursor(ImGui::CalcTextSize(className).x);
     ImGui::Text("%s", className);
 
     void* subPtr;

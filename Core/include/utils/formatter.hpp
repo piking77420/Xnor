@@ -66,7 +66,6 @@ struct std::formatter<XnorCore::Pointer<T>>
     }
 };
 
-
 template<>
 struct std::formatter<XnorCore::Guid>
 {

@@ -34,7 +34,7 @@ void ContentBrowser::Display()
     const char_t* const titleStr = title.c_str();
     //available = ImGui::GetContentRegionAvail();
     const ImVec2 textSize = ImGui::CalcTextSize(titleStr);
-    XnorCore::Utils::CenterImguiObject(textSize.x);
+    XnorCore::Utils::AlignImGuiCursor(textSize.x);
     ImGui::Text("%s", titleStr);
     // TODO Add child window around title for visual border
 
@@ -139,10 +139,10 @@ void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entr
         ImGui::EndDragDropSource();
     }
     
-    XnorCore::Utils::CenterImguiObject(64.f);
+    XnorCore::Utils::AlignImGuiCursor(64.f);
     ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(texture->GetId()), ImVec2(64.f, 64.f));
     
-    XnorCore::Utils::CenterImguiObject(textSize.x);
+    XnorCore::Utils::AlignImGuiCursor(textSize.x);
     ImGui::Text("%s", entry->GetName().c_str());
     
     ImGui::EndChild();

@@ -90,7 +90,7 @@ namespace Utils
     constexpr bool IsMathType = std::is_same_v<T, Vector2> || std::is_same_v<T, Vector2i> || std::is_same_v<T, Vector3> ||
                                 std::is_same_v<T, Vector4> || std::is_same_v<T, Quaternion>;
     
-    XNOR_ENGINE void CenterImguiObject(float_t objectWidth, float_t alignment = 0.5f);
+    XNOR_ENGINE void AlignImGuiCursor(float_t objectWidth, float_t alignment = 0.5f);
 
     [[nodiscard]]
     XNOR_ENGINE ImVec2 ToImVec(Vector2 v);
