@@ -137,11 +137,21 @@ void Inspector::DisplayVectorMember(void* const obj, const XnorCore::FieldInfo& 
         for (size_t i = 0; i < size; i++)
         {
             ImGui::PushID(static_cast<int32_t>(i));
+            
             if (ImGui::Button("-"))
             {
                 vec->RemoveAt(i);
                 ptr = vec->GetData() - fieldInfo.offset;
                 size--;
+            }
+        
+            ImGui::SameLine();
+            
+            if (!fieldInfo.isPolyPointer && ImGui::Button("+"))
+            {
+                vec->InsertZeroed(i);
+                ptr = vec->GetData() - fieldInfo.offset;
+                size++;
             }
         
             ImGui::SameLine();
@@ -156,7 +166,9 @@ void Inspector::DisplayXnorPointerMember(void* obj, const XnorCore::FieldInfo& f
 {
     // TODO support anything other than resource
     XnorCore::Pointer<XnorCore::Resource>* ptr = XnorCore::Utils::GetAddress<XnorCore::Pointer<XnorCore::Resource>>(obj, fieldInfo.offset, 0);
-    
+
+    ImGui::Text("%s", fieldInfo.name.c_str());
+    ImGui::SameLine();
     if (ImGui::Selectable(ptr->Get()->GetName().c_str()))
     {
         if (ImGui::BeginDragDropTarget())
@@ -212,7 +224,7 @@ void Inspector::DisplayNativeType(void* const obj, const XnorCore::FieldInfo& fi
     }
     else if (fieldInfo.typeHash == typeid(bool_t).hash_code())
     {
-        ImGui::Checkbox(name, XnorCore::Utils::GetAddress<bool>(obj, fieldInfo.offset, element));
+        ImGui::Checkbox(name, XnorCore::Utils::GetAddress<bool_t>(obj, fieldInfo.offset, element));
     }
 }
 
@@ -268,6 +280,10 @@ void Inspector::DisplayNestedType(void* const obj, const XnorCore::FieldInfo& fi
     }
     
     const XnorCore::TypeInfo& subInfo = XnorCore::TypeInfo::Get(hash);
+
+    const char* const className = subInfo.GetName().c_str(); 
+    XnorCore::Utils::CenterImguiObject(ImGui::CalcTextSize(className).x);
+    ImGui::Text("%s", className);
 
     void* subPtr;
     if (isPoly)

@@ -173,6 +173,7 @@ private:
 template <typename T>
 size_t TypeInfo::GetMemberOffset(const T member)
 {
+    // TODO fix this awful hack
     char buffer[50];
     (void) sprintf_s(buffer, sizeof(buffer), "%p", member.pointer);
     char* end = &buffer[sizeof(buffer)];

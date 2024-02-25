@@ -175,7 +175,7 @@ void Editor::CreateTestScene()
 	ent1.transform.position = { 0.f, 3.f, 0.f };
 	
 	meshRenderer->model = ResourceManager::Load<Model>(FileManager::Get("assets/models/viking_room.obj"));
-	Pointer<File>&& vikingRoomTexture = FileManager::Get("assets/textures/viking_room.png");
+	Pointer<File> vikingRoomTexture = FileManager::Get("assets/textures/viking_room.png");
 	meshRenderer->texture = ResourceManager::Add<Texture>(vikingRoomTexture);
 	meshRenderer->texture->loadData.flipVertically = true;
 	meshRenderer->texture->Load(*vikingRoomTexture);
