@@ -140,3 +140,15 @@ Vector3 Utils::GetQuaternionEulerAngles(const Quaternion& rot)
     v.z = std::atan2f(2.f * q.X() * q.Y() + 2.f * q.Z() * q.W(), 1 - 2.f * (q.Y() * q.Y() + q.Z() * q.Z()));    // Roll
     return NormalizeAngles(v);
 }
+
+void Utils::OpenInExplorer(const Entry& entry)
+{
+    return OpenInExplorer(entry.GetPath());
+}
+
+void Utils::OpenInExplorer(const std::filesystem::path& path)
+{
+    std::string command = "start explorer ";
+    command += absolute(path).string();
+    std::system(command.c_str());  // NOLINT(concurrency-mt-unsafe)
+}

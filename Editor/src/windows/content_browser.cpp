@@ -79,6 +79,18 @@ void ContentBrowser::DisplayDirectoryHierarchy(const XnorCore::Pointer<XnorCore:
         if (isDirectory && ImGui::IsItemHovered() && ImGui::IsMouseDown(ImGuiMouseButton_Left))
             m_CurrentDirectory = directory;
         
+        if (ImGui::BeginPopupContextItem())
+        {
+            //if (ImGui::Selectable("Rename"))
+
+            if (ImGui::Selectable("Open in explorer"))
+                XnorCore::Utils::OpenInExplorer(*entry);
+
+            //if (ImGui::Selectable("Delete"))
+
+            ImGui::EndPopup();
+        }
+        
         if (isDirectory)
         {
             for (const XnorCore::Pointer<XnorCore::Entry>& childEntry : directory->GetChildEntries())
@@ -120,10 +132,10 @@ void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entr
     {
         m_SelectedEntry = entry;
 
-        const XnorCore::Pointer<XnorCore::Directory>&& directory = XnorCore::Utils::DynamicPointerCast<XnorCore::Directory>(entry);
+        XnorCore::Pointer<XnorCore::Directory>&& directory = XnorCore::Utils::DynamicPointerCast<XnorCore::Directory>(entry);
         if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && directory)
         {
-            m_CurrentDirectory = directory;
+            m_CurrentDirectory = std::move(directory);
             m_SelectedEntry = nullptr;
         }
     }

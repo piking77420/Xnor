@@ -12,6 +12,7 @@
 #include <ImGui/imgui.h>
 
 #include "core.hpp"
+#include "file/entry.hpp"
 
 #include "utils/color.hpp"
 #include "utils/list.hpp"
@@ -131,6 +132,10 @@ namespace Utils
     template<typename T, typename U>
     [[nodiscard]]
     Pointer<T> DynamicPointerCast(const Pointer<U>& value);
+
+    XNOR_ENGINE void OpenInExplorer(const Entry& entry);
+
+    XNOR_ENGINE void OpenInExplorer(const std::filesystem::path& path);
 }
 
 template<typename PtrT, typename IntT>
