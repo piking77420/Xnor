@@ -58,7 +58,6 @@ void Serializer::FetchAttribute(const std::string& attributeName, const T& value
     if constexpr (std::is_same_v<std::string, T> || std::is_same_v<const char*, T>)
     {
         FetchAttributeInternal(attributeName, value);
-        return;
     }
     else
     {
