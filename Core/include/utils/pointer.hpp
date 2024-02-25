@@ -62,6 +62,8 @@ template<typename T>
 class Pointer
 {
 public:
+    using Type = T;
+    
     /// @brief Creates an empty @ref Pointer without a reference counter and pointing to @c nullptr.
     Pointer() = default;
     

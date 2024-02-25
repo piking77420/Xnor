@@ -1,6 +1,6 @@
 #pragma once
 
-class cubemap
+class Cubemap
 {
 public:
     

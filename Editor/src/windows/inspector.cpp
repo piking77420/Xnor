@@ -162,29 +162,32 @@ void Inspector::DisplayVectorMember(void* const obj, const XnorCore::FieldInfo& 
     }
 }
 
-void Inspector::DisplayXnorPointerMember(void* obj, const XnorCore::FieldInfo& fieldInfo)
+void Inspector::DisplayXnorPointerMember(const void* obj, const XnorCore::FieldInfo& fieldInfo)
 {
     // TODO support anything other than resource
     XnorCore::Pointer<XnorCore::Resource>* ptr = XnorCore::Utils::GetAddress<XnorCore::Pointer<XnorCore::Resource>>(obj, fieldInfo.offset, 0);
 
     ImGui::Text("%s", fieldInfo.name.c_str());
     ImGui::SameLine();
-    if (ImGui::Selectable(ptr->Get()->GetName().c_str()))
+    ImGui::Selectable(ptr->Get()->GetName().c_str());
+    
+    if (ImGui::BeginDragDropTarget())
     {
-        if (ImGui::BeginDragDropTarget())
+        // ReSharper disable once CppTooWideScope
+        const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("CB");
+                
+        if (payload)
         {
-            // ReSharper disable once CppTooWideScope
-            const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("CB");
-                
-            if (payload)
+            XnorCore::Pointer<XnorCore::Resource> dragged = *static_cast<XnorCore::Pointer<XnorCore::Resource>*>(payload->Data);
+            
+            XnorCore::Resource* raw = static_cast<XnorCore::Resource*>(dragged);
+            if (typeid(*raw).hash_code() == fieldInfo.typeHash)
             {
-                XnorCore::Resource* const dragged = *static_cast<XnorCore::Resource**>(payload->Data);
-
-                XnorCore::Logger::LogInfo("Dropped resource {} ", typeid(*dragged).hash_code());
+                *XnorCore::Utils::GetAddress<decltype(dragged)>(obj, fieldInfo.offset, 0) = dragged;
             }
-                
-            ImGui::EndDragDropTarget();
         }
+                
+        ImGui::EndDragDropTarget();
     }
 }
 

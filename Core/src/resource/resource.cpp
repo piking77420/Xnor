@@ -6,6 +6,7 @@ using namespace XnorCore;
 
 Resource::Resource(std::string name)
     : m_Name(std::move(name))
+    , m_Guid(Guid::New())
 {
 }
 
@@ -38,4 +39,9 @@ bool_t Resource::GetLoadedInRhi() const
 std::string Resource::GetName() const
 {
     return m_Name;
+}
+
+const Guid& Resource::GetGuid() const
+{
+    return m_Guid;
 }

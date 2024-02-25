@@ -6,17 +6,16 @@
 
 using namespace XnorCore;
 
-Guid::Guid()
-	: m_Data1(0)
-	, m_Data2(0)
-	, m_Data3(0)
+Guid Guid::New()
 {
-	std::fill_n(m_Data4, Data4Size, static_cast<uint8_t>(0));
+	Guid guid;
 
-	const HRESULT result = CoCreateGuid(reinterpret_cast<UUID*>(this));
+	const HRESULT result = CoCreateGuid(reinterpret_cast<UUID*>(&guid));
 
 	if (result != S_OK)
 		Logger::LogError("Couldn't create GUID");
+
+	return guid;
 }
 
 bool Guid::operator==(const Guid& other) const

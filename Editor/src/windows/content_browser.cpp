@@ -38,10 +38,10 @@ void ContentBrowser::Display()
     ImGui::Text("%s", titleStr);
     // TODO Add child window around title for visual border
 
-    for ([[maybe_unused]] const XnorCore::Pointer<XnorCore::Directory>& directory : m_CurrentDirectory->GetChildDirectories())
+    for (const XnorCore::Pointer<XnorCore::Directory>& directory : m_CurrentDirectory->GetChildDirectories())
         DisplayEntry(static_cast<XnorCore::Pointer<XnorCore::Entry>>(directory), m_DirectoryTexture);
 
-    for ([[maybe_unused]] const XnorCore::Pointer<XnorCore::File>& file : m_CurrentDirectory->GetChildFiles())
+    for (const XnorCore::Pointer<XnorCore::File>& file : m_CurrentDirectory->GetChildFiles())
         DisplayEntry(static_cast<XnorCore::Pointer<XnorCore::Entry>>(file), m_FileTexture);
     
     ImGui::EndChild();
@@ -130,6 +130,15 @@ void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entr
         )
     );
     
+    const XnorCore::Pointer<XnorCore::File> file = XnorCore::Utils::DynamicPointerCast<XnorCore::File>(entry);
+    if (file && ImGui::BeginDragDropSource())
+    {
+        const XnorCore::Pointer<XnorCore::Resource> resource = XnorCore::ResourceManager::Get(file);
+        ImGui::SetDragDropPayload("CB", &resource, sizeof(resource));
+        ImGui::SetTooltip("%s", entry->GetName().c_str());
+        ImGui::EndDragDropSource();
+    }
+    
     XnorCore::Utils::CenterImguiObject(64.f);
     ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(texture->GetId()), ImVec2(64.f, 64.f));
     
@@ -137,14 +146,6 @@ void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entr
     ImGui::Text("%s", entry->GetName().c_str());
     
     ImGui::EndChild();
-    
-    if (ImGui::BeginDragDropSource())
-    {
-        XnorCore::Pointer<XnorCore::File> file = XnorCore::Utils::DynamicPointerCast<XnorCore::File>(entry);
-        if (file)
-            ImGui::SetDragDropPayload("", static_cast<XnorCore::File*>(file), sizeof(XnorCore::Pointer<XnorCore::Resource>));
-        ImGui::EndDragDropSource();
-    }
 
     if (pushedStyleVar)
         ImGui::PopStyleColor();

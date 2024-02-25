@@ -12,6 +12,7 @@ Entity::Entity(const Guid& entiyId)
 }
 
 Entity::Entity()
+    : m_EntityId(Guid::New())
 {
     Entity::CreateTypeInfo();
     transform.CreateTypeInfo();

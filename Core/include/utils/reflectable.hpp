@@ -271,13 +271,19 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
         }
         else if constexpr (isList)
         {
-            using ListT = typename T::value_type::value_type; 
+            using ListT = typename T::value_type::value_type;
             hash = typeid(ListT).hash_code();
             elementSize = sizeof(ListT);
             isPolyPointer = Utils::IsPolyPtr<ListT>;
             isXnorPointer = Utils::IsXnorPointer<ListT>;
             isNativeType = Utils::IsNativeType<ListT>;
             isMathType = Utils::IsNativeType<ListT>;
+        }
+        else if constexpr (Utils::IsXnorPointer<typename T::value_type>)
+        {
+            using XnorPointerT = typename T::value_type::Type;
+            hash = typeid(XnorPointerT).hash_code();
+            elementSize = sizeof(XnorPointerT);
         }
         else
         {

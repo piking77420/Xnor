@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "file/file.hpp"
+#include "utils/guid.hpp"
 #include "utils/pointer.hpp"
 
 BEGIN_XNOR_CORE
@@ -38,11 +39,15 @@ public:
     [[nodiscard]]
     XNOR_ENGINE std::string GetName() const;
 
+    [[nodiscard]]
+    XNOR_ENGINE const Guid& GetGuid() const;
+
 protected:
     bool_t m_Loaded = false;
     bool_t m_LoadedInRhi = false;
 
     std::string m_Name;
+    Guid m_Guid;
 };
 
 END_XNOR_CORE

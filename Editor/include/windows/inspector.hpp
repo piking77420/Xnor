@@ -22,7 +22,7 @@ private:
     void DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldInfo, size_t element);
     void DisplayArrayMember(void* obj, const XnorCore::FieldInfo& fieldInfo);
     void DisplayVectorMember(void* obj, const XnorCore::FieldInfo& fieldInfo);
-    void DisplayXnorPointerMember(void* obj, const XnorCore::FieldInfo& fieldInfo);
+    void DisplayXnorPointerMember(const void* obj, const XnorCore::FieldInfo& fieldInfo);
 
     void DisplayNativeType(void* obj, const XnorCore::FieldInfo& fieldInfo, const char* name, size_t element);
     void DisplayMathType(void* obj, const XnorCore::FieldInfo& fieldInfo, const char* name, size_t element);

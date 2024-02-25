@@ -125,6 +125,7 @@
     <ClCompile Include="src\rendering\render_pass.cpp" />
     <ClCompile Include="src\rendering\rhi.cpp" />
     <ClCompile Include="src\rendering\uniformBuffer.cpp" />
+    <ClCompile Include="src\resource\cubemap.cpp" />
     <ClCompile Include="src\resource\shader.cpp" />
     <ClCompile Include="src\file\file.cpp" />
     <ClCompile Include="src\file\file_manager.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="include\rendering\renderer_context.hpp" />
     <ClInclude Include="include\rendering\render_pass.hpp" />
     <ClInclude Include="include\rendering\uniformBuffer.hpp" />
+    <ClInclude Include="include\resource\cubemap.hpp" />
     <ClInclude Include="include\resource\model.hpp" />
     <ClInclude Include="include\resource\resource.hpp" />
     <ClInclude Include="include\resource\resource_manager.hpp" />

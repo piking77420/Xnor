@@ -35,11 +35,11 @@ public:
     [[nodiscard]]
     XNOR_ENGINE static bool Contains(const std::string& name);
 
-    template<ResourceT T>
+    template<ResourceT T = Resource>
     [[nodiscard]]
     static Pointer<T> Get(const std::string& name);
 
-    template<ResourceT T>
+    template<ResourceT T = Resource>
     [[nodiscard]]
     static Pointer<T> Get(const Pointer<File>& file);
 
@@ -60,7 +60,7 @@ public:
     /// called for each stored @ref Resource.
     /// @return The first @ref Resource for which the @p predicate returned @c true. If every @ref Resource
     /// returned @c false, instead return a null @ref Pointer.
-    template<ResourceT T>
+    template<ResourceT T = Resource>
     [[nodiscard]]
     static Pointer<T> Find(std::function<bool(Pointer<T>)>&& predicate);
     
@@ -70,7 +70,7 @@ public:
     /// called for each stored @ref Resource.
     /// @return The first @ref Resource for which the @p predicate returned @c true. If every @ref Resource
     /// returned @c false, instead return a null @ref Pointer.
-    template<ResourceT T>
+    template<ResourceT T = Resource>
     [[nodiscard]]
     static std::vector<Pointer<T>> FindAll(std::function<bool(Pointer<T>)>&& predicate);
 

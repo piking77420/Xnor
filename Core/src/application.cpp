@@ -1,7 +1,5 @@
 ﻿#include "application.hpp"
 
-#include <Maths/vector4.hpp>
-
 #include "screen.hpp"
 #include "input/input.hpp"
 #include "resource/resource_manager.hpp"
