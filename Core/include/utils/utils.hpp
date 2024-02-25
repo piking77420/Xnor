@@ -31,36 +31,31 @@ namespace Utils
     constexpr T* GetAddress(const void* obj, size_t offset, size_t element);
 
     template<typename>
-    struct IsStdVector : std::false_type {};
+    constexpr bool IsStdVector = false;
 
     template<typename T, typename A>
-    struct IsStdVector<std::vector<T, A>> : std::true_type {};
+    constexpr bool IsStdVector<std::vector<T, A>> = true;
 
     template<typename>
-    struct IsXnorVector : std::false_type {};
+    constexpr bool IsXnorVector = false;
 
     template<typename T>
-    struct IsXnorVector<List<T>> : std::true_type {};
+    constexpr bool IsXnorVector<List<T>> = true;
 
     template<typename>
-    struct IsPolyPtr : std::false_type {};
+    constexpr bool IsPolyPtr = false;
 
     template<typename T>
-    struct IsPolyPtr<PolyPtr<T>> : std::true_type {};
+    constexpr bool IsPolyPtr<PolyPtr<T>> = true;
 
     template<typename>
-    struct IsXnorPointer : std::false_type {};
+    constexpr bool IsXnorPointer = false;
 
     template<typename T>
-    struct IsXnorPointer<Pointer<T>> : std::true_type {};
+    constexpr bool IsXnorPointer<Pointer<T>> = true;
 
-    template<typename T>
-    struct PtrToVoidPtr { using type = T; };
-
-    template<typename T>
-    struct PtrToVoidPtr<T*> { using type = void*; };
-
-    /// @brief Checks if T is a native type \n
+    /// @brief Checks if T is a native type.
+    /// 
     /// A native type is one of the following types:
     /// - uint8_t \n
     /// - int8_t \n
@@ -70,26 +65,30 @@ namespace Utils
     /// - int32_t \n
     /// - float_t \n
     /// - double_t \n
-    /// - bool_t \n
+    /// - bool_t
+    /// 
     /// @tparam T Type
-    /// @return Is native type
-    template <typename T>
-    [[nodiscard]]
-    constexpr bool IsNativeType();
-    
-    /// @brief Checks if T is a math type \n
+    /// @return Whether @p T is a native type.
+    template<typename T>
+    constexpr bool IsNativeType = std::is_same_v<T, uint8_t> || std::is_same_v<T, int8_t> || std::is_same_v<T, uint16_t> ||
+                                    std::is_same_v<T, int16_t> || std::is_same_v<T, uint32_t> || std::is_same_v<T, int32_t> ||
+                                    std::is_same_v<T, float_t> || std::is_same_v<T, double_t> || std::is_same_v<T, bool_t>;
+
+    /// @brief Checks if T is a math type.
+    /// 
     /// A native type is one of the following types:
     /// - Vector2 \n
     /// - Vector2i \n
     /// - Vector3 \n
     /// - Vector4 \n
-    /// - Quaternion \n
+    /// - Quaternion
+    /// 
     /// @tparam T Type
-    /// @return Is native type
-    template <typename T>
-    [[nodiscard]]
-    constexpr bool IsMathType(); 
-
+    /// @return Whether @p T is a native type
+    template<typename T>
+    constexpr bool IsMathType = std::is_same_v<T, Vector2> || std::is_same_v<T, Vector2i> || std::is_same_v<T, Vector3> ||
+                                std::is_same_v<T, Vector4> || std::is_same_v<T, Quaternion>;
+    
     XNOR_ENGINE void CenterImguiObject(float_t objectWidth, float_t alignment = 0.5f);
 
     [[nodiscard]]
@@ -148,32 +147,6 @@ constexpr T* Utils::GetAddress(const void* const obj, const size_t offset, const
 {
     return const_cast<T* const>(reinterpret_cast<const T* const>(static_cast<const uint8_t* const>(obj) + offset + sizeof(T) * element));
 }
-
-template <typename T>
-constexpr bool Utils::IsNativeType()
-{
-    return (std::is_same_v<T, uint8_t> ||
-        std::is_same_v<T, int8_t> ||
-        std::is_same_v<T, uint16_t> ||
-        std::is_same_v<T, int16_t> ||
-        std::is_same_v<T, uint32_t> ||
-        std::is_same_v<T, int32_t> ||
-        std::is_same_v<T, float_t> ||
-        std::is_same_v<T, double_t> ||
-        std::is_same_v<T, bool_t>
-    );
-}
-
-template <typename T>
-constexpr bool Utils::IsMathType()
-{
-    return (std::is_same_v<T, Vector2> ||
-        std::is_same_v<T, Vector2i> ||
-        std::is_same_v<T, Vector3> ||
-        std::is_same_v<T, Vector4> ||
-        std::is_same_v<T, Quaternion>);
-}
-
 
 template<typename T, typename U>
 Pointer<T> Utils::DynamicPointerCast(const Pointer<U>& value)

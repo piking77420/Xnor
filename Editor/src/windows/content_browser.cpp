@@ -96,18 +96,24 @@ void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entr
 {
     const float_t oldCursorPos = ImGui::GetCursorPosX();
 
-    const float_t textWidth = ImGui::CalcTextSize(entry->GetName().c_str()).x;
-    ImGui::BeginChild(entry->GetPathString().c_str(), ImVec2(std::max(textWidth, static_cast<float_t>(texture->GetSize().x)), 0.f));
-    const ImVec4 color = m_SelectedEntry == entry ? XnorCore::Utils::ToImCol(SelectedEntryColor) : ImVec4(1.f, 1.f, 1.f, 1.f);
-    ImGui::Image(
-        XnorCore::Utils::IntToPointer<ImTextureID>(texture->GetId()), XnorCore::Utils::ToImVec(static_cast<Vector2>(texture->GetSize())),
-        ImVec2(),
-        ImVec2(1.f, 1.f),
-        color
+    if (m_SelectedEntry == entry)
+        ImGui::PushStyleColor(ImGuiCol_ChildBg, XnorCore::Utils::ToImCol(SelectedEntryColor));
+    
+    const ImVec2 textSize = ImGui::CalcTextSize(entry->GetName().c_str());
+    ImGui::BeginChild(
+        entry->GetPathString().c_str(),
+        ImVec2(
+            std::max(textSize.x, static_cast<float_t>(texture->GetSize().x)),
+            static_cast<float_t>(texture->GetSize().y) + textSize.y + ImGui::GetStyle().FramePadding.y * 2.f
+        )
     );
-    XnorCore::Utils::CenterImguiObject(textWidth);
-    ImGui::TextColored(color, "%s", entry->GetName().c_str());
+    ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(texture->GetId()), XnorCore::Utils::ToImVec(static_cast<Vector2>(texture->GetSize())));
+    XnorCore::Utils::CenterImguiObject(textSize.x);
+    ImGui::Text("%s", entry->GetName().c_str());
     ImGui::EndChild();
+    
+    if (m_SelectedEntry == entry)
+        ImGui::PopStyleColor();
 
     if (ImGui::IsItemClicked())
         m_SelectedEntry = entry;

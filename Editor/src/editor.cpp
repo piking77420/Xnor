@@ -266,8 +266,6 @@ void Editor::Update()
 		
 		ImGui::End();
 
-		ImGui::ShowDemoWindow();
-
 		WorldBehaviours();
 		UpdateWindow();
 	

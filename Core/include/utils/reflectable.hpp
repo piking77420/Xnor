@@ -221,15 +221,15 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
         const size_t offset = GetMemberOffset(member);
 
         // Get metadata about the member
-        constexpr bool_t isArray = std::is_array<typename T::value_type>();
-        constexpr bool_t isPointer = std::is_pointer<typename T::value_type>();
-        bool_t isPolyPointer = Utils::IsPolyPtr<typename T::value_type>();
-        bool_t isNativeType = Utils::IsNativeType<typename T::value_type>();
-        bool_t isMathType = Utils::IsMathType<typename T::value_type>();
-        bool_t isXnorPointer = Utils::IsXnorPointer<typename T::value_type>();
+        constexpr bool_t isArray = std::is_array_v<typename T::value_type>;
+        constexpr bool_t isPointer = std::is_pointer_v<typename T::value_type>;
+        bool_t isPolyPointer = Utils::IsPolyPtr<typename T::value_type>;
+        bool_t isNativeType = Utils::IsNativeType<typename T::value_type>;
+        bool_t isMathType = Utils::IsMathType<typename T::value_type>;
+        bool_t isXnorPointer = Utils::IsXnorPointer<typename T::value_type>;
         constexpr bool_t isReflectable = std::is_base_of_v<Reflectable, typename T::value_type>;
         constexpr bool_t isStatic = member.is_static;
-        constexpr bool_t isList = Utils::IsXnorVector<typename T::value_type>::value;
+        constexpr bool_t isList = Utils::IsXnorVector<typename T::value_type>;
 
         // A member is const if it can't be written to
         constexpr bool_t isConst = !member.is_writable;
@@ -259,20 +259,20 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
             using ArrayT = std::remove_all_extents_t<typename T::value_type>;
             hash = typeid(ArrayT).hash_code();
             elementSize = sizeof(ArrayT);
-            isPolyPointer = Utils::IsPolyPtr<ArrayT>();
-            isXnorPointer = Utils::IsXnorPointer<ArrayT>();
-            isNativeType = Utils::IsNativeType<ArrayT>();
-            isMathType = Utils::IsNativeType<ArrayT>();
+            isPolyPointer = Utils::IsPolyPtr<ArrayT>;
+            isXnorPointer = Utils::IsXnorPointer<ArrayT>;
+            isNativeType = Utils::IsNativeType<ArrayT>;
+            isMathType = Utils::IsNativeType<ArrayT>;
         }
         else if constexpr (isList)
         {
             using ListT = typename T::value_type::value_type; 
             hash = typeid(ListT).hash_code();
             elementSize = sizeof(ListT);
-            isPolyPointer = Utils::IsPolyPtr<ListT>();
-            isXnorPointer = Utils::IsXnorPointer<ListT>();
-            isNativeType = Utils::IsNativeType<ListT>();
-            isMathType = Utils::IsNativeType<ListT>();
+            isPolyPointer = Utils::IsPolyPtr<ListT>;
+            isXnorPointer = Utils::IsXnorPointer<ListT>;
+            isNativeType = Utils::IsNativeType<ListT>;
+            isMathType = Utils::IsNativeType<ListT>;
         }
         else
         {

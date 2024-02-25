@@ -10,7 +10,7 @@ BEGIN_XNOR_EDITOR
 class ContentBrowser : public UiWindow
 {
 public:
-    static constexpr XnorCore::Colorf SelectedEntryColor = XnorCore::Colorf(0.1f, 0.1f, 1.f, 1.f);
+    static constexpr XnorCore::Colorf SelectedEntryColor = XnorCore::Colorf(0.5f, 0.5f, 0.5f, 1.f);
     
     using UiWindow::UiWindow;
 
