@@ -133,16 +133,18 @@ void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entr
     XnorCore::Utils::CenterImguiObject(64.f);
     ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(texture->GetId()), ImVec2(64.f, 64.f));
     
-    /*if (ImGui::BeginDragDropSource())
-    {
-        //ImGui::SetDragDropPayload("", , sizeof(XnorCore::Pointer<XnorCore::Resource>));
-        ImGui::EndDragDropSource();
-    }*/
-    
     XnorCore::Utils::CenterImguiObject(textSize.x);
     ImGui::Text("%s", entry->GetName().c_str());
     
     ImGui::EndChild();
+    
+    if (ImGui::BeginDragDropSource())
+    {
+        XnorCore::Pointer<XnorCore::File> file = XnorCore::Utils::DynamicPointerCast<XnorCore::File>(entry);
+        if (file)
+            ImGui::SetDragDropPayload("", static_cast<XnorCore::File*>(file), sizeof(XnorCore::Pointer<XnorCore::Resource>));
+        ImGui::EndDragDropSource();
+    }
 
     if (pushedStyleVar)
         ImGui::PopStyleColor();

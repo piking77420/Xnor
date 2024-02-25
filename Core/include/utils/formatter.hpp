@@ -50,7 +50,7 @@ struct std::formatter<XnorCore::Pointer<T>>
             return it;
  
         if (*it != '}')
-            throw std::format_error("Invalid format args for Pointer");
+            throw std::format_error("Invalid format args for XnorCore::Pointer");
  
         return it;
     }
@@ -78,7 +78,7 @@ struct std::formatter<XnorCore::Guid>
             return it;
  
         if (*it != '}')
-            throw std::format_error("Invalid format args for std::filesystem::path");
+            throw std::format_error("Invalid format args for XnorCore::Guid");
  
         return it;
     }
