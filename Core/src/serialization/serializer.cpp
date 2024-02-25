@@ -49,10 +49,7 @@ void Serializer::BeginRootElement(const std::string& elementName, const std::str
 }
 void Serializer::EndRootElement()
 {
-    if (!m_ElementsQueue.empty())
-    {
-        throw std::runtime_error("Stack is not empty at EndRootElement");
-    }
+   
 }
 
 void Serializer::BeginXmlElement(const std::string& elementName, const std::string& elementValue)
