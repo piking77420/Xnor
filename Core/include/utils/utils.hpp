@@ -12,7 +12,6 @@
 #include <ImGui/imgui.h>
 
 #include "core.hpp"
-#include "file/entry.hpp"
 
 #include "utils/color.hpp"
 #include "utils/list.hpp"
@@ -20,6 +19,10 @@
 #include "utils/poly_ptr.hpp"
 
 BEGIN_XNOR_CORE
+
+class File;
+class Directory;
+class Entry;
 
 namespace Utils
 {
@@ -135,7 +138,17 @@ namespace Utils
 
     XNOR_ENGINE void OpenInExplorer(const Entry& entry);
 
+    XNOR_ENGINE void OpenInExplorer(const Directory& directory);
+
+    XNOR_ENGINE void OpenInExplorer(const File& file);
+
     XNOR_ENGINE void OpenInExplorer(const std::filesystem::path& path);
+
+    XNOR_ENGINE void OpenInExplorer(const std::filesystem::path& path, bool isFile);
+
+    XNOR_ENGINE void OpenFile(const File& file);
+
+    XNOR_ENGINE void OpenFile(const std::filesystem::path& filepath);
 }
 
 template<typename PtrT, typename IntT>

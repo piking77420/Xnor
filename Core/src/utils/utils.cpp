@@ -3,6 +3,10 @@
 #include <regex>
 #include <ImGui/imgui.h>
 
+#include "file/directory.hpp"
+#include "file/entry.hpp"
+#include "file/file.hpp"
+
 using namespace XnorCore;
 
 void Utils::AlignImGuiCursor(const float_t objectWidth, const float_t alignment)
@@ -141,12 +145,41 @@ Vector3 Utils::GetQuaternionEulerAngles(const Quaternion& rot)
 
 void Utils::OpenInExplorer(const Entry& entry)
 {
-    return OpenInExplorer(entry.GetPath());
+    OpenInExplorer(entry.GetPath());
+}
+
+void Utils::OpenInExplorer(const Directory& directory)
+{
+    OpenInExplorer(directory.GetPath(), false);
+}
+
+void Utils::OpenInExplorer(const File& file)
+{
+    OpenInExplorer(file.GetPath(), true);
 }
 
 void Utils::OpenInExplorer(const std::filesystem::path& path)
 {
+    OpenInExplorer(path, !is_directory(path));
+}
+
+void Utils::OpenInExplorer(const std::filesystem::path& path, const bool isFile)
+{
     std::string command = "start explorer ";
+    if (isFile)
+        command += "/select,";
     command += absolute(path).string();
+    std::system(command.c_str());  // NOLINT(concurrency-mt-unsafe)
+}
+
+void Utils::OpenFile(const File& file)
+{
+    OpenFile(file.GetPath());
+}
+
+void Utils::OpenFile(const std::filesystem::path& filepath)
+{
+    std::string command = "start explorer ";
+    command += absolute(filepath).string();
     std::system(command.c_str());  // NOLINT(concurrency-mt-unsafe)
 }
