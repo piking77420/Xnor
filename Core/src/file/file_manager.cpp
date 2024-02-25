@@ -203,7 +203,7 @@ void FileManager::Unload(const Pointer<Entry>& entry)
 
 void FileManager::UnloadAll()
 {
-    Logger::LogDebug("Unloading all FileManager entries...");
+    Logger::LogDebug("Unloading all FileManager entries ({})", m_Entries.size());
 
     auto&& start = std::chrono::system_clock::now();
     

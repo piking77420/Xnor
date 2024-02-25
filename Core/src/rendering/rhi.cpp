@@ -91,7 +91,7 @@ void RHI::BindMaterial(const Material& material)
 	
 	
 	
-	material.shader->UnUse();
+	material.shader->Unuse();
 }*/
 
 void RHI::DestroyShader(const uint32_t shaderId)
@@ -125,26 +125,31 @@ void RHI::CheckCompilationError(const uint32_t shaderId, const std::string& type
 	}
 }
 
-uint32_t RHI::CreateShader(const std::vector<ShaderCode>& shaderCodes)
+uint32_t RHI::CreateShaders(const std::vector<ShaderCode>& shaderCodes)
 {
-	uint32_t shaderId = glCreateProgram();
+	uint32_t programId = glCreateProgram();
 	
-	std::vector<uint32_t> shadersId(shaderCodes.size());
+	std::vector<uint32_t> shaderIds(shaderCodes.size());
 	
 	for (size_t i = 0; i < shaderCodes.size(); i++)
 	{
-		shadersId[i] = glCreateShader(GetOpenglShaderType(shaderCodes[i].shaderType));
-		glShaderSource(shadersId[i], 1, &shaderCodes[i].shaderCode, nullptr);
-		glCompileShader(shadersId[i]);
-		CheckCompilationError(shadersId[i], GetShaderTypeToString(shaderCodes[i].shaderType));
-		glAttachShader(shaderId, shadersId[i]);
+		const ShaderCode& code = shaderCodes[i];
+		if (code.code == nullptr)
+			continue;
+
+		uint32_t& shaderId = shaderIds[i];
+		shaderId = glCreateShader(GetOpenglShaderType(code.type));
+		glShaderSource(shaderId, 1, &code.code, &code.codeLength);
+		glCompileShader(shaderId);
+		CheckCompilationError(shaderId, GetShaderTypeToString(code.type));
+		glAttachShader(programId, shaderId);
 	}
 	
-	glLinkProgram(shaderId);
-	CheckCompilationError(shaderId, "PROGRAM");
-	m_ShaderMap.emplace(shaderId,ShaderInternal());
+	glLinkProgram(programId);
+	CheckCompilationError(programId, "PROGRAM");
+	m_ShaderMap.emplace(programId, ShaderInternal());
 
-	return shaderId;
+	return programId;
 }
 
 void RHI::UseShader(const uint32_t shaderId)
@@ -152,9 +157,6 @@ void RHI::UseShader(const uint32_t shaderId)
 #ifdef _DEBUG
 	IsShaderValid(shaderId);
 #endif
-#ifdef NDEBUG 
-
-#endif // NDEBUG 
 	glUseProgram(shaderId);
 }
 
@@ -308,9 +310,8 @@ void RHI::CreateRenderPass(uint32_t* const renderPassId, const std::vector<Attac
 
 void RHI::SwapBuffers()
 {
-	glfwSwapBuffers(reinterpret_cast<GLFWwindow*>(Window::GetHandle()));
+	glfwSwapBuffers(Window::GetHandle());
 }
-
 
 uint32_t RHI::GetOpenglShaderType(const ShaderType shaderType)
 {
@@ -327,9 +328,12 @@ uint32_t RHI::GetOpenglShaderType(const ShaderType shaderType)
 			
 		case ShaderType::Compute:
 			return GL_COMPUTE_SHADER;
+		
+		case ShaderType::Count:
+			break;
 	}
-
-	return GL_VERTEX_SHADER;
+	
+	throw std::invalid_argument("Invalid shader type");
 }
 
 std::string RHI::GetShaderTypeToString(const ShaderType shaderType)
@@ -347,9 +351,12 @@ std::string RHI::GetShaderTypeToString(const ShaderType shaderType)
 
 		case ShaderType::Compute:
 			return "COMPUTE_SHADER";
+		
+		case ShaderType::Count:
+			break;
 	}
 	
-	return"UNKNOWN_SHADER_TYPE";
+	throw std::invalid_argument("Invalid shader type");
 }
 
 void RHI::ComputeTextureWrapper(const uint32_t textureId, const TextureWrapping textureWrapping)
@@ -546,7 +553,7 @@ void RHI::Initialize()
 	glDepthFunc(GL_LESS);
 }
 
-void RHI::ShutDown()
+void RHI::Shutdown()
 {
 	for (std::unordered_map<uint32_t, ModelInternal>::iterator it = m_ModelMap.begin() ; it != m_ModelMap.end(); it++)
 	{

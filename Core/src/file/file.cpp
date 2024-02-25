@@ -13,6 +13,7 @@ File::File(std::filesystem::path&& filepath)
         throw std::invalid_argument("Path does not point to a file");
     
     m_NameNoExtension = m_Path.stem().generic_string();
+    m_Extension = m_Path.extension().string();
 }
 
 File::~File()
@@ -53,6 +54,11 @@ void File::Unload()
 std::string File::GetNameNoExtension() const
 {
     return m_NameNoExtension;
+}
+
+std::string File::GetExtension() const
+{
+    return m_Extension;
 }
 
 int64_t File::GetSize() const

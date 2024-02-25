@@ -4,7 +4,7 @@
 
 #include "definitions.hpp"
 #include "editor_data.hpp"
-#include "applications/application.hpp"
+#include "application.hpp"
 
 BEGIN_XNOR_EDITOR
 

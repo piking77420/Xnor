@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 #include <Maths/vector2i.hpp>
 
 #include "core.hpp"
@@ -17,6 +19,20 @@ struct TextureLoadData
 class Texture : public Resource
 {
 public:
+    XNOR_ENGINE static inline constexpr std::array<const char_t*, 10> FileExtensions
+    {
+        ".jpeg",
+        ".png",
+        ".bmp",
+        ".hdr",
+        ".psd",
+        ".tga",
+        ".gif",
+        ".pic",
+        ".pgm",
+        ".ppm"
+    };
+    
     TextureLoadData loadData;
     
     // Same constructor from base class
@@ -29,13 +45,15 @@ public:
 
     XNOR_ENGINE explicit Texture(const TextureCreateInfo& createInfo);
 
-    XNOR_ENGINE Texture(AttachementsType attachements, vec2i size);
+    XNOR_ENGINE Texture(AttachementsType attachements, Vector2i size);
     
     XNOR_ENGINE ~Texture() override;
     
-    XNOR_ENGINE void Load(File& file) override;
-    
     XNOR_ENGINE void Load(const uint8_t* buffer, int64_t length) override;
+
+    XNOR_ENGINE void CreateInRhi() override;
+
+    XNOR_ENGINE void DestroyInRhi() override;
     
     XNOR_ENGINE void Unload() override;
 
@@ -58,6 +76,7 @@ public:
 
     XNOR_ENGINE virtual void BindTexture(uint32_t index) const;
     
+    [[nodiscard]]
     XNOR_ENGINE uint32_t GetId() const;
 
 private:

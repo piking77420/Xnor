@@ -69,12 +69,24 @@ void Model::Load(const aiMesh& loadedData)
         m_Indices[baseIndex + 2] = face.mIndices[2];
     }
 
-    m_Loaded = true;
-
-    m_ModelId = RHI::CreateModel(m_Vertices, m_Indices);
-
     m_Aabb.min = Vector3(&loadedData.mAABB.mMin.x);
     m_Aabb.max = Vector3(&loadedData.mAABB.mMax.x);
+
+    m_Loaded = true;
+}
+
+void Model::CreateInRhi()
+{
+    m_ModelId = RHI::CreateModel(m_Vertices, m_Indices);
+
+    m_LoadedInRhi = true;
+}
+
+void Model::DestroyInRhi()
+{
+    RHI::DestroyModel(m_ModelId);
+
+    m_LoadedInRhi = false;
 }
 
 void Model::Unload()

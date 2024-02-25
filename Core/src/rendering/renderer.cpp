@@ -18,36 +18,31 @@ Renderer::~Renderer()
 	delete m_RenderBuffer;
 	delete m_ColorAttachment;
 	delete m_DepthAttachment;
-	RHI::ShutDown();
+	
+	RHI::Shutdown();
 }
 
 void Renderer::Initialize()
 {
-	m_Rhi.Initialize();
-	
 	m_Rhi.SetClearColor(clearColor);
 
-	m_VertexPath = FileManager::Get("assets/shaders/vertex.vert");
-	m_FragmentPath = FileManager::Get("assets/shaders/fragment.frag");
-	m_BasicShader = ResourceManager::Add<Shader>("phong_shader");
-	m_BasicShader->Load(*m_VertexPath, *m_FragmentPath);
+	m_BasicShader = ResourceManager::Get<Shader>("basic_shader");
+	m_BasicShader->CreateInRhi();
 
-	m_VertexDrawTextureToScreenPath = FileManager::Get("assets/shaders/draw_texture_to_screen/draw_texture_to_screen.vert");
-	m_DrawTextureToScreen = FileManager::Get("assets/shaders/draw_texture_to_screen/draw_texture_to_screen.frag");
-	m_DrawTextureToScreenShader = ResourceManager::Add<Shader>("draw_texture_to_screen");
-	m_DrawTextureToScreenShader->Load(*m_VertexDrawTextureToScreenPath, *m_DrawTextureToScreen);
+	m_DrawTextureToScreenShader = ResourceManager::Get<Shader>("draw_texture_to_screen");
+	m_DrawTextureToScreenShader->CreateInRhi();
 	
-	m_GizmoShader = ResourceManager::Add<Shader>("gizmo_shader");
-	m_GizmoShader->Load(*FileManager::Get("assets/shaders/gizmo_shader/gizmo_shader.vert"),*FileManager::Get("assets/shaders/gizmo_shader/gizmo_shader.frag"));
+	m_GizmoShader = ResourceManager::Get<Shader>("gizmo_shader");
+	m_GizmoShader->CreateInRhi();
 
 	m_DrawTextureToScreenShader->Use();
-	m_DrawTextureToScreenShader->SetInt("BufferTextureId",0);
-	m_DrawTextureToScreenShader->UnUse();
+	m_DrawTextureToScreenShader->SetInt("BufferTextureId", 0);
+	m_DrawTextureToScreenShader->Unuse();
 	
 	m_Rhi.PrepareUniform();
 
-	m_Cube = ResourceManager::Load<Model>(FileManager::Get("assets/models/cube.obj"));
-	m_Quad = ResourceManager::Load<Model>(FileManager::Get("assets/models/quad.obj"));
+	m_Cube = ResourceManager::Get<Model>("assets/models/cube.obj");
+	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
 }
 
 void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererContext) const
@@ -70,13 +65,13 @@ void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererCo
 	CameraUniformData cam;
 	cam.cameraPos = rendererContext.camera->pos;
 	rendererContext.camera->GetView(&cam.view);
-	rendererContext.camera->GetProjection(rendererContext.framebuffer->GetSize(),&cam.projection);
+	rendererContext.camera->GetProjection(rendererContext.framebuffer->GetSize(), &cam.projection);
 	
 	m_Rhi.UpdateCameraUniform(cam);
 
 	UpdateLight(scene,rendererContext);
 	DrawMeshRenders(scene,rendererContext);
-	m_BasicShader->UnUse();
+	m_BasicShader->Unuse();
 	m_RenderBuffer->UnBindFrameBuffer();
 	
 	if (rendererContext.framebuffer != nullptr)
@@ -89,7 +84,7 @@ void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererCo
 		m_ColorAttachment->BindTexture(0);
 		
 		RHI::DrawQuad(m_Quad->GetId());
-		m_DrawTextureToScreenShader->UnUse();
+		m_DrawTextureToScreenShader->Unuse();
 		rendererContext.framebuffer->UnBindFrameBuffer();
 	}
 
@@ -97,13 +92,13 @@ void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererCo
 
 void Renderer::CompileShader()
 {
-	if (m_BasicShader->IsLoaded())
+	if (m_BasicShader->GetLoaded())
 	{
-		m_BasicShader->Recompile(*m_VertexPath, *m_FragmentPath);
+		m_BasicShader->Recompile();
 	}
 	else
 	{
-		m_BasicShader->Load(*m_VertexPath, *m_FragmentPath);
+		m_BasicShader->CreateInRhi();
 	}
 }
 
@@ -251,6 +246,6 @@ void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext&) const
 		
 		RHI::DrawModel(m_Cube->GetId());
 	}
-	m_GizmoShader->UnUse();*/
+	m_GizmoShader->Unuse();*/
 }
 

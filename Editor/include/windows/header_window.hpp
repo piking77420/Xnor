@@ -27,13 +27,8 @@ private:
     Vector2 m_ImagePos[2];
     float_t m_ImageSize = 1.f;
     
-    XnorCore::Pointer<XnorCore::File> m_PauseButtonPng;
     XnorCore::Pointer<XnorCore::Texture> m_PauseButton;
-
-    XnorCore::Pointer<XnorCore::File> m_PlayButtonPng;
     XnorCore::Pointer<XnorCore::Texture> m_PlayButton;
-
-    XnorCore::Pointer<XnorCore::File> m_StopButtonPng;
     XnorCore::Pointer<XnorCore::Texture> m_StopButton;
 };
 

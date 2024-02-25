@@ -12,8 +12,8 @@ ContentBrowser::ContentBrowser(Editor* editor, XnorCore::Pointer<XnorCore::Direc
     , m_RootDirectory(std::move(rootDirectory))
     , m_CurrentDirectory(m_RootDirectory)
 {
-    m_FileTexture = XnorCore::ResourceManager::Load<XnorCore::Texture>(XnorCore::FileManager::Get(ASSETS_PATH "file.png"));
-    m_DirectoryTexture = XnorCore::ResourceManager::Load<XnorCore::Texture>(XnorCore::FileManager::Get(ASSETS_PATH "directory.png"));
+    m_FileTexture = XnorCore::ResourceManager::Get<XnorCore::Texture>(ASSETS_PATH "file.png");
+    m_DirectoryTexture = XnorCore::ResourceManager::Get<XnorCore::Texture>(ASSETS_PATH "directory.png");
 }
 
 void ContentBrowser::Display()
@@ -31,7 +31,7 @@ void ContentBrowser::Display()
     ImGui::BeginChild("##right");
     
     const std::string title = m_CurrentDirectory->GetPathString();
-    const char* const titleStr = title.c_str();
+    const char_t* const titleStr = title.c_str();
     //available = ImGui::GetContentRegionAvail();
     const ImVec2 textSize = ImGui::CalcTextSize(titleStr);
     XnorCore::Utils::CenterImguiObject(textSize.x);
@@ -133,11 +133,11 @@ void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entr
     XnorCore::Utils::CenterImguiObject(64.f);
     ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(texture->GetId()), ImVec2(64.f, 64.f));
     
-    /*if (ImGui::BeginDragDropSource())
+    if (ImGui::BeginDragDropSource())
     {
-        ImGui::SetDragDropPayload("", , sizeof(XnorCore::Pointer<XnorCore::Resource>));
+        //ImGui::SetDragDropPayload("", , sizeof(XnorCore::Pointer<XnorCore::Resource>));
         ImGui::EndDragDropSource();
-    }*/
+    }
     
     XnorCore::Utils::CenterImguiObject(textSize.x);
     ImGui::Text("%s", entry->GetName().c_str());

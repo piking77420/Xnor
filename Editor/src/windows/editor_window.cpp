@@ -28,10 +28,10 @@ void EditorWindow::CameraControl()
 {
     if (IsFocused())
     {
-        if (XnorCore::CoreInput::GetMouseButton(XnorCore::MouseButton::Right, XnorCore::MouseButtonStatus::Down) && m_IsMoving == false)
+        if (XnorCore::Input::GetMouseButton(XnorCore::MouseButton::Right, XnorCore::MouseButtonStatus::Down) && m_IsMoving == false)
             m_IsMoving = true;
 
-        if (XnorCore::CoreInput::GetMouseButton(XnorCore::MouseButton::Right, XnorCore::MouseButtonStatus::Release))
+        if (XnorCore::Input::GetMouseButton(XnorCore::MouseButton::Right, XnorCore::MouseButtonStatus::Release))
             ResetCameraRotation();
 
         if (m_IsMoving)
@@ -47,7 +47,7 @@ void EditorWindow::CameraControl()
 
 void EditorWindow::OnGotoObject()
 {
-    if (!XnorCore::CoreInput::GetKey(m_Editor->data.goToObjectKey, XnorCore::KeyStatus::Down))
+    if (!XnorCore::Input::GetKey(m_Editor->data.goToObjectKey, XnorCore::KeyStatus::Down))
         return;
 
     
@@ -63,7 +63,7 @@ void EditorWindow::EditorCameraRotation()
 {
     using namespace XnorCore;
     
-    const Vector2 mousePos = CoreInput::GetCursorPos<Vector2>();
+    const Vector2 mousePos = Input::GetCursorPos<Vector2>();
     
     if(!m_FirstMove)
     {
@@ -100,22 +100,22 @@ void EditorWindow::EditorCameraMovement()
     const float_t dt = Time::GetDeltaTime();
     const float_t cameraSpeed = m_Editor->data.cameraSpeed * dt;
 
-    if (CoreInput::GetKey(Key::W, KeyStatus::Down))
+    if (Input::GetKey(Key::W, KeyStatus::Down))
         m_EditorCamRef->pos += m_EditorCamRef->front * cameraSpeed;
 
-    if (CoreInput::GetKey(Key::S, KeyStatus::Down))
+    if (Input::GetKey(Key::S, KeyStatus::Down))
         m_EditorCamRef->pos -= m_EditorCamRef->front * cameraSpeed;
 
-    if (CoreInput::GetKey(Key::A, KeyStatus::Down))
+    if (Input::GetKey(Key::A, KeyStatus::Down))
         m_EditorCamRef->pos += m_EditorCamRef->right * cameraSpeed;
     
-    if (CoreInput::GetKey(Key::D, KeyStatus::Down))
+    if (Input::GetKey(Key::D, KeyStatus::Down))
         m_EditorCamRef->pos -=  m_EditorCamRef->right * cameraSpeed;
    
-    if (CoreInput::GetKey(Key::Space, KeyStatus::Down))
+    if (Input::GetKey(Key::Space, KeyStatus::Down))
         m_EditorCamRef->pos += Vector3::UnitY() * cameraSpeed;
 
-    if (CoreInput::GetKey(Key::LeftControl, KeyStatus::Down))
+    if (Input::GetKey(Key::LeftControl, KeyStatus::Down))
         m_EditorCamRef->pos -= Vector3::UnitY() * cameraSpeed;
 }
 

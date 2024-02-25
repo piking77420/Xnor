@@ -17,6 +17,12 @@ Entry::Entry(std::filesystem::path&& path)
         m_Parent = static_cast<Directory*>(FileManager::Get<Directory>(parent));
 }
 
+bool Entry::Reload()
+{
+    Unload();
+    return Load();
+}
+
 const std::filesystem::path& Entry::GetPath() const
 {
     return m_Path;

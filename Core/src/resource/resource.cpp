@@ -9,17 +9,30 @@ Resource::Resource(std::string name)
 {
 }
 
-void Resource::Load(File& file)
+void Resource::Load(const Pointer<File>& file)
 {
-    if (!file.GetLoaded())
-        Logger::LogWarning("Tried to load resource {} with an unloaded file: {}", m_Name, file.GetPath());
+    if (!file->GetLoaded())
+        Logger::LogWarning("Tried to load resource {} with an unloaded file: {}", m_Name, file->GetPath());
     
-    Load(file.GetData<uint8_t>(), file.GetSize());
+    Load(file->GetData<uint8_t>(), file->GetSize());
 }
 
-bool Resource::IsLoaded() const
+void Resource::CreateInRhi()
+{
+}
+
+void Resource::DestroyInRhi()
+{
+}
+
+bool_t Resource::GetLoaded() const
 {
     return m_Loaded;
+}
+
+bool_t Resource::GetLoadedInRhi() const
+{
+    return m_LoadedInRhi;
 }
 
 std::string Resource::GetName() const

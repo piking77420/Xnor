@@ -19,10 +19,16 @@ public:
 
     DEFAULT_COPY_MOVE_OPERATIONS(Entry)
 
+    /// @brief Loads the contents of this @ref Entry.
     /// @returns <c>false</c> if an error occured while loading.
     XNOR_ENGINE virtual bool Load() = 0;
 
     XNOR_ENGINE virtual void Unload() = 0;
+
+    /// @brief Reloads the contents of this @ref Entry.
+    ///
+    /// This if effectively the same as call @ref Unload() and then @ref Load().
+    XNOR_ENGINE virtual bool Reload();
     
     [[nodiscard]]
     XNOR_ENGINE const std::filesystem::path& GetPath() const;

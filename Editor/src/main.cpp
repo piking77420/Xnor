@@ -9,22 +9,13 @@
 
 int main(int, char**)
 {
-	using namespace XnorCore;
-	using namespace XnorEditor;
+	XnorCore::Logger::OpenDefaultFile();
 
-	Logger::OpenDefaultFile();
-
-	FileManager::LoadDirectory("assets");
-
-	Editor editor;
+	XnorCore::FileManager::LoadDirectory("assets");
+	
+	XnorEditor::Editor editor;
 
 	editor.Update();
-
-	ResourceManager::RemoveAll();
-
-	FileManager::UnloadAll();
-	
-	Logger::Stop();
 
 	return 0;
 }

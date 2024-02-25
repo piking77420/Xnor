@@ -14,14 +14,9 @@ using namespace XnorCore;
 HeaderWindow::HeaderWindow(Editor* editor)
     : UiWindow(editor, "Header")
 {
-    m_PauseButtonPng = FileManager::Get("assets/editor/pause_button.png");
-    m_PauseButton =  ResourceManager::Load<Texture>(m_PauseButtonPng);
-    
-    m_PlayButtonPng = FileManager::Get("assets/editor/play_button.png");
-    m_PlayButton = ResourceManager::Load<Texture>(m_PlayButtonPng);
-
-    m_StopButtonPng = FileManager::Get("assets/editor/stop_button.png");
-    m_StopButton = ResourceManager::Load<Texture>(m_StopButtonPng);
+    m_PauseButton =  ResourceManager::Get<Texture>("assets/editor/pause_button.png");
+    m_PlayButton = ResourceManager::Get<Texture>("assets/editor/play_button.png");
+    m_StopButton = ResourceManager::Get<Texture>("assets/editor/stop_button.png");
 }
 
 void HeaderWindow::Display()

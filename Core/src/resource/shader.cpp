@@ -7,73 +7,105 @@
 
 using namespace XnorCore;
 
-void Shader::Load(const uint8_t*, const int64_t)
+ShaderType Shader::FileExtensionToType(const std::string& extension)
 {
+    if (std::ranges::find(VertexFileExtensions, extension) != VertexFileExtensions.end())
+        return ShaderType::Vertex;
+    if (std::ranges::find(FragmentFileExtensions, extension) != FragmentFileExtensions.end())
+        return ShaderType::Fragment;
+    if (std::ranges::find(GeometryFileExtensions, extension) != GeometryFileExtensions.end())
+        return ShaderType::Geometry;
+    if (std::ranges::find(ComputeFileExtensions, extension) != ComputeFileExtensions.end())
+        return ShaderType::Compute;
+
+    throw std::invalid_argument("Invalid file extension for shader");
 }
 
-void Shader::Load(const File& vertexShader, const File& fragmentShader)
+void Shader::Load(const Pointer<File>& shader)
 {
-    std::string vertexCode;
-    GetShaderCode(vertexShader.GetPathString().c_str(), &vertexCode);
+    ShaderType&& type = FileExtensionToType(shader->GetExtension());
+    Load(shader->GetData(), shader->GetSize(), type);
 
-    std::string fragmentCode;
-    GetShaderCode(fragmentShader.GetPathString().c_str(), &fragmentCode);
+    m_Files[static_cast<size_t>(type)] = shader;
+}
 
-    const char* vShaderCode = vertexCode.c_str();
-    const char* fShaderCode = fragmentCode.c_str();
+void Shader::Load(const uint8_t*, int64_t)
+{
+    throw std::runtime_error("Cannot load shader without shader type information");
+}
 
-    std::vector<ShaderCode> shaderCodes(2);
+void Shader::Load(const char_t* buffer, const int64_t length, const ShaderType type)
+{
+    ShaderCode& code = m_Code[static_cast<size_t>(type)];
+    code.code = buffer;
+    code.codeLength = static_cast<int32_t>(length);
+    code.type = type;
+}
 
-    shaderCodes[0].shaderType = ShaderType::Vertex;
-    shaderCodes[0].shaderCode = vShaderCode;
-
-    shaderCodes[1].shaderType = ShaderType::Fragment;
-    shaderCodes[1].shaderCode = fShaderCode;
-    
-    m_Id = RHI::CreateShader(shaderCodes);
+void Shader::CreateInRhi()
+{
+    std::vector<ShaderCode> code(m_Code.size());
+    std::ranges::copy(m_Code, code.begin());
+    m_Id = RHI::CreateShaders(code);
 
     m_Loaded = true;
 }
 
-XNOR_ENGINE void Shader::Recompile(const File& vertexShader, const File& fragmentShader)
+void Shader::DestroyInRhi()
 {
     RHI::DestroyShader(m_Id);
+    m_Id = 0;
 
-    Load(vertexShader, fragmentShader);
+    m_Loaded = false;
+}
+
+void Shader::Recompile()
+{
+    DestroyInRhi();
+
+    for (auto&& file : m_Files)
+    {
+        if (file)
+            file->Reload();
+    }
+
+    CreateInRhi();
 }
 
 void Shader::Unload()
 {
+    m_Files.fill(nullptr);
+    m_Code.fill({});
 }
 
-void Shader::SetInt(const std::string& keyName, int value) const
+void Shader::SetInt(const std::string& keyName, const int value) const
 {
-    RHI::SetUniform(UniformType::Int,&value,m_Id,keyName.c_str());
+    RHI::SetUniform(UniformType::Int, &value, m_Id, keyName.c_str());
 }
 
-void Shader::SetBool(const std::string& keyName, bool value) const
+void Shader::SetBool(const std::string& keyName, const bool value) const
 {
-    RHI::SetUniform(UniformType::Bool,&value,m_Id,keyName.c_str());
+    RHI::SetUniform(UniformType::Bool, &value, m_Id, keyName.c_str());
 }
 
-void Shader::SetFloat(const std::string& keyName, float value) const
+void Shader::SetFloat(const std::string& keyName, const float value) const
 {
-    RHI::SetUniform(UniformType::Float,&value,m_Id,keyName.c_str());
+    RHI::SetUniform(UniformType::Float, &value, m_Id, keyName.c_str());
 }
 
 void Shader::SetVec3(const std::string& keyName, const Vector3& value) const
 {
-    RHI::SetUniform(UniformType::Vec3,&value,m_Id,keyName.c_str());
+    RHI::SetUniform(UniformType::Vec3, &value, m_Id, keyName.c_str());
 }
 
 void Shader::SetVec4(const std::string& keyName, const Vector4& value) const
 {
-    RHI::SetUniform(UniformType::Vec4,&value,m_Id,keyName.c_str());
+    RHI::SetUniform(UniformType::Vec4, &value, m_Id, keyName.c_str());
 }
 
 void Shader::SetMat4(const std::string& keyName, const Matrix& value) const
 {
-    RHI::SetUniform(UniformType::Mat4,&value,m_Id,keyName.c_str());
+    RHI::SetUniform(UniformType::Mat4, &value, m_Id, keyName.c_str());
 }
 
 uint32_t Shader::GetId() const
@@ -86,33 +118,7 @@ void Shader::Use() const
     RHI::UseShader(m_Id);
 }
 
-void Shader::UnUse() const
+void Shader::Unuse() const
 {
     RHI::UnuseShader();
-}
-
-void Shader::GetShaderCode(const char* shaderPath, std::string* shaderCode)
-{
-    if (!shaderCode || !shaderPath)
-        throw std::runtime_error("Shader path or code are invalid");
-
-    std::ifstream shaderFile;
-    shaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-
-    try
-    {
-        shaderFile.open(shaderPath);
-        std::stringstream stream;
-        stream << shaderFile.rdbuf();
-        shaderFile.close();
-        *shaderCode = stream.str();
-    }
-    catch (const std::ifstream::failure& e)
-    {
-        Logger::LogError("An error occured while attempting to read shader file {}: {}", shaderPath, e.what());
-    }
-}
-
-void Shader::Load(File&)
-{
 }

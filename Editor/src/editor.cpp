@@ -4,6 +4,7 @@
 #include <ImGui/imgui_impl_glfw.h>
 #include <ImGui/imgui_impl_opengl3.h>
 
+#include "world.hpp"
 #include "input/time.hpp"
 #include "rendering/light/point_light.hpp"
 #include "resource/resource_manager.hpp"
@@ -17,8 +18,49 @@
 #include "windows/render_window.hpp"
 #include "windows/scene_graph.hpp"
 
-
 using namespace XnorEditor;
+
+Editor::Editor()
+{
+	const XnorCore::Pointer<XnorCore::File> logoFile = XnorCore::FileManager::Get("assets/editor/logo.png");
+	XnorCore::Pointer<XnorCore::Texture> logo = XnorCore::ResourceManager::Get<XnorCore::Texture>(logoFile);
+	logo->loadData.desiredChannels = 4;
+	logo->DestroyInRhi();
+	logo->Unload();
+	logo->Load(logoFile);
+	logo->CreateInRhi();
+	XnorCore::Window::SetIcon(*logo);
+	
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+	io.Fonts->AddFontDefault();
+
+	constexpr const char* glslVersion = "#version 460";
+
+	ImGui_ImplGlfw_InitForOpenGL(XnorCore::Window::GetHandle(), true);
+	ImGui_ImplOpenGL3_Init(glslVersion);
+
+	SetupImGuiStyle();
+	CreateDefaultWindows();
+
+	XnorCore::World::world = new XnorCore::World();
+}
+
+Editor::~Editor()
+{
+	for (const UiWindow* w : m_UiWindows)
+		delete w;
+	
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyPlatformWindows();
+	ImGui::DestroyContext();
+}
 
 void Editor::CreateDefaultWindows()
 {
@@ -171,11 +213,13 @@ void Editor::CreateTestScene()
 	MeshRenderer* meshRenderer = ent1.AddComponent<MeshRenderer>();
 	ent1.transform.position = { 0.f, 3.f, 0.f };
 	
-	meshRenderer->model = ResourceManager::Load<Model>(FileManager::Get("assets/models/viking_room.obj"));
+	meshRenderer->model = ResourceManager::Get<Model>(FileManager::Get("assets/models/viking_room.obj"));
 	Pointer<File>&& vikingRoomTexture = FileManager::Get("assets/textures/viking_room.png");
-	meshRenderer->texture = ResourceManager::Add<Texture>(vikingRoomTexture);
+	meshRenderer->texture = ResourceManager::Get<Texture>(vikingRoomTexture);
 	meshRenderer->texture->loadData.flipVertically = true;
-	meshRenderer->texture->Load(*vikingRoomTexture);
+	meshRenderer->texture->Unload();
+	meshRenderer->texture->Load(vikingRoomTexture);
+	meshRenderer->texture->CreateInRhi();
 
 	Entity& ent2 = *World::world->Scene.CreateEntity("PointLight");
 	PointLight* pointLight = ent2.AddComponent<PointLight>();
@@ -195,34 +239,6 @@ void Editor::CreateTestScene()
 	meshRenderer = ent4.AddComponent<MeshRenderer>();
 	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
 	meshRenderer->texture = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/diamond_block.jpg"));
-}
-
-Editor::Editor()
-{
-	XnorCore::Pointer<XnorCore::File> logoFile = XnorCore::FileManager::Get("assets/editor/logo.png");
-	XnorCore::Pointer<XnorCore::Texture> logo = XnorCore::ResourceManager::Add<XnorCore::Texture>(logoFile);
-	logo->loadData.desiredChannels = 4;
-	logo->Load(*logoFile);
-	XnorCore::Window::SetIcon(*logo);
-	
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-
-	io.Fonts->AddFontDefault();
-
-	constexpr const char* glslVersion = "#version 460";
-
-	ImGui_ImplGlfw_InitForOpenGL(XnorCore::Window::GetHandle(), true);
-	ImGui_ImplOpenGL3_Init(glslVersion);
-
-	SetupImGuiStyle();
-	CreateDefaultWindows();
-
-	XnorCore::World::world = new XnorCore::World();
 }
 
 void Editor::UpdateWindow()
@@ -256,7 +272,7 @@ void Editor::Update()
 	{
 		Time::Update();
 		Window::PollEvents();
-		CoreInput::HandleEvent();
+		Input::HandleEvent();
 		BeginFrame();
 
 		ImGui::Begin("Renderer Settings");
@@ -269,7 +285,7 @@ void Editor::Update()
 		WorldBehaviours();
 		UpdateWindow();
 	
-		CoreInput::Reset();
+		Input::Reset();
 		EndFrame();
 		renderer.SwapBuffers();
 	}
@@ -304,15 +320,4 @@ void Editor::WorldBehaviours()
 
 		w->Update();
 	}
-}
-
-Editor::~Editor()
-{
-	for (const UiWindow* w : m_UiWindows)
-		delete w;
-	
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyPlatformWindows();
-	ImGui::DestroyContext();
 }

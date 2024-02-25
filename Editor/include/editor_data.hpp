@@ -1,7 +1,7 @@
 #pragma once
 
 #include "definitions.hpp"
-#include "input/core_input.hpp"
+#include "..\..\Core\include\input\input.hpp"
 #include "rendering/camera.hpp"
 #include "scene/entity.hpp"
 

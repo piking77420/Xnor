@@ -51,12 +51,14 @@ enum class ShaderType : int32_t
 	Fragment,
 	Geometry,
 	Compute,
+	Count
 };
 
 struct ShaderCode
 {
-	const char* shaderCode = nullptr;
-	ShaderType shaderType;
+	const char_t* code = nullptr;
+	int32_t codeLength = 0;
+	ShaderType type = ShaderType::Count;
 };
 
 enum class TextureWrapping : int32_t

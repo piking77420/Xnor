@@ -22,6 +22,9 @@ public:
     
     [[nodiscard]]
     XNOR_ENGINE std::string GetNameNoExtension() const;
+    
+    [[nodiscard]]
+    XNOR_ENGINE std::string GetExtension() const;
 
     template<typename T = char_t>
     [[nodiscard]]
@@ -36,6 +39,7 @@ public:
     
 private:
     std::string m_NameNoExtension;
+    std::string m_Extension;
     
     int8_t* m_Data = nullptr;
     int64_t m_Size = 0;

@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "file/file.hpp"
+#include "utils/pointer.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -20,18 +21,26 @@ public:
     XNOR_ENGINE virtual void Load(const uint8_t* buffer, int64_t length) = 0;
 
     /// @brief Load resource from file.
-    XNOR_ENGINE virtual void Load(File& file);
+    XNOR_ENGINE virtual void Load(const Pointer<File>& file);
+
+    XNOR_ENGINE virtual void CreateInRhi();
+
+    XNOR_ENGINE virtual void DestroyInRhi();
 
     XNOR_ENGINE virtual void Unload() = 0;
     
     [[nodiscard]]
-    XNOR_ENGINE bool IsLoaded() const;
+    XNOR_ENGINE bool_t GetLoaded() const;
+
+    [[nodiscard]]
+    XNOR_ENGINE bool_t GetLoadedInRhi() const;
 
     [[nodiscard]]
     XNOR_ENGINE std::string GetName() const;
 
 protected:
-    bool m_Loaded = false;
+    bool_t m_Loaded = false;
+    bool_t m_LoadedInRhi = false;
 
     std::string m_Name;
 };

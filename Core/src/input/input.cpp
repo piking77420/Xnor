@@ -1,21 +1,21 @@
-﻿#include "input/core_input.hpp"
+﻿#include "..\..\include\input\input.hpp"
 
 #include "assimp/Logger.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
 
-bool CoreInput::GetKey(const Key key, const KeyStatus status)
+bool Input::GetKey(const Key key, const KeyStatus status)
 {
     return m_Keyboard.at(static_cast<uint16_t>(key)).at(static_cast<uint16_t>(status));
 }
 
-bool CoreInput::GetMouseButton(const MouseButton mouseButton, const MouseButtonStatus status)
+bool Input::GetMouseButton(const MouseButton mouseButton, const MouseButtonStatus status)
 {
     return m_Mouse.at(static_cast<uint8_t>(mouseButton)).at(static_cast<uint8_t>(status));
 }
 
-bool CoreInput::GetGamePadButton(const uint32_t gamePadId, const GamepadButton gamepadButton, const GameButtonStatus buttonStatus)
+bool Input::GetGamePadButton(const uint32_t gamePadId, const GamepadButton gamepadButton, const GameButtonStatus buttonStatus)
 {
     if(gamePadId > GamePadMax)
     {
@@ -26,12 +26,12 @@ bool CoreInput::GetGamePadButton(const uint32_t gamePadId, const GamepadButton g
     return m_GamePadsButton.at(gamePadId).at(static_cast<uint32_t>(gamepadButton)).at(static_cast<uint32_t>(buttonStatus));
 }
 
-void CoreInput::HandleEvent()
+void Input::HandleEvent()
 {
     HandleGamePad();
 }
 
-void CoreInput::HandleKeyboard(GLFWwindow*, const int32_t key, const int32_t, const int32_t action, const int32_t)
+void Input::HandleKeyboard(GLFWwindow*, const int32_t key, const int32_t, const int32_t action, const int32_t)
 {
     if (key > m_Keyboard.size())
         return;
@@ -60,7 +60,7 @@ void CoreInput::HandleKeyboard(GLFWwindow*, const int32_t key, const int32_t, co
     }
 }
 
-void CoreInput::HandleMouseButton(GLFWwindow*, const int32_t mouseButton, const int32_t action, int32_t)
+void Input::HandleMouseButton(GLFWwindow*, const int32_t mouseButton, const int32_t action, int32_t)
 {
     MouseStatuses& keyStatuses = m_Mouse.at(mouseButton);
     
@@ -81,12 +81,12 @@ void CoreInput::HandleMouseButton(GLFWwindow*, const int32_t mouseButton, const 
     }
 }
 
-void CoreInput::MouseCursorPos(GLFWwindow*, const double_t xpos, const double_t ypos)
+void Input::MouseCursorPos(GLFWwindow*, const double_t xpos, const double_t ypos)
 {
     m_MousePos = Vector2(static_cast<float_t>(xpos), static_cast<float_t>(ypos));
 }
 
-void CoreInput::HandleJoyStickCallBack(int jid, int event)
+void Input::HandleJoyStickCallBack(int jid, int event)
 {
     switch (event)
     {
@@ -100,7 +100,7 @@ void CoreInput::HandleJoyStickCallBack(int jid, int event)
         default:;
     }
 }
-void CoreInput::HandleGamePad()
+void Input::HandleGamePad()
 {
     for (uint32_t i = 0; i < GamePadMax ; i++)
     {
@@ -150,7 +150,7 @@ void CoreInput::HandleGamePad()
     }
 }
 
-void CoreInput::ResetKey()
+void Input::ResetKey()
 {
 
     GLFWwindow* const windowPtr = Window::GetHandle();
@@ -168,7 +168,7 @@ void CoreInput::ResetKey()
     m_Mouse.fill(defaultMouseButtons);
 }
 
-void CoreInput::CheckGamePadAtLaunch()
+void Input::CheckGamePadAtLaunch()
 {
     for (int32_t i = 0; i < static_cast<int32_t>(GamePadMax); i++)
     {
@@ -177,7 +177,7 @@ void CoreInput::CheckGamePadAtLaunch()
     }
 }
 
-void CoreInput::Reset()
+void Input::Reset()
 {
     for (uint8_t i = 0; i < static_cast<uint8_t>(MouseButton::Count) - 1; i++)
     {
@@ -209,7 +209,7 @@ void CoreInput::Reset()
 
 
 
-void CoreInput::Initialize()
+void Input::Initialize()
 {
     GLFWwindow* const windowPtr = static_cast<GLFWwindow*>(Window::GetHandle());
 

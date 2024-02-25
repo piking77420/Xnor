@@ -16,7 +16,7 @@ Texture::Texture(const TextureCreateInfo& createInfo)
     m_Loaded = true;
 }
 
-Texture::Texture(const AttachementsType attachements, const vec2i size)
+Texture::Texture(const AttachementsType attachements, const Vector2i size)
 {
     TextureCreateInfo createInfo
     {
@@ -36,12 +36,15 @@ Texture::Texture(const AttachementsType attachements, const vec2i size)
         case AttachementsType::Normal:
             createInfo.textureInternalFormat = TextureInternalFormat::Rgba16F;
             break;
+        
         case AttachementsType::Texturecoord:
             createInfo.textureInternalFormat = TextureInternalFormat::Rg16;
             break;
+        
         case AttachementsType::Depth:
         case AttachementsType::Stencil:
             break;
+        
         case AttachementsType::DepthAndStencil:
             createInfo.textureInternalFormat = TextureInternalFormat::DepthStencil;
             break;
@@ -57,16 +60,16 @@ Texture::~Texture()
         Texture::Unload();
 }
 
-void Texture::Load(File& file)
-{
-    Load(file.GetData<uint8_t>(), file.GetSize());
-}
-
 void Texture::Load(const uint8_t* buffer, const int64_t length)
 {
     stbi_set_flip_vertically_on_load(loadData.flipVertically);
     m_Data = stbi_load_from_memory(buffer, static_cast<int32_t>(length), &m_Size.x, &m_Size.y, &m_DataChannels, loadData.desiredChannels);
+    
+    m_Loaded = true;
+}
 
+void Texture::CreateInRhi()
+{
     const TextureCreateInfo textureCreateInfo
     {
         m_Data,
@@ -80,13 +83,18 @@ void Texture::Load(const uint8_t* buffer, const int64_t length)
     
     RHI::CreateTexture(&m_Id, textureCreateInfo);
     
-    m_Loaded = true;
+    m_LoadedInRhi = true;
+}
+
+void Texture::DestroyInRhi()
+{
+    RHI::DestroyTexture(&m_Id);
+    
+    m_LoadedInRhi = false;
 }
 
 void Texture::Unload()
 {
-    RHI::DestroyTexture(&m_Id);
-    
     stbi_image_free(m_Data);
     m_Data = nullptr;
     m_Size = Vector2i::Zero();
@@ -132,5 +140,4 @@ TextureFormat Texture::GetFormat(const uint32_t textureFormat)
         default:
             return TextureFormat::Rgb;
     }
-    
 }

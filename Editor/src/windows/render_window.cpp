@@ -1,5 +1,7 @@
 ﻿#include "windows/render_window.hpp"
 
+#include "world.hpp"
+
 using namespace XnorEditor;
 
 RenderWindow::RenderWindow(Editor* editor)

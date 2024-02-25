@@ -181,9 +181,9 @@ enum class GameButtonStatus : uint8_t
     Count
 };
 
-class CoreInput
+class Input
 {
-    STATIC_CLASS(CoreInput)
+    STATIC_CLASS(Input)
     
 public:
     XNOR_ENGINE static bool GetKey(Key key, KeyStatus status = KeyStatus::Down);
@@ -238,7 +238,7 @@ private:
 };
 
 template <class T>
-T CoreInput::GetCursorPos()
+T Input::GetCursorPos()
 {
     static_assert(std::is_same_v<T, Vector2> || std::is_same_v<T, Vector2i>, "Mouse pos must be a valid Vector2 type");
     

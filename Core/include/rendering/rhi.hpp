@@ -29,8 +29,8 @@ public:
 
 	// Shader
 	XNOR_ENGINE static void DestroyShader(uint32_t shaderId);
-	XNOR_ENGINE static void CheckCompilationError(uint32_t shaderId,const std::string& type);
-	XNOR_ENGINE static uint32_t CreateShader(const std::vector<ShaderCode>& shaderCodes);
+	XNOR_ENGINE static void CheckCompilationError(uint32_t shaderId, const std::string& type);
+	XNOR_ENGINE static uint32_t CreateShaders(const std::vector<ShaderCode>& shaderCodes);
 	XNOR_ENGINE static void UseShader(uint32_t shaderId);
 	XNOR_ENGINE static void UnuseShader();
 
@@ -67,7 +67,7 @@ private:
 		uint32_t nbrOfIndicies = 0;
 		ModelAABB aabb;
 	};
-
+	
 	struct ShaderInternal
 	{
 		uint32_t id;
@@ -110,7 +110,7 @@ public:
 
 	XNOR_ENGINE static void Initialize();
 
-	XNOR_ENGINE static void ShutDown();
+	XNOR_ENGINE static void Shutdown();
 
 	XNOR_ENGINE void PrepareUniform();
 

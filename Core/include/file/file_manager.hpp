@@ -35,9 +35,20 @@ public:
     [[nodiscard]]
     XNOR_ENGINE static bool Contains(const std::filesystem::path& path);
 
+    /// @brief Tries to get the @ref Entry with the given @p path.
+    /// @tparam T The type of @ref Entry to get.
+    /// @param path The system path to get the @ref Entry of.
+    /// @return The @ref Entry corresponding to the given @p path, or nullptr if it hasn't been added yet.
     template<EntryT T = File>
     [[nodiscard]]
     static Pointer<T> Get(const std::filesystem::path& path);
+
+    /// @brief Finds the first @ref Entry of type @p T.
+    /// @tparam T The type of @ref Entry to find.
+    /// @return The first @ref Entry of type @p T.
+    template<EntryT T = File>
+    [[nodiscard]]
+    static Pointer<T> Find();
 
     /// @brief Finds a specific @ref Entry based on a predicate.
     /// @tparam T The type of @ref Entry to find.
@@ -48,6 +59,17 @@ public:
     template<EntryT T = File>
     [[nodiscard]]
     static Pointer<T> Find(std::function<bool(Pointer<T>)>&& predicate);
+
+    /// @brief Finds all @ref Entry "Entries" of type @p T.
+    /// @tparam T The type of @ref Entry to find.
+    /// @return All stored @ref Entry "Entries" of type @p T.
+    template<EntryT T = File>
+    [[nodiscard]]
+    static std::vector<Pointer<T>> FindAll();
+    
+    /// @see @ref FileManager::FindAll()
+    template<EntryT T = File>
+    static void FindAll(std::vector<Pointer<T>>* result);
     
     /// @brief Finds a list of @ref Entry "Entries" based on a predicate.
     /// @tparam T The type of @ref Entry to find.
@@ -86,6 +108,20 @@ Pointer<T> FileManager::Get(const std::filesystem::path& path)
 }
 
 template<EntryT T>
+Pointer<T> FileManager::Find()
+{
+    for (auto&& mapEntry : m_Entries)
+    {
+        Pointer<Entry> entry = mapEntry.second;
+        
+        if (Utils::DynamicPointerCast<T>(entry))
+            return entry;
+    }
+
+    return nullptr;
+}
+
+template<EntryT T>
 Pointer<T> FileManager::Find(std::function<bool(Pointer<T>)>&& predicate)
 {
     for (auto&& mapEntry : m_Entries)
@@ -97,6 +133,28 @@ Pointer<T> FileManager::Find(std::function<bool(Pointer<T>)>&& predicate)
     }
 
     return nullptr;
+}
+
+template<EntryT T>
+std::vector<Pointer<T>> FileManager::FindAll()
+{
+    std::vector<Pointer<T>> result;
+    FindAll<T>(&result);
+    return result;
+}
+
+template<EntryT T>
+void FileManager::FindAll(std::vector<Pointer<T>>* result)
+{
+    result->clear();
+    
+    for (auto&& mapEntry : m_Entries)
+    {
+        Pointer<T> entry = Utils::DynamicPointerCast<T>(mapEntry.second);
+        
+        if (entry)
+            result->push_back(std::move(entry));
+    }
 }
 
 template<EntryT T>
