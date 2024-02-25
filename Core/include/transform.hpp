@@ -5,6 +5,7 @@
 
 #include "core.hpp"
 #include "utils/reflectable.hpp"
+#include "serialization/serializer.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -18,9 +19,6 @@ public:
 	Vector3 rotation; 
 	Vector3 scale = Vector3(1.f);
 	Quaternion quaternion = Quaternion::Identity();
-
-	XNOR_ENGINE void Serialize() const override;
-	XNOR_ENGINE void Deserialize() override;
 };
 
 END_XNOR_CORE

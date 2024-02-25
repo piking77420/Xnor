@@ -5,13 +5,38 @@
 #include <unordered_map>
 #include "core.hpp"
 #include "logger.hpp"
+#include "reflectable.hpp"
 #include "refl/refl.hpp"
 
 #include "utils.hpp"
-#include "serialization/serializable.hpp"
 
 BEGIN_XNOR_CORE
-    class FieldInfo
+
+using MemberAttribute = refl::attr::usage::member;
+
+template<std::size_t I = 0, typename... Tp>
+std::enable_if_t<I == sizeof...(Tp), void>
+GetType(std::vector<MemberAttribute>&, const std::tuple<Tp...>&)
+{ }
+
+template<std::size_t I = 0, typename... Tp>
+std::enable_if_t<I < sizeof...(Tp), void>
+GetType(std::vector<MemberAttribute>& v, const std::tuple<Tp...>& t)
+{
+    using Type = std::remove_reference_t<decltype(std::get<I>(t))>;
+    v.push_back(Type());
+    GetType<I + 1, Tp...>(v, t);
+}
+
+struct NotSerializable : MemberAttribute
+{
+};
+
+struct ExpandPointer : MemberAttribute
+{
+};
+
+class FieldInfo
 {
 public:
     std::string name;
@@ -29,6 +54,7 @@ public:
     bool_t isXnorPointer;
     bool_t isStatic;
     bool_t isConst;
+    std::vector<MemberAttribute> attributes;
 
     [[nodiscard]]
     XNOR_ENGINE constexpr size_t GetArraySize() const
@@ -38,11 +64,18 @@ public:
 
         return fullSize / elementSize;
     }
+
+    template <typename T>
+    [[nodiscard]]
+    bool HasAttribute() const
+    {
+        return std::ranges::find(attributes, T()) != attributes.end();
+    }
 };
 
 /// @brief Enables reflection for a class
-///        A class that inherits from this class should implement the macro REFLECTABLE_IMPL(ClassName) in order to provide the ful implementation for the reflection
-class XNOR_ENGINE Reflectable : public Serializable
+///        A class that inherits from this class should implement the macro REFLECTABLE_IMPL(ClassName) in order to provide the full implementation for the reflection
+class XNOR_ENGINE Reflectable
 {
 public:
     Reflectable() = default;
@@ -53,9 +86,8 @@ public:
     
     virtual void CreateTypeInfo() const = 0;
 
-    void Serialize() const override;
-    
-    void Deserialize() override;
+    virtual void Serialize() const = 0;
+    virtual void Deserialize() = 0;
 };
 
 template<class T>
@@ -67,6 +99,17 @@ virtual void CreateTypeInfo() const override                                    
 {                                                                                                                                       \
     XnorCore::TypeInfo::Create<refl::trait::remove_qualifiers_t<decltype(*this)>>();                                                    \
 }                                                                                                                                       \
+                                                                                                                                        \
+virtual void Serialize() const override                                                                                                 \
+{                                                                                                                                       \
+    Serializer::Serialize<decltype(*this)>(this);                                                                                       \
+}                                                                                                                                       \
+                                                                                                                                        \
+virtual void Deserialize() override                                                                                                     \
+{                                                                                                                                       \
+    Serializer::Deserialize<decltype(*this)>(this);                                                                                     \
+}                                                                                                                                       \
+                                                                                                                                        \
 /*
 Even though the use of the friend functionality is prohibited in the C++ style guidelines of this project, it has to be used here to
 circumvent the issue of accessing private members through reflection, the friend declaration allows the underlying code generated
@@ -80,24 +123,24 @@ class TypeInfo
 {
 public:
     /**
-     * \brief Creates a type info from a class that inherits <c>XnorCore::Reflectable</c>
-     * \tparam ReflectT Type
+     * @brief Creates a type info from a class that inherits <c>XnorCore::Reflectable</c>
+     * @tparam ReflectT Type
      */
     template <typename ReflectT>
     static constexpr void Create();
 
     /**
-     * \brief Gets the type info of a class
-     * \tparam ReflectT Type
-     * \return Type info
+     * @brief Gets the type info of a class
+     * @tparam ReflectT Type
+     * @return Type info
      */
     template <typename ReflectT>
     static constexpr const TypeInfo& Get();
 
     /**
-     * \brief Gets the type info of a type from a hash
-     * \param typeHash Type hash
-     * \return Type info
+     * @brief Gets the type info of a type from a hash
+     * @param typeHash Type hash
+     * @return Type info
      */
     XNOR_ENGINE static const TypeInfo& Get(size_t typeHash);
 
@@ -105,37 +148,40 @@ public:
 
 private:
     /**
-     * \brief Unordered map of the type info, the key is the hash value of the typeid
+     * @brief Unordered map of the type info, the key is the hash value of the typeid
      */
     XNOR_ENGINE static inline std::unordered_map<size_t, TypeInfo> m_TypeInfo;
 
     /**
-     * \brief Gets the offset of of class/struct member
-     * \tparam T refl member type
-     * \param member refl member
-     * \return Offset
+     * @brief Gets the offset of of class/struct member
+     * @tparam T refl member type
+     * @param member refl member
+     * @return Offset
      */
     template <typename T>
     static size_t GetMemberOffset(T member);
+    
+    template <typename T>
+    static void ParseMemberAttributes(T member, FieldInfo& info);
 
 public:
     /**
-     * \brief Gets the name of the type
-     * \return Name
+     * @brief Gets the name of the type
+     * @return Name
      */
     XNOR_ENGINE constexpr const std::string& GetName() const;
     
     XNOR_ENGINE constexpr size_t GetSize() const;
 
     /**
-     * \brief Gets the members of the type
-     * \return Members
+     * @brief Gets the members of the type
+     * @return Members
      */
     XNOR_ENGINE constexpr const std::vector<FieldInfo>& GetMembers() const;
 
     /**
-     * \brief Gets the parents of the type
-     * \return Members
+     * @brief Gets the parents of the type
+     * @return Members
      */
     XNOR_ENGINE constexpr const std::vector<size_t>& GetParents() const;
 
@@ -146,25 +192,25 @@ private:
     std::vector<size_t> m_BaseClasses;
 
     /**
-     * \brief Creates the type info from a type descriptor
-     * \tparam ReflectT Type
-     * \param desc refl Type descriptor
+     * @brief Creates the type info from a type descriptor
+     * @tparam ReflectT Type
+     * @param desc refl Type descriptor
      */
     template <typename ReflectT>
     explicit constexpr TypeInfo(refl::type_descriptor<ReflectT> desc);
 
     /**
-     * \brief Parses the members of a type from a type descriptor
-     * \tparam ReflectT Type
-     * \param desc refl Type descriptor
+     * @brief Parses the members of a type from a type descriptor
+     * @tparam ReflectT Type
+     * @param desc refl Type descriptor
      */
     template <typename ReflectT>
     constexpr void ParseMembers(refl::type_descriptor<ReflectT> desc);
 
     /**
-     * \brief Parses the parent classes of a type from a type descriptor
-     * \tparam ReflectT Type
-     * \param desc refl Type descriptor
+     * @brief Parses the parent classes of a type from a type descriptor
+     * @tparam ReflectT Type
+     * @param desc refl Type descriptor
      */
     template <typename ReflectT>
     constexpr void ParseParents(refl::type_descriptor<ReflectT> desc);
@@ -178,6 +224,13 @@ size_t TypeInfo::GetMemberOffset(const T member)
     (void) sprintf_s(buffer, sizeof(buffer), "%p", member.pointer);
     char* end = &buffer[sizeof(buffer)];
     return std::strtoll(buffer, &end, 16);
+}
+
+template <typename T>
+void TypeInfo::ParseMemberAttributes(T member, FieldInfo& info)
+{
+    Logger::LogInfo("{}", typeid(decltype(member.attributes)).name());
+    GetType(info.attributes, member.attributes);
 }
 
 template <typename ReflectT>
@@ -298,7 +351,7 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
         }
 
         // Construct field info
-        const FieldInfo info = {
+        FieldInfo info = {
             .name = name,
             .typeName = typeName,
             .typeHash = hash,
@@ -315,6 +368,8 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
             .isStatic = isStatic,
             .isConst = isConst
         };
+
+        ParseMemberAttributes(member, info);
 
         // Add to members
         m_Members.push_back(info);

@@ -7,27 +7,27 @@ using namespace XnorCore;
 
 void Scene::Begin()
 {
-    for (Entity* ent : m_Entities)
+    for (size_t i = 0; i < m_Entities.GetSize(); i++)
     {
-        ent->Begin();
+        m_Entities[i]->Begin();
     }
 }
 
 void Scene::Update()
 {
-    for (Entity* ent : m_Entities)
+    for (size_t i = 0; i < m_Entities.GetSize(); i++)
     {
-        ent->Update();
+        m_Entities[i]->Update();
     }
 }
 
 Entity* Scene::GetEntityById(const Guid& xnorGuid)
 {
-    for (Entity* ent : m_Entities)
+    for (size_t i = 0; i < m_Entities.GetSize(); i++)
     {
-        if (ent->GetId() == xnorGuid)
+        if (m_Entities[i]->GetId() == xnorGuid)
         {
-            return ent;
+            return m_Entities[i];
         }
     }
 
@@ -44,7 +44,7 @@ Entity* Scene::CreateEntity(const std::string&& name, Entity* parent)
     e->SetParent(parent);
     e->Begin();
 
-    m_Entities.push_back(e);
+    m_Entities.Add(e);
 
     return e;
 }
@@ -58,12 +58,12 @@ void Scene::DestroyEntity(Entity* const entity)
     delete entity;
 }
 
-bool Scene::HasEntity(const Entity* entity)
+bool Scene::HasEntity(const Entity* const entity) const
 {
-    return std::ranges::find(std::as_const(m_Entities), entity) != m_Entities.cend();
+    return m_Entities.Contains(const_cast<Entity* const>(entity));
 }
 
-const std::vector<Entity*>& Scene::GetEntities()
+const List<Entity*>& Scene::GetEntities()
 {
     return m_Entities;
 }
@@ -71,7 +71,7 @@ const std::vector<Entity*>& Scene::GetEntities()
 void Scene::DestroyEntityChildren(Entity* const entity)
 {
     // Remove from array
-    m_Entities.erase(std::ranges::find(m_Entities, entity));
+    m_Entities.Remove(entity);
     
     for (size_t i = 0; i < entity->GetChildCount(); i++)
     {
@@ -80,45 +80,20 @@ void Scene::DestroyEntityChildren(Entity* const entity)
         DestroyEntityChildren(child);
     }
 
-    entity->m_Children.clear();
+    entity->m_Children.Clear();
 }
 
-
-void Scene::GetEntities(std::vector<const Entity*>* entities) const
+Scene::Scene()
 {
-    if (entities == nullptr)
-    {
-        Logger::LogError("GetEntities entity vector is nullPtr");
-        throw std::runtime_error("Entity vector is nullPtr");
-    }
-    
-    for (const Entity* entPtr : m_Entities)
-    {
-        entities->push_back(entPtr);
-    }
-    
-}
-
-void Scene::Serialize() const
-{
-    Serializer::BeginRootElement("Scene", "SceneCaca");
-    for (const Entity* ent : m_Entities)
-    {
-        ent->Serialize();
-    }
-    
-    Serializer::EndRootElement();
-}
-
-void Scene::Deserialize()
-{
-   
+    CreateTypeInfo();
 }
 
 Scene::~Scene()
 {
-    for (const Entity* ent : m_Entities)
+    for (size_t i = 0; i < m_Entities.GetSize(); i++)
     {
-        delete ent;
+        delete m_Entities[i];
     }
+
+    m_Entities.Clear();
 }

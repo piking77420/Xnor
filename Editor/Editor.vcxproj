@@ -60,7 +60,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;MATH_TOOLBOX_DLL_IMPORT;%(PreprocessorDefinitions);MATH_DEFINE_FORMATTER</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;MATH_TOOLBOX_DLL_IMPORT;MATH_DEFINE_FORMATTER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>include;externals\include;..\Core\include;..\Core\externals\include</AdditionalIncludeDirectories>
@@ -87,7 +87,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;MATH_TOOLBOX_DLL_IMPORT;%(PreprocessorDefinitions);GLFW_DLL;MATH_DEFINE_FORMATTER</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;MATH_TOOLBOX_DLL_IMPORT;MATH_DEFINE_FORMATTER;%(PreprocessorDefinitions);GLFW_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>include;externals\include;..\Core\include;..\Core\externals\include</AdditionalIncludeDirectories>
@@ -147,7 +147,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="include\menu_bar\" />
-    <Folder Include="src\menu_bar\" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

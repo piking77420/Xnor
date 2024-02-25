@@ -19,7 +19,7 @@ void SceneGraph::Display()
     // TODO fetch current loaded scene
     XnorCore::Scene& scene = XnorCore::World::world->Scene;
   
-    const std::vector<XnorCore::Entity*>& entities = scene.GetEntities();
+    const XnorCore::List<XnorCore::Entity*>& entities = scene.GetEntities();
 
     if (ImGui::TreeNodeEx("Entities", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_FramePadding))
     {
@@ -38,7 +38,7 @@ void SceneGraph::Display()
             
             if (payload)
             {
-                XnorCore::Entity* const dragged = *static_cast<XnorCore::Entity**>(payload->Data);
+                XnorCore::Entity* const dragged = static_cast<XnorCore::Entity*>(payload->Data);
 
                 dragged->SetParent(nullptr);
             }
@@ -46,7 +46,7 @@ void SceneGraph::Display()
             ImGui::EndDragDropTarget();
         }
 
-        for (size_t i = 0; i < entities.size(); i++)  // NOLINT(modernize-loop-convert)
+        for (size_t i = 0; i < entities.GetSize(); i++)  // NOLINT(modernize-loop-convert)
         {
             if (!entities[i]->HasParent())
                 DisplayEntity(scene, entities[i]);

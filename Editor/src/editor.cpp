@@ -18,6 +18,7 @@
 #include "windows/performance.hpp"
 #include "windows/render_window.hpp"
 #include "windows/scene_graph.hpp"
+#include "world.hpp"
 
 using namespace XnorEditor;
 

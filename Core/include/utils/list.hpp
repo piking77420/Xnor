@@ -78,7 +78,7 @@ public:
 
     /// @brief Adds a specified element to the end of the list
     /// @param element Element
-    void Add(T& element);
+    void Add(const T& element);
     
     /// @brief Adds a specified element to the end of the list
     /// @param element Element
@@ -142,12 +142,6 @@ public:
     /// @return Element exists
     [[nodiscard]]
     bool Contains(const T& element) const;
-    
-    /// @brief Checks if the list contains a specified element
-    /// @param element Element
-    /// @return Element exists
-    [[nodiscard]]
-    bool Contains(const T&& element) const;
 
     /// @brief Allows iteration over the list with a lambda
     /// <p>The lambda returns void, and has a pointer to the current element and its index as parameters</p>
@@ -365,7 +359,7 @@ void List<T>::Add()
 }
 
 template <typename T>
-void List<T>::Add(T& element)
+void List<T>::Add(const T& element)
 {
     CheckGrow(m_Size + 1);
 
@@ -539,18 +533,6 @@ void List<T>::RemoveRange(const size_t start, const size_t end)
 
 template <typename T>
 bool List<T>::Contains(const T& element) const
-{
-    for (size_t i = 0; i < m_Size; i++)
-    {
-        if (m_Data[i] == element)
-            return true;
-    }
-
-    return false;
-}
-
-template <typename T>
-bool List<T>::Contains(const T&& element) const
 {
     for (size_t i = 0; i < m_Size; i++)
     {

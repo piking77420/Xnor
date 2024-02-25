@@ -17,7 +17,6 @@ concept ComponentT = std::is_base_of_v<Component, T>;
 
 class Entity : public Reflectable
 {
-private:
     REFLECTABLE_IMPL(Entity)
 
 public:
@@ -73,10 +72,6 @@ public:
 
     XNOR_ENGINE bool operator==(const Entity& entity) const;
 
-    void Serialize() const override;
-    
-    void Deserialize() override;
-
 private:
     XNOR_ENGINE explicit Entity(const Guid& entiyId);
 
@@ -85,12 +80,11 @@ private:
     XNOR_ENGINE ~Entity() override;
     
     Entity* m_Parent = nullptr;
-    std::vector<Entity*> m_Children;
+    List<Entity*> m_Children;
     
     Guid m_EntityId;
 
     List<PolyPtr<Component>> m_Components;
-    List<Transform> m_Test;
 
     friend class Scene;
 };
@@ -186,5 +180,5 @@ REFL_AUTO(
     field(name),
     field(transform),
     field(m_Components),
-    field(m_Test)
+    field(m_Parent, XnorCore::NotSerializable())
 )

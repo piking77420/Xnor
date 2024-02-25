@@ -411,7 +411,7 @@ const bool AddElementToElement(XMLElement* parent, XMLElement* child, std::strin
 {
 	if (!parent)
 	{
-		error = "PArent cannot be null";
+		error = "Parent cannot be null";
 		return false;
 	}
 

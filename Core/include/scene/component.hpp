@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "utils/reflectable.hpp"
+#include "serialization/serializer.hpp"
 
 BEGIN_XNOR_CORE
 

@@ -1,15 +1,17 @@
 #include "file/file_manager.hpp"
 #include "utils/logger.hpp"
-
 #include "editor.hpp"
 
 int main(int, char**)
 {
-	XnorCore::Logger::OpenDefaultFile();
-
-	XnorCore::FileManager::LoadDirectory("assets");
+	using namespace XnorCore;
+	using namespace XnorEditor;
 	
-	XnorEditor::Editor editor;
+	Logger::OpenDefaultFile();
+
+	FileManager::LoadDirectory("assets");
+
+	Editor editor;
 
 	editor.Update();
 

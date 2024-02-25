@@ -2,7 +2,6 @@
 
 #include "definitions.hpp"
 #include "input/input.hpp"
-#include "RapidXML/rapidxml_utils.hpp"
 #include "rendering/camera.hpp"
 #include "scene/entity.hpp"
 

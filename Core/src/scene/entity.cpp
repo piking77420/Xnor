@@ -66,7 +66,7 @@ Entity* Entity::GetChild(const size_t index) const
 
 size_t Entity::GetChildCount() const
 {
-    return m_Children.size();
+    return m_Children.GetSize();
 }
 
 bool Entity::HasChildren() const
@@ -93,7 +93,7 @@ void Entity::SetParent(Entity* const parent)
 {
     // Remove ourselves from our old parent if we had one
     if (HasParent())
-        m_Parent->m_Children.erase(std::ranges::find(m_Parent->m_Children, this));
+        m_Parent->m_Children.Remove(this);
 
     // Set new parent
     m_Parent = parent;
@@ -102,7 +102,7 @@ void Entity::SetParent(Entity* const parent)
     if (parent)
     {
         // Add ourselves to our new parent
-        parent->m_Children.push_back(this);
+        parent->m_Children.Add(this);
     }
 }
 
@@ -115,13 +115,13 @@ void Entity::AddChild(Entity* child)
     }
 
     // Add the enw child
-    m_Children.push_back(child);
+    m_Children.Add(child);
 
     // Check if the child add a parent
     if (child->HasParent())
     {
         // If it had one, remove its old child affiliation
-        m_Parent->m_Children.erase(std::ranges::find(m_Parent->m_Children, this));
+        m_Parent->m_Children.Remove(this);
     }
 
     // Set the new parent of the child to ourselves
@@ -138,7 +138,7 @@ void Entity::RemoveChild(Entity* const child)
     
     // Remove from the list if the parent was indeed us
     if (child->m_Parent == this)
-        m_Children.erase(std::ranges::find(m_Children, child));
+        m_Children.Remove(child);
 
     // Orphan the child
     child->m_Parent = nullptr;
@@ -148,16 +148,3 @@ bool Entity::operator==(const Entity& entity) const
 {
     return m_EntityId == entity.m_EntityId;
 }
-
-void Entity::Serialize() const
-{
-    Serializer::BeginXmlElement("Entity", std::format("{}", m_EntityId));
-    transform.Serialize();
-    Serializer::EndXmlElement();
-}
-
-void Entity::Deserialize()
-{
-    
-}
-

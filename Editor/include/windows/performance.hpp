@@ -2,7 +2,6 @@
 
 #include <vector>
 
-#include "definitions.hpp"
 #include "windows/ui_window.hpp"
 
 BEGIN_XNOR_EDITOR
