@@ -38,6 +38,8 @@ public:
     
     [[nodiscard]]
     XNOR_ENGINE std::string GetName() const;
+
+    XNOR_ENGINE virtual void SetName(std::string newName);
     
     [[nodiscard]]
     XNOR_ENGINE bool GetLoaded() const;

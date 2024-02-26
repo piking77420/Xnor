@@ -1,11 +1,12 @@
 ﻿#pragma once
 
 #include "core.hpp"
-#include "file/file.hpp"
 #include "utils/guid.hpp"
 #include "utils/pointer.hpp"
 
 BEGIN_XNOR_CORE
+
+class File;
 
 class Resource
 {

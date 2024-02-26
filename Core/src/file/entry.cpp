@@ -38,6 +38,13 @@ std::string Entry::GetName() const
     return m_Name;
 }
 
+void Entry::SetName(std::string newName)
+{
+    m_Name = std::move(newName);
+
+    std::filesystem::rename(m_Path, m_Path.parent_path().string() + m_Name);
+}
+
 bool Entry::GetLoaded() const
 {
     return m_Loaded;

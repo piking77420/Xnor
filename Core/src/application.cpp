@@ -22,10 +22,12 @@ Application::Application()
 
 Application::~Application()
 {
-    Window::Shutdown();
-
+	renderer.Shutdown();
     ResourceManager::UnloadAll();
+	RHI::Shutdown();
 
+    Window::Shutdown();
+	
     FileManager::UnloadAll();
 	
     Logger::Stop();

@@ -528,3 +528,4 @@ doc/**
 !*.vcxproj.user
 
 imgui.ini
+assets/scenes/*

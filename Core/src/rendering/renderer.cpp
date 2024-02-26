@@ -15,11 +15,6 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
-	delete m_RenderBuffer;
-	delete m_ColorAttachment;
-	delete m_DepthAttachment;
-	
-	RHI::Shutdown();
 }
 
 void Renderer::Initialize()
@@ -43,6 +38,13 @@ void Renderer::Initialize()
 
 	m_Cube = ResourceManager::Get<Model>("assets/models/cube.obj");
 	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
+}
+
+void Renderer::Shutdown()
+{
+	delete m_RenderBuffer;
+	delete m_ColorAttachment;
+	delete m_DepthAttachment;
 }
 
 void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererContext) const

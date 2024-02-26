@@ -4,8 +4,11 @@
 
 #include "core.hpp"
 #include "file/entry.hpp"
+#include "resource/resource.hpp"
+#include "utils/pointer.hpp"
 
 BEGIN_XNOR_CORE
+
 class File : public Entry
 {
 public:
@@ -37,12 +40,24 @@ public:
     [[nodiscard]]
     XNOR_ENGINE int64_t GetSize() const;
     
+    XNOR_ENGINE void SetName(std::string newName) override;
+    
+    [[nodiscard]]
+    XNOR_ENGINE Pointer<Resource> GetResource() const;
+    
 private:
     std::string m_NameNoExtension;
     std::string m_Extension;
     
     int8_t* m_Data = nullptr;
     int64_t m_Size = 0;
+
+    // Null if the file isn't linked to a specific resource
+    Pointer<Resource> m_Resource;
+
+    // We need this in order to set m_Resource from the ResourceManager
+    // which is the only class that needs to do that
+    friend class ResourceManager;
 };
 
 template<typename T>

@@ -1,5 +1,6 @@
 ﻿#include "resource/resource.hpp"
 
+#include "file/file.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
