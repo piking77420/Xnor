@@ -36,13 +36,29 @@ void ContentBrowser::Display()
     ImGui::Text("%s", titleStr);
     // TODO Add child window around title for visual border
 
+    bool entryHovered = false, entryClicked = false;
     for (const XnorCore::Pointer<XnorCore::Directory>& directory : m_CurrentDirectory->GetChildDirectories())
-        DisplayEntry(static_cast<XnorCore::Pointer<XnorCore::Entry>>(directory), m_DirectoryTexture);
+    {
+        bool hovered = false, clicked = false;
+        DisplayEntry(static_cast<XnorCore::Pointer<XnorCore::Entry>>(directory), m_DirectoryTexture, &hovered, &clicked);
+        entryHovered |= hovered;
+        entryClicked |= clicked;
+    }
 
     for (const XnorCore::Pointer<XnorCore::File>& file : m_CurrentDirectory->GetChildFiles())
-        DisplayEntry(static_cast<XnorCore::Pointer<XnorCore::Entry>>(file), m_FileTexture);
-    
+    {
+        bool hovered = false, clicked = false;
+        DisplayEntry(static_cast<XnorCore::Pointer<XnorCore::Entry>>(file), m_FileTexture, &hovered, &clicked);
+        entryHovered |= hovered;
+        entryClicked |= clicked;
+    }
+
     ImGui::EndChild();
+
+    if (entryHovered == false)
+        m_HoveredEntry = nullptr;
+    if (entryClicked == false && ImGui::IsItemClicked())
+        m_SelectedEntry = nullptr;
 }
 
 const XnorCore::Pointer<XnorCore::Directory>& ContentBrowser::GetRootDirectory() const
@@ -107,7 +123,12 @@ void ContentBrowser::DisplayDirectoryHierarchy(const XnorCore::Pointer<XnorCore:
     }
 }
 
-void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entry, const XnorCore::Pointer<XnorCore::Texture>& texture)
+void ContentBrowser::DisplayEntry(
+    const XnorCore::Pointer<XnorCore::Entry>& entry,
+    const XnorCore::Pointer<XnorCore::Texture>& texture,
+    bool* hovered,
+    bool* clicked
+)
 {
     const float_t oldCursorPos = ImGui::GetCursorPosX();
 
@@ -149,14 +170,18 @@ void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entr
         ImGui::PopStyleColor();
 
     if (ImGui::IsItemHovered())
+    {
         m_HoveredEntry = entry;
+        *hovered = true;
+    }
 
     if (ImGui::IsItemClicked())
     {
         m_SelectedEntry = entry;
+        *clicked = true;
 
         XnorCore::Pointer<XnorCore::Directory>&& directory = XnorCore::Utils::DynamicPointerCast<XnorCore::Directory>(entry);
-        if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && directory)
+        if (directory && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
         {
             m_CurrentDirectory = std::move(directory);
             m_SelectedEntry = nullptr;
@@ -174,7 +199,7 @@ void ContentBrowser::BeginDragDrop(const XnorCore::Pointer<XnorCore::File>& file
     if (ImGui::BeginDragDropSource())
     {
         const XnorCore::Pointer<XnorCore::Resource> resource = XnorCore::ResourceManager::Get(file);
-        ImGui::SetDragDropPayload("CB", &resource, sizeof(resource));
+        ImGui::SetDragDropPayload("ContentBrowserFile", &resource, sizeof(resource));
         ImGui::SetTooltip("%s", file->GetName().c_str());
         ImGui::EndDragDropSource();
     }

@@ -9,6 +9,8 @@ BEGIN_XNOR_EDITOR
 
 class ContentBrowser : public UiWindow
 {
+    static void BeginDragDrop(const XnorCore::Pointer<XnorCore::File>& file);
+    
 public:
     static constexpr XnorCore::Colorf SelectedEntryColor = XnorCore::Colorf(0.5f, 0.5f, 0.5f);
     static constexpr XnorCore::Colorf HoveredEntryColor = SelectedEntryColor * 0.5f;
@@ -37,9 +39,8 @@ private:
 
     void DisplayDirectoryHierarchy(const XnorCore::Pointer<XnorCore::Entry>& entry);
 
-    void DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entry, const XnorCore::Pointer<XnorCore::Texture>& texture);
-
-    void BeginDragDrop(const XnorCore::Pointer<XnorCore::File>& file);
+    void DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entry, const XnorCore::Pointer<XnorCore::Texture>& texture, bool* hovered, bool
+                      * clicked);
 };
 
 END_XNOR_EDITOR
