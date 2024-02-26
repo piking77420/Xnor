@@ -3,6 +3,7 @@
 #include <array>
 
 #include "core.hpp"
+#include "file/file.hpp"
 #include "Maths/math.hpp"
 #include "rendering/rhi_typedef.hpp"
 #include "resource/resource.hpp"

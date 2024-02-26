@@ -11,7 +11,7 @@ class ContentBrowser : public UiWindow
 {
     static void BeginDragDrop(const XnorCore::Pointer<XnorCore::File>& file);
 
-    static void ContextMenu(const XnorCore::Pointer<XnorCore::Entry>& entry, const char_t* strId);
+    static void ContextMenu(XnorCore::Pointer<XnorCore::Entry> entry, const char_t* strId);
     
 public:
     static constexpr XnorCore::Colorf SelectedEntryColor = XnorCore::Colorf(0.5f, 0.5f, 0.5f);

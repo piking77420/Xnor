@@ -1,5 +1,6 @@
 ﻿#include "resource/resource.hpp"
 
+#include "file/file.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -14,8 +15,6 @@ void Resource::Load(const Pointer<File>& file)
 {
     if (!file->GetLoaded())
         Logger::LogWarning("Tried to load resource {} with an unloaded file: {}", m_Name, file->GetPath());
-
-    m_File = file;
     
     Load(file->GetData<uint8_t>(), file->GetSize());
 }
@@ -41,11 +40,6 @@ bool_t Resource::GetLoadedInRhi() const
 std::string Resource::GetName() const
 {
     return m_Name;
-}
-
-Pointer<File> Resource::GetFile() const
-{
-    return m_File;
 }
 
 const Guid& Resource::GetGuid() const

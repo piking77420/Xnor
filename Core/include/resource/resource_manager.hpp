@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 #include "resource.hpp"
+#include "file/file.hpp"
 #include "utils/logger.hpp"
 #include "utils/pointer.hpp"
 
@@ -99,7 +100,7 @@ private:
     static Pointer<T> AddNoCheck(std::string name);
     
     template<ResourceT T>
-    static Pointer<T> LoadNoCheck(const Pointer<File>& file);
+    static Pointer<T> LoadNoCheck(Pointer<File> file);
 
     template<ResourceT T>
     [[nodiscard]]
@@ -280,7 +281,7 @@ Pointer<T> ResourceManager::AddNoCheck(std::string name)
 }
 
 template<ResourceT T>
-Pointer<T> ResourceManager::LoadNoCheck(const Pointer<File>& file)
+Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file)
 {
     Pointer<T> resource(file->GetPathString());
 
@@ -290,6 +291,8 @@ Pointer<T> ResourceManager::LoadNoCheck(const Pointer<File>& file)
     resource.ToWeakReference();
 
     resource->Load(file);
+
+    file->m_Resource = std::move(Pointer<Resource>(resource, false));
 
     resource->CreateInRhi();
 

@@ -2,6 +2,7 @@
 
 #include <fstream>
 
+#include "resource/resource.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -64,4 +65,14 @@ std::string File::GetExtension() const
 int64_t File::GetSize() const
 {
     return m_Size;
+}
+
+void File::SetName(std::string newName)
+{
+    Entry::SetName(std::forward<std::string>(newName));
+}
+
+Pointer<Resource> File::GetResource() const
+{
+    return m_Resource;
 }

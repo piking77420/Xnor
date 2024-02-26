@@ -11,25 +11,25 @@ void ContentBrowser::BeginDragDrop(const XnorCore::Pointer<XnorCore::File>& file
 {
     if (ImGui::BeginDragDropSource())
     {
-        const XnorCore::Pointer<XnorCore::Resource> resource = XnorCore::ResourceManager::Get(file);
+        const XnorCore::Pointer<XnorCore::Resource> resource = file->GetResource();
         ImGui::SetDragDropPayload("ContentBrowserFile", &resource, sizeof(resource));
         ImGui::SetTooltip("%s", file->GetName().c_str());
         ImGui::EndDragDropSource();
     }
 }
 
-void ContentBrowser::ContextMenu(const XnorCore::Pointer<XnorCore::Entry>& entry, const char_t* strId)
+void ContentBrowser::ContextMenu(XnorCore::Pointer<XnorCore::Entry> entry, const char_t* strId)
 {
     if (ImGui::BeginPopupContextItem(strId))
     {
-        //if (ImGui::Selectable("Rename"))
-
         XnorCore::Pointer<XnorCore::File>&& file = XnorCore::Utils::DynamicPointerCast<XnorCore::File>(entry);
         if (file && ImGui::Selectable("Open"))
             XnorCore::Utils::OpenFile(*file);
 
         if (ImGui::Selectable("Open in explorer"))
             XnorCore::Utils::OpenInExplorer(*entry);
+
+        //if (ImGui::Selectable("Rename"))
 
         //if (ImGui::Selectable("Delete"))
 
@@ -77,7 +77,7 @@ void ContentBrowser::Display()
 
     for (const XnorCore::Pointer<XnorCore::File>& file : m_CurrentDirectory->GetChildFiles())
     {
-        XnorCore::Pointer<XnorCore::Resource>&& correspondingResource = XnorCore::ResourceManager::Contains(file) ? XnorCore::ResourceManager::Get(file) : nullptr;
+        XnorCore::Pointer<XnorCore::Resource>&& correspondingResource = XnorCore::ResourceManager::Contains(file) ? file->GetResource() : nullptr;
         XnorCore::Pointer<XnorCore::Texture>&& correspondingTexture = XnorCore::Utils::DynamicPointerCast<XnorCore::Texture>(correspondingResource);
 
         if (!correspondingTexture)

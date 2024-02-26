@@ -1,11 +1,12 @@
 ﻿#pragma once
 
 #include "core.hpp"
-#include "file/file.hpp"
 #include "utils/guid.hpp"
 #include "utils/pointer.hpp"
 
 BEGIN_XNOR_CORE
+
+class File;
 
 class Resource
 {
@@ -40,9 +41,6 @@ public:
     XNOR_ENGINE std::string GetName() const;
 
     [[nodiscard]]
-    XNOR_ENGINE Pointer<File> GetFile() const;
-
-    [[nodiscard]]
     XNOR_ENGINE const Guid& GetGuid() const;
 
 protected:
@@ -50,8 +48,6 @@ protected:
     bool_t m_LoadedInRhi = false;
 
     std::string m_Name;
-    // Null if the resource isn't linked to a specific file
-    Pointer<File> m_File;
     Guid m_Guid;
 };
 
