@@ -68,8 +68,8 @@ void EditorCamera::EditorCameraRotation()
     m_EditorRefCamera->front.z = std::sin(m_Yaw * Calc::Deg2Rad) * std::cos(m_Pitch * Calc::Deg2Rad);
     m_EditorRefCamera->front = m_EditorRefCamera->front.Normalized();
 
-    m_EditorRefCamera->right = Vector3::Cross(Vector3::UnitY(),m_EditorRefCamera->front).Normalized();
-    m_EditorRefCamera->up = Vector3::Cross(m_EditorRefCamera->front,m_EditorRefCamera->right).Normalized();
+    m_EditorRefCamera->right = Vector3::Cross(m_EditorRefCamera->front,Vector3::UnitY()).Normalized();
+    m_EditorRefCamera->up = Vector3::Cross(m_EditorRefCamera->right,m_EditorRefCamera->front).Normalized();
 }
 
 void EditorCamera::EditorCameraMovement()
@@ -80,10 +80,10 @@ void EditorCamera::EditorCameraMovement()
     Vector3 addVector;
 
     if (ImGui::IsKeyDown(ImGuiKey_W))
-        addVector += m_EditorRefCamera->front * cameraSpeed;
+        addVector -= m_EditorRefCamera->front * cameraSpeed;
 
     if (ImGui::IsKeyDown(ImGuiKey_S))
-        addVector -= m_EditorRefCamera->front * cameraSpeed;
+        addVector += m_EditorRefCamera->front * cameraSpeed;
 
     if (ImGui::IsKeyDown(ImGuiKey_A))
         addVector += m_EditorRefCamera->right * cameraSpeed;
@@ -130,7 +130,7 @@ void EditorCamera::ComputeDeltaMouse()
     } 
     
     m_MouseOffSet.x = mousePos.x - m_LastInput.x ;
-    m_MouseOffSet.y = m_LastInput.y - mousePos.y ; 
+    m_MouseOffSet.y =  mousePos.y - m_LastInput.y; 
     m_LastInput.x = mousePos.x;
     m_LastInput.y = mousePos.y;
 }
