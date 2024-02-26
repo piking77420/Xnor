@@ -7,14 +7,14 @@ using namespace XnorEditor;
 
 void EditorCamera::UpdateCamera(XnorCore::Camera* camera)
 {
-    if(!camera)
+    if (!camera)
         return;
     
     if (XnorCore::Input::GetMouseButton(XnorCore::MouseButton::Right, XnorCore::MouseButtonStatus::Down) && m_IsMoving == false)
         m_IsMoving = true;
 
     if (XnorCore::Input::GetMouseButton(XnorCore::MouseButton::Right, XnorCore::MouseButtonStatus::Release))
-        ResetCameraRotation(camera);
+        ResetCameraRotation();
 
     if (m_IsMoving)
         EditorCameraRotation(camera);
@@ -23,7 +23,7 @@ void EditorCamera::UpdateCamera(XnorCore::Camera* camera)
 }
     
 
-void EditorCamera::ResetCameraRotation(XnorCore::Camera* camera)
+void EditorCamera::ResetCameraRotation()
 {
     m_FirstMove = false;
     m_IsMoving = false;
@@ -37,7 +37,7 @@ void EditorCamera::EditorCameraRotation(XnorCore::Camera* camera)
     
     const Vector2 mousePos = Input::GetCursorPos<Vector2>();
     
-    if(!m_FirstMove)
+    if (!m_FirstMove)
     {
         m_LastX = mousePos.x;
         m_LastY = mousePos.y;

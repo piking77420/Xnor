@@ -14,7 +14,7 @@ public:
     void UpdateCamera(XnorCore::Camera* camera);
 
 private:
-    void ResetCameraRotation(XnorCore::Camera* camera);
+    void ResetCameraRotation();
     
     void EditorCameraRotation(XnorCore::Camera* camera);
 
