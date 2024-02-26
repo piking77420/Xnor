@@ -79,16 +79,9 @@ void Window::SetIcon(Texture& icon)
 	glfwSetWindowIcon(m_Window, 1, &image);
 }
 
-void Window::HideCursor(bool value)
+void Window::HideCursor(const bool value)
 {
-	if(value)
-	{
-		glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-	}
-	else
-	{
-		glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	}
+	glfwSetInputMode(m_Window, GLFW_CURSOR, value ? GLFW_CURSOR_HIDDEN : GLFW_CURSOR_NORMAL);
 }
 
 void Window::GlfwResizeFramebuffer(GLFWwindow*, int, int)

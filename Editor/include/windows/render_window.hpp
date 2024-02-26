@@ -10,8 +10,7 @@ BEGIN_XNOR_EDITOR
 class RenderWindow : public UiWindow
 {
 public:
-
-    RenderWindow(Editor* editor);
+    explicit RenderWindow(Editor* editor);
     
     RenderWindow(Editor* editor, const std::string& title);
 
@@ -27,6 +26,7 @@ protected:
     XnorCore::RenderPass m_RenderPass;
     
     XnorCore::Texture* m_ColorTexture = nullptr;
+
 private:
     void Initialize(XnorCore::RendererContext* rendererContext);
 };

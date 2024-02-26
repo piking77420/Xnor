@@ -5,6 +5,7 @@
 #include "rendering/camera.hpp"
 
 BEGIN_XNOR_EDITOR
+
 class Editor;
 
 class EditorCamera
@@ -13,7 +14,8 @@ private:
     static constexpr float_t MaxPitch = 89.0f;
 
 public:
-    void UpdateCamera(const XnorEditor::Editor& editor,XnorCore::Camera& camera);
+    void UpdateCamera(const Editor& editor, XnorCore::Camera& camera);
+    
 private:
     const Editor* m_EditorRef = nullptr;
     XnorCore::Camera* m_EditorRefCamera = nullptr;
@@ -52,6 +54,5 @@ private:
 
     void GoToObject();
 };
-
 
 END_XNOR_EDITOR
