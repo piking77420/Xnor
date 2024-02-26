@@ -47,8 +47,14 @@ void ContentBrowser::Display()
 
     for (const XnorCore::Pointer<XnorCore::File>& file : m_CurrentDirectory->GetChildFiles())
     {
+        XnorCore::Pointer<XnorCore::Resource>&& correspondingResource = XnorCore::ResourceManager::Contains(file) ? XnorCore::ResourceManager::Get(file) : nullptr;
+        XnorCore::Pointer<XnorCore::Texture>&& correspondingTexture = XnorCore::Utils::DynamicPointerCast<XnorCore::Texture>(correspondingResource);
+
+        if (!correspondingTexture)
+            correspondingTexture = m_FileTexture;
+        
         bool hovered = false, clicked = false;
-        DisplayEntry(static_cast<XnorCore::Pointer<XnorCore::Entry>>(file), m_FileTexture, &hovered, &clicked);
+        DisplayEntry(static_cast<XnorCore::Pointer<XnorCore::Entry>>(file), correspondingTexture, &hovered, &clicked);
         entryHovered |= hovered;
         entryClicked |= clicked;
     }
