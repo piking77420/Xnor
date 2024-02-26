@@ -25,7 +25,7 @@ using namespace XnorEditor;
 
 Editor::Editor()
 {
-	const XnorCore::Pointer<XnorCore::File> logoFile = XnorCore::FileManager::Get("assets/editor/logo.png");
+	const XnorCore::Pointer<XnorCore::File> logoFile = XnorCore::FileManager::Get("assets_internal/editor/logo.png");
 	XnorCore::Pointer<XnorCore::Texture> logo = XnorCore::ResourceManager::Get<XnorCore::Texture>(logoFile);
 	logo->loadData.desiredChannels = 4;
 	logo->DestroyInRhi();

@@ -21,6 +21,8 @@ public:
     
     XNOR_ENGINE void Initialize();
     
+    XNOR_ENGINE void Shutdown();
+    
     XNOR_ENGINE void RenderScene(const Scene& scene, const RendererContext& rendererContext) const;
 
     XNOR_ENGINE void CompileShader(); 

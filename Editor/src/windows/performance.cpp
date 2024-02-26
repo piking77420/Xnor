@@ -4,6 +4,7 @@
 
 #undef APIENTRY
 
+// ReSharper disable once CppInconsistentNaming
 #define XMLDocument XMLDocument_dont_care
 #include <windows.h>
 #undef XMLDocument

@@ -9,6 +9,7 @@ int main(int, char**)
 	
 	Logger::OpenDefaultFile();
 
+	FileManager::LoadDirectory("assets_internal");
 	FileManager::LoadDirectory("assets");
 
 	Editor editor;

@@ -3,9 +3,39 @@
 #include "ImGui/imgui.h"
 #include "resource/resource_manager.hpp"
 
-#define ASSETS_PATH "assets/editor/content_browser/"
+#define ASSETS_PATH "assets_internal/editor/content_browser/"
 
 using namespace XnorEditor;
+
+void ContentBrowser::BeginDragDrop(const XnorCore::Pointer<XnorCore::File>& file)
+{
+    if (ImGui::BeginDragDropSource())
+    {
+        const XnorCore::Pointer<XnorCore::Resource> resource = XnorCore::ResourceManager::Get(file);
+        ImGui::SetDragDropPayload("ContentBrowserFile", &resource, sizeof(resource));
+        ImGui::SetTooltip("%s", file->GetName().c_str());
+        ImGui::EndDragDropSource();
+    }
+}
+
+void ContentBrowser::ContextMenu(const XnorCore::Pointer<XnorCore::Entry>& entry, const char_t* strId)
+{
+    if (ImGui::BeginPopupContextItem(strId))
+    {
+        //if (ImGui::Selectable("Rename"))
+
+        XnorCore::Pointer<XnorCore::File>&& file = XnorCore::Utils::DynamicPointerCast<XnorCore::File>(entry);
+        if (file && ImGui::Selectable("Open"))
+            XnorCore::Utils::OpenFile(*file);
+
+        if (ImGui::Selectable("Open in explorer"))
+            XnorCore::Utils::OpenInExplorer(*entry);
+
+        //if (ImGui::Selectable("Delete"))
+
+        ImGui::EndPopup();
+    }
+}
 
 ContentBrowser::ContentBrowser(Editor* editor, XnorCore::Pointer<XnorCore::Directory>&& rootDirectory)
     : UiWindow(editor, "Content Browser")
@@ -18,15 +48,15 @@ ContentBrowser::ContentBrowser(Editor* editor, XnorCore::Pointer<XnorCore::Direc
 
 void ContentBrowser::Display()
 {
-    ImVec2 available = ImGui::GetContentRegionAvail();
+    const ImVec2 available = ImGui::GetContentRegionAvail();
 
-    ImGui::BeginChild("##left", ImVec2(available.x * 0.5f, 0.f), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeX);
+    ImGui::BeginChild("ContentBrowserLeftPanel", ImVec2(available.x * 0.5f, 0.f), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeX);
     DisplayDirectoryHierarchy(static_cast<XnorCore::Pointer<XnorCore::Entry>>(m_RootDirectory));
     ImGui::EndChild();
 
     ImGui::SameLine();
 
-    ImGui::BeginChild("##right");
+    ImGui::BeginChild("ContentBrowserRightPanel");
     
     const std::string title = m_CurrentDirectory->GetPathString();
     const char_t* const titleStr = title.c_str();
@@ -36,10 +66,10 @@ void ContentBrowser::Display()
     ImGui::Text("%s", titleStr);
     // TODO Add child window around title for visual border
 
-    bool entryHovered = false, entryClicked = false;
+    bool_t entryHovered = false, entryClicked = false;
     for (const XnorCore::Pointer<XnorCore::Directory>& directory : m_CurrentDirectory->GetChildDirectories())
     {
-        bool hovered = false, clicked = false;
+        bool_t hovered = false, clicked = false;
         DisplayEntry(static_cast<XnorCore::Pointer<XnorCore::Entry>>(directory), m_DirectoryTexture, &hovered, &clicked);
         entryHovered |= hovered;
         entryClicked |= clicked;
@@ -53,7 +83,7 @@ void ContentBrowser::Display()
         if (!correspondingTexture)
             correspondingTexture = m_FileTexture;
         
-        bool hovered = false, clicked = false;
+        bool_t hovered = false, clicked = false;
         DisplayEntry(static_cast<XnorCore::Pointer<XnorCore::Entry>>(file), correspondingTexture, &hovered, &clicked);
         entryHovered |= hovered;
         entryClicked |= clicked;
@@ -87,7 +117,7 @@ void ContentBrowser::DisplayDirectoryHierarchy(const XnorCore::Pointer<XnorCore:
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_FramePadding;
 
     const XnorCore::Pointer<XnorCore::Directory> directory = XnorCore::Utils::DynamicPointerCast<XnorCore::Directory>(entry);
-    const bool isDirectory = directory;
+    const bool_t isDirectory = directory;
     
     if (!isDirectory)
         flags |= ImGuiTreeNodeFlags_Leaf;
@@ -98,18 +128,8 @@ void ContentBrowser::DisplayDirectoryHierarchy(const XnorCore::Pointer<XnorCore:
     {
         if (isDirectory && ImGui::IsItemHovered() && ImGui::IsMouseDown(ImGuiMouseButton_Left))
             m_CurrentDirectory = directory;
-        
-        if (ImGui::BeginPopupContextItem())
-        {
-            //if (ImGui::Selectable("Rename"))
 
-            if (ImGui::Selectable("Open in explorer"))
-                XnorCore::Utils::OpenInExplorer(*entry);
-
-            //if (ImGui::Selectable("Delete"))
-
-            ImGui::EndPopup();
-        }
+        ContextMenu(entry, nullptr);
         
         if (isDirectory)
         {
@@ -132,13 +152,13 @@ void ContentBrowser::DisplayDirectoryHierarchy(const XnorCore::Pointer<XnorCore:
 void ContentBrowser::DisplayEntry(
     const XnorCore::Pointer<XnorCore::Entry>& entry,
     const XnorCore::Pointer<XnorCore::Texture>& texture,
-    bool* hovered,
-    bool* clicked
+    bool_t* hovered,
+    bool_t* clicked
 )
 {
     const float_t oldCursorPos = ImGui::GetCursorPosX();
 
-    bool pushedStyleVar = false;
+    bool_t pushedStyleVar = false;
     if (m_SelectedEntry == entry)
     {
         ImGui::PushStyleColor(ImGuiCol_ChildBg, XnorCore::Utils::ToImCol(SelectedEntryColor));
@@ -172,6 +192,8 @@ void ContentBrowser::DisplayEntry(
     
     ImGui::EndChild();
 
+    ContextMenu(entry, entry->GetPathString().c_str());
+
     if (pushedStyleVar)
         ImGui::PopStyleColor();
 
@@ -181,16 +203,26 @@ void ContentBrowser::DisplayEntry(
         *hovered = true;
     }
 
-    if (ImGui::IsItemClicked())
+    if (ImGui::IsItemClicked(ImGuiMouseButton_Left) || ImGui::IsItemClicked(ImGuiMouseButton_Right))
     {
         m_SelectedEntry = entry;
         *clicked = true;
 
-        XnorCore::Pointer<XnorCore::Directory>&& directory = XnorCore::Utils::DynamicPointerCast<XnorCore::Directory>(entry);
-        if (directory && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+        if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
         {
-            m_CurrentDirectory = std::move(directory);
-            m_SelectedEntry = nullptr;
+            if (file)
+            {
+                XnorCore::Utils::OpenFile(*file);
+            }
+            else
+            {
+                XnorCore::Pointer<XnorCore::Directory>&& directory = XnorCore::Utils::DynamicPointerCast<XnorCore::Directory>(entry);
+                if (directory)
+                {
+                    m_CurrentDirectory = std::move(directory);
+                    m_SelectedEntry = nullptr;
+                }
+            }
         }
     }
 
@@ -198,15 +230,4 @@ void ContentBrowser::DisplayEntry(
     
     if (ImGui::GetCursorPosX() - oldCursorPos > ImGui::GetContentRegionAvail().x)
         ImGui::Dummy(ImVec2());
-}
-
-void ContentBrowser::BeginDragDrop(const XnorCore::Pointer<XnorCore::File>& file)
-{
-    if (ImGui::BeginDragDropSource())
-    {
-        const XnorCore::Pointer<XnorCore::Resource> resource = XnorCore::ResourceManager::Get(file);
-        ImGui::SetDragDropPayload("ContentBrowserFile", &resource, sizeof(resource));
-        ImGui::SetTooltip("%s", file->GetName().c_str());
-        ImGui::EndDragDropSource();
-    }
 }
