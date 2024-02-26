@@ -81,10 +81,17 @@ void Window::SetIcon(Texture& icon)
 
 void Window::HideCursor(const bool value)
 {
-	glfwSetInputMode(m_Window, GLFW_CURSOR, value ? GLFW_CURSOR_HIDDEN : GLFW_CURSOR_NORMAL);
+	glfwSetInputMode(m_Window, GLFW_CURSOR, value ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
 }
 
 void Window::GlfwResizeFramebuffer(GLFWwindow*, int, int)
 {
+	glfwGetFramebufferSize(m_Window, &m_Size.x, &m_Size.y);
+	while (m_Size.x == 0 || m_Size.y == 0)
+	{
+		glfwGetFramebufferSize(m_Window, &m_Size.x, &m_Size.y);
+
+		glfwWaitEvents();
+	}
 	resizeFrameBuffer = true;
 }

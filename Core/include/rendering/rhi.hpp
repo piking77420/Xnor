@@ -38,13 +38,13 @@ public:
 	
 	// TEXTURE
 	XNOR_ENGINE  static void CreateTexture(uint32_t* textureId, const TextureCreateInfo& textureCreateInfo);
-	XNOR_ENGINE  static void DestroyTexture(const uint32_t* textureId);
+	XNOR_ENGINE  static void DestroyTexture(uint32_t* textureId);
 
 	XNOR_ENGINE  static void BindTexture(uint32_t unit,uint32_t textureId);
 
 	// FrameBuffer
 	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferId,const RenderPass& renderPass,const std::vector<const Texture*>& attechements);
-	XNOR_ENGINE static void DestroyFrameBuffer(const uint32_t* frameBufferId);
+	XNOR_ENGINE static void DestroyFrameBuffer(uint32_t* frameBufferId);
 	
 	XNOR_ENGINE static void BindFrameBuffer(uint32_t frameBufferId);
 	XNOR_ENGINE static void UnbindFrameBuffer();

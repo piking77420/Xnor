@@ -24,6 +24,8 @@ public:
 
 	void GetVp(Vector2i screenSize,Matrix* matrix) const;
 
+	void LookAt(Vector3 at);
+
 	[[nodiscard]]
 	Vector2i ProjectOn(const Vector3& vertex, Vector2i screenSize, const Matrix& model) const;
 	

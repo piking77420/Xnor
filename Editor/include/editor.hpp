@@ -15,6 +15,8 @@ class UserInput;
 class Editor : public XnorCore::Application
 {
 public:
+	EditorData data;
+
 	explicit Editor();
 
 	~Editor() override;
@@ -23,7 +25,7 @@ public:
 	
 	void Update() override;
 
-	EditorData data;
+	void OnWindowRezize() override;
 	
 private:
 	XnorCore::RendererContext m_GameRenderContext;
@@ -36,7 +38,7 @@ private:
 	void BeginFrame();
 
 	void EndFrame();
-
+	
 	void WorldBehaviours();
 
 	void CreateDefaultWindows();

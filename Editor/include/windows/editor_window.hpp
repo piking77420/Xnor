@@ -7,6 +7,7 @@ BEGIN_XNOR_EDITOR
 
 class EditorWindow : public RenderWindow
 {
+
 public:
     EditorWindow(Editor* editor);
 
@@ -15,6 +16,10 @@ public:
     DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(EditorWindow)
 
     void Display() override;
+    
+protected:
+    void Initialize(Vector2i size) override;
+    
 private:
     EditorCamera m_EditorCamera;
 };

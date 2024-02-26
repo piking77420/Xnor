@@ -15,7 +15,6 @@ private:
 
 public:
     void UpdateCamera(const Editor& editor, XnorCore::Camera& camera);
-    
 private:
     const Editor* m_EditorRef = nullptr;
     XnorCore::Camera* m_EditorRefCamera = nullptr;
@@ -53,6 +52,8 @@ private:
     void OnPressGoToObject();
 
     void GoToObject();
+
+    void AddMovement(const Vector3& movement);
 };
 
 END_XNOR_EDITOR

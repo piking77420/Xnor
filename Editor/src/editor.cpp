@@ -300,6 +300,7 @@ void Editor::Update()
 		Window::PollEvents();
 		Input::HandleEvent();
 		BeginFrame();
+		OnWindowRezize();
 
 		ImGui::Begin("Renderer Settings");
 		if (ImGui::Button("Recompile Shader"))
@@ -316,6 +317,21 @@ void Editor::Update()
 	}
 	
 	delete World::world;
+}
+
+void Editor::OnWindowRezize()
+{
+	if(!XnorCore::Window::resizeFrameBuffer)
+		return;
+
+	const Vector2i newWindowSize = XnorCore::Window::GetSize(); 
+	
+	for (UiWindow* w : m_UiWindows)
+	{
+		w->OnWindowResize(newWindowSize);
+	}
+	
+	XnorCore::Window::resizeFrameBuffer = false;
 }
 
 void Editor::EndFrame()

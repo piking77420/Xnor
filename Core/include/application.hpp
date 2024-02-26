@@ -17,6 +17,8 @@ public:
     DEFAULT_COPY_MOVE_OPERATIONS(Application)
 
     virtual void Update() = 0;
+
+    virtual void OnWindowRezize() = 0;
     
 protected:
     XNOR_ENGINE static inline Application* m_ApplicationInstance = nullptr;

@@ -227,9 +227,11 @@ void RHI::CreateTexture(uint32_t* const textureId, const TextureCreateInfo& text
 	glGenerateTextureMipmap(*textureId);
 }
 
-void RHI::DestroyTexture(const uint32_t* textureId)
+void RHI::DestroyTexture(uint32_t* textureId)
 {
 	glDeleteTextures(1, textureId);
+	*textureId = 0;
+	
 }
 
 void RHI::BindTexture(const uint32_t unit, const uint32_t textureId)
@@ -283,10 +285,13 @@ void RHI::CreateFrameBuffer(uint32_t* frameBufferId,const RenderPass& renderPass
 	
 }
 
-void RHI::DestroyFrameBuffer(const uint32_t* const frameBufferId)
+void RHI::DestroyFrameBuffer(uint32_t* const frameBufferId)
 {
 	if (glIsFramebuffer(*frameBufferId))
+	{
 		glDeleteFramebuffers(1, frameBufferId);
+		*frameBufferId = 0;
+	}
 }
 
 void RHI::BindFrameBuffer(const uint32_t frameBufferId)

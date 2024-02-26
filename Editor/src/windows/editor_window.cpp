@@ -20,3 +20,9 @@ void EditorWindow::Display()
         m_EditorCamera.UpdateCamera(*m_Editor, m_Editor->data.editorCam);
     }
 }
+
+void EditorWindow::Initialize(Vector2i size)
+{
+    RenderWindow::Initialize(size);
+    m_RendererContext.camera = &m_Editor->data.editorCam;
+}
