@@ -160,7 +160,11 @@ private:
      */
     template <typename T>
     static size_t GetMemberOffset(T member);
-    
+
+    /// @brief Parses the attributes of a member
+    /// @tparam T refl member type
+    /// @param member refl member
+    /// @param info Field info
     template <typename T>
     static void ParseMemberAttributes(T member, FieldInfo& info);
 
@@ -229,7 +233,6 @@ size_t TypeInfo::GetMemberOffset(const T member)
 template <typename T>
 void TypeInfo::ParseMemberAttributes(T member, FieldInfo& info)
 {
-    Logger::LogInfo("{}", typeid(decltype(member.attributes)).name());
     GetType(info.attributes, member.attributes);
 }
 
