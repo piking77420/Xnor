@@ -4,6 +4,8 @@
 #include "Maths/matrix.hpp"
 
 BEGIN_XNOR_CORE
+class Texture;
+class RenderPass;
 
 static constexpr uint32_t MaxSpotLights = 10;
 static constexpr uint32_t MaxPointLights = 10;
@@ -123,15 +125,37 @@ enum class TextureFormat
 	Rgba,
 };
 
-enum class AttachementsType
+enum class Attachment
 {
-	Color,
-	Position,
-	Normal,
-	Texturecoord,
+	Color_Attachment01,
+	Color_Attachment02,
+	Color_Attachment03,
+	Color_Attachment04,
 	Depth,
 	Stencil,
-	DepthAndStencil
+	DepthAndStencil,
+	
+};
+
+struct RenderTargetInfo
+{
+	Attachment attachment;
+	bool isClearing;
+};
+
+struct ClearValue
+{
+	Vector3 color;
+	Vector2 depth;
+};
+
+struct RenderPassBeginInfo
+{
+	RenderPass* renderPass = nullptr;
+	Vector2 renderAreaOffset;
+	Vector2 renderAreaExtent;
+	size_t clearValueSize;
+	ClearValue* clearValues = nullptr;
 };
 
 struct TextureCreateInfo

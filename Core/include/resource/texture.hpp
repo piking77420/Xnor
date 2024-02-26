@@ -45,7 +45,7 @@ public:
 
     XNOR_ENGINE explicit Texture(const TextureCreateInfo& createInfo);
 
-    XNOR_ENGINE Texture(AttachementsType attachements, Vector2i size);
+    XNOR_ENGINE Texture(const TextureInternalFormat textureFormat, Vector2i size);
     
     XNOR_ENGINE ~Texture() override;
     

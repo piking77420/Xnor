@@ -10,18 +10,15 @@ BEGIN_XNOR_CORE
 class RenderPass
 {
 public:
+    std::vector<RenderTargetInfo> renderPassAttachments;
+
     XNOR_ENGINE RenderPass() = default;
     
     XNOR_ENGINE ~RenderPass() = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(RenderPass)
     
-    XNOR_ENGINE explicit RenderPass(const std::vector<AttachementsType>& renderPass);
-
-    XNOR_ENGINE uint32_t GetId() const;
+    XNOR_ENGINE explicit RenderPass(const std::vector<RenderTargetInfo>& attachments);
     
-private:
-    uint32_t m_Id = 0;
-    std::vector<AttachementsType> m_RenderPass;
 };
 END_XNOR_CORE

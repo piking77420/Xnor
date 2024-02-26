@@ -43,15 +43,12 @@ public:
 	XNOR_ENGINE  static void BindTexture(uint32_t unit,uint32_t textureId);
 
 	// FrameBuffer
-	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferId,uint32_t renderPassId,const std::vector<Texture*>& outTargets);
+	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferId,const RenderPass& renderPass,const std::vector<const Texture*>& attechements);
 	XNOR_ENGINE static void DestroyFrameBuffer(const uint32_t* frameBufferId);
 	
 	XNOR_ENGINE static void BindFrameBuffer(uint32_t frameBufferId);
 	XNOR_ENGINE static void UnbindFrameBuffer();
-
-	// RenderPass 
-	XNOR_ENGINE static void CreateRenderPass(uint32_t* renderPassId,const std::vector<AttachementsType>& attachementsType);
-
+	
 	XNOR_ENGINE static void CreateColorAttachement(Texture* texture, vec2i size);
 
 	XNOR_ENGINE static void SwapBuffers();
@@ -73,16 +70,11 @@ private:
 		std::map<std::string, uint32_t> uniformMap;
 	};
 
-	struct RenderPassIternal
-	{
-		std::vector<AttachementsType> attachementsType;
-	};
 
 	static constexpr int32_t NullUniformLocation = -1;
 	
 	XNOR_ENGINE static inline std::unordered_map<uint32_t, ShaderInternal> m_ShaderMap;
 	XNOR_ENGINE static inline std::unordered_map<uint32_t, ModelInternal> m_ModelMap;
-	XNOR_ENGINE static inline std::unordered_map<uint32_t, RenderPassIternal> m_RenderPassMap;
 
 	static uint32_t GetOpenglShaderType(ShaderType shaderType);
 	

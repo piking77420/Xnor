@@ -4,6 +4,7 @@
 
 #include "window.hpp"
 #include "GLFW/glfw3.h"
+#include "rendering/render_pass.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -236,43 +237,50 @@ void RHI::BindTexture(const uint32_t unit, const uint32_t textureId)
 	glBindTextureUnit(unit, textureId);
 }
 
-void RHI::CreateFrameBuffer(uint32_t* const frameBufferId, const uint32_t renderPassId,const std::vector<Texture*>& targets)
+void RHI::CreateFrameBuffer(uint32_t* frameBufferId,const RenderPass& renderPass,const std::vector<const Texture*>& attechements)
 {
-	if (!m_RenderPassMap.contains(renderPassId))
-		Logger::LogError("There is no renderPass with this id");
-	
 	glCreateFramebuffers(1, frameBufferId);
-	const RenderPassIternal& renderPassIternal = m_RenderPassMap.at(renderPassId);
 
-	std::vector<GLenum> openglAttachments(targets.size());
-
-	for (size_t i = 0; i < renderPassIternal.attachementsType.size(); i++)
+	const std::vector<RenderTargetInfo>& renderTargetInfos = renderPass.renderPassAttachments;
+	std::vector<GLenum> openglAttachments(renderTargetInfos.size());
+	
+	for (uint32_t i = 0; i < renderTargetInfos.size();i++ )
 	{
-		switch (renderPassIternal.attachementsType[i])
+		switch (renderTargetInfos[i].attachment)
 		{
-			case AttachementsType::Color:
-			case AttachementsType::Position:
-			case AttachementsType::Normal:
-			case AttachementsType::Texturecoord:
-				openglAttachments[i] = static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + i);
+			case Attachment::Color_Attachment01:
+				openglAttachments[i] =  static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + i);
 				break;
 			
-			case AttachementsType::Depth:
+			case Attachment::Color_Attachment02:
+				openglAttachments[i] =  static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + i);
+				break;
+			
+			case Attachment::Color_Attachment03:
+				openglAttachments[i] =  static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + i);
+				break;
+			
+			case Attachment::Color_Attachment04:
+				openglAttachments[i] =  static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + i);
+				break;
+			
+			case Attachment::Depth:
 				openglAttachments[i] = GL_DEPTH_ATTACHMENT;
 				break;
 			
-			case AttachementsType::Stencil:
+			case Attachment::Stencil:
 				openglAttachments[i] = GL_STENCIL_ATTACHMENT;
 				break;
 			
-			case AttachementsType::DepthAndStencil:
+			case Attachment::DepthAndStencil:
 				openglAttachments[i] = GL_DEPTH_STENCIL_ATTACHMENT;
 				break;
+			
 		}
-		
-		glNamedFramebufferTexture(*frameBufferId, openglAttachments[i], targets.at(i)->GetId(), 0);
+		glNamedFramebufferTexture(*frameBufferId, openglAttachments[i], attechements.at(i)->GetId(), 0);
 	}
 	glNamedFramebufferDrawBuffers(*frameBufferId, static_cast<int32_t>(openglAttachments.size()), openglAttachments.data());
+	
 }
 
 void RHI::DestroyFrameBuffer(const uint32_t* const frameBufferId)
@@ -289,13 +297,6 @@ void RHI::BindFrameBuffer(const uint32_t frameBufferId)
 void RHI::UnbindFrameBuffer()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-
-void RHI::CreateRenderPass(uint32_t* const renderPassId, const std::vector<AttachementsType>& attachementsType)
-{
-	*renderPassId = static_cast<uint32_t>(m_RenderPassMap.size());
-	m_RenderPassMap.emplace(*renderPassId, attachementsType);
 }
 
 void RHI::SwapBuffers()

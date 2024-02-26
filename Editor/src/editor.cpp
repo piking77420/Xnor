@@ -19,6 +19,7 @@
 #include "windows/render_window.hpp"
 #include "windows/scene_graph.hpp"
 #include "world.hpp"
+#include "rendering/light/directional_light.hpp"
 
 using namespace XnorEditor;
 
@@ -225,9 +226,9 @@ void Editor::CreateTestScene()
 	meshRenderer->texture->Load(vikingRoomTexture);
 	meshRenderer->texture->CreateInRhi();
 
-	Entity& ent2 = *World::world->Scene.CreateEntity("PointLight");
-	PointLight* pointLight = ent2.AddComponent<PointLight>();
-	pointLight->color = { 1.f, 0.f, 1.f };
+	Entity& ent2 = *World::world->Scene.CreateEntity("DirectionalLight");
+	DirectionalLight* pointLight = ent2.AddComponent<DirectionalLight>();
+	pointLight->color = { 1.f, 1.f, 1.f };
 	ent2.AddComponent<TestComponent>();
 	ent2.transform.position = { 0.f, 1.f, 0.f };
 	
@@ -304,6 +305,7 @@ void Editor::Update()
 		if (ImGui::Button("Recompile Shader"))
 			renderer.CompileShader();
 		ImGui::End();
+
 		
 		WorldBehaviours();
 		UpdateWindow();
@@ -332,7 +334,9 @@ void Editor::WorldBehaviours()
 	XnorCore::World* const w = XnorCore::World::world;
 	if (w == nullptr)
 		return;
-		
+
+	w->Scene.UpdateTransforms();
+	
 	if (w->IsPlaying)
 	{
 		if (!w->HasStarted)

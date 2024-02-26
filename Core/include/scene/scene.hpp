@@ -28,6 +28,9 @@ public:
 
     XNOR_ENGINE void Update();
 
+    // TO DO be the scene Graph
+    XNOR_ENGINE void UpdateTransforms();
+    
     [[nodiscard]]
     XNOR_ENGINE Entity* GetEntityById(const Guid& xnorGuid);
 

@@ -69,7 +69,7 @@ public:
     XNOR_ENGINE void Begin();
 
     XNOR_ENGINE void Update();
-
+    
     XNOR_ENGINE bool operator==(const Entity& entity) const;
 
 private:

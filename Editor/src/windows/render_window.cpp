@@ -45,18 +45,18 @@ void RenderWindow::Initialize(XnorCore::RendererContext* rendererContext)
         throw std::runtime_error("renderPass Context is Null");
     }
 
-    const std::vector attachementsType =
+    const std::vector<RenderTargetInfo> attachementsType =
     {
-        AttachementsType::Color,
+        {Attachment::Color_Attachment01,true},
     };
     
     // Init Rendering
     m_FrameBuffer = FrameBuffer(Window::GetSize());
-    m_ColorTexture = new Texture(AttachementsType::Color, m_FrameBuffer.GetSize());
-    
+    m_ColorTexture = new Texture(TextureInternalFormat::Rgba16F, m_FrameBuffer.GetSize());
+
     // Set Up renderPass
     const RenderPass renderPass(attachementsType);
-    const std::vector targets = { m_ColorTexture };
+    const std::vector<const Texture*> targets = { m_ColorTexture };
     m_FrameBuffer.Create(renderPass,targets);
 
     // Init rendererContext

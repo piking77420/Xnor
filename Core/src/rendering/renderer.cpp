@@ -117,18 +117,20 @@ void Renderer::PrepareRendering(vec2i windowSize)
 	
 	m_RenderBuffer = new FrameBuffer(windowSize);
 	
-	const std::vector attachementsType =
+	
+	m_ColorAttachment = new Texture(TextureInternalFormat::Rgba16F, m_RenderBuffer->GetSize());
+	m_DepthAttachment = new Texture(TextureInternalFormat::DepthStencil,m_RenderBuffer->GetSize());
+
+	const std::vector<RenderTargetInfo> attachementsType =
 	{
-		AttachementsType::Color,
-		AttachementsType::DepthAndStencil
+		{Attachment::Color_Attachment01,true},
+		{Attachment::DepthAndStencil,true},
 	};
 	
-	m_ColorAttachment = new Texture(AttachementsType::Color, m_RenderBuffer->GetSize());
-	m_DepthAttachment = new Texture(AttachementsType::DepthAndStencil,m_RenderBuffer->GetSize());
-    
+	
 	// Set Up renderPass
 	const RenderPass renderPass(attachementsType);
-	const std::vector targets = { m_ColorAttachment, m_DepthAttachment };
+	const std::vector<const Texture*> targets = { m_ColorAttachment, m_DepthAttachment };
 	m_RenderBuffer->Create(renderPass,targets);
 	
 }
@@ -178,6 +180,8 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 	for (size_t i = 0 ; i < nbrOfspothLight ; i++)
 	{
 		const SpotLight* spotLight = spotLightsComponents[i];
+		const Matrix matrix = Matrix::Trs(Vector3(0.f),spotLight->entity->transform.quaternion,Vector3(1.f));
+		Vector4 direction = matrix * (-Vector4::UnitY());
 		
 		gpuLightData.spotLightData[i] =
 		{
@@ -185,7 +189,7 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 			.intensity = spotLight->intensity,
 			.position = spotLight->entity->transform.position,
 			.cutOff = spotLight->cutOff,
-			.direction = Vector3::Zero(),
+			.direction = {direction.x,direction.y,direction.z},
 			.outerCutOff = spotLight->outerCutOff,
 		};
 	}
@@ -193,11 +197,14 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 
 	if (!directionalComponent.empty())
 	{
+		const Matrix matrix = Matrix::Trs(Vector3(0.f),directionalComponent[0]->entity->transform.quaternion,Vector3(1.f));
+		Vector4 direction = matrix * (-Vector4::UnitY()); 
+		
 		gpuLightData.directionalData =
 		{
 			.color = directionalComponent[0]->color,
 			.intensity = directionalComponent[0]->intensity,
-			.direction = directionalComponent[0]->direction,
+			.direction = {direction.x,direction.y,direction.z},
 		};
 	}
 
@@ -213,10 +220,8 @@ void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext&) const
 	for (const MeshRenderer* meshRenderer : meshrenderers)
 	{
 		Transform& transform = meshRenderer->entity->transform;
-		
 		ModelUniformData modelData;
 		
-		transform.quaternion = Quaternion::FromEuler(transform.rotation).Normalized();
 		modelData.model = Matrix::Trs(transform.position, transform.quaternion, transform.scale);
 		m_Rhi.UpdateModelUniform(modelData);
 

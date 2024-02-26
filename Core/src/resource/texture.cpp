@@ -16,39 +16,19 @@ Texture::Texture(const TextureCreateInfo& createInfo)
     m_Loaded = true;
 }
 
-Texture::Texture(const AttachementsType attachements, const Vector2i size)
+Texture::Texture(const TextureInternalFormat textureFormat, const Vector2i size) : m_TextureInternalFormat(textureFormat) , m_Size(size) , m_TextureFiltering(TextureFiltering::Linear)
+,m_TextureWrapping(TextureWrapping::None), m_Data(nullptr)
 {
     TextureCreateInfo createInfo
     {
         nullptr,
         static_cast<uint32_t>(size.x),
         static_cast<uint32_t>(size.y),
-        TextureFiltering::Linear,
-        TextureWrapping::None,
+        m_TextureFiltering,
+        m_TextureWrapping,
         TextureFormat::Rgb,
-        TextureInternalFormat::Rgba16F
+        m_TextureInternalFormat
     };
-
-    switch (attachements)
-    {
-        case AttachementsType::Color:
-        case AttachementsType::Position:
-        case AttachementsType::Normal:
-            createInfo.textureInternalFormat = TextureInternalFormat::Rgba16F;
-            break;
-        
-        case AttachementsType::Texturecoord:
-            createInfo.textureInternalFormat = TextureInternalFormat::Rg16;
-            break;
-        
-        case AttachementsType::Depth:
-        case AttachementsType::Stencil:
-            break;
-        
-        case AttachementsType::DepthAndStencil:
-            createInfo.textureInternalFormat = TextureInternalFormat::DepthStencil;
-            break;
-    }
     
     RHI::CreateTexture(&m_Id,createInfo);
     m_Loaded = true;

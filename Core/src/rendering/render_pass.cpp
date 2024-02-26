@@ -4,12 +4,7 @@
 using namespace XnorCore;
 
 
-RenderPass::RenderPass(const std::vector<AttachementsType>& renderPass) : m_RenderPass(renderPass)
+RenderPass::RenderPass(const std::vector<RenderTargetInfo>& attachments) : renderPassAttachments(attachments)
 {
-     RHI::CreateRenderPass(&m_Id,m_RenderPass);
-}
-
-uint32_t RenderPass::GetId() const
-{
-     return m_Id;
+     
 }

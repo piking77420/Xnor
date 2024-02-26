@@ -19,6 +19,7 @@ public:
 	Vector3 rotation; 
 	Vector3 scale = Vector3(1.f);
 	Quaternion quaternion = Quaternion::Identity();
+	
 };
 
 END_XNOR_CORE

@@ -10,9 +10,9 @@ FrameBuffer::FrameBuffer(const vec2i size) : m_FrameBufferSize(size)
 	
 }
 
-void FrameBuffer::Create(const RenderPass& renderPass ,const  std::vector<Texture*>& textures)
+void FrameBuffer::Create(const RenderPass& renderPass,const std::vector<const Texture*>& textures)
 {
-	RHI::CreateFrameBuffer(&m_Id,renderPass.GetId(),textures);
+	RHI::CreateFrameBuffer(&m_Id,renderPass,textures);
 }
 
 void FrameBuffer::Destroy()

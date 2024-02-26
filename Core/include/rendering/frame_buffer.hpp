@@ -18,7 +18,7 @@ public:
 	
 	DEFAULT_COPY_MOVE_OPERATIONS(FrameBuffer)
 	
-	XNOR_ENGINE void Create(const RenderPass& renderPass ,const std::vector<Texture*>& textures);
+	XNOR_ENGINE void Create(const RenderPass& renderPass,const std::vector<const Texture*>& attachements);
 
 	XNOR_ENGINE void Destroy();
 	
