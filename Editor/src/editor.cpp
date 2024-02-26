@@ -20,6 +20,7 @@
 #include "windows/scene_graph.hpp"
 #include "world.hpp"
 #include "rendering/light/directional_light.hpp"
+#include "rendering/light/spot_light.hpp"
 
 using namespace XnorEditor;
 
@@ -227,7 +228,7 @@ void Editor::CreateTestScene()
 	meshRenderer->texture->CreateInRhi();
 
 	Entity& ent2 = *World::world->Scene.CreateEntity("DirectionalLight");
-	DirectionalLight* pointLight = ent2.AddComponent<DirectionalLight>();
+	SpotLight* pointLight = ent2.AddComponent<SpotLight>();
 	pointLight->color = { 1.f, 1.f, 1.f };
 	ent2.AddComponent<TestComponent>();
 	ent2.transform.position = { 0.f, 1.f, 0.f };

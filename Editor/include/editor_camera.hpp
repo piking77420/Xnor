@@ -31,11 +31,11 @@ private:
     float_t m_Pitch = 0.f;
     float_t m_CameraSpeed = 2.5f;
 
-    bool m_IsMoving = false;
-    bool m_FirstMove = false;
-    bool m_ComputeDeltaMouse = false;
-    bool m_ResetDeltaMouse = false;
-    bool m_GotoObject = false;
+    bool_t m_IsMoving = false;
+    bool_t m_FirstMove = false;
+    bool_t m_ComputeDeltaMouse = false;
+    bool_t m_ResetDeltaMouse = false;
+    bool_t m_GotoObject = false;
     
     void ResetDeltatMouse();
 

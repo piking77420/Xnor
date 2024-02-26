@@ -180,7 +180,7 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 	for (size_t i = 0 ; i < nbrOfspothLight ; i++)
 	{
 		const SpotLight* spotLight = spotLightsComponents[i];
-		const Matrix matrix = Matrix::Trs(Vector3(0.f),spotLight->entity->transform.quaternion,Vector3(1.f));
+		const Matrix matrix = Matrix::Trs(Vector3(0.f),spotLight->entity->transform.quaternion.Normalized(),Vector3(1.f));
 		Vector4 direction = matrix * (-Vector4::UnitY());
 		
 		gpuLightData.spotLightData[i] =
@@ -188,9 +188,9 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 			.color = spotLight->color,
 			.intensity = spotLight->intensity,
 			.position = spotLight->entity->transform.position,
-			.cutOff = spotLight->cutOff,
+			.cutOff = std::cos(spotLight->cutOff),
 			.direction = {direction.x,direction.y,direction.z},
-			.outerCutOff = spotLight->outerCutOff,
+			.outerCutOff = std::cos(spotLight->outerCutOff),
 		};
 	}
 	gpuLightData.nbrOfSpotLight = static_cast<uint32_t>(nbrOfspothLight);
@@ -232,7 +232,7 @@ void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext&) const
 			RHI::DrawModel(meshRenderer->model->GetId());
 		
 	}
-	/*
+	
 	m_GizmoShader->Use();
 	RHI::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Line);
 	// Draw AABB 
@@ -241,16 +241,24 @@ void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext&) const
 		if (!meshRenderer->model.IsValid())
 			continue;
 
-		if(!meshRenderer->m_DrawModelAABB)
+		if (!meshRenderer->drawModelAabb)
 			continue;
+		
 		const Transform& transform =  meshRenderer->entity->transform;
-
+		const ModelAABB&& modelAabb = meshRenderer->model->GetAABB();
+		
+		Vector3 aabbMinMax = (modelAabb.max - modelAabb.min) * 0.5f;
+		Vector3 aabbSize = {aabbMinMax.x * transform.scale.x , aabbMinMax.y * transform.scale.y, aabbMinMax.z * transform.scale.z};
+		
 		ModelUniformData modelData;
-		modelData.model = Matrix::Trs(transform.position, transform.rotation, transform.scale);
+		modelData.model = Matrix::Trs(transform.position, transform.quaternion.Normalized(), aabbSize);
 		m_Rhi.UpdateModelUniform(modelData);
 		
 		RHI::DrawModel(m_Cube->GetId());
 	}
-	m_GizmoShader->Unuse();*/
+	
+	m_GizmoShader->Unuse();
+	RHI::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
+
 }
 

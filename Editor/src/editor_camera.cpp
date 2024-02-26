@@ -131,7 +131,7 @@ void EditorCamera::ComputeDeltaMouse()
     } 
     
     m_MouseOffSet.x = mousePos.x - m_LastInput.x ;
-    m_MouseOffSet.y = m_LastInput.y - mousePos.y ; // reversed since y-coordinates range from bottom to top
+    m_MouseOffSet.y = m_LastInput.y - mousePos.y ; 
     m_LastInput.x = mousePos.x;
     m_LastInput.y = mousePos.y;
 }
