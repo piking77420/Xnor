@@ -227,9 +227,11 @@ void RHI::CreateTexture(uint32_t* const textureId, const TextureCreateInfo& text
 	glGenerateTextureMipmap(*textureId);
 }
 
-void RHI::DestroyTexture(const uint32_t* textureId)
+void RHI::DestroyTexture(uint32_t* textureId)
 {
 	glDeleteTextures(1, textureId);
+	*textureId = 0;
+	
 }
 
 void RHI::BindTexture(const uint32_t unit, const uint32_t textureId)
@@ -283,10 +285,13 @@ void RHI::CreateFrameBuffer(uint32_t* frameBufferId,const RenderPass& renderPass
 	
 }
 
-void RHI::DestroyFrameBuffer(const uint32_t* const frameBufferId)
+void RHI::DestroyFrameBuffer(uint32_t* const frameBufferId)
 {
 	if (glIsFramebuffer(*frameBufferId))
+	{
 		glDeleteFramebuffers(1, frameBufferId);
+		*frameBufferId = 0;
+	}
 }
 
 void RHI::BindFrameBuffer(const uint32_t frameBufferId)
@@ -585,28 +590,28 @@ void RHI::PrepareUniform()
 	m_LightUniform->Bind(2);
 }
 
-void RHI::SetClearColor(const Vector4& color) const
+void RHI::SetClearColor(const Vector4& color)
 {
 	glClearColor(color.x, color.y, color.z, color.w);
 }
 
-void RHI::ClearColorAndDepth() const
+void RHI::ClearColorAndDepth()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void RHI::UpdateModelUniform(const ModelUniformData& modelUniformData) const
+void RHI::UpdateModelUniform(const ModelUniformData& modelUniformData)
 {	
 	constexpr size_t size = sizeof(ModelUniformData);
 	m_ModelUniform->Update(size,0,modelUniformData.model.Raw());
 }
 
-void RHI::UpdateCameraUniform(const CameraUniformData& cameraUniformData) const
+void RHI::UpdateCameraUniform(const CameraUniformData& cameraUniformData)
 {
 	m_CameraUniform->Update(sizeof(CameraUniformData),0,cameraUniformData.view.Raw());
 }
 
-void RHI::UpdateLight(const GpuLightData& lightData) const
+void RHI::UpdateLight(const GpuLightData& lightData)
 {
 	m_LightUniform->Update(sizeof(GpuLightData),0,&lightData.nbrOfPointLight);
 }

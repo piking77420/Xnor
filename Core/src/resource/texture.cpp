@@ -13,7 +13,7 @@ Texture::Texture(const TextureCreateInfo& createInfo)
     , m_TextureInternalFormat(createInfo.textureInternalFormat)
 {
     RHI::CreateTexture(&m_Id, createInfo);
-    m_Loaded = true;
+    m_LoadedInRhi = true;
 }
 
 Texture::Texture(const TextureInternalFormat textureFormat, const Vector2i size) : m_TextureInternalFormat(textureFormat) , m_Size(size) , m_TextureFiltering(TextureFiltering::Linear)
@@ -31,13 +31,20 @@ Texture::Texture(const TextureInternalFormat textureFormat, const Vector2i size)
     };
     
     RHI::CreateTexture(&m_Id,createInfo);
-    m_Loaded = true;
+    m_LoadedInRhi = true;
 }
 
 Texture::~Texture()
 {
+    if (m_LoadedInRhi)
+    {
+        Texture::DestroyInRhi();
+    }
+    
     if (m_Loaded)
+    {
         Texture::Unload();
+    }
 }
 
 void Texture::Load(const uint8_t* buffer, const int64_t length)

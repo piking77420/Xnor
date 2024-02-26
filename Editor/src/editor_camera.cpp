@@ -15,6 +15,7 @@ void EditorCamera::UpdateCamera(const Editor& editor, XnorCore::Camera& camera)
     {
         ComputeDeltaMouse();
         m_ComputeDeltaMouse = false;
+        XnorCore::Window::HideCursor(true);
     }
     
     OnMiddleButton();
@@ -26,6 +27,7 @@ void EditorCamera::UpdateCamera(const Editor& editor, XnorCore::Camera& camera)
     {
         ResetDeltatMouse();
         m_ResetDeltaMouse = false;
+        XnorCore::Window::HideCursor(false);
     }
 }
 
@@ -75,23 +77,27 @@ void EditorCamera::EditorCameraMovement()
     const float_t dt = XnorCore::Time::GetDeltaTime();
     const float_t cameraSpeed = m_CameraSpeed * dt;
 
+    Vector3 addVector;
+
     if (ImGui::IsKeyDown(ImGuiKey_W))
-        m_EditorRefCamera->pos += m_EditorRefCamera->front * cameraSpeed;
+        addVector += m_EditorRefCamera->front * cameraSpeed;
 
     if (ImGui::IsKeyDown(ImGuiKey_S))
-        m_EditorRefCamera->pos -= m_EditorRefCamera->front * cameraSpeed;
+        addVector -= m_EditorRefCamera->front * cameraSpeed;
 
     if (ImGui::IsKeyDown(ImGuiKey_A))
-        m_EditorRefCamera->pos += m_EditorRefCamera->right * cameraSpeed;
+        addVector += m_EditorRefCamera->right * cameraSpeed;
     
     if (ImGui::IsKeyDown(ImGuiKey_D))
-        m_EditorRefCamera->pos -=  m_EditorRefCamera->right * cameraSpeed;
+        addVector -=  m_EditorRefCamera->right * cameraSpeed;
    
     if (ImGui::IsKeyDown(ImGuiKey_Space))
-        m_EditorRefCamera->pos += Vector3::UnitY() * cameraSpeed;
+        addVector += Vector3::UnitY() * cameraSpeed;
 
-    if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
-        m_EditorRefCamera->pos -= Vector3::UnitY() * cameraSpeed;
+    if (ImGui::IsKeyDown(ImGuiMod_Shift))
+        addVector -= Vector3::UnitY() * cameraSpeed;
+
+    AddMovement(addVector);
 }
 
 void EditorCamera::OnMiddleButton()
@@ -103,11 +109,13 @@ void EditorCamera::OnMiddleButton()
         m_ComputeDeltaMouse = true;
         const Vector3 vector = (m_EditorRefCamera->right * -m_MouseOffSet.x) + (m_EditorRefCamera->up * m_MouseOffSet.y);
         m_EditorRefCamera->pos += vector * Time::GetDeltaTime() * m_CameraSpeed;
+        
     }
     
     if (ImGui::IsMouseReleased(ImGuiMouseButton_Middle))
     {
         m_ResetDeltaMouse = true;
+        
     }
 }
 
@@ -123,7 +131,7 @@ void EditorCamera::ComputeDeltaMouse()
     } 
     
     m_MouseOffSet.x = mousePos.x - m_LastInput.x ;
-    m_MouseOffSet.y = m_LastInput.y - mousePos.y ; // reversed since y-coordinates range from bottom to top
+    m_MouseOffSet.y = m_LastInput.y - mousePos.y ; 
     m_LastInput.x = mousePos.x;
     m_LastInput.y = mousePos.y;
 }
@@ -132,28 +140,36 @@ void EditorCamera::OnPressGoToObject()
 {
     GoToObject();
     
-    if (m_EditorRef->data.selectedEntity == nullptr)
+    if (m_EditorRef->data.selectedEntity == nullptr || m_GotoObject)
         return;
     
-    if (ImGui::IsKeyPressed(ImGuiKey_F))
-    {
-        m_GotoObject = true;
-    }
-    else
+    if (!XnorCore::Input::GetKey(XnorCore::Key::F, XnorCore::KeyStatus::Press))
     {
         return;
     }
+    m_GotoObject = true;
+    
+    ResetDeltatMouse();
 
     const XnorCore::Entity& currentEntiy = *m_EditorRef->data.selectedEntity;
-
     const XnorCore::MeshRenderer* meshRenderer = currentEntiy.GetComponent<XnorCore::MeshRenderer>();
+    m_ObjectPos = currentEntiy.transform.position;
     
     if (meshRenderer == nullptr)
     {
-        m_ObjectPos = currentEntiy.transform.position;
         m_DistanceToStop = 1.f;
     }
-
+    else
+    {
+        const XnorCore::ModelAABB&& aabb = meshRenderer->model->GetAABB();
+        const Vector3 radiusVec = aabb.max - aabb.min;
+        Vector4 radiusPreScale = Vector4(radiusVec.x,radiusVec.y,radiusVec.z,1.0f);
+        radiusPreScale = Matrix::Trs(Vector3(0.f),Quaternion::Identity(),currentEntiy.transform.scale) * radiusPreScale;
+        const Vector3 correctVec = {radiusPreScale.x,radiusPreScale.y,radiusPreScale.z};
+        m_DistanceToStop = correctVec.Length();
+    }
+    
+    m_EditorRefCamera->LookAt(m_ObjectPos);
     m_GotoObject = true;
 }
 
@@ -165,14 +181,23 @@ void EditorCamera::GoToObject()
     Vector3 forwartVec = (m_ObjectPos - m_EditorRefCamera->pos);
     const float distance = forwartVec.Length();
         
-    if(distance <= m_DistanceToStop)
+    if (distance <= m_DistanceToStop)
     {
         m_GotoObject = false;
         return;
     }
     
-    XnorCore::Logger::LogDebug("Go to object");
-        
     forwartVec *= 1.f / distance;
     m_EditorRefCamera->pos = Vector3::Lerp(m_EditorRefCamera->pos,m_EditorRefCamera->pos + forwartVec, XnorCore::Time::GetDeltaTime() * distance);
+}
+
+void EditorCamera::AddMovement(const Vector3& movement)
+{
+    if(movement == Vector3::Zero())
+    {
+        return;
+    }
+        
+    m_EditorRefCamera->pos += movement;
+    m_GotoObject = false;
 }

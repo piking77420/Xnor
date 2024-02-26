@@ -4,5 +4,5 @@ using namespace XnorCore;
 
 bool RendererContext::IsValid()
 {
-    return camera != nullptr &&  framebuffer != nullptr && renderPass != nullptr;  
+    return camera != nullptr &&  framebuffer != nullptr;  
 }

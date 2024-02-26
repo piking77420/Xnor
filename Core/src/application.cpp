@@ -32,3 +32,4 @@ Application::~Application()
 	
     Logger::Stop();
 }
+

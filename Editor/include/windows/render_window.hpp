@@ -15,8 +15,10 @@ public:
     RenderWindow(Editor* editor, const std::string& title);
 
     ~RenderWindow() override;
-
+    
     void Display() override;
+
+    void OnWindowResize(Vector2i newWindowSize) override;
 
 protected:
     XnorCore::RendererContext m_RendererContext;
@@ -27,8 +29,9 @@ protected:
     
     XnorCore::Texture* m_ColorTexture = nullptr;
 
-private:
-    void Initialize(XnorCore::RendererContext* rendererContext);
+    void ResizeRenderContext(Vector2i size);
+    
+    virtual void Initialize(Vector2i size);
 };
 
 END_XNOR_EDITOR

@@ -41,3 +41,7 @@ void UiWindow::FetchInfo()
     const ImVec2 size = ImGui::GetWindowSize(); 
     m_Size = Vector2i(static_cast<int32_t>(size.x), static_cast<int32_t>(size.y));
 }
+
+void UiWindow::OnWindowResize([[maybe_unused]]Vector2i newWindowSize)
+{
+}

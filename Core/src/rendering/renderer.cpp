@@ -19,7 +19,7 @@ Renderer::~Renderer()
 
 void Renderer::Initialize()
 {
-	m_Rhi.SetClearColor(clearColor);
+	RHI::SetClearColor(clearColor);
 
 	m_BasicShader = ResourceManager::Get<Shader>("basic_shader");
 	m_BasicShader->CreateInRhi();
@@ -34,7 +34,7 @@ void Renderer::Initialize()
 	m_DrawTextureToScreenShader->SetInt("BufferTextureId", 0);
 	m_DrawTextureToScreenShader->Unuse();
 	
-	m_Rhi.PrepareUniform();
+	RHI::PrepareUniform();
 
 	m_Cube = ResourceManager::Get<Model>("assets/models/cube.obj");
 	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
@@ -50,16 +50,16 @@ void Renderer::Shutdown()
 void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererContext) const
 {
 	// Clear MainWindow // 
-	m_Rhi.SetClearColor(clearColor);
-	m_Rhi.ClearColorAndDepth();
+	RHI::SetClearColor(clearColor);
+	RHI::ClearColorAndDepth();
 
 	rendererContext.framebuffer->BindFrameBuffer();
-	m_Rhi.SetClearColor(clearColor);
-	m_Rhi.ClearColorAndDepth();
+	RHI::SetClearColor(clearColor);
+	RHI::ClearColorAndDepth();
 
 	m_RenderBuffer->BindFrameBuffer();
-	m_Rhi.SetClearColor(clearColor);
-	m_Rhi.ClearColorAndDepth();
+	RHI::SetClearColor(clearColor);
+	RHI::ClearColorAndDepth();
 	
 	RHI::SetViewport(m_RenderBuffer->GetSize());
 	
@@ -69,7 +69,7 @@ void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererCo
 	rendererContext.camera->GetView(&cam.view);
 	rendererContext.camera->GetProjection(rendererContext.framebuffer->GetSize(), &cam.projection);
 	
-	m_Rhi.UpdateCameraUniform(cam);
+	RHI::UpdateCameraUniform(cam);
 
 	UpdateLight(scene,rendererContext);
 	DrawMeshRenders(scene,rendererContext);
@@ -102,11 +102,6 @@ void Renderer::CompileShader()
 	{
 		m_BasicShader->CreateInRhi();
 	}
-}
-
-void Renderer::OnResizeWindow()
-{
-	
 }
 
 void Renderer::SwapBuffers()
@@ -182,7 +177,7 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 	for (size_t i = 0 ; i < nbrOfspothLight ; i++)
 	{
 		const SpotLight* spotLight = spotLightsComponents[i];
-		const Matrix matrix = Matrix::Trs(Vector3(0.f),spotLight->entity->transform.quaternion,Vector3(1.f));
+		const Matrix matrix = Matrix::Trs(Vector3(0.f),spotLight->entity->transform.quaternion.Normalized(),Vector3(1.f));
 		Vector4 direction = matrix * (-Vector4::UnitY());
 		
 		gpuLightData.spotLightData[i] =
@@ -190,9 +185,9 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 			.color = spotLight->color,
 			.intensity = spotLight->intensity,
 			.position = spotLight->entity->transform.position,
-			.cutOff = spotLight->cutOff,
+			.cutOff = std::cos(spotLight->cutOff),
 			.direction = {direction.x,direction.y,direction.z},
-			.outerCutOff = spotLight->outerCutOff,
+			.outerCutOff = std::cos(spotLight->outerCutOff),
 		};
 	}
 	gpuLightData.nbrOfSpotLight = static_cast<uint32_t>(nbrOfspothLight);
@@ -210,7 +205,7 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 		};
 	}
 
-	m_Rhi.UpdateLight(gpuLightData);
+	RHI::UpdateLight(gpuLightData);
 }
 
 void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext&) const 
@@ -225,7 +220,7 @@ void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext&) const
 		ModelUniformData modelData;
 		
 		modelData.model = Matrix::Trs(transform.position, transform.quaternion, transform.scale);
-		m_Rhi.UpdateModelUniform(modelData);
+		RHI::UpdateModelUniform(modelData);
 
 		if (meshRenderer->texture.IsValid())
 			meshRenderer->texture->BindTexture(0);
@@ -234,7 +229,7 @@ void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext&) const
 			RHI::DrawModel(meshRenderer->model->GetId());
 		
 	}
-	/*
+	
 	m_GizmoShader->Use();
 	RHI::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Line);
 	// Draw AABB 
@@ -243,16 +238,24 @@ void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext&) const
 		if (!meshRenderer->model.IsValid())
 			continue;
 
-		if(!meshRenderer->m_DrawModelAABB)
+		if (!meshRenderer->drawModelAabb)
 			continue;
+		
 		const Transform& transform =  meshRenderer->entity->transform;
-
+		const ModelAABB&& modelAabb = meshRenderer->model->GetAABB();
+		
+		Vector3 aabbMinMax = (modelAabb.max - modelAabb.min) * 0.5f;
+		Vector3 aabbSize = {aabbMinMax.x * transform.scale.x , aabbMinMax.y * transform.scale.y, aabbMinMax.z * transform.scale.z};
+		
 		ModelUniformData modelData;
-		modelData.model = Matrix::Trs(transform.position, transform.rotation, transform.scale);
-		m_Rhi.UpdateModelUniform(modelData);
+		modelData.model = Matrix::Trs(transform.position, transform.quaternion.Normalized(), aabbSize);
+		RHI::UpdateModelUniform(modelData);
 		
 		RHI::DrawModel(m_Cube->GetId());
 	}
-	m_GizmoShader->Unuse();*/
+	
+	m_GizmoShader->Unuse();
+	RHI::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
+
 }
 

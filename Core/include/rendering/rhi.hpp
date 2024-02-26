@@ -38,13 +38,13 @@ public:
 	
 	// TEXTURE
 	XNOR_ENGINE  static void CreateTexture(uint32_t* textureId, const TextureCreateInfo& textureCreateInfo);
-	XNOR_ENGINE  static void DestroyTexture(const uint32_t* textureId);
+	XNOR_ENGINE  static void DestroyTexture(uint32_t* textureId);
 
 	XNOR_ENGINE  static void BindTexture(uint32_t unit,uint32_t textureId);
 
 	// FrameBuffer
 	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferId,const RenderPass& renderPass,const std::vector<const Texture*>& attechements);
-	XNOR_ENGINE static void DestroyFrameBuffer(const uint32_t* frameBufferId);
+	XNOR_ENGINE static void DestroyFrameBuffer(uint32_t* frameBufferId);
 	
 	XNOR_ENGINE static void BindFrameBuffer(uint32_t frameBufferId);
 	XNOR_ENGINE static void UnbindFrameBuffer();
@@ -97,25 +97,24 @@ private:
 	static uint32_t GetOpenglDataType(DataType dataType);
 
 public:
-	XNOR_ENGINE RHI() = default;
-
-	XNOR_ENGINE ~RHI() = default;
+	
+	DELETE_COPY_MOVE_OPERATIONS(RHI)
 
 	XNOR_ENGINE static void Initialize();
 
 	XNOR_ENGINE static void Shutdown();
 
-	XNOR_ENGINE void PrepareUniform();
+	XNOR_ENGINE static void PrepareUniform();
 
-	XNOR_ENGINE void SetClearColor(const Vector4& color) const;
+	XNOR_ENGINE static void SetClearColor(const Vector4& color);
 	
-	XNOR_ENGINE void ClearColorAndDepth() const;
+	XNOR_ENGINE static void ClearColorAndDepth();
 
-	XNOR_ENGINE void UpdateModelUniform(const ModelUniformData& modelUniformData) const;
+	XNOR_ENGINE static void UpdateModelUniform(const ModelUniformData& modelUniformData);
 
-	XNOR_ENGINE void UpdateCameraUniform(const CameraUniformData& cameraUniformData) const;
+	XNOR_ENGINE static void UpdateCameraUniform(const CameraUniformData& cameraUniformData);
 
-	XNOR_ENGINE void UpdateLight(const GpuLightData& lightData) const;
+	XNOR_ENGINE static void UpdateLight(const GpuLightData& lightData);
 
 private:
 	 static inline UniformBuffer* m_CameraUniform;

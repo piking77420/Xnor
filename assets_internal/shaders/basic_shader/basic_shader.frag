@@ -146,12 +146,12 @@ void main()
 
     vec3 finalColor = CalcDirLight(directionalData,Normal,viewDir);
     
-    for(int i = 0 ; i < nbrOfPointLight ; i++)
+    for (int i = 0 ; i < nbrOfPointLight ; i++)
     {
         finalColor += CalcPointLight(pointLightData[i],Normal,fs_in.FragPos,viewDir);
     }
 
-    for(int i = 0 ; i < nbrOfPointLight ; i++)
+    for (int i = 0 ; i < nbrOfSpothLight ; i++)
     {
         finalColor += CalcSpotLight(spothLightData[i],Normal,fs_in.FragPos,viewDir);
     }

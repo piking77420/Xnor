@@ -8,13 +8,20 @@ using namespace XnorEditor;
 RenderWindow::RenderWindow(Editor* editor)
     : UiWindow(editor, "Game Preview")
 {
-    Initialize(&m_RendererContext);
+    Initialize(XnorCore::Window::GetSize());
 }
 
 RenderWindow::RenderWindow(Editor* editor, const std::string& title)
     : UiWindow(editor, title)
 {
-    Initialize(&m_RendererContext);
+    Initialize(XnorCore::Window::GetSize());
+}
+
+void RenderWindow::ResizeRenderContext(const Vector2i size)
+{
+    delete m_ColorTexture;
+    m_FrameBuffer.Destroy();
+    Initialize(size);
 }
 
 RenderWindow::~RenderWindow()
@@ -32,32 +39,33 @@ void RenderWindow::Display()
     ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_ColorTexture->GetId()), ImGui::GetContentRegionAvail(), {1, 1},{0, 0});
 }
 
-void RenderWindow::Initialize(XnorCore::RendererContext* rendererContext)
+void RenderWindow::OnWindowResize(Vector2i newWindowSize)
+{
+    UiWindow::OnWindowResize(newWindowSize);
+    ResizeRenderContext(newWindowSize);
+}
+
+
+void RenderWindow::Initialize(Vector2i size)
 {
     using namespace XnorCore;
-    
-    if(rendererContext == nullptr)
-    {
-        Logger::LogError("renderPass Context is Null");
-        throw std::runtime_error("renderPass Context is Null");
-    }
-
     const std::vector<RenderTargetInfo> attachementsType =
     {
         {Attachment::Color_Attachment01,true},
     };
     
     // Init Rendering
-    m_FrameBuffer = FrameBuffer(Window::GetSize());
+    m_FrameBuffer = FrameBuffer(size);
     m_ColorTexture = new Texture(TextureInternalFormat::Rgba16F, m_FrameBuffer.GetSize());
 
     // Set Up renderPass
     const RenderPass renderPass(attachementsType);
-    const std::vector<const Texture*> targets = { m_ColorTexture };
+    const std::vector<const Texture*> targets = { m_ColorTexture};
     m_FrameBuffer.Create(renderPass,targets);
 
     // Init rendererContext
-    rendererContext->camera = &m_Editor->data.gameCam;
-    rendererContext->framebuffer = &m_FrameBuffer;
-    rendererContext->renderPass = &m_RenderPass;
+    m_RendererContext.camera = &m_Editor->data.gameCam;
+    m_RendererContext.framebuffer = &m_FrameBuffer;
 }
+
+
