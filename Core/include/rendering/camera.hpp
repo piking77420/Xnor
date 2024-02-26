@@ -16,7 +16,7 @@ public:
 	float far = 1000.f;
 	Vector3 up = Vector3::UnitY();
 	float fov = 90.f;
-	Vector3 right = Vector3::UnitX();
+	Vector3 right = -Vector3::UnitX();
 
 	void GetProjection(Vector2i screenSize,Matrix* matrix) const;
 
