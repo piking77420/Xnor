@@ -69,8 +69,11 @@ void Model::Load(const aiMesh& loadedData)
         m_Indices[baseIndex + 2] = face.mIndices[2];
     }
 
-    m_Aabb.min = Vector3(&loadedData.mAABB.mMin.x);
-    m_Aabb.max = Vector3(&loadedData.mAABB.mMax.x);
+    if(!HadToComputeAABB(loadedData.mAABB))
+    {
+        m_Aabb.min = Vector3(&loadedData.mAABB.mMin.x);
+        m_Aabb.max = Vector3(&loadedData.mAABB.mMax.x);
+    }
 
     m_Loaded = true;
 }
@@ -103,4 +106,36 @@ void Model::Unload()
 uint32_t Model::GetId() const
 {
     return  m_ModelId;
+}
+
+ModelAABB Model::GetAABB() const
+{
+    return m_Aabb;
+}
+
+bool Model::HadToComputeAABB(const aiAABB& assimpAABB)
+{
+    if(assimpAABB.mMax.x == 0.f && assimpAABB.mMax.y == 0.f && assimpAABB.mMax.z == 0.f &&
+        assimpAABB.mMin.x == 0.f && assimpAABB.mMin.y == 0.f && assimpAABB.mMin.z == 0.f)
+    {
+        for (const Vertex& vertex : m_Vertices)
+        {
+            if(vertex.position.x < m_Aabb.min.x)
+                 m_Aabb.min.x = vertex.position.x;
+            if(vertex.position.y < m_Aabb.min.y)
+                m_Aabb.min.y = vertex.position.y;
+            if(vertex.position.z < m_Aabb.min.z)
+                m_Aabb.min.z = vertex.position.z;
+
+            if(vertex.position.x > m_Aabb.max.x)
+                m_Aabb.max.x = vertex.position.x;
+            if(vertex.position.y > m_Aabb.max.y)
+                m_Aabb.max.y = vertex.position.y;
+            if(vertex.position.z > m_Aabb.max.z)
+                m_Aabb.max.z = vertex.position.z;
+        }
+        return true;
+    }
+
+    return false;
 }

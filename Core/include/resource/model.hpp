@@ -104,8 +104,12 @@ public:
 
     [[nodiscard]]
     XNOR_ENGINE uint32_t GetId() const;
+
+    XNOR_ENGINE ModelAABB GetAABB() const ;
     
 private:
+    XNOR_ENGINE bool HadToComputeAABB(const aiAABB& assimpAABB);
+    
     std::vector<Vertex> m_Vertices;
     std::vector<uint32_t> m_Indices;
     uint32_t m_ModelId = 0;

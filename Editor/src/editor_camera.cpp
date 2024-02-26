@@ -36,7 +36,6 @@ void EditorCamera::UpdateCamera(const XnorEditor::Editor& editor,Camera& camera)
 
 void EditorCamera::ResetDeltatMouse()
 {
-
     m_FirstMove = false;
     m_LastInput = Vector2(0.f);
 }
@@ -116,8 +115,6 @@ void EditorCamera::OnMiddleButton()
     {
         m_ResetDeltaMouse = true;
     }
-   
-
 }
 
 void EditorCamera::ComputeDeltaMouse()
@@ -148,23 +145,31 @@ void EditorCamera::OnPressGoToObject()
     if (m_EditorRef->data.selectedEntity == nullptr)
         return;
     
-    if (Input::GetKey(Key::F,KeyStatus::Press))
-    {
-        m_GotoObject = true;
-    }
-    else
+    if (!Input::GetKey(Key::F,KeyStatus::Press))
     {
         return;
     }
+    
+    m_GotoObject = true;
 
     const Entity& currentEntiy = *m_EditorRef->data.selectedEntity;
 
     const MeshRenderer* meshRenderer = currentEntiy.GetComponent<MeshRenderer>();
-    
+    m_ObjectPos = currentEntiy.transform.position;
+
     if (meshRenderer == nullptr)
     {
-        m_ObjectPos = currentEntiy.transform.position;
         m_DistanceToStop = 1.f;
+    }
+    else
+    {
+        const ModelAABB&& aabb = meshRenderer->model->GetAABB();
+        const Vector3 radiusVec = aabb.max - aabb.min;
+        Vector4 radiusPreScale = Vector4(radiusVec.x,radiusVec.y,radiusVec.z,1.0f);
+        radiusPreScale = Matrix::Trs(Vector3(0.f),Quaternion::Identity(),currentEntiy.transform.scale) * radiusPreScale;
+        const Vector3 correctVec = {radiusPreScale.x,radiusPreScale.y,radiusPreScale.z};
+        
+        m_DistanceToStop = correctVec.Length();
     }
 
     m_GotoObject = true;
@@ -178,7 +183,7 @@ void EditorCamera::GoToObject()
     Vector3 forwartVec = (m_ObjectPos - m_EditorRefCamera->pos);
     const float distance = forwartVec.Length();
         
-    if(distance <= m_DistanceToStop)
+    if (distance <= m_DistanceToStop)
     {
         m_GotoObject = false;
         return;
