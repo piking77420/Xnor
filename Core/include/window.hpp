@@ -38,6 +38,8 @@ public:
 
 	static void SetIcon(Texture& icon);
 
+	static void HideCursor(bool value);
+
 private:
 	static void GlfwResizeFramebuffer(GLFWwindow* window, int width, int height);
 	

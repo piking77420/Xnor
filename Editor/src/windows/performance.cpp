@@ -55,7 +55,6 @@ void Performance::Display()
     
     const ImVec2 available = ImGui::GetContentRegionAvail();
     std::string format = std::format("FPS: {:.0f}", m_LastFps);
-    FetchInfo();
 
     ImGui::PlotLines("##fps", m_FrameRateArray.data(), static_cast<int32_t>(std::min(m_TotalSamples, m_FrameRateArray.size())), m_ArrayIndex,
         format.c_str(), 0.f, m_HighestArrayFps, ImVec2(available.x, GraphsHeight));

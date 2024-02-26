@@ -14,9 +14,11 @@ EditorWindow::EditorWindow(Editor* editor)
 void EditorWindow::Display()
 {
     RenderWindow::Display();
-    if(IsFocused())
+
+    XnorCore::Logger::LogInfo("{}", IsFocused());
+    if (IsFocused())
     {
-        m_EditorCamera.UpdateCamera(&m_Editor->data.editorCam);
+        m_EditorCamera.UpdateCamera(*m_Editor,m_Editor->data.editorCam);
     }
 }
 
