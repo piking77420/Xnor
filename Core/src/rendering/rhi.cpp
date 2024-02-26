@@ -590,28 +590,28 @@ void RHI::PrepareUniform()
 	m_LightUniform->Bind(2);
 }
 
-void RHI::SetClearColor(const Vector4& color) const
+void RHI::SetClearColor(const Vector4& color)
 {
 	glClearColor(color.x, color.y, color.z, color.w);
 }
 
-void RHI::ClearColorAndDepth() const
+void RHI::ClearColorAndDepth()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void RHI::UpdateModelUniform(const ModelUniformData& modelUniformData) const
+void RHI::UpdateModelUniform(const ModelUniformData& modelUniformData)
 {	
 	constexpr size_t size = sizeof(ModelUniformData);
 	m_ModelUniform->Update(size,0,modelUniformData.model.Raw());
 }
 
-void RHI::UpdateCameraUniform(const CameraUniformData& cameraUniformData) const
+void RHI::UpdateCameraUniform(const CameraUniformData& cameraUniformData)
 {
 	m_CameraUniform->Update(sizeof(CameraUniformData),0,cameraUniformData.view.Raw());
 }
 
-void RHI::UpdateLight(const GpuLightData& lightData) const
+void RHI::UpdateLight(const GpuLightData& lightData)
 {
 	m_LightUniform->Update(sizeof(GpuLightData),0,&lightData.nbrOfPointLight);
 }

@@ -24,7 +24,7 @@ Renderer::~Renderer()
 
 void Renderer::Initialize()
 {
-	m_Rhi.SetClearColor(clearColor);
+	RHI::SetClearColor(clearColor);
 
 	m_BasicShader = ResourceManager::Get<Shader>("basic_shader");
 	m_BasicShader->CreateInRhi();
@@ -39,7 +39,7 @@ void Renderer::Initialize()
 	m_DrawTextureToScreenShader->SetInt("BufferTextureId", 0);
 	m_DrawTextureToScreenShader->Unuse();
 	
-	m_Rhi.PrepareUniform();
+	RHI::PrepareUniform();
 
 	m_Cube = ResourceManager::Get<Model>("assets/models/cube.obj");
 	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
@@ -48,16 +48,16 @@ void Renderer::Initialize()
 void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererContext) const
 {
 	// Clear MainWindow // 
-	m_Rhi.SetClearColor(clearColor);
-	m_Rhi.ClearColorAndDepth();
+	RHI::SetClearColor(clearColor);
+	RHI::ClearColorAndDepth();
 
 	rendererContext.framebuffer->BindFrameBuffer();
-	m_Rhi.SetClearColor(clearColor);
-	m_Rhi.ClearColorAndDepth();
+	RHI::SetClearColor(clearColor);
+	RHI::ClearColorAndDepth();
 
 	m_RenderBuffer->BindFrameBuffer();
-	m_Rhi.SetClearColor(clearColor);
-	m_Rhi.ClearColorAndDepth();
+	RHI::SetClearColor(clearColor);
+	RHI::ClearColorAndDepth();
 	
 	RHI::SetViewport(m_RenderBuffer->GetSize());
 	
@@ -67,7 +67,7 @@ void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererCo
 	rendererContext.camera->GetView(&cam.view);
 	rendererContext.camera->GetProjection(rendererContext.framebuffer->GetSize(), &cam.projection);
 	
-	m_Rhi.UpdateCameraUniform(cam);
+	RHI::UpdateCameraUniform(cam);
 
 	UpdateLight(scene,rendererContext);
 	DrawMeshRenders(scene,rendererContext);
@@ -100,11 +100,6 @@ void Renderer::CompileShader()
 	{
 		m_BasicShader->CreateInRhi();
 	}
-}
-
-void Renderer::OnResizeWindow()
-{
-	
 }
 
 void Renderer::SwapBuffers()
@@ -208,7 +203,7 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 		};
 	}
 
-	m_Rhi.UpdateLight(gpuLightData);
+	RHI::UpdateLight(gpuLightData);
 }
 
 void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext&) const 
@@ -223,7 +218,7 @@ void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext&) const
 		ModelUniformData modelData;
 		
 		modelData.model = Matrix::Trs(transform.position, transform.quaternion, transform.scale);
-		m_Rhi.UpdateModelUniform(modelData);
+		RHI::UpdateModelUniform(modelData);
 
 		if (meshRenderer->texture.IsValid())
 			meshRenderer->texture->BindTexture(0);
@@ -252,7 +247,7 @@ void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext&) const
 		
 		ModelUniformData modelData;
 		modelData.model = Matrix::Trs(transform.position, transform.quaternion.Normalized(), aabbSize);
-		m_Rhi.UpdateModelUniform(modelData);
+		RHI::UpdateModelUniform(modelData);
 		
 		RHI::DrawModel(m_Cube->GetId());
 	}

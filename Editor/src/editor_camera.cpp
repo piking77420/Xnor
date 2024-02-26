@@ -94,7 +94,7 @@ void EditorCamera::EditorCameraMovement()
     if (ImGui::IsKeyDown(ImGuiKey_Space))
         addVector += Vector3::UnitY() * cameraSpeed;
 
-    if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
+    if (ImGui::IsKeyDown(ImGuiMod_Shift))
         addVector -= Vector3::UnitY() * cameraSpeed;
 
     AddMovement(addVector);

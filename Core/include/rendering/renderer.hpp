@@ -36,8 +36,6 @@ private:
     Texture* m_ColorAttachment = nullptr;
     Texture* m_DepthAttachment = nullptr;
     
-    RHI m_Rhi;
-
     Pointer<Shader> m_BasicShader;
     Pointer<Shader> m_DrawTextureToScreenShader;
     Pointer<Shader> m_GizmoShader;
