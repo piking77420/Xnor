@@ -96,6 +96,11 @@ void ContentBrowser::DisplayDirectoryHierarchy(const XnorCore::Pointer<XnorCore:
             for (const XnorCore::Pointer<XnorCore::Entry>& childEntry : directory->GetChildEntries())
                 DisplayDirectoryHierarchy(childEntry);
         }
+        else
+        {
+            BeginDragDrop(XnorCore::Utils::DynamicPointerCast<XnorCore::File>(entry));
+        }
+        
         ImGui::TreePop();
     }
     else if (isDirectory && ImGui::IsItemHovered() && ImGui::IsMouseDown(ImGuiMouseButton_Left))
@@ -131,13 +136,8 @@ void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entr
     );
     
     const XnorCore::Pointer<XnorCore::File> file = XnorCore::Utils::DynamicPointerCast<XnorCore::File>(entry);
-    if (file && ImGui::BeginDragDropSource())
-    {
-        const XnorCore::Pointer<XnorCore::Resource> resource = XnorCore::ResourceManager::Get(file);
-        ImGui::SetDragDropPayload("CB", &resource, sizeof(resource));
-        ImGui::SetTooltip("%s", entry->GetName().c_str());
-        ImGui::EndDragDropSource();
-    }
+    if (file)
+        BeginDragDrop(file);
     
     XnorCore::Utils::AlignImGuiCursor(64.f);
     ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(texture->GetId()), ImVec2(64.f, 64.f));
@@ -170,4 +170,15 @@ void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entr
     const float_t newCursorPos = ImGui::GetCursorPosX();
     if (newCursorPos + (newCursorPos - oldCursorPos) > ImGui::GetContentRegionAvail().x)
         ImGui::Dummy(ImVec2());
+}
+
+void ContentBrowser::BeginDragDrop(const XnorCore::Pointer<XnorCore::File>& file)
+{
+    if (ImGui::BeginDragDropSource())
+    {
+        const XnorCore::Pointer<XnorCore::Resource> resource = XnorCore::ResourceManager::Get(file);
+        ImGui::SetDragDropPayload("CB", &resource, sizeof(resource));
+        ImGui::SetTooltip("%s", file->GetName().c_str());
+        ImGui::EndDragDropSource();
+    }
 }
