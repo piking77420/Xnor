@@ -105,6 +105,25 @@ void Inspector::DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldI
         return;
     }
 
+    if (fieldInfo.typeHash == typeid(XnorCore::ColorRgb).hash_code())
+    {
+        XnorCore::ColorRgb* const ptr = XnorCore::Utils::GetAddress<XnorCore::ColorRgb>(obj, fieldInfo.offset, element);
+        XnorCore::Colorf tmp = static_cast<XnorCore::Colorf>(*ptr);
+        ImGui::ColorPicker4(name, &tmp.r, ImGuiColorEditFlags_DisplayHex);
+        *ptr = static_cast<XnorCore::ColorRgb>(tmp);
+    }
+    else if (fieldInfo.typeHash == typeid(XnorCore::ColorHsv).hash_code())
+    {
+        XnorCore::ColorHsv* const ptr = XnorCore::Utils::GetAddress<XnorCore::ColorHsv>(obj, fieldInfo.offset, element);
+        XnorCore::Colorf tmp = static_cast<XnorCore::Colorf>(*ptr);
+        ImGui::ColorPicker4(name, &tmp.r, ImGuiColorEditFlags_DisplayHSV);
+        *ptr = static_cast<XnorCore::ColorHsv>(tmp);
+    }
+    else if (fieldInfo.typeHash == typeid(XnorCore::Colorf).hash_code())
+    {
+        ImGui::ColorPicker4(name, reinterpret_cast<float_t*>(XnorCore::Utils::GetAddress<XnorCore::Colorf>(obj, fieldInfo.offset, element)));
+    }
+
     DisplayNestedType(obj, fieldInfo, name, element);
 }
 
@@ -235,27 +254,26 @@ void Inspector::DisplayMathType(void* const obj, const XnorCore::FieldInfo& fiel
 {
     if (fieldInfo.typeHash == typeid(Vector2i).hash_code())
     {
-        ImGui::DragInt2(name, XnorCore::Utils::GetAddress<Vector2i>(obj, fieldInfo.offset, element)->Raw());
+        ImGui::DragInt2(name, XnorCore::Utils::GetAddress<Vector2i>(obj, fieldInfo.offset, element)->Raw(), 0.1f);
     }
     else if (fieldInfo.typeHash == typeid(Vector2).hash_code())
     {
-        ImGui::DragFloat2(name, XnorCore::Utils::GetAddress<Vector2>(obj, fieldInfo.offset, element)->Raw());
+        ImGui::DragFloat2(name, XnorCore::Utils::GetAddress<Vector2>(obj, fieldInfo.offset, element)->Raw(), 0.1f);
     }
     else if (fieldInfo.typeHash == typeid(Vector3).hash_code())
     {
-        ImGui::DragFloat3(name, XnorCore::Utils::GetAddress<Vector3>(obj, fieldInfo.offset, element)->Raw());
+        ImGui::DragFloat3(name, XnorCore::Utils::GetAddress<Vector3>(obj, fieldInfo.offset, element)->Raw(), 0.1f);
     }
     else if (fieldInfo.typeHash == typeid(Vector4).hash_code())
     {
-        ImGui::DragFloat4(name, XnorCore::Utils::GetAddress<Vector4>(obj, fieldInfo.offset, element)->Raw());
+        ImGui::DragFloat4(name, XnorCore::Utils::GetAddress<Vector4>(obj, fieldInfo.offset, element)->Raw(), 0.1f);
     }
     else if (fieldInfo.typeHash == typeid(Quaternion).hash_code())
     {
         Quaternion* const q = XnorCore::Utils::GetAddress<Quaternion>(obj, fieldInfo.offset, element);
 
         Vector3 euler = XnorCore::Utils::GetQuaternionEulerAngles(*q);
-        euler *= Calc::Deg2Rad;
-        ImGui::DragFloat3(name, euler.Raw());
+        ImGui::SliderAngle3(name, euler.Raw());
         
         *q = Quaternion::FromEuler(euler);
     }

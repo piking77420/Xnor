@@ -75,6 +75,9 @@ struct XNOR_ENGINE Colorf
 
     [[nodiscard]]
     constexpr explicit operator Color() const;
+
+    [[nodiscard]]
+    constexpr explicit operator ColorHsv() const;
 };
 
 /// @brief The @ref ColorHSV struct represents a color in HSVA color space.
@@ -95,6 +98,9 @@ struct XNOR_ENGINE ColorHsv
 
     [[nodiscard]]
     constexpr explicit operator Color() const;
+    
+    [[nodiscard]]
+    constexpr explicit operator Colorf() const;
 };
 
 constexpr Color Color::White() { return Color(0xFF, 0xFF, 0xFF); }
@@ -167,6 +173,45 @@ constexpr ColorHsv::operator Color() const
     }
 }
 
+constexpr ColorHsv::operator Colorf() const
+{
+    const uint8_t hi = h / HueAngle;
+    const uint8_t f = h % HueAngle * 6;
+    const uint8_t p = (v * (0xFF - s) + 0x7F) / 0xFF;
+    const uint8_t q = (v * (0xFF - (s * f + 0x7F) / 0xFF) + 0x7F) / 0xFF;
+    const uint8_t t = (v * (0xFF - (s * (0xFF - f) + 0x7F) / 0xFF) + 0x7F) / 0xFF;
+
+    ColorRgb color;
+    switch (hi)
+    {
+        case 0:
+            color = { v, t, p, a };
+            break;
+
+        case 1:
+            color = { q, v, p, a };
+            break;
+
+        case 2:
+            color = { p, v, t, a };
+            break;
+
+        case 3:
+            color = { p, q, v, a };
+            break;
+
+        case 4:
+            color = { t, p, v, a };
+            break;
+
+        default:
+            color = { v, p, q, a };
+            break;
+    }
+
+    return static_cast<Colorf>(color);
+}
+
 [[nodiscard]]
 constexpr Color operator+(const Color c1, const Color c2)
 {
@@ -212,6 +257,11 @@ constexpr Colorf operator*(const Colorf color, const float_t alphaFactor) { retu
 constexpr Colorf::operator Color() const
 {
     return Color(static_cast<uint8_t>(r) * 255, static_cast<uint8_t>(g) * 255, static_cast<uint8_t>(b) * 255, static_cast<uint8_t>(a) * 255);
+}
+
+constexpr Colorf::operator ColorHsv() const
+{
+    return static_cast<ColorHsv>(static_cast<ColorRgb>(*this));
 }
 
 constexpr Color::operator Colorf() const
