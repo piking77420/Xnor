@@ -167,8 +167,7 @@ void ContentBrowser::DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entr
 
     ImGui::SameLine();
     
-    const float_t newCursorPos = ImGui::GetCursorPosX();
-    if (newCursorPos + (newCursorPos - oldCursorPos) > ImGui::GetContentRegionAvail().x)
+    if (ImGui::GetCursorPosX() - oldCursorPos > ImGui::GetContentRegionAvail().x)
         ImGui::Dummy(ImVec2());
 }
 
