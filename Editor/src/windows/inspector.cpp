@@ -193,7 +193,7 @@ void Inspector::DisplayXnorPointerMember(const void* obj, const XnorCore::FieldI
     if (ImGui::BeginDragDropTarget())
     {
         // ReSharper disable once CppTooWideScope
-        const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("CB");
+        const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("ContentBrowserFile");
                 
         if (payload)
         {
