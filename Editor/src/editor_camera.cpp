@@ -1,19 +1,15 @@
 #include "editor_camera.hpp"
 
 #include "editor.hpp"
-#include "input/input.hpp"
 #include "input/time.hpp"
 #include "scene/component/mesh_renderer.hpp"
 
 using namespace XnorEditor;
-using namespace XnorCore;
 
-
-void EditorCamera::UpdateCamera(const XnorEditor::Editor& editor,Camera& camera)
+void EditorCamera::UpdateCamera(const Editor& editor, XnorCore::Camera& camera)
 {
     m_EditorRef = &editor;
     m_EditorRefCamera = &camera;
-
   
     if (m_ComputeDeltaMouse)
     {
@@ -32,40 +28,37 @@ void EditorCamera::UpdateCamera(const XnorEditor::Editor& editor,Camera& camera)
         m_ResetDeltaMouse = false;
     }
 }
-    
 
 void EditorCamera::ResetDeltatMouse()
 {
-
     m_FirstMove = false;
     m_LastInput = Vector2(0.f);
 }
 
 void EditorCamera::CameraOnRightClick()
 {
-    if (Input::GetMouseButton(MouseButton::Right, MouseButtonStatus::Down))
+    if (ImGui::IsMouseDown(ImGuiMouseButton_Right))
     {
         m_ComputeDeltaMouse = true;
         EditorCameraRotation();
-        Window::HideCursor(true);
+        XnorCore::Window::HideCursor(true);
     }
     
-    if (Input::GetMouseButton(MouseButton::Right, MouseButtonStatus::Release))
+    if (ImGui::IsMouseReleased(ImGuiMouseButton_Right))
     {
         m_ResetDeltaMouse = true;
-        Window::HideCursor(false);
+        XnorCore::Window::HideCursor(false);
     }
-    
 }
 
 void EditorCamera::EditorCameraRotation()
 {
-    m_Yaw   += m_MouseOffSet.x;
+    m_Yaw += m_MouseOffSet.x;
     m_Pitch += m_MouseOffSet.y; 
     
-    if(m_Pitch > MaxPitch)
+    if (m_Pitch > MaxPitch)
         m_Pitch = MaxPitch;
-    if(m_Pitch < -MaxPitch)
+    if (m_Pitch < -MaxPitch)
         m_Pitch = -MaxPitch;
 
     m_EditorRefCamera->front.x = std::cos(m_Yaw * Calc::Deg2Rad) * std::cos(m_Pitch * Calc::Deg2Rad);
@@ -79,25 +72,25 @@ void EditorCamera::EditorCameraRotation()
 
 void EditorCamera::EditorCameraMovement()
 {
-    const float_t dt = Time::GetDeltaTime();
+    const float_t dt = XnorCore::Time::GetDeltaTime();
     const float_t cameraSpeed = m_CameraSpeed * dt;
 
-    if (Input::GetKey(Key::W, KeyStatus::Down))
+    if (ImGui::IsKeyDown(ImGuiKey_W))
         m_EditorRefCamera->pos += m_EditorRefCamera->front * cameraSpeed;
 
-    if (Input::GetKey(Key::S, KeyStatus::Down))
+    if (ImGui::IsKeyDown(ImGuiKey_S))
         m_EditorRefCamera->pos -= m_EditorRefCamera->front * cameraSpeed;
 
-    if (Input::GetKey(Key::A, KeyStatus::Down))
+    if (ImGui::IsKeyDown(ImGuiKey_A))
         m_EditorRefCamera->pos += m_EditorRefCamera->right * cameraSpeed;
     
-    if (Input::GetKey(Key::D, KeyStatus::Down))
+    if (ImGui::IsKeyDown(ImGuiKey_D))
         m_EditorRefCamera->pos -=  m_EditorRefCamera->right * cameraSpeed;
    
-    if (Input::GetKey(Key::Space, KeyStatus::Down))
+    if (ImGui::IsKeyDown(ImGuiKey_Space))
         m_EditorRefCamera->pos += Vector3::UnitY() * cameraSpeed;
 
-    if (Input::GetKey(Key::LeftControl, KeyStatus::Down))
+    if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
         m_EditorRefCamera->pos -= Vector3::UnitY() * cameraSpeed;
 }
 
@@ -105,26 +98,22 @@ void EditorCamera::OnMiddleButton()
 {
     using namespace XnorCore;
     
-    if (Input::GetMouseButton(MouseButton::Middle,MouseButtonStatus::Down))
+    if (ImGui::IsMouseDown(ImGuiMouseButton_Middle))
     {
         m_ComputeDeltaMouse = true;
         const Vector3 vector = (m_EditorRefCamera->right * -m_MouseOffSet.x) + (m_EditorRefCamera->up * m_MouseOffSet.y);
-        m_EditorRefCamera->pos += vector * Time::GetDeltaTime() * m_CameraSpeed ; 
+        m_EditorRefCamera->pos += vector * Time::GetDeltaTime() * m_CameraSpeed;
     }
     
-    if (Input::GetMouseButton(MouseButton::Middle,MouseButtonStatus::Release))
+    if (ImGui::IsMouseReleased(ImGuiMouseButton_Middle))
     {
         m_ResetDeltaMouse = true;
     }
-   
-
 }
 
 void EditorCamera::ComputeDeltaMouse()
 {
-    using namespace XnorCore;
-
-    const Vector2 mousePos = Input::GetCursorPos<Vector2>();
+    const Vector2 mousePos = XnorCore::Utils::FromImVec(ImGui::GetMousePos());
     
     if (!m_FirstMove)
     {
@@ -137,9 +126,7 @@ void EditorCamera::ComputeDeltaMouse()
     m_MouseOffSet.y = m_LastInput.y - mousePos.y ; // reversed since y-coordinates range from bottom to top
     m_LastInput.x = mousePos.x;
     m_LastInput.y = mousePos.y;
-
 }
-
 
 void EditorCamera::OnPressGoToObject()
 {
@@ -148,7 +135,7 @@ void EditorCamera::OnPressGoToObject()
     if (m_EditorRef->data.selectedEntity == nullptr)
         return;
     
-    if (Input::GetKey(Key::F,KeyStatus::Press))
+    if (ImGui::IsKeyPressed(ImGuiKey_F))
     {
         m_GotoObject = true;
     }
@@ -157,9 +144,9 @@ void EditorCamera::OnPressGoToObject()
         return;
     }
 
-    const Entity& currentEntiy = *m_EditorRef->data.selectedEntity;
+    const XnorCore::Entity& currentEntiy = *m_EditorRef->data.selectedEntity;
 
-    const MeshRenderer* meshRenderer = currentEntiy.GetComponent<MeshRenderer>();
+    const XnorCore::MeshRenderer* meshRenderer = currentEntiy.GetComponent<XnorCore::MeshRenderer>();
     
     if (meshRenderer == nullptr)
     {
@@ -184,9 +171,8 @@ void EditorCamera::GoToObject()
         return;
     }
     
-    Logger::LogDebug("Go to object");
+    XnorCore::Logger::LogDebug("Go to object");
         
-    forwartVec *= 1.f/distance;
-    m_EditorRefCamera->pos = Vector3::Lerp(m_EditorRefCamera->pos,m_EditorRefCamera->pos + forwartVec,Time::GetDeltaTime() * distance) ; 
+    forwartVec *= 1.f / distance;
+    m_EditorRefCamera->pos = Vector3::Lerp(m_EditorRefCamera->pos,m_EditorRefCamera->pos + forwartVec, XnorCore::Time::GetDeltaTime() * distance);
 }
-

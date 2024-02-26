@@ -29,10 +29,7 @@ void RenderWindow::Display()
         m_Editor->renderer.RenderScene(XnorCore::World::world->Scene, m_RendererContext);
     }
     
-    ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_ColorTexture->GetId())
-        , ImGui::GetContentRegionAvail(),
-        {1,1},{0,0}
-        );
+    ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_ColorTexture->GetId()), ImGui::GetContentRegionAvail(), {1, 1},{0, 0});
 }
 
 void RenderWindow::Initialize(XnorCore::RendererContext* rendererContext)

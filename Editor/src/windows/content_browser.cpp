@@ -18,8 +18,6 @@ ContentBrowser::ContentBrowser(Editor* editor, XnorCore::Pointer<XnorCore::Direc
 
 void ContentBrowser::Display()
 {
-    FetchInfo();
-
     ImVec2 available = ImGui::GetContentRegionAvail();
 
     ImGui::BeginChild("##left", ImVec2(available.x * 0.5f, 0.f), ImGuiChildFlags_Border | ImGuiChildFlags_ResizeX);
