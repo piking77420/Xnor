@@ -40,7 +40,7 @@ public:
     // static_assert(std::is_assignable_v<T, std::add_const_t<T>>, "T must have a copy operator");
 
     /// @brief The type of the List<T>, refers to T
-    using value_type = T;
+    using Type = T;
 
     /// @brief Creates an empty list with a capacity of 0
     explicit List();
@@ -109,6 +109,8 @@ public:
     /// @param args Arguments
     template <class... Args>
     void Emplace(Args&&... args);
+
+    void Insert(size_t index);
 
     /// @brief Inserts an element in the list at the given position
     /// @param element Element
@@ -428,6 +430,20 @@ void List<T>::Emplace(Args&&... args) // NOLINT(cppcoreguidelines-missing-std-fo
     CheckGrow(m_Size + 1);
 
     m_Data[m_Size] = T(std::forward<Args>(args)...);
+    m_Size++;
+}
+
+template <typename T>
+void List<T>::Insert(size_t index)
+{
+    if (index >= m_Size)
+        throw std::invalid_argument("List insert index out of range");
+
+    CheckGrow(m_Size + 1);
+
+    std::memcpy(&m_Data[index + 1], &m_Data[index], (m_Size - index) * m_TypeSize);
+    m_Data[index] = T();
+    
     m_Size++;
 }
 

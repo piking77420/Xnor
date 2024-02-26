@@ -219,6 +219,7 @@
   <ItemGroup>
     <Content Include="include\rendering\rhi_typedef.hpp" />
     <Content Include="include\utils\constexpr_array.hpp" />
+    <Content Include="include\utils\meta_programming.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

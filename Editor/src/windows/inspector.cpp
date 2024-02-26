@@ -32,12 +32,17 @@ void Inspector::Display()
 
     // Request the type info of the object
 	const XnorCore::TypeInfo& info = XnorCore::TypeInfo::Get(typeid(*m_Editor->data.selectedEntity).hash_code());
+
+    using ObjType = std::remove_reference_t<decltype(*m_Editor->data.selectedEntity)>;
+    constexpr XnorCore::TypeDescriptor<ObjType> desc = XnorCore::TypeInfo::Get<ObjType>();
     ImGui::Text("%s", info.GetName().c_str());
 
     // Display each member
-    for (const XnorCore::FieldInfo& m : info.GetMembers())
-        DisplayMember(ptr, m);
+    // for (const XnorCore::FieldInfo& m : info.GetMembers())
+    //    DisplayMember(ptr, m);
 
+    DisplayUsingDescriptor(static_cast<ObjType*>(ptr), desc);
+    
     ImGui::PopID();
 }
 

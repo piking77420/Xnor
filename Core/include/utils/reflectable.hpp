@@ -8,11 +8,14 @@
 #include "reflectable.hpp"
 #include "refl/refl.hpp"
 
+#include "meta_programming.hpp"
 #include "utils.hpp"
 
 BEGIN_XNOR_CORE
 
 using MemberAttribute = refl::attr::usage::member;
+template <typename T>
+using TypeDescriptor = refl::type_descriptor<T>;
 
 template<std::size_t I = 0, typename... Tp>
 std::enable_if_t<I == sizeof...(Tp), void>
@@ -33,6 +36,10 @@ struct NotSerializable : MemberAttribute
 };
 
 struct ExpandPointer : MemberAttribute
+{
+};
+
+struct HideInInspector : MemberAttribute
 {
 };
 
@@ -135,7 +142,7 @@ public:
      * @return Type info
      */
     template <typename ReflectT>
-    static constexpr const TypeInfo& Get();
+    static constexpr TypeDescriptor<ReflectT> Get();
 
     /**
      * @brief Gets the type info of a type from a hash
@@ -201,7 +208,7 @@ private:
      * @param desc refl Type descriptor
      */
     template <typename ReflectT>
-    explicit constexpr TypeInfo(refl::type_descriptor<ReflectT> desc);
+    explicit constexpr TypeInfo(TypeDescriptor<ReflectT> desc);
 
     /**
      * @brief Parses the members of a type from a type descriptor
@@ -209,7 +216,7 @@ private:
      * @param desc refl Type descriptor
      */
     template <typename ReflectT>
-    constexpr void ParseMembers(refl::type_descriptor<ReflectT> desc);
+    constexpr void ParseMembers(TypeDescriptor<ReflectT> desc);
 
     /**
      * @brief Parses the parent classes of a type from a type descriptor
@@ -217,7 +224,7 @@ private:
      * @param desc refl Type descriptor
      */
     template <typename ReflectT>
-    constexpr void ParseParents(refl::type_descriptor<ReflectT> desc);
+    constexpr void ParseParents(TypeDescriptor<ReflectT> desc);
 };
 
 template <typename T>
@@ -250,18 +257,18 @@ constexpr void TypeInfo::Create()
     
     // TODO FIXME constexpr TypeInfo ti(refl::reflect<ReflectT>());
     TypeInfo ti(refl::reflect<ReflectT>());
-        
+
     m_TypeInfo.emplace(typeid(ReflectT).hash_code(), ti);
 }
 
 template <typename ReflectT>
-constexpr const TypeInfo& TypeInfo::Get()
+constexpr TypeDescriptor<ReflectT> TypeInfo::Get()
 {
-    return m_TypeInfo.at(typeid(ReflectT).hash_code());
+    return refl::reflect<ReflectT>();
 }
 
 template <typename ReflectT>
-constexpr TypeInfo::TypeInfo(const refl::type_descriptor<ReflectT> desc)
+constexpr TypeInfo::TypeInfo(const TypeDescriptor<ReflectT> desc)
 {
     // Get type name
     m_Name = std::string(desc.name.c_str());
@@ -273,7 +280,7 @@ constexpr TypeInfo::TypeInfo(const refl::type_descriptor<ReflectT> desc)
 }
 
 template <typename ReflectT>
-constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
+constexpr void TypeInfo::ParseMembers(TypeDescriptor<ReflectT> desc)
 {
     // Loop over type members (variables only)
     refl::util::for_each(desc.members, [&]<typename T>(const T member)
@@ -284,13 +291,13 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
         // Get metadata about the member
         constexpr bool_t isArray = std::is_array_v<typename T::value_type>;
         constexpr bool_t isPointer = std::is_pointer_v<typename T::value_type>;
-        bool_t isPolyPointer = Utils::IsPolyPtr<typename T::value_type>;
-        bool_t isNativeType = Utils::IsNativeType<typename T::value_type>;
-        bool_t isMathType = Utils::IsMathType<typename T::value_type>;
-        bool_t isXnorPointer = Utils::IsXnorPointer<typename T::value_type>;
+        bool_t isPolyPointer = Meta::IsPolyPtr<typename T::value_type>;
+        bool_t isNativeType = Meta::IsNativeType<typename T::value_type>;
+        bool_t isMathType = Meta::IsMathType<typename T::value_type>;
+        bool_t isXnorPointer = Meta::IsXnorPointer<typename T::value_type>;
         constexpr bool_t isReflectable = std::is_base_of_v<Reflectable, typename T::value_type>;
         constexpr bool_t isStatic = member.is_static;
-        constexpr bool_t isList = Utils::IsXnorVector<typename T::value_type>;
+        constexpr bool_t isList = Meta::IsXnorVector<typename T::value_type>;
 
         // A member is const if it can't be written to
         constexpr bool_t isConst = !member.is_writable;
@@ -320,22 +327,22 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
             using ArrayT = std::remove_all_extents_t<typename T::value_type>;
             hash = typeid(ArrayT).hash_code();
             elementSize = sizeof(ArrayT);
-            isPolyPointer = Utils::IsPolyPtr<ArrayT>;
-            isXnorPointer = Utils::IsXnorPointer<ArrayT>;
-            isNativeType = Utils::IsNativeType<ArrayT>;
-            isMathType = Utils::IsNativeType<ArrayT>;
+            isPolyPointer = Meta::IsPolyPtr<ArrayT>;
+            isXnorPointer = Meta::IsXnorPointer<ArrayT>;
+            isNativeType = Meta::IsNativeType<ArrayT>;
+            isMathType = Meta::IsNativeType<ArrayT>;
         }
         else if constexpr (isList)
         {
-            using ListT = typename T::value_type::value_type;
+            using ListT = typename T::value_type::Type;
             hash = typeid(ListT).hash_code();
             elementSize = sizeof(ListT);
-            isPolyPointer = Utils::IsPolyPtr<ListT>;
-            isXnorPointer = Utils::IsXnorPointer<ListT>;
-            isNativeType = Utils::IsNativeType<ListT>;
-            isMathType = Utils::IsNativeType<ListT>;
+            isPolyPointer = Meta::IsPolyPtr<ListT>;
+            isXnorPointer = Meta::IsXnorPointer<ListT>;
+            isNativeType = Meta::IsNativeType<ListT>;
+            isMathType = Meta::IsNativeType<ListT>;
         }
-        else if constexpr (Utils::IsXnorPointer<typename T::value_type>)
+        else if constexpr (Meta::IsXnorPointer<typename T::value_type>)
         {
             using XnorPointerT = typename T::value_type::Type;
             hash = typeid(XnorPointerT).hash_code();
@@ -380,7 +387,7 @@ constexpr void TypeInfo::ParseMembers(refl::type_descriptor<ReflectT> desc)
 }
 
 template <typename ReflectT>
-constexpr void TypeInfo::ParseParents(refl::type_descriptor<ReflectT> desc)
+constexpr void TypeInfo::ParseParents(TypeDescriptor<ReflectT> desc)
 {
     if constexpr (desc.declared_bases.size != 0)
     {
