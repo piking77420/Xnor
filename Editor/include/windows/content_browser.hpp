@@ -38,6 +38,8 @@ private:
     void DisplayDirectoryHierarchy(const XnorCore::Pointer<XnorCore::Entry>& entry);
 
     void DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entry, const XnorCore::Pointer<XnorCore::Texture>& texture);
+
+    void BeginDragDrop(const XnorCore::Pointer<XnorCore::File>& file);
 };
 
 END_XNOR_EDITOR
