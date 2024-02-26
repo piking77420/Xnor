@@ -46,6 +46,9 @@ private:
     static void DisplaySimpleType(MemberT* ptr, const char_t* name);
 
     template <typename MemberT>
+    static void DisplayArray(MemberT* ptr, const char_t* name);
+
+    template <typename MemberT>
     static void DisplayList(MemberT* ptr, const char_t* name);
 };
 
@@ -153,31 +156,25 @@ void Inspector::DisplayUsingDescriptor(ReflectT* const obj, const XnorCore::Type
 {
     refl::util::for_each(desc.members, [&]<typename T>(const T member)
     {
-        using MemberT = typename T::value_type;
-        const constexpr char_t* const name = member.name.c_str();
+        constexpr bool hidden = refl::descriptor::has_attribute<XnorCore::HideInInspector>(member); 
         
-        if constexpr (std::is_array_v<MemberT>)
+        if constexpr (!hidden)
         {
-            using ArrayT = std::remove_extent_t<MemberT>;
-            constexpr size_t arraySize = sizeof(MemberT) / sizeof(ArrayT);
-
-            MemberT& array = member.get(obj);
-
-            if (ImGui::CollapsingHeader(name))
+            using MemberT = typename T::value_type;
+            const constexpr char_t* const name = member.name.c_str();
+            
+            if constexpr (std::is_array_v<MemberT>)
             {
-                for (size_t i = 0; i < arraySize; i++)
-                {
-                    DisplaySimpleType<ArrayT>(&array[i], std::to_string(i).c_str());
-                }
+                DisplayArray<MemberT>(&member.get(obj), name);
             }
-        }
-        else if constexpr (XnorCore::Meta::IsXnorVector<MemberT>)
-        {
-            DisplayList<MemberT>(&member.get(obj), name);
-        }
-        else
-        {
-            DisplaySimpleType<MemberT>(&member.get(obj), name);
+            else if constexpr (XnorCore::Meta::IsXnorVector<MemberT>)
+            {
+                DisplayList<MemberT>(&member.get(obj), name);
+            }
+            else
+            {
+                DisplaySimpleType<MemberT>(&member.get(obj), name);
+            }
         }
     });
 }
@@ -207,12 +204,27 @@ void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name)
     }
     else if constexpr (XnorCore::Meta::IsPolyPtr<MemberT>)
     {
-        
+        [[maybe_unused]] const size_t hash = ptr->GetHash(); 
     }
     else
     {
         if (ImGui::CollapsingHeader(name))
             DisplayUsingDescriptor<MemberT>(ptr, XnorCore::TypeInfo::Get<MemberT>());            
+    }
+}
+
+template <typename MemberT>
+void Inspector::DisplayArray(MemberT* ptr, const char_t* name)
+{
+    using ArrayT = std::remove_extent_t<MemberT>;
+    constexpr size_t arraySize = sizeof(MemberT) / sizeof(ArrayT);
+
+    if (ImGui::CollapsingHeader(name))
+    {
+        for (size_t i = 0; i < arraySize; i++)
+        {
+            DisplaySimpleType<ArrayT>(&(*ptr)[i], std::to_string(i).c_str());
+        }
     }
 }
 

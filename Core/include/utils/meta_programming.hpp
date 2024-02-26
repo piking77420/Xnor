@@ -107,18 +107,6 @@ namespace Meta
     /// @return Whether @p T is a color type
     template<typename T>
     constexpr bool IsColorType = std::is_same_v<T, Colorf> || std::is_same_v<T, ColorRgb> || std::is_same_v<T, ColorHsv>;
-    
-    template <typename T, typename Tuple>
-    struct TupleContains;
-
-    template <typename T>
-    struct TupleContains<T, std::tuple<>> : std::false_type {};
-
-    template <typename T, typename U, typename... Ts>
-    struct TupleContains<T, std::tuple<U, Ts...>> : TupleContains<T, std::tuple<Ts...>> {};
-
-    template <typename T, typename... Ts>
-    struct TupleContains<T, std::tuple<T, Ts...>> : std::true_type {};
 }
 
 END_XNOR_CORE;
