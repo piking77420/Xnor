@@ -20,6 +20,12 @@ typedef char char_t;
 /// @see @ref char_t for reason
 typedef bool bool_t;
 
+// ReSharper disable once CppEnforceTypeAliasCodeStyle
+/// @brief Equivalent to <c>float</c>.
+///
+/// @see @ref float_t for reason
+typedef float float_t;
+
 #ifdef XNOR_EXPORT
 #define XNOR_ENGINE __declspec(dllexport)
 #else

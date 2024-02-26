@@ -10,9 +10,7 @@ BEGIN_XNOR_EDITOR
 struct EditorData
 {
     XnorCore::Entity* selectedEntity = nullptr;
-    float_t cameraSpeed = 3;
-    XnorCore::Key goToObjectKey = XnorCore::Key::F;
-
+    
     XnorCore::Camera gameCam;
     XnorCore::Camera editorCam;
 
