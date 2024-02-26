@@ -221,14 +221,14 @@ void Editor::CreateTestScene()
 	
 	meshRenderer->model = ResourceManager::Get<Model>(FileManager::Get("assets/models/viking_room.obj"));
 	Pointer<File>&& vikingRoomTexture = FileManager::Get("assets/textures/viking_room.png");
-	meshRenderer->texture = ResourceManager::Get<Texture>(vikingRoomTexture);
-	meshRenderer->texture->loadData.flipVertically = true;
-	meshRenderer->texture->Unload();
-	meshRenderer->texture->Load(vikingRoomTexture);
-	meshRenderer->texture->CreateInRhi();
+	meshRenderer->material.textures = ResourceManager::Get<Texture>(vikingRoomTexture);
+	meshRenderer->material.textures->loadData.flipVertically = true;
+	meshRenderer->material.textures->Unload();
+	meshRenderer->material.textures->Load(vikingRoomTexture);
+	meshRenderer->material.textures->CreateInRhi();
 
 	Entity& ent2 = *World::world->Scene.CreateEntity("DirectionalLight");
-	SpotLight* pointLight = ent2.AddComponent<SpotLight>();
+	DirectionalLight* pointLight = ent2.AddComponent<DirectionalLight>();
 	pointLight->color = { 1.f, 1.f, 1.f };
 	ent2.AddComponent<TestComponent>();
 	ent2.transform.position = { 0.f, 1.f, 0.f };
@@ -236,7 +236,7 @@ void Editor::CreateTestScene()
 	Entity& ent3 = *World::world->Scene.CreateEntity("Plane");
 	meshRenderer = ent3.AddComponent<MeshRenderer>();
 	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
-	meshRenderer->texture = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/wood.jpg"));
+	meshRenderer->material.textures = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/wood.jpg"));
 	ent3.transform.scale = { 10.f, 0.1f, 10.f };
 	ent3.transform.position -= { 0.f, -0.2f, 0.f};
 	
@@ -244,7 +244,7 @@ void Editor::CreateTestScene()
 	ent4.transform.position = { 2.f, 0, 2.f};
 	meshRenderer = ent4.AddComponent<MeshRenderer>();
 	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
-	meshRenderer->texture = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/diamond_block.jpg"));
+	meshRenderer->material.textures = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/diamond_block.jpg"));
 }
 
 void Editor::MenuBar() const

@@ -1,5 +1,6 @@
 #pragma once
 #include "core.hpp"
+#include "rendering/material.hpp"
 #include "resource/model.hpp"
 #include "resource/texture.hpp"
 #include "scene/component.hpp"
@@ -12,9 +13,8 @@ class MeshRenderer : public Component
     
 public:
     XNOR_ENGINE MeshRenderer();
-
     Pointer<Model> model;
-    Pointer<Texture> texture;
+    Material material;
     bool drawModelAabb = true;
 };
 
@@ -23,6 +23,6 @@ END_XNOR_CORE
 REFL_AUTO(
     type(XnorCore::MeshRenderer, bases<XnorCore::Component>),
     field(model),
-    field(texture),
+    field(material),
     field(drawModelAabb)
 );

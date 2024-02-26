@@ -109,7 +109,6 @@ void EditorCamera::OnMiddleButton()
         m_ComputeDeltaMouse = true;
         const Vector3 vector = (m_EditorRefCamera->right * -m_MouseOffSet.x) + (m_EditorRefCamera->up * m_MouseOffSet.y);
         m_EditorRefCamera->pos += vector * Time::GetDeltaTime() * m_CameraSpeed;
-        
     }
     
     if (ImGui::IsMouseReleased(ImGuiMouseButton_Middle))
@@ -143,7 +142,7 @@ void EditorCamera::OnPressGoToObject()
     if (m_EditorRef->data.selectedEntity == nullptr || m_GotoObject)
         return;
     
-    if (!XnorCore::Input::GetKey(XnorCore::Key::F, XnorCore::KeyStatus::Press))
+    if (!ImGui::IsKeyPressed(ImGuiKey_F))
     {
         return;
     }
@@ -163,9 +162,9 @@ void EditorCamera::OnPressGoToObject()
     {
         const XnorCore::ModelAABB&& aabb = meshRenderer->model->GetAABB();
         const Vector3 radiusVec = aabb.max - aabb.min;
-        Vector4 radiusPreScale = Vector4(radiusVec.x,radiusVec.y,radiusVec.z,1.0f);
-        radiusPreScale = Matrix::Trs(Vector3(0.f),Quaternion::Identity(),currentEntiy.transform.scale) * radiusPreScale;
-        const Vector3 correctVec = {radiusPreScale.x,radiusPreScale.y,radiusPreScale.z};
+        Vector4 radiusPreScale = Vector4(radiusVec.x, radiusVec.y, radiusVec.z, 1.0f);
+        radiusPreScale = Matrix::Trs(Vector3(0.f), Quaternion::Identity(), currentEntiy.transform.scale) * radiusPreScale;
+        const Vector3 correctVec = {radiusPreScale.x, radiusPreScale.y, radiusPreScale.z};
         m_DistanceToStop = correctVec.Length();
     }
     
@@ -178,8 +177,8 @@ void EditorCamera::GoToObject()
     if (!m_GotoObject)
         return;
     
-    Vector3 forwartVec = (m_ObjectPos - m_EditorRefCamera->pos);
-    const float distance = forwartVec.Length();
+    Vector3 forwardVec = (m_ObjectPos - m_EditorRefCamera->pos);
+    const float_t distance = forwardVec.Length();
         
     if (distance <= m_DistanceToStop)
     {
@@ -187,17 +186,15 @@ void EditorCamera::GoToObject()
         return;
     }
     
-    forwartVec *= 1.f / distance;
-    m_EditorRefCamera->pos = Vector3::Lerp(m_EditorRefCamera->pos,m_EditorRefCamera->pos + forwartVec, XnorCore::Time::GetDeltaTime() * distance);
+    forwardVec *= 1.f / distance;
+    m_EditorRefCamera->pos = Vector3::Lerp(m_EditorRefCamera->pos, m_EditorRefCamera->pos + forwardVec, XnorCore::Time::GetDeltaTime() * distance);
 }
 
 void EditorCamera::AddMovement(const Vector3& movement)
 {
-    if(movement == Vector3::Zero())
-    {
+    if (movement == Vector3::Zero())
         return;
-    }
-        
+    
     m_EditorRefCamera->pos += movement;
     m_GotoObject = false;
 }

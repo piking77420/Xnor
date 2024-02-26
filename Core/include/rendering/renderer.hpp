@@ -25,8 +25,6 @@ public:
 
     XNOR_ENGINE void CompileShader(); 
     
-    XNOR_ENGINE void OnResizeWindow();
-    
     XNOR_ENGINE void SwapBuffers();
 
     XNOR_ENGINE void PrepareRendering(vec2i windowSize);
@@ -34,8 +32,11 @@ public:
 private:
     FrameBuffer* m_RenderBuffer = nullptr;
     Texture* m_ColorAttachment = nullptr;
+    Texture* m_TexturePositionAttachement = nullptr;
+    Texture* m_NormalAttachement = nullptr;
+    Texture* m_TextureCoordAttachement = nullptr;
     Texture* m_DepthAttachment = nullptr;
-    
+
     Pointer<Shader> m_BasicShader;
     Pointer<Shader> m_DrawTextureToScreenShader;
     Pointer<Shader> m_GizmoShader;
@@ -45,9 +46,14 @@ private:
     
     XNOR_ENGINE void UpdateLight(const Scene& scene, const RendererContext& rendererContext) const;
 
-    XNOR_ENGINE void DrawMeshRenders(const Scene& scene, const RendererContext& rendererContext) const;
+    XNOR_ENGINE void DrawMeshRendersOpaque(const Scene& scene, const RendererContext& rendererContext) const;
 
+    XNOR_ENGINE void DrawMeshRendersLit(const Scene& scene, const RendererContext& rendererContext) const;
+
+    
     XNOR_ENGINE void SetViewport(const Camera& camera);
+
+
 };
 
 END_XNOR_CORE

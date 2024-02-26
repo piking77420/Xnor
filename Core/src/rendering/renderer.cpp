@@ -70,7 +70,7 @@ void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererCo
 	RHI::UpdateCameraUniform(cam);
 
 	UpdateLight(scene,rendererContext);
-	DrawMeshRenders(scene,rendererContext);
+	DrawMeshRendersOpaque(scene,rendererContext);
 	m_BasicShader->Unuse();
 	m_RenderBuffer->UnBindFrameBuffer();
 	
@@ -109,9 +109,7 @@ void Renderer::SwapBuffers()
 
 void Renderer::PrepareRendering(vec2i windowSize)
 {
-	
 	m_RenderBuffer = new FrameBuffer(windowSize);
-	
 	
 	m_ColorAttachment = new Texture(TextureInternalFormat::Rgba16F, m_RenderBuffer->GetSize());
 	m_DepthAttachment = new Texture(TextureInternalFormat::DepthStencil,m_RenderBuffer->GetSize());
@@ -206,7 +204,7 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 	RHI::UpdateLight(gpuLightData);
 }
 
-void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext&) const 
+void Renderer::DrawMeshRendersOpaque(const Scene& scene, const RendererContext&) const 
 {
 	std::vector<const MeshRenderer*> meshrenderers;
 	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderers);
@@ -214,14 +212,15 @@ void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext&) const
 
 	for (const MeshRenderer* meshRenderer : meshrenderers)
 	{
+		
 		Transform& transform = meshRenderer->entity->transform;
 		ModelUniformData modelData;
 		
 		modelData.model = Matrix::Trs(transform.position, transform.quaternion, transform.scale);
 		RHI::UpdateModelUniform(modelData);
 
-		if (meshRenderer->texture.IsValid())
-			meshRenderer->texture->BindTexture(0);
+		if (meshRenderer->material.textures.IsValid())
+			meshRenderer->material.textures->BindTexture(0);
 
 		if (meshRenderer->model.IsValid())
 			RHI::DrawModel(meshRenderer->model->GetId());
@@ -255,5 +254,10 @@ void Renderer::DrawMeshRenders(const Scene& scene, const RendererContext&) const
 	m_GizmoShader->Unuse();
 	RHI::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 
+}
+
+void Renderer::DrawMeshRendersLit(const Scene& scene, const RendererContext& rendererContext) const
+{
+	
 }
 
