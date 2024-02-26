@@ -60,6 +60,11 @@ bool ResourceManager::Contains(const std::string& name)
     return m_Resources.contains(name);
 }
 
+bool ResourceManager::Contains(const Pointer<File>& file)
+{
+    return m_Resources.contains(file->GetPathString());
+}
+
 void ResourceManager::Unload(const std::string& name)
 {
     Logger::LogDebug("Unloading resource {}", name);

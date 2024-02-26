@@ -184,6 +184,9 @@ Pointer<T>::Pointer(const Pointer& other, const bool strongReference)
     : m_ReferenceCounter(other.m_ReferenceCounter)
     , m_IsStrongReference(strongReference)
 {
+    if (!m_ReferenceCounter)
+        return;
+    
     if (strongReference)
         m_ReferenceCounter->IncStrong();
     else
@@ -195,6 +198,9 @@ Pointer<T>::Pointer(Pointer&& other) noexcept
     : m_ReferenceCounter(std::move(other.m_ReferenceCounter))
     , m_IsStrongReference(std::move(other.m_IsStrongReference))
 {
+    if (!m_ReferenceCounter)
+        return;
+    
     if (!m_IsStrongReference)
     {
         m_ReferenceCounter->DecWeak(&other);
@@ -222,6 +228,9 @@ Pointer<T>::Pointer(const Pointer<U>& other, const bool strongReference)
     : m_ReferenceCounter(reinterpret_cast<ReferenceCounter<T>*>(const_cast<ReferenceCounter<U>*>(other.GetReferenceCounter())))
     , m_IsStrongReference(strongReference)
 {
+    if (!m_ReferenceCounter)
+        return;
+    
     if (strongReference)
         m_ReferenceCounter->IncStrong();
     else
@@ -241,6 +250,9 @@ Pointer<T>::Pointer(Pointer<U>&& other) noexcept  // NOLINT(cppcoreguidelines-rv
     : m_ReferenceCounter(reinterpret_cast<ReferenceCounter<T>*>(const_cast<ReferenceCounter<U>*>(std::move(other.GetReferenceCounter()))))
     , m_IsStrongReference(std::move(other.GetIsStrongReference()))
 {
+    if (!m_ReferenceCounter)
+        return;
+    
     if (!m_IsStrongReference)
     {
         m_ReferenceCounter->DecWeak(reinterpret_cast<Pointer*>(&other));

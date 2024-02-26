@@ -35,6 +35,9 @@ public:
     [[nodiscard]]
     XNOR_ENGINE static bool Contains(const std::string& name);
 
+    [[nodiscard]]
+    XNOR_ENGINE static bool Contains(const Pointer<File>& file);
+
     template<ResourceT T = Resource>
     [[nodiscard]]
     static Pointer<T> Get(const std::string& name);
