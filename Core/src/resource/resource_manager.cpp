@@ -69,7 +69,7 @@ void ResourceManager::Rename(const Pointer<Resource>& resource, const std::strin
 {
     std::string&& oldName = resource->GetName();
     
-    Logger::LogDebug("Renaming resource {} to {}", oldName, newName);
+    Logger::LogInfo("Renaming resource {} to {}", oldName, newName);
 
     // Create a new temporary strong reference of the resource to keep it alive until we insert it in the map again
     const Pointer newResource(resource, true);
