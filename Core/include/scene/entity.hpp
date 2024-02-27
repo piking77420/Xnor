@@ -6,8 +6,6 @@
 #include "core.hpp"
 #include "transform.hpp"
 #include "resource/model.hpp"
-#include "resource/resource.hpp"
-#include "resource/texture.hpp"
 #include "utils/guid.hpp"
 #include "utils/list.hpp"
 #include "utils/poly_ptr.hpp"
@@ -88,9 +86,6 @@ private:
     Guid m_EntityId;
 
     List<PolyPtr<Component>> m_Components;
-
-    Pointer<Model> m_Model;
-    Pointer<Texture> m_Texture;
 
     friend class Scene;
 };
@@ -187,7 +182,5 @@ REFL_AUTO(
     field(transform),
     field(m_Components),
     field(m_Parent, XnorCore::HideInInspector()),
-    field(m_Children, XnorCore::HideInInspector()),
-    field(m_Model),
-    field(m_Texture)
+    field(m_Children, XnorCore::HideInInspector())
 )

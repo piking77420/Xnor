@@ -4,6 +4,11 @@
 #include "ui_window.hpp"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_stdlib.h"
+#include "rendering/light/directional_light.hpp"
+#include "rendering/light/point_light.hpp"
+#include "rendering/light/spot_light.hpp"
+#include "scene/component/mesh_renderer.hpp"
+#include "scene/component/test_component.hpp"
 #include "utils/reflectable.hpp"
 #include "utils/utils.hpp"
 
@@ -19,8 +24,6 @@ public:
     void Display() override;
 
 private:
-    void DisplayXnorPointerMember(const void* obj, const XnorCore::FieldInfo& fieldInfo);
-
     template <typename MemberT>
     static void DisplayScalar(MemberT* obj, const char_t* name);
     template <typename MemberT>
@@ -29,6 +32,8 @@ private:
     static void DisplayColorType(MemberT* obj, const char_t* name);
     template <typename MemberT>
     static void DisplayXnorPointer(MemberT* obj, const char_t* name);
+    template <typename MemberT>
+    static void DisplayPolyPointer(MemberT* obj, const char_t* name);
 
     template <typename ReflectT>
     static void DisplayObject(ReflectT* obj, XnorCore::TypeDescriptor<ReflectT> desc);
@@ -154,6 +159,30 @@ void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name)
     }
 }
 
+#define POLY_PTR_IF(type)\
+if (hash == typeid(type).hash_code())\
+{\
+    DisplayObject<type>(obj->Cast<type>(), XnorCore::TypeInfo::Get<type>());\
+}\
+
+
+template <typename MemberT>
+void Inspector::DisplayPolyPointer(MemberT* obj, const char_t* name)
+{
+    const size_t hash = obj->GetHash();
+
+    if (ImGui::CollapsingHeader(name))
+    {
+        // TODO find a less ugly solution to that
+
+        POLY_PTR_IF(XnorCore::MeshRenderer);
+        POLY_PTR_IF(XnorCore::DirectionalLight);
+        POLY_PTR_IF(XnorCore::TestComponent);
+        POLY_PTR_IF(XnorCore::PointLight);
+        POLY_PTR_IF(XnorCore::SpotLight);
+    }
+}
+
 template <typename ReflectT>
 void Inspector::DisplayObject(ReflectT* const obj, const XnorCore::TypeDescriptor<ReflectT> desc)
 {
@@ -207,7 +236,7 @@ void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name)
     }
     else if constexpr (XnorCore::Meta::IsPolyPtr<MemberT>)
     {
-        [[maybe_unused]] const size_t hash = ptr->GetHash(); 
+        DisplayPolyPointer<MemberT>(ptr, name);
     }
     else if constexpr (XnorCore::Meta::IsXnorPointer<MemberT>)
     {
