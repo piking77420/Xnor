@@ -12,9 +12,8 @@ File::File(std::filesystem::path&& filepath)
 {
     if (!is_regular_file(m_Path))
         throw std::invalid_argument("Path does not point to a file");
-    
-    m_NameNoExtension = m_Path.stem().generic_string();
-    m_Extension = m_Path.extension().string();
+
+    File::UpdateUtilityValues();
 }
 
 File::~File()
@@ -67,12 +66,22 @@ int64_t File::GetSize() const
     return m_Size;
 }
 
-void File::SetName(std::string newName)
+void File::SetName(std::string&& newName)
 {
-    Entry::SetName(std::forward<std::string>(newName));
+    Entry::SetName(std::move(newName));
+
+    m_Resource->SetName(GetPathString());
 }
 
 Pointer<Resource> File::GetResource() const
 {
     return m_Resource;
+}
+
+void File::UpdateUtilityValues()
+{
+    Entry::UpdateUtilityValues();
+    
+    m_NameNoExtension = m_Path.stem().generic_string();
+    m_Extension = m_Path.extension().string();
 }

@@ -1,6 +1,7 @@
 ﻿#include "resource/resource.hpp"
 
 #include "file/file.hpp"
+#include "resource/resource_manager.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -40,6 +41,13 @@ bool_t Resource::GetLoadedInRhi() const
 std::string Resource::GetName() const
 {
     return m_Name;
+}
+
+void Resource::SetName(std::string newName)
+{
+    ResourceManager::Rename(ResourceManager::Get(m_Name), newName);
+    
+    m_Name = std::move(newName);
 }
 
 const Guid& Resource::GetGuid() const

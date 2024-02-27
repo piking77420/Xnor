@@ -47,6 +47,8 @@ public:
     [[nodiscard]]
     static Pointer<T> Get(const Pointer<File>& file);
 
+    XNOR_ENGINE static void Rename(const Pointer<Resource>& resource, const std::string& newName);
+
     /// @brief Finds all @ref Resource "Resources" of type @p T.
     /// @tparam T The type of @ref Resource to find.
     /// @return All stored @ref Resource "Resources" of type @p T.

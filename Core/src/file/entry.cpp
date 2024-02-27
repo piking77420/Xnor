@@ -11,10 +11,7 @@ Entry::Entry(std::filesystem::path&& path)
     if (!exists(m_Path))
         throw std::invalid_argument("Path does not exist");
     
-    m_Name = m_Path.filename().generic_string();
-    const std::filesystem::path parent = m_Path.parent_path();
-    if (FileManager::Contains(parent))
-        m_Parent = static_cast<Directory*>(FileManager::Get<Directory>(parent));
+    Entry::UpdateUtilityValues();
 }
 
 bool Entry::Reload()
@@ -38,11 +35,15 @@ std::string Entry::GetName() const
     return m_Name;
 }
 
-void Entry::SetName(std::string newName)
+void Entry::SetName(std::string&& newName)
 {
     m_Name = std::move(newName);
 
-    std::filesystem::rename(m_Path, m_Path.parent_path().string() + m_Name);
+    const std::filesystem::path oldPath = m_Path;
+    m_Path = m_Path.parent_path().string() + static_cast<char_t>(std::filesystem::path::preferred_separator) + m_Name;
+    std::filesystem::rename(oldPath, m_Path);
+
+    UpdateUtilityValues();
 }
 
 bool Entry::GetLoaded() const
@@ -58,4 +59,12 @@ const Directory* Entry::GetParent() const
 Directory* Entry::GetParent()
 {
     return m_Parent;
+}
+
+void Entry::UpdateUtilityValues()
+{
+    m_Name = m_Path.filename().generic_string();
+    const std::filesystem::path parent = m_Path.parent_path();
+    if (FileManager::Contains(parent))
+        m_Parent = static_cast<Directory*>(FileManager::Get<Directory>(parent));
 }

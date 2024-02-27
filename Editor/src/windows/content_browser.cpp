@@ -1,6 +1,7 @@
 #include "windows/content_browser.hpp"
 
 #include "ImGui/imgui.h"
+#include "ImGui/imgui_stdlib.h"
 #include "resource/resource_manager.hpp"
 
 #define ASSETS_PATH "assets_internal/editor/content_browser/"
@@ -15,25 +16,6 @@ void ContentBrowser::BeginDragDrop(const XnorCore::Pointer<XnorCore::File>& file
         ImGui::SetDragDropPayload("ContentBrowserFile", &resource, sizeof(resource));
         ImGui::SetTooltip("%s", file->GetName().c_str());
         ImGui::EndDragDropSource();
-    }
-}
-
-void ContentBrowser::ContextMenu(XnorCore::Pointer<XnorCore::Entry> entry, const char_t* strId)
-{
-    if (ImGui::BeginPopupContextItem(strId))
-    {
-        XnorCore::Pointer<XnorCore::File>&& file = XnorCore::Utils::DynamicPointerCast<XnorCore::File>(entry);
-        if (file && ImGui::Selectable("Open"))
-            XnorCore::Utils::OpenFile(*file);
-
-        if (ImGui::Selectable("Open in explorer"))
-            XnorCore::Utils::OpenInExplorer(*entry);
-
-        //if (ImGui::Selectable("Rename"))
-
-        //if (ImGui::Selectable("Delete"))
-
-        ImGui::EndPopup();
     }
 }
 
@@ -124,12 +106,23 @@ void ContentBrowser::DisplayDirectoryHierarchy(const XnorCore::Pointer<XnorCore:
     else if (entry == m_CurrentDirectory)
         flags |= ImGuiTreeNodeFlags_Selected;
 
-    if (ImGui::TreeNodeEx(entry->GetName().c_str(), flags))
+    const bool_t isEntryToRename = m_EntryToRename == entry;
+
+    std::string&& entryName = entry->GetName();
+    const char* treeNodeName = isEntryToRename ? "##EntryToRename" : entryName.c_str();
+
+    if (ImGui::TreeNodeEx(treeNodeName, flags))
     {
+        if (m_EntryToRename == entry && m_IsEntryToRenameLeft)
+        {
+            ImGui::SameLine();
+            RenameEntry(entry);
+        }
+
         if (isDirectory && ImGui::IsItemHovered() && ImGui::IsMouseDown(ImGuiMouseButton_Left))
             m_CurrentDirectory = directory;
 
-        ContextMenu(entry, nullptr);
+        ContextMenu(entry, nullptr, true);
         
         if (isDirectory)
         {
@@ -188,11 +181,14 @@ void ContentBrowser::DisplayEntry(
     ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(texture->GetId()), ImVec2(64.f, 64.f));
     
     XnorCore::Utils::AlignImGuiCursor(textSize.x);
-    ImGui::Text("%s", entry->GetName().c_str());
+    if (m_EntryToRename == entry && !m_IsEntryToRenameLeft)
+        RenameEntry(entry);
+    else
+        ImGui::Text("%s", entry->GetName().c_str());
     
     ImGui::EndChild();
 
-    ContextMenu(entry, entry->GetPathString().c_str());
+    ContextMenu(entry, entry->GetPathString().c_str(), false);
 
     if (pushedStyleVar)
         ImGui::PopStyleColor();
@@ -230,4 +226,42 @@ void ContentBrowser::DisplayEntry(
     
     if (ImGui::GetCursorPosX() - oldCursorPos > ImGui::GetContentRegionAvail().x)
         ImGui::Dummy(ImVec2());
+}
+
+void ContentBrowser::ContextMenu(XnorCore::Pointer<XnorCore::Entry> entry, const char_t* strId, const bool_t isLeftPanel)
+{
+    if (ImGui::BeginPopupContextItem(strId))
+    {
+        XnorCore::Pointer<XnorCore::File>&& file = XnorCore::Utils::DynamicPointerCast<XnorCore::File>(entry);
+        if (file && ImGui::Selectable("Open"))
+            XnorCore::Utils::OpenFile(*file);
+
+        if (ImGui::Selectable("Open in explorer"))
+            XnorCore::Utils::OpenInExplorer(*entry);
+
+        if (ImGui::Selectable("Rename"))
+        {
+            m_EntryToRename = entry;
+            m_IsEntryToRenameLeft = isLeftPanel;
+        }
+
+        //if (ImGui::Selectable("Delete"))
+
+        ImGui::EndPopup();
+    }
+}
+
+void ContentBrowser::RenameEntry(const XnorCore::Pointer<XnorCore::Entry>& entry)
+{
+    ImGui::SetKeyboardFocusHere();
+        
+    std::string name = entry->GetName();
+    if (ImGui::InputText("##input", &name, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+    {
+        m_EntryToRename->SetName(std::move(name));
+        m_EntryToRename = nullptr;
+    }
+
+    if (!ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+        m_EntryToRename = nullptr;
 }

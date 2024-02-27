@@ -10,8 +10,6 @@ BEGIN_XNOR_EDITOR
 class ContentBrowser : public UiWindow
 {
     static void BeginDragDrop(const XnorCore::Pointer<XnorCore::File>& file);
-
-    static void ContextMenu(XnorCore::Pointer<XnorCore::Entry> entry, const char_t* strId);
     
 public:
     static constexpr XnorCore::Colorf SelectedEntryColor = XnorCore::Colorf(0.5f, 0.5f, 0.5f);
@@ -35,6 +33,9 @@ private:
     
     XnorCore::Pointer<XnorCore::Entry> m_SelectedEntry;
     XnorCore::Pointer<XnorCore::Entry> m_HoveredEntry;
+    XnorCore::Pointer<XnorCore::Entry> m_EntryToRename;
+    // Whether the entry to rename is on the left or right panel
+    bool_t m_IsEntryToRenameLeft = false;
 
     XnorCore::Pointer<XnorCore::Texture> m_DirectoryTexture;
     // Texture used to display unknown file types
@@ -46,6 +47,10 @@ private:
     void DisplayDirectoryHierarchy(const XnorCore::Pointer<XnorCore::Entry>& entry);
 
     void DisplayEntry(const XnorCore::Pointer<XnorCore::Entry>& entry, const XnorCore::Pointer<XnorCore::Texture>& texture, bool_t* hovered, bool_t* clicked);
+
+    void ContextMenu(XnorCore::Pointer<XnorCore::Entry> entry, const char_t* strId, bool_t isLeftPanel);
+
+    void RenameEntry(const XnorCore::Pointer<XnorCore::Entry>& entry);
 };
 
 END_XNOR_EDITOR

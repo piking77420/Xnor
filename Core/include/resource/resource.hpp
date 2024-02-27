@@ -40,6 +40,8 @@ public:
     [[nodiscard]]
     XNOR_ENGINE std::string GetName() const;
 
+    XNOR_ENGINE void SetName(std::string newName);
+
     [[nodiscard]]
     XNOR_ENGINE const Guid& GetGuid() const;
 

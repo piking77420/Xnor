@@ -40,10 +40,13 @@ public:
     [[nodiscard]]
     XNOR_ENGINE int64_t GetSize() const;
     
-    XNOR_ENGINE void SetName(std::string newName) override;
+    XNOR_ENGINE void SetName(std::string&& newName) override;
     
     [[nodiscard]]
     XNOR_ENGINE Pointer<Resource> GetResource() const;
+    
+protected:
+    void UpdateUtilityValues() override;
     
 private:
     std::string m_NameNoExtension;
@@ -56,7 +59,7 @@ private:
     Pointer<Resource> m_Resource;
 
     // We need this in order to set m_Resource from the ResourceManager
-    // which is the only class that needs to do that
+    // which is the only class that needs modify this field
     friend class ResourceManager;
 };
 

@@ -39,7 +39,7 @@ public:
     [[nodiscard]]
     XNOR_ENGINE std::string GetName() const;
 
-    XNOR_ENGINE virtual void SetName(std::string newName);
+    XNOR_ENGINE virtual void SetName(std::string&& newName);
     
     [[nodiscard]]
     XNOR_ENGINE bool GetLoaded() const;
@@ -57,6 +57,8 @@ protected:
     bool m_Loaded = false;
 
     Directory* m_Parent;
+
+    virtual void UpdateUtilityValues();
 };
 
 END_XNOR_CORE

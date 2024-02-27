@@ -65,6 +65,20 @@ bool ResourceManager::Contains(const Pointer<File>& file)
     return m_Resources.contains(file->GetPathString());
 }
 
+void ResourceManager::Rename(const Pointer<Resource>& resource, const std::string& newName)
+{
+    std::string&& oldName = resource->GetName();
+    
+    Logger::LogDebug("Renaming resource {} to {}", oldName, newName);
+
+    // Create a new temporary strong reference of the resource to keep it alive until we insert it in the map again
+    const Pointer newResource(resource, true);
+    
+    m_Resources.erase(oldName);
+    // Here we also need to create a new strong reference as the last one will be deleted when going out of scope
+    m_Resources[newName] = newResource.CreateStrongReference();
+}
+
 void ResourceManager::Unload(const std::string& name)
 {
     Logger::LogDebug("Unloading resource {}", name);
