@@ -54,7 +54,6 @@ void SceneGraph::Display()
         
         ImGui::TreePop();
     }
-
     
     CheckDeleteEntity(scene);
 }

@@ -308,7 +308,6 @@ void Editor::Update()
 			renderer.CompileShader();
 		ImGui::End();
 
-		
 		WorldBehaviours();
 		UpdateWindow();
 	

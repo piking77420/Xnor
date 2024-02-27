@@ -2456,6 +2456,16 @@ namespace refl
             }
 
             /**
+             * Returns the value of the field. (for instance fields).
+             * \copydetails refl::descriptor::invoke
+             */
+            template <typename U>
+            static constexpr decltype(auto) get(U* target) noexcept
+            {
+                return (target->*(member::pointer));
+            }
+
+            /**
              * A synonym for get().
              * \copydetails refl::descriptor::invoke
              */
