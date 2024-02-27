@@ -76,7 +76,7 @@ void Serializer::FetchAttribute(const std::string& attributeName, const T& value
 template <typename ReflectT>
 void Serializer::Serialize(const void* obj)
 {
-    const TypeInfo& info = TypeInfo::Get<ReflectT>();
+    const TypeInfo& info = TypeInfo::Get(typeid(ReflectT).hash_code());
 
     BeginXmlElement(info.GetName(), info.GetName());
 

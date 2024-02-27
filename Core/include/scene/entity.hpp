@@ -5,6 +5,7 @@
 #include "component.hpp"
 #include "core.hpp"
 #include "transform.hpp"
+#include "resource/model.hpp"
 #include "utils/guid.hpp"
 #include "utils/list.hpp"
 #include "utils/poly_ptr.hpp"
@@ -71,7 +72,7 @@ public:
     XNOR_ENGINE void Update();
     
     XNOR_ENGINE bool operator==(const Entity& entity) const;
-
+    
 private:
     XNOR_ENGINE explicit Entity(const Guid& entiyId);
 
@@ -180,5 +181,6 @@ REFL_AUTO(
     field(name),
     field(transform),
     field(m_Components),
-    field(m_Parent, XnorCore::NotSerializable())
+    field(m_Parent, XnorCore::HideInInspector()),
+    field(m_Children, XnorCore::HideInInspector())
 )
