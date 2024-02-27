@@ -10,10 +10,15 @@
 #include "vertex.hpp"
 #include "resource/model.hpp"
 
+
+
 BEGIN_XNOR_CORE
-	class RHI
+class RHI
 {
 public:
+
+	DELETE_COPY_MOVE_OPERATIONS(RHI)
+	
 	// Utils
 	XNOR_ENGINE static void SetPolygonMode(PolygonFace face, PolygonMode mode);
 	XNOR_ENGINE static void SetViewport(Vector2i screenSize);
@@ -45,13 +50,32 @@ public:
 	// FrameBuffer
 	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferId,const RenderPass& renderPass,const std::vector<const Texture*>& attechements);
 	XNOR_ENGINE static void DestroyFrameBuffer(uint32_t* frameBufferId);
-	
+	XNOR_ENGINE static void BlitFrameBuffer(uint32_t readBuffer,uint32_t targetBuffer,
+		Vector2i src0Size,Vector2i src1Size,Vector2i target0Size,Vector2i target1Size,Attachment attachmentTarget,TextureFiltering textureFiltering);
 	XNOR_ENGINE static void BindFrameBuffer(uint32_t frameBufferId);
 	XNOR_ENGINE static void UnbindFrameBuffer();
-	
-	XNOR_ENGINE static void CreateColorAttachement(Texture* texture, vec2i size);
 
 	XNOR_ENGINE static void SwapBuffers();
+	
+	XNOR_ENGINE static void Initialize();
+
+	XNOR_ENGINE static void Shutdown();
+
+	XNOR_ENGINE static void PrepareUniform();
+
+	XNOR_ENGINE static void SetClearColor(const Vector4& color);
+	
+	XNOR_ENGINE static void ClearColorAndDepth();
+	
+	XNOR_ENGINE static void ClearColor();
+
+	XNOR_ENGINE static void ClearDepth();
+	
+	XNOR_ENGINE static void UpdateModelUniform(const ModelUniformData& modelUniformData);
+
+	XNOR_ENGINE static void UpdateCameraUniform(const CameraUniformData& cameraUniformData);
+
+	XNOR_ENGINE static void UpdateLight(const GpuLightData& lightData);
 
 private:
 	struct ModelInternal
@@ -84,6 +108,8 @@ private:
 	
 	static void ComputeOpenglTextureFilter(uint32_t textureId, TextureFiltering textureFilter);
 
+	static uint32_t GetOpenglTextureFiltering(TextureFiltering textureFilter);
+
 	static uint32_t TextureTypeToOpenglTexture(TextureType textureType);
 
 	static uint32_t GetOpenglInternalFormat(TextureInternalFormat textureFormat);
@@ -96,25 +122,16 @@ private:
 
 	static uint32_t GetOpenglDataType(DataType dataType);
 
-public:
 	
-	DELETE_COPY_MOVE_OPERATIONS(RHI)
-
-	XNOR_ENGINE static void Initialize();
-
-	XNOR_ENGINE static void Shutdown();
-
-	XNOR_ENGINE static void PrepareUniform();
-
-	XNOR_ENGINE static void SetClearColor(const Vector4& color);
-	
-	XNOR_ENGINE static void ClearColorAndDepth();
-
-	XNOR_ENGINE static void UpdateModelUniform(const ModelUniformData& modelUniformData);
-
-	XNOR_ENGINE static void UpdateCameraUniform(const CameraUniformData& cameraUniformData);
-
-	XNOR_ENGINE static void UpdateLight(const GpuLightData& lightData);
+	static void OpenglDebugCallBack(
+		uint32_t source,
+		uint32_t type,
+		uint32_t id,
+		uint32_t severity,
+		size_t length,
+		const char_t* message,
+		const void* userParam
+	);
 
 private:
 	 static inline UniformBuffer* m_CameraUniform;

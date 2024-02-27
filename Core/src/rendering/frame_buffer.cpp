@@ -37,6 +37,11 @@ void FrameBuffer::UnBindFrameBuffer() const
 	RHI::BindFrameBuffer(0);
 }
 
+uint32_t FrameBuffer::GetId() const
+{
+	return m_Id;
+}
+
 
 
 

@@ -244,44 +244,53 @@ void RHI::CreateFrameBuffer(uint32_t* frameBufferId,const RenderPass& renderPass
 	glCreateFramebuffers(1, frameBufferId);
 
 	const std::vector<RenderTargetInfo>& renderTargetInfos = renderPass.renderPassAttachments;
-	std::vector<GLenum> openglAttachments(renderTargetInfos.size());
+	std::vector<GLenum> openglAttachmentsdraw;
+
 	
 	for (uint32_t i = 0; i < renderTargetInfos.size();i++ )
 	{
+		GLenum openglAttachment = 0 ;
 		switch (renderTargetInfos[i].attachment)
 		{
+			
 			case Attachment::Color_Attachment01:
-				openglAttachments[i] =  static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + i);
+				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
 				break;
 			
 			case Attachment::Color_Attachment02:
-				openglAttachments[i] =  static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + i);
+				openglAttachment =  static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + i);
 				break;
 			
 			case Attachment::Color_Attachment03:
-				openglAttachments[i] =  static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + i);
+				openglAttachment =  static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + i);
 				break;
 			
 			case Attachment::Color_Attachment04:
-				openglAttachments[i] =  static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + i);
+				openglAttachment =  static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + i);
 				break;
 			
 			case Attachment::Depth:
-				openglAttachments[i] = GL_DEPTH_ATTACHMENT;
+				openglAttachment = GL_DEPTH_ATTACHMENT;
 				break;
 			
 			case Attachment::Stencil:
-				openglAttachments[i] = GL_STENCIL_ATTACHMENT;
+				openglAttachment = GL_STENCIL_ATTACHMENT;
 				break;
 			
 			case Attachment::DepthAndStencil:
-				openglAttachments[i] = GL_DEPTH_STENCIL_ATTACHMENT;
+				openglAttachment = GL_DEPTH_STENCIL_ATTACHMENT;
 				break;
 			
 		}
-		glNamedFramebufferTexture(*frameBufferId, openglAttachments[i], attechements.at(i)->GetId(), 0);
+		glNamedFramebufferTexture(*frameBufferId, openglAttachment, attechements.at(i)->GetId(), 0);
+		
+		if(renderTargetInfos[i].draw)
+		{
+			openglAttachmentsdraw.push_back(openglAttachment);
+		}
+		
 	}
-	glNamedFramebufferDrawBuffers(*frameBufferId, static_cast<int32_t>(openglAttachments.size()), openglAttachments.data());
+	glNamedFramebufferDrawBuffers(*frameBufferId, static_cast<int32_t>(openglAttachmentsdraw.size()), openglAttachmentsdraw.data());
 	
 }
 
@@ -292,6 +301,27 @@ void RHI::DestroyFrameBuffer(uint32_t* const frameBufferId)
 		glDeleteFramebuffers(1, frameBufferId);
 		*frameBufferId = 0;
 	}
+}
+
+void RHI::BlitFrameBuffer(
+	uint32_t readBuffer,
+	uint32_t targetBuffer,
+	Vector2i src0Size,
+	Vector2i src1Size,
+	Vector2i target0Size,
+	Vector2i target1Size,
+	[[maybe_unused]]Attachment attachmentTarget,
+	TextureFiltering textureFiltering
+)
+{
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, readBuffer);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, targetBuffer);
+	glBlitFramebuffer(
+	  src0Size.x, src0Size.y,
+	  src1Size.x, src1Size.y,
+	  target0Size.x, target0Size.y,
+	  target1Size.x, target1Size.y, GL_DEPTH_BUFFER_BIT, GetOpenglTextureFiltering(textureFiltering)
+	);
 }
 
 void RHI::BindFrameBuffer(const uint32_t frameBufferId)
@@ -403,6 +433,24 @@ void RHI::ComputeOpenglTextureFilter(const uint32_t textureId, const TextureFilt
 	}
 }
 
+uint32_t RHI::GetOpenglTextureFiltering(TextureFiltering textureFilter)
+{
+	switch (textureFilter)
+	{
+		case TextureFiltering::None:
+			return GL_NONE;
+			break;
+		case TextureFiltering::Linear:
+			return GL_LINEAR;
+			break;
+		case TextureFiltering::Nearest:
+			return GL_NEAREST;
+			break;
+	}
+
+	return GL_NONE;
+}
+
 uint32_t RHI::TextureTypeToOpenglTexture(const TextureType textureType)
 {
 	switch (textureType)
@@ -484,8 +532,17 @@ uint32_t RHI::GetOpenglInternalFormat(const TextureInternalFormat textureFormat)
 		case TextureInternalFormat::Rgba16F:
 			return GL_RGBA16F;
 
-		case TextureInternalFormat::DepthComponent:
-			return GL_DEPTH_COMPONENT;
+		case TextureInternalFormat::DepthComponent16:
+			return GL_DEPTH_COMPONENT16;
+		
+		case TextureInternalFormat::DepthComponent24:
+			return GL_DEPTH_COMPONENT24;
+		
+		case TextureInternalFormat::DepthComponent32:
+			return GL_DEPTH_COMPONENT32;
+		
+		case TextureInternalFormat::DepthComponent32f:
+			return GL_DEPTH_COMPONENT32F;
 		
 		case TextureInternalFormat::DepthStencil:
 			return GL_DEPTH24_STENCIL8;
@@ -556,12 +613,124 @@ uint32_t RHI::GetOpenglDataType(DataType dataType)
 	return GL_UNSIGNED_BYTE;
 }
 
+
+
+
+void RHI::OpenglDebugCallBack([[maybe_unused]]uint32_t source,
+	[[maybe_unused]]uint32_t type,
+	[[maybe_unused]]uint32_t id,
+	[[maybe_unused]]uint32_t severity,
+	[[maybe_unused]]size_t length,
+	[[maybe_unused]]const char_t* message,
+	[[maybe_unused]]const void* userParam)
+{
+	
+    // ignore non-significant error/warning codes
+    if(id == 131169 || id == 131185 || id == 131218 || id == 131204) return; 
+
+	Logger::LogDebug("---------------\n");
+	Logger::LogDebug("Debug message ({}",id);
+	Logger::LogDebug("): {}\n",message);
+	
+    switch (source)
+    {
+        case GL_DEBUG_SOURCE_API:
+        	Logger::LogDebug("Source: API");
+    	break;
+    	
+        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+        	Logger::LogDebug("Source: Window System");
+    	break;
+    	
+        case GL_DEBUG_SOURCE_SHADER_COMPILER:
+        	Logger::LogDebug("Source: Shader Compiler");
+    	break;
+    	
+        case GL_DEBUG_SOURCE_THIRD_PARTY:
+        	Logger::LogDebug("Source: Third Party");
+    	break;
+    	
+        case GL_DEBUG_SOURCE_APPLICATION:
+        	Logger::LogDebug("Source: Application");
+    	break;
+    	
+        case GL_DEBUG_SOURCE_OTHER:
+        	Logger::LogDebug("Source: Other");
+    	break;
+    	
+    } Logger::LogDebug("\n");
+
+    switch (type)
+    {
+        case GL_DEBUG_TYPE_ERROR:
+        		Logger::LogDebug(  "Type: Error");
+    	break;
+    	
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+        		Logger::LogDebug(  "Type: Deprecated Behaviour");
+    	break;
+    	
+        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+				Logger::LogDebug(  "Type: Undefined Behaviour"); 
+    	break;
+    	
+        case GL_DEBUG_TYPE_PORTABILITY:
+        		Logger::LogDebug(  "Type: Portability"); 
+    	break;
+    	
+        case GL_DEBUG_TYPE_PERFORMANCE:
+        		Logger::LogDebug(  "Type: Performance"); 
+    	break;
+    	
+        case GL_DEBUG_TYPE_MARKER:
+        		Logger::LogDebug(  "Type: Marker"); 
+    	break;
+    	
+        case GL_DEBUG_TYPE_PUSH_GROUP:
+        		Logger::LogDebug(  "Type: Push Group"); 
+    	break;
+    	
+        case GL_DEBUG_TYPE_POP_GROUP:
+        	Logger::LogDebug(  "Type: Pop Group"); 
+    	break;
+    	
+        case GL_DEBUG_TYPE_OTHER:
+        	Logger::LogDebug(  "Type: Other"); 
+    	break;
+    	
+    } Logger::LogDebug("\n");
+    
+    switch (severity)
+    {
+        case GL_DEBUG_SEVERITY_HIGH:
+        	Logger::LogDebug("Severity: high");
+    	break;
+        case GL_DEBUG_SEVERITY_MEDIUM:
+        	Logger::LogDebug("Severity: medium");
+    	break;
+        case GL_DEBUG_SEVERITY_LOW:
+        	Logger::LogDebug("Severity: low");
+    	break;
+        case GL_DEBUG_SEVERITY_NOTIFICATION:
+        	Logger::LogDebug("Severity: notification");
+    	break;
+    }  Logger::LogDebug("\n");
+	Logger::LogDebug("\n");
+}
+
+
 void RHI::Initialize()
 {
 	gladLoadGL();
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+	
+	glEnable(GL_DEBUG_OUTPUT);
+	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 
+	glDebugMessageCallback(reinterpret_cast<GLDEBUGPROC>(OpenglDebugCallBack), nullptr);
+	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 }
+
 
 void RHI::Shutdown()
 {
@@ -598,6 +767,16 @@ void RHI::SetClearColor(const Vector4& color)
 void RHI::ClearColorAndDepth()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void RHI::ClearColor()
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void RHI::ClearDepth()
+{
+	glClear(GL_DEPTH_BUFFER_BIT);
 }
 
 void RHI::UpdateModelUniform(const ModelUniformData& modelUniformData)

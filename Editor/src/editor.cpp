@@ -228,7 +228,7 @@ void Editor::CreateTestScene()
 	meshRenderer->material.textures->CreateInRhi();
 
 	Entity& ent2 = *World::world->Scene.CreateEntity("DirectionalLight");
-	DirectionalLight* pointLight = ent2.AddComponent<DirectionalLight>();
+	PointLight* pointLight = ent2.AddComponent<PointLight>();
 	pointLight->color = { 1.f, 1.f, 1.f };
 	ent2.AddComponent<TestComponent>();
 	ent2.transform.position = { 0.f, 1.f, 0.f };

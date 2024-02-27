@@ -108,7 +108,10 @@ enum class TextureInternalFormat
 	Rg16F,
 	Rgb16F,
 	Rgba16F,
-	DepthComponent,
+	DepthComponent16,
+	DepthComponent24,
+	DepthComponent32,
+	DepthComponent32f,
 	DepthStencil
 };
 
@@ -140,6 +143,7 @@ enum class Attachment
 struct RenderTargetInfo
 {
 	Attachment attachment;
+	bool draw;
 	bool isClearing;
 };
 

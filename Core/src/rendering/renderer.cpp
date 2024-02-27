@@ -1,5 +1,6 @@
 #include "rendering/renderer.hpp"
 
+
 #include "rendering/light/point_light.hpp"
 #include "rendering\light\directional_light.hpp"
 #include "rendering\light\spot_light.hpp"
@@ -9,7 +10,7 @@
 using namespace XnorCore;
 
 Renderer::Renderer()
-	: clearColor(0.5f)
+	: clearColor(0.f)
 {
 }
 
@@ -43,53 +44,85 @@ void Renderer::Initialize()
 void Renderer::Shutdown()
 {
 	delete m_RenderBuffer;
-	delete m_ColorAttachment;
+	delete m_PositionAtttachment;
+	delete m_AlbedoAtttachment;
+	delete m_NormalAttachement;
+	
 	delete m_DepthAttachment;
+	delete m_ColorAttachment;
 }
 
 void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererContext) const
 {
-	// Clear MainWindow // 
-	RHI::SetClearColor(clearColor);
-	RHI::ClearColorAndDepth();
-
-	rendererContext.framebuffer->BindFrameBuffer();
-	RHI::SetClearColor(clearColor);
-	RHI::ClearColorAndDepth();
-
-	m_RenderBuffer->BindFrameBuffer();
-	RHI::SetClearColor(clearColor);
-	RHI::ClearColorAndDepth();
+	std::vector<const MeshRenderer*> meshrenderers;
+	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderers);
 	
-	RHI::SetViewport(m_RenderBuffer->GetSize());
+	std::vector<const PointLight*> pointLights;
+	std::vector<const SpotLight*> spotLights;
+	std::vector<const DirectionalLight*> directionalLights;
+	scene.GetAllComponentOfType<PointLight>(&pointLights);
+	scene.GetAllComponentOfType<SpotLight>(&spotLights);
+	scene.GetAllComponentOfType<DirectionalLight>(&directionalLights);
+
+	// Update Light
+	UpdateLight(pointLights,spotLights,directionalLights);
 	
-	m_BasicShader->Use();
+	// Update Camera
 	CameraUniformData cam;
-	cam.cameraPos = rendererContext.camera->pos;
 	rendererContext.camera->GetView(&cam.view);
 	rendererContext.camera->GetProjection(rendererContext.framebuffer->GetSize(), &cam.projection);
-	
+	cam.cameraPos = rendererContext.camera->pos;
 	RHI::UpdateCameraUniform(cam);
 
-	UpdateLight(scene,rendererContext);
-	DrawMeshRendersOpaque(scene,rendererContext);
-	m_BasicShader->Unuse();
+	RHI::SetViewport(m_RenderBuffer->GetSize());
+	// Clear MainWindow // 
+	RHI::ClearColorAndDepth();
+
+	
+	// Bind for gbuffer pass // 
+	m_GframeBuffer->BindFrameBuffer();
+	RHI::ClearColorAndDepth();
+	m_gBufferShader->Use();
+	DrawMeshRendersByType(meshrenderers,MaterialType::Opaque);
+	m_gBufferShader->Unuse();
+
+	
+	// Shading Gbuffer Value //
+	m_RenderBuffer->BindFrameBuffer();
+	
+	// Clear color only
+	RHI::ClearColorAndDepth();
+	m_gBufferShaderLit->Use();
+	RHI::DrawQuad(m_Quad->GetId());
+	m_gBufferShaderLit->Unuse();
+	// END DEFFERED RENDERING
+
+	// Blit depth of gbuffer to forward Pass
+	RHI::BlitFrameBuffer(m_GframeBuffer->GetId(),m_RenderBuffer->GetId(),
+		{0,0},m_GframeBuffer->GetSize(),
+		{0,0},m_RenderBuffer->GetSize(),Attachment::Depth,TextureFiltering::Nearest);
+	
+	// ForwardPass //
+	DrawAABB(meshrenderers);
 	m_RenderBuffer->UnBindFrameBuffer();
 	
+	// DRAW THE FINAL IMAGE TEXTURE
 	if (rendererContext.framebuffer != nullptr)
 	{
 		rendererContext.framebuffer->BindFrameBuffer();
-		RHI::SetViewport(rendererContext.framebuffer->GetSize());
-
-		// Render To Imgui frame buffer
-		m_DrawTextureToScreenShader->Use();
-		m_ColorAttachment->BindTexture(0);
 		
-		RHI::DrawQuad(m_Quad->GetId());
-		m_DrawTextureToScreenShader->Unuse();
+		RHI::ClearColorAndDepth();
+		RHI::SetViewport(rendererContext.framebuffer->GetSize());
+	}
+	m_DrawTextureToScreenShader->Use();
+	m_ColorAttachment->BindTexture(0);
+	RHI::DrawQuad(m_Quad->GetId());
+	m_DrawTextureToScreenShader->Unuse();
+	
+	if(rendererContext.framebuffer != nullptr)
+	{
 		rendererContext.framebuffer->UnBindFrameBuffer();
 	}
-
 }
 
 void Renderer::CompileShader()
@@ -111,36 +144,14 @@ void Renderer::SwapBuffers()
 
 void Renderer::PrepareRendering(vec2i windowSize)
 {
-	m_RenderBuffer = new FrameBuffer(windowSize);
-	
-	m_ColorAttachment = new Texture(TextureInternalFormat::Rgba16F, m_RenderBuffer->GetSize());
-	m_DepthAttachment = new Texture(TextureInternalFormat::DepthStencil,m_RenderBuffer->GetSize());
-
-	const std::vector<RenderTargetInfo> attachementsType =
-	{
-		{Attachment::Color_Attachment01,true},
-		{Attachment::DepthAndStencil,true},
-	};
-	
-	
-	// Set Up renderPass
-	const RenderPass renderPass(attachementsType);
-	const std::vector<const Texture*> targets = { m_ColorAttachment, m_DepthAttachment };
-	m_RenderBuffer->Create(renderPass,targets);
-	
+	InitForwardRendering(windowSize);
+	InitDefferedRendering(windowSize);
 }
 
-void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
+void Renderer::UpdateLight(const std::vector<const PointLight*>& pointLightComponents,
+	const std::vector<const SpotLight*>& spotLightsComponents,const std::vector<const DirectionalLight*>& directionalComponent) const
 {
-	std::vector<const PointLight*> pointLightComponents;
-	scene.GetAllComponentOfType<PointLight>(&pointLightComponents);
-
-	std::vector<const SpotLight*> spotLightsComponents;
-	scene.GetAllComponentOfType<SpotLight>(&spotLightsComponents);
-
-	std::vector<const DirectionalLight*> directionalComponent;
-	scene.GetAllComponentOfType<DirectionalLight>(&directionalComponent);
-
+	
 	if (directionalComponent.size() > MaxDirectionalLights)
 	{
 		Logger::LogWarning("You cannot have more than 1 directional light in the scene");
@@ -206,19 +217,66 @@ void Renderer::UpdateLight(const Scene& scene, const RendererContext&) const
 	RHI::UpdateLight(gpuLightData);
 }
 
-void Renderer::DrawMeshRendersOpaque(const Scene& scene, const RendererContext&) const 
+void Renderer::DrawLightGizmo(
+	const std::vector<const PointLight*>& pointLightComponents,
+	const std::vector<const SpotLight*>& spotLightsComponents,
+	const  std::vector<const DirectionalLight*>& directionalComponent,const Camera& camera
+) const
 {
-	std::vector<const MeshRenderer*> meshrenderers;
-	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderers);
+
+	std::map<float_t,GizmoLight> sortedLight;
+	
+	for (uint32_t i = 0; i < pointLightComponents.size(); i++)
+	{
+		GizmoLight gizmoLight;
+		gizmoLight.pos = pointLightComponents[i]->entity->transform.position;
+		gizmoLight.type = RenderingLight::PointLight;
+		
+		float_t distance = (camera.pos - pointLightComponents[i]->entity->transform.position).SquaredLength();
+		sortedLight.emplace(distance,gizmoLight);
+	}
+	for (uint32_t i = 0; i < spotLightsComponents.size(); i++)
+	{
+		GizmoLight gizmoLight;
+		gizmoLight.pos = pointLightComponents[i]->entity->transform.position;
+		gizmoLight.type = RenderingLight::SpothLight;
+		
+		float_t distance = (camera.pos - pointLightComponents[i]->entity->transform.position).SquaredLength();
+		sortedLight.emplace(distance,gizmoLight);
+	}
+	for (uint32_t i = 0; i < directionalComponent.size(); i++)
+	{
+		GizmoLight gizmoLight;
+		gizmoLight.pos = pointLightComponents[i]->entity->transform.position;
+		gizmoLight.type = RenderingLight::DirLight;
+		
+		float_t distance = (camera.pos - pointLightComponents[i]->entity->transform.position).SquaredLength();
+		sortedLight.emplace(distance,gizmoLight);
+	}
+
+	for(std::map<float_t,GizmoLight>::reverse_iterator it = sortedLight.rbegin(); it != sortedLight.rend(); ++it)
+	{
+		
+	}
+	
+}
+
+void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers, MaterialType materialtype
+) const
+{
 	RHI::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 
-	for (const MeshRenderer* meshRenderer : meshrenderers)
+	for (const MeshRenderer* meshRenderer : meshRenderers)
 	{
+		if(meshRenderer->material.m_MaterialType != materialtype)
+			continue;
 		
 		Transform& transform = meshRenderer->entity->transform;
 		ModelUniformData modelData;
-		
-		modelData.model = Matrix::Trs(transform.position, transform.quaternion, transform.scale);
+
+		Matrix&& trs =  Matrix::Trs(transform.position, transform.quaternion, transform.scale);
+		modelData.model = trs;
+		modelData.normalInvertMatrix = trs.Inverted().Transposed();
 		RHI::UpdateModelUniform(modelData);
 
 		if (meshRenderer->material.textures.IsValid())
@@ -228,11 +286,81 @@ void Renderer::DrawMeshRendersOpaque(const Scene& scene, const RendererContext&)
 			RHI::DrawModel(meshRenderer->model->GetId());
 		
 	}
+}
+
+
+void Renderer::InitDefferedRendering(vec2i windowSize)
+{
+	m_gBufferShader = ResourceManager::Get<Shader>("gbuffer");
+	m_gBufferShaderLit = ResourceManager::Get<Shader>("deffered_opaque");
+	m_gBufferShader->CreateInRhi();
+	m_gBufferShaderLit->CreateInRhi();
+
+	// Init diffuse Texture for gbuffer
+	m_gBufferShader->Use();
+	m_gBufferShader->SetInt("textureDiffuse",0);
+	m_gBufferShader->Unuse();
 	
+	m_GframeBuffer = new FrameBuffer(windowSize);
+
+	m_PositionAtttachment = new Texture(TextureInternalFormat::Rgb16F,windowSize);
+	m_NormalAttachement = new Texture(TextureInternalFormat::Rgb16F,windowSize);
+	m_AlbedoAtttachment = new Texture(TextureInternalFormat::Rgb16F,windowSize);
+	m_DepthGbufferAtttachment = new Texture(TextureInternalFormat::DepthComponent16,windowSize);
+	
+	const std::vector<RenderTargetInfo> attachementsType =
+	{
+		{Attachment::Color_Attachment01,true,true},
+		{Attachment::Color_Attachment02,true,true},
+		{Attachment::Color_Attachment03,true,true},
+		{Attachment::Depth,false,true},
+
+	};
+	// Set Up renderPass
+	const RenderPass renderPass(attachementsType);
+
+	const std::vector<const Texture*> targets = { m_PositionAtttachment,m_NormalAttachement,m_AlbedoAtttachment,m_DepthGbufferAtttachment};
+	m_GframeBuffer->Create(renderPass,targets);
+	
+	// Init gbuffer Texture
+	m_gBufferShaderLit->Use();
+	m_gBufferShaderLit->SetInt("gPosition",4);
+	m_PositionAtttachment->BindTexture(4);
+	
+	m_gBufferShaderLit->SetInt("gNormal",5);
+	m_NormalAttachement->BindTexture(5);
+	
+	m_gBufferShaderLit->SetInt("gAlbedoSpec",6);
+	m_AlbedoAtttachment->BindTexture(6);
+	
+	m_gBufferShaderLit->Unuse();
+	
+}
+
+void Renderer::InitForwardRendering(vec2i windowSize)
+{
+	m_RenderBuffer = new FrameBuffer(windowSize);
+	m_ColorAttachment = new Texture(TextureInternalFormat::Rgb16F, m_RenderBuffer->GetSize());
+	m_DepthAttachment = new Texture(TextureInternalFormat::DepthComponent16,m_RenderBuffer->GetSize());
+
+	const std::vector<RenderTargetInfo> attachementsType =
+	{
+		{Attachment::Color_Attachment01,true,true},
+		{Attachment::Depth,false,true},
+	};
+	// Set Up renderPass
+	const RenderPass renderPass(attachementsType);
+	const std::vector<const Texture*> targets = { m_ColorAttachment,m_DepthAttachment };
+	m_RenderBuffer->Create(renderPass,targets);
+}
+
+void Renderer::DrawAABB(const std::vector<const MeshRenderer*>& meshRenderers) const
+{
 	m_GizmoShader->Use();
 	RHI::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Line);
-	// Draw AABB 
-	for (const MeshRenderer* meshRenderer : meshrenderers)
+	ModelUniformData modelData;
+
+	for (const MeshRenderer* meshRenderer : meshRenderers)
 	{
 		if (!meshRenderer->model.IsValid())
 			continue;
@@ -243,10 +371,9 @@ void Renderer::DrawMeshRendersOpaque(const Scene& scene, const RendererContext&)
 		const Transform& transform =  meshRenderer->entity->transform;
 		const ModelAABB&& modelAabb = meshRenderer->model->GetAABB();
 		
-		Vector3 aabbMinMax = (modelAabb.max - modelAabb.min) * 0.5f;
-		Vector3 aabbSize = {aabbMinMax.x * transform.scale.x , aabbMinMax.y * transform.scale.y, aabbMinMax.z * transform.scale.z};
+		const Vector3 aabbMinMax = (modelAabb.max - modelAabb.min) * 0.5f;
+		const Vector3 aabbSize = {aabbMinMax.x * transform.scale.x , aabbMinMax.y * transform.scale.y, aabbMinMax.z * transform.scale.z};
 		
-		ModelUniformData modelData;
 		modelData.model = Matrix::Trs(transform.position, transform.quaternion.Normalized(), aabbSize);
 		RHI::UpdateModelUniform(modelData);
 		
@@ -256,10 +383,5 @@ void Renderer::DrawMeshRendersOpaque(const Scene& scene, const RendererContext&)
 	m_GizmoShader->Unuse();
 	RHI::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 
-}
-
-void Renderer::DrawMeshRendersLit(const Scene&, const RendererContext&) const
-{
-	
 }
 

@@ -10,7 +10,7 @@
 #include "serialization/serializer.hpp"
 
 BEGIN_XNOR_CORE
-    enum class MaterialType
+enum class MaterialType
 {
     Opaque,
     Litt
@@ -23,6 +23,7 @@ public:
     Material();
     
     //Pointer<Shader> shader;
+    MaterialType m_MaterialType;
     Pointer<Texture> textures;
 };
 
@@ -30,5 +31,6 @@ END_XNOR_CORE
 
 REFL_AUTO(
     type(XnorCore::Material),
+    field(m_MaterialType),
     field(textures)
 );

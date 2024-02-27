@@ -27,6 +27,8 @@ public:
 	XNOR_ENGINE void BindFrameBuffer() const ;
 
 	XNOR_ENGINE void UnBindFrameBuffer() const ;
+
+	XNOR_ENGINE uint32_t GetId() const;
 	
 private:
 	Vector2i m_FrameBufferSize = Window::GetSize();

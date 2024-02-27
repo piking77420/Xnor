@@ -1,5 +1,7 @@
 #version 460 core
 
+out vec4 FragColor;
+
 const int MaxSpothLight = 10;
 const int MaxPointLight = 10;
 
@@ -48,24 +50,11 @@ layout (std140, binding = 2) uniform LightData
     DirectionalData directionalData;
 };
 
-
-in VS_OUT 
-{
-    vec3 FragPos;
-    vec3 Normal;
-    vec2 TexCoords;
-} fs_in;
-
-out vec4 FragColor;
-
-uniform vec3 color;
-uniform sampler2D diffuseTexture;
-
 vec3 CalcPointLight(PointLightData light, vec3 viewDir,vec3 fragPos, vec3 normal,vec3 albedo)
 {
     float distanceCamLight = distance(cameraPos, fragPos);
 
-    if(distanceCamLight < light.radius)
+    if(distanceCamLight > light.radius)
         return vec3(0);
 
     vec3 lightDir = normalize(light.position - fragPos);
@@ -140,29 +129,35 @@ vec3 CalcDirLight(DirectionalData light,vec3 viewDir,vec3 fragPos, vec3 normal,v
     return (ambient + diffuse + specular);
 }
 
+uniform sampler2D gPosition;
+uniform sampler2D gNormal;
+uniform sampler2D gAlbedoSpec;
+
+in vec2 TexCoords;
+
 void main()
 {
-    vec3 Normal = normalize(fs_in.Normal);
-    vec3 viewDir = normalize(cameraPos - fs_in.FragPos);
-    vec3 Albedo = vec3(texture(diffuseTexture,fs_in.TexCoords));
 
 
-    vec3 finalColor = CalcDirLight(directionalData,viewDir,fs_in.FragPos,Normal,Albedo);
+    vec3 FragPos = texture(gPosition,TexCoords).rgb;
+    vec3 Normal = texture(gNormal,TexCoords).rgb;
+    vec3 Albedo = texture(gAlbedoSpec,TexCoords).rgb;
+    vec3 viewDir = normalize(cameraPos - FragPos);
+
+
+    vec3 finalColor = CalcDirLight(directionalData,viewDir,FragPos,Normal,Albedo);
     
     for (int i = 0 ; i < nbrOfPointLight ; i++)
     {
-        finalColor += CalcPointLight(pointLightData[i],viewDir,fs_in.FragPos,Normal,Albedo);
+        finalColor += CalcPointLight(pointLightData[i],viewDir,FragPos,Normal,Albedo);
     }
 
     for (int i = 0 ; i < nbrOfSpothLight ; i++)
     {
-        finalColor += CalcSpotLight(spothLightData[i],viewDir,fs_in.FragPos,Normal,Albedo);
+        finalColor += CalcSpotLight(spothLightData[i],viewDir,FragPos,Normal,Albedo);
     }
     
     
     FragColor = vec4(finalColor,1);
 }
     
-
-
-
