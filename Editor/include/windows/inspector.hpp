@@ -19,28 +19,19 @@ public:
     void Display() override;
 
 private:
-    void DisplayMember(void* obj, const XnorCore::FieldInfo& fieldInfo);
-    void DisplayScalarMember(void* obj, const XnorCore::FieldInfo& fieldInfo, size_t element);
-    void DisplayArrayMember(void* obj, const XnorCore::FieldInfo& fieldInfo);
-    void DisplayVectorMember(void* obj, const XnorCore::FieldInfo& fieldInfo);
     void DisplayXnorPointerMember(const void* obj, const XnorCore::FieldInfo& fieldInfo);
 
-    void DisplayNativeType(void* obj, const XnorCore::FieldInfo& fieldInfo, const char_t* name, size_t element);
-    void DisplayMathType(void* obj, const XnorCore::FieldInfo& fieldInfo, const char_t* name, size_t element);
-    void DisplayNestedType(void* obj, const XnorCore::FieldInfo& fieldInfo, const char_t* name, size_t element);
-
-    template <typename T>
-    static void DisplayScalar(void* obj, size_t offset, const char_t* name, size_t element);
-
     template <typename MemberT>
-    static void DisplayScalarUsingDescriptor(MemberT* obj, const char_t* name);
+    static void DisplayScalar(MemberT* obj, const char_t* name);
     template <typename MemberT>
-    static void DisplayMathTypeUsingDescriptor(MemberT* obj, const char_t* name);
+    static void DisplayMathType(MemberT* obj, const char_t* name);
     template <typename MemberT>
-    static void DisplayColorTypeUsingDescriptor(MemberT* obj, const char_t* name);
+    static void DisplayColorType(MemberT* obj, const char_t* name);
+    template <typename MemberT>
+    static void DisplayXnorPointer(MemberT* obj, const char_t* name);
 
     template <typename ReflectT>
-    static void DisplayUsingDescriptor(ReflectT* obj, XnorCore::TypeDescriptor<ReflectT> desc);
+    static void DisplayObject(ReflectT* obj, XnorCore::TypeDescriptor<ReflectT> desc);
 
     template <typename MemberT>
     static void DisplaySimpleType(MemberT* ptr, const char_t* name);
@@ -52,33 +43,8 @@ private:
     static void DisplayList(MemberT* ptr, const char_t* name);
 };
 
-template <typename T>
-void Inspector::DisplayScalar(void* const obj, const size_t offset, const char_t* const name, const size_t element)
-{
-    uint32_t type;
-
-    if constexpr (std::is_same_v<T, int32_t>)
-        type = ImGuiDataType_S32;
-    else if constexpr (std::is_same_v<T, uint32_t>)
-        type = ImGuiDataType_U32;
-    else if constexpr (std::is_same_v<T, int16_t>)
-        type = ImGuiDataType_S16;
-    else if constexpr (std::is_same_v<T, uint16_t>)
-        type = ImGuiDataType_U16;
-    else if constexpr (std::is_same_v<T, int8_t>)
-        type = ImGuiDataType_S8;
-    else if constexpr (std::is_same_v<T, uint8_t>)
-        type = ImGuiDataType_U8;
-    else if constexpr (std::is_same_v<T, float_t>)
-        type = ImGuiDataType_Float;
-    else if constexpr (std::is_same_v<T, double_t>)
-        type = ImGuiDataType_Double;
-
-    ImGui::InputScalar(name, type, XnorCore::Utils::GetAddress<T>(obj, offset, element));
-}
-
 template <typename MemberT>
-void Inspector::DisplayScalarUsingDescriptor(MemberT* const obj, const char_t* name)
+void Inspector::DisplayScalar(MemberT* const obj, const char_t* name)
 {
     uint32_t type;
 
@@ -103,7 +69,7 @@ void Inspector::DisplayScalarUsingDescriptor(MemberT* const obj, const char_t* n
 }
 
 template <typename MemberT>
-void Inspector::DisplayMathTypeUsingDescriptor(MemberT* const obj, const char_t* name)
+void Inspector::DisplayMathType(MemberT* const obj, const char_t* name)
 {
     if constexpr (std::is_same_v<MemberT, Vector2i>)
     {
@@ -131,7 +97,7 @@ void Inspector::DisplayMathTypeUsingDescriptor(MemberT* const obj, const char_t*
 }
 
 template <typename MemberT>
-void Inspector::DisplayColorTypeUsingDescriptor(MemberT* obj, const char_t* name)
+void Inspector::DisplayColorType(MemberT* obj, const char_t* name)
 {
     if constexpr (std::is_same_v<MemberT, XnorCore::ColorRgb>)
     {
@@ -151,8 +117,45 @@ void Inspector::DisplayColorTypeUsingDescriptor(MemberT* obj, const char_t* name
     }
 }
 
+template <typename MemberT>
+void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name)
+{
+    using PtrT = typename MemberT::Type;
+
+    ImGui::Text("%s", name);
+
+    if constexpr (std::is_base_of_v<XnorCore::Resource, PtrT>)
+    {
+        ImGui::SameLine();
+
+        if (*obj != nullptr)
+            ImGui::Selectable(obj->Get()->GetName().c_str());
+        else
+            ImGui::Selectable("No resource");
+    
+        if (ImGui::BeginDragDropTarget())
+        {
+            // ReSharper disable once CppTooWideScope
+            const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("ContentBrowserFile");
+                
+            if (payload)
+            {
+                XnorCore::Pointer<XnorCore::Resource> dragged = *static_cast<XnorCore::Pointer<XnorCore::Resource>*>(payload->Data);
+            
+                XnorCore::Resource* raw = static_cast<XnorCore::Resource*>(dragged);
+                if (typeid(*raw).hash_code() == typeid(PtrT).hash_code())
+                {
+                    *reinterpret_cast<decltype(dragged)*>(obj) = dragged;
+                }
+            }
+                
+            ImGui::EndDragDropTarget();
+        }
+    }
+}
+
 template <typename ReflectT>
-void Inspector::DisplayUsingDescriptor(ReflectT* const obj, const XnorCore::TypeDescriptor<ReflectT> desc)
+void Inspector::DisplayObject(ReflectT* const obj, const XnorCore::TypeDescriptor<ReflectT> desc)
 {
     refl::util::for_each(desc.members, [&]<typename T>(const T member)
     {
@@ -184,15 +187,15 @@ void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name)
 {
     if constexpr (XnorCore::Meta::IsIntegralOrFloating<MemberT>)
     {
-        DisplayScalarUsingDescriptor<MemberT>(ptr, name);
+        DisplayScalar<MemberT>(ptr, name);
     }
     else if constexpr (XnorCore::Meta::IsMathType<MemberT>)
     {
-        DisplayMathTypeUsingDescriptor<MemberT>(ptr, name);
+        DisplayMathType<MemberT>(ptr, name);
     }
     else if constexpr (XnorCore::Meta::IsColorType<MemberT>)
     {
-        DisplayColorUsingDescriptor<MemberT>(ptr, name);
+        DisplayColor<MemberT>(ptr, name);
     }
     else if constexpr (std::is_same_v<MemberT, bool_t>)
     {
@@ -206,10 +209,14 @@ void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name)
     {
         [[maybe_unused]] const size_t hash = ptr->GetHash(); 
     }
+    else if constexpr (XnorCore::Meta::IsXnorPointer<MemberT>)
+    {
+        DisplayXnorPointer<MemberT>(ptr, name);
+    }
     else
     {
         if (ImGui::CollapsingHeader(name))
-            DisplayUsingDescriptor<MemberT>(ptr, XnorCore::TypeInfo::Get<MemberT>());            
+            DisplayObject<MemberT>(ptr, XnorCore::TypeInfo::Get<MemberT>());            
     }
 }
 
