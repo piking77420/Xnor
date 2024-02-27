@@ -258,7 +258,7 @@ void Renderer::DrawMeshRendersOpaque(const Scene& scene, const RendererContext&)
 
 }
 
-void Renderer::DrawMeshRendersLit(const Scene& scene, const RendererContext& rendererContext) const
+void Renderer::DrawMeshRendersLit(const Scene&, const RendererContext&) const
 {
 	
 }
