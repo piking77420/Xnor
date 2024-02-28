@@ -95,8 +95,6 @@ private:
 
     XNOR_ENGINE void DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers,MaterialType materialtype) const;
     
-    XNOR_ENGINE void SetViewport(const Camera& camera);
-    
     XNOR_ENGINE void DrawAABB(const std::vector<const MeshRenderer*>& meshRenderers) const;
 
     XNOR_ENGINE void RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRenderers);
