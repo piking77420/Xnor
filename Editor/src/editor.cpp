@@ -4,7 +4,6 @@
 #include <ImGui/imgui_impl_glfw.h>
 #include <ImGui/imgui_impl_opengl3.h>
 
-#include "world.hpp"
 #include "input/time.hpp"
 #include "rendering/light/point_light.hpp"
 #include "resource/resource_manager.hpp"
@@ -18,9 +17,9 @@
 #include "windows/performance.hpp"
 #include "windows/render_window.hpp"
 #include "windows/scene_graph.hpp"
-#include "world.hpp"
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/spot_light.hpp"
+#include "world/world.hpp"
 
 using namespace XnorEditor;
 
@@ -308,8 +307,8 @@ void Editor::Update()
 			renderer.CompileShader();
 		ImGui::End();
 
-		WorldBehaviours();
 		UpdateWindow();
+		WorldBehaviours();
 	
 		Input::Reset();
 		EndFrame();
@@ -353,14 +352,14 @@ void Editor::WorldBehaviours()
 	if (w == nullptr)
 		return;
 
-	w->Scene.UpdateTransforms();
+	w->hierarchy.Update(w->Scene.GetEntities());
 	
-	if (w->IsPlaying)
+	if (w->isPlaying)
 	{
-		if (!w->HasStarted)
+		if (!w->hasStarted)
 		{
 			w->Begin();
-			w->HasStarted = true;
+			w->hasStarted = true;
 		}
 
 		w->Update();

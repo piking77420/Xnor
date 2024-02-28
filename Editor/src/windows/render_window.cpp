@@ -1,7 +1,6 @@
 ﻿#include "windows/render_window.hpp"
-#include "world.hpp"
+#include "world/world.hpp"
 
-#include "world.hpp"
 
 using namespace XnorEditor;
 
@@ -33,7 +32,7 @@ void RenderWindow::Display()
 {
     if (XnorCore::World::world != nullptr)
     {
-        m_Editor->renderer.RenderScene(XnorCore::World::world->Scene, m_RendererContext);
+        m_Editor->renderer.RenderScene(*XnorCore::World::world, m_RendererContext);
     }
     
     ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_ColorTexture->GetId()), ImGui::GetContentRegionAvail(), {1, 1},{0, 0});

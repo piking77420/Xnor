@@ -24,7 +24,6 @@ void TestComponent::Update()
         return;
 
     m_CurrentAngle += m_RotationSpeed * Time::GetDeltaTime();
-    entity->transform.rotation.x = (std::cos(m_CurrentAngle) - std::sin(m_CurrentAngle)) * m_Radius;
-    entity->transform.rotation.z = std::sin(m_CurrentAngle) * m_Radius;
-    entity->transform.rotation.z = (std::cos(m_CurrentAngle) + std::sin(m_CurrentAngle)) * m_Radius;
+    entity->transform.position.x = (std::cos(m_CurrentAngle) - std::sin(m_CurrentAngle)) * m_Radius;
+    entity->transform.position.z = (std::cos(m_CurrentAngle) + std::sin(m_CurrentAngle)) * m_Radius;
 }

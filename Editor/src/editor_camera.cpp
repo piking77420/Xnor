@@ -6,6 +6,7 @@
 
 using namespace XnorEditor;
 
+
 void EditorCamera::UpdateCamera(const Editor& editor, XnorCore::Camera& camera)
 {
     m_EditorRef = &editor;

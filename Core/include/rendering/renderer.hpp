@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "renderer_context.hpp"
+#include "world/world.hpp"
 #include "file/file_manager.hpp"
 #include "Maths/vector4.hpp"
 #include "rendering/rhi.hpp"
@@ -28,7 +29,7 @@ public:
     
     XNOR_ENGINE void Shutdown();
     
-    XNOR_ENGINE void RenderScene(const Scene& scene, const RendererContext& rendererContext) const;
+    XNOR_ENGINE void RenderScene(const World& world, const RendererContext& rendererContext) const;
 
     XNOR_ENGINE void CompileShader(); 
     

@@ -240,4 +240,11 @@ struct ShadowMappingData
 	Matrix model;
 };
 
+enum Gbuffer : int32_t
+{
+	GbufferPosition = 4,
+	GbufferNormal,
+	GbufferAlbedo
+};
+
 END_XNOR_CORE

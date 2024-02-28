@@ -27,14 +27,12 @@ public:
     XNOR_ENGINE void Begin();
 
     XNOR_ENGINE void Update();
-
-    // TO DO be the scene Graph
-    XNOR_ENGINE void UpdateTransforms();
     
     [[nodiscard]]
     XNOR_ENGINE Entity* GetEntityById(const Guid& xnorGuid);
 
     XNOR_ENGINE Entity* CreateEntity(const std::string&& name, Entity* parent = nullptr);
+    
     XNOR_ENGINE void DestroyEntity(Entity* entity);
     
     [[nodiscard]]

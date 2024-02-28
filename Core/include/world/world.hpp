@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "core.hpp"
+#include "hierarchy.hpp"
 #include "scene/scene.hpp"
 
 BEGIN_XNOR_CORE
@@ -11,11 +12,13 @@ class World
 public:
     XNOR_ENGINE static inline World* world = nullptr;
     
-    bool IsPlaying = false;
+    bool isPlaying = false;
     
-    bool HasStarted = false;
+    bool hasStarted = false;
     
     Scene Scene;
+
+    Hierarchy hierarchy;
     
     XNOR_ENGINE World();
 
@@ -24,7 +27,8 @@ public:
     XNOR_ENGINE void Begin();
     
     XNOR_ENGINE void Update();
-  
+
+
 private:
 };
 

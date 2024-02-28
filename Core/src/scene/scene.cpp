@@ -21,14 +21,6 @@ void Scene::Update()
     }
 }
 
-void Scene::UpdateTransforms()
-{
-    for (size_t i = 0; i < m_Entities.GetSize(); i++)
-    {
-          m_Entities[i]->transform.quaternion = Quaternion::FromEuler(m_Entities[i]->transform.rotation); 
-    }
-}
-
 Entity* Scene::GetEntityById(const Guid& xnorGuid)
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)

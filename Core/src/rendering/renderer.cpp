@@ -33,8 +33,10 @@ void Renderer::Shutdown()
 	DestroyAttachment();
 }
 
-void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererContext) const
+void Renderer::RenderScene(const World& world, const RendererContext& rendererContext) const
 {
+	const Scene& scene = world.Scene;
+	
 	std::vector<const MeshRenderer*> meshrenderers;
 	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderers);
 	
@@ -262,7 +264,7 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		Transform& transform = meshRenderer->entity->transform;
 		ModelUniformData modelData;
 
-		Matrix&& trs =  Matrix::Trs(transform.position, transform.quaternion, transform.scale);
+		Matrix&& trs =  Hierarchy::GetTrs(Matrix::Trs(transform.position, transform.quaternion, transform.scale),meshRenderer->entity);
 		modelData.model = trs;
 		modelData.normalInvertMatrix = trs.Inverted().Transposed();
 		RHI::UpdateModelUniform(modelData);
@@ -304,11 +306,11 @@ void Renderer::InitDefferedRenderingAttachment(vec2i windowSize)
 	// Init gbuffer Texture
 	m_gBufferShaderLit->Use();
 
-	m_PositionAtttachment->BindTexture(4);
+	m_PositionAtttachment->BindTexture(GbufferPosition);
 	
-	m_NormalAttachement->BindTexture(5);
+	m_NormalAttachement->BindTexture(GbufferNormal);
 	
-	m_AlbedoAtttachment->BindTexture(6);
+	m_AlbedoAtttachment->BindTexture(GbufferAlbedo);
 	
 	m_gBufferShaderLit->Unuse();
 	
@@ -352,9 +354,9 @@ void Renderer::InitResources()
 	m_gBufferShader->CreateInRhi();
 	m_gBufferShaderLit->CreateInRhi();
 	m_gBufferShaderLit->Use();
-	m_gBufferShaderLit->SetInt("gPosition",4);
-	m_gBufferShaderLit->SetInt("gNormal",5);
-	m_gBufferShaderLit->SetInt("gAlbedoSpec",6);
+	m_gBufferShaderLit->SetInt("gPosition",GbufferPosition);
+	m_gBufferShaderLit->SetInt("gNormal",GbufferNormal);
+	m_gBufferShaderLit->SetInt("gAlbedoSpec",GbufferAlbedo);
 	m_gBufferShaderLit->Unuse();
 	// Init diffuse Texture for gbuffer
 	m_gBufferShader->Use();
@@ -403,7 +405,7 @@ void Renderer::DrawAABB(const std::vector<const MeshRenderer*>& meshRenderers) c
 		const Vector3 aabbMinMax = (modelAabb.max - modelAabb.min) * 0.5f;
 		const Vector3 aabbSize = {aabbMinMax.x * transform.scale.x , aabbMinMax.y * transform.scale.y, aabbMinMax.z * transform.scale.z};
 		
-		modelData.model = Matrix::Trs(transform.position, transform.quaternion.Normalized(), aabbSize);
+		modelData.model = Hierarchy::GetTrs(Matrix::Trs(transform.position, transform.quaternion.Normalized(), aabbSize),meshRenderer->entity);
 		RHI::UpdateModelUniform(modelData);
 		
 		RHI::DrawModel(m_Cube->GetId());
@@ -422,7 +424,7 @@ void Renderer::RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRende
 	{
 		const Transform& transform = mesh->entity->transform;
 
-		Matrix&& trs =  Matrix::Trs(transform.position, transform.quaternion, transform.scale);
+		Matrix&& trs = Matrix::Trs(transform.position, transform.quaternion, transform.scale);
 		data.model = trs;
 		data.normalInvertMatrix = trs.Inverted().Transposed();
 		
