@@ -15,7 +15,7 @@ public:
     XNOR_ENGINE MeshRenderer();
     Pointer<Model> model;
     Material material;
-    bool drawModelAabb = true;
+    bool drawModelAabb = false;
 };
 
 END_XNOR_CORE

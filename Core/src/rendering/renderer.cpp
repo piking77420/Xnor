@@ -167,7 +167,7 @@ void Renderer::UpdateLight(const std::vector<const PointLight*>& pointLightCompo
 		{
 			.color = pointLight->color,
 			.intensity = pointLight->intensity,
-			.position = pointLight->entity->transform.position,
+			.position = pointLight->entity->transform.GetWorldPos(),
 			.radius = 30.f * sqrt(pointLight->intensity),
 		};
 	}
@@ -183,7 +183,7 @@ void Renderer::UpdateLight(const std::vector<const PointLight*>& pointLightCompo
 		{
 			.color = spotLight->color,
 			.intensity = spotLight->intensity,
-			.position = spotLight->entity->transform.position,
+			.position = spotLight->entity->transform.GetWorldPos(),
 			.cutOff = std::cos(spotLight->cutOff),
 			.direction = {direction.x,direction.y,direction.z},
 			.outerCutOff = std::cos(spotLight->outerCutOff),
@@ -264,9 +264,8 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		Transform& transform = meshRenderer->entity->transform;
 		ModelUniformData modelData;
 
-		Matrix&& trs =  SceneGraph::GetTrs(Matrix::Trs(transform.position, transform.quaternion, transform.scale),meshRenderer->entity);
-		modelData.model = trs;
-		modelData.normalInvertMatrix = trs.Inverted().Transposed();
+		modelData.model = transform.worldMatrix;
+		modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
 		RHI::UpdateModelUniform(modelData);
 
 		if (meshRenderer->material.textures.IsValid())
@@ -404,8 +403,9 @@ void Renderer::DrawAABB(const std::vector<const MeshRenderer*>& meshRenderers) c
 		
 		const Vector3 aabbMinMax = (modelAabb.max - modelAabb.min) * 0.5f;
 		const Vector3 aabbSize = {aabbMinMax.x * transform.scale.x , aabbMinMax.y * transform.scale.y, aabbMinMax.z * transform.scale.z};
+		const Matrix&& scaleMatrix = Matrix::Scaling(aabbSize);
 		
-		modelData.model = SceneGraph::GetTrs(Matrix::Trs(transform.position, transform.quaternion.Normalized(), aabbSize),meshRenderer->entity);
+		modelData.model = scaleMatrix * transform.worldMatrix;
 		RHI::UpdateModelUniform(modelData);
 		
 		RHI::DrawModel(m_Cube->GetId());

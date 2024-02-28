@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Maths/matrix.hpp>
+
 #include "Maths/quaternion.hpp"
 #include "Maths/vector3.hpp"
 
@@ -15,11 +17,14 @@ private:
 	REFLECTABLE_IMPL(Transform)
 
 public:
+
+	Vector3 GetWorldPos();
+	
 	Vector3 position;
 	Vector3 rotation; 
-	
 	Vector3 scale = Vector3(1.f);
 	Quaternion quaternion = Quaternion::Identity();
+	Matrix worldMatrix = Matrix::Identity();
 };
 
 END_XNOR_CORE
