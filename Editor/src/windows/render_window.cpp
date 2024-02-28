@@ -20,7 +20,7 @@ RenderWindow::RenderWindow(Editor* editor, const std::string& title)
 void RenderWindow::ResizeRenderContext(const Vector2i size)
 {
     delete m_ColorTexture;
-    m_FrameBuffer.Destroy();
+    m_FrameBuffer.~FrameBuffer();
     Initialize(size);
 }
 

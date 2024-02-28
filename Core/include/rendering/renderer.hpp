@@ -33,7 +33,9 @@ public:
     XNOR_ENGINE void CompileShader(); 
     
     XNOR_ENGINE void SwapBuffers();
-
+    
+    XNOR_ENGINE void OnResize(vec2i windowSize);
+    
     XNOR_ENGINE void PrepareRendering(vec2i windowSize);
 
 private:
@@ -58,7 +60,6 @@ private:
     Texture* m_DepthGbufferAtttachment = nullptr;
     RenderPass m_GbufferPass;
     
-
     
     FrameBuffer* m_RenderBuffer = nullptr;
     // Forward Attahcment
@@ -75,7 +76,13 @@ private:
     Pointer<Model> m_Quad;
     Pointer<Model> m_Cube;
 
-  
+    XNOR_ENGINE void InitResources();
+    
+    XNOR_ENGINE void InitDefferedRenderingAttachment(vec2i windowSize);
+    
+    XNOR_ENGINE void InitForwardRenderingAttachment(vec2i windowSize);
+    
+    XNOR_ENGINE void DestroyAttachment();
     
     XNOR_ENGINE void UpdateLight(const std::vector<const PointLight*>& pointLightComponents,
     const std::vector<const SpotLight*>& spotLightsComponents,
@@ -88,15 +95,11 @@ private:
     XNOR_ENGINE void DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers,MaterialType materialtype) const;
     
     XNOR_ENGINE void SetViewport(const Camera& camera);
-
-    XNOR_ENGINE void InitDefferedRendering(vec2i windowSize);
-        
-    XNOR_ENGINE void InitForwardRendering(vec2i windowSize);
+    
 
     XNOR_ENGINE void DrawAABB(const std::vector<const MeshRenderer*>& meshRenderers) const;
 
     XNOR_ENGINE void RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRenderers);
-
     
     XNOR_ENGINE void ShadowPathSpotLight(const std::vector<const SpotLight*>& spotLights);
 

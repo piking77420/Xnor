@@ -14,13 +14,11 @@ public:
 	
 	XNOR_ENGINE explicit FrameBuffer(vec2i size);
 
-	XNOR_ENGINE ~FrameBuffer() = default;
+	XNOR_ENGINE ~FrameBuffer();
 	
 	DEFAULT_COPY_MOVE_OPERATIONS(FrameBuffer)
 	
 	XNOR_ENGINE void Create(const RenderPass& renderPass,const std::vector<const Texture*>& attachements);
-	
-	XNOR_ENGINE void Destroy();
 	
 	XNOR_ENGINE	const Vector2i GetSize() const;
 	

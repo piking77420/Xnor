@@ -22,34 +22,15 @@ void Renderer::Initialize()
 {
 	RHI::SetClearColor(clearColor);
 
-	m_BasicShader = ResourceManager::Get<Shader>("basic_shader");
-	m_BasicShader->CreateInRhi();
+	InitResources();
 
-	m_DrawTextureToScreenShader = ResourceManager::Get<Shader>("draw_texture_to_screen");
-	m_DrawTextureToScreenShader->CreateInRhi();
-	
-	m_GizmoShader = ResourceManager::Get<Shader>("gizmo_shader");
-	m_GizmoShader->CreateInRhi();
-
-	m_DrawTextureToScreenShader->Use();
-	m_DrawTextureToScreenShader->SetInt("BufferTextureId", 0);
-	m_DrawTextureToScreenShader->Unuse();
-	
 	RHI::PrepareUniform();
 
-	m_Cube = ResourceManager::Get<Model>("assets/models/cube.obj");
-	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
 }
 
 void Renderer::Shutdown()
 {
-	delete m_RenderBuffer;
-	delete m_PositionAtttachment;
-	delete m_AlbedoAtttachment;
-	delete m_NormalAttachement;
-	
-	delete m_DepthAttachment;
-	delete m_ColorAttachment;
+	DestroyAttachment();
 }
 
 void Renderer::RenderScene(const Scene& scene, const RendererContext& rendererContext) const
@@ -142,10 +123,17 @@ void Renderer::SwapBuffers()
 	RHI::SwapBuffers();
 }
 
+void Renderer::OnResize(vec2i windowSize)
+{
+	DestroyAttachment();
+	InitDefferedRenderingAttachment(windowSize);
+	InitForwardRenderingAttachment(windowSize);
+}
+
 void Renderer::PrepareRendering(vec2i windowSize)
 {
-	InitForwardRendering(windowSize);
-	InitDefferedRendering(windowSize);
+	InitDefferedRenderingAttachment(windowSize);
+	InitForwardRenderingAttachment(windowSize);
 }
 
 void Renderer::UpdateLight(const std::vector<const PointLight*>& pointLightComponents,
@@ -289,17 +277,8 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 }
 
 
-void Renderer::InitDefferedRendering(vec2i windowSize)
+void Renderer::InitDefferedRenderingAttachment(vec2i windowSize)
 {
-	m_gBufferShader = ResourceManager::Get<Shader>("gbuffer");
-	m_gBufferShaderLit = ResourceManager::Get<Shader>("deffered_opaque");
-	m_gBufferShader->CreateInRhi();
-	m_gBufferShaderLit->CreateInRhi();
-
-	// Init diffuse Texture for gbuffer
-	m_gBufferShader->Use();
-	m_gBufferShader->SetInt("textureDiffuse",0);
-	m_gBufferShader->Unuse();
 	
 	m_GframeBuffer = new FrameBuffer(windowSize);
 
@@ -324,20 +303,18 @@ void Renderer::InitDefferedRendering(vec2i windowSize)
 	
 	// Init gbuffer Texture
 	m_gBufferShaderLit->Use();
-	m_gBufferShaderLit->SetInt("gPosition",4);
+
 	m_PositionAtttachment->BindTexture(4);
 	
-	m_gBufferShaderLit->SetInt("gNormal",5);
 	m_NormalAttachement->BindTexture(5);
 	
-	m_gBufferShaderLit->SetInt("gAlbedoSpec",6);
 	m_AlbedoAtttachment->BindTexture(6);
 	
 	m_gBufferShaderLit->Unuse();
 	
 }
 
-void Renderer::InitForwardRendering(vec2i windowSize)
+void Renderer::InitForwardRenderingAttachment(vec2i windowSize)
 {
 	m_RenderBuffer = new FrameBuffer(windowSize);
 	m_ColorAttachment = new Texture(TextureInternalFormat::Rgb16F, m_RenderBuffer->GetSize());
@@ -352,6 +329,58 @@ void Renderer::InitForwardRendering(vec2i windowSize)
 	const RenderPass renderPass(attachementsType);
 	const std::vector<const Texture*> targets = { m_ColorAttachment,m_DepthAttachment };
 	m_RenderBuffer->Create(renderPass,targets);
+}
+
+void Renderer::DestroyAttachment()
+{
+	delete m_GframeBuffer;
+	delete m_PositionAtttachment;
+	delete m_AlbedoAtttachment;
+	delete m_NormalAttachement;
+	delete m_DepthGbufferAtttachment; 
+	
+	delete m_RenderBuffer;
+	delete m_DepthAttachment;
+	delete m_ColorAttachment;
+}
+
+void Renderer::InitResources()
+{
+	// Deffered 
+	m_gBufferShader = ResourceManager::Get<Shader>("gbuffer");
+	m_gBufferShaderLit = ResourceManager::Get<Shader>("deffered_opaque");
+	m_gBufferShader->CreateInRhi();
+	m_gBufferShaderLit->CreateInRhi();
+	m_gBufferShaderLit->Use();
+	m_gBufferShaderLit->SetInt("gPosition",4);
+	m_gBufferShaderLit->SetInt("gNormal",5);
+	m_gBufferShaderLit->SetInt("gAlbedoSpec",6);
+	m_gBufferShaderLit->Unuse();
+	// Init diffuse Texture for gbuffer
+	m_gBufferShader->Use();
+	m_gBufferShader->SetInt("textureDiffuse",0);
+	m_gBufferShader->Unuse();
+	// EndDefferd
+
+	// Forward
+	m_BasicShader = ResourceManager::Get<Shader>("basic_shader");
+	m_BasicShader->CreateInRhi();
+
+	m_DrawTextureToScreenShader = ResourceManager::Get<Shader>("draw_texture_to_screen");
+	m_DrawTextureToScreenShader->CreateInRhi();
+	
+	m_GizmoShader = ResourceManager::Get<Shader>("gizmo_shader");
+	m_GizmoShader->CreateInRhi();
+
+	m_DrawTextureToScreenShader->Use();
+	m_DrawTextureToScreenShader->SetInt("BufferTextureId", 0);
+	m_DrawTextureToScreenShader->Unuse();
+	// EndForward
+
+	// Primitive
+	m_Cube = ResourceManager::Get<Model>("assets/models/cube.obj");
+	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
+	
 }
 
 void Renderer::DrawAABB(const std::vector<const MeshRenderer*>& meshRenderers) const
@@ -403,7 +432,7 @@ void Renderer::RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRende
 	
 }
 
-void Renderer::ShadowPathSpotLight(const std::vector<const SpotLight*>& spotLights)
+void Renderer::ShadowPathSpotLight([[maybe_unused]]const std::vector<const SpotLight*>& spotLights)
 {
 
 	
