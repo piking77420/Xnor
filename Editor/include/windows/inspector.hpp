@@ -165,7 +165,6 @@ if (hash == typeid(type).hash_code())\
     DisplayObject<type>(obj->Cast<type>(), XnorCore::TypeInfo::Get<type>());\
 }\
 
-
 template <typename MemberT>
 void Inspector::DisplayPolyPointer(MemberT* obj, const char_t* name)
 {
@@ -199,7 +198,7 @@ void Inspector::DisplayObject(ReflectT* const obj, const XnorCore::TypeDescripto
             {
                 DisplayArray<MemberT>(&member.get(obj), name);
             }
-            else if constexpr (XnorCore::Meta::IsXnorVector<MemberT>)
+            else if constexpr (XnorCore::Meta::IsXnorList<MemberT>)
             {
                 DisplayList<MemberT>(&member.get(obj), name);
             }
@@ -245,7 +244,7 @@ void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name)
     else
     {
         if (ImGui::CollapsingHeader(name))
-            DisplayObject<MemberT>(ptr, XnorCore::TypeInfo::Get<MemberT>());            
+            DisplayObject<MemberT>(ptr, XnorCore::TypeInfo::Get<MemberT>());
     }
 }
 

@@ -1,13 +1,6 @@
 ﻿#include "windows/inspector.hpp"
 
 #include "imgui/imgui.h"
-#include "imgui/imgui_stdlib.h"
-#include "Maths/quaternion.hpp"
-#include "Maths/vector2.hpp"
-#include "Maths/vector2i.hpp"
-#include "Maths/vector3.hpp"
-#include "Maths/vector4.hpp"
-#include "scene/component/mesh_renderer.hpp"
 
 using namespace XnorEditor;
 

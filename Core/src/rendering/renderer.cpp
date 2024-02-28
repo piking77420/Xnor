@@ -268,7 +268,7 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 
 	for (const MeshRenderer* meshRenderer : meshRenderers)
 	{
-		if(meshRenderer->material.m_MaterialType != materialtype)
+		if(meshRenderer->material.materialType != materialtype)
 			continue;
 		
 		Transform& transform = meshRenderer->entity->transform;

@@ -104,17 +104,17 @@ concept ReflectT = std::is_base_of_v<Reflectable, T>;
 public:                                                                                                                                 \
 virtual void CreateTypeInfo() const override                                                                                            \
 {                                                                                                                                       \
-    XnorCore::TypeInfo::Create<refl::trait::remove_qualifiers_t<decltype(*this)>>();                                                    \
+    XnorCore::TypeInfo::Create<std::remove_cvref_t<decltype(*this)>>();                                                                 \
 }                                                                                                                                       \
                                                                                                                                         \
 virtual void Serialize() const override                                                                                                 \
 {                                                                                                                                       \
-    Serializer::Serialize<decltype(*this)>(this);                                                                                       \
+    Serializer::Serialize<std::remove_cvref_t<decltype(*this)>>(this);                                                                  \
 }                                                                                                                                       \
                                                                                                                                         \
 virtual void Deserialize() override                                                                                                     \
 {                                                                                                                                       \
-    Serializer::Deserialize<decltype(*this)>(this);                                                                                     \
+    Serializer::Deserialize<std::remove_cvref_t<decltype(*this)>>(this);                                                                \
 }                                                                                                                                       \
                                                                                                                                         \
 /*
@@ -255,7 +255,6 @@ constexpr void TypeInfo::Create()
         return;
     }
     
-    // TODO FIXME constexpr TypeInfo ti(refl::reflect<ReflectT>());
     TypeInfo ti(refl::reflect<ReflectT>());
 
     m_TypeInfo.emplace(typeid(ReflectT).hash_code(), ti);
@@ -297,7 +296,7 @@ constexpr void TypeInfo::ParseMembers(TypeDescriptor<ReflectT> desc)
         bool_t isXnorPointer = Meta::IsXnorPointer<typename T::value_type>;
         constexpr bool_t isReflectable = std::is_base_of_v<Reflectable, typename T::value_type>;
         constexpr bool_t isStatic = member.is_static;
-        constexpr bool_t isList = Meta::IsXnorVector<typename T::value_type>;
+        constexpr bool_t isList = Meta::IsXnorList<typename T::value_type>;
 
         // A member is const if it can't be written to
         constexpr bool_t isConst = !member.is_writable;
