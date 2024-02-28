@@ -10,20 +10,22 @@
 #include "serialization/serializer.hpp"
 
 BEGIN_XNOR_CORE
-enum class MaterialType
+
+enum MaterialType
 {
     Opaque,
     Litt
 };
 
-struct Material : public Reflectable
+struct Material : Reflectable
 {
     REFLECTABLE_IMPL(Material)
+    
 public:
     Material();
     
     //Pointer<Shader> shader;
-    MaterialType m_MaterialType;
+    int32_t materialType;
     Pointer<Texture> textures;
 };
 
@@ -31,6 +33,6 @@ END_XNOR_CORE
 
 REFL_AUTO(
     type(XnorCore::Material),
-    field(m_MaterialType),
+    field(materialType),
     field(textures)
 );

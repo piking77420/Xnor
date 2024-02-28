@@ -25,10 +25,10 @@ namespace Meta
     constexpr bool IsStdVector<std::vector<T, A>> = true;
 
     template<typename>
-    constexpr bool IsXnorVector = false;
+    constexpr bool IsXnorList = false;
 
     template<typename T>
-    constexpr bool IsXnorVector<List<T>> = true;
+    constexpr bool IsXnorList<List<T>> = true;
 
     template<typename>
     constexpr bool IsPolyPtr = false;

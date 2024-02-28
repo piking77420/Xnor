@@ -76,5 +76,5 @@ void Scene::GetAllComponentOfType(std::vector<ComponentT*>* componentData)
 END_XNOR_CORE
 
 REFL_AUTO(type(XnorCore::Scene),
-    field(m_Entities, XnorCore::ExpandPointer())
+    field(m_Entities, XnorCore::ExpandPointer(), XnorCore::HideInInspector())
 );
