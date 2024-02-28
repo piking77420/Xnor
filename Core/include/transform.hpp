@@ -17,6 +17,7 @@ private:
 public:
 	Vector3 position;
 	Vector3 rotation; 
+	
 	Vector3 scale = Vector3(1.f);
 	Quaternion quaternion = Quaternion::Identity();
 };

@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "core.hpp"
-#include "hierarchy.hpp"
+#include "scene_graph.hpp"
 #include "scene/scene.hpp"
 
 BEGIN_XNOR_CORE
@@ -18,7 +18,7 @@ public:
     
     Scene Scene;
 
-    Hierarchy hierarchy;
+    SceneGraph hierarchy;
     
     XNOR_ENGINE World();
 

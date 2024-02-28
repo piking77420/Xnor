@@ -157,7 +157,7 @@
     <ClCompile Include="src\window.cpp" />
     <ClCompile Include="src\rendering\vertex.cpp" />
     <ClCompile Include="src\utils\guid.cpp" />
-    <ClCompile Include="src\world\hierarchy.cpp" />
+    <ClCompile Include="src\world\scene_graph.cpp" />
     <ClCompile Include="src\world\world.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -288,7 +288,7 @@
     <ClInclude Include="include\utils\guid.hpp" />
     <ClInclude Include="include\resource\shader.hpp" />
     <ClInclude Include="include\rendering\rhi.hpp" />
-    <ClInclude Include="include\world\hierarchy.hpp" />
+    <ClInclude Include="include\world\scene_graph.hpp" />
     <ClInclude Include="include\world\world.hpp" />
   </ItemGroup>
   <ItemGroup>

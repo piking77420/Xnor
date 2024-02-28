@@ -16,7 +16,7 @@
 #include "windows/inspector.hpp"
 #include "windows/performance.hpp"
 #include "windows/render_window.hpp"
-#include "windows/scene_graph.hpp"
+#include "..\include\windows\hierarchy.hpp"
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/spot_light.hpp"
 #include "world/world.hpp"
@@ -70,7 +70,7 @@ void Editor::CreateDefaultWindows()
 	m_UiWindows.push_back(new Performance(this, 50));
 	m_UiWindows.push_back(new Inspector(this));
 	m_UiWindows.push_back(new HeaderWindow(this));
-	m_UiWindows.push_back(new SceneGraph(this));
+	m_UiWindows.push_back(new Hierarchy(this));
 	m_UiWindows.push_back(new ContentBrowser(this, XnorCore::FileManager::Get<XnorCore::Directory>("assets")));
 	m_UiWindows.push_back(new EditorWindow(this));
 	m_UiWindows.push_back(new RenderWindow(this));

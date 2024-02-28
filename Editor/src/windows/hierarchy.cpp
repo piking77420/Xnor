@@ -1,4 +1,4 @@
-﻿#include "windows/scene_graph.hpp"
+﻿#include "windows/hierarchy.hpp"
 
 #include "world/world.hpp"
 #include "ImGui/imgui.h"
@@ -7,14 +7,14 @@
 
 using namespace XnorEditor;
 
-SceneGraph::SceneGraph(Editor* editor)
+Hierarchy::Hierarchy(Editor* editor)
     : UiWindow(editor, "Scene Graph")
 {
     m_EntityToDelete = nullptr;
     m_EntityToRename = nullptr;
 }
 
-void SceneGraph::Display()
+void Hierarchy::Display()
 {
     // TODO fetch current loaded scene
     XnorCore::Scene& scene = XnorCore::World::world->Scene;
@@ -58,7 +58,7 @@ void SceneGraph::Display()
     CheckDeleteEntity(scene);
 }
 
-void SceneGraph::DisplayEntity(XnorCore::Scene& scene, XnorCore::Entity* const entity)
+void Hierarchy::DisplayEntity(XnorCore::Scene& scene, XnorCore::Entity* const entity)
 {
     ImGui::PushID(entity);
     
@@ -97,7 +97,7 @@ void SceneGraph::DisplayEntity(XnorCore::Scene& scene, XnorCore::Entity* const e
     ImGui::PopID();
 }
 
-void SceneGraph::DisplayEntityContextMenu(XnorCore::Scene& scene, XnorCore::Entity* const entity)
+void Hierarchy::DisplayEntityContextMenu(XnorCore::Scene& scene, XnorCore::Entity* const entity)
 {
     if (ImGui::BeginPopupContextItem())
     {
@@ -123,7 +123,7 @@ void SceneGraph::DisplayEntityContextMenu(XnorCore::Scene& scene, XnorCore::Enti
     }
 }
 
-void SceneGraph::DisplayEntityRenaming(XnorCore::Entity* const entity)
+void Hierarchy::DisplayEntityRenaming(XnorCore::Entity* const entity)
 {
     ImGui::SameLine();
     ImGui::SetKeyboardFocusHere();
@@ -135,7 +135,7 @@ void SceneGraph::DisplayEntityRenaming(XnorCore::Entity* const entity)
         m_EntityToRename = nullptr;
 }
 
-void SceneGraph::ProcessEntityDragDrop(XnorCore::Entity* const entity)
+void Hierarchy::ProcessEntityDragDrop(XnorCore::Entity* const entity)
 {
     if (ImGui::BeginDragDropSource())
     {
@@ -160,13 +160,13 @@ void SceneGraph::ProcessEntityDragDrop(XnorCore::Entity* const entity)
     }
 }
 
-void SceneGraph::ProcessEntitySelection(XnorCore::Entity* const entity) const
+void Hierarchy::ProcessEntitySelection(XnorCore::Entity* const entity) const
 {
     if (ImGui::IsItemClicked())
         m_Editor->data.selectedEntity = entity;
 }
 
-void SceneGraph::ProcessEntityDoubleClick(XnorCore::Scene&, XnorCore::Entity* const)
+void Hierarchy::ProcessEntityDoubleClick(XnorCore::Scene&, XnorCore::Entity* const)
 {
     if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
     {
@@ -174,7 +174,7 @@ void SceneGraph::ProcessEntityDoubleClick(XnorCore::Scene&, XnorCore::Entity* co
     }
 }
 
-void SceneGraph::CheckDeleteEntity(XnorCore::Scene& scene)
+void Hierarchy::CheckDeleteEntity(XnorCore::Scene& scene)
 {
     if (m_EntityToDelete)
     {
@@ -186,7 +186,7 @@ void SceneGraph::CheckDeleteEntity(XnorCore::Scene& scene)
     }
 }
 
-ImGuiTreeNodeFlags SceneGraph::GetEntityNodeFlags(const XnorCore::Entity* const entity) const
+ImGuiTreeNodeFlags Hierarchy::GetEntityNodeFlags(const XnorCore::Entity* const entity) const
 {
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
@@ -199,12 +199,12 @@ ImGuiTreeNodeFlags SceneGraph::GetEntityNodeFlags(const XnorCore::Entity* const 
     return flags;
 }
 
-bool SceneGraph::IsRenamingEntity(const XnorCore::Entity* entity) const
+bool Hierarchy::IsRenamingEntity(const XnorCore::Entity* entity) const
 {
     return m_EntityToRename == entity;
 }
 
-bool SceneGraph::IsEntitySelected(const XnorCore::Entity* entity) const
+bool Hierarchy::IsEntitySelected(const XnorCore::Entity* entity) const
 {
     return m_Editor->data.selectedEntity == entity;
 }

@@ -264,7 +264,7 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		Transform& transform = meshRenderer->entity->transform;
 		ModelUniformData modelData;
 
-		Matrix&& trs =  Hierarchy::GetTrs(Matrix::Trs(transform.position, transform.quaternion, transform.scale),meshRenderer->entity);
+		Matrix&& trs =  SceneGraph::GetTrs(Matrix::Trs(transform.position, transform.quaternion, transform.scale),meshRenderer->entity);
 		modelData.model = trs;
 		modelData.normalInvertMatrix = trs.Inverted().Transposed();
 		RHI::UpdateModelUniform(modelData);
@@ -405,7 +405,7 @@ void Renderer::DrawAABB(const std::vector<const MeshRenderer*>& meshRenderers) c
 		const Vector3 aabbMinMax = (modelAabb.max - modelAabb.min) * 0.5f;
 		const Vector3 aabbSize = {aabbMinMax.x * transform.scale.x , aabbMinMax.y * transform.scale.y, aabbMinMax.z * transform.scale.z};
 		
-		modelData.model = Hierarchy::GetTrs(Matrix::Trs(transform.position, transform.quaternion.Normalized(), aabbSize),meshRenderer->entity);
+		modelData.model = SceneGraph::GetTrs(Matrix::Trs(transform.position, transform.quaternion.Normalized(), aabbSize),meshRenderer->entity);
 		RHI::UpdateModelUniform(modelData);
 		
 		RHI::DrawModel(m_Cube->GetId());

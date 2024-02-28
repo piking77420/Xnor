@@ -7,12 +7,12 @@
 
 BEGIN_XNOR_EDITOR
 
-class SceneGraph : public UiWindow
+class Hierarchy : public UiWindow
 {
 public:
     using UiWindow::UiWindow;
 
-    explicit SceneGraph(Editor* editor);
+    explicit Hierarchy(Editor* editor);
     
     void Display() override;
 

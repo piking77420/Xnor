@@ -3,7 +3,7 @@
 #include "scene/component.hpp"
 #include "scene/scene.hpp"
 #include "serialization/serializer.hpp"
-#include "world/hierarchy.hpp"
+#include "..\..\include\world\scene_graph.hpp"
 
 using namespace XnorCore;
 
@@ -102,7 +102,7 @@ void Entity::SetParent(Entity* const parent)
     // Need to check if we actually have a parent, since a nullptr parent is valid
     if (parent)
     {
-        Hierarchy::OnAttachToParent(*this);
+        SceneGraph::OnAttachToParent(*this);
         // Add ourselves to our new parent
         parent->m_Children.Add(this);
     }
