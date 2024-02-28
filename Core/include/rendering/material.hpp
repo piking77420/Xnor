@@ -29,6 +29,7 @@ public:
 
 END_XNOR_CORE
 
+
 REFL_AUTO(
     type(XnorCore::Material),
     field(m_MaterialType),

@@ -7,8 +7,8 @@ BEGIN_XNOR_CORE
 class Texture;
 class RenderPass;
 
-static constexpr uint32_t MaxSpotLights = 10;
-static constexpr uint32_t MaxPointLights = 10;
+static constexpr uint32_t MaxSpotLights = 100;
+static constexpr uint32_t MaxPointLights = 100;
 static constexpr uint32_t MaxDirectionalLights = 1;
 
 enum class PolygonMode : int32_t
@@ -233,6 +233,11 @@ struct GpuLightData
 	SpotLightData spotLightData[MaxSpotLights];
 
 	DirectionalData directionalData;
+};
+struct ShadowMappingData
+{
+	Matrix lightSpaceMatrix;
+	Matrix model;
 };
 
 END_XNOR_CORE

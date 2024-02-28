@@ -385,3 +385,28 @@ void Renderer::DrawAABB(const std::vector<const MeshRenderer*>& meshRenderers) c
 
 }
 
+void Renderer::RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRenderers)
+{
+	ModelUniformData data;
+	
+	for (const MeshRenderer* mesh : meshRenderers)
+	{
+		const Transform& transform = mesh->entity->transform;
+
+		Matrix&& trs =  Matrix::Trs(transform.position, transform.quaternion, transform.scale);
+		data.model = trs;
+		data.normalInvertMatrix = trs.Inverted().Transposed();
+		
+		RHI::UpdateModelUniform(data);
+		RHI::DrawModel(mesh->model->GetId());
+	}
+	
+}
+
+void Renderer::ShadowPathSpotLight(const std::vector<const SpotLight*>& spotLights)
+{
+
+	
+	
+}
+

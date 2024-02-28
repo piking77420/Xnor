@@ -2,8 +2,8 @@
 
 out vec4 FragColor;
 
-const int MaxSpothLight = 10;
-const int MaxPointLight = 10;
+const int MaxSpothLight = 100;
+const int MaxPointLight = 100;
 
 struct PointLightData
 {

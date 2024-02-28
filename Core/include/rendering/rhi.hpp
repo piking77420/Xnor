@@ -76,6 +76,8 @@ public:
 	XNOR_ENGINE static void UpdateCameraUniform(const CameraUniformData& cameraUniformData);
 
 	XNOR_ENGINE static void UpdateLight(const GpuLightData& lightData);
+	
+	XNOR_ENGINE static void UpdateShadowMapingData(const ShadowMappingData& shadowMappingData);
 
 private:
 	struct ModelInternal
@@ -134,9 +136,10 @@ private:
 	);
 
 private:
-	 static inline UniformBuffer* m_CameraUniform;
-	 static inline UniformBuffer* m_ModelUniform;
-	 static inline UniformBuffer* m_LightUniform;
+	static inline UniformBuffer* m_CameraUniform;
+	static inline UniformBuffer* m_LightShadowMappingUniform;
+	static inline UniformBuffer* m_ModelUniform;
+	static inline UniformBuffer* m_LightUniform;
 };
 
 END_XNOR_CORE

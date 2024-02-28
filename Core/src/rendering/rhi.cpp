@@ -742,6 +742,7 @@ void RHI::Shutdown()
 	delete m_CameraUniform;
 	delete m_ModelUniform;
 	delete m_LightUniform;
+	delete m_LightShadowMappingUniform;
 }
 
 void RHI::PrepareUniform()
@@ -757,6 +758,11 @@ void RHI::PrepareUniform()
 	m_LightUniform = new UniformBuffer;
 	m_LightUniform->Allocate(sizeof(GpuLightData),nullptr);
 	m_LightUniform->Bind(2);
+
+	m_LightShadowMappingUniform = new UniformBuffer;
+	m_LightShadowMappingUniform->Allocate(sizeof(ShadowMappingData),nullptr);
+	m_LightUniform->Bind(3);
+
 }
 
 void RHI::SetClearColor(const Vector4& color)
@@ -793,4 +799,9 @@ void RHI::UpdateCameraUniform(const CameraUniformData& cameraUniformData)
 void RHI::UpdateLight(const GpuLightData& lightData)
 {
 	m_LightUniform->Update(sizeof(GpuLightData),0,&lightData.nbrOfPointLight);
+}
+
+void RHI::UpdateShadowMapingData(const ShadowMappingData& shadowMappingData)
+{
+	m_LightShadowMappingUniform->Update(sizeof(ShadowMappingData),0,&shadowMappingData);
 }
