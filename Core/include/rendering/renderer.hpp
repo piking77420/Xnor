@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "renderer_context.hpp"
+#include "tone_mapping.hpp"
 #include "world/world.hpp"
 #include "file/file_manager.hpp"
 #include "Maths/vector4.hpp"
@@ -76,6 +77,8 @@ private:
     
     Pointer<Model> m_Quad;
     Pointer<Model> m_Cube;
+
+    ToneMapping m_ToneMapping;
 
     XNOR_ENGINE void InitResources();
     

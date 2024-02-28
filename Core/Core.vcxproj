@@ -124,6 +124,7 @@
     <ClCompile Include="src\rendering\material.cpp" />
     <ClCompile Include="src\rendering\render_pass.cpp" />
     <ClCompile Include="src\rendering\rhi.cpp" />
+    <ClCompile Include="src\rendering\tone_mapping.cpp" />
     <ClCompile Include="src\rendering\uniformBuffer.cpp" />
     <ClCompile Include="src\resource\cubemap.cpp" />
     <ClCompile Include="src\resource\shader.cpp" />
@@ -258,6 +259,7 @@
     <ClInclude Include="include\rendering\renderer.hpp" />
     <ClInclude Include="include\rendering\renderer_context.hpp" />
     <ClInclude Include="include\rendering\render_pass.hpp" />
+    <ClInclude Include="include\rendering\tone_mapping.hpp" />
     <ClInclude Include="include\rendering\uniformBuffer.hpp" />
     <ClInclude Include="include\resource\cubemap.hpp" />
     <ClInclude Include="include\resource\model.hpp" />

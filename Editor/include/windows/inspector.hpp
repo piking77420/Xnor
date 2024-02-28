@@ -1,4 +1,4 @@
-#pragma once
+    #pragma once
 
 #include "definitions.hpp"
 #include "ui_window.hpp"

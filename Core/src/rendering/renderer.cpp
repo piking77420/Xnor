@@ -23,6 +23,7 @@ void Renderer::Initialize()
 	RHI::SetClearColor(clearColor);
 
 	InitResources();
+	m_ToneMapping.InitializeResources();
 
 	RHI::PrepareUniform();
 
@@ -90,6 +91,9 @@ void Renderer::RenderScene(const World& world, const RendererContext& rendererCo
 	m_RenderBuffer->UnBindFrameBuffer();
 	
 	// DRAW THE FINAL IMAGE TEXTURE
+
+	m_ToneMapping.ComputeToneMaping(*m_ColorAttachment,m_Quad);
+	
 	if (rendererContext.framebuffer != nullptr)
 	{
 		rendererContext.framebuffer->BindFrameBuffer();
@@ -98,7 +102,7 @@ void Renderer::RenderScene(const World& world, const RendererContext& rendererCo
 		RHI::SetViewport(rendererContext.framebuffer->GetSize());
 	}
 	m_DrawTextureToScreenShader->Use();
-	m_ColorAttachment->BindTexture(0);
+	m_ToneMapping.GetToneMapedImage().BindTexture(0);
 	RHI::DrawQuad(m_Quad->GetId());
 	m_DrawTextureToScreenShader->Unuse();
 	
@@ -110,14 +114,7 @@ void Renderer::RenderScene(const World& world, const RendererContext& rendererCo
 
 void Renderer::CompileShader()
 {
-	if (m_BasicShader->GetLoaded())
-	{
-		m_BasicShader->Recompile();
-	}
-	else
-	{
-		m_BasicShader->CreateInRhi();
-	}
+	m_ToneMapping.RecompileShader();
 }
 
 void Renderer::SwapBuffers()
@@ -128,6 +125,7 @@ void Renderer::SwapBuffers()
 void Renderer::OnResize(vec2i windowSize)
 {
 	DestroyAttachment();
+	m_ToneMapping.OnResizeWindow(windowSize);
 	InitDefferedRenderingAttachment(windowSize);
 	InitForwardRenderingAttachment(windowSize);
 }
@@ -136,6 +134,7 @@ void Renderer::PrepareRendering(vec2i windowSize)
 {
 	InitDefferedRenderingAttachment(windowSize);
 	InitForwardRenderingAttachment(windowSize);
+	m_ToneMapping.Initialize(windowSize);
 }
 
 void Renderer::UpdateLight(const std::vector<const PointLight*>& pointLightComponents,
