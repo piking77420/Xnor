@@ -175,7 +175,7 @@ void SceneGraph::OnAttachToParent(Entity& entity)
 {
     Transform& transform = entity.transform;
 
-    Matrix& trs = transform.worldMatrix;
+    Matrix trs = transform.worldMatrix;
     Matrix&& parent = GetTrsOfParents(*entity.GetParent());
     
     trs = parent.Inverted() * trs ;
