@@ -108,6 +108,11 @@ void Serializer::FetchAttributeInternal(const std::string& attributeName, const 
     std::string error;
     XMLAttributte* attribute = CreateAttribute(m_XmlDoc, attributeName, attributeValue, error);
 
+    if (!attribute)
+    {
+        Logger::LogError(error);
+    }
+
     if (!AddAttributeToElement(m_ElementsStack.top(), attribute, error))
     {
         Logger::LogError(error);

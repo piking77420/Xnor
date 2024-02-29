@@ -185,6 +185,11 @@ void Inspector::DisplayPolyPointer(MemberT* obj, const char_t* name)
 template <typename ReflectT>
 void Inspector::DisplayObject(ReflectT* const obj, const XnorCore::TypeDescriptor<ReflectT> desc)
 {
+    constexpr const char* const typeName = desc.name.c_str();
+    const float_t textSize = ImGui::CalcTextSize(typeName).x;
+    XnorCore::Utils::AlignImGuiCursor(textSize);
+    ImGui::Text("%s", typeName);
+    
     refl::util::for_each(desc.members, [&]<typename T>(const T member)
     {
         constexpr bool hidden = refl::descriptor::has_attribute<XnorCore::HideInInspector>(member); 

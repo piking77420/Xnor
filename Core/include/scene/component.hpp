@@ -1,8 +1,8 @@
 ﻿#pragma once
 
 #include "core.hpp"
-#include "utils/reflectable.hpp"
 #include "serialization/serializer.hpp"
+#include "utils/reflectable.hpp"
 
 BEGIN_XNOR_CORE
 

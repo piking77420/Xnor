@@ -177,7 +177,7 @@ void Serializer::SerializeSimpleType(const MemberT* ptr, const char_t* name, con
     }
     else if constexpr (XnorCore::Meta::IsPolyPtr<MemberT>)
     {
-        // DisplayPolyPointer<MemberT>(ptr, name);
+
     }
     else if constexpr (XnorCore::Meta::IsXnorPointer<MemberT>)
     {
@@ -207,7 +207,7 @@ void Serializer::SerializeListType(const MemberT* ptr, const char_t* name, const
 
     for (size_t i = 0; i < ptr->GetSize(); i++)
     {
-        SerializeSimpleType<ListT>(&(*ptr)[i], "", flags);
+        SerializeSimpleType<ListT>(&(*ptr)[i], std::to_string(i).c_str(), flags);
     }
     
     EndXmlElement();
