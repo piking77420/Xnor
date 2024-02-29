@@ -9,24 +9,24 @@
 
 using namespace XnorCore;
 
-void RHI::SetPolygonMode(const PolygonFace face, const PolygonMode mode)
+void Rhi::SetPolygonMode(const PolygonFace face, const PolygonMode mode)
 {
 	glPolygonMode(static_cast<GLenum>(face), GL_POINT + static_cast<GLenum>(mode));
 }
 
-void RHI::SetViewport(const Vector2i screenSize)
+void Rhi::SetViewport(const Vector2i screenSize)
 {
-	glViewport(0,0,screenSize.x,screenSize.y);
+	glViewport(0, 0, screenSize.x, screenSize.y);
 }
 
-void RHI::DrawQuad(uint32_t quadID)
+void Rhi::DrawQuad(const uint32_t quadId)
 {
-	const ModelInternal model = m_ModelMap.at(quadID);
+	const ModelInternal model = m_ModelMap.at(quadId);
 	glBindVertexArray(model.vao);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
-uint32_t RHI::CreateModel(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indicies)
+uint32_t Rhi::CreateModel(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indicies)
 {
 	ModelInternal modelInternal;
 	modelInternal.nbrOfVertex = static_cast<uint32_t>(vertices.size());
@@ -64,7 +64,7 @@ uint32_t RHI::CreateModel(const std::vector<Vertex>& vertices, const std::vector
 	return modelId;
 }
 
-bool RHI::DestroyModel(const uint32_t modelId)
+bool Rhi::DestroyModel(const uint32_t modelId)
 {
 	if (!m_ModelMap.contains(modelId))
 		return false;
@@ -78,11 +78,15 @@ bool RHI::DestroyModel(const uint32_t modelId)
 	return true;
 }
 
-void RHI::DrawModel(const uint32_t modelId)
+void Rhi::DrawModel(const uint32_t modelId)
 {
 	const ModelInternal model = m_ModelMap.at(modelId);
 	glBindVertexArray(model.vao);
-	glDrawElements(GL_TRIANGLES,  static_cast<GLsizei>(model.nbrOfIndicies), GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(model.nbrOfIndicies), GL_UNSIGNED_INT, nullptr);
+}
+
+void Rhi::BindMaterial([[maybe_unused]] const Material& material)
+{
 }
 
 /*
@@ -95,14 +99,14 @@ void RHI::BindMaterial(const Material& material)
 	material.shader->Unuse();
 }*/
 
-void RHI::DestroyShader(const uint32_t shaderId)
+void Rhi::DestroyShader(const uint32_t shaderId)
 {
 	IsShaderValid(shaderId);
 	
 	glDeleteShader(shaderId);
 }
 
-void RHI::CheckCompilationError(const uint32_t shaderId, const std::string& type)
+void Rhi::CheckCompilationError(const uint32_t shaderId, const std::string& type)
 {
 	int success;
 	char infoLog[1024];
@@ -126,7 +130,7 @@ void RHI::CheckCompilationError(const uint32_t shaderId, const std::string& type
 	}
 }
 
-uint32_t RHI::CreateShaders(const std::vector<ShaderCode>& shaderCodes)
+uint32_t Rhi::CreateShaders(const std::vector<ShaderCode>& shaderCodes)
 {
 	uint32_t programId = glCreateProgram();
 	
@@ -153,7 +157,7 @@ uint32_t RHI::CreateShaders(const std::vector<ShaderCode>& shaderCodes)
 	return programId;
 }
 
-void RHI::UseShader(const uint32_t shaderId)
+void Rhi::UseShader(const uint32_t shaderId)
 {
 #ifdef _DEBUG
 	IsShaderValid(shaderId);
@@ -161,12 +165,12 @@ void RHI::UseShader(const uint32_t shaderId)
 	glUseProgram(shaderId);
 }
 
-void RHI::UnuseShader()
+void Rhi::UnuseShader()
 {
 	glUseProgram(0);
 }
 
-void RHI::SetUniform(const UniformType uniformType, const void* data, const uint32_t shaderId, const char* uniformKey)
+void Rhi::SetUniform(const UniformType uniformType, const void* data, const uint32_t shaderId, const char* uniformKey)
 {
 	const GLint uniformLocation = GetUniformInMap(shaderId, uniformKey);
 
@@ -202,12 +206,12 @@ void RHI::SetUniform(const UniformType uniformType, const void* data, const uint
 	}
 }
 
-void RHI::CreateTexture(uint32_t* const textureId, const TextureCreateInfo& textureCreateInfo)
+void Rhi::CreateTexture(uint32_t* const textureId, const TextureCreateInfo& textureCreateInfo)
 {
 	glCreateTextures(GL_TEXTURE_2D, 1, textureId);
 
-	ComputeTextureWrapper(*textureId,textureCreateInfo.textureWrapping);
-	ComputeOpenglTextureFilter(*textureId,textureCreateInfo.textureFiltering);
+	ComputeTextureWrapper(*textureId, textureCreateInfo.textureWrapping);
+	ComputeOpenglTextureFilter(*textureId, textureCreateInfo.textureFiltering);
 
 	glTextureStorage2D(*textureId, 1,
 		GetOpenglInternalFormat(textureCreateInfo.textureInternalFormat),
@@ -227,46 +231,34 @@ void RHI::CreateTexture(uint32_t* const textureId, const TextureCreateInfo& text
 	glGenerateTextureMipmap(*textureId);
 }
 
-void RHI::DestroyTexture(uint32_t* textureId)
+void Rhi::DestroyTexture(uint32_t* const textureId)
 {
 	glDeleteTextures(1, textureId);
 	*textureId = 0;
-	
 }
 
-void RHI::BindTexture(const uint32_t unit, const uint32_t textureId)
+void Rhi::BindTexture(const uint32_t unit, const uint32_t textureId)
 {
 	glBindTextureUnit(unit, textureId);
 }
 
-void RHI::CreateFrameBuffer(uint32_t* frameBufferId,const RenderPass& renderPass,const std::vector<const Texture*>& attechements)
+void Rhi::CreateFrameBuffer(uint32_t* const frameBufferId, const RenderPass& renderPass, const std::vector<const Texture*>& attechements)
 {
 	glCreateFramebuffers(1, frameBufferId);
 
 	const std::vector<RenderTargetInfo>& renderTargetInfos = renderPass.renderPassAttachments;
 	std::vector<GLenum> openglAttachmentsdraw;
-
 	
-	for (uint32_t i = 0; i < renderTargetInfos.size();i++ )
+	for (uint32_t i = 0; i < renderTargetInfos.size(); i++)
 	{
 		GLenum openglAttachment = 0 ;
 		switch (renderTargetInfos[i].attachment)
 		{
-			
-			case Attachment::Color_Attachment01:
+			case Attachment::Color01:
+			case Attachment::Color02:
+			case Attachment::Color03:
+			case Attachment::Color04:
 				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
-				break;
-			
-			case Attachment::Color_Attachment02:
-				openglAttachment =  static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + i);
-				break;
-			
-			case Attachment::Color_Attachment03:
-				openglAttachment =  static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + i);
-				break;
-			
-			case Attachment::Color_Attachment04:
-				openglAttachment =  static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + i);
 				break;
 			
 			case Attachment::Depth:
@@ -284,7 +276,7 @@ void RHI::CreateFrameBuffer(uint32_t* frameBufferId,const RenderPass& renderPass
 		}
 		glNamedFramebufferTexture(*frameBufferId, openglAttachment, attechements.at(i)->GetId(), 0);
 		
-		if(renderTargetInfos[i].draw)
+		if (renderTargetInfos[i].draw)
 		{
 			openglAttachmentsdraw.push_back(openglAttachment);
 		}
@@ -294,7 +286,7 @@ void RHI::CreateFrameBuffer(uint32_t* frameBufferId,const RenderPass& renderPass
 	
 }
 
-void RHI::DestroyFrameBuffer(uint32_t* const frameBufferId)
+void Rhi::DestroyFrameBuffer(uint32_t* const frameBufferId)
 {
 	if (glIsFramebuffer(*frameBufferId))
 	{
@@ -303,43 +295,43 @@ void RHI::DestroyFrameBuffer(uint32_t* const frameBufferId)
 	}
 }
 
-void RHI::BlitFrameBuffer(
-	uint32_t readBuffer,
-	uint32_t targetBuffer,
-	Vector2i src0Size,
-	Vector2i src1Size,
-	Vector2i target0Size,
-	Vector2i target1Size,
-	[[maybe_unused]]Attachment attachmentTarget,
-	TextureFiltering textureFiltering
+void Rhi::BlitFrameBuffer(
+	const uint32_t readBuffer,
+	const uint32_t targetBuffer,
+	const Vector2i src0Size,
+	const Vector2i src1Size,
+	const Vector2i target0Size,
+	const Vector2i target1Size,
+	[[maybe_unused]]const Attachment attachmentTarget,
+	const TextureFiltering textureFiltering
 )
 {
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, readBuffer);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, targetBuffer);
 	glBlitFramebuffer(
-	  src0Size.x, src0Size.y,
-	  src1Size.x, src1Size.y,
-	  target0Size.x, target0Size.y,
-	  target1Size.x, target1Size.y, GL_DEPTH_BUFFER_BIT, GetOpenglTextureFiltering(textureFiltering)
+		src0Size.x, src0Size.y,
+		src1Size.x, src1Size.y,
+		target0Size.x, target0Size.y,
+		target1Size.x, target1Size.y, GL_DEPTH_BUFFER_BIT, GetOpenglTextureFiltering(textureFiltering)
 	);
 }
 
-void RHI::BindFrameBuffer(const uint32_t frameBufferId)
+void Rhi::BindFrameBuffer(const uint32_t frameBufferId)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
 }
 
-void RHI::UnbindFrameBuffer()
+void Rhi::UnbindFrameBuffer()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void RHI::SwapBuffers()
+void Rhi::SwapBuffers()
 {
 	glfwSwapBuffers(Window::GetHandle());
 }
 
-uint32_t RHI::GetOpenglShaderType(const ShaderType shaderType)
+uint32_t Rhi::GetOpenglShaderType(const ShaderType shaderType)
 {
 	switch (shaderType)
 	{
@@ -362,7 +354,7 @@ uint32_t RHI::GetOpenglShaderType(const ShaderType shaderType)
 	throw std::invalid_argument("Invalid shader type");
 }
 
-std::string RHI::GetShaderTypeToString(const ShaderType shaderType)
+std::string Rhi::GetShaderTypeToString(const ShaderType shaderType)
 {
 	switch (shaderType)
 	{
@@ -385,7 +377,7 @@ std::string RHI::GetShaderTypeToString(const ShaderType shaderType)
 	throw std::invalid_argument("Invalid shader type");
 }
 
-void RHI::ComputeTextureWrapper(const uint32_t textureId, const TextureWrapping textureWrapping)
+void Rhi::ComputeTextureWrapper(const uint32_t textureId, const TextureWrapping textureWrapping)
 {
 	switch (textureWrapping)
 	{
@@ -414,7 +406,7 @@ void RHI::ComputeTextureWrapper(const uint32_t textureId, const TextureWrapping 
 	}
 }
 
-void RHI::ComputeOpenglTextureFilter(const uint32_t textureId, const TextureFiltering textureFilter)
+void Rhi::ComputeOpenglTextureFilter(const uint32_t textureId, const TextureFiltering textureFilter)
 {
 	switch (textureFilter)
 	{
@@ -433,25 +425,24 @@ void RHI::ComputeOpenglTextureFilter(const uint32_t textureId, const TextureFilt
 	}
 }
 
-uint32_t RHI::GetOpenglTextureFiltering(TextureFiltering textureFilter)
+uint32_t Rhi::GetOpenglTextureFiltering(TextureFiltering textureFilter)
 {
 	switch (textureFilter)
 	{
 		case TextureFiltering::None:
 			return GL_NONE;
-			break;
+
 		case TextureFiltering::Linear:
 			return GL_LINEAR;
-			break;
+
 		case TextureFiltering::Nearest:
 			return GL_NEAREST;
-			break;
 	}
 
 	return GL_NONE;
 }
 
-uint32_t RHI::TextureTypeToOpenglTexture(const TextureType textureType)
+uint32_t Rhi::TextureTypeToOpenglTexture(const TextureType textureType)
 {
 	switch (textureType)
 	{
@@ -492,7 +483,7 @@ uint32_t RHI::TextureTypeToOpenglTexture(const TextureType textureType)
 	return 0;
 }
 
-uint32_t RHI::GetOpenglInternalFormat(const TextureInternalFormat textureFormat)
+uint32_t Rhi::GetOpenglInternalFormat(const TextureInternalFormat textureFormat)
 {
 	switch (textureFormat)
 	{
@@ -553,7 +544,7 @@ uint32_t RHI::GetOpenglInternalFormat(const TextureInternalFormat textureFormat)
 	return GL_RGB;
 }
 
-uint32_t RHI::GetOpenGlTextureFormat(const TextureFormat textureFormat)
+uint32_t Rhi::GetOpenGlTextureFormat(const TextureFormat textureFormat)
 {
 	switch (textureFormat)
 	{
@@ -570,7 +561,7 @@ uint32_t RHI::GetOpenGlTextureFormat(const TextureFormat textureFormat)
 	return GL_RGB;
 }
 
-void RHI::IsShaderValid(const uint32_t shaderId)
+void Rhi::IsShaderValid(const uint32_t shaderId)
 {
 	if (!m_ShaderMap.contains(shaderId))
 	{
@@ -579,7 +570,7 @@ void RHI::IsShaderValid(const uint32_t shaderId)
 	}
 }
 
-int RHI::GetUniformInMap(uint32_t shaderId, const char* uniformKey)
+int Rhi::GetUniformInMap(const uint32_t shaderId, const char* const uniformKey)
 {
 	std::map<std::string, uint32_t>& shaderUniformMap = m_ShaderMap.at(shaderId).uniformMap;
 
@@ -599,127 +590,142 @@ int RHI::GetUniformInMap(uint32_t shaderId, const char* uniformKey)
 	return location;
 }
 
-uint32_t RHI::GetOpenglDataType(DataType dataType)
+uint32_t Rhi::GetOpenglDataType(const DataType dataType)
 {
 	switch (dataType)
 	{
 		case DataType::Float:
-			GL_FLOAT;
-			break;
+			return GL_FLOAT;
+
 		case DataType::UnsignedByte:
-			GL_UNSIGNED_BYTE;
-			break;
+			return GL_UNSIGNED_BYTE;
 	}
+
 	return GL_UNSIGNED_BYTE;
 }
 
-
-
-
-void RHI::OpenglDebugCallBack([[maybe_unused]]uint32_t source,
-	[[maybe_unused]]uint32_t type,
-	[[maybe_unused]]uint32_t id,
-	[[maybe_unused]]uint32_t severity,
-	[[maybe_unused]]size_t length,
-	[[maybe_unused]]const char_t* message,
-	[[maybe_unused]]const void* userParam)
+void Rhi::OpenglDebugCallBack([[maybe_unused]] const uint32_t source,
+	[[maybe_unused]] const uint32_t type,
+	[[maybe_unused]] const uint32_t id,
+	[[maybe_unused]] const uint32_t severity,
+	[[maybe_unused]] const size_t length,
+	[[maybe_unused]] const char_t* const message,
+	[[maybe_unused]] const void* const userParam)
 {
 	
     // ignore non-significant error/warning codes
-    if(id == 131169 || id == 131185 || id == 131218 || id == 131204) return; 
+    if (id == 131169 || id == 131185 || id == 131218 || id == 131204)
+    	return; 
 
 	Logger::LogDebug("---------------\n");
-	Logger::LogDebug("Debug message ({}",id);
-	Logger::LogDebug("): {}\n",message);
+	Logger::LogDebug("Debug message ({}", id);
+	Logger::LogDebug("): {}\n", message);
 	
     switch (source)
     {
         case GL_DEBUG_SOURCE_API:
         	Logger::LogDebug("Source: API");
-    	break;
+    		break;
     	
         case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
         	Logger::LogDebug("Source: Window System");
-    	break;
+    		break;
     	
         case GL_DEBUG_SOURCE_SHADER_COMPILER:
         	Logger::LogDebug("Source: Shader Compiler");
-    	break;
+    		break;
     	
         case GL_DEBUG_SOURCE_THIRD_PARTY:
         	Logger::LogDebug("Source: Third Party");
-    	break;
+    		break;
     	
         case GL_DEBUG_SOURCE_APPLICATION:
         	Logger::LogDebug("Source: Application");
-    	break;
+    		break;
     	
         case GL_DEBUG_SOURCE_OTHER:
         	Logger::LogDebug("Source: Other");
-    	break;
-    	
-    } Logger::LogDebug("\n");
+    		break;
+
+    	default:
+    		Logger::LogDebug("Source: Unknown [{}]", source);
+    }
+
+	Logger::LogDebug("\n");
 
     switch (type)
     {
         case GL_DEBUG_TYPE_ERROR:
-        		Logger::LogDebug(  "Type: Error");
-    	break;
+        	Logger::LogDebug("Type: Error");
+    		break;
     	
         case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
-        		Logger::LogDebug(  "Type: Deprecated Behaviour");
-    	break;
+			Logger::LogDebug("Type: Deprecated Behaviour");
+    		break;
     	
         case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-				Logger::LogDebug(  "Type: Undefined Behaviour"); 
-    	break;
+			Logger::LogDebug("Type: Undefined Behaviour"); 
+    		break;
     	
         case GL_DEBUG_TYPE_PORTABILITY:
-        		Logger::LogDebug(  "Type: Portability"); 
-    	break;
+			Logger::LogDebug("Type: Portability"); 
+    		break;
     	
         case GL_DEBUG_TYPE_PERFORMANCE:
-        		Logger::LogDebug(  "Type: Performance"); 
-    	break;
+			Logger::LogDebug("Type: Performance"); 
+    		break;
     	
         case GL_DEBUG_TYPE_MARKER:
-        		Logger::LogDebug(  "Type: Marker"); 
-    	break;
+			Logger::LogDebug("Type: Marker"); 
+    		break;
     	
         case GL_DEBUG_TYPE_PUSH_GROUP:
-        		Logger::LogDebug(  "Type: Push Group"); 
-    	break;
+			Logger::LogDebug("Type: Push Group"); 
+    		break;
     	
         case GL_DEBUG_TYPE_POP_GROUP:
-        	Logger::LogDebug(  "Type: Pop Group"); 
-    	break;
+			Logger::LogDebug("Type: Pop Group"); 
+    		break;
     	
         case GL_DEBUG_TYPE_OTHER:
-        	Logger::LogDebug(  "Type: Other"); 
-    	break;
-    	
-    } Logger::LogDebug("\n");
+			Logger::LogDebug("Type: Other"); 
+    		break;
+
+    	default:
+			Logger::LogDebug("Type: Unknown [{}]", type); 
+    }
+
+	Logger::LogDebug("\n");
     
     switch (severity)
     {
         case GL_DEBUG_SEVERITY_HIGH:
         	Logger::LogDebug("Severity: high");
-    	break;
+    		break;
+
         case GL_DEBUG_SEVERITY_MEDIUM:
         	Logger::LogDebug("Severity: medium");
-    	break;
+    		break;
+
         case GL_DEBUG_SEVERITY_LOW:
         	Logger::LogDebug("Severity: low");
-    	break;
+    		break;
+
         case GL_DEBUG_SEVERITY_NOTIFICATION:
         	Logger::LogDebug("Severity: notification");
-    	break;
-    }  Logger::LogDebug("\n");
+    		break;
+
+    	default:
+        	Logger::LogDebug("Severity: Unknown [{}]", severity);
+    }
+	
+	Logger::LogDebug("\n");
+	
 	Logger::LogDebug("\n");
 }
 
 
-void RHI::Initialize()
+void Rhi::Initialize()
 {
 	gladLoadGL();
 	glEnable(GL_DEPTH_TEST);
@@ -727,13 +733,14 @@ void RHI::Initialize()
 	
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 
-	glDebugMessageCallback(reinterpret_cast<GLDEBUGPROC>(OpenglDebugCallBack), nullptr);
+	glDebugMessageCallback(reinterpret_cast<GLDEBUGPROC>(OpenglDebugCallBack), nullptr);  // NOLINT(clang-diagnostic-cast-function-type-strict)
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 }
 
 
-void RHI::Shutdown()
+void Rhi::Shutdown()
 {
+	// ReSharper disable once CppDiscardedPostfixOperatorResult
 	for (std::unordered_map<uint32_t, ModelInternal>::iterator it = m_ModelMap.begin() ; it != m_ModelMap.end(); it++)
 	{
 		DestroyModel(it->first);
@@ -745,7 +752,7 @@ void RHI::Shutdown()
 	delete m_LightShadowMappingUniform;
 }
 
-void RHI::PrepareUniform()
+void Rhi::PrepareUniform()
 {
 	m_CameraUniform = new UniformBuffer;
 	m_CameraUniform->Allocate(sizeof(CameraUniformData), nullptr);
@@ -756,52 +763,52 @@ void RHI::PrepareUniform()
 	m_ModelUniform->Bind(1);
 	
 	m_LightUniform = new UniformBuffer;
-	m_LightUniform->Allocate(sizeof(GpuLightData),nullptr);
+	m_LightUniform->Allocate(sizeof(GpuLightData), nullptr);
 	m_LightUniform->Bind(2);
 
 	m_LightShadowMappingUniform = new UniformBuffer;
-	m_LightShadowMappingUniform->Allocate(sizeof(ShadowMappingData),nullptr);
+	m_LightShadowMappingUniform->Allocate(sizeof(ShadowMappingData), nullptr);
 	m_LightUniform->Bind(3);
 
 }
 
-void RHI::SetClearColor(const Vector4& color)
+void Rhi::SetClearColor(const Vector4& color)
 {
 	glClearColor(color.x, color.y, color.z, color.w);
 }
 
-void RHI::ClearColorAndDepth()
+void Rhi::ClearColorAndDepth()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void RHI::ClearColor()
+void Rhi::ClearColor()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void RHI::ClearDepth()
+void Rhi::ClearDepth()
 {
 	glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-void RHI::UpdateModelUniform(const ModelUniformData& modelUniformData)
+void Rhi::UpdateModelUniform(const ModelUniformData& modelUniformData)
 {	
 	constexpr size_t size = sizeof(ModelUniformData);
-	m_ModelUniform->Update(size,0,modelUniformData.model.Raw());
+	m_ModelUniform->Update(size, 0, modelUniformData.model.Raw());
 }
 
-void RHI::UpdateCameraUniform(const CameraUniformData& cameraUniformData)
+void Rhi::UpdateCameraUniform(const CameraUniformData& cameraUniformData)
 {
-	m_CameraUniform->Update(sizeof(CameraUniformData),0,cameraUniformData.view.Raw());
+	m_CameraUniform->Update(sizeof(CameraUniformData), 0, cameraUniformData.view.Raw());
 }
 
-void RHI::UpdateLight(const GpuLightData& lightData)
+void Rhi::UpdateLight(const GpuLightData& lightData)
 {
-	m_LightUniform->Update(sizeof(GpuLightData),0,&lightData.nbrOfPointLight);
+	m_LightUniform->Update(sizeof(GpuLightData), 0, &lightData.nbrOfPointLight);
 }
 
-void RHI::UpdateShadowMapingData(const ShadowMappingData& shadowMappingData)
+void Rhi::UpdateShadowMapingData(const ShadowMappingData& shadowMappingData)
 {
-	m_LightShadowMappingUniform->Update(sizeof(ShadowMappingData),0,&shadowMappingData);
+	m_LightShadowMappingUniform->Update(sizeof(ShadowMappingData), 0, &shadowMappingData);
 }

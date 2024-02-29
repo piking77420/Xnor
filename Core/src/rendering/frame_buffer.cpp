@@ -5,36 +5,34 @@
 using namespace XnorCore;
 
 
-FrameBuffer::FrameBuffer(const vec2i size) : m_FrameBufferSize(size)
+FrameBuffer::FrameBuffer(const vec2i size)
+	: m_FrameBufferSize(size), m_Id(0)
 {
-	
 }
 
 FrameBuffer::~FrameBuffer()
 {
-	RHI::DestroyFrameBuffer(&m_Id);
+	Rhi::DestroyFrameBuffer(&m_Id);
 }
 
-void FrameBuffer::Create(const RenderPass& renderPass,const std::vector<const Texture*>& textures)
+void FrameBuffer::Create(const RenderPass& renderPass, const std::vector<const Texture*>& attachements)
 {
-	RHI::CreateFrameBuffer(&m_Id,renderPass,textures);
+	Rhi::CreateFrameBuffer(&m_Id,renderPass, attachements);
 }
 
-const Vector2i FrameBuffer::GetSize() const
+Vector2i FrameBuffer::GetSize() const
 {
 	return m_FrameBufferSize;
 }
 
-
-
 void FrameBuffer::BindFrameBuffer() const 
 {
-	RHI::BindFrameBuffer(m_Id);
+	Rhi::BindFrameBuffer(m_Id);
 }
 
 void FrameBuffer::UnBindFrameBuffer() const 
 {
-	RHI::BindFrameBuffer(0);
+	Rhi::BindFrameBuffer(0);
 }
 
 uint32_t FrameBuffer::GetId() const

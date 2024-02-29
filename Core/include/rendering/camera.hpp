@@ -28,7 +28,6 @@ public:
 
 	[[nodiscard]]
 	Vector2i ProjectOn(const Vector3& vertex, Vector2i screenSize, const Matrix& model) const;
-	
 };
 
 END_XNOR_CORE

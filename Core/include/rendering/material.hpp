@@ -5,9 +5,9 @@
 #include "core.hpp"
 #include "resource/shader.hpp"
 #include "resource/texture.hpp"
+#include "serialization/serializer.hpp"
 #include "utils/pointer.hpp"
 #include "utils/reflectable.hpp"
-#include "serialization/serializer.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -24,13 +24,12 @@ struct Material : Reflectable
 public:
     Material();
     
-    //Pointer<Shader> shader;
+    // Pointer<Shader> shader;
     int32_t materialType;
     Pointer<Texture> textures;
 };
 
 END_XNOR_CORE
-
 
 REFL_AUTO(
     type(XnorCore::Material),

@@ -10,22 +10,21 @@
 #include "vertex.hpp"
 #include "resource/model.hpp"
 
-
-
 BEGIN_XNOR_CORE
-class RHI
+
+class Rhi
 {
 public:
 
-	DELETE_COPY_MOVE_OPERATIONS(RHI)
+	DELETE_COPY_MOVE_OPERATIONS(Rhi)
 	
 	// Utils
 	XNOR_ENGINE static void SetPolygonMode(PolygonFace face, PolygonMode mode);
 	XNOR_ENGINE static void SetViewport(Vector2i screenSize);
-	XNOR_ENGINE static void DrawQuad(uint32_t quadID);
+	XNOR_ENGINE static void DrawQuad(uint32_t quadId);
 
 	// Model
-	XNOR_ENGINE static uint32_t CreateModel(const std::vector<Vertex>& vertices,const std::vector<uint32_t>& indicies);
+	XNOR_ENGINE static uint32_t CreateModel(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indicies);
 	XNOR_ENGINE static bool DestroyModel(uint32_t modelId);
 	XNOR_ENGINE static void DrawModel(uint32_t modelId); 
 
@@ -42,16 +41,16 @@ public:
 	XNOR_ENGINE static void SetUniform(UniformType uniformType, const void* data, uint32_t shaderId, const char* uniformKey);
 	
 	// TEXTURE
-	XNOR_ENGINE  static void CreateTexture(uint32_t* textureId, const TextureCreateInfo& textureCreateInfo);
-	XNOR_ENGINE  static void DestroyTexture(uint32_t* textureId);
+	XNOR_ENGINE static void CreateTexture(uint32_t* textureId, const TextureCreateInfo& textureCreateInfo);
+	XNOR_ENGINE static void DestroyTexture(uint32_t* textureId);
 
-	XNOR_ENGINE  static void BindTexture(uint32_t unit,uint32_t textureId);
+	XNOR_ENGINE static void BindTexture(uint32_t unit,uint32_t textureId);
 
 	// FrameBuffer
 	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferId,const RenderPass& renderPass,const std::vector<const Texture*>& attechements);
 	XNOR_ENGINE static void DestroyFrameBuffer(uint32_t* frameBufferId);
-	XNOR_ENGINE static void BlitFrameBuffer(uint32_t readBuffer,uint32_t targetBuffer,
-		Vector2i src0Size,Vector2i src1Size,Vector2i target0Size,Vector2i target1Size,Attachment attachmentTarget,TextureFiltering textureFiltering);
+	XNOR_ENGINE static void BlitFrameBuffer(uint32_t readBuffer, uint32_t targetBuffer, Vector2i src0Size, Vector2i src1Size,
+		Vector2i target0Size,Vector2i target1Size,Attachment attachmentTarget,TextureFiltering textureFiltering);
 	XNOR_ENGINE static void BindFrameBuffer(uint32_t frameBufferId);
 	XNOR_ENGINE static void UnbindFrameBuffer();
 
@@ -96,7 +95,6 @@ private:
 		std::map<std::string, uint32_t> uniformMap;
 	};
 
-
 	static constexpr int32_t NullUniformLocation = -1;
 	
 	XNOR_ENGINE static inline std::unordered_map<uint32_t, ShaderInternal> m_ShaderMap;
@@ -123,7 +121,6 @@ private:
 	static int32_t GetUniformInMap(uint32_t shaderId, const char* uniformKey);
 
 	static uint32_t GetOpenglDataType(DataType dataType);
-
 	
 	static void OpenglDebugCallBack(
 		uint32_t source,

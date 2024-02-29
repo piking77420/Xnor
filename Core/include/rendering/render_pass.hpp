@@ -17,6 +17,6 @@ public:
     XNOR_ENGINE ~RenderPass() = default;
     
     XNOR_ENGINE explicit RenderPass(const std::vector<RenderTargetInfo>& attachments);
-    
 };
+
 END_XNOR_CORE

@@ -11,7 +11,7 @@ using namespace XnorCore;
 
 Model::~Model()
 {
-    RHI::DestroyModel(m_ModelId);
+    Rhi::DestroyModel(m_ModelId);
 }
 
 void Model::Load(const uint8_t* buffer, const int64_t length)
@@ -80,14 +80,14 @@ void Model::Load(const aiMesh& loadedData)
 
 void Model::CreateInRhi()
 {
-    m_ModelId = RHI::CreateModel(m_Vertices, m_Indices);
+    m_ModelId = Rhi::CreateModel(m_Vertices, m_Indices);
 
     m_LoadedInRhi = true;
 }
 
 void Model::DestroyInRhi()
 {
-    RHI::DestroyModel(m_ModelId);
+    Rhi::DestroyModel(m_ModelId);
 
     m_LoadedInRhi = false;
 }

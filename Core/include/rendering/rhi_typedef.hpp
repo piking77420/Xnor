@@ -4,6 +4,7 @@
 #include "Maths/matrix.hpp"
 
 BEGIN_XNOR_CORE
+
 class Texture;
 class RenderPass;
 
@@ -21,8 +22,7 @@ enum class PolygonMode : int32_t
 enum class DrawMode : uint8_t
 {
 	Point = 0,
-	Line_Strip,
-	Line_Loop,
+	LineStrip,
 	LineLoop,
 	LineStripAdjency,
 	TrianglesStrip,
@@ -130,14 +130,13 @@ enum class TextureFormat
 
 enum class Attachment
 {
-	Color_Attachment01,
-	Color_Attachment02,
-	Color_Attachment03,
-	Color_Attachment04,
+	Color01,
+	Color02,
+	Color03,
+	Color04,
 	Depth,
 	Stencil,
 	DepthAndStencil,
-	
 };
 
 struct RenderTargetInfo

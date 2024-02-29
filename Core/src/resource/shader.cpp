@@ -46,14 +46,14 @@ void Shader::CreateInRhi()
 {
     std::vector<ShaderCode> code(m_Code.size());
     std::ranges::copy(m_Code, code.begin());
-    m_Id = RHI::CreateShaders(code);
+    m_Id = Rhi::CreateShaders(code);
 
     m_Loaded = true;
 }
 
 void Shader::DestroyInRhi()
 {
-    RHI::DestroyShader(m_Id);
+    Rhi::DestroyShader(m_Id);
     m_Id = 0;
 
     m_Loaded = false;
@@ -80,32 +80,32 @@ void Shader::Unload()
 
 void Shader::SetInt(const std::string& keyName, const int value) const
 {
-    RHI::SetUniform(UniformType::Int, &value, m_Id, keyName.c_str());
+    Rhi::SetUniform(UniformType::Int, &value, m_Id, keyName.c_str());
 }
 
 void Shader::SetBool(const std::string& keyName, const bool value) const
 {
-    RHI::SetUniform(UniformType::Bool, &value, m_Id, keyName.c_str());
+    Rhi::SetUniform(UniformType::Bool, &value, m_Id, keyName.c_str());
 }
 
 void Shader::SetFloat(const std::string& keyName, const float value) const
 {
-    RHI::SetUniform(UniformType::Float, &value, m_Id, keyName.c_str());
+    Rhi::SetUniform(UniformType::Float, &value, m_Id, keyName.c_str());
 }
 
 void Shader::SetVec3(const std::string& keyName, const Vector3& value) const
 {
-    RHI::SetUniform(UniformType::Vec3, &value, m_Id, keyName.c_str());
+    Rhi::SetUniform(UniformType::Vec3, &value, m_Id, keyName.c_str());
 }
 
 void Shader::SetVec4(const std::string& keyName, const Vector4& value) const
 {
-    RHI::SetUniform(UniformType::Vec4, &value, m_Id, keyName.c_str());
+    Rhi::SetUniform(UniformType::Vec4, &value, m_Id, keyName.c_str());
 }
 
 void Shader::SetMat4(const std::string& keyName, const Matrix& value) const
 {
-    RHI::SetUniform(UniformType::Mat4, &value, m_Id, keyName.c_str());
+    Rhi::SetUniform(UniformType::Mat4, &value, m_Id, keyName.c_str());
 }
 
 uint32_t Shader::GetId() const
@@ -115,10 +115,10 @@ uint32_t Shader::GetId() const
 
 void Shader::Use() const
 {
-    RHI::UseShader(m_Id);
+    Rhi::UseShader(m_Id);
 }
 
 void Shader::Unuse() const
 {
-    RHI::UnuseShader();
+    Rhi::UnuseShader();
 }

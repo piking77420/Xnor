@@ -10,12 +10,12 @@
 #include "resource/model.hpp"
 #include "scene/scene.hpp"
 
-
 BEGIN_XNOR_CORE
-    class DirectionalLight;
-    class SpotLight;
-    class PointLight;
-    class MeshRenderer;
+
+class DirectionalLight;
+class SpotLight;
+class PointLight;
+class MeshRenderer;
 
 class Renderer
 {
@@ -36,9 +36,9 @@ public:
     
     XNOR_ENGINE void SwapBuffers();
     
-    XNOR_ENGINE void OnResize(vec2i windowSize);
+    XNOR_ENGINE void OnResize(Vector2i windowSize);
     
-    XNOR_ENGINE void PrepareRendering(vec2i windowSize);
+    XNOR_ENGINE void PrepareRendering(Vector2i windowSize);
 
 private:
     enum class RenderingLight
@@ -55,21 +55,20 @@ private:
     };
     
     FrameBuffer* m_GframeBuffer = nullptr;
-    // Deffered attachment GBuffers
+    // Deferred attachment GBuffers
     Texture* m_PositionAtttachment = nullptr;
     Texture* m_NormalAttachement = nullptr;
     Texture* m_AlbedoAtttachment = nullptr;
     Texture* m_DepthGbufferAtttachment = nullptr;
     RenderPass m_GbufferPass;
     
-    
     FrameBuffer* m_RenderBuffer = nullptr;
-    // Forward Attahcment
+    // Forward Attachment
     Texture* m_ColorAttachment = nullptr;
     Texture* m_DepthAttachment = nullptr;
 
-    Pointer<Shader> m_gBufferShader;
-    Pointer<Shader> m_gBufferShaderLit;
+    Pointer<Shader> m_GBufferShader;
+    Pointer<Shader> m_GBufferShaderLit;
     
     Pointer<Shader> m_BasicShader;
     Pointer<Shader> m_DrawTextureToScreenShader;
@@ -86,25 +85,23 @@ private:
     
     XNOR_ENGINE void InitForwardRenderingAttachment(vec2i windowSize);
     
-    XNOR_ENGINE void DestroyAttachment();
+    XNOR_ENGINE void DestroyAttachment() const;
     
     XNOR_ENGINE void UpdateLight(const std::vector<const PointLight*>& pointLightComponents,
-    const std::vector<const SpotLight*>& spotLightsComponents,
-    const std::vector<const DirectionalLight*>& directionalComponent) const;
+        const std::vector<const SpotLight*>& spotLightsComponents,
+        const std::vector<const DirectionalLight*>& directionalComponent) const;
 
     XNOR_ENGINE void DrawLightGizmo(const std::vector<const PointLight*>& pointLightComponents,
-     const std::vector<const SpotLight*>& spotLightsComponents,
-    const std::vector<const DirectionalLight*>& directionalComponent,const Camera& camera) const;
+        const std::vector<const SpotLight*>& spotLightsComponents,
+        const std::vector<const DirectionalLight*>& directionalComponent,const Camera& camera) const;
 
     XNOR_ENGINE void DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers,MaterialType materialtype) const;
     
-    XNOR_ENGINE void DrawAABB(const std::vector<const MeshRenderer*>& meshRenderers) const;
+    XNOR_ENGINE void DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) const;
 
     XNOR_ENGINE void RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRenderers);
     
     XNOR_ENGINE void ShadowPathSpotLight(const std::vector<const SpotLight*>& spotLights);
-
-    
 };
 
 END_XNOR_CORE

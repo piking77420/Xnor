@@ -12,7 +12,7 @@ Texture::Texture(const TextureCreateInfo& createInfo)
     , m_TextureFiltering(createInfo.textureFiltering), m_TextureWrapping(createInfo.textureWrapping)
     , m_TextureInternalFormat(createInfo.textureInternalFormat)
 {
-    RHI::CreateTexture(&m_Id, createInfo);
+    Rhi::CreateTexture(&m_Id, createInfo);
     m_LoadedInRhi = true;
 }
 
@@ -30,7 +30,7 @@ Texture::Texture(const TextureInternalFormat textureFormat, const Vector2i size)
         m_TextureInternalFormat
     };
     
-    RHI::CreateTexture(&m_Id,createInfo);
+    Rhi::CreateTexture(&m_Id,createInfo);
     m_LoadedInRhi = true;
 }
 
@@ -69,14 +69,14 @@ void Texture::CreateInRhi()
         DataType::UnsignedByte
     };
     
-    RHI::CreateTexture(&m_Id, textureCreateInfo);
+    Rhi::CreateTexture(&m_Id, textureCreateInfo);
     
     m_LoadedInRhi = true;
 }
 
 void Texture::DestroyInRhi()
 {
-    RHI::DestroyTexture(&m_Id);
+    Rhi::DestroyTexture(&m_Id);
     
     m_LoadedInRhi = false;
 }
@@ -107,12 +107,12 @@ int32_t Texture::GetChannels() const
 
 void Texture::BindTexture([[maybe_unused]] const uint32_t index) const
 {
-    RHI::BindTexture(index,m_Id);
+    Rhi::BindTexture(index,m_Id);
 }
 
 void Texture::UnbindTexture(uint32_t index) const
 {
-    RHI::BindTexture(index,0);
+    Rhi::BindTexture(index,0);
 }
 
 uint32_t Texture::GetId() const

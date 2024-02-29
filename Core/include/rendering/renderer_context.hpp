@@ -5,7 +5,6 @@
 
 BEGIN_XNOR_CORE
 
-
 class RendererContext
 {
 public:
@@ -13,7 +12,7 @@ public:
 	const FrameBuffer* framebuffer;
 	bool isEditor = false;
 	
-	bool IsValid();
+	bool IsValid() const;
 };
 
 END_XNOR_CORE

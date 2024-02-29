@@ -12,7 +12,7 @@ Application::Application()
     
     Window::Initialize();
 
-    RHI::Initialize();
+    Rhi::Initialize();
     ResourceManager::LoadAll();
     renderer.Initialize();
 	
@@ -24,7 +24,7 @@ Application::~Application()
 {
 	renderer.Shutdown();
     ResourceManager::UnloadAll();
-	RHI::Shutdown();
+	Rhi::Shutdown();
 
     Window::Shutdown();
 	

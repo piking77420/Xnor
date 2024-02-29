@@ -19,15 +19,16 @@ public:
     
     XNOR_ENGINE void Initialize(Vector2i windowSize);
     
-    XNOR_ENGINE void Destroy();
+    XNOR_ENGINE void Destroy() const;
 
     XNOR_ENGINE void RecompileShader();
     
     XNOR_ENGINE void OnResizeWindow(Vector2i windowSize);
 
-    XNOR_ENGINE void ComputeToneMaping(const Texture& imageWithoutToneMapping, Pointer<Model> cubeMode) const;
+    XNOR_ENGINE void ComputeToneMaping(const Texture& imageWithoutToneMapping, const Pointer<Model>& cubeMode) const;
 
     XNOR_ENGINE const Texture& GetToneMapedImage() const;
+    
 private:
     Pointer<Shader> m_Aces = nullptr;
 

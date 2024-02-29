@@ -50,7 +50,7 @@ void RenderWindow::Initialize(Vector2i size)
     using namespace XnorCore;
     const std::vector<RenderTargetInfo> attachementsType =
     {
-        {Attachment::Color_Attachment01,true},
+        {Attachment::Color01,true},
     };
     
     // Init Rendering
