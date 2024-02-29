@@ -1,19 +1,20 @@
 #pragma once
 
-#include <Maths/vector2i.hpp>
-
 #include "core.hpp"
 #include "frame_buffer.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
 
 BEGIN_XNOR_CORE
+
 class ToneMapping
 {
 public:
     XNOR_ENGINE ToneMapping() = default;
     
     XNOR_ENGINE ~ToneMapping() = default;
+
+    DEFAULT_COPY_MOVE_OPERATIONS(ToneMapping)
 
     XNOR_ENGINE void InitializeResources();
     
