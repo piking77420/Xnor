@@ -111,7 +111,7 @@
     <ClCompile Include="externals\src\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="externals\src\RapidXMLSTD.cpp" />
     <ClCompile Include="externals\src\ttf\ttfParser.cpp" />
-    <ClCompile Include="src\application.cpp"/>
+    <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\file\directory.cpp" />
     <ClCompile Include="src\file\entry.cpp" />
     <ClCompile Include="src\input\input.cpp" />
@@ -141,11 +141,11 @@
     <ClCompile Include="src\scene\component.cpp" />
     <ClCompile Include="src\scene\component\camera_component.cpp" />
     <ClCompile Include="src\scene\component\mesh_renderer.cpp" />
-    <ClCompile Include="src\scene\component\test_component.cpp"/>
+    <ClCompile Include="src\scene\component\test_component.cpp" />
     <ClCompile Include="src\scene\entity.cpp" />
     <ClCompile Include="src\scene\scene.cpp" />
     <ClCompile Include="src\screen.cpp" />
-    <ClCompile Include="src\serialization\serializer.cpp"/>
+    <ClCompile Include="src\serialization\serializer.cpp" />
     <ClCompile Include="src\transform.cpp" />
     <ClCompile Include="src\utils\color.cpp" />
     <ClCompile Include="src\utils\formatter.cpp" />

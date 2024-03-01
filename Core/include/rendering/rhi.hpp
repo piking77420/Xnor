@@ -41,11 +41,14 @@ public:
 	XNOR_ENGINE static void SetUniform(UniformType uniformType, const void* data, uint32_t shaderId, const char* uniformKey);
 	
 	// TEXTURE
-	XNOR_ENGINE static void CreateTexture(uint32_t* textureId, const TextureCreateInfo& textureCreateInfo);
+	XNOR_ENGINE static void CreateTexture2D(uint32_t* textureId, const TextureCreateInfo& textureCreateInfo);
 	XNOR_ENGINE static void DestroyTexture(uint32_t* textureId);
-
 	XNOR_ENGINE static void BindTexture(uint32_t unit,uint32_t textureId);
+	// CubeMap
+	XNOR_ENGINE static void CreateCubeMap(uint32_t* textureId, const CreateCubeMapInfo& createCubeMapInfo);
 
+
+	
 	// FrameBuffer
 	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferId,const RenderPass& renderPass,const std::vector<const Texture*>& attechements);
 	XNOR_ENGINE static void DestroyFrameBuffer(uint32_t* frameBufferId);
@@ -78,6 +81,8 @@ public:
 	
 	XNOR_ENGINE static void UpdateShadowMapingData(const ShadowMappingData& shadowMappingData);
 
+	XNOR_ENGINE static TextureFormat GetFormat(const uint32_t textureFormat);
+
 private:
 	struct ModelInternal
 	{
@@ -100,27 +105,29 @@ private:
 	XNOR_ENGINE static inline std::unordered_map<uint32_t, ShaderInternal> m_ShaderMap;
 	XNOR_ENGINE static inline std::unordered_map<uint32_t, ModelInternal> m_ModelMap;
 
-	static uint32_t GetOpenglShaderType(ShaderType shaderType);
+	XNOR_ENGINE static uint32_t GetOpenglShaderType(ShaderType shaderType);
 	
-	static std::string GetShaderTypeToString(ShaderType shaderType);
+	XNOR_ENGINE static std::string GetShaderTypeToString(ShaderType shaderType);
 	
-	static void ComputeTextureWrapper(uint32_t textureId, TextureWrapping textureWrapping);
+	XNOR_ENGINE static uint32_t GetOpenglTextureType(TextureType textureType);
+
+	XNOR_ENGINE static uint32_t GetOpenglInternalFormat(TextureInternalFormat textureFormat);
+
+	XNOR_ENGINE static uint32_t GetOpenGlTextureFormat(TextureFormat textureFormat);
 	
-	static void ComputeOpenglTextureFilter(uint32_t textureId, TextureFiltering textureFilter);
-
-	static uint32_t GetOpenglTextureFiltering(TextureFiltering textureFilter);
-
-	static uint32_t TextureTypeToOpenglTexture(TextureType textureType);
-
-	static uint32_t GetOpenglInternalFormat(TextureInternalFormat textureFormat);
-
-	static uint32_t GetOpenGlTextureFormat(TextureFormat textureFormat);
+	XNOR_ENGINE static void IsShaderValid(uint32_t shaderId);
 	
-	static void IsShaderValid(uint32_t shaderId);
-	
-	static int32_t GetUniformInMap(uint32_t shaderId, const char* uniformKey);
+	XNOR_ENGINE static int32_t GetUniformInMap(uint32_t shaderId, const char* uniformKey);
 
-	static uint32_t GetOpenglDataType(DataType dataType);
+	XNOR_ENGINE static uint32_t GetOpenglDataType(DataType dataType);
+
+	// Texture 
+	XNOR_ENGINE static void AllocTexture2D(const uint32_t* textureId, const TextureCreateInfo& textureCreateInfo);
+	XNOR_ENGINE static void CreateTexture(uint32_t* textureId,TextureType textureType);
+
+	XNOR_ENGINE static uint32_t GetOpenglTextureWrapper(TextureWrapping textureWrapping);
+	XNOR_ENGINE static uint32_t GetOpenglTextureFilter(TextureFiltering textureFiltering);
+
 	
 	static void OpenglDebugCallBack(
 		uint32_t source,
@@ -133,10 +140,10 @@ private:
 	);
 
 private:
-	static inline UniformBuffer* m_CameraUniform;
-	static inline UniformBuffer* m_LightShadowMappingUniform;
-	static inline UniformBuffer* m_ModelUniform;
-	static inline UniformBuffer* m_LightUniform;
+	XNOR_ENGINE static inline UniformBuffer* m_CameraUniform;
+	XNOR_ENGINE static inline UniformBuffer* m_LightShadowMappingUniform;
+	XNOR_ENGINE static inline UniformBuffer* m_ModelUniform;
+	XNOR_ENGINE static inline UniformBuffer* m_LightUniform;
 };
 
 END_XNOR_CORE

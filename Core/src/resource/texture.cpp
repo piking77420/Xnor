@@ -12,14 +12,15 @@ Texture::Texture(const TextureCreateInfo& createInfo)
     , m_TextureFiltering(createInfo.textureFiltering), m_TextureWrapping(createInfo.textureWrapping)
     , m_TextureInternalFormat(createInfo.textureInternalFormat)
 {
-    Rhi::CreateTexture(&m_Id, createInfo);
+    Rhi::CreateTexture2D(&m_Id, createInfo);
     m_LoadedInRhi = true;
 }
 
-Texture::Texture(const TextureInternalFormat textureFormat, const Vector2i size) : m_TextureInternalFormat(textureFormat) , m_Size(size) , m_TextureFiltering(TextureFiltering::Linear)
-,m_TextureWrapping(TextureWrapping::None), m_Data(nullptr)
+Texture::Texture(const TextureInternalFormat textureFormat, const Vector2i size) : m_Data(nullptr)
+  , m_Size(size) , m_TextureFiltering(TextureFiltering::Linear)
+,m_TextureWrapping(TextureWrapping::None), m_TextureInternalFormat(textureFormat)
 {
-    TextureCreateInfo createInfo
+    const TextureCreateInfo createInfo
     {
         nullptr,
         static_cast<uint32_t>(size.x),
@@ -30,7 +31,7 @@ Texture::Texture(const TextureInternalFormat textureFormat, const Vector2i size)
         m_TextureInternalFormat
     };
     
-    Rhi::CreateTexture(&m_Id,createInfo);
+    Rhi::CreateTexture2D(&m_Id,createInfo);
     m_LoadedInRhi = true;
 }
 
@@ -64,12 +65,12 @@ void Texture::CreateInRhi()
         static_cast<uint32_t>(m_Size.y),
         m_TextureFiltering,
         m_TextureWrapping,
-        GetFormat(m_DataChannels),
+        Rhi::GetFormat(m_DataChannels),
         m_TextureInternalFormat,
         DataType::UnsignedByte
     };
     
-    Rhi::CreateTexture(&m_Id, textureCreateInfo);
+    Rhi::CreateTexture2D(&m_Id, textureCreateInfo);
     
     m_LoadedInRhi = true;
 }
@@ -120,17 +121,3 @@ uint32_t Texture::GetId() const
     return m_Id;
 }
 
-TextureFormat Texture::GetFormat(const uint32_t textureFormat)
-{
-    switch (textureFormat)
-    {
-        case 1:
-           return TextureFormat::Red;
-        case 3:
-            return TextureFormat::Rgb;
-        case 4:
-             return TextureFormat::Rgba;
-        default:
-            return TextureFormat::Rgb;
-    }
-}

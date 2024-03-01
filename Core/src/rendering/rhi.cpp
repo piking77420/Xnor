@@ -206,28 +206,73 @@ void Rhi::SetUniform(const UniformType uniformType, const void* data, const uint
 	}
 }
 
-void Rhi::CreateTexture(uint32_t* const textureId, const TextureCreateInfo& textureCreateInfo)
+void Rhi::CreateTexture(uint32_t* textureId,TextureType textureType)
 {
-	glCreateTextures(GL_TEXTURE_2D, 1, textureId);
+	glCreateTextures(GetOpenglTextureType(textureType), 1, textureId);
+}
+uint32_t Rhi::GetOpenglTextureFilter(TextureFiltering textureFiltering)
+{
+	switch (textureFiltering)
+	{
+		case TextureFiltering::None:
+			return GL_NONE;
+			
+		case TextureFiltering::Linear:
+			return GL_LINEAR;
+			
+		case TextureFiltering::Nearest:
+			return GL_NEAREST;
+		
+	}
+	return GL_LINEAR;
+}
 
-	ComputeTextureWrapper(*textureId, textureCreateInfo.textureWrapping);
-	ComputeOpenglTextureFilter(*textureId, textureCreateInfo.textureFiltering);
 
-	glTextureStorage2D(*textureId, 1,
-		GetOpenglInternalFormat(textureCreateInfo.textureInternalFormat),
-		static_cast<GLsizei>(textureCreateInfo.textureSizeWidth),
-		static_cast<GLsizei>(textureCreateInfo.textureSizeHeight)
-	);
+uint32_t Rhi::GetOpenglTextureWrapper(TextureWrapping textureWrapping)
+{
+	switch (textureWrapping)
+	{
+		case TextureWrapping::None:
+			return GL_NONE;
+		
+		case TextureWrapping::Repeat:
+			return GL_REPEAT;
+			
+		case TextureWrapping::MirroredRepeat:
+			return GL_MIRRORED_REPEAT;
+		
+		case TextureWrapping::ClampToEdge:
+			return GL_CLAMP_TO_EDGE;
+		
+		case TextureWrapping::ClampToBorder:
+			return GL_CLAMP_TO_BORDER;
+	}
+
+	return GL_REPEAT;
+}
+
+
+void Rhi::CreateTexture2D(uint32_t* const textureId, const TextureCreateInfo& textureCreateInfo)
+{
+	CreateTexture(textureId,TextureType::Texture2D);
+	AllocTexture2D(textureId,textureCreateInfo);
 	
-	if (!textureCreateInfo.data)
-		return;
-
-	glTextureSubImage2D(*textureId, 0, 0, 0,
+	if (textureCreateInfo.data != nullptr)
+	{
+		glTextureSubImage2D(*textureId, 0, 0, 0,
 		static_cast<GLsizei>(textureCreateInfo.textureSizeWidth),
 		static_cast<GLsizei>(textureCreateInfo.textureSizeHeight),
-		GetOpenGlTextureFormat(textureCreateInfo.textureFormat), GetOpenglDataType(textureCreateInfo.dataType), textureCreateInfo.data
-	);
+		GetOpenGlTextureFormat(textureCreateInfo.textureFormat), GetOpenglDataType(textureCreateInfo.dataType), textureCreateInfo.data);
+	}
+	
+	const GLint openglTextureFilter =  static_cast<GLint>(GetOpenglTextureFilter(textureCreateInfo.textureFiltering));
+	glTextureParameteri(*textureId, GL_TEXTURE_MIN_FILTER,openglTextureFilter);
+	glTextureParameteri(*textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
 
+	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(textureCreateInfo.textureWrapping));
+	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
+	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
+	
 	glGenerateTextureMipmap(*textureId);
 }
 
@@ -241,6 +286,34 @@ void Rhi::BindTexture(const uint32_t unit, const uint32_t textureId)
 {
 	glBindTextureUnit(unit, textureId);
 }
+
+void Rhi::CreateCubeMap(uint32_t* textureId, const CreateCubeMapInfo& createCubeMapInfo)
+{
+	CreateTexture(textureId,TextureType::TextureCubeMap);	
+
+	if(createCubeMapInfo.datas == nullptr || createCubeMapInfo.datas == nullptr)
+	{
+		Logger::LogError("CubeMapCreateInfo is Invalid");
+	}
+	
+	for (size_t i = 0; i < createCubeMapInfo.datas->size(); i++)
+	{
+		glTextureSubImage3D(*textureId, 0, 0, 0, static_cast<GLint>(i), createCubeMapInfo.textureSizeWidth, createCubeMapInfo.textureSizeHeight, 1,
+			GetOpenGlTextureFormat(createCubeMapInfo.textureFormat),  GetOpenglDataType(createCubeMapInfo.dataType), createCubeMapInfo.datas->at(i));
+	}
+	
+
+}
+
+void Rhi::AllocTexture2D(const uint32_t* textureId, const TextureCreateInfo& textureCreateInfo)
+{
+	glTextureStorage2D(*textureId, 1,
+		GetOpenglInternalFormat(textureCreateInfo.textureInternalFormat),
+		static_cast<GLsizei>(textureCreateInfo.textureSizeWidth),
+		static_cast<GLsizei>(textureCreateInfo.textureSizeHeight)
+	);
+}
+
 
 void Rhi::CreateFrameBuffer(uint32_t* const frameBufferId, const RenderPass& renderPass, const std::vector<const Texture*>& attechements)
 {
@@ -312,7 +385,7 @@ void Rhi::BlitFrameBuffer(
 		src0Size.x, src0Size.y,
 		src1Size.x, src1Size.y,
 		target0Size.x, target0Size.y,
-		target1Size.x, target1Size.y, GL_DEPTH_BUFFER_BIT, GetOpenglTextureFiltering(textureFiltering)
+		target1Size.x, target1Size.y, GL_DEPTH_BUFFER_BIT, GetOpenglTextureFilter(textureFiltering)
 	);
 }
 
@@ -377,72 +450,7 @@ std::string Rhi::GetShaderTypeToString(const ShaderType shaderType)
 	throw std::invalid_argument("Invalid shader type");
 }
 
-void Rhi::ComputeTextureWrapper(const uint32_t textureId, const TextureWrapping textureWrapping)
-{
-	switch (textureWrapping)
-	{
-		case TextureWrapping::Repeat:
-			glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			break;
-		
-		case TextureWrapping::MirroredRepeat:
-			glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-			glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-			break;
-		
-		case TextureWrapping::ClampToEdge:
-			glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			break;
-		
-		case TextureWrapping::ClampToBorder:
-			glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-			glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-			break;
-
-		case TextureWrapping::None:
-			break;
-	}
-}
-
-void Rhi::ComputeOpenglTextureFilter(const uint32_t textureId, const TextureFiltering textureFilter)
-{
-	switch (textureFilter)
-	{
-		case TextureFiltering::Linear:
-			glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			break;
-			
-		case TextureFiltering::Nearest:
-			glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			break;
-			
-		case TextureFiltering::None:
-			break;
-	}
-}
-
-uint32_t Rhi::GetOpenglTextureFiltering(TextureFiltering textureFilter)
-{
-	switch (textureFilter)
-	{
-		case TextureFiltering::None:
-			return GL_NONE;
-
-		case TextureFiltering::Linear:
-			return GL_LINEAR;
-
-		case TextureFiltering::Nearest:
-			return GL_NEAREST;
-	}
-
-	return GL_NONE;
-}
-
-uint32_t Rhi::TextureTypeToOpenglTexture(const TextureType textureType)
+uint32_t Rhi::GetOpenglTextureType(const TextureType textureType)
 {
 	switch (textureType)
 	{
@@ -604,13 +612,15 @@ uint32_t Rhi::GetOpenglDataType(const DataType dataType)
 	return GL_UNSIGNED_BYTE;
 }
 
+
+
 void Rhi::OpenglDebugCallBack([[maybe_unused]] const uint32_t source,
-	[[maybe_unused]] const uint32_t type,
-	[[maybe_unused]] const uint32_t id,
-	[[maybe_unused]] const uint32_t severity,
-	[[maybe_unused]] const size_t length,
-	[[maybe_unused]] const char_t* const message,
-	[[maybe_unused]] const void* const userParam)
+                              [[maybe_unused]] const uint32_t type,
+                              [[maybe_unused]] const uint32_t id,
+                              [[maybe_unused]] const uint32_t severity,
+                              [[maybe_unused]] const size_t length,
+                              [[maybe_unused]] const char_t* const message,
+                              [[maybe_unused]] const void* const userParam)
 {
 	
     // ignore non-significant error/warning codes
@@ -811,4 +821,21 @@ void Rhi::UpdateLight(const GpuLightData& lightData)
 void Rhi::UpdateShadowMapingData(const ShadowMappingData& shadowMappingData)
 {
 	m_LightShadowMappingUniform->Update(sizeof(ShadowMappingData), 0, &shadowMappingData);
+}
+
+TextureFormat Rhi::GetFormat(const uint32_t textureFormat)
+{
+	{
+		switch (textureFormat)
+		{
+			case 1:
+				return TextureFormat::Red;
+			case 3:
+				return TextureFormat::Rgb;
+			case 4:
+				return TextureFormat::Rgba;
+			default:
+				return TextureFormat::Rgb;
+		}
+	}
 }

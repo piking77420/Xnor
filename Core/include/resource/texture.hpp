@@ -90,8 +90,6 @@ private:
     TextureFiltering m_TextureFiltering = TextureFiltering::Linear;
     TextureWrapping m_TextureWrapping = TextureWrapping::Repeat;
     TextureInternalFormat m_TextureInternalFormat = TextureInternalFormat::Rgba8;
-
-    static TextureFormat GetFormat(uint32_t textureFormat);
 };
 
 template<typename T>

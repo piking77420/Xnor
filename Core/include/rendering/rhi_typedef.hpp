@@ -163,7 +163,7 @@ struct RenderPassBeginInfo
 
 struct TextureCreateInfo
 {
-	void* data = nullptr;
+	void* data;
 	uint32_t textureSizeWidth;
 	uint32_t textureSizeHeight;
 	TextureFiltering textureFiltering;
@@ -172,6 +172,19 @@ struct TextureCreateInfo
 	TextureInternalFormat textureInternalFormat;
 	DataType dataType = DataType::UnsignedByte;
 };
+
+struct CreateCubeMapInfo
+{
+	const std::array<void*,6>* datas = nullptr;
+	uint32_t textureSizeWidth;
+	uint32_t textureSizeHeight;
+	TextureFiltering textureFiltering;
+	TextureWrapping textureWrapping;
+	TextureFormat textureFormat;
+	TextureInternalFormat textureInternalFormat;
+	DataType dataType = DataType::UnsignedByte;
+};
+
 
 struct CameraUniformData
 {
