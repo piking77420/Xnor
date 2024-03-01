@@ -14,9 +14,8 @@ private:
     static constexpr float_t MaxPitch = 89.0f;
 
 public:
-
-    
     void UpdateCamera(const Editor& editor, XnorCore::Camera& camera);
+    
 private:
     const Editor* m_EditorRef = nullptr;
     XnorCore::Camera* m_EditorRefCamera = nullptr;

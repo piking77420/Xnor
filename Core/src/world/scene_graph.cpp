@@ -200,6 +200,7 @@ Matrix SceneGraph::GetTrsOfParents(const Entity& parent)
 
 void SceneGraph::UpdateTransform(Entity& entity)
 {
+	
     entity.transform.quaternion = Quaternion::FromEuler(entity.transform.rotation).Normalized();
     entity.transform.worldMatrix = Matrix::Trs(entity.transform.position,entity.transform.quaternion,entity.transform.scale);
     
