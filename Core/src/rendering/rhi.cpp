@@ -89,16 +89,6 @@ void Rhi::BindMaterial([[maybe_unused]] const Material& material)
 {
 }
 
-/*
-void RHI::BindMaterial(const Material& material)
-{
-	material.shader->Use();
-	
-	
-	
-	material.shader->Unuse();
-}*/
-
 void Rhi::DestroyShader(const uint32_t shaderId)
 {
 	IsShaderValid(shaderId);
@@ -266,10 +256,10 @@ void Rhi::CreateTexture2D(uint32_t* const textureId, const TextureCreateInfo& te
 	}
 	
 	const GLint openglTextureFilter =  static_cast<GLint>(GetOpenglTextureFilter(textureCreateInfo.textureFiltering));
+	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(textureCreateInfo.textureWrapping));
+	
 	glTextureParameteri(*textureId, GL_TEXTURE_MIN_FILTER,openglTextureFilter);
 	glTextureParameteri(*textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
-
-	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(textureCreateInfo.textureWrapping));
 	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
 	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
 	
@@ -290,19 +280,33 @@ void Rhi::BindTexture(const uint32_t unit, const uint32_t textureId)
 void Rhi::CreateCubeMap(uint32_t* textureId, const CreateCubeMapInfo& createCubeMapInfo)
 {
 	CreateTexture(textureId,TextureType::TextureCubeMap);	
-
+	glBindTexture(GL_TEXTURE_CUBE_MAP, *textureId);
+	
 	if(createCubeMapInfo.datas == nullptr || createCubeMapInfo.datas == nullptr)
 	{
 		Logger::LogError("CubeMapCreateInfo is Invalid");
 	}
 	
+	const GLuint widht = static_cast<GLint>(createCubeMapInfo.textureSizeWidth);
+	const GLuint height = static_cast<GLint>(createCubeMapInfo.textureSizeHeight);
+	const GLint openglTextureFilter =  static_cast<GLint>(GetOpenglTextureFilter(createCubeMapInfo.textureFiltering));
+	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(createCubeMapInfo.textureWrapping));
+	
 	for (size_t i = 0; i < createCubeMapInfo.datas->size(); i++)
 	{
-		glTextureSubImage3D(*textureId, 0, 0, 0, static_cast<GLint>(i), createCubeMapInfo.textureSizeWidth, createCubeMapInfo.textureSizeHeight, 1,
-			GetOpenGlTextureFormat(createCubeMapInfo.textureFormat),  GetOpenglDataType(createCubeMapInfo.dataType), createCubeMapInfo.datas->at(i));
+		glTexImage2D(
+	   GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), 
+	   0, GetOpenglInternalFormat(createCubeMapInfo.textureInternalFormat), widht, height, 0, GetOpenGlTextureFormat(createCubeMapInfo.textureFormat),
+	   GetOpenglDataType(createCubeMapInfo.dataType), createCubeMapInfo.datas->at(i));
 	}
 	
-
+	glTextureParameteri(*textureId, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
+	glTextureParameteri(*textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
+	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
+	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
+	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_R, openglTextureWrapper);
+	
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
 void Rhi::AllocTexture2D(const uint32_t* textureId, const TextureCreateInfo& textureCreateInfo)
@@ -628,8 +632,7 @@ void Rhi::OpenglDebugCallBack([[maybe_unused]] const uint32_t source,
     	return; 
 
 	Logger::LogDebug("---------------\n");
-	Logger::LogDebug("Debug message ({}", id);
-	Logger::LogDebug("): {}\n", message);
+	Logger::LogDebug("Debug message ({} ): {}\n", id,message);
 	
     switch (source)
     {

@@ -6,6 +6,16 @@
 
 using namespace XnorCore;
 
+void* Texture::LoadDataFromFile(char const *filename, int *x, int *y, int *comp, int req_comp)
+{
+   return stbi_load(filename,x,y,comp,req_comp);
+}
+
+void Texture::FreeData(void* data)
+{
+    stbi_image_free(data);
+}
+
 Texture::Texture(const TextureCreateInfo& createInfo)
     : m_Data(static_cast<uint8_t*>(createInfo.data))
     , m_Size(static_cast<int>(createInfo.textureSizeWidth), static_cast<int>(createInfo.textureSizeHeight))
@@ -18,7 +28,7 @@ Texture::Texture(const TextureCreateInfo& createInfo)
 
 Texture::Texture(const TextureInternalFormat textureFormat, const Vector2i size) : m_Data(nullptr)
   , m_Size(size) , m_TextureFiltering(TextureFiltering::Linear)
-,m_TextureWrapping(TextureWrapping::None), m_TextureInternalFormat(textureFormat)
+,m_TextureWrapping(TextureWrapping::Repeat), m_TextureInternalFormat(textureFormat)
 {
     const TextureCreateInfo createInfo
     {

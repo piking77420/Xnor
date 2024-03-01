@@ -24,6 +24,7 @@ void Renderer::Initialize()
 
 	InitResources();
 	m_ToneMapping.InitializeResources();
+	m_SkyboxRenderer.InitializeResources();
 
 	Rhi::PrepareUniform();
 
@@ -86,6 +87,7 @@ void Renderer::RenderScene(const World& world, const RendererContext& rendererCo
 	
 	// ForwardPass //
 	DrawAabb(meshrenderers);
+	m_SkyboxRenderer.DrawSkymap(m_Cube);
 	m_RenderBuffer->UnBindFrameBuffer();
 	
 	// DRAW THE FINAL IMAGE TEXTURE

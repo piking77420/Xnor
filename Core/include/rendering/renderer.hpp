@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "renderer_context.hpp"
+#include "skybox_renderer.hpp"
 #include "tone_mapping.hpp"
 #include "world/world.hpp"
 #include "file/file_manager.hpp"
@@ -78,7 +79,8 @@ private:
     Pointer<Model> m_Cube;
 
     ToneMapping m_ToneMapping;
-
+    SkyboxRenderer m_SkyboxRenderer;
+    
     XNOR_ENGINE void InitResources();
     
     XNOR_ENGINE void InitDefferedRenderingAttachment(vec2i windowSize);

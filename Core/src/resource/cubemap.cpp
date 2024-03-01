@@ -1,7 +1,8 @@
 #include "resource/cubemap.hpp"
 
-
+#include "resource/texture.hpp"
 #include "rendering/rhi.hpp"
+
 
 using namespace XnorCore;
 
@@ -46,19 +47,28 @@ void Cubemap::Unload()
 {
     for (uint32_t i = 0; i < m_Datas.size(); i++)
     {
-        //stbi_image_free(m_Datas[i]); 
+        Texture::FreeData(m_Datas[i]); 
     }
     m_Loaded = false;
 }
 
 Cubemap::Cubemap(const std::array<std::string, 6>& cubeMapsTextures)
 {
-    for (unsigned int i = 0; i < cubeMapsTextures.size(); i++)
+    for (size_t i = 0; i < cubeMapsTextures.size(); i++)
     {
-       //m_Datas[i] = stbi_load(cubeMapsTextures[i].c_str(), &m_CubeMapSize.x, &m_CubeMapSize.y, &m_DataChannels, 0);
-      
+       m_Datas[i] = Texture::LoadDataFromFile(cubeMapsTextures[i].c_str(), &m_CubeMapSize.x, &m_CubeMapSize.y, &m_DataChannels, 0);
     }
     m_Loaded = true;
+}
+
+void Cubemap::BindTexture(uint32_t unit) const
+{
+    Rhi::BindTexture(unit,m_Id);
+}
+
+void Cubemap::UnBindTexture(uint32_t unit) const
+{
+    Rhi::BindTexture(unit,0);
 }
 
 

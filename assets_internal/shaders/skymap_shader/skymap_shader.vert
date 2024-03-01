@@ -13,12 +13,6 @@ layout (std140, binding = 0) uniform CameraUniform
     vec3 cameraPos;
 };
 
-layout (std140, binding = 1) uniform ModelUniform
-{
-    mat4 model;
-    mat4 normalInvertMatrix;
-};
-
 
 
 out VS_OUT {
@@ -26,8 +20,6 @@ out VS_OUT {
 } vs_out;
 
 
-uniform mat4 view;
-uniform mat4 projection;
 
 void main()
 {
