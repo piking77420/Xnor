@@ -1,5 +1,8 @@
 #include "resource/cubemap.hpp"
 
+#include <stb/stb_image.h>
+
+
 #include "resource/texture.hpp"
 #include "rendering/rhi.hpp"
 
@@ -47,7 +50,7 @@ void Cubemap::Unload()
 {
     for (uint32_t i = 0; i < m_Datas.size(); i++)
     {
-        Texture::FreeData(m_Datas[i]); 
+      stbi_image_free(m_Datas[i]); 
     }
     m_Loaded = false;
 }
@@ -56,7 +59,7 @@ Cubemap::Cubemap(const std::array<std::string, 6>& cubeMapsTextures)
 {
     for (size_t i = 0; i < cubeMapsTextures.size(); i++)
     {
-       m_Datas[i] = Texture::LoadDataFromFile(cubeMapsTextures[i].c_str(), &m_CubeMapSize.x, &m_CubeMapSize.y, &m_DataChannels, 0);
+       m_Datas[i] = stbi_load(cubeMapsTextures[i].c_str(), &m_CubeMapSize.x, &m_CubeMapSize.y, &m_DataChannels, 0);
     }
     m_Loaded = true;
 }

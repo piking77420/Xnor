@@ -27,10 +27,7 @@ public:
 	XNOR_ENGINE static uint32_t CreateModel(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indicies);
 	XNOR_ENGINE static bool DestroyModel(uint32_t modelId);
 	XNOR_ENGINE static void DrawModel(uint32_t modelId); 
-
-	// Material
-	XNOR_ENGINE static void BindMaterial(const Material& material);
-
+	
 	// Shader
 	XNOR_ENGINE static void DestroyShader(uint32_t shaderId);
 	XNOR_ENGINE static void CheckCompilationError(uint32_t shaderId, const std::string& type);

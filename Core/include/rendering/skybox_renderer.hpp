@@ -7,17 +7,11 @@
 #include "utils/pointer.hpp"
 
 BEGIN_XNOR_CORE
-enum class SkyMode
-{
-    CubeMap,
-    Procedurral
-};
+
 
 class SkyboxRenderer
 {
 public:
-    
-    
     XNOR_ENGINE SkyboxRenderer();
 
     XNOR_ENGINE ~SkyboxRenderer();

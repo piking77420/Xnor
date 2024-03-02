@@ -19,11 +19,6 @@ struct TextureLoadData
 class Texture : public Resource
 {
 public:
-    // temporary to load cube map
-    XNOR_ENGINE static void* LoadDataFromFile(char const *filename, int *x, int *y, int *comp, int req_comp);
-    XNOR_ENGINE static void FreeData(void* data);
-
-    
     XNOR_ENGINE static inline constexpr std::array<const char_t*, 10> FileExtensions
     {
         ".jpeg",

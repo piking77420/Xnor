@@ -85,10 +85,6 @@ void Rhi::DrawModel(const uint32_t modelId)
 	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(model.nbrOfIndicies), GL_UNSIGNED_INT, nullptr);
 }
 
-void Rhi::BindMaterial([[maybe_unused]] const Material& material)
-{
-}
-
 void Rhi::DestroyShader(const uint32_t shaderId)
 {
 	IsShaderValid(shaderId);
@@ -631,110 +627,106 @@ void Rhi::OpenglDebugCallBack([[maybe_unused]] const uint32_t source,
     if (id == 131169 || id == 131185 || id == 131218 || id == 131204)
     	return; 
 
-	Logger::LogDebug("---------------\n");
-	Logger::LogDebug("Debug message ({} ): {}\n", id,message);
+	Logger::LogError("---------------");
+	Logger::LogError("Debug message ({} ): {}", id,message);
 	
     switch (source)
     {
         case GL_DEBUG_SOURCE_API:
-        	Logger::LogDebug("Source: API");
+        	Logger::LogError("Source: API");
     		break;
     	
         case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
-        	Logger::LogDebug("Source: Window System");
+        	Logger::LogError("Source: Window System");
     		break;
     	
         case GL_DEBUG_SOURCE_SHADER_COMPILER:
-        	Logger::LogDebug("Source: Shader Compiler");
+        	Logger::LogError("Source: Shader Compiler");
     		break;
     	
         case GL_DEBUG_SOURCE_THIRD_PARTY:
-        	Logger::LogDebug("Source: Third Party");
+        	Logger::LogError("Source: Third Party");
     		break;
     	
         case GL_DEBUG_SOURCE_APPLICATION:
-        	Logger::LogDebug("Source: Application");
+        	Logger::LogError("Source: Application");
     		break;
     	
         case GL_DEBUG_SOURCE_OTHER:
-        	Logger::LogDebug("Source: Other");
+        	Logger::LogError("Source: Other");
     		break;
 
     	default:
-    		Logger::LogDebug("Source: Unknown [{}]", source);
+    		Logger::LogError("Source: Unknown [{}]", source);
     }
 
-	Logger::LogDebug("\n");
 
     switch (type)
     {
         case GL_DEBUG_TYPE_ERROR:
-        	Logger::LogDebug("Type: Error");
+        	Logger::LogError("Type: Error");
     		break;
     	
         case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
-			Logger::LogDebug("Type: Deprecated Behaviour");
+			Logger::LogError("Type: Deprecated Behaviour");
     		break;
     	
         case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-			Logger::LogDebug("Type: Undefined Behaviour"); 
+			Logger::LogError("Type: Undefined Behaviour"); 
     		break;
     	
         case GL_DEBUG_TYPE_PORTABILITY:
-			Logger::LogDebug("Type: Portability"); 
+			Logger::LogError("Type: Portability"); 
     		break;
     	
         case GL_DEBUG_TYPE_PERFORMANCE:
-			Logger::LogDebug("Type: Performance"); 
+			Logger::LogError("Type: Performance"); 
     		break;
     	
         case GL_DEBUG_TYPE_MARKER:
-			Logger::LogDebug("Type: Marker"); 
+			Logger::LogError("Type: Marker"); 
     		break;
     	
         case GL_DEBUG_TYPE_PUSH_GROUP:
-			Logger::LogDebug("Type: Push Group"); 
+			Logger::LogError("Type: Push Group"); 
     		break;
     	
         case GL_DEBUG_TYPE_POP_GROUP:
-			Logger::LogDebug("Type: Pop Group"); 
+			Logger::LogError("Type: Pop Group"); 
     		break;
     	
         case GL_DEBUG_TYPE_OTHER:
-			Logger::LogDebug("Type: Other"); 
+			Logger::LogError("Type: Other"); 
     		break;
 
     	default:
-			Logger::LogDebug("Type: Unknown [{}]", type); 
+			Logger::LogError("Type: Unknown [{}]", type); 
     }
 
-	Logger::LogDebug("\n");
     
     switch (severity)
     {
         case GL_DEBUG_SEVERITY_HIGH:
-        	Logger::LogDebug("Severity: high");
+        	Logger::LogError("Severity: high");
     		break;
 
         case GL_DEBUG_SEVERITY_MEDIUM:
-        	Logger::LogDebug("Severity: medium");
+        	Logger::LogError("Severity: medium");
     		break;
 
         case GL_DEBUG_SEVERITY_LOW:
-        	Logger::LogDebug("Severity: low");
+        	Logger::LogError("Severity: low");
     		break;
 
         case GL_DEBUG_SEVERITY_NOTIFICATION:
-        	Logger::LogDebug("Severity: notification");
+        	Logger::LogError("Severity: notification");
     		break;
 
     	default:
-        	Logger::LogDebug("Severity: Unknown [{}]", severity);
+        	Logger::LogError("Severity: Unknown [{}]", severity);
     }
 	
-	Logger::LogDebug("\n");
 	
-	Logger::LogDebug("\n");
 }
 
 
