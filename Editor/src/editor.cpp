@@ -293,6 +293,8 @@ void Editor::Update()
 
 	renderer.PrepareRendering(Window::GetSize());
 	CreateTestScene();
+
+	Window::Show();
 	
 	while (!Window::ShouldClose())
 	{
