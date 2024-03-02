@@ -40,7 +40,7 @@ public:
     [[nodiscard]]
     XNOR_ENGINE int64_t GetSize() const;
     
-    XNOR_ENGINE void SetName(std::string&& newName) override;
+    XNOR_ENGINE void SetName(const std::string& newName) override;
     
     [[nodiscard]]
     XNOR_ENGINE Pointer<Resource> GetResource() const;

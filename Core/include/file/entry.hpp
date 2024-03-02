@@ -27,7 +27,7 @@ public:
 
     /// @brief Reloads the contents of this @ref Entry.
     ///
-    /// This if effectively the same as call @ref Unload() and then @ref Load().
+    /// This if effectively the same as calling @ref Unload() and then @ref Load().
     XNOR_ENGINE virtual bool Reload();
     
     [[nodiscard]]
@@ -39,13 +39,18 @@ public:
     [[nodiscard]]
     XNOR_ENGINE std::string GetName() const;
 
-    XNOR_ENGINE virtual void SetName(std::string&& newName);
+    /// @brief Renames this @ref Entry on the file system.
+    /// @param newName The new name of this @ref Entry.
+    XNOR_ENGINE virtual void SetName(const std::string& newName);
     
     [[nodiscard]]
     XNOR_ENGINE bool GetLoaded() const;
     
     [[nodiscard]]
     XNOR_ENGINE const Directory* GetParent() const;
+
+    /// @brief Sets the new path of this @ref Entry.
+    virtual void SetParent(Directory* newParent);
     
     [[nodiscard]]
     XNOR_ENGINE Directory* GetParent();

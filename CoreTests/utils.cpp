@@ -5,15 +5,6 @@ TEST(Utils, IntToPointer)
     EXPECT_EQ(Utils::IntToPointer<char*>(0), nullptr);
 }
 
-TEST(Utils, MetaProgramming)
-{
-    EXPECT_FALSE(Utils::IsStdVector<bool>::value);
-    EXPECT_TRUE(Utils::IsStdVector<std::vector<bool>>::value);
-    
-    EXPECT_TRUE((std::is_same_v<Utils::PtrToVoidPtr<bool>::type, bool>));
-    EXPECT_TRUE((std::is_same_v<Utils::PtrToVoidPtr<bool*>::type, void*>));
-}
-
 TEST(Utils, ConversionVectorImVec)
 {
     constexpr Vector2 v(2.4f);

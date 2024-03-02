@@ -16,7 +16,8 @@ Entry::Entry(std::filesystem::path&& path)
 
 bool Entry::Reload()
 {
-    Unload();
+    if (m_Loaded)
+        Unload();
     return Load();
 }
 
@@ -35,13 +36,14 @@ std::string Entry::GetName() const
     return m_Name;
 }
 
-void Entry::SetName(std::string&& newName)
+void Entry::SetName(const std::string& newName)
 {
-    m_Name = std::move(newName);
+    std::filesystem::path newPath = m_Path.parent_path().string() + static_cast<char_t>(std::filesystem::path::preferred_separator) + newName;
+    std::filesystem::rename(m_Path, newPath);
 
-    const std::filesystem::path oldPath = m_Path;
-    m_Path = m_Path.parent_path().string() + static_cast<char_t>(std::filesystem::path::preferred_separator) + m_Name;
-    std::filesystem::rename(oldPath, m_Path);
+    FileManager::Rename(m_Path, newPath);
+
+    m_Path = std::move(newPath);
 
     UpdateUtilityValues();
 }
@@ -54,6 +56,16 @@ bool Entry::GetLoaded() const
 const Directory* Entry::GetParent() const
 {
     return m_Parent;
+}
+
+void Entry::SetParent(Directory* newParent)
+{
+    m_Parent = newParent;
+    std::filesystem::path newPath = m_Parent->GetPathString() + static_cast<char_t>(std::filesystem::path::preferred_separator) + m_Name;
+
+    FileManager::Rename(m_Path, newPath);
+
+    m_Path = std::move(newPath);
 }
 
 Directory* Entry::GetParent()

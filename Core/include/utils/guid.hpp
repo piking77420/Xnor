@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include <format>
+#include <sstream>
 #include <string>
 
 #include "core.hpp"
@@ -29,3 +31,40 @@ private:
 };
 
 END_XNOR_CORE
+
+template<>
+struct std::formatter<XnorCore::Guid>
+{
+    template<class ParseContext>
+    constexpr typename ParseContext::iterator parse(ParseContext& ctx);
+
+    template<class FormatContext>
+    typename FormatContext::iterator format(const XnorCore::Guid& guid, FormatContext& ctx) const;
+};
+
+// ReSharper disable once CppMemberFunctionMayBeStatic
+template<class FormatContext>
+typename FormatContext::iterator std::formatter<XnorCore::Guid>::format(
+    const XnorCore::Guid& guid,
+    FormatContext& ctx
+) const
+{
+    std::ostringstream out;
+
+    out << static_cast<std::string>(guid);
+        
+    return std::ranges::copy(std::move(out).str(), ctx.out()).out;
+}
+
+template<class ParseContext>
+constexpr typename ParseContext::iterator std::formatter<XnorCore::Guid>::parse(ParseContext& ctx)
+{
+    auto it = ctx.begin();
+    if (it == ctx.end())
+        return it;
+ 
+    if (*it != '}')
+        throw std::format_error("Invalid format args for XnorCore::Guid");
+ 
+    return it;
+}

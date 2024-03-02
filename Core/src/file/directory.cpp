@@ -71,3 +71,11 @@ std::vector<Pointer<Directory>>& Directory::GetChildDirectories()
 {
     return m_ChildDirectories;
 }
+
+void Directory::SetName(const std::string& newName)
+{
+    Entry::SetName(newName);
+
+    for (auto&& entry : GetChildEntries())
+        entry->SetParent(this);
+}

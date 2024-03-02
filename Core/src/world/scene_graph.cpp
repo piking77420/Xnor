@@ -182,14 +182,14 @@ void SceneGraph::OnAttachToParent(Entity& entity)
 	Vector3 skew;
 	Vector4 perspective;
 	
-    Decompose(trs,&transform.position,&transform.quaternion,&transform.scale,&skew,&perspective);
+    Decompose(trs,&transform.position,&transform.rotation,&transform.scale,&skew,&perspective);
 	transform.position = static_cast<Vector3>(trs[3]);
-	transform.rotation = Quaternion::ToEuler(transform.quaternion);
+	transform.eulerRotation = Quaternion::ToEuler(transform.rotation);
 }
 
 Matrix SceneGraph::GetTrsOfParents(const Entity& parent)
 {
-    Matrix&& parentMatrix = Matrix::Trs(parent.transform.position,parent.transform.quaternion,parent.transform.scale);
+    Matrix&& parentMatrix = Matrix::Trs(parent.transform.position,parent.transform.rotation,parent.transform.scale);
 
     if(parent.HasParent())  
     {
@@ -201,8 +201,8 @@ Matrix SceneGraph::GetTrsOfParents(const Entity& parent)
 void SceneGraph::UpdateTransform(Entity& entity)
 {
 	
-    entity.transform.quaternion = Quaternion::FromEuler(entity.transform.rotation).Normalized();
-    entity.transform.worldMatrix = Matrix::Trs(entity.transform.position,entity.transform.quaternion,entity.transform.scale);
+    entity.transform.rotation = Quaternion::FromEuler(entity.transform.eulerRotation).Normalized();
+    entity.transform.worldMatrix = Matrix::Trs(entity.transform.position,entity.transform.rotation,entity.transform.scale);
     
     if(!entity.HasParent())
         return;

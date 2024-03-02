@@ -176,7 +176,7 @@ void Renderer::UpdateLight(const std::vector<const PointLight*>& pointLightCompo
 	for (size_t i = 0 ; i < nbrOfspothLight ; i++)
 	{
 		const SpotLight* spotLight = spotLightsComponents[i];
-		const Matrix matrix = Matrix::Trs(Vector3(0.f), spotLight->entity->transform.quaternion.Normalized(), Vector3(1.f));
+		const Matrix matrix = Matrix::Trs(Vector3(0.f), spotLight->entity->transform.rotation.Normalized(), Vector3(1.f));
 		const Vector4 direction = matrix * (-Vector4::UnitY());
 		
 		gpuLightData.spotLightData[i] =
@@ -194,7 +194,7 @@ void Renderer::UpdateLight(const std::vector<const PointLight*>& pointLightCompo
 
 	if (!directionalComponent.empty())
 	{
-		const Matrix matrix = Matrix::Trs(Vector3(0.f), directionalComponent[0]->entity->transform.quaternion, Vector3(1.f));
+		const Matrix matrix = Matrix::Trs(Vector3(0.f), directionalComponent[0]->entity->transform.rotation, Vector3(1.f));
 		const Vector4 direction = matrix * (-Vector4::UnitY()); 
 		
 		gpuLightData.directionalData =
@@ -450,7 +450,7 @@ void Renderer::RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRende
 	{
 		const Transform& transform = mesh->entity->transform;
 
-		Matrix&& trs = Matrix::Trs(transform.position, transform.quaternion, transform.scale);
+		Matrix&& trs = Matrix::Trs(transform.position, transform.rotation, transform.scale);
 		data.model = trs;
 		data.normalInvertMatrix = trs.Inverted().Transposed();
 		

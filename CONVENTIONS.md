@@ -428,7 +428,7 @@ Do not use [trailing return types](https://en.cppreference.com/w/cpp/language/fu
 
 Do not use `friend` classes or functions, as it only makes things unclear and split across different files.
 
-However, in some cases this can be very useful and may be allowed. If you need a class `A` to access the private members of another class `B`, and this is the only case in which `B`'s members should be accessed from elsewhere, you can make `B` a friend of `A`.
+However, in some cases this can be very useful and may be allowed. If you need a class `A` to access the private members of another class `B`, and this is the only case in which `B`'s members should be accessed from elsewhere, you can make `B` a friend of `A`. In such a case, the `friend` declaration must be preceded by comments indicating the reason behind this declaration.
 
 ### Exceptions
 
