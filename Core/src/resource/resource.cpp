@@ -2,6 +2,7 @@
 
 #include "file/file.hpp"
 #include "resource/resource_manager.hpp"
+#include "utils/formatter.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -45,7 +46,7 @@ std::string Resource::GetName() const
 
 void Resource::SetName(std::string newName)
 {
-    ResourceManager::Rename(ResourceManager::Get(m_Name), newName);
+    ResourceManager::Rename(m_Name, newName);
     
     m_Name = std::move(newName);
 }

@@ -37,7 +37,8 @@ void ResourceManager::LoadAll()
         {
             Pointer<Shader> shader;
 
-            const std::string&& filenameNoExtension = file->GetNameNoExtension();
+            // We use an underscore before the name to make sure it isn't used elsewhere
+            const std::string&& filenameNoExtension = ReservedShaderPrefix + file->GetNameNoExtension();
             if (Contains(filenameNoExtension))
                 shader = Get<Shader>(filenameNoExtension);
             else
@@ -65,15 +66,20 @@ bool ResourceManager::Contains(const Pointer<File>& file)
     return m_Resources.contains(file->GetPathString());
 }
 
+void ResourceManager::Rename(const std::string& name, const std::string& newName)
+{
+    Rename(Get(name), newName);
+}
+
 void ResourceManager::Rename(const Pointer<Resource>& resource, const std::string& newName)
 {
     std::string&& oldName = resource->GetName();
-    
+
     Logger::LogInfo("Renaming resource {} to {}", oldName, newName);
 
     // Create a new temporary strong reference of the resource to keep it alive until we insert it in the map again
     const Pointer newResource(resource, true);
-    
+
     m_Resources.erase(oldName);
     // Here we also need to create a new strong reference as the last one will be deleted when going out of scope
     m_Resources[newName] = newResource.CreateStrongReference();

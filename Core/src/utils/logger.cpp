@@ -5,6 +5,8 @@
 
 #include <windows.h>
 
+#include "utils/formatter.hpp"
+
 #define ANSI_COLOR_GRAY     "\x1b[38;5;242m"
 #define ANSI_COLOR_YELLOW   "\x1b[33m"
 #define ANSI_COLOR_RED      "\x1b[31m"

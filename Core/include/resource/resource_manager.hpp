@@ -5,6 +5,7 @@
 
 #include "resource.hpp"
 #include "file/file.hpp"
+#include "resource/shader.hpp"
 #include "utils/logger.hpp"
 #include "utils/pointer.hpp"
 
@@ -18,6 +19,8 @@ class ResourceManager final
     STATIC_CLASS(ResourceManager)
     
 public:
+    static constexpr std::string ReservedShaderPrefix = "_shaders/";
+    
     /// @brief Creates the @ref Resource corresponding to the given @p name without loading it.
     template<ResourceT T>
     static Pointer<T> Add(std::string name);
@@ -46,6 +49,8 @@ public:
     template<ResourceT T = Resource>
     [[nodiscard]]
     static Pointer<T> Get(const Pointer<File>& file);
+
+    XNOR_ENGINE static void Rename(const std::string& name, const std::string& newName);
 
     XNOR_ENGINE static void Rename(const Pointer<Resource>& resource, const std::string& newName);
 
@@ -161,6 +166,21 @@ Pointer<T> ResourceManager::Get(const std::string& name)
     }
 
     return GetNoCheck<T>(name);
+}
+
+template<>
+inline Pointer<Shader> ResourceManager::Get<Shader>(const std::string& name)
+{
+    if (!Contains(name))
+    {
+        if (Contains(ReservedShaderPrefix + name))
+            return GetNoCheck<Shader>(ReservedShaderPrefix + name);
+        
+        Logger::LogError("Attempt to get an unknown resource: {}", name);
+        return nullptr;
+    }
+
+    return GetNoCheck<Shader>(name);
 }
 
 template<ResourceT T>

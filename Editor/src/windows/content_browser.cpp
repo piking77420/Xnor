@@ -258,7 +258,7 @@ void ContentBrowser::RenameEntry(const XnorCore::Pointer<XnorCore::Entry>& entry
     std::string name = entry->GetName();
     if (ImGui::InputText("##input", &name, ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
     {
-        m_EntryToRename->SetName(std::move(name));
+        m_EntryToRename->SetName(name);
         m_EntryToRename = nullptr;
     }
 

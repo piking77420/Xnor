@@ -6,6 +6,7 @@
 #include "core.hpp"
 #include "file/directory.hpp"
 #include "file/file.hpp"
+#include "utils/formatter.hpp"
 #include "utils/logger.hpp"
 #include "utils/pointer.hpp"
 
@@ -42,6 +43,10 @@ public:
     template<EntryT T = File>
     [[nodiscard]]
     static Pointer<T> Get(const std::filesystem::path& path);
+
+    XNOR_ENGINE static void Rename(const std::filesystem::path& path, const std::filesystem::path& newPath);
+
+    XNOR_ENGINE static void Rename(const Pointer<Entry>& entry, const std::filesystem::path& newPath);
 
     /// @brief Finds the first @ref Entry of type @p T.
     /// @tparam T The type of @ref Entry to find.

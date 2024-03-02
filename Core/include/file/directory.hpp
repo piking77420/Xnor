@@ -42,6 +42,8 @@ public:
     
     [[nodiscard]]
     XNOR_ENGINE std::vector<Pointer<Directory>>& GetChildDirectories();
+    
+    void SetName(const std::string& newName) override;
 
 private:
     std::vector<Pointer<Entry>> m_ChildEntries;

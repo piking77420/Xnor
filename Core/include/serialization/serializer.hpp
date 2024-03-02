@@ -4,9 +4,11 @@
 #include <stack>
 #include <string>
 
+#include <RapidXML/rapidxml.hpp>
+#include <RapidXML/RapidXMLSTD.hpp>
+
 #include "core.hpp"
-#include "RapidXML/rapidxml.hpp"
-#include "RapidXML/RapidXMLSTD.hpp"
+#include "utils/guid.hpp"
 #include "utils/reflectable.hpp"
 
 BEGIN_XNOR_CORE

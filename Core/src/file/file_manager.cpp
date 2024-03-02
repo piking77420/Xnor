@@ -151,6 +151,25 @@ bool FileManager::Contains(const std::filesystem::path& path)
     return m_Entries.contains(path);
 }
 
+void FileManager::Rename(const std::filesystem::path& path, const std::filesystem::path& newPath)
+{
+    Rename(Get<Entry>(path), newPath);
+}
+
+void FileManager::Rename(const Pointer<Entry>& entry, const std::filesystem::path& newPath)
+{
+    std::string&& oldName = entry->GetPathString();
+
+    Logger::LogInfo("Renaming FileManager entry {} to {}", oldName, newPath);
+
+    // Create a new temporary strong reference of the entry to keep it alive until we insert it in the map again
+    const Pointer newEntry(entry, true);
+
+    m_Entries.erase(oldName);
+    // Here we also need to create a new strong reference as the last one will be deleted when going out of scope
+    m_Entries[newPath] = newEntry.CreateStrongReference();
+}
+
 void FileManager::Unload(const std::filesystem::path& path)
 {
     Logger::LogDebug("Unloading FileManager entry {}", path);
@@ -210,8 +229,9 @@ void FileManager::UnloadAll()
     for (auto& entry : m_Entries)
     {
         Logger::LogDebug("Unloading FileManager entry {}", entry.first);
-        
-        entry.second->Unload();
+
+        if (entry.second->GetLoaded())
+            entry.second->Unload();
     }
 
     // Smart pointers are deleted automatically, we only need to clear the container

@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include "resource/resource.hpp"
+#include "utils/formatter.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -66,9 +67,9 @@ int64_t File::GetSize() const
     return m_Size;
 }
 
-void File::SetName(std::string&& newName)
+void File::SetName(const std::string& newName)
 {
-    Entry::SetName(std::move(newName));
+    Entry::SetName(newName);
 
     m_Resource->SetName(GetPathString());
 }
