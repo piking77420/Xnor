@@ -38,7 +38,7 @@ void Hierarchy::Display()
             
             if (payload)
             {
-                XnorCore::Entity* const dragged = static_cast<XnorCore::Entity*>(payload->Data);
+                XnorCore::Entity* const dragged = *static_cast<XnorCore::Entity**>(payload->Data);
 
                 dragged->SetParent(nullptr);
             }

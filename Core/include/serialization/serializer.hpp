@@ -183,18 +183,18 @@ void Serializer::SerializeSimpleType(const MemberT* ptr, const char_t* name, con
     {
         const size_t hash = ptr->GetHash();
         
-#define POLY_PTR_IF(type)\
+#define POLY_PTR_IF_SER(type)\
 if (hash == typeid(type).hash_code())\
 {\
 Serialize<type>(ptr->Cast<type>(), false);\
 }\
         // TODO find a less ugly solution to that
 
-        POLY_PTR_IF(XnorCore::MeshRenderer);
-        POLY_PTR_IF(XnorCore::DirectionalLight);
-        POLY_PTR_IF(XnorCore::TestComponent);
-        POLY_PTR_IF(XnorCore::PointLight);
-        POLY_PTR_IF(XnorCore::SpotLight);
+        POLY_PTR_IF_SER(XnorCore::MeshRenderer);
+        POLY_PTR_IF_SER(XnorCore::DirectionalLight);
+        POLY_PTR_IF_SER(XnorCore::TestComponent);
+        POLY_PTR_IF_SER(XnorCore::PointLight);
+        POLY_PTR_IF_SER(XnorCore::SpotLight);
     }
     else if constexpr (XnorCore::Meta::IsXnorPointer<MemberT>)
     {

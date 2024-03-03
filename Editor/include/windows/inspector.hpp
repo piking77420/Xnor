@@ -159,7 +159,7 @@ void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name)
     }
 }
 
-#define POLY_PTR_IF(type)\
+#define POLY_PTR_IF_INSP(type)\
 if (hash == typeid(type).hash_code())\
 {\
     DisplayObject<type>(obj->Cast<type>(), XnorCore::TypeInfo::Get<type>());\
@@ -174,11 +174,11 @@ void Inspector::DisplayPolyPointer(MemberT* obj, const char_t* name)
     {
         // TODO find a less ugly solution to that
 
-        POLY_PTR_IF(XnorCore::MeshRenderer);
-        POLY_PTR_IF(XnorCore::DirectionalLight);
-        POLY_PTR_IF(XnorCore::TestComponent);
-        POLY_PTR_IF(XnorCore::PointLight);
-        POLY_PTR_IF(XnorCore::SpotLight);
+        POLY_PTR_IF_INSP(XnorCore::MeshRenderer);
+        POLY_PTR_IF_INSP(XnorCore::DirectionalLight);
+        POLY_PTR_IF_INSP(XnorCore::TestComponent);
+        POLY_PTR_IF_INSP(XnorCore::PointLight);
+        POLY_PTR_IF_INSP(XnorCore::SpotLight);
     }
 }
 
