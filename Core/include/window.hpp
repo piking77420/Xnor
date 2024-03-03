@@ -36,6 +36,8 @@ public:
 	[[nodiscard]]
 	static GLFWwindow* GetHandle();
 
+	static void Show();
+
 	static void SetIcon(Texture& icon);
 
 	static void HideCursor(bool value);

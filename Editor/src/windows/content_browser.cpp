@@ -77,6 +77,8 @@ void ContentBrowser::Display()
         m_HoveredEntry = nullptr;
     if (entryClicked == false && ImGui::IsItemClicked())
         m_SelectedEntry = nullptr;
+
+    HandleInputs();
 }
 
 const XnorCore::Pointer<XnorCore::Directory>& ContentBrowser::GetRootDirectory() const
@@ -170,7 +172,9 @@ void ContentBrowser::DisplayEntry(
         ImVec2(
             64.f + framePadding.x * 2.f,
             64.f + textSize.y + framePadding.y * 2.f
-        )
+        ),
+        ImGuiChildFlags_None,
+        ImGuiWindowFlags_NoScrollbar
     );
     
     const XnorCore::Pointer<XnorCore::File> file = XnorCore::Utils::DynamicPointerCast<XnorCore::File>(entry);
@@ -263,5 +267,17 @@ void ContentBrowser::RenameEntry(const XnorCore::Pointer<XnorCore::Entry>& entry
     }
 
     if (!ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+        m_EntryToRename = nullptr;
+}
+
+void ContentBrowser::HandleInputs()
+{
+    if (!ImGui::GetIO().WantCaptureKeyboard)
+        return;
+    
+    if (m_SelectedEntry && ImGui::IsKeyPressed(ImGuiKey_F2, false))
+        m_EntryToRename = m_SelectedEntry;
+
+    if (m_EntryToRename && ImGui::IsKeyPressed(ImGuiKey_Escape, false))
         m_EntryToRename = nullptr;
 }

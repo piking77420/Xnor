@@ -51,6 +51,8 @@ private:
     void ContextMenu(XnorCore::Pointer<XnorCore::Entry> entry, const char_t* strId, bool_t isLeftPanel);
 
     void RenameEntry(const XnorCore::Pointer<XnorCore::Entry>& entry);
+
+    void HandleInputs();
 };
 
 END_XNOR_EDITOR

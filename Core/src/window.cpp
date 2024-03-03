@@ -12,6 +12,7 @@ void Window::Initialize()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
 	m_Window = glfwCreateWindow(m_Size.x, m_Size.y, "XNOR Engine", nullptr, nullptr);
 
@@ -57,6 +58,11 @@ double Window::GetTime()
 GLFWwindow* Window::GetHandle()
 {
 	return m_Window;
+}
+
+void Window::Show()
+{
+	glfwShowWindow(m_Window);
 }
 
 void Window::SetIcon(Texture& icon)
