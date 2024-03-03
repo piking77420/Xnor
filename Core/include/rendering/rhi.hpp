@@ -94,6 +94,7 @@ private:
 	struct ShaderInternal
 	{
 		DepthFunction depthFunction;
+		BlendFunction blendFunction;
 		std::map<std::string, uint32_t> uniformMap;
 	};
 
@@ -124,7 +125,8 @@ private:
 	XNOR_ENGINE static uint32_t GetOpenGlTextureFormat(TextureFormat textureFormat);
 	XNOR_ENGINE static uint32_t GetOpenglTextureWrapper(TextureWrapping textureWrapping);
 	XNOR_ENGINE static uint32_t GetOpenglTextureFilter(TextureFiltering textureFiltering);
-	
+	XNOR_ENGINE static uint32_t GetBlendValueOpengl(BlendValue blendFunction);
+
 	static void OpenglDebugCallBack(
 		uint32_t source,
 		uint32_t type,

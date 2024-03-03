@@ -48,7 +48,7 @@ void Shader::CreateInRhi()
 {
     std::vector<ShaderCode> code(m_Code.size());
     std::ranges::copy(m_Code, code.begin());
-    m_Id = Rhi::CreateShaders(code, {m_DepthFunction});
+    m_Id = Rhi::CreateShaders(code, {m_DepthFunction,m_BlendFunction});
     m_LoadedInRhi = true;
    
 }
@@ -132,4 +132,14 @@ void Shader::SetDepthFunction(DepthFunction depthFunction)
         return;
     }
     m_DepthFunction = depthFunction;
+}
+
+void Shader::SetBlendFunction(BlendFunction blendFunction)
+{
+    if(m_LoadedInRhi)
+    {
+        Logger::LogError("You are trying do modifies blend function for already initialize shader !\n Shader id = {}",m_Id);
+        return;
+    }
+    m_BlendFunction = blendFunction;
 }

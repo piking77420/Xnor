@@ -151,8 +151,25 @@ void Rhi::UseShader(const uint32_t shaderId)
 #ifdef _DEBUG
 	IsShaderValid(shaderId);
 #endif
+
+	const ShaderInternal& shaderInternal = m_ShaderMap.at(shaderId);
 	
-	glDepthFunc(GetOpengDepthEnum(m_ShaderMap.at(shaderId).depthFunction));
+	glDepthFunc(GetOpengDepthEnum(shaderInternal.depthFunction));
+	
+	if(shaderInternal.blendFunction.IsBlanding)
+	{
+		const uint32_t srcValue =  GetBlendValueOpengl(shaderInternal.blendFunction.sValue);
+		const uint32_t destValue =  GetBlendValueOpengl(shaderInternal.blendFunction.dValue);
+		glBlendFunc(srcValue,destValue);
+	}
+	else
+	{
+		const uint32_t srcValue =  GetBlendValueOpengl(BlendValue::ONE);
+		const uint32_t destValue =  GetBlendValueOpengl(BlendValue::ZERO);
+		glBlendFunc(srcValue,destValue);
+	}
+	
+	
 	glUseProgram(shaderId);
 }
 
@@ -216,6 +233,57 @@ uint32_t Rhi::GetOpenglTextureFilter(TextureFiltering textureFiltering)
 		
 	}
 	return GL_LINEAR;
+}
+
+uint32_t Rhi::GetBlendValueOpengl(BlendValue blendFunction)
+{
+	switch (blendFunction)
+	{
+		case BlendValue::ZERO:
+			return GL_ZERO;
+			
+		case BlendValue::ONE:
+			return GL_ONE;
+			
+		case BlendValue::SRC_COLOR:
+			return GL_SRC_COLOR;
+			
+		case BlendValue::ONE_MINUS_SRC_COLOR:
+			return GL_ONE_MINUS_SRC_COLOR;
+			
+		case BlendValue::DST_COLOR:
+			return GL_DST_COLOR;
+			
+		case BlendValue::ONE_MINUS_DST_COLOR:
+			return GL_ONE_MINUS_DST_COLOR;
+			
+		case BlendValue::SRC_ALPHA:
+			return GL_SRC_ALPHA;
+			
+		case BlendValue::ONE_MINUS_SRC_ALPHA:
+			return GL_ONE_MINUS_SRC_ALPHA;
+			
+		case BlendValue::DST_ALPHA:
+			return GL_DST_ALPHA;
+			
+		case BlendValue::ONE_MINUS_DST_ALPHA:
+			return GL_ONE_MINUS_DST_ALPHA;
+			
+		case BlendValue::CONSTANT_COLOR:
+			return GL_CONSTANT_COLOR;
+			
+		case BlendValue::ONE_MINUS_CONSTANT_COLOR:
+			return GL_ONE_MINUS_CONSTANT_COLOR;
+			
+		case BlendValue::CONSTANT_ALPHA:
+			return GL_CONSTANT_ALPHA;
+			
+		case BlendValue::ONE_MINUS_CONSTANT_ALPHA:
+			return GL_ONE_MINUS_CONSTANT_ALPHA;
+
+		default:
+			return GL_ONE; 
+	}
 }
 
 uint32_t Rhi::GetOpengDepthEnum(DepthFunction depthFunction)
@@ -773,6 +841,7 @@ void Rhi::Initialize()
 {
 	gladLoadGL();
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
 	glDepthFunc(GL_LESS);
 	
 #ifdef _DEBUG
