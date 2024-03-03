@@ -210,6 +210,23 @@ enum class UniformType
 	Mat4,
 };
 
+enum class DepthFunction
+{
+	ALWAYS,
+	NEVER,
+	LESS,
+	EQUAL,
+	LEAQUAL,
+	GREATER,
+	NOTEQUAL,
+	GEQUAL
+};
+
+struct ShaderCreateInfo
+{
+	DepthFunction depthFunction;
+};
+
 struct PointLightData
 {
 	Vector3 color;

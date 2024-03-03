@@ -27,6 +27,7 @@ void Shader::Load(const Pointer<File>& shader)
     Load(shader->GetData(), shader->GetSize(), type);
 
     m_Files[static_cast<size_t>(type)] = shader;
+    m_Loaded = true;
 }
 
 void Shader::Load(const uint8_t*, int64_t)
@@ -40,23 +41,23 @@ void Shader::Load(const char_t* buffer, const int64_t length, const ShaderType t
     code.code = buffer;
     code.codeLength = static_cast<int32_t>(length);
     code.type = type;
+    m_Loaded = true;
 }
 
 void Shader::CreateInRhi()
 {
     std::vector<ShaderCode> code(m_Code.size());
     std::ranges::copy(m_Code, code.begin());
-    m_Id = Rhi::CreateShaders(code);
-
-    m_Loaded = true;
+    m_Id = Rhi::CreateShaders(code, {m_DepthFunction});
+    m_LoadedInRhi = true;
+   
 }
 
 void Shader::DestroyInRhi()
 {
     Rhi::DestroyShader(m_Id);
     m_Id = 0;
-
-    m_Loaded = false;
+    m_LoadedInRhi = false;
 }
 
 void Shader::Recompile()
@@ -121,4 +122,14 @@ void Shader::Use() const
 void Shader::Unuse() const
 {
     Rhi::UnuseShader();
+}
+
+void Shader::SetDepthFunction(DepthFunction depthFunction)
+{
+    if(m_LoadedInRhi)
+    {
+        Logger::LogError("You are trying do modifies depth function for already initialize shader !\n Shader id = {}",m_Id);
+        return;
+    }
+    m_DepthFunction = depthFunction;
 }

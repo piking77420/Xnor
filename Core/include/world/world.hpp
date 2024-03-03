@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "scene_graph.hpp"
+#include "skybox.hpp"
 #include "scene/scene.hpp"
 
 BEGIN_XNOR_CORE
@@ -19,6 +20,8 @@ public:
     Scene Scene;
 
     SceneGraph hierarchy;
+
+    Skybox skybox;
     
     XNOR_ENGINE World();
 

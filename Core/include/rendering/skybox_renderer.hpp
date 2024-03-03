@@ -5,6 +5,7 @@
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
 #include "utils/pointer.hpp"
+#include "world/skybox.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -12,17 +13,17 @@ BEGIN_XNOR_CORE
 class SkyboxRenderer
 {
 public:
-    XNOR_ENGINE SkyboxRenderer();
+    XNOR_ENGINE SkyboxRenderer() = default;
 
-    XNOR_ENGINE ~SkyboxRenderer();
+    XNOR_ENGINE ~SkyboxRenderer() = default;
 
     XNOR_ENGINE void InitializeResources();
 
-    XNOR_ENGINE void DrawSkymap(const Pointer<Model>& cubeModel) const;
+    XNOR_ENGINE void DrawSkymap(const Pointer<Model>& cubeModel,const Skybox& skybox) const;
   
 private:
 
-    Cubemap* m_Cubemap;
+ 
     Pointer<Shader> m_SkyboxDrawerShader;
 };
 

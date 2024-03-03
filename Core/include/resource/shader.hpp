@@ -69,7 +69,7 @@ public:
 	XNOR_ENGINE void SetVec4(const std::string& keyName, const Vector4& value) const;
 	
 	XNOR_ENGINE void SetMat4(const std::string& keyName, const Matrix& value) const;
-
+	
 	[[nodiscard]]
 	uint32_t GetId() const;
 
@@ -77,8 +77,13 @@ public:
 
 	void Unuse() const;
 
+	// Should call it before Creating in rhi if you want to specialize a depthFunction;
+	void SetDepthFunction(DepthFunction depthFunction);
+
 private:
 	uint32_t m_Id = 0;
+	
+	DepthFunction m_DepthFunction = DepthFunction::LESS;
 
 	std::array<Pointer<File>, static_cast<size_t>(ShaderType::Count)> m_Files;
 	std::array<ShaderCode, static_cast<size_t>(ShaderType::Count)> m_Code;

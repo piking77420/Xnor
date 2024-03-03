@@ -31,7 +31,7 @@ public:
 	// Shader
 	XNOR_ENGINE static void DestroyShader(uint32_t shaderId);
 	XNOR_ENGINE static void CheckCompilationError(uint32_t shaderId, const std::string& type);
-	XNOR_ENGINE static uint32_t CreateShaders(const std::vector<ShaderCode>& shaderCodes);
+	XNOR_ENGINE static uint32_t CreateShaders(const std::vector<ShaderCode>& shaderCodes,const ShaderCreateInfo& shaderCreateInfo);
 	XNOR_ENGINE static void UseShader(uint32_t shaderId);
 	XNOR_ENGINE static void UnuseShader();
 
@@ -50,7 +50,7 @@ public:
 	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferId,const RenderPass& renderPass,const std::vector<const Texture*>& attechements);
 	XNOR_ENGINE static void DestroyFrameBuffer(uint32_t* frameBufferId);
 	XNOR_ENGINE static void BlitFrameBuffer(uint32_t readBuffer, uint32_t targetBuffer, Vector2i src0Size, Vector2i src1Size,
-		Vector2i target0Size,Vector2i target1Size,Attachment attachmentTarget,TextureFiltering textureFiltering);
+		Vector2i target0Size,Vector2i target1Size,Attachment attachmentTarget, TextureFiltering textureFiltering);
 	XNOR_ENGINE static void BindFrameBuffer(uint32_t frameBufferId);
 	XNOR_ENGINE static void UnbindFrameBuffer();
 
@@ -94,6 +94,7 @@ private:
 	struct ShaderInternal
 	{
 		uint32_t id;
+		DepthFunction depthFunction;
 		std::map<std::string, uint32_t> uniformMap;
 	};
 
@@ -102,15 +103,7 @@ private:
 	XNOR_ENGINE static inline std::unordered_map<uint32_t, ShaderInternal> m_ShaderMap;
 	XNOR_ENGINE static inline std::unordered_map<uint32_t, ModelInternal> m_ModelMap;
 
-	XNOR_ENGINE static uint32_t GetOpenglShaderType(ShaderType shaderType);
-	
-	XNOR_ENGINE static std::string GetShaderTypeToString(ShaderType shaderType);
-	
-	XNOR_ENGINE static uint32_t GetOpenglTextureType(TextureType textureType);
 
-	XNOR_ENGINE static uint32_t GetOpenglInternalFormat(TextureInternalFormat textureFormat);
-
-	XNOR_ENGINE static uint32_t GetOpenGlTextureFormat(TextureFormat textureFormat);
 	
 	XNOR_ENGINE static void IsShaderValid(uint32_t shaderId);
 	
@@ -122,9 +115,16 @@ private:
 	XNOR_ENGINE static void AllocTexture2D(const uint32_t* textureId, const TextureCreateInfo& textureCreateInfo);
 	XNOR_ENGINE static void CreateTexture(uint32_t* textureId,TextureType textureType);
 
+
+	// Enum to OpenglEnum
+	XNOR_ENGINE static uint32_t GetOpengDepthEnum(DepthFunction depthFunction);
+	XNOR_ENGINE static uint32_t GetOpenglShaderType(ShaderType shaderType);
+	XNOR_ENGINE static std::string GetShaderTypeToString(ShaderType shaderType);
+	XNOR_ENGINE static uint32_t GetOpenglTextureType(TextureType textureType);
+	XNOR_ENGINE static uint32_t GetOpenglInternalFormat(TextureInternalFormat textureFormat);
+	XNOR_ENGINE static uint32_t GetOpenGlTextureFormat(TextureFormat textureFormat);
 	XNOR_ENGINE static uint32_t GetOpenglTextureWrapper(TextureWrapping textureWrapping);
 	XNOR_ENGINE static uint32_t GetOpenglTextureFilter(TextureFiltering textureFiltering);
-
 	
 	static void OpenglDebugCallBack(
 		uint32_t source,

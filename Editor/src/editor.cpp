@@ -244,6 +244,17 @@ void Editor::CreateTestScene()
 	meshRenderer = ent4.AddComponent<MeshRenderer>();
 	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
 	meshRenderer->material.textures = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/diamond_block.jpg"));
+
+	std::array<std::string,6> testCubeMap
+	{
+	  	"assets/skybox/right.jpg",
+		  "assets/skybox/left.jpg",
+		  "assets/skybox/top.jpg",
+		  "assets/skybox/bottom.jpg",
+		  "assets/skybox/front.jpg",
+		  "assets/skybox/back.jpg"
+	};
+	World::world->skybox.LoadCubeMap(testCubeMap);
 }
 
 void Editor::MenuBar() const

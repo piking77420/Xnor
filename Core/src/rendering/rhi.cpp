@@ -116,7 +116,7 @@ void Rhi::CheckCompilationError(const uint32_t shaderId, const std::string& type
 	}
 }
 
-uint32_t Rhi::CreateShaders(const std::vector<ShaderCode>& shaderCodes)
+uint32_t Rhi::CreateShaders(const std::vector<ShaderCode>& shaderCodes,const ShaderCreateInfo& shaderCreateInfo)
 {
 	uint32_t programId = glCreateProgram();
 	
@@ -138,7 +138,11 @@ uint32_t Rhi::CreateShaders(const std::vector<ShaderCode>& shaderCodes)
 	
 	glLinkProgram(programId);
 	CheckCompilationError(programId, "PROGRAM");
-	m_ShaderMap.emplace(programId, ShaderInternal());
+
+	ShaderInternal shaderInternal;
+	shaderInternal.depthFunction = shaderCreateInfo.depthFunction;
+	
+	m_ShaderMap.emplace(programId,shaderInternal);
 
 	return programId;
 }
@@ -148,6 +152,8 @@ void Rhi::UseShader(const uint32_t shaderId)
 #ifdef _DEBUG
 	IsShaderValid(shaderId);
 #endif
+	
+	glDepthFunc(GetOpengDepthEnum(m_ShaderMap.at(shaderId).depthFunction));
 	glUseProgram(shaderId);
 }
 
@@ -211,6 +217,30 @@ uint32_t Rhi::GetOpenglTextureFilter(TextureFiltering textureFiltering)
 		
 	}
 	return GL_LINEAR;
+}
+
+uint32_t Rhi::GetOpengDepthEnum(DepthFunction depthFunction)
+{
+	switch (depthFunction)
+	{
+		case DepthFunction::ALWAYS:
+			return GL_ALWAYS;
+		case DepthFunction::NEVER:
+			return GL_NEVER;
+		case DepthFunction::LESS:
+			return GL_LESS;
+		case DepthFunction::EQUAL:
+			return GL_EQUAL;
+		case DepthFunction::LEAQUAL:
+			return GL_LEQUAL;
+		case DepthFunction::GREATER:
+			return GL_GREATER;
+		case DepthFunction::NOTEQUAL:
+			return GL_NOTEQUAL;
+		case DepthFunction::GEQUAL:
+			return GL_GEQUAL;
+	}
+	return GL_LESS;
 }
 
 
@@ -283,8 +313,8 @@ void Rhi::CreateCubeMap(uint32_t* textureId, const CreateCubeMapInfo& createCube
 		Logger::LogError("CubeMapCreateInfo is Invalid");
 	}
 	
-	const GLuint widht = static_cast<GLint>(createCubeMapInfo.textureSizeWidth);
-	const GLuint height = static_cast<GLint>(createCubeMapInfo.textureSizeHeight);
+	const GLsizei widht = static_cast<GLsizei>(createCubeMapInfo.textureSizeWidth);
+	const GLsizei height = static_cast<GLsizei>(createCubeMapInfo.textureSizeHeight);
 	const GLint openglTextureFilter =  static_cast<GLint>(GetOpenglTextureFilter(createCubeMapInfo.textureFiltering));
 	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(createCubeMapInfo.textureWrapping));
 	
@@ -292,7 +322,7 @@ void Rhi::CreateCubeMap(uint32_t* textureId, const CreateCubeMapInfo& createCube
 	{
 		glTexImage2D(
 	   GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), 
-	   0, GetOpenglInternalFormat(createCubeMapInfo.textureInternalFormat), widht, height, 0, GetOpenGlTextureFormat(createCubeMapInfo.textureFormat),
+	   0, static_cast<GLint>(GetOpenglInternalFormat(createCubeMapInfo.textureInternalFormat)), widht, height, 0, GetOpenGlTextureFormat(createCubeMapInfo.textureFormat),
 	   GetOpenglDataType(createCubeMapInfo.dataType), createCubeMapInfo.datas->at(i));
 	}
 	
@@ -328,8 +358,17 @@ void Rhi::CreateFrameBuffer(uint32_t* const frameBufferId, const RenderPass& ren
 		switch (renderTargetInfos[i].attachment)
 		{
 			case Attachment::Color01:
+				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
+				break;
+			
 			case Attachment::Color02:
+			openglAttachment = GL_COLOR_ATTACHMENT0 + i;
+				break;
+			
 			case Attachment::Color03:
+			openglAttachment = GL_COLOR_ATTACHMENT0 + i;
+				break;
+			
 			case Attachment::Color04:
 				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
 				break;
@@ -381,6 +420,7 @@ void Rhi::BlitFrameBuffer(
 {
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, readBuffer);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, targetBuffer);
+	// TODO PARESER ATTACHEMNT TO BUFFER BIT 
 	glBlitFramebuffer(
 		src0Size.x, src0Size.y,
 		src1Size.x, src1Size.y,
@@ -578,7 +618,7 @@ void Rhi::IsShaderValid(const uint32_t shaderId)
 	}
 }
 
-int Rhi::GetUniformInMap(const uint32_t shaderId, const char* const uniformKey)
+int32_t Rhi::GetUniformInMap(const uint32_t shaderId, const char* const uniformKey)
 {
 	std::map<std::string, uint32_t>& shaderUniformMap = m_ShaderMap.at(shaderId).uniformMap;
 
@@ -736,10 +776,13 @@ void Rhi::Initialize()
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	
+#ifdef _DEBUG
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 
 	glDebugMessageCallback(reinterpret_cast<GLDEBUGPROC>(OpenglDebugCallBack), nullptr);  // NOLINT(clang-diagnostic-cast-function-type-strict)
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+#endif
+	
 }
 
 

@@ -87,7 +87,7 @@ void Renderer::RenderScene(const World& world, const RendererContext& rendererCo
 	
 	// ForwardPass //
 	DrawAabb(meshrenderers);
-	m_SkyboxRenderer.DrawSkymap(m_Cube);
+	m_SkyboxRenderer.DrawSkymap(m_Cube,world.skybox);
 	m_RenderBuffer->UnBindFrameBuffer();
 	
 	// DRAW THE FINAL IMAGE TEXTURE
