@@ -1,5 +1,6 @@
 #include "windows/content_browser.hpp"
 
+#include "file/directory.hpp"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_stdlib.h"
 #include "resource/resource_manager.hpp"

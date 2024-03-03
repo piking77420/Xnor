@@ -75,6 +75,8 @@ public:
 	XNOR_ENGINE static void UpdateCameraUniform(const CameraUniformData& cameraUniformData);
 
 	XNOR_ENGINE static void UpdateLight(const GpuLightData& lightData);
+
+	XNOR_ENGINE static void BindMaterial(const Material& material);
 	
 	XNOR_ENGINE static void UpdateShadowMapingData(const ShadowMappingData& shadowMappingData);
 
@@ -94,6 +96,7 @@ private:
 	struct ShaderInternal
 	{
 		DepthFunction depthFunction;
+		BlendFunction blendFunction;
 		std::map<std::string, uint32_t> uniformMap;
 	};
 
@@ -124,7 +127,8 @@ private:
 	XNOR_ENGINE static uint32_t GetOpenGlTextureFormat(TextureFormat textureFormat);
 	XNOR_ENGINE static uint32_t GetOpenglTextureWrapper(TextureWrapping textureWrapping);
 	XNOR_ENGINE static uint32_t GetOpenglTextureFilter(TextureFiltering textureFiltering);
-	
+	XNOR_ENGINE static uint32_t GetBlendValueOpengl(BlendValue blendFunction);
+
 	static void OpenglDebugCallBack(
 		uint32_t source,
 		uint32_t type,
@@ -140,6 +144,7 @@ private:
 	XNOR_ENGINE static inline UniformBuffer* m_LightShadowMappingUniform;
 	XNOR_ENGINE static inline UniformBuffer* m_ModelUniform;
 	XNOR_ENGINE static inline UniformBuffer* m_LightUniform;
+	XNOR_ENGINE static inline UniformBuffer* m_MaterialUniform;
 };
 
 END_XNOR_CORE

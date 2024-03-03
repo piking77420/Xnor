@@ -32,8 +32,7 @@ void main()
     const float gamma = 2.2;
     vec3 hdrColor = texture(beforeToneMappedImage, TexCoords).rgb;
     
-  
-    FragColor = vec4(changeExposure(ACES(hdrColor),1.0), 1.0);
-
+     FragColor = vec4(changeExposure(ACES(hdrColor),1.0), 1.0);
+   // FragColor = vec4(1,1,1,1.0);
 }
     

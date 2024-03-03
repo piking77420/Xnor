@@ -79,16 +79,25 @@ public:
 
 	// Should call it before Creating in rhi if you want to specialize a depthFunction;
 	void SetDepthFunction(DepthFunction depthFunction);
+	
+	// Should call it before Creating in rhi if you want to specialize a depthFunction;
+	void SetBlendFunction(BlendFunction blendFunction);
 
 private:
 	uint32_t m_Id = 0;
 	
 	DepthFunction m_DepthFunction = DepthFunction::LESS;
+	BlendFunction m_BlendFunction =
+	{
+		.IsBlanding = false,
+		.sValue = BlendValue::ONE,
+		.dValue = BlendValue::ZERO
+	};
+		
 
 	std::array<Pointer<File>, static_cast<size_t>(ShaderType::Count)> m_Files;
 	std::array<ShaderCode, static_cast<size_t>(ShaderType::Count)> m_Code;
 };
-
 
 
 

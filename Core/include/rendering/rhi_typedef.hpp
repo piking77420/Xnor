@@ -222,9 +222,35 @@ enum class DepthFunction
 	GEQUAL
 };
 
+enum class BlendValue
+{
+	ZERO,
+	ONE,
+	SRC_COLOR,
+	ONE_MINUS_SRC_COLOR,
+	DST_COLOR,
+	ONE_MINUS_DST_COLOR,
+	SRC_ALPHA,
+	ONE_MINUS_SRC_ALPHA,
+	DST_ALPHA,
+	ONE_MINUS_DST_ALPHA,
+	CONSTANT_COLOR,
+	ONE_MINUS_CONSTANT_COLOR,
+	CONSTANT_ALPHA,
+	ONE_MINUS_CONSTANT_ALPHA,
+};
+
+struct BlendFunction
+{
+	bool IsBlanding = false;
+	BlendValue sValue;
+	BlendValue dValue;
+};
+
 struct ShaderCreateInfo
 {
 	DepthFunction depthFunction;
+	BlendFunction blendFunction;
 };
 
 struct PointLightData
@@ -263,10 +289,18 @@ struct GpuLightData
 
 	DirectionalData directionalData;
 };
+
 struct ShadowMappingData
 {
 	Matrix lightSpaceMatrix;
 	Matrix model;
+};
+
+// modifies in shader
+struct MaterialData
+{
+	int32_t hasAlbedoMap = 0;
+	int32_t hasNormalmap = 0;
 };
 
 enum Gbuffer : int32_t

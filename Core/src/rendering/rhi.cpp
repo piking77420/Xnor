@@ -54,6 +54,14 @@ uint32_t Rhi::CreateModel(const std::vector<Vertex>& vertices, const std::vector
 	glVertexArrayAttribBinding(modelInternal.vao, 2, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 2, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex, textureCoord));
 
+	glEnableVertexArrayAttrib(modelInternal.vao, 3);
+	glVertexArrayAttribBinding(modelInternal.vao, 3, 0);
+	glVertexArrayAttribFormat(modelInternal.vao, 3, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, tangent));
+
+	glEnableVertexArrayAttrib(modelInternal.vao, 4);
+	glVertexArrayAttribBinding(modelInternal.vao, 4, 0);
+	glVertexArrayAttribFormat(modelInternal.vao, 4, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, bitangent));
+	
 	glVertexArrayVertexBuffer(modelInternal.vao, 0, modelInternal.vbo, 0, sizeof(Vertex));
 	glVertexArrayElementBuffer(modelInternal.vao, modelInternal.ebo);
 	
@@ -151,8 +159,25 @@ void Rhi::UseShader(const uint32_t shaderId)
 #ifdef _DEBUG
 	IsShaderValid(shaderId);
 #endif
+
+	const ShaderInternal& shaderInternal = m_ShaderMap.at(shaderId);
 	
-	glDepthFunc(GetOpengDepthEnum(m_ShaderMap.at(shaderId).depthFunction));
+	glDepthFunc(GetOpengDepthEnum(shaderInternal.depthFunction));
+	
+	if(shaderInternal.blendFunction.IsBlanding)
+	{
+		const uint32_t srcValue =  GetBlendValueOpengl(shaderInternal.blendFunction.sValue);
+		const uint32_t destValue =  GetBlendValueOpengl(shaderInternal.blendFunction.dValue);
+		glBlendFunc(srcValue,destValue);
+	}
+	else
+	{
+		const uint32_t srcValue =  GetBlendValueOpengl(BlendValue::ONE);
+		const uint32_t destValue =  GetBlendValueOpengl(BlendValue::ZERO);
+		glBlendFunc(srcValue,destValue);
+	}
+	
+	
 	glUseProgram(shaderId);
 }
 
@@ -218,6 +243,57 @@ uint32_t Rhi::GetOpenglTextureFilter(TextureFiltering textureFiltering)
 	return GL_LINEAR;
 }
 
+uint32_t Rhi::GetBlendValueOpengl(BlendValue blendFunction)
+{
+	switch (blendFunction)
+	{
+		case BlendValue::ZERO:
+			return GL_ZERO;
+			
+		case BlendValue::ONE:
+			return GL_ONE;
+			
+		case BlendValue::SRC_COLOR:
+			return GL_SRC_COLOR;
+			
+		case BlendValue::ONE_MINUS_SRC_COLOR:
+			return GL_ONE_MINUS_SRC_COLOR;
+			
+		case BlendValue::DST_COLOR:
+			return GL_DST_COLOR;
+			
+		case BlendValue::ONE_MINUS_DST_COLOR:
+			return GL_ONE_MINUS_DST_COLOR;
+			
+		case BlendValue::SRC_ALPHA:
+			return GL_SRC_ALPHA;
+			
+		case BlendValue::ONE_MINUS_SRC_ALPHA:
+			return GL_ONE_MINUS_SRC_ALPHA;
+			
+		case BlendValue::DST_ALPHA:
+			return GL_DST_ALPHA;
+			
+		case BlendValue::ONE_MINUS_DST_ALPHA:
+			return GL_ONE_MINUS_DST_ALPHA;
+			
+		case BlendValue::CONSTANT_COLOR:
+			return GL_CONSTANT_COLOR;
+			
+		case BlendValue::ONE_MINUS_CONSTANT_COLOR:
+			return GL_ONE_MINUS_CONSTANT_COLOR;
+			
+		case BlendValue::CONSTANT_ALPHA:
+			return GL_CONSTANT_ALPHA;
+			
+		case BlendValue::ONE_MINUS_CONSTANT_ALPHA:
+			return GL_ONE_MINUS_CONSTANT_ALPHA;
+
+		default:
+			return GL_ONE; 
+	}
+}
+
 uint32_t Rhi::GetOpengDepthEnum(DepthFunction depthFunction)
 {
 	switch (depthFunction)
@@ -266,12 +342,29 @@ uint32_t Rhi::GetOpenglTextureWrapper(TextureWrapping textureWrapping)
 	return GL_REPEAT;
 }
 
+void Rhi::AllocTexture2D(const uint32_t* textureId, const TextureCreateInfo& textureCreateInfo)
+{
+	glTextureStorage2D(*textureId, 1,
+		GetOpenglInternalFormat(textureCreateInfo.textureInternalFormat),
+		static_cast<GLsizei>(textureCreateInfo.textureSizeWidth),
+		static_cast<GLsizei>(textureCreateInfo.textureSizeHeight)
+	);
+}
 
 void Rhi::CreateTexture2D(uint32_t* const textureId, const TextureCreateInfo& textureCreateInfo)
 {
 	CreateTexture(textureId,TextureType::Texture2D);
-	AllocTexture2D(textureId,textureCreateInfo);
+
+	const GLint openglTextureFilter =  static_cast<GLint>(GetOpenglTextureFilter(textureCreateInfo.textureFiltering));
+	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(textureCreateInfo.textureWrapping));
 	
+	glTextureParameteri(*textureId, GL_TEXTURE_MIN_FILTER,openglTextureFilter);
+	glTextureParameteri(*textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
+	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
+	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
+
+	AllocTexture2D(textureId,textureCreateInfo);
+
 	if (textureCreateInfo.data != nullptr)
 	{
 		glTextureSubImage2D(*textureId, 0, 0, 0,
@@ -280,13 +373,6 @@ void Rhi::CreateTexture2D(uint32_t* const textureId, const TextureCreateInfo& te
 		GetOpenGlTextureFormat(textureCreateInfo.textureFormat), GetOpenglDataType(textureCreateInfo.dataType), textureCreateInfo.data);
 	}
 	
-	const GLint openglTextureFilter =  static_cast<GLint>(GetOpenglTextureFilter(textureCreateInfo.textureFiltering));
-	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(textureCreateInfo.textureWrapping));
-	
-	glTextureParameteri(*textureId, GL_TEXTURE_MIN_FILTER,openglTextureFilter);
-	glTextureParameteri(*textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
-	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
-	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
 	
 	glGenerateTextureMipmap(*textureId);
 }
@@ -304,7 +390,16 @@ void Rhi::BindTexture(const uint32_t unit, const uint32_t textureId)
 
 void Rhi::CreateCubeMap(uint32_t* textureId, const CreateCubeMapInfo& createCubeMapInfo)
 {
-	CreateTexture(textureId,TextureType::TextureCubeMap);	
+	CreateTexture(textureId,TextureType::TextureCubeMap);
+	const GLint openglTextureFilter =  static_cast<GLint>(GetOpenglTextureFilter(createCubeMapInfo.textureFiltering));
+	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(createCubeMapInfo.textureWrapping));
+	glTextureParameteri(*textureId, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
+	glTextureParameteri(*textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
+	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
+	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
+	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_R, openglTextureWrapper);
+
+	
 	glBindTexture(GL_TEXTURE_CUBE_MAP, *textureId);
 	
 	if(createCubeMapInfo.datas == nullptr || createCubeMapInfo.datas == nullptr)
@@ -314,8 +409,7 @@ void Rhi::CreateCubeMap(uint32_t* textureId, const CreateCubeMapInfo& createCube
 	
 	const GLsizei widht = static_cast<GLsizei>(createCubeMapInfo.textureSizeWidth);
 	const GLsizei height = static_cast<GLsizei>(createCubeMapInfo.textureSizeHeight);
-	const GLint openglTextureFilter =  static_cast<GLint>(GetOpenglTextureFilter(createCubeMapInfo.textureFiltering));
-	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(createCubeMapInfo.textureWrapping));
+	
 	
 	for (size_t i = 0; i < createCubeMapInfo.datas->size(); i++)
 	{
@@ -325,23 +419,11 @@ void Rhi::CreateCubeMap(uint32_t* textureId, const CreateCubeMapInfo& createCube
 	   GetOpenglDataType(createCubeMapInfo.dataType), createCubeMapInfo.datas->at(i));
 	}
 	
-	glTextureParameteri(*textureId, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
-	glTextureParameteri(*textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
-	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
-	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
-	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_R, openglTextureWrapper);
-	
+
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
-void Rhi::AllocTexture2D(const uint32_t* textureId, const TextureCreateInfo& textureCreateInfo)
-{
-	glTextureStorage2D(*textureId, 1,
-		GetOpenglInternalFormat(textureCreateInfo.textureInternalFormat),
-		static_cast<GLsizei>(textureCreateInfo.textureSizeWidth),
-		static_cast<GLsizei>(textureCreateInfo.textureSizeHeight)
-	);
-}
+
 
 
 void Rhi::CreateFrameBuffer(uint32_t* const frameBufferId, const RenderPass& renderPass, const std::vector<const Texture*>& attechements)
@@ -773,6 +855,7 @@ void Rhi::Initialize()
 {
 	gladLoadGL();
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
 	glDepthFunc(GL_LESS);
 	
 #ifdef _DEBUG
@@ -797,6 +880,7 @@ void Rhi::Shutdown()
 	delete m_ModelUniform;
 	delete m_LightUniform;
 	delete m_LightShadowMappingUniform;
+	delete m_MaterialUniform;
 }
 
 void Rhi::PrepareUniform()
@@ -816,6 +900,10 @@ void Rhi::PrepareUniform()
 	m_LightShadowMappingUniform = new UniformBuffer;
 	m_LightShadowMappingUniform->Allocate(sizeof(ShadowMappingData), nullptr);
 	m_LightUniform->Bind(3);
+
+	m_MaterialUniform = new UniformBuffer;
+	m_MaterialUniform->Allocate(sizeof(MaterialData),nullptr);
+	m_MaterialUniform->Bind(4);
 
 }
 
@@ -853,6 +941,16 @@ void Rhi::UpdateCameraUniform(const CameraUniformData& cameraUniformData)
 void Rhi::UpdateLight(const GpuLightData& lightData)
 {
 	m_LightUniform->Update(sizeof(GpuLightData), 0, &lightData.nbrOfPointLight);
+}
+
+void Rhi::BindMaterial(const Material& material)
+{
+	MaterialData materialData;
+	
+	materialData.hasAlbedoMap = static_cast<int32_t>(material.albedo.IsValid());
+	materialData.hasNormalmap =  static_cast<int32_t>(material.normalMap.IsValid());
+	constexpr size_t size = sizeof(MaterialData);
+	m_MaterialUniform->Update(size, 0, &materialData);
 }
 
 void Rhi::UpdateShadowMapingData(const ShadowMappingData& shadowMappingData)

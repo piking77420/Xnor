@@ -17,8 +17,7 @@ Texture::Texture(const TextureCreateInfo& createInfo)
 }
 
 Texture::Texture(const TextureInternalFormat textureFormat, const Vector2i size) : m_Data(nullptr)
-  , m_Size(size) , m_TextureFiltering(TextureFiltering::Linear)
-,m_TextureWrapping(TextureWrapping::Repeat), m_TextureInternalFormat(textureFormat)
+  , m_Size(size) , m_TextureInternalFormat(textureFormat)
 {
     const TextureCreateInfo createInfo
     {
