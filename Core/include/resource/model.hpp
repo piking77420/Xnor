@@ -4,6 +4,7 @@
 
 #include <assimp/mesh.h>
 
+#include "file/file.hpp"
 #include "core.hpp"
 #include "resource.hpp"
 #include "rendering/vertex.hpp"
