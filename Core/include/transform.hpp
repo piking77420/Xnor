@@ -18,7 +18,7 @@ class Transform final : public Reflectable
 	REFLECTABLE_IMPL_MINIMAL(Transform)
 
 public:
-	Vector3 GetWorldPos();
+	XNOR_ENGINE Vector3 GetWorldPos() const;
 	
 	Vector3 position;
 	Vector3 eulerRotation; 

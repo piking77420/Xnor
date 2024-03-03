@@ -435,11 +435,11 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 		const Transform& transform =  meshRenderer->entity->transform;
 		const ModelAABB&& modelAabb = meshRenderer->model->GetAabb();
 		
-		const Vector3 aabbMinMax = (modelAabb.max - modelAabb.min) * 0.5f;
-		const Vector3 aabbSize = { aabbMinMax.x * transform.scale.x, aabbMinMax.y * transform.scale.y, aabbMinMax.z * transform.scale.z };
-		const Matrix&& scaleMatrix = Matrix::Scaling(aabbSize);
+		const Vector3&& aabbSize = (modelAabb.max - modelAabb.min) * 0.5f;
+		const Vector3&& center  = (modelAabb.max + modelAabb.min) * 0.5f;
 		
-		modelData.model = scaleMatrix * transform.worldMatrix;
+		const Matrix&& trsAabb = Matrix::Trs(center,Quaternion::Identity(),aabbSize);
+		modelData.model =  transform.worldMatrix * trsAabb;
 		Rhi::UpdateModelUniform(modelData);
 		
 		Rhi::DrawModel(m_Cube->GetId());

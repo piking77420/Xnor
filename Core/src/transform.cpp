@@ -5,7 +5,7 @@ using namespace XnorCore;
 
 REFLECTABLE_IMPL_CPP(Transform)
 
-Vector3 Transform::GetWorldPos()
+Vector3 Transform::GetWorldPos() const
 {
-    return static_cast<Vector3>(worldMatrix[3]);
+    return static_cast<Vector3>(const_cast<Matrix&>(worldMatrix)[3]);
 }
