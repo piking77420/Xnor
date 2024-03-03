@@ -16,7 +16,6 @@ void Serializer::StartSerialization(const std::string& filePath)
 {
     m_CurrentFilePath = filePath;
     OpenFileToWrite(filePath);
-    BeginRootElement("Root", "");
 }
 
 void Serializer::EndSerialization()
@@ -25,8 +24,7 @@ void Serializer::EndSerialization()
     {
         Logger::LogError("Failed to write Serialization");
     }
-    
-    EndRootElement();
+
     DisposeXMLObject(m_XmlDoc);
     m_CurrentFilePath = "";
 }

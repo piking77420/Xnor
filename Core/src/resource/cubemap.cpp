@@ -2,20 +2,19 @@
 
 #include <stb/stb_image.h>
 
-
-#include "resource/texture.hpp"
 #include "rendering/rhi.hpp"
-
+#include "resource/texture.hpp"
+#include "utils/logger.hpp"
 
 using namespace XnorCore;
 
-void Cubemap::Load([[maybe_unused]] const uint8_t* buffer, [[maybe_unused]]int64_t length)
+void Cubemap::Load([[maybe_unused]] const uint8_t* buffer, [[maybe_unused]] int64_t length)
 {
     // TO do how to manager 6 resource texture with one buffer
     Logger::LogError("Non Implemented function");
 }
 
-void Cubemap::Load([[maybe_unused]]const Pointer<File>& file)
+void Cubemap::Load([[maybe_unused]] const Pointer<File>& file)
 {
     // Could work with meta data file
     Logger::LogError("Non Implemented function");
@@ -24,20 +23,19 @@ void Cubemap::Load([[maybe_unused]]const Pointer<File>& file)
 void Cubemap::CreateInRhi()
 {
     const CreateCubeMapInfo createCubeMapInfo
-   {
-       .datas = &m_Datas,
-       .textureSizeWidth = static_cast<uint32_t>(m_CubeMapSize.x),
-       .textureSizeHeight =  static_cast<uint32_t>(m_CubeMapSize.y),
-       .textureFiltering = TextureFiltering::Linear,
-       .textureWrapping = TextureWrapping::ClampToEdge,
-       .textureFormat = Rhi::GetFormat(m_DataChannels),
-       .textureInternalFormat = TextureInternalFormat::Rgba8,
-       .dataType = DataType::UnsignedByte
-   };
-    
+    {
+        .datas = &m_Datas,
+        .textureSizeWidth = static_cast<uint32_t>(m_CubeMapSize.x),
+        .textureSizeHeight =  static_cast<uint32_t>(m_CubeMapSize.y),
+        .textureFiltering = TextureFiltering::Linear,
+        .textureWrapping = TextureWrapping::ClampToEdge,
+        .textureFormat = Rhi::GetFormat(m_DataChannels),
+        .textureInternalFormat = TextureInternalFormat::Rgba8,
+        .dataType = DataType::UnsignedByte
+    };
+
     Rhi::CreateCubeMap(&m_Id,createCubeMapInfo);
     m_LoadedInRhi = true;
-    
 }
 
 void Cubemap::DestroyInRhi()
@@ -50,8 +48,9 @@ void Cubemap::Unload()
 {
     for (uint32_t i = 0; i < m_Datas.size(); i++)
     {
-      stbi_image_free(m_Datas[i]); 
+        stbi_image_free(m_Datas[i]); 
     }
+
     m_Loaded = false;
 }
 
@@ -64,14 +63,14 @@ Cubemap::Cubemap(const std::array<std::string, 6>& cubeMapsTextures)
     m_Loaded = true;
 }
 
-void Cubemap::BindTexture(uint32_t unit) const
+void Cubemap::BindTexture(const uint32_t unit) const
 {
-    Rhi::BindTexture(unit,m_Id);
+    Rhi::BindTexture(unit, m_Id);
 }
 
-void Cubemap::UnBindTexture(uint32_t unit) const
+void Cubemap::UnBindTexture(const uint32_t unit) const
 {
-    Rhi::BindTexture(unit,0);
+    Rhi::BindTexture(unit, 0);
 }
 
 

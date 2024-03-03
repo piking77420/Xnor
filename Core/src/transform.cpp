@@ -1,6 +1,11 @@
 #include "transform.hpp"
+#include "serialization/serializer.hpp"
 
-Vector3 XnorCore::Transform::GetWorldPos()
+using namespace XnorCore;
+
+REFLECTABLE_IMPL_CPP(Transform)
+
+Vector3 Transform::GetWorldPos()
 {
     return static_cast<Vector3>(worldMatrix[3]);
 }

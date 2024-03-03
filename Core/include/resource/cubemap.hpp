@@ -20,17 +20,16 @@ public:
     
     XNOR_ENGINE void Unload() override;
     
-    XNOR_ENGINE explicit Cubemap(const std::array<std::string,6>& cubeMapsTextures);
+    XNOR_ENGINE explicit Cubemap(const std::array<std::string, 6>& cubeMapsTextures);
 
     XNOR_ENGINE void BindTexture(uint32_t unit) const;
 
     XNOR_ENGINE void UnBindTexture(uint32_t unit) const;
-
     
 private:
     uint32_t m_Id = 0;
-    std::array<void*,6> m_Datas;
-    vec2i m_CubeMapSize;
+    std::array<void*, 6> m_Datas;
+    Vector2i m_CubeMapSize;
     int32_t m_DataChannels = 0;
 };
 

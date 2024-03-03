@@ -8,7 +8,14 @@
 #include <RapidXML/RapidXMLSTD.hpp>
 
 #include "core.hpp"
+#include "rendering/light/directional_light.hpp"
+#include "rendering/light/point_light.hpp"
+#include "rendering/light/spot_light.hpp"
+#include "scene/component/mesh_renderer.hpp"
+#include "scene/component/test_component.hpp"
 #include "utils/guid.hpp"
+#include "utils/logger.hpp"
+#include "utils/meta_programming.hpp"
 #include "utils/reflectable.hpp"
 
 BEGIN_XNOR_CORE
@@ -18,7 +25,7 @@ class Serializer
     STATIC_CLASS(Serializer)
 
 public:
-    enum class SerializeFlags : size_t
+    enum SerializeFlags : size_t
     {
         NONE = 0 << 0,
         EXPAND_POINTER = 1 << 0
@@ -41,7 +48,7 @@ public:
     static void FetchAttribute(const std::string& attributeName, const T& value);
 
     template<typename ReflectT>
-    static void Serialize(const ReflectT* obj);
+    static void Serialize(const ReflectT* obj, bool isRoot);
 
     template<typename ReflectT>
     static void Deserialize(ReflectT* obj);
@@ -64,29 +71,18 @@ private:
     XNOR_ENGINE static void FetchAttributeInternal(const std::string& attributeName, const std::string& attributeValue);
 
     template <typename MemberT>
-    static void SerializeSimpleType(const MemberT* ptr, const char_t* name, SerializeFlags flags);
+    static void SerializeSimpleType(const MemberT* ptr, const char_t* name, size_t flags);
 
     template <typename MemberT>
-    static void SerializeArrayType(const MemberT* ptr, const char_t* name, SerializeFlags flags);
+    static void SerializeArrayType(const MemberT* ptr, const char_t* name, size_t flags);
 
     template <typename MemberT>
-    static void SerializeListType(const MemberT* ptr, const char_t* name, SerializeFlags flags);
+    static void SerializeListType(const MemberT* ptr, const char_t* name, size_t flags);
 
     template <typename T>
     [[nodiscard]]
-    static constexpr SerializeFlags GetFlags(T member);
+    static constexpr size_t GetFlags(T member);
 };
-
-constexpr Serializer::SerializeFlags& operator|=(Serializer::SerializeFlags& a, const Serializer::SerializeFlags b)
-{
-    a = static_cast<Serializer::SerializeFlags>(static_cast<size_t>(a) | static_cast<size_t>(b));
-    return a;
-}
-
-constexpr bool operator&(const Serializer::SerializeFlags a, const Serializer::SerializeFlags b)
-{
-    return static_cast<size_t>(a) & static_cast<size_t>(b);
-}
 
 template<typename T>
 void Serializer::FetchAttribute(const std::string& attributeName, const T& value)
@@ -103,18 +99,21 @@ void Serializer::FetchAttribute(const std::string& attributeName, const T& value
 }
 
 template <typename ReflectT>
-void Serializer::Serialize(const ReflectT* const obj)
+void Serializer::Serialize(const ReflectT* const obj, const bool isRoot)
 {
     constexpr TypeDescriptor<ReflectT> desc = TypeInfo::Get<ReflectT>();
 
-    BeginXmlElement(desc.name.c_str(), "");
+    if (isRoot)
+        BeginRootElement(desc.name.c_str(), "");
+    else
+        BeginXmlElement(desc.name.c_str(), "");
 
     refl::util::for_each(desc.members, [&]<typename T>(const T member)
     {
         constexpr bool isFunction = refl::descriptor::is_function(member);
         
         constexpr bool dontSerialize = refl::descriptor::has_attribute<NotSerializable>(member);
-        constexpr SerializeFlags flags = GetFlags<T>(member);
+        constexpr size_t flags = GetFlags<T>(member);
             
         if constexpr (!isFunction)
         {
@@ -139,11 +138,14 @@ void Serializer::Serialize(const ReflectT* const obj)
         }
         else
         {
-            Logger::LogInfo("{}", member.name.c_str());
+            Logger::LogInfo("{} ; {}", desc.name.c_str(), member.name.c_str());
         }
     });
 
-    EndXmlElement();
+    if (isRoot)
+        EndRootElement();
+    else
+        EndXmlElement();
 }
 
 template <typename ReflectT>
@@ -153,7 +155,7 @@ void Serializer::Deserialize([[maybe_unused]] ReflectT* obj)
 }
 
 template <typename MemberT>
-void Serializer::SerializeSimpleType(const MemberT* ptr, const char_t* name, const SerializeFlags flags)
+void Serializer::SerializeSimpleType(const MemberT* ptr, const char_t* name, const size_t flags)
 {
     if constexpr (Meta::IsNativeType<MemberT> || Meta::IsMathType<MemberT> || std::is_same_v<MemberT, std::string>)
     {
@@ -165,9 +167,9 @@ void Serializer::SerializeSimpleType(const MemberT* ptr, const char_t* name, con
     }
     else if constexpr (std::is_pointer_v<MemberT>)
     {
-        if (flags & SerializeFlags::EXPAND_POINTER)
+        if (flags & EXPAND_POINTER)
         {
-            Serialize<std::remove_pointer_t<MemberT>>(*ptr);
+            Serialize<std::remove_pointer_t<MemberT>>(*ptr, false);
         }
         else
         {
@@ -179,11 +181,34 @@ void Serializer::SerializeSimpleType(const MemberT* ptr, const char_t* name, con
     }
     else if constexpr (XnorCore::Meta::IsPolyPtr<MemberT>)
     {
+        const size_t hash = ptr->GetHash();
+        
+#define POLY_PTR_IF_SER(type)\
+if (hash == typeid(type).hash_code())\
+{\
+Serialize<type>(ptr->Cast<type>(), false);\
+}\
+        // TODO find a less ugly solution to that
 
+        POLY_PTR_IF_SER(XnorCore::MeshRenderer);
+        POLY_PTR_IF_SER(XnorCore::DirectionalLight);
+        POLY_PTR_IF_SER(XnorCore::TestComponent);
+        POLY_PTR_IF_SER(XnorCore::PointLight);
+        POLY_PTR_IF_SER(XnorCore::SpotLight);
     }
     else if constexpr (XnorCore::Meta::IsXnorPointer<MemberT>)
     {
-        // DisplayXnorPointer<MemberT>(ptr, name);
+        if (flags & EXPAND_POINTER)
+        {
+            // Serialize<std::remove_pointer_t<typename MemberT::Type>>(*ptr, false);
+        }
+        else
+        {
+            if (*ptr == nullptr)
+                FetchAttribute(name, Guid());
+            else
+                FetchAttribute(name, static_cast<std::string>((*ptr)->GetGuid()));
+        }
     }
     else if constexpr (std::is_same_v<MemberT, Guid>)
     {
@@ -191,21 +216,21 @@ void Serializer::SerializeSimpleType(const MemberT* ptr, const char_t* name, con
     }
     else
     {
-        Serialize<MemberT>(ptr);
+        Serialize<MemberT>(ptr, false);
     }
 }
 
 template <typename MemberT>
-void Serializer::SerializeArrayType(const MemberT* ptr, const char_t* name, const SerializeFlags flags)
+void Serializer::SerializeArrayType([[maybe_unused]] const MemberT* ptr, [[maybe_unused]] const char_t* name, [[maybe_unused]] const size_t flags)
 {
 }
 
 template <typename MemberT>
-void Serializer::SerializeListType(const MemberT* ptr, const char_t* name, const SerializeFlags flags)
+void Serializer::SerializeListType(const MemberT* ptr, const char_t* name, const size_t flags)
 {
     using ListT = typename MemberT::Type;
     
-    BeginXmlElement(std::string(name), std::string(name));
+    BeginXmlElement(std::string(name), "");
 
     for (size_t i = 0; i < ptr->GetSize(); i++)
     {
@@ -216,12 +241,12 @@ void Serializer::SerializeListType(const MemberT* ptr, const char_t* name, const
 }
 
 template <typename T>
-constexpr Serializer::SerializeFlags Serializer::GetFlags(const T member)
+constexpr size_t Serializer::GetFlags(const T member)
 {
-    SerializeFlags flags = SerializeFlags::NONE; 
+    size_t flags = NONE; 
 
     if constexpr (refl::descriptor::has_attribute<ExpandPointer>(member))
-        flags |= SerializeFlags::EXPAND_POINTER;
+        flags |= EXPAND_POINTER;
 
     return flags;
 }

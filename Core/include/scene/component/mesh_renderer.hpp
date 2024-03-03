@@ -1,18 +1,19 @@
 #pragma once
+
 #include "core.hpp"
 #include "rendering/material.hpp"
 #include "resource/model.hpp"
-#include "resource/texture.hpp"
 #include "scene/component.hpp"
 
 BEGIN_XNOR_CORE
 
 class MeshRenderer : public Component
 {
-    REFLECTABLE_IMPL(MeshRenderer)
+    REFLECTABLE_IMPL_MINIMAL(MeshRenderer)
     
 public:
-    XNOR_ENGINE MeshRenderer();
+    XNOR_ENGINE MeshRenderer() = default;
+    
     Pointer<Model> model;
     Material material;
     bool drawModelAabb = false;

@@ -1,6 +1,6 @@
 ﻿#include "rendering/material.hpp"
+#include "serialization/serializer.hpp"
 
-XnorCore::Material::Material()
-{
-    CreateTypeInfo();
-}
+using namespace XnorCore;
+
+REFLECTABLE_IMPL_CPP(Material)

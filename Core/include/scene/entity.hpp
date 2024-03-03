@@ -18,7 +18,7 @@ concept ComponentT = std::is_base_of_v<Component, T>;
 
 class Entity : public Reflectable
 {
-    REFLECTABLE_IMPL(Entity)
+    REFLECTABLE_IMPL_H(Entity)
 
 public:
     Transform transform;

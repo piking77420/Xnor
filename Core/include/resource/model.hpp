@@ -105,10 +105,10 @@ public:
     [[nodiscard]]
     XNOR_ENGINE uint32_t GetId() const;
 
-    XNOR_ENGINE ModelAABB GetAABB() const ;
+    XNOR_ENGINE ModelAABB GetAabb() const;
     
 private:
-    XNOR_ENGINE bool HadToComputeAABB(const aiAABB& assimpAABB);
+    XNOR_ENGINE bool HadToComputeAabb(const aiAABB& assimpAabb);
     
     std::vector<Vertex> m_Vertices;
     std::vector<uint32_t> m_Indices;

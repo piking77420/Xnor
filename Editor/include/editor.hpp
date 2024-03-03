@@ -2,9 +2,9 @@
 
 #include <vector>
 
+#include "application.hpp"
 #include "definitions.hpp"
 #include "editor_data.hpp"
-#include "application.hpp"
 
 BEGIN_XNOR_EDITOR
 

@@ -1,16 +1,17 @@
 #pragma once
 
 #include "core.hpp"
+#include "Maths/vector3.hpp"
 #include "scene/component.hpp"
 
 BEGIN_XNOR_CORE
 
 class TestComponent : public Component
 {
-    REFLECTABLE_IMPL(TestComponent)
+    REFLECTABLE_IMPL_MINIMAL(TestComponent)
     
 public:
-    XNOR_ENGINE TestComponent();
+    XNOR_ENGINE TestComponent() = default;
     
     XNOR_ENGINE void Begin() override;
 

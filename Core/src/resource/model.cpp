@@ -72,7 +72,7 @@ void Model::Load(const aiMesh& loadedData)
         m_Indices[baseIndex + 2] = face.mIndices[2];
     }
 
-    if(!HadToComputeAABB(loadedData.mAABB))
+    if(!HadToComputeAabb(loadedData.mAABB))
     {
         m_Aabb.min = Vector3(&loadedData.mAABB.mMin.x);
         m_Aabb.max = Vector3(&loadedData.mAABB.mMax.x);
@@ -111,15 +111,15 @@ uint32_t Model::GetId() const
     return  m_ModelId;
 }
 
-ModelAABB Model::GetAABB() const
+ModelAABB Model::GetAabb() const
 {
     return m_Aabb;
 }
 
-bool Model::HadToComputeAABB(const aiAABB& assimpAABB)
+bool Model::HadToComputeAabb(const aiAABB& assimpAabb)
 {
-    if(assimpAABB.mMax.x == 0.f && assimpAABB.mMax.y == 0.f && assimpAABB.mMax.z == 0.f &&
-        assimpAABB.mMin.x == 0.f && assimpAABB.mMin.y == 0.f && assimpAABB.mMin.z == 0.f)
+    if(assimpAabb.mMax.x == 0.f && assimpAabb.mMax.y == 0.f && assimpAabb.mMax.z == 0.f &&
+        assimpAabb.mMin.x == 0.f && assimpAabb.mMin.y == 0.f && assimpAabb.mMin.z == 0.f)
     {
         for (const Vertex& vertex : m_Vertices)
         {

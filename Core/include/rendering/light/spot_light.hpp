@@ -1,17 +1,18 @@
 ﻿#pragma once
+
 #include "light.hpp"
 
 BEGIN_XNOR_CORE
 
 class SpotLight : public Light
 {
-    REFLECTABLE_IMPL(SpotLight)
+    REFLECTABLE_IMPL_MINIMAL(SpotLight)
 
 public:
     float_t cutOff = 12.5f * Calc::Deg2Rad;	
     float_t outerCutOff = 15.f * Calc::Deg2Rad;
     
-    XNOR_ENGINE SpotLight();
+    XNOR_ENGINE SpotLight() = default;
     
     XNOR_ENGINE ~SpotLight() override = default;
 
