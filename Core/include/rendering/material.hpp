@@ -26,7 +26,9 @@ public:
     
     // Pointer<Shader> shader;
     int32_t materialType;
-    Pointer<Texture> textures;
+    Pointer<Texture> albedo;
+    Pointer<Texture> normalMap;
+
 };
 
 END_XNOR_CORE
@@ -34,5 +36,6 @@ END_XNOR_CORE
 REFL_AUTO(
     type(XnorCore::Material),
     field(materialType),
-    field(textures)
+    field(albedo),
+    field(normalMap)
 );

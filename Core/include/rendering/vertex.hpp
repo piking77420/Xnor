@@ -11,6 +11,8 @@ struct Vertex
 	Vector3 position;
 	Vector3 normal;
 	Vector2 textureCoord;
+	Vector3 tangent;
+	Vector3 bitangent;
 };
 
 END_XNOR_CORE

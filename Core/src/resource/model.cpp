@@ -17,7 +17,7 @@ Model::~Model()
 void Model::Load(const uint8_t* buffer, const int64_t length)
 {
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFileFromMemory(buffer, length, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FindInvalidData | aiProcess_FixInfacingNormals);
+    const aiScene* scene = importer.ReadFileFromMemory(buffer, length, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FindInvalidData | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace);
 
     if (!scene)
     {
@@ -50,7 +50,10 @@ void Model::Load(const aiMesh& loadedData)
         vert.position = Vector3(&loadedData.mVertices[i].x);
         vert.normal = Vector3(&loadedData.mNormals[i].x);
         vert.textureCoord = Vector2(&loadedData.mTextureCoords[0][i].x);
+        vert.tangent = Vector3(&loadedData.mBitangents[i].x);
+        vert.bitangent = Vector3::Cross(vert.normal,vert.tangent);
     }
+    
 
     m_Indices.resize(static_cast<size_t>(loadedData.mNumFaces) * 3);
     

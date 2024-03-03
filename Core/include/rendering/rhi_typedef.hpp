@@ -289,10 +289,18 @@ struct GpuLightData
 
 	DirectionalData directionalData;
 };
+
 struct ShadowMappingData
 {
 	Matrix lightSpaceMatrix;
 	Matrix model;
+};
+
+// modifies in shader
+struct MaterialData
+{
+	int32_t hasAlbedoMap = 0;
+	int32_t hasNormalmap = 0;
 };
 
 enum Gbuffer : int32_t

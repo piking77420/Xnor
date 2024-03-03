@@ -54,6 +54,14 @@ uint32_t Rhi::CreateModel(const std::vector<Vertex>& vertices, const std::vector
 	glVertexArrayAttribBinding(modelInternal.vao, 2, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 2, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex, textureCoord));
 
+	glEnableVertexArrayAttrib(modelInternal.vao, 3);
+	glVertexArrayAttribBinding(modelInternal.vao, 3, 0);
+	glVertexArrayAttribFormat(modelInternal.vao, 3, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, tangent));
+
+	glEnableVertexArrayAttrib(modelInternal.vao, 4);
+	glVertexArrayAttribBinding(modelInternal.vao, 4, 0);
+	glVertexArrayAttribFormat(modelInternal.vao, 4, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, bitangent));
+	
 	glVertexArrayVertexBuffer(modelInternal.vao, 0, modelInternal.vbo, 0, sizeof(Vertex));
 	glVertexArrayElementBuffer(modelInternal.vao, modelInternal.ebo);
 	
@@ -334,12 +342,29 @@ uint32_t Rhi::GetOpenglTextureWrapper(TextureWrapping textureWrapping)
 	return GL_REPEAT;
 }
 
+void Rhi::AllocTexture2D(const uint32_t* textureId, const TextureCreateInfo& textureCreateInfo)
+{
+	glTextureStorage2D(*textureId, 1,
+		GetOpenglInternalFormat(textureCreateInfo.textureInternalFormat),
+		static_cast<GLsizei>(textureCreateInfo.textureSizeWidth),
+		static_cast<GLsizei>(textureCreateInfo.textureSizeHeight)
+	);
+}
 
 void Rhi::CreateTexture2D(uint32_t* const textureId, const TextureCreateInfo& textureCreateInfo)
 {
 	CreateTexture(textureId,TextureType::Texture2D);
-	AllocTexture2D(textureId,textureCreateInfo);
+
+	const GLint openglTextureFilter =  static_cast<GLint>(GetOpenglTextureFilter(textureCreateInfo.textureFiltering));
+	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(textureCreateInfo.textureWrapping));
 	
+	glTextureParameteri(*textureId, GL_TEXTURE_MIN_FILTER,openglTextureFilter);
+	glTextureParameteri(*textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
+	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
+	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
+
+	AllocTexture2D(textureId,textureCreateInfo);
+
 	if (textureCreateInfo.data != nullptr)
 	{
 		glTextureSubImage2D(*textureId, 0, 0, 0,
@@ -348,13 +373,6 @@ void Rhi::CreateTexture2D(uint32_t* const textureId, const TextureCreateInfo& te
 		GetOpenGlTextureFormat(textureCreateInfo.textureFormat), GetOpenglDataType(textureCreateInfo.dataType), textureCreateInfo.data);
 	}
 	
-	const GLint openglTextureFilter =  static_cast<GLint>(GetOpenglTextureFilter(textureCreateInfo.textureFiltering));
-	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(textureCreateInfo.textureWrapping));
-	
-	glTextureParameteri(*textureId, GL_TEXTURE_MIN_FILTER,openglTextureFilter);
-	glTextureParameteri(*textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
-	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
-	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
 	
 	glGenerateTextureMipmap(*textureId);
 }
@@ -372,7 +390,16 @@ void Rhi::BindTexture(const uint32_t unit, const uint32_t textureId)
 
 void Rhi::CreateCubeMap(uint32_t* textureId, const CreateCubeMapInfo& createCubeMapInfo)
 {
-	CreateTexture(textureId,TextureType::TextureCubeMap);	
+	CreateTexture(textureId,TextureType::TextureCubeMap);
+	const GLint openglTextureFilter =  static_cast<GLint>(GetOpenglTextureFilter(createCubeMapInfo.textureFiltering));
+	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(createCubeMapInfo.textureWrapping));
+	glTextureParameteri(*textureId, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
+	glTextureParameteri(*textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
+	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
+	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
+	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_R, openglTextureWrapper);
+
+	
 	glBindTexture(GL_TEXTURE_CUBE_MAP, *textureId);
 	
 	if(createCubeMapInfo.datas == nullptr || createCubeMapInfo.datas == nullptr)
@@ -382,8 +409,7 @@ void Rhi::CreateCubeMap(uint32_t* textureId, const CreateCubeMapInfo& createCube
 	
 	const GLsizei widht = static_cast<GLsizei>(createCubeMapInfo.textureSizeWidth);
 	const GLsizei height = static_cast<GLsizei>(createCubeMapInfo.textureSizeHeight);
-	const GLint openglTextureFilter =  static_cast<GLint>(GetOpenglTextureFilter(createCubeMapInfo.textureFiltering));
-	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(createCubeMapInfo.textureWrapping));
+	
 	
 	for (size_t i = 0; i < createCubeMapInfo.datas->size(); i++)
 	{
@@ -393,23 +419,11 @@ void Rhi::CreateCubeMap(uint32_t* textureId, const CreateCubeMapInfo& createCube
 	   GetOpenglDataType(createCubeMapInfo.dataType), createCubeMapInfo.datas->at(i));
 	}
 	
-	glTextureParameteri(*textureId, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
-	glTextureParameteri(*textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
-	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
-	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
-	glTextureParameteri(*textureId, GL_TEXTURE_WRAP_R, openglTextureWrapper);
-	
+
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
-void Rhi::AllocTexture2D(const uint32_t* textureId, const TextureCreateInfo& textureCreateInfo)
-{
-	glTextureStorage2D(*textureId, 1,
-		GetOpenglInternalFormat(textureCreateInfo.textureInternalFormat),
-		static_cast<GLsizei>(textureCreateInfo.textureSizeWidth),
-		static_cast<GLsizei>(textureCreateInfo.textureSizeHeight)
-	);
-}
+
 
 
 void Rhi::CreateFrameBuffer(uint32_t* const frameBufferId, const RenderPass& renderPass, const std::vector<const Texture*>& attechements)
@@ -866,6 +880,7 @@ void Rhi::Shutdown()
 	delete m_ModelUniform;
 	delete m_LightUniform;
 	delete m_LightShadowMappingUniform;
+	delete m_MaterialUniform;
 }
 
 void Rhi::PrepareUniform()
@@ -885,6 +900,10 @@ void Rhi::PrepareUniform()
 	m_LightShadowMappingUniform = new UniformBuffer;
 	m_LightShadowMappingUniform->Allocate(sizeof(ShadowMappingData), nullptr);
 	m_LightUniform->Bind(3);
+
+	m_MaterialUniform = new UniformBuffer;
+	m_MaterialUniform->Allocate(sizeof(MaterialData),nullptr);
+	m_MaterialUniform->Bind(4);
 
 }
 
@@ -922,6 +941,16 @@ void Rhi::UpdateCameraUniform(const CameraUniformData& cameraUniformData)
 void Rhi::UpdateLight(const GpuLightData& lightData)
 {
 	m_LightUniform->Update(sizeof(GpuLightData), 0, &lightData.nbrOfPointLight);
+}
+
+void Rhi::BindMaterial(const Material& material)
+{
+	MaterialData materialData;
+	
+	materialData.hasAlbedoMap = static_cast<int32_t>(material.albedo.IsValid());
+	materialData.hasNormalmap =  static_cast<int32_t>(material.normalMap.IsValid());
+	constexpr size_t size = sizeof(MaterialData);
+	m_MaterialUniform->Update(size, 0, &materialData);
 }
 
 void Rhi::UpdateShadowMapingData(const ShadowMappingData& shadowMappingData)

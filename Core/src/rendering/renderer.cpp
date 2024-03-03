@@ -272,11 +272,17 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
 		Rhi::UpdateModelUniform(modelData);
 
-		if (meshRenderer->material.textures.IsValid())
-			meshRenderer->material.textures->BindTexture(0);
+		if (meshRenderer->material.albedo.IsValid())
+			meshRenderer->material.albedo->BindTexture(0);
+
+		if (meshRenderer->material.normalMap.IsValid())
+			meshRenderer->material.normalMap->BindTexture(1);
 
 		if (meshRenderer->model.IsValid())
+		{
+			Rhi::BindMaterial(meshRenderer->material);
 			Rhi::DrawModel(meshRenderer->model->GetId());
+		}
 	}
 }
 
@@ -386,7 +392,8 @@ void Renderer::InitResources()
 	m_GBufferShader->CreateInRhi();
 	// Init diffuse Texture for gbuffer
 	m_GBufferShader->Use();
-	m_GBufferShader->SetInt("textureDiffuse", 0);
+	m_GBufferShader->SetInt("material.albedo", 0);
+	m_GBufferShader->SetInt("material.normalMap", 1);
 	m_GBufferShader->Unuse();
 	// EndDeferred
 

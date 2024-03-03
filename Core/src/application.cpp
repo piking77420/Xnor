@@ -1,6 +1,7 @@
 ﻿#include "application.hpp"
 
 #include "screen.hpp"
+#include "file/file_manager.hpp"
 #include "input/input.hpp"
 #include "resource/resource_manager.hpp"
 

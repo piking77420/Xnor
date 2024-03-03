@@ -87,7 +87,7 @@ private:
     int32_t m_DataChannels = 0;
     uint32_t m_Id = 0;
 
-    TextureFiltering m_TextureFiltering = TextureFiltering::Linear;
+    TextureFiltering m_TextureFiltering = TextureFiltering::Nearest;
     TextureWrapping m_TextureWrapping = TextureWrapping::Repeat;
     TextureInternalFormat m_TextureInternalFormat = TextureInternalFormat::Rgba8;
 };

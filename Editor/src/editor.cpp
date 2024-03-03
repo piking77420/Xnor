@@ -17,6 +17,7 @@
 #include "windows/performance.hpp"
 #include "windows/render_window.hpp"
 #include "..\include\windows\hierarchy.hpp"
+#include "file/file_manager.hpp"
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/spot_light.hpp"
 #include "world/world.hpp"
@@ -220,11 +221,11 @@ void Editor::CreateTestScene()
 	
 	meshRenderer->model = ResourceManager::Get<Model>(FileManager::Get("assets/models/viking_room.obj"));
 	Pointer<File>&& vikingRoomTexture = FileManager::Get("assets/textures/viking_room.png");
-	meshRenderer->material.textures = ResourceManager::Get<Texture>(vikingRoomTexture);
-	meshRenderer->material.textures->loadData.flipVertically = true;
-	meshRenderer->material.textures->Unload();
-	meshRenderer->material.textures->Load(vikingRoomTexture);
-	meshRenderer->material.textures->CreateInRhi();
+	meshRenderer->material.albedo = ResourceManager::Get<Texture>(vikingRoomTexture);
+	meshRenderer->material.albedo->loadData.flipVertically = true;
+	meshRenderer->material.albedo->Unload();
+	meshRenderer->material.albedo->Load(vikingRoomTexture);
+	meshRenderer->material.albedo->CreateInRhi();
 
 	Entity& ent2 = *World::world->Scene.CreateEntity("DirectionalLight");
 	PointLight* pointLight = ent2.AddComponent<PointLight>();
@@ -235,7 +236,7 @@ void Editor::CreateTestScene()
 	Entity& ent3 = *World::world->Scene.CreateEntity("Plane");
 	meshRenderer = ent3.AddComponent<MeshRenderer>();
 	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
-	meshRenderer->material.textures = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/wood.jpg"));
+	meshRenderer->material.albedo = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/wood.jpg"));
 	ent3.transform.scale = { 10.f, 0.1f, 10.f };
 	ent3.transform.position -= { 0.f, -0.2f, 0.f};
 	
@@ -243,7 +244,7 @@ void Editor::CreateTestScene()
 	ent4.transform.position = { 2.f, 0, 2.f};
 	meshRenderer = ent4.AddComponent<MeshRenderer>();
 	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
-	meshRenderer->material.textures = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/diamond_block.jpg"));
+	meshRenderer->material.albedo = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/diamond_block.jpg"));
 
 	std::array<std::string,6> testCubeMap
 	{
