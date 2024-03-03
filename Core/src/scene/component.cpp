@@ -1,14 +1,14 @@
 ﻿#include "scene/component.hpp"
+#include "serialization/serializer.hpp"
 
-XnorCore::Component::Component()
+using namespace XnorCore;
+
+REFLECTABLE_IMPL_CPP(Component)
+
+void Component::Begin()
 {
-    CreateTypeInfo();
 }
 
-void XnorCore::Component::Begin()
-{
-}
-
-void XnorCore::Component::Update()
+void Component::Update()
 {
 }

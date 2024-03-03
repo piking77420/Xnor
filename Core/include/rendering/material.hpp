@@ -3,9 +3,7 @@
 #include <vector>
 
 #include "core.hpp"
-#include "resource/shader.hpp"
 #include "resource/texture.hpp"
-#include "serialization/serializer.hpp"
 #include "utils/pointer.hpp"
 #include "utils/reflectable.hpp"
 
@@ -19,11 +17,9 @@ enum MaterialType
 
 struct Material : Reflectable
 {
-    REFLECTABLE_IMPL(Material)
+    REFLECTABLE_IMPL_MINIMAL(Material)
     
 public:
-    Material();
-    
     // Pointer<Shader> shader;
     int32_t materialType;
     Pointer<Texture> textures;

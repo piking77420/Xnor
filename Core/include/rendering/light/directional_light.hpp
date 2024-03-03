@@ -6,7 +6,7 @@ BEGIN_XNOR_CORE
 
 class DirectionalLight : public Light
 {
-    REFLECTABLE_IMPL(DirectionalLight)
+    REFLECTABLE_IMPL_MINIMAL(DirectionalLight)
 
 public:
     XNOR_ENGINE DirectionalLight();

@@ -161,7 +161,7 @@ void EditorCamera::OnPressGoToObject()
     }
     else
     {
-        const XnorCore::ModelAABB&& aabb = meshRenderer->model->GetAABB();
+        const XnorCore::ModelAABB&& aabb = meshRenderer->model->GetAabb();
         const Vector3 radiusVec = aabb.max - aabb.min;
         Vector4 radiusPreScale = Vector4(radiusVec.x, radiusVec.y, radiusVec.z, 1.0f);
         radiusPreScale = Matrix::Trs(Vector3(0.f), Quaternion::Identity(), currentEntiy.transform.scale) * radiusPreScale;

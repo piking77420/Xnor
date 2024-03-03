@@ -1,6 +1,6 @@
 #include "scene/component/mesh_renderer.hpp"
+#include "serialization/serializer.hpp"
 
-XnorCore::MeshRenderer::MeshRenderer()
-{
-    CreateTypeInfo();
-}
+using namespace XnorCore;
+
+REFLECTABLE_IMPL_CPP(MeshRenderer)

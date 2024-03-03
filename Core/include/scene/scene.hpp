@@ -9,7 +9,7 @@ BEGIN_XNOR_CORE
 
 class Scene : public Reflectable
 {
-    REFLECTABLE_IMPL(Scene)
+    REFLECTABLE_IMPL_H(Scene)
     
 public:
     XNOR_ENGINE Scene();

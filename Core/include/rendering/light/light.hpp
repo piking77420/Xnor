@@ -8,7 +8,7 @@ BEGIN_XNOR_CORE
 
 class Light : public Component
 {
-    REFLECTABLE_IMPL(Light)
+    REFLECTABLE_IMPL_MINIMAL(Light)
     
 public:
     Vector3 color = Vector3(1.f);

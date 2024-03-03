@@ -1,6 +1,6 @@
 ﻿#include "rendering/light/point_light.hpp"
+#include "serialization/serializer.hpp"
 
-XnorCore::PointLight::PointLight()
-{
-    CreateTypeInfo();
-}
+using namespace XnorCore;
+
+REFLECTABLE_IMPL_CPP(PointLight)

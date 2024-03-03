@@ -426,7 +426,7 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 			continue;
 		
 		const Transform& transform =  meshRenderer->entity->transform;
-		const ModelAABB&& modelAabb = meshRenderer->model->GetAABB();
+		const ModelAABB&& modelAabb = meshRenderer->model->GetAabb();
 		
 		const Vector3 aabbMinMax = (modelAabb.max - modelAabb.min) * 0.5f;
 		const Vector3 aabbSize = { aabbMinMax.x * transform.scale.x, aabbMinMax.y * transform.scale.y, aabbMinMax.z * transform.scale.z };

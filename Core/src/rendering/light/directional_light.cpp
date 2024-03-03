@@ -1,6 +1,6 @@
 ﻿#include "rendering/light/directional_light.hpp"
+#include "serialization/serializer.hpp"
 
-XnorCore::DirectionalLight::DirectionalLight()
-{
-    CreateTypeInfo();
-}
+using namespace XnorCore;
+
+REFLECTABLE_IMPL_CPP(DirectionalLight);

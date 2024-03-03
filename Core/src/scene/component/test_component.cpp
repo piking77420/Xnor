@@ -5,10 +5,7 @@
 
 using namespace XnorCore;
 
-TestComponent::TestComponent()
-{
-    CreateTypeInfo();
-}
+REFLECTABLE_IMPL_CPP(TestComponent)
 
 void TestComponent::Begin()
 {

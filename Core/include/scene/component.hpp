@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "core.hpp"
-#include "serialization/serializer.hpp"
 #include "utils/reflectable.hpp"
 
 BEGIN_XNOR_CORE
@@ -10,12 +9,12 @@ class Entity;
 
 class XNOR_ENGINE Component : public Reflectable
 {
-    REFLECTABLE_IMPL(Component)
+    REFLECTABLE_IMPL_MINIMAL(Component)
     
 public:
     Entity* entity = nullptr;
 
-    Component();
+    Component() = default;
     
     ~Component() override = default;
 

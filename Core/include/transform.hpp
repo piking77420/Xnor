@@ -15,7 +15,7 @@ BEGIN_XNOR_CORE
 
 class Transform final : public Reflectable
 {
-	REFLECTABLE_IMPL(Transform)
+	REFLECTABLE_IMPL_MINIMAL(Transform)
 
 public:
 	Vector3 GetWorldPos();
