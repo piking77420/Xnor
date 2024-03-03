@@ -16,8 +16,8 @@ Texture::Texture(const TextureCreateInfo& createInfo)
     m_LoadedInRhi = true;
 }
 
-Texture::Texture(const TextureInternalFormat textureFormat, const Vector2i size) : m_Data(nullptr)
-  , m_Size(size) , m_TextureInternalFormat(textureFormat)
+Texture::Texture(const TextureInternalFormat textureInternalFormat, const Vector2i size) : m_Data(nullptr)
+  , m_Size(size) , m_TextureInternalFormat(textureInternalFormat)
 {
     const TextureCreateInfo createInfo
     {
@@ -26,7 +26,7 @@ Texture::Texture(const TextureInternalFormat textureFormat, const Vector2i size)
         static_cast<uint32_t>(size.y),
         m_TextureFiltering,
         m_TextureWrapping,
-        TextureFormat::Rgb,
+        m_TextureFormat,
         m_TextureInternalFormat
     };
     
@@ -51,12 +51,13 @@ void Texture::Load(const uint8_t* buffer, const int64_t length)
 {
     stbi_set_flip_vertically_on_load(loadData.flipVertically);
     m_Data = stbi_load_from_memory(buffer, static_cast<int32_t>(length), &m_Size.x, &m_Size.y, &m_DataChannels, loadData.desiredChannels);
-    
+    m_TextureFormat = Rhi::GetFormat(m_DataChannels);
     m_Loaded = true;
 }
 
 void Texture::CreateInRhi()
 {
+
     const TextureCreateInfo textureCreateInfo
     {
         m_Data,
@@ -64,7 +65,7 @@ void Texture::CreateInRhi()
         static_cast<uint32_t>(m_Size.y),
         m_TextureFiltering,
         m_TextureWrapping,
-        Rhi::GetFormat(m_DataChannels),
+        m_TextureFormat,
         m_TextureInternalFormat,
         DataType::UnsignedByte
     };
@@ -118,5 +119,25 @@ void Texture::UnbindTexture(uint32_t index) const
 uint32_t Texture::GetId() const
 {
     return m_Id;
+}
+
+const TextureFiltering Texture::GetTextureFiltering() const
+{
+    return m_TextureFiltering;
+}
+
+const TextureWrapping Texture::GetTextureWrapping() const
+{
+    return  m_TextureWrapping;
+}
+
+const TextureInternalFormat Texture::GetInternalFormat() const
+{
+    return m_TextureInternalFormat;
+}
+
+const TextureFormat Texture::GetTextureFormat() const
+{
+    return m_TextureFormat;
 }
 

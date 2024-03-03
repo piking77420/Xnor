@@ -54,6 +54,8 @@ public:
 	XNOR_ENGINE static void BindFrameBuffer(uint32_t frameBufferId);
 	XNOR_ENGINE static void UnbindFrameBuffer();
 
+	XNOR_ENGINE static void ReadAttachement(uint32_t attachmentIndex,int32_t x, int32_t y,TextureFormat textureFormat,TextureInternalFormat textureInternalFormat,void* output);
+
 	XNOR_ENGINE static void SwapBuffers();
 	
 	XNOR_ENGINE static void Initialize();

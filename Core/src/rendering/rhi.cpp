@@ -520,6 +520,23 @@ void Rhi::UnbindFrameBuffer()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void Rhi::ReadAttachement(
+	uint32_t attachmentIndex,
+	const int32_t x,
+	const int32_t y,
+	const TextureFormat textureFormat,
+	const TextureInternalFormat textureInternalFormat,
+	void* output
+)
+{
+	const GLenum format = GetOpenGlTextureFormat(textureFormat);
+	const GLenum internalFormat = GetOpenglInternalFormat(textureInternalFormat);
+	
+	glReadBuffer(GL_COLOR_ATTACHMENT0 + static_cast<GLint>(attachmentIndex)); 
+	glReadPixels(x, y, 1, 1, format, GL_UNSIGNED_BYTE, output);
+
+}
+
 void Rhi::SwapBuffers()
 {
 	glfwSwapBuffers(Window::GetHandle());

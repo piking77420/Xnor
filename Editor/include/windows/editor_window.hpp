@@ -16,7 +16,7 @@ public:
     DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(EditorWindow)
 
     void Display() override;
-    
+
 protected:
     void Initialize(Vector2i size) override;
     

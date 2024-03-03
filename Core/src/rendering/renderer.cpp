@@ -293,7 +293,7 @@ void Renderer::InitDefferedRenderingAttachment(const Vector2i windowSize)
 
 	m_PositionAtttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);
 	m_NormalAttachement = new Texture(TextureInternalFormat::Rgb16F, windowSize);
-	m_AlbedoAtttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);
+	m_AlbedoAttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);
 	m_DepthGbufferAtttachment = new Texture(TextureInternalFormat::DepthComponent16, windowSize);
 	
 	const std::vector<RenderTargetInfo> attachementsType =
@@ -323,7 +323,7 @@ void Renderer::InitDefferedRenderingAttachment(const Vector2i windowSize)
 	// Set Up renderPass
 	const RenderPass renderPass(attachementsType);
 
-	const std::vector<const Texture*> targets = { m_PositionAtttachment, m_NormalAttachement, m_AlbedoAtttachment, m_DepthGbufferAtttachment};
+	const std::vector<const Texture*> targets = { m_PositionAtttachment, m_NormalAttachement, m_AlbedoAttachment, m_DepthGbufferAtttachment};
 	m_GframeBuffer->Create(renderPass,targets);
 	
 	// Init gbuffer Texture
@@ -333,7 +333,7 @@ void Renderer::InitDefferedRenderingAttachment(const Vector2i windowSize)
 	
 	m_NormalAttachement->BindTexture(GbufferNormal);
 	
-	m_AlbedoAtttachment->BindTexture(GbufferAlbedo);
+	m_AlbedoAttachment->BindTexture(GbufferAlbedo);
 	
 	m_GBufferShaderLit->Unuse();
 }
@@ -350,7 +350,7 @@ void Renderer::InitForwardRenderingAttachment(const Vector2i windowSize)
 			.attachment = Attachment::Color01,
 			.draw = true,
 			.isClearing = true
-		},
+		},	
 		{
 			.attachment = Attachment::Depth,
 			.draw = false,
@@ -368,7 +368,7 @@ void Renderer::DestroyAttachment() const
 {
 	delete m_GframeBuffer;
 	delete m_PositionAtttachment;
-	delete m_AlbedoAtttachment;
+	delete m_AlbedoAttachment;
 	delete m_NormalAttachement;
 	delete m_DepthGbufferAtttachment; 
 	

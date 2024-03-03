@@ -58,7 +58,8 @@ private:
     // Deferred attachment GBuffers
     Texture* m_PositionAtttachment = nullptr;
     Texture* m_NormalAttachement = nullptr;
-    Texture* m_AlbedoAtttachment = nullptr;
+    Texture* m_AlbedoAttachment = nullptr;
+    
     Texture* m_DepthGbufferAtttachment = nullptr;
     RenderPass m_GbufferPass;
     

@@ -55,7 +55,7 @@ void RenderWindow::Initialize(Vector2i size)
     
     // Init Rendering
     m_FrameBuffer = FrameBuffer(size);
-    m_ColorTexture = new Texture(TextureInternalFormat::Rgba16F, m_FrameBuffer.GetSize());
+    m_ColorTexture = new Texture(TextureInternalFormat::Rgb16, m_FrameBuffer.GetSize());
 
     // Set Up renderPass
     const RenderPass renderPass(attachementsType);

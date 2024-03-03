@@ -14,7 +14,6 @@ EditorWindow::EditorWindow(Editor* editor)
 void EditorWindow::Display()
 {
     RenderWindow::Display();
-
     if (IsFocused())
     {
         m_EditorCamera.UpdateCamera(*m_Editor, m_Editor->data.editorCam);

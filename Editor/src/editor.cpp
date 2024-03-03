@@ -228,10 +228,15 @@ void Editor::CreateTestScene()
 	meshRenderer->material.albedo->CreateInRhi();
 
 	Entity& ent2 = *World::world->Scene.CreateEntity("DirectionalLight");
-	PointLight* pointLight = ent2.AddComponent<PointLight>();
-	pointLight->color = { 1.f, 1.f, 1.f };
-	ent2.AddComponent<TestComponent>();
-	ent2.transform.position = { 0.f, 1.f, 0.f };
+	DirectionalLight* dirlight = ent2.AddComponent<DirectionalLight>();
+	dirlight->intensity = 0.2f;
+	dirlight->color = { 1.f, 1.f, 1.f };
+
+	Entity& pointLightentity = *World::world->Scene.CreateEntity("PointLight");
+	PointLight* pointLight = pointLightentity.AddComponent<PointLight>();
+	pointLight->color = { 7.f, 0.f, 3.f };
+	pointLightentity.AddComponent<TestComponent>();
+	pointLightentity.transform.position = { 0.f, 2.f, -2.f };
 	
 	Entity& ent3 = *World::world->Scene.CreateEntity("Plane");
 	meshRenderer = ent3.AddComponent<MeshRenderer>();
@@ -315,6 +320,7 @@ void Editor::Update()
 		Input::HandleEvent();
 		BeginFrame();
 		OnWindowRezize();
+
 
 		ImGui::Begin("Renderer Settings");
 		if (ImGui::Button("Recompile Shader"))

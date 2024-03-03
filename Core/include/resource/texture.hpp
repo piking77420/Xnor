@@ -81,6 +81,14 @@ public:
     [[nodiscard]]
     XNOR_ENGINE uint32_t GetId() const;
 
+    XNOR_ENGINE const TextureFiltering GetTextureFiltering() const;
+
+    XNOR_ENGINE const TextureWrapping GetTextureWrapping() const;
+    
+    XNOR_ENGINE const TextureInternalFormat GetInternalFormat() const;
+
+    XNOR_ENGINE const TextureFormat GetTextureFormat() const;
+
 private:
     uint8_t* m_Data = nullptr;
     Vector2i m_Size;
@@ -90,6 +98,7 @@ private:
     TextureFiltering m_TextureFiltering = TextureFiltering::Nearest;
     TextureWrapping m_TextureWrapping = TextureWrapping::Repeat;
     TextureInternalFormat m_TextureInternalFormat = TextureInternalFormat::Rgba8;
+    TextureFormat m_TextureFormat = TextureFormat::Rgb;
 };
 
 template<typename T>
