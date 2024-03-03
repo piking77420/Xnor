@@ -29,7 +29,7 @@ public:
 	XNOR_ENGINE static void DrawModel(uint32_t modelId); 
 	
 	// Shader
-	XNOR_ENGINE static void DestroyShader(uint32_t shaderId);
+	XNOR_ENGINE static void DestroyProgram(uint32_t shaderId);
 	XNOR_ENGINE static void CheckCompilationError(uint32_t shaderId, const std::string& type);
 	XNOR_ENGINE static uint32_t CreateShaders(const std::vector<ShaderCode>& shaderCodes,const ShaderCreateInfo& shaderCreateInfo);
 	XNOR_ENGINE static void UseShader(uint32_t shaderId);
@@ -93,7 +93,6 @@ private:
 	
 	struct ShaderInternal
 	{
-		uint32_t id;
 		DepthFunction depthFunction;
 		std::map<std::string, uint32_t> uniformMap;
 	};

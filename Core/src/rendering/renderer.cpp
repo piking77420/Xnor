@@ -374,9 +374,7 @@ void Renderer::DestroyAttachment() const
 void Renderer::InitResources()
 {
 	// Deferred 
-	m_GBufferShader = ResourceManager::Get<Shader>("gbuffer");
 	m_GBufferShaderLit = ResourceManager::Get<Shader>("deferred_opaque");
-	m_GBufferShader->CreateInRhi();
 	m_GBufferShaderLit->CreateInRhi();
 	m_GBufferShaderLit->Use();
 	m_GBufferShaderLit->SetInt("gPosition", GbufferPosition);
@@ -384,6 +382,8 @@ void Renderer::InitResources()
 	m_GBufferShaderLit->SetInt("gAlbedoSpec", GbufferAlbedo);
 	m_GBufferShaderLit->Unuse();
 	
+	m_GBufferShader = ResourceManager::Get<Shader>("gbuffer");
+	m_GBufferShader->CreateInRhi();
 	// Init diffuse Texture for gbuffer
 	m_GBufferShader->Use();
 	m_GBufferShader->SetInt("textureDiffuse", 0);
@@ -391,8 +391,8 @@ void Renderer::InitResources()
 	// EndDeferred
 
 	// Forward
-	m_BasicShader = ResourceManager::Get<Shader>("basic_shader");
-	m_BasicShader->CreateInRhi();
+	m_Forward = ResourceManager::Get<Shader>("basic_shader");
+	m_Forward->CreateInRhi();
 
 	m_DrawTextureToScreenShader = ResourceManager::Get<Shader>("draw_texture_to_screen");
 	m_DrawTextureToScreenShader->CreateInRhi();

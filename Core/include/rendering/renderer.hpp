@@ -71,7 +71,7 @@ private:
     Pointer<Shader> m_GBufferShader;
     Pointer<Shader> m_GBufferShaderLit;
     
-    Pointer<Shader> m_BasicShader;
+    Pointer<Shader> m_Forward;
     Pointer<Shader> m_DrawTextureToScreenShader;
     Pointer<Shader> m_GizmoShader;
     

@@ -55,7 +55,7 @@ void Shader::CreateInRhi()
 
 void Shader::DestroyInRhi()
 {
-    Rhi::DestroyShader(m_Id);
+    Rhi::DestroyProgram(m_Id);
     m_Id = 0;
     m_LoadedInRhi = false;
 }

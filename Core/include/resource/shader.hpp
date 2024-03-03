@@ -71,11 +71,11 @@ public:
 	XNOR_ENGINE void SetMat4(const std::string& keyName, const Matrix& value) const;
 	
 	[[nodiscard]]
-	uint32_t GetId() const;
+	XNOR_ENGINE uint32_t GetId() const;
 
-	void Use() const;
+	XNOR_ENGINE void Use() const;
 
-	void Unuse() const;
+	XNOR_ENGINE void Unuse() const;
 
 	// Should call it before Creating in rhi if you want to specialize a depthFunction;
 	void SetDepthFunction(DepthFunction depthFunction);

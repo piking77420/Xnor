@@ -85,11 +85,10 @@ void Rhi::DrawModel(const uint32_t modelId)
 	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(model.nbrOfIndicies), GL_UNSIGNED_INT, nullptr);
 }
 
-void Rhi::DestroyShader(const uint32_t shaderId)
+void Rhi::DestroyProgram(const uint32_t shaderId)
 {
 	IsShaderValid(shaderId);
-	
-	glDeleteShader(shaderId);
+	glDeleteProgram(shaderId);
 }
 
 void Rhi::CheckCompilationError(const uint32_t shaderId, const std::string& type)
@@ -118,10 +117,10 @@ void Rhi::CheckCompilationError(const uint32_t shaderId, const std::string& type
 
 uint32_t Rhi::CreateShaders(const std::vector<ShaderCode>& shaderCodes,const ShaderCreateInfo& shaderCreateInfo)
 {
-	uint32_t programId = glCreateProgram();
-	
+	const uint32_t programId = glCreateProgram();
 	std::vector<uint32_t> shaderIds(shaderCodes.size());
 	
+
 	for (size_t i = 0; i < shaderCodes.size(); i++)
 	{
 		const ShaderCode& code = shaderCodes[i];
@@ -143,7 +142,7 @@ uint32_t Rhi::CreateShaders(const std::vector<ShaderCode>& shaderCodes,const Sha
 	shaderInternal.depthFunction = shaderCreateInfo.depthFunction;
 	
 	m_ShaderMap.emplace(programId,shaderInternal);
-
+	
 	return programId;
 }
 
@@ -357,7 +356,7 @@ void Rhi::CreateFrameBuffer(uint32_t* const frameBufferId, const RenderPass& ren
 		GLenum openglAttachment = 0 ;
 		switch (renderTargetInfos[i].attachment)
 		{
-			case Attachment::Color01:
+			case Attachment::Color01:  // NOLINT(bugprone-branch-clone)
 				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
 				break;
 			
@@ -611,7 +610,7 @@ uint32_t Rhi::GetOpenGlTextureFormat(const TextureFormat textureFormat)
 
 void Rhi::IsShaderValid(const uint32_t shaderId)
 {
-	if (!m_ShaderMap.contains(shaderId))
+	if (!m_ShaderMap.contains(shaderId) || !glIsProgram(shaderId))
 	{
 		Logger::LogFatal("No shader with id #{}", shaderId);
 		throw std::runtime_error("No shader with this id");
@@ -667,8 +666,8 @@ void Rhi::OpenglDebugCallBack([[maybe_unused]] const uint32_t source,
     if (id == 131169 || id == 131185 || id == 131218 || id == 131204)
     	return; 
 
-	Logger::LogError("---------------");
-	Logger::LogError("Debug message ({} ): {}", id,message);
+	Logger::LogError("---------------");  // NOLINT(clang-diagnostic-misleading-indentation)
+	Logger::LogError("Debug message ({}): {}", id,message);
 	
     switch (source)
     {
