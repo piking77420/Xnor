@@ -8,13 +8,13 @@
 
 using namespace XnorCore;
 
-void Cubemap::Load([[maybe_unused]] const uint8_t* buffer, [[maybe_unused]] int64_t length)
+void Cubemap::Load(const uint8_t*, int64_t)
 {
     // TO do how to manager 6 resource texture with one buffer
     Logger::LogError("Non Implemented function");
 }
 
-void Cubemap::Load([[maybe_unused]] const Pointer<File>& file)
+void Cubemap::Load(const Pointer<File>&)
 {
     // Could work with meta data file
     Logger::LogError("Non Implemented function");
@@ -46,9 +46,9 @@ void Cubemap::DestroyInRhi()
 
 void Cubemap::Unload()
 {
-    for (uint32_t i = 0; i < m_Datas.size(); i++)
+    for (const auto& data : m_Datas)
     {
-        stbi_image_free(m_Datas[i]); 
+        stbi_image_free(data);
     }
 
     m_Loaded = false;
@@ -56,9 +56,10 @@ void Cubemap::Unload()
 
 Cubemap::Cubemap(const std::array<std::string, 6>& cubeMapsTextures)
 {
+    stbi_set_flip_vertically_on_load(false);
     for (size_t i = 0; i < cubeMapsTextures.size(); i++)
     {
-       m_Datas[i] = stbi_load(cubeMapsTextures[i].c_str(), &m_CubeMapSize.x, &m_CubeMapSize.y, &m_DataChannels, 0);
+        m_Datas[i] = stbi_load(cubeMapsTextures[i].c_str(), &m_CubeMapSize.x, &m_CubeMapSize.y, &m_DataChannels, 0);
     }
     m_Loaded = true;
 }

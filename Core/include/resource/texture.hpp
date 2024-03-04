@@ -19,8 +19,9 @@ struct TextureLoadData
 class Texture : public Resource
 {
 public:
-    XNOR_ENGINE static inline constexpr std::array<const char_t*, 10> FileExtensions
+    XNOR_ENGINE static inline constexpr std::array<const char_t*, 11> FileExtensions
     {
+        ".jpg",
         ".jpeg",
         ".png",
         ".bmp",

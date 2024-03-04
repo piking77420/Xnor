@@ -114,6 +114,7 @@ void Editor::BeginDockSpace() const
 	ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), dockspaceFlags);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeStatic
 void Editor::EndDockSpace() const
 {
 	ImGui::End();
@@ -211,6 +212,7 @@ void Editor::SetupImGuiStyle() const
 	style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.800000011920929f, 0.800000011920929f, 0.800000011920929f, 0.3499999940395355f);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeStatic
 void Editor::CreateTestScene()
 {
 	using namespace XnorCore;
@@ -242,7 +244,7 @@ void Editor::CreateTestScene()
 	Entity& ent3 = *World::world->Scene.CreateEntity("Plane");
 	meshRenderer = ent3.AddComponent<MeshRenderer>();
 	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
-	meshRenderer->material.albedo = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/wood.jpg"));
+	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/wood.jpg");
 	ent3.transform.scale = { 10.f, 0.1f, 10.f };
 	ent3.transform.position -= { 0.f, -0.2f, 0.f};
 	
@@ -250,16 +252,16 @@ void Editor::CreateTestScene()
 	ent4.transform.position = { 2.f, 0, 2.f};
 	meshRenderer = ent4.AddComponent<MeshRenderer>();
 	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
-	meshRenderer->material.albedo = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/diamond_block.jpg"));
+	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/diamond_block.jpg");
 
-	std::array<std::string,6> testCubeMap
+	const std::array<std::string, 6> testCubeMap
 	{
-	  	"assets/skybox/right.jpg",
-		  "assets/skybox/left.jpg",
-		  "assets/skybox/top.jpg",
-		  "assets/skybox/bottom.jpg",
-		  "assets/skybox/front.jpg",
-		  "assets/skybox/back.jpg"
+		"assets/skybox/right.jpg",
+		"assets/skybox/left.jpg",
+		"assets/skybox/top.jpg",
+		"assets/skybox/bottom.jpg",
+		"assets/skybox/front.jpg",
+		"assets/skybox/back.jpg"
 	};
 	World::world->skybox.LoadCubeMap(testCubeMap);
 }
