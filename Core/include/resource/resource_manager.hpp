@@ -19,7 +19,7 @@ class ResourceManager final
     STATIC_CLASS(ResourceManager)
     
 public:
-    static constexpr std::string ReservedShaderPrefix = "_shaders/";
+    static constexpr const char_t* ReservedShaderPrefix = "_shaders/";
     
     /// @brief Creates the @ref Resource corresponding to the given @p name without loading it.
     template <ResourceT T>

@@ -4,8 +4,11 @@
 #include <ImGui/imgui_impl_glfw.h>
 #include <ImGui/imgui_impl_opengl3.h>
 
+#include "file/file_manager.hpp"
 #include "input/time.hpp"
+#include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
+#include "rendering/light/spot_light.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/component/mesh_renderer.hpp"
 #include "scene/component/test_component.hpp"
@@ -13,13 +16,10 @@
 #include "windows/content_browser.hpp"
 #include "windows/editor_window.hpp"
 #include "windows/header_window.hpp"
+#include "windows/hierarchy.hpp"
 #include "windows/inspector.hpp"
 #include "windows/performance.hpp"
 #include "windows/render_window.hpp"
-#include "..\include\windows\hierarchy.hpp"
-#include "file/file_manager.hpp"
-#include "rendering/light/directional_light.hpp"
-#include "rendering/light/spot_light.hpp"
 #include "world/world.hpp"
 
 using namespace XnorEditor;
@@ -274,7 +274,18 @@ void Editor::MenuBar() const
 		{
 			if (ImGui::MenuItem("Save"))
 			{
-				XnorCore::Serializer::StartSerialization(data.currentScene != nullptr ? data.currentScene->GetPathString() : SerializedScenePath);
+				std::string path;
+				if (data.currentScene == nullptr)
+				{
+					if (!std::filesystem::exists("assets/scenes"))
+						std::filesystem::create_directories("assets/scenes");
+					path = SerializedScenePath;
+				}
+				else
+				{
+					path = data.currentScene->GetPathString();
+				}
+				XnorCore::Serializer::StartSerialization(path);
 				XnorCore::World::world->Scene.Serialize();
 				XnorCore::Serializer::EndSerialization();
 			}

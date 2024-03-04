@@ -28,7 +28,7 @@ public:
 	void OnWindowRezize() override;
 	
 private:
-	static constexpr std::string SerializedScenePath = "assets/scenes/basic_scene.scene.xml";
+	static constexpr const char_t* SerializedScenePath = "assets/scenes/basic_scene.scene.xml";
 	
 	XnorCore::RendererContext m_GameRenderContext;
 	XnorCore::RendererContext m_EditorRenderContext;
