@@ -7,6 +7,9 @@
 #include "gamepad_input.hpp"
 #include "window.hpp"
 
+/// @file input.hpp
+/// @brief Defines the @ref GamepadInput struct and the @ref GamepadAxes and @ref GamepadButton enumerations.
+
 BEGIN_XNOR_CORE
 
 enum class Key : uint16_t

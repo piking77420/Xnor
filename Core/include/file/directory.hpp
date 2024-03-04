@@ -13,6 +13,9 @@ BEGIN_XNOR_CORE
 
 class File;
 
+/// @brief Defines a directory on the filesystem.
+///
+/// This is meant to be used with @ref Pointer "Pointers" and with the @ref FileManager.
 class Directory : public Entry
 {
 public:

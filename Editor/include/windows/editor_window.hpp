@@ -12,7 +12,7 @@ public:
 
     ~EditorWindow() override = default;
 
-    DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(EditorWindow)
+    DEFAULT_COPY_MOVE_OPERATIONS(EditorWindow)
 
     void Display() override;
 

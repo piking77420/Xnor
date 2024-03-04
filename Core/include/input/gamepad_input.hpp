@@ -5,16 +5,21 @@
 #include "core.hpp"
 #include <array>
 
+/// @file gamepad_input.hpp
+/// @brief Defines gamepad input types and enumerations.
+/// 
+/// Defines the @ref GamepadInput struct and the @ref GamepadAxes and @ref GamepadButton enumerations.
+
 BEGIN_XNOR_CORE
 
-enum class GamePadAxes : uint32_t
+enum class GamepadAxes : uint32_t
 {
     LeftStickHorizontalAxis,
     LeftStickVerticalAxis,
     RightStickHorizontalAxis,
     RightStickVerticalAxis,
-    GamePadLTAxis,
-    GamePadRTAxis,
+    GamepadLtAxis,
+    GamepadRtAxis,
 
     Count
 };
@@ -36,8 +41,8 @@ enum class GamepadButton
     GamepadButtonDpadRight,     
     GamepadButtonDpadDown,      
     GamepadButtonDpadLeft, 
-    GamepadButtonLast        =    GamepadButtonDpadLeft,
-    GamepadButtonCross      =  GamepadButtonA,
+    GamepadButtonLast       = GamepadButtonDpadLeft,
+    GamepadButtonCross      = GamepadButtonA,
     GamepadButtonCircle     = GamepadButtonB,
     GamepadButtonSquare     = GamepadButtonX,
     GamepadButtonTriangle   = GamepadButtonY,
@@ -50,7 +55,7 @@ constexpr double_t NullAnalogValue = 1.5259022e-05;
 struct GamepadInput
 {
     bool isConnected = false;
-    std::array<float_t,static_cast<uint32_t>(GamePadAxes::Count)> m_AxesValue;
+    std::array<float_t,static_cast<uint32_t>(GamepadAxes::Count)> axesValue;
 };
 
 END_XNOR_CORE

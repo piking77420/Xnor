@@ -34,7 +34,7 @@ public:
     
     virtual ~Reflectable() = default;
 
-    DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(Reflectable)
+    DEFAULT_COPY_MOVE_OPERATIONS(Reflectable)
     
     virtual void CreateTypeInfo() const = 0;
 

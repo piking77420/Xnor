@@ -21,7 +21,7 @@ public:
 
 	~Editor() override;
 
-	DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(Editor)
+	DEFAULT_COPY_MOVE_OPERATIONS(Editor)
 	
 	void Update() override;
 

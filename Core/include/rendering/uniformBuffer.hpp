@@ -11,7 +11,7 @@ public:
     
     ~UniformBuffer();
 
-    DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(UniformBuffer)
+    DEFAULT_COPY_MOVE_OPERATIONS(UniformBuffer)
 
     void Allocate(size_t size,const void* data) const;
 
