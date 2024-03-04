@@ -6,7 +6,10 @@
 BEGIN_XNOR_CORE
 
 /// @brief Thread-Safe Queue
+/// 
 /// @tparam T The type of data to store.
+///
+/// @see <a href="https://en.cppreference.com/w/cpp/container/queue">std::queue</a>
 template <typename T>
 class TsQueue  // NOLINT(cppcoreguidelines-special-member-functions)
 {

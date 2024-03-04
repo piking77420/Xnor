@@ -12,9 +12,7 @@ BEGIN_XNOR_CORE
 
 /// @brief Used to default-construct the value of a @ref Pointer.
 /// @see @ref Pointer::Pointer(Construct)
-struct Construct
-{
-};
+struct Construct {};
 
 /// @brief Custom XNOR smart pointer.
 ///        Represents both a @c std::shared_ptr and a @c std::weak_ptr.
