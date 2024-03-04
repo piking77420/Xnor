@@ -16,7 +16,7 @@
 #include "utils/guid.hpp"
 #include "utils/logger.hpp"
 #include "utils/meta_programming.hpp"
-#include "utils/reflectable.hpp"
+#include "utils/serializable.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -48,7 +48,7 @@ public:
     static void FetchAttribute(const std::string& attributeName, const T& value);
 
     template <typename ReflectT>
-    static void Serialize(const ReflectT* obj, bool isRoot);
+    static void Serialize(const ReflectT* obj, bool_t isRoot);
 
     template <typename ReflectT>
     static void Deserialize(ReflectT* obj);
@@ -87,7 +87,7 @@ private:
 template <typename T>
 void Serializer::FetchAttribute(const std::string& attributeName, const T& value)
 {
-    if constexpr (std::is_same_v<std::string, T> || std::is_same_v<const char*, T>)
+    if constexpr (Meta::IsSame<std::string, T> || Meta::IsSame<const char*, T>)
     {
         FetchAttributeInternal(attributeName, value);
     }
@@ -99,9 +99,9 @@ void Serializer::FetchAttribute(const std::string& attributeName, const T& value
 }
 
 template <typename ReflectT>
-void Serializer::Serialize(const ReflectT* const obj, const bool isRoot)
+void Serializer::Serialize(const ReflectT* const obj, const bool_t isRoot)
 {
-    constexpr TypeDescriptor<ReflectT> desc = TypeInfo::Get<ReflectT>();
+    constexpr TypeDescriptor<ReflectT> desc = Reflection::GetTypeInfo<ReflectT>();
 
     if (isRoot)
         BeginRootElement(desc.name.c_str(), "");
@@ -110,9 +110,9 @@ void Serializer::Serialize(const ReflectT* const obj, const bool isRoot)
 
     refl::util::for_each(desc.members, [&]<typename T>(const T member)
     {
-        constexpr bool isFunction = refl::descriptor::is_function(member);
+        constexpr bool_t isFunction = refl::descriptor::is_function(member);
         
-        constexpr bool dontSerialize = refl::descriptor::has_attribute<NotSerializable>(member);
+        constexpr bool_t dontSerialize = Reflection::HasAttribute<NotSerializable>(member);
         constexpr size_t flags = GetFlags<T>(member);
             
         if constexpr (!isFunction)
@@ -126,7 +126,7 @@ void Serializer::Serialize(const ReflectT* const obj, const bool isRoot)
                 {
                     SerializeArrayType<MemberT>(&member.get(obj), name, flags);
                 }
-                else if constexpr (XnorCore::Meta::IsXnorList<MemberT>)
+                else if constexpr (Meta::IsXnorList<MemberT>)
                 {
                     SerializeListType<MemberT>(&member.get(obj), name, flags);
                 }
@@ -157,11 +157,11 @@ void Serializer::Deserialize([[maybe_unused]] ReflectT* obj)
 template <typename MemberT>
 void Serializer::SerializeSimpleType(const MemberT* ptr, const char_t* name, const size_t flags)
 {
-    if constexpr (Meta::IsNativeType<MemberT> || Meta::IsMathType<MemberT> || std::is_same_v<MemberT, std::string>)
+    if constexpr (Meta::IsNativeType<MemberT> || Meta::IsMathType<MemberT> || Meta::IsSame<MemberT, std::string>)
     {
         FetchAttribute<MemberT>(name, *ptr);
     }
-    else if constexpr (XnorCore::Meta::IsColorType<MemberT>)
+    else if constexpr (Meta::IsColorType<MemberT>)
     {
         // DisplayColor<MemberT>(ptr, name);
     }
@@ -179,7 +179,7 @@ void Serializer::SerializeSimpleType(const MemberT* ptr, const char_t* name, con
                 FetchAttribute(name, static_cast<std::string>((*ptr)->GetId()));
         }
     }
-    else if constexpr (XnorCore::Meta::IsPolyPtr<MemberT>)
+    else if constexpr (Meta::IsPolyPtr<MemberT>)
     {
         const size_t hash = ptr->GetHash();
         
@@ -190,13 +190,13 @@ Serialize<type>(ptr->Cast<type>(), false);\
 }\
         // TODO find a less ugly solution to that
 
-        POLY_PTR_IF_SER(XnorCore::MeshRenderer);
-        POLY_PTR_IF_SER(XnorCore::DirectionalLight);
-        POLY_PTR_IF_SER(XnorCore::TestComponent);
-        POLY_PTR_IF_SER(XnorCore::PointLight);
-        POLY_PTR_IF_SER(XnorCore::SpotLight);
+        POLY_PTR_IF_SER(MeshRenderer);
+        POLY_PTR_IF_SER(DirectionalLight);
+        POLY_PTR_IF_SER(TestComponent);
+        POLY_PTR_IF_SER(PointLight);
+        POLY_PTR_IF_SER(SpotLight);
     }
-    else if constexpr (XnorCore::Meta::IsXnorPointer<MemberT>)
+    else if constexpr (Meta::IsXnorPointer<MemberT>)
     {
         if (flags & EXPAND_POINTER)
         {
@@ -210,7 +210,7 @@ Serialize<type>(ptr->Cast<type>(), false);\
                 FetchAttribute(name, static_cast<std::string>((*ptr)->GetGuid()));
         }
     }
-    else if constexpr (std::is_same_v<MemberT, Guid>)
+    else if constexpr (Meta::IsSame<MemberT, Guid>)
     {
         FetchAttribute<std::string>(name, static_cast<std::string>(*ptr));
     }

@@ -1,5 +1,11 @@
 ﻿#pragma once
 
+// ReSharper disable CppInconsistentNaming
+
+/// @file meta_programming.hpp
+///
+/// @brief Defines utilities for meta programming and template manipulation
+
 #include <tuple>
 #include <type_traits>
 
@@ -16,31 +22,69 @@
 
 BEGIN_XNOR_CORE
 
+/// @brief Defines utilities for meta programming and template manipulation
 namespace Meta
 {
+    /// @brief Checks whether @c Derived is a derived class of @c Base
+    /// @tparam Base Base class
+    /// @tparam Derived Derived class
+    template <typename Base, typename Derived>
+    constexpr bool_t IsBaseOf = std::is_base_of_v<Base, Derived>;
+
+    /// @brief Checks whether @c A and @c B are the same type
+    /// @tparam A First type
+    /// @tparam B Second type
+    template <typename A, typename B>
+    constexpr bool_t IsSame = std::is_same_v<A, B>;
+
+    /// @brief Checks whether @c T is any of the provided types in @c Other
+    /// @tparam T Type
+    /// @tparam Other Other types
+    template <typename T, typename... Other>
+    constexpr bool_t IsAny = (std::is_same_v<T, Other> || ...);
+
+    /// @brief Checks whether @c T is an array
+    /// @tparam T Type
+    template <typename T>
+    constexpr bool_t IsArray = std::is_array_v<T>;
+
+    /// @brief Removes the array specification from @c T
+    ///
+    /// e.g. if @c T was @c int[4], then @c RemoveArraySpecifier<T> will be @c int
+    ///
+    template <typename T>
+    using RemoveArraySpecifier = std::remove_extent_t<T>;
+
+    /// @brief Checks whether the type is a @c std::vector
     template <typename>
-    constexpr bool IsStdVector = false;
+    constexpr bool_t IsStdVector = false;
 
     template <typename T, typename A>
-    constexpr bool IsStdVector<std::vector<T, A>> = true;
+    constexpr bool_t IsStdVector<std::vector<T, A>> = true;
 
+    /// @brief Checks whether the type is a @ref List
     template <typename>
-    constexpr bool IsXnorList = false;
+    constexpr bool_t IsXnorList = false;
 
+    /// @private
     template <typename T>
-    constexpr bool IsXnorList<List<T>> = true;
+    constexpr bool_t IsXnorList<List<T>> = true;
 
+    /// @brief Checks whether the type is a @ref PolyPtr
     template <typename>
-    constexpr bool IsPolyPtr = false;
+    constexpr bool_t IsPolyPtr = false;
 
+    /// @private
     template <typename T>
-    constexpr bool IsPolyPtr<PolyPtr<T>> = true;
+    constexpr bool_t IsPolyPtr<PolyPtr<T>> = true;
 
+    /// @brief Checks whether the type is a @ref Pointer
     template <typename>
-    constexpr bool IsXnorPointer = false;
+    constexpr bool_t IsXnorPointer = false;
 
+    /// @private
     template <typename T>
-    constexpr bool IsXnorPointer<Pointer<T>> = true;
+    constexpr bool_t IsXnorPointer<Pointer<T>> = true;
 
     /// @brief Checks if T is a native type.
     /// 
@@ -53,14 +97,11 @@ namespace Meta
     /// - int32_t
     /// - float_t
     /// - double_t
-    /// - bool_t
+    /// - bool_t_t
     /// 
     /// @tparam T Type
-    /// @return Whether @p T is a native type.
     template <typename T>
-    constexpr bool IsNativeType = std::is_same_v<T, uint8_t> || std::is_same_v<T, int8_t> || std::is_same_v<T, uint16_t> ||
-                                    std::is_same_v<T, int16_t> || std::is_same_v<T, uint32_t> || std::is_same_v<T, int32_t> ||
-                                    std::is_same_v<T, float_t> || std::is_same_v<T, double_t> || std::is_same_v<T, bool_t>;
+    constexpr bool_t IsNativeType = IsAny<T, uint8_t, int8_t, uint16_t, int16_t, uint32_t, int32_t, float_t, double_t, bool_t>;
 
     /// @brief Checks if T is an integral or a floating type.
     /// 
@@ -75,11 +116,8 @@ namespace Meta
     /// - double_t
     /// 
     /// @tparam T Type
-    /// @return Whether @p T is an integral or a floating type.
     template <typename T>
-    constexpr bool IsIntegralOrFloating = std::is_same_v<T, uint8_t> || std::is_same_v<T, int8_t> || std::is_same_v<T, uint16_t> ||
-                                    std::is_same_v<T, int16_t> || std::is_same_v<T, uint32_t> || std::is_same_v<T, int32_t> ||
-                                    std::is_same_v<T, float_t> || std::is_same_v<T, double_t>;
+    constexpr bool_t IsIntegralOrFloating = IsAny<T, uint8_t, int8_t, uint16_t, int16_t, uint32_t, int32_t, float_t, double_t>;
 
     /// @brief Checks if T is a math type.
     /// 
@@ -91,10 +129,8 @@ namespace Meta
     /// - Quaternion
     /// 
     /// @tparam T Type
-    /// @return Whether @p T is a math type
     template <typename T>
-    constexpr bool IsMathType = std::is_same_v<T, Vector2> || std::is_same_v<T, Vector2i> || std::is_same_v<T, Vector3> ||
-                                std::is_same_v<T, Vector4> || std::is_same_v<T, Quaternion>;
+    constexpr bool_t IsMathType = IsAny<T, Vector2, Vector2i, Vector3, Vector4, Quaternion>;
     
     /// @brief Checks if T is a color type.
     /// 
@@ -104,9 +140,8 @@ namespace Meta
     /// - ColorHsv
     /// 
     /// @tparam T Type
-    /// @return Whether @p T is a color type
     template <typename T>
-    constexpr bool IsColorType = std::is_same_v<T, Colorf> || std::is_same_v<T, ColorRgb> || std::is_same_v<T, ColorHsv>;
+    constexpr bool_t IsColorType = IsAny<T, Colorf, ColorRgb, ColorHsv>;
 }
 
 END_XNOR_CORE;

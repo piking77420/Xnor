@@ -62,11 +62,11 @@ std::string Utils::HumanizeString(const std::string& str)
 
 float_t Utils::NormalizeAngle(float_t angle)
 {
-    while (angle > Calc::PiTimes2)
-        angle -= Calc::PiTimes2;
+    while (angle > Calc::PiOver2)
+        angle -= Calc::PiOver2;
         
     while (angle < 0)
-        angle += Calc::PiTimes2;
+        angle += Calc::PiOver2;
         
     return angle;
 }

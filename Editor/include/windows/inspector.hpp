@@ -7,9 +7,10 @@
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
 #include "rendering/light/spot_light.hpp"
+#include "resource/resource_manager.hpp"
 #include "scene/component/mesh_renderer.hpp"
 #include "scene/component/test_component.hpp"
-#include "utils/reflectable.hpp"
+#include "utils/serializable.hpp"
 #include "utils/utils.hpp"
 
 BEGIN_XNOR_EDITOR
@@ -53,21 +54,21 @@ void Inspector::DisplayScalar(MemberT* const obj, const char_t* name)
 {
     uint32_t type;
 
-    if constexpr (std::is_same_v<MemberT, int32_t>)
+    if constexpr (XnorCore::Meta::IsSame<MemberT, int32_t>)
         type = ImGuiDataType_S32;
-    else if constexpr (std::is_same_v<MemberT, uint32_t>)
+    else if constexpr (XnorCore::Meta::IsSame<MemberT, uint32_t>)
         type = ImGuiDataType_U32;
-    else if constexpr (std::is_same_v<MemberT, int16_t>)
+    else if constexpr (XnorCore::Meta::IsSame<MemberT, int16_t>)
         type = ImGuiDataType_S16;
-    else if constexpr (std::is_same_v<MemberT, uint16_t>)
+    else if constexpr (XnorCore::Meta::IsSame<MemberT, uint16_t>)
         type = ImGuiDataType_U16;
-    else if constexpr (std::is_same_v<MemberT, int8_t>)
+    else if constexpr (XnorCore::Meta::IsSame<MemberT, int8_t>)
         type = ImGuiDataType_S8;
-    else if constexpr (std::is_same_v<MemberT, uint8_t>)
+    else if constexpr (XnorCore::Meta::IsSame<MemberT, uint8_t>)
         type = ImGuiDataType_U8;
-    else if constexpr (std::is_same_v<MemberT, float_t>)
+    else if constexpr (XnorCore::Meta::IsSame<MemberT, float_t>)
         type = ImGuiDataType_Float;
-    else if constexpr (std::is_same_v<MemberT, double_t>)
+    else if constexpr (XnorCore::Meta::IsSame<MemberT, double_t>)
         type = ImGuiDataType_Double;
 
     ImGui::InputScalar(name, type, obj);
@@ -76,23 +77,23 @@ void Inspector::DisplayScalar(MemberT* const obj, const char_t* name)
 template <typename MemberT>
 void Inspector::DisplayMathType(MemberT* const obj, const char_t* name)
 {
-    if constexpr (std::is_same_v<MemberT, Vector2i>)
+    if constexpr (XnorCore::Meta::IsSame<MemberT, Vector2i>)
     {
         ImGui::DragInt2(name, obj->Raw(), 0.1f);
     }
-    else if constexpr (std::is_same_v<MemberT, Vector2>)
+    else if constexpr (XnorCore::Meta::IsSame<MemberT, Vector2>)
     {
         ImGui::DragFloat2(name, obj->Raw(), 0.1f);
     }
-    else if constexpr (std::is_same_v<MemberT, Vector3>)
+    else if constexpr (XnorCore::Meta::IsSame<MemberT, Vector3>)
     {
         ImGui::DragFloat3(name, obj->Raw(), 0.1f);
     }
-    else if constexpr (std::is_same_v<MemberT, Vector4>)
+    else if constexpr (XnorCore::Meta::IsSame<MemberT, Vector4>)
     {
         ImGui::DragFloat4(name, obj->Raw(), 0.1f);
     }
-    else if constexpr (std::is_same_v<MemberT, Quaternion>)
+    else if constexpr (XnorCore::Meta::IsSame<MemberT, Quaternion>)
     {
         Vector3 euler = XnorCore::Utils::GetQuaternionEulerAngles(*obj);
         ImGui::SliderAngle3(name, euler.Raw());
@@ -104,19 +105,19 @@ void Inspector::DisplayMathType(MemberT* const obj, const char_t* name)
 template <typename MemberT>
 void Inspector::DisplayColorType(MemberT* obj, const char_t* name)
 {
-    if constexpr (std::is_same_v<MemberT, XnorCore::ColorRgb>)
+    if constexpr (XnorCore::Meta::IsSame<MemberT, XnorCore::ColorRgb>)
     {
         XnorCore::Colorf tmp = static_cast<XnorCore::Colorf>(*obj);
         ImGui::ColorPicker4(name, &tmp.r, ImGuiColorEditFlags_DisplayHex);
         *obj = static_cast<XnorCore::ColorRgb>(tmp);
     }
-    else if constexpr (std::is_same_v<MemberT, XnorCore::ColorHsv>)
+    else if constexpr (XnorCore::Meta::IsSame<MemberT, XnorCore::ColorHsv>)
     {
         XnorCore::Colorf tmp = static_cast<XnorCore::Colorf>(*obj);
         ImGui::ColorPicker4(name, &tmp.r, ImGuiColorEditFlags_DisplayHSV);
         *obj = static_cast<XnorCore::ColorHsv>(tmp);
     }
-    else if constexpr (std::is_same_v<MemberT, XnorCore::Colorf>)
+    else if constexpr (XnorCore::Meta::IsSame<MemberT, XnorCore::Colorf>)
     {
         ImGui::ColorPicker4(name, reinterpret_cast<float_t*>(obj));
     }
@@ -129,7 +130,7 @@ void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name)
 
     ImGui::Text("%s", name);
 
-    if constexpr (std::is_base_of_v<XnorCore::Resource, PtrT>)
+    if constexpr (XnorCore::Meta::IsBaseOf<XnorCore::Resource, PtrT>)
     {
         ImGui::SameLine();
 
@@ -162,7 +163,7 @@ void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name)
 #define POLY_PTR_IF_INSP(type)\
 if (hash == typeid(type).hash_code())\
 {\
-    DisplayObject<type>(obj->Cast<type>(), XnorCore::TypeInfo::Get<type>());\
+    DisplayObject<type>(obj->Cast<type>(), XnorCore::Reflection::GetTypeInfo<type>());\
 }\
 
 template <typename MemberT>
@@ -174,11 +175,11 @@ void Inspector::DisplayPolyPointer(MemberT* obj, const char_t* name)
     {
         // TODO find a less ugly solution to that
 
-        POLY_PTR_IF_INSP(XnorCore::MeshRenderer);
-        POLY_PTR_IF_INSP(XnorCore::DirectionalLight);
-        POLY_PTR_IF_INSP(XnorCore::TestComponent);
-        POLY_PTR_IF_INSP(XnorCore::PointLight);
-        POLY_PTR_IF_INSP(XnorCore::SpotLight);
+        POLY_PTR_IF_INSP(XnorCore::MeshRenderer)
+        POLY_PTR_IF_INSP(XnorCore::DirectionalLight)
+        POLY_PTR_IF_INSP(XnorCore::TestComponent)
+        POLY_PTR_IF_INSP(XnorCore::PointLight)
+        POLY_PTR_IF_INSP(XnorCore::SpotLight)
     }
 }
 
@@ -192,14 +193,14 @@ void Inspector::DisplayObject(ReflectT* const obj, const XnorCore::TypeDescripto
     
     refl::util::for_each(desc.members, [&]<typename T>(const T member)
     {
-        constexpr bool hidden = refl::descriptor::has_attribute<XnorCore::HideInInspector>(member); 
+        constexpr bool_t hidden = XnorCore::Reflection::HasAttribute<XnorCore::HideInInspector>(member); 
         
         if constexpr (!hidden)
         {
             using MemberT = typename T::value_type;
             const constexpr char_t* const name = member.name.c_str();
             
-            if constexpr (std::is_array_v<MemberT>)
+            if constexpr (XnorCore::Meta::IsArray<MemberT>)
             {
                 DisplayArray<MemberT>(&member.get(obj), name);
             }
@@ -230,11 +231,11 @@ void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name)
     {
         DisplayColor<MemberT>(ptr, name);
     }
-    else if constexpr (std::is_same_v<MemberT, bool_t>)
+    else if constexpr (XnorCore::Meta::IsSame<MemberT, bool_t>)
     {
         ImGui::Checkbox(name, ptr);
     }
-    else if constexpr (std::is_same_v<MemberT, std::string>)
+    else if constexpr (XnorCore::Meta::IsSame<MemberT, std::string>)
     {
         ImGui::InputText(name, ptr);
     }
@@ -249,14 +250,14 @@ void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name)
     else
     {
         if (ImGui::CollapsingHeader(name))
-            DisplayObject<MemberT>(ptr, XnorCore::TypeInfo::Get<MemberT>());
+            DisplayObject<MemberT>(ptr, XnorCore::Reflection::GetTypeInfo<MemberT>());
     }
 }
 
 template <typename MemberT>
 void Inspector::DisplayArray(MemberT* ptr, const char_t* name)
 {
-    using ArrayT = std::remove_extent_t<MemberT>;
+    using ArrayT = XnorCore::Meta::RemoveArraySpecifier<MemberT>;
     constexpr size_t arraySize = sizeof(MemberT) / sizeof(ArrayT);
 
     if (ImGui::CollapsingHeader(name))

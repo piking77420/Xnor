@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+BEGIN_XNOR_CORE
+
 template <typename T>
 class PolyPtr
 {
@@ -157,3 +159,5 @@ size_t PolyPtr<T>::GetHash() const
 {
     return m_Hash;
 }
+
+END_XNOR_CORE

@@ -5,7 +5,7 @@
 #include "core.hpp"
 #include "resource/texture.hpp"
 #include "utils/pointer.hpp"
-#include "utils/reflectable.hpp"
+#include "utils/serializable.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -15,7 +15,7 @@ enum MaterialType
     Litt
 };
 
-struct Material : Reflectable
+struct Material : Serializable
 {
     REFLECTABLE_IMPL_MINIMAL(Material)
     

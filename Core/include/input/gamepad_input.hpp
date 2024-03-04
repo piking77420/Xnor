@@ -51,7 +51,7 @@ enum class GamepadButton
     Count = 20
 };
 
-enum class GameButtonStatus : uint8_t
+enum class GamepadButtonStatus : uint8_t
 {
     Press,
     Down,

@@ -24,7 +24,7 @@ void Inspector::Display()
     ImGui::PushID(ptr);
 
     using ObjType = std::remove_reference_t<decltype(*m_Editor->data.selectedEntity)>;
-    constexpr XnorCore::TypeDescriptor<ObjType> desc = XnorCore::TypeInfo::Get<ObjType>();
+    constexpr XnorCore::TypeDescriptor<ObjType> desc = XnorCore::Reflection::GetTypeInfo<ObjType>();
 
     DisplayObject(static_cast<ObjType*>(ptr), desc);
     
