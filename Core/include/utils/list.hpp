@@ -7,40 +7,22 @@
 
 BEGIN_XNOR_CORE
 
-/// @brief A dynamic array implementation whose internal structure is independent of T as much as possible.
+/// @brief A dynamic array implementation.
 /// @paragraph reasons Reasons
-/// This was needed because the internal structure of std::vector depends on T, getting the size and data wasn't uniform and changed based
-/// on the size of T, however with reflection, it was needed to have a way to get both of these information with an unknown T.
-/// Hence why this class exists, it's friendly to reflection, and it also allows to have a more user friendly List, based on how List is done in C#
-/// It's impossible for the List to be fully independent of T, but the internal structure at least is, moreover some functions are also independent
-/// which is enough to use the List while being unaware of T.
-/// Functions that are independent will be marked with [T SAFE] at the beginning of their brief
+/// A more user friendly list than std::vector, based on how List is done in C#
+/// The internal structure and workings are similar to how std::vector works, it uses a capacity that grows exponentially based on powers of 2
 /// @tparam T Type stored
 template <typename T>
 class List
-{
-    template <typename U, typename = void>
-    struct has_destroy_function : std::false_type {};
-
-    template <typename U>
-    struct has_destroy_function<U, std::void_t<decltype(&U::Destroy)>> : std::true_type {};
-
-    /// @brief Encapsulates a function that has a signature looking like this : void Destroy(T* element) \n
-    /// Since this needs to be T safe, using void* as a parameter is preferred
-    /// @paragraph reason Reasons
-    /// The reason this needs to exists is so that the objects of the List can be destroyed without needed to know T,
-    /// since T is unknown, using the destructor isn't possible hence why using a static function with a generic name/signature is the solution used here
-    /// The function is automatically located upon the creation of the list, and T doesn't need to have one for the List to work
-    using DestroySignature = void(*)(void*);
-    
+{    
 public:
     static_assert(std::is_default_constructible_v<T>, "T must have a default constructor");
     static_assert(std::is_copy_constructible_v<T>, "T must have a copy constructor");
-    // static_assert(std::is_assignable_v<T, T>, "T must have a copy operator");
-    // static_assert(std::is_assignable_v<T, std::add_const_t<T>>, "T must have a copy operator");
 
     /// @brief The type of the List<T>, refers to T
     using Type = T;
+
+    DELETE_COPY_MOVE_OPERATIONS(List)
 
     /// @brief Creates an empty list with a capacity of 0
     explicit List();
@@ -93,7 +75,7 @@ public:
     /// @param values Values
     void AddRange(const std::initializer_list<T>& values);
 
-    /// @brief [T SAFE] \n Adds a zeroed out element to the list  
+    /// @brief Adds a zeroed out element to the list  
     void AddZeroed();
 
     /// @brief Fills the list with a specified value
@@ -110,6 +92,10 @@ public:
     template <class... Args>
     void Emplace(Args&&... args);
 
+    /**
+     * @brief Inserts an element at the given position using the default constructor 
+     * @param index Index
+     */
     void Insert(size_t index);
 
     /// @brief Inserts an element in the list at the given position
@@ -122,7 +108,7 @@ public:
     /// @param index Index
     void Insert(T&& element, size_t index);
 
-    /// @brief [T SAFE] Inserts an zeroed element in the list at the given position
+    /// @brief Inserts an zeroed element in the list at the given position
     /// @param index Index
     void InsertZeroed(size_t index);
 
@@ -130,11 +116,11 @@ public:
     /// @param element Element
     void Remove(const T& element);
     
-    /// @brief [T SAFE] \n Removes an element from the list at a given index
+    /// @brief Removes an element from the list at a given index
     /// @param index Index
     void RemoveAt(size_t index);
 
-    /// @brief [T SAFE] \n Removes a range of elements from the list
+    /// @brief Removes a range of elements from the list
     /// @param start Starting index
     /// @param end End index
     void RemoveRange(size_t start, size_t end);
@@ -143,7 +129,7 @@ public:
     /// @param element Element
     /// @return Element exists
     [[nodiscard]]
-    bool Contains(const T& element) const;
+    bool_t Contains(const T& element) const;
 
     /// @brief Allows iteration over the list with a lambda
     /// <p>The lambda returns void, and has a pointer to the current element and its index as parameters</p>
@@ -151,56 +137,52 @@ public:
     void Iterate(const std::function<void(T*, size_t)>& lambda);
 
     /// @brief Checks if an element exists that fulfills the requirements provided in a lambda
-    /// <p>The lambda returns bool, and has a pointer to the current element and its index as parameters</p>
+    /// <p>The lambda returns bool_t, and has a pointer to the current element and its index as parameters</p>
     /// @param lambda Function lambda
     /// @return Element exists
-    bool Exists(const std::function<bool(const T*, size_t)>& lambda) const;
+    bool_t Exists(const std::function<bool_t(const T*, size_t)>& lambda) const;
 
     /// @brief Tries to find an element that fulfills the requirements provided in a lambda
-    /// <p>The lambda returns bool, and has a pointer to the current element and its index as parameters</p>
+    /// <p>The lambda returns bool_t, and has a pointer to the current element and its index as parameters</p>
     /// @param lambda Function lambda
     /// @return Pointer to element
-    T* Find(const std::function<bool(const T*, size_t)>& lambda);
+    T* Find(const std::function<bool_t(const T*, size_t)>& lambda);
 
-    /// @brief [T SAFE] Invokes the "Destroy" function of T on a specified element of the list
-    /// @param index Index
-    void InvokeDestroy(size_t index);
-
-    /// @brief [T SAFE] \n Checks if the list if valid, a list is valid if it meets these requirements :
+    /// @brief Checks if the list if valid, a list is valid if it meets these requirements :
     /// <p>- The internal pointer mustn't be nullptr</p>
     /// <p>- Capacity mustn't be 0</p>
     /// <p>- The size mustn't exceed the capacity</p>
     /// @return Is valid
     [[nodiscard]]
-    bool IsValid() const;
+    bool_t IsValid() const;
 
-    /// @brief [T SAFE] \n Gets the underlying pointer to the list
+    /// @brief Gets the underlying pointer to the list
     /// @return Pointer
     [[nodiscard]]
     T* GetData() const;
 
-    /// @brief [T SAFE] \n Gets the size of the list
+    /// @brief Gets the size of the list
     /// @return Size
     [[nodiscard]]
     size_t GetSize() const;
 
-    /// @brief [T SAFE] \n Gets the capacity of the list
+    /// @brief Gets the capacity of the list
     /// @return Capacity
     [[nodiscard]]
     size_t GetCapacity() const;
 
-    /// @brief [T SAFE] \n Gets the type size of T
+    /// @brief Gets the type size of T
     /// @return Type size
     [[nodiscard]]
     size_t GetTypeSize() const;
 
-    /// @brief [T SAFE] \n Gets an element of the list at a specified index
+    /// @brief Gets an element of the list at a specified index
     /// @param index Index
     /// @return Element
     /// @throw invalid_argument If index >= list size
     T& operator[](size_t index);
     
-    /// @brief [T SAFE] \n Gets an element of the list at a specified index
+    /// @brief Gets an element of the list at a specified index
     /// @param index Index
     /// @return Element
     /// @throw invalid_argument If index >= list size
@@ -213,38 +195,34 @@ private:
     size_t m_Size;
     size_t m_Capacity;
     size_t m_TypeSize;
-    DestroySignature m_DestroyFunc;
 
-    /// @brief [T SAFE] Tries to locate a static function named "Destroy" in T
-    void LocateDestroy();
-
-    /// @brief [T SAFE] Performs a malloc on the data
+    /// @brief Performs a malloc on the data
     /// @param size Size
     void Malloc(size_t size);
     
-    /// @brief [T SAFE] Performs a calloc on the data
+    /// @brief Performs a calloc on the data
     /// @param size Size
     void Calloc(size_t size);
 
-    /// @brief [T SAFE] Performs a realloc on the data
+    /// @brief Performs a realloc on the data
     /// @param size Size
     void Realloc(size_t size);
 
-    /// @brief [T SAFE] Checks if the list should grow
+    /// @brief Checks if the list should grow
     /// @param newSize New size
     void CheckGrow(size_t newSize);
     
-    /// @brief [T SAFE] Checks if the list should shrink
+    /// @brief Checks if the list should shrink
     /// @param newSize New size
     void CheckShrink(size_t newSize);
 
-    /// @brief [T SAFE] \n Gets the address to the nth element of the list
+    /// @brief Gets the address to the nth element of the list
     /// @param index Index
     /// @return Pointer to nth element
     [[nodiscard]]
     T* Access(size_t index);
 
-    /// @brief [T SAFE] \n Gets the address to the nth element of the list
+    /// @brief Gets the address to the nth element of the list
     /// @param index Index
     /// @return Pointer to nth element
     [[nodiscard]]
@@ -255,7 +233,6 @@ template <typename T>
 List<T>::List()
     : m_Size(0), m_TypeSize(sizeof(T))
 {
-    LocateDestroy();
     m_Capacity = 1;
 
     Calloc(m_Capacity);
@@ -265,7 +242,6 @@ template <typename T>
 List<T>::List(const size_t size)
     : m_Size(size), m_TypeSize(sizeof(T))
 {
-    LocateDestroy();
     m_Capacity = std::bit_ceil(m_Size);
     
     Malloc(m_Capacity);
@@ -278,7 +254,6 @@ template <typename T>
 List<T>::List(const size_t size, const T& defaultValue)
     : m_Size(size), m_TypeSize(sizeof(T))
 {
-    LocateDestroy();
     m_Capacity = std::bit_ceil(m_Size);
 
     Malloc(m_Capacity);
@@ -291,7 +266,6 @@ template <typename T>
 List<T>::List(const size_t size, const T values[])
     : m_Size(size), m_TypeSize(sizeof(T))
 {
-    LocateDestroy();
     m_Capacity = std::bit_ceil(m_Size);
     
     Malloc(m_Capacity);
@@ -304,7 +278,6 @@ template <typename T>
 List<T>::List(const std::initializer_list<T>& values)
     : m_TypeSize(sizeof(T))
 {
-    LocateDestroy();
     m_Size = values.size();
     m_Capacity = std::bit_ceil(m_Size);
     
@@ -344,7 +317,7 @@ void List<T>::Clear()
 {
     for (size_t i = 0; i < m_Size; i++)
     {
-        InvokeDestroy(i);
+        m_Data[i].~T();
     }
 
     CheckShrink(0);
@@ -502,7 +475,7 @@ void List<T>::Remove(const T& element)
     if (i == m_Size)
         return;
 
-    InvokeDestroy(i);
+    m_Data[i].~T();
     std::memcpy(&m_Data[i], &m_Data[i + 1], (m_Size - i - 1) * m_TypeSize);
 
     CheckShrink(m_Size - 1);
@@ -515,7 +488,7 @@ void List<T>::RemoveAt(const size_t index)
     if (index >= m_Size)
         throw std::invalid_argument("List remove at subscript out of range");
 
-    InvokeDestroy(index);
+    m_Data[index].~T();
     std::memcpy(Access(index), Access(index + 1), (m_Size - index - 1) * m_TypeSize);
 
     CheckShrink(m_Size - 1);
@@ -538,7 +511,7 @@ void List<T>::RemoveRange(const size_t start, const size_t end)
 
     for (size_t i = start; i < end; i++)
     {
-        InvokeDestroy(i);
+        m_Data[i].~T();
     }
     
     std::memcpy(Access(start), Access(end + 1), (m_Size - end - 1) * m_TypeSize);
@@ -548,7 +521,7 @@ void List<T>::RemoveRange(const size_t start, const size_t end)
 }
 
 template <typename T>
-bool List<T>::Contains(const T& element) const
+bool_t List<T>::Contains(const T& element) const
 {
     for (size_t i = 0; i < m_Size; i++)
     {
@@ -567,7 +540,7 @@ void List<T>::Iterate(const std::function<void(T*, size_t)>& lambda)
 }
 
 template <typename T>
-bool List<T>::Exists(const std::function<bool(const T*, size_t)>& lambda) const
+bool_t List<T>::Exists(const std::function<bool_t(const T*, size_t)>& lambda) const
 {
     for (size_t i = 0; i < m_Size; i++)
     {
@@ -579,7 +552,7 @@ bool List<T>::Exists(const std::function<bool(const T*, size_t)>& lambda) const
 }
 
 template <typename T>
-T* List<T>::Find(const std::function<bool(const T*, size_t)>& lambda)
+T* List<T>::Find(const std::function<bool_t(const T*, size_t)>& lambda)
 {
     for (size_t i = 0; i < m_Size; i++)
     {
@@ -591,16 +564,7 @@ T* List<T>::Find(const std::function<bool(const T*, size_t)>& lambda)
 }
 
 template <typename T>
-void List<T>::InvokeDestroy(const size_t index)
-{
-    if (!m_DestroyFunc)
-        return;
-
-    m_DestroyFunc(Access(index));
-}
-
-template <typename T>
-bool List<T>::IsValid() const
+bool_t List<T>::IsValid() const
 {
     if (m_Data == nullptr)
         return false;
@@ -657,15 +621,6 @@ const T& List<T>::operator[](const size_t index) const
 }
 
 template <typename T>
-void List<T>::LocateDestroy()
-{
-    if constexpr (has_destroy_function<T>())
-        m_DestroyFunc = reinterpret_cast<DestroySignature>(&T::Destroy);
-    else
-        m_DestroyFunc = nullptr;
-}
-
-template <typename T>
 void List<T>::Malloc(const size_t size)
 {
     m_Data = static_cast<T*>(std::malloc(size * m_TypeSize));
@@ -708,13 +663,13 @@ void List<T>::CheckShrink(const size_t newSize)
 template <typename T>
 T* List<T>::Access(const size_t index)
 {
-    return static_cast<T*>(static_cast<void*>(static_cast<uint8_t*>(static_cast<void*>(m_Data)) + index * m_TypeSize));
+    return reinterpret_cast<T*>(reinterpret_cast<uint8_t*>(m_Data) + index * m_TypeSize);
 }
 
 template <typename T>
 const T* List<T>::Access(const size_t index) const
 {
-    return static_cast<const T*>(static_cast<const void*>(static_cast<const uint8_t*>(static_cast<const void*>(m_Data)) + index * m_TypeSize));
+    return reinterpret_cast<const T*>(reinterpret_cast<const uint8_t*>(m_Data) + index * m_TypeSize);
 }
 
 END_XNOR_CORE

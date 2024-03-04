@@ -275,9 +275,12 @@ void Inspector::DisplayList(MemberT* ptr, const char_t* name)
 
     if (ImGui::CollapsingHeader(name))
     {
-        if (ImGui::Selectable("Add"))
+        if constexpr (!XnorCore::Meta::IsPolyPtr<ArrayT>)
         {
-            ptr->Add();
+            if (ImGui::Selectable("Add"))
+            {
+                ptr->Add();
+            }
         }
             
         size_t listSize = ptr->GetSize();

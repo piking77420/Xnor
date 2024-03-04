@@ -194,7 +194,7 @@ public:
 
     XNOR_ENGINE static void HandleEvent();
     
-    template<class T>
+    template <class T>
     static T GetCursorPos();
     
     XNOR_ENGINE static void Initialize();

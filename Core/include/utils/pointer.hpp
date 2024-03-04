@@ -2,6 +2,7 @@
 
 #include <format>
 #include <ostream>
+#include <sstream>
 #include <utility>
 
 #include "core.hpp"
@@ -58,7 +59,7 @@ struct Construct
 /// @see <a href="https://en.cppreference.com/book/intro/smart_pointers">Smart Pointers</a>
 /// @see <a href="https://en.cppreference.com/w/cpp/memory/shared_ptr">std::shared_ptr</a>
 /// @see <a href="https://en.cppreference.com/w/cpp/memory/weak_ptr">std::weak_ptr</a>
-template<typename T>
+template <typename T>
 class Pointer
 {
 public:
@@ -88,16 +89,16 @@ public:
     /// @endcode
     explicit Pointer(Construct);
 
-    template<typename U>
+    template <typename U>
     explicit Pointer(const Pointer<U>& other, bool strongReference = false);
 
-    template<typename U>
+    template <typename U>
     explicit Pointer(Pointer<U>& other, bool strongReference = false);
 
-    template<typename U>
+    template <typename U>
     explicit Pointer(Pointer<U>&& other) noexcept;
 
-    template<typename... Args>
+    template <typename... Args>
     explicit Pointer(Args&&... args);
 
     virtual ~Pointer();
@@ -140,10 +141,10 @@ public:
 
     Pointer& operator=(nullptr_t);
 
-    template<typename U>
+    template <typename U>
     Pointer& operator=(const Pointer<U>& other);
 
-    template<typename U>
+    template <typename U>
     Pointer& operator=(Pointer<U>&& other) noexcept;
 
     [[nodiscard]]
@@ -179,7 +180,7 @@ private:
     void CheckReferenceCounterValid();
 };
 
-template<typename T>
+template <typename T>
 Pointer<T>::Pointer(const Pointer& other, const bool strongReference)
     : m_ReferenceCounter(other.m_ReferenceCounter)
     , m_IsStrongReference(strongReference)
@@ -193,7 +194,7 @@ Pointer<T>::Pointer(const Pointer& other, const bool strongReference)
         m_ReferenceCounter->IncWeak(this);
 }
 
-template<typename T>
+template <typename T>
 Pointer<T>::Pointer(Pointer&& other) noexcept
     : m_ReferenceCounter(std::move(other.m_ReferenceCounter))
     , m_IsStrongReference(std::move(other.m_IsStrongReference))
@@ -210,20 +211,20 @@ Pointer<T>::Pointer(Pointer&& other) noexcept
     other.Reset();
 }
 
-template<typename T>
+template <typename T>
 Pointer<T>::Pointer(nullptr_t)
 {
 }
 
-template<typename T>
+template <typename T>
 Pointer<T>::Pointer(Construct)
     : m_ReferenceCounter(new ReferenceCounter<T>)
     , m_IsStrongReference(true)
 {
 }
 
-template<typename T>
-template<typename U>
+template <typename T>
+template <typename U>
 Pointer<T>::Pointer(const Pointer<U>& other, const bool strongReference)
     : m_ReferenceCounter(reinterpret_cast<ReferenceCounter<T>*>(const_cast<ReferenceCounter<U>*>(other.GetReferenceCounter())))
     , m_IsStrongReference(strongReference)
@@ -237,15 +238,15 @@ Pointer<T>::Pointer(const Pointer<U>& other, const bool strongReference)
         m_ReferenceCounter->IncWeak(this);
 }
 
-template<typename T>
-template<typename U>
+template <typename T>
+template <typename U>
 Pointer<T>::Pointer(Pointer<U>& other, const bool strongReference)
     : Pointer(const_cast<const Pointer<U>&>(other), strongReference)
 {
 }
 
-template<typename T>
-template<typename U>
+template <typename T>
+template <typename U>
 Pointer<T>::Pointer(Pointer<U>&& other) noexcept  // NOLINT(cppcoreguidelines-rvalue-reference-param-not-moved)
     : m_ReferenceCounter(reinterpret_cast<ReferenceCounter<T>*>(const_cast<ReferenceCounter<U>*>(std::move(other.GetReferenceCounter()))))
     , m_IsStrongReference(std::move(other.GetIsStrongReference()))
@@ -262,39 +263,39 @@ Pointer<T>::Pointer(Pointer<U>&& other) noexcept  // NOLINT(cppcoreguidelines-rv
     other.Reset();
 }
 
-template<typename T>
-template<typename... Args>
+template <typename T>
+template <typename... Args>
 Pointer<T>::Pointer(Args&&... args) // NOLINT(cppcoreguidelines-missing-std-forward)
     : m_ReferenceCounter(new ReferenceCounter<T>(std::forward<Args>(args)...))
     , m_IsStrongReference(true)
 {
 }
 
-template<typename T>
+template <typename T>
 Pointer<T>::~Pointer()
 {
     SetReferenceCounter(nullptr);
 }
 
-template<typename T>
+template <typename T>
 Pointer<T> Pointer<T>::CreateStrongReference() const
 {
     return Pointer(*this, true);
 }
 
-template<typename T>
+template <typename T>
 const T* Pointer<T>::Get() const
 {
     return m_ReferenceCounter->GetPointer();
 }
 
-template<typename T>
+template <typename T>
 T* Pointer<T>::Get()
 {
     return m_ReferenceCounter->GetPointer();
 }
 
-template<typename T>
+template <typename T>
 Pointer<T>& Pointer<T>::operator=(const Pointer& other)  // NOLINT(bugprone-unhandled-self-assignment)
 {
     if (this == &other)
@@ -307,7 +308,7 @@ Pointer<T>& Pointer<T>::operator=(const Pointer& other)  // NOLINT(bugprone-unha
     return *this;
 }
 
-template<typename T>
+template <typename T>
 Pointer<T>& Pointer<T>::operator=(Pointer&& other) noexcept
 {
     if (this == &other)
@@ -327,7 +328,7 @@ Pointer<T>& Pointer<T>::operator=(Pointer&& other) noexcept
     return *this;
 }
 
-template<typename T>
+template <typename T>
 Pointer<T>& Pointer<T>::operator=(nullptr_t)
 {
     SetReferenceCounter(nullptr);
@@ -336,8 +337,8 @@ Pointer<T>& Pointer<T>::operator=(nullptr_t)
     return *this;
 }
 
-template<typename T>
-template<typename U>
+template <typename T>
+template <typename U>
 Pointer<T>& Pointer<T>::operator=(const Pointer<U>& other)
 {
     if (this == &other)
@@ -349,8 +350,8 @@ Pointer<T>& Pointer<T>::operator=(const Pointer<U>& other)
     return *this;
 }
 
-template<typename T>
-template<typename U>
+template <typename T>
+template <typename U>
 Pointer<T>& Pointer<T>::operator=(Pointer<U>&& other) noexcept
 {
     if (reinterpret_cast<int8_t*>(this) == reinterpret_cast<int8_t*>(&other))
@@ -370,7 +371,7 @@ Pointer<T>& Pointer<T>::operator=(Pointer<U>&& other) noexcept
     return *this;
 }
 
-template<typename T>
+template <typename T>
 Pointer<T>::operator T*() const
 {
     if (m_ReferenceCounter)
@@ -378,7 +379,7 @@ Pointer<T>::operator T*() const
     return nullptr;
 }
 
-template<typename T>
+template <typename T>
 Pointer<T>::operator std::string() const
 {
     return std::format(
@@ -390,28 +391,28 @@ Pointer<T>::operator std::string() const
     );
 }
 
-template<typename T>
+template <typename T>
 Pointer<T>::operator bool_t() const { return IsValid(); }
 
-template<typename T>
+template <typename T>
 T& Pointer<T>::operator*() { return *m_ReferenceCounter->GetPointer(); }
 
-template<typename T>
+template <typename T>
 const T& Pointer<T>::operator*() const { return *m_ReferenceCounter->GetPointer(); }
 
-template<typename T>
+template <typename T>
 T* Pointer<T>::operator->() { return m_ReferenceCounter->GetPointer(); }
 
-template<typename T>
+template <typename T>
 const T* Pointer<T>::operator->() const { return m_ReferenceCounter->GetPointer(); }
 
 template <typename T>
 bool_t Pointer<T>::IsValid() const { return m_ReferenceCounter != nullptr; }
 
-template<typename T>
+template <typename T>
 bool_t Pointer<T>::GetIsStrongReference() const { return m_IsStrongReference; }
 
-template<typename T>
+template <typename T>
 void Pointer<T>::ToStrongReference()
 {
     if (m_IsStrongReference)
@@ -422,7 +423,7 @@ void Pointer<T>::ToStrongReference()
     m_IsStrongReference = true;
 }
 
-template<typename T>
+template <typename T>
 void Pointer<T>::ToWeakReference()
 {
     if (!m_IsStrongReference)
@@ -440,10 +441,10 @@ void Pointer<T>::Reset()
     m_IsStrongReference = false;
 }
 
-template<typename T>
+template <typename T>
 const ReferenceCounter<T>* Pointer<T>::GetReferenceCounter() const { return m_ReferenceCounter; }
 
-template<typename T>
+template <typename T>
 void Pointer<T>::SetReferenceCounter(ReferenceCounter<T>* newReferenceCounter)
 {
     if (m_ReferenceCounter)
@@ -462,7 +463,7 @@ void Pointer<T>::SetReferenceCounter(ReferenceCounter<T>* newReferenceCounter)
     m_ReferenceCounter = newReferenceCounter;
 }
 
-template<typename T>
+template <typename T>
 void Pointer<T>::CheckReferenceCounterValid()
 {
     if (!m_ReferenceCounter)
@@ -476,30 +477,30 @@ void Pointer<T>::CheckReferenceCounterValid()
 }
 
 /// @brief Compares two @ref Pointer "Pointers" by checking if they point to the same address.
-template<typename T>
+template <typename T>
 bool operator==(const Pointer<T>& a, const Pointer<T>& b) { return static_cast<const T*>(a) == static_cast<const T*>(b); }
 
 /// @brief Compares two @ref Pointer "Pointers" by checking if they point to the same address.
-template<typename T>
+template <typename T>
 bool operator!=(const Pointer<T>& a, const Pointer<T>& b) { return !(a == b); }
 
 /// @brief Compares two @ref Pointer "Pointers" by checking if they point to the same address.
-template<typename T, typename U>
+template <typename T, typename U>
 bool operator==(const Pointer<T>& a, const Pointer<U>& b) { return static_cast<const T*>(a) == reinterpret_cast<const T*>(static_cast<const U*>(b)); }
 
 /// @brief Compares two @ref Pointer "Pointers" by checking if they point to the same address.
-template<typename T, typename U>
+template <typename T, typename U>
 bool operator!=(const Pointer<T>& a, const Pointer<U>& b) { return !(a == b); }
 
 /// @brief Checks if a @ref Pointer is null.
-template<typename T>
+template <typename T>
 bool operator==(const Pointer<T>& a, const nullptr_t) { return !a.IsValid(); }
 
 /// @brief Checks if a @ref Pointer is not null.
-template<typename T>
+template <typename T>
 bool operator!=(const Pointer<T>& a, const nullptr_t) { return a.IsValid(); }
 
-template<typename T>
+template <typename T>
 std::ostream& operator<<(std::ostream& stream, const Pointer<T>& ptr)
 {
     return stream
@@ -512,18 +513,18 @@ std::ostream& operator<<(std::ostream& stream, const Pointer<T>& ptr)
 
 END_XNOR_CORE
 
-template<typename T>
+template <typename T>
 struct std::formatter<XnorCore::Pointer<T>>  // NOLINT(cert-dcl58-cpp)
 {
-    template<class ParseContext>
+    template <class ParseContext>
     constexpr typename ParseContext::iterator parse(ParseContext& ctx);
 
-    template<class FormatContext>
+    template <class FormatContext>
     typename FormatContext::iterator format(const XnorCore::Pointer<T>& pointer, FormatContext& ctx) const;
 };
 
-template<typename T>
-template<class FormatContext>
+template <typename T>
+template <class FormatContext>
 typename FormatContext::iterator std::formatter<XnorCore::Pointer<T>>::format(
     const XnorCore::Pointer<T>& pointer,
     FormatContext& ctx
@@ -537,8 +538,8 @@ typename FormatContext::iterator std::formatter<XnorCore::Pointer<T>>::format(
 }
 
 // ReSharper disable once CppMemberFunctionMayBeStatic
-template<typename T>
-template<class ParseContext>
+template <typename T>
+template <class ParseContext>
 constexpr typename ParseContext::iterator std::formatter<XnorCore::Pointer<T>>::parse(ParseContext& ctx)
 {
     auto it = ctx.begin();

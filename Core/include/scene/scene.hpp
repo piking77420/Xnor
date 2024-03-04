@@ -18,10 +18,10 @@ public:
 
     DEFAULT_COPY_MOVE_OPERATIONS(Scene)
 
-    template<class ComponentT>
+    template <class ComponentT>
     void GetAllComponentOfType(std::vector<const ComponentT*>*) const;
 
-    template<class ComponentT>
+    template <class ComponentT>
     void GetAllComponentOfType(std::vector<ComponentT*>*);
 
     XNOR_ENGINE void Begin();
@@ -47,7 +47,7 @@ private:
     XNOR_ENGINE void DestroyEntityChildren(Entity* entity);
 };
 
-template<class ComponentT>
+template <class ComponentT>
 void Scene::GetAllComponentOfType(std::vector<const ComponentT*>* componentData) const
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)
@@ -59,7 +59,7 @@ void Scene::GetAllComponentOfType(std::vector<const ComponentT*>* componentData)
     }
 }
 
-template<class ComponentT>
+template <class ComponentT>
 void Scene::GetAllComponentOfType(std::vector<ComponentT*>* componentData)
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)

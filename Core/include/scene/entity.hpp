@@ -13,7 +13,7 @@
 
 BEGIN_XNOR_CORE
 
-template<class T>
+template <class T>
 concept ComponentT = std::is_base_of_v<Component, T>;
 
 class Entity : public Reflectable
@@ -24,27 +24,27 @@ public:
     Transform transform;
     std::string name;
 
-    template<class ComponentT>
+    template <class ComponentT>
     ComponentT* AddComponent();
     
-    template<class ComponentT>
+    template <class ComponentT>
     [[nodiscard]]
     const ComponentT* GetComponent() const;
 
-    template<class ComponentT>
+    template <class ComponentT>
     void GetComponents(std::vector<ComponentT*>* components);
 
-    template<class ComponentT>
+    template <class ComponentT>
     void GetComponents(std::vector<const ComponentT*>* components) const;
     
-    template<class ComponentT>
+    template <class ComponentT>
     ComponentT* GetComponent();
     
-    template<class ComponentT>
+    template <class ComponentT>
     [[nodiscard]]
     bool TryGetComponent(ComponentT** output);
 
-    template<class ComponentT>
+    template <class ComponentT>
     void RemoveComponent();
 
     [[nodiscard]]

@@ -4,8 +4,11 @@
 #include <ImGui/imgui_impl_glfw.h>
 #include <ImGui/imgui_impl_opengl3.h>
 
+#include "file/file_manager.hpp"
 #include "input/time.hpp"
+#include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
+#include "rendering/light/spot_light.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/component/mesh_renderer.hpp"
 #include "scene/component/test_component.hpp"
@@ -13,13 +16,10 @@
 #include "windows/content_browser.hpp"
 #include "windows/editor_window.hpp"
 #include "windows/header_window.hpp"
+#include "windows/hierarchy.hpp"
 #include "windows/inspector.hpp"
 #include "windows/performance.hpp"
 #include "windows/render_window.hpp"
-#include "..\include\windows\hierarchy.hpp"
-#include "file/file_manager.hpp"
-#include "rendering/light/directional_light.hpp"
-#include "rendering/light/spot_light.hpp"
 #include "world/world.hpp"
 
 using namespace XnorEditor;
@@ -76,7 +76,8 @@ void Editor::CreateDefaultWindows()
 	m_UiWindows.push_back(new EditorWindow(this));
 	m_UiWindows.push_back(new RenderWindow(this));
 
-	data.currentScene = XnorCore::FileManager::Get<XnorCore::File>("assets/scenes/basic_scene.scene.xml");
+	if (XnorCore::FileManager::Contains(SerializedScenePath))
+		data.currentScene = XnorCore::FileManager::Get<XnorCore::File>(SerializedScenePath);
 }
 
 void Editor::BeginDockSpace() const
@@ -113,6 +114,7 @@ void Editor::BeginDockSpace() const
 	ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), dockspaceFlags);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeStatic
 void Editor::EndDockSpace() const
 {
 	ImGui::End();
@@ -210,6 +212,7 @@ void Editor::SetupImGuiStyle() const
 	style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.800000011920929f, 0.800000011920929f, 0.800000011920929f, 0.3499999940395355f);
 }
 
+// ReSharper disable once CppMemberFunctionMayBeStatic
 void Editor::CreateTestScene()
 {
 	using namespace XnorCore;
@@ -241,7 +244,7 @@ void Editor::CreateTestScene()
 	Entity& ent3 = *World::world->Scene.CreateEntity("Plane");
 	meshRenderer = ent3.AddComponent<MeshRenderer>();
 	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
-	meshRenderer->material.albedo = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/wood.jpg"));
+	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/wood.jpg");
 	ent3.transform.scale = { 10.f, 0.1f, 10.f };
 	ent3.transform.position -= { 0.f, -0.2f, 0.f};
 	
@@ -249,16 +252,16 @@ void Editor::CreateTestScene()
 	ent4.transform.position = { 2.f, 0, 2.f};
 	meshRenderer = ent4.AddComponent<MeshRenderer>();
 	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
-	meshRenderer->material.albedo = ResourceManager::Load<Texture>(FileManager::Get("assets/textures/diamond_block.jpg"));
+	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/diamond_block.jpg");
 
-	std::array<std::string,6> testCubeMap
+	const std::array<std::string, 6> testCubeMap
 	{
-	  	"assets/skybox/right.jpg",
-		  "assets/skybox/left.jpg",
-		  "assets/skybox/top.jpg",
-		  "assets/skybox/bottom.jpg",
-		  "assets/skybox/front.jpg",
-		  "assets/skybox/back.jpg"
+		"assets/skybox/right.jpg",
+		"assets/skybox/left.jpg",
+		"assets/skybox/top.jpg",
+		"assets/skybox/bottom.jpg",
+		"assets/skybox/front.jpg",
+		"assets/skybox/back.jpg"
 	};
 	World::world->skybox.LoadCubeMap(testCubeMap);
 }
@@ -271,7 +274,18 @@ void Editor::MenuBar() const
 		{
 			if (ImGui::MenuItem("Save"))
 			{
-				XnorCore::Serializer::StartSerialization(data.currentScene->GetPath().generic_string());
+				std::string path;
+				if (data.currentScene == nullptr)
+				{
+					if (!std::filesystem::exists("assets/scenes"))
+						std::filesystem::create_directories("assets/scenes");
+					path = SerializedScenePath;
+				}
+				else
+				{
+					path = data.currentScene->GetPathString();
+				}
+				XnorCore::Serializer::StartSerialization(path);
 				XnorCore::World::world->Scene.Serialize();
 				XnorCore::Serializer::EndSerialization();
 			}
@@ -321,7 +335,6 @@ void Editor::Update()
 		BeginFrame();
 		OnWindowRezize();
 
-
 		ImGui::Begin("Renderer Settings");
 		if (ImGui::Button("Recompile Shader"))
 			renderer.CompileShader();
@@ -340,7 +353,7 @@ void Editor::Update()
 
 void Editor::OnWindowRezize()
 {
-	if(!XnorCore::Window::resizeFrameBuffer)
+	if (!XnorCore::Window::resizeFrameBuffer)
 		return;
 
 	const Vector2i newWindowSize = XnorCore::Window::GetSize();

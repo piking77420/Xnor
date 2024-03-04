@@ -7,9 +7,8 @@ BEGIN_XNOR_EDITOR
 
 class EditorWindow : public RenderWindow
 {
-
 public:
-    EditorWindow(Editor* editor);
+    explicit EditorWindow(Editor* editor);
 
     ~EditorWindow() override = default;
 

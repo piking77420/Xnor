@@ -16,6 +16,8 @@ public:
 
     ~RenderWindow() override;
     
+    DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(RenderWindow);
+    
     void Display() override;
 
     void OnWindowResize(Vector2i newWindowSize) override;

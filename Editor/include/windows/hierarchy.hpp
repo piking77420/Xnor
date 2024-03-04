@@ -22,10 +22,11 @@ private:
     void DisplayEntityRenaming(XnorCore::Entity* entity);
 
     void ProcessEntityDragDrop(XnorCore::Entity* entity);
-    void ProcessEntitySelection(XnorCore::Entity* entity) const;
+    void ProcessEntitySelection(XnorCore::Entity* entity);
     void ProcessEntityDoubleClick(XnorCore::Scene& scene, XnorCore::Entity* entity);
     
     void CheckDeleteEntity(XnorCore::Scene& scene);
+    void CheckUnselectEntity();
 
     [[nodiscard]]
     ImGuiTreeNodeFlags GetEntityNodeFlags(const XnorCore::Entity* entity) const;
@@ -37,6 +38,7 @@ private:
 
     XnorCore::Entity* m_EntityToDelete;
     XnorCore::Entity* m_EntityToRename;
+    bool m_ClickedOnEntity;
 };
 
 END_XNOR_EDITOR

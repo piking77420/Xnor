@@ -12,6 +12,7 @@ Hierarchy::Hierarchy(Editor* editor)
 {
     m_EntityToDelete = nullptr;
     m_EntityToRename = nullptr;
+    m_ClickedOnEntity = false;
 }
 
 void Hierarchy::Display()
@@ -46,7 +47,7 @@ void Hierarchy::Display()
             ImGui::EndDragDropTarget();
         }
 
-        for (size_t i = 0; i < entities.GetSize(); i++)  // NOLINT(modernize-loop-convert)
+        for (size_t i = 0; i < entities.GetSize(); i++)
         {
             if (!entities[i]->HasParent())
                 DisplayEntity(scene, entities[i]);
@@ -56,6 +57,7 @@ void Hierarchy::Display()
     }
     
     CheckDeleteEntity(scene);
+    CheckUnselectEntity();
 }
 
 void Hierarchy::DisplayEntity(XnorCore::Scene& scene, XnorCore::Entity* const entity)
@@ -160,10 +162,13 @@ void Hierarchy::ProcessEntityDragDrop(XnorCore::Entity* const entity)
     }
 }
 
-void Hierarchy::ProcessEntitySelection(XnorCore::Entity* const entity) const
+void Hierarchy::ProcessEntitySelection(XnorCore::Entity* const entity)
 {
     if (ImGui::IsItemClicked())
+    {
         m_Editor->data.selectedEntity = entity;
+        m_ClickedOnEntity = true;
+    }
 }
 
 void Hierarchy::ProcessEntityDoubleClick(XnorCore::Scene&, XnorCore::Entity* const)
@@ -184,6 +189,14 @@ void Hierarchy::CheckDeleteEntity(XnorCore::Scene& scene)
         if (!scene.HasEntity(m_Editor->data.selectedEntity))
             m_Editor->data.selectedEntity = nullptr;
     }
+}
+
+void Hierarchy::CheckUnselectEntity()
+{
+    if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !m_ClickedOnEntity)
+        m_Editor->data.selectedEntity = nullptr;
+    
+    m_ClickedOnEntity = false;
 }
 
 ImGuiTreeNodeFlags Hierarchy::GetEntityNodeFlags(const XnorCore::Entity* const entity) const

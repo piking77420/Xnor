@@ -44,13 +44,13 @@ public:
     
     XNOR_ENGINE static void EndXmlElement();
     
-    template<typename T>
+    template <typename T>
     static void FetchAttribute(const std::string& attributeName, const T& value);
 
-    template<typename ReflectT>
+    template <typename ReflectT>
     static void Serialize(const ReflectT* obj, bool isRoot);
 
-    template<typename ReflectT>
+    template <typename ReflectT>
     static void Deserialize(ReflectT* obj);
     
 private:
@@ -84,7 +84,7 @@ private:
     static constexpr size_t GetFlags(T member);
 };
 
-template<typename T>
+template <typename T>
 void Serializer::FetchAttribute(const std::string& attributeName, const T& value)
 {
     if constexpr (std::is_same_v<std::string, T> || std::is_same_v<const char*, T>)

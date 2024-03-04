@@ -53,14 +53,9 @@ bool Entry::GetLoaded() const
     return m_Loaded;
 }
 
-const Directory* Entry::GetParent() const
+void Entry::SetParent(Pointer<Directory>&& newParent)
 {
-    return m_Parent;
-}
-
-void Entry::SetParent(Directory* newParent)
-{
-    m_Parent = newParent;
+    m_Parent = std::move(newParent);
     std::filesystem::path newPath = m_Parent->GetPathString() + static_cast<char_t>(std::filesystem::path::preferred_separator) + m_Name;
 
     FileManager::Rename(m_Path, newPath);
@@ -68,7 +63,7 @@ void Entry::SetParent(Directory* newParent)
     m_Path = std::move(newPath);
 }
 
-Directory* Entry::GetParent()
+Pointer<Directory> Entry::GetParent()
 {
     return m_Parent;
 }
@@ -78,5 +73,5 @@ void Entry::UpdateUtilityValues()
     m_Name = m_Path.filename().generic_string();
     const std::filesystem::path parent = m_Path.parent_path();
     if (FileManager::Contains(parent))
-        m_Parent = static_cast<Directory*>(FileManager::Get<Directory>(parent));
+        m_Parent = FileManager::Get<Directory>(parent);
 }

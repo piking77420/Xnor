@@ -10,7 +10,6 @@ class Editor;
 
 class EditorCamera
 {
-private:
     static constexpr float_t MaxPitch = 89.0f;
 
 public:
