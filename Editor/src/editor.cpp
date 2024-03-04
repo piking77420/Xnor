@@ -76,7 +76,8 @@ void Editor::CreateDefaultWindows()
 	m_UiWindows.push_back(new EditorWindow(this));
 	m_UiWindows.push_back(new RenderWindow(this));
 
-	data.currentScene = XnorCore::FileManager::Get<XnorCore::File>("assets/scenes/basic_scene.scene.xml");
+	if (XnorCore::FileManager::Contains(SerializedScenePath))
+		data.currentScene = XnorCore::FileManager::Get<XnorCore::File>(SerializedScenePath);
 }
 
 void Editor::BeginDockSpace() const
@@ -271,7 +272,7 @@ void Editor::MenuBar() const
 		{
 			if (ImGui::MenuItem("Save"))
 			{
-				XnorCore::Serializer::StartSerialization(data.currentScene->GetPath().generic_string());
+				XnorCore::Serializer::StartSerialization(data.currentScene != nullptr ? data.currentScene->GetPathString() : SerializedScenePath);
 				XnorCore::World::world->Scene.Serialize();
 				XnorCore::Serializer::EndSerialization();
 			}

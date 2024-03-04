@@ -3,6 +3,7 @@
 #include <filesystem>
 
 #include "core.hpp"
+#include "utils/pointer.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -45,15 +46,12 @@ public:
     
     [[nodiscard]]
     XNOR_ENGINE bool GetLoaded() const;
-    
-    [[nodiscard]]
-    XNOR_ENGINE const Directory* GetParent() const;
 
     /// @brief Sets the new path of this @ref Entry.
-    virtual void SetParent(Directory* newParent);
+    virtual void SetParent(Pointer<Directory>&& newParent);
     
     [[nodiscard]]
-    XNOR_ENGINE Directory* GetParent();
+    XNOR_ENGINE Pointer<Directory> GetParent();
 
 protected:
     std::filesystem::path m_Path;
@@ -61,9 +59,14 @@ protected:
     
     bool m_Loaded = false;
 
-    Directory* m_Parent;
+    Pointer<Directory> m_Parent;
 
     virtual void UpdateUtilityValues();
 };
 
 END_XNOR_CORE
+
+// We cannot include directory.hpp above the class declaration, as the Directory class inherits from Entry.
+// However, we also need to include this in every file in which we include entry.hpp, as the Entry class contains a Pointer<Directory>
+// which needs the Directory class to be defined at some point so its destructor is defined as well
+#include "file/directory.hpp"

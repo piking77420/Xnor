@@ -77,5 +77,5 @@ void Directory::SetName(const std::string& newName)
     Entry::SetName(newName);
 
     for (auto&& entry : GetChildEntries())
-        entry->SetParent(this);
+        entry->SetParent(FileManager::Get<Directory>(m_Path));
 }
