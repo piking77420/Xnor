@@ -14,10 +14,9 @@ BEGIN_XNOR_CORE
 
 class Rhi
 {
-public:
-
-	DELETE_COPY_MOVE_OPERATIONS(Rhi)
+	STATIC_CLASS(Rhi)
 	
+public:
 	// Utils
 	XNOR_ENGINE static void SetPolygonMode(PolygonFace face, PolygonMode mode);
 	XNOR_ENGINE static void SetViewport(Vector2i screenSize);
@@ -44,8 +43,6 @@ public:
 	// CubeMap
 	XNOR_ENGINE static void CreateCubeMap(uint32_t* textureId, const CreateCubeMapInfo& createCubeMapInfo);
 
-
-	
 	// FrameBuffer
 	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferId,const RenderPass& renderPass,const std::vector<const Texture*>& attechements);
 	XNOR_ENGINE static void DestroyFrameBuffer(uint32_t* frameBufferId);
@@ -107,8 +104,6 @@ private:
 	XNOR_ENGINE static inline std::unordered_map<uint32_t, ShaderInternal> m_ShaderMap;
 	XNOR_ENGINE static inline std::unordered_map<uint32_t, ModelInternal> m_ModelMap;
 
-
-	
 	XNOR_ENGINE static void IsShaderValid(uint32_t shaderId);
 	
 	XNOR_ENGINE static int32_t GetUniformInMap(uint32_t shaderId, const char* uniformKey);
@@ -118,7 +113,6 @@ private:
 	// Texture 
 	XNOR_ENGINE static void AllocTexture2D(const uint32_t* textureId, const TextureCreateInfo& textureCreateInfo);
 	XNOR_ENGINE static void CreateTexture(uint32_t* textureId,TextureType textureType);
-
 
 	// Enum to OpenglEnum
 	XNOR_ENGINE static uint32_t GetOpengDepthEnum(DepthFunction depthFunction);
@@ -131,7 +125,7 @@ private:
 	XNOR_ENGINE static uint32_t GetOpenglTextureFilter(TextureFiltering textureFiltering);
 	XNOR_ENGINE static uint32_t GetBlendValueOpengl(BlendValue blendFunction);
 
-	static void OpenglDebugCallBack(
+	XNOR_ENGINE static void OpenglDebugCallBack(
 		uint32_t source,
 		uint32_t type,
 		uint32_t id,

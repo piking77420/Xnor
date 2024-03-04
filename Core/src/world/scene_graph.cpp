@@ -9,57 +9,57 @@ Vector3 ScaleVector(const Vector3& v,const float desiredLength)
 	return v * desiredLength / v.Length();
 }
 
-Vector3 Combine(Vector3 const& a,Vector3 const& b, const float ascl,const float bscl)
+Vector3 Combine(Vector3 const& a,Vector3 const& b, const float ascl, const float bscl)
 {
 	return (a * ascl) + (b * bscl);
 }
 
 bool Decompose(Matrix const& modelMatrix, Vector3* translation,
-	Quaternion* orientation,Vector3* Scale,
+	Quaternion* orientation, Vector3* scale,
 	Vector3* skew, Vector4* perspective)
 {
-	Matrix LocalMatrix(modelMatrix);
+	Matrix localMatrix(modelMatrix);
 
-	if (Calc::IsZero(LocalMatrix.m33))
+	if (Calc::IsZero(localMatrix.m33))
 		return false;
 	
 	// Normalize the matrix.
-	float_t Invm33 = 1.f/LocalMatrix[3][3];
-	float_t* matrix = LocalMatrix.Raw();
+	float_t invm33 = 1.f/localMatrix[3][3];
+	float_t* matrix = localMatrix.Raw();
 	
 	for (uint32_t i = 0; i < 16; i++)
 	{
-		matrix[i] *= Invm33;
+		matrix[i] *= invm33;
 	}
 
-	Matrix PerspectiveMatrix(LocalMatrix);
-	PerspectiveMatrix.m30 = 0.f;
-	PerspectiveMatrix.m31 = 0.f;
-	PerspectiveMatrix.m32 = 0.f;
-	PerspectiveMatrix.m33 = 1.f;
+	Matrix perspectiveMatrix(localMatrix);
+	perspectiveMatrix.m30 = 0.f;
+	perspectiveMatrix.m31 = 0.f;
+	perspectiveMatrix.m32 = 0.f;
+	perspectiveMatrix.m33 = 1.f;
 
-	if(Calc::IsZero(PerspectiveMatrix.Determinant(), 0.f))
+	if(Calc::IsZero(perspectiveMatrix.Determinant(), 0.f))
 		return false;
 
 	// First, isolate perspective.  This is the messiest.
-	if(Calc::IsZero(LocalMatrix.m30,0.f) ||Calc::IsZero(LocalMatrix.m31,0.f) ||
-		Calc::IsZero(LocalMatrix.m32,0.f) )
+	if(Calc::IsZero(localMatrix.m30,0.f) ||Calc::IsZero(localMatrix.m31,0.f) ||
+		Calc::IsZero(localMatrix.m32,0.f) )
 	{
 		// rightHandSide is the right hand side of the equation.
-		Vector4 RightHandSide;
-		RightHandSide[0] = LocalMatrix[0][3];
-		RightHandSide[1] = LocalMatrix[1][3];
-		RightHandSide[2] = LocalMatrix[2][3];
-		RightHandSide[3] = LocalMatrix[3][3];
+		Vector4 rightHandSide;
+		rightHandSide[0] = localMatrix[0][3];
+		rightHandSide[1] = localMatrix[1][3];
+		rightHandSide[2] = localMatrix[2][3];
+		rightHandSide[3] = localMatrix[3][3];
 		
-		Matrix InversePerspectiveMatrix = PerspectiveMatrix.Inverted();
-		Matrix TransposedInversePerspectiveMatrix = InversePerspectiveMatrix.Transposed();
+		Matrix inversePerspectiveMatrix = perspectiveMatrix.Inverted();
+		Matrix transposedInversePerspectiveMatrix = inversePerspectiveMatrix.Transposed();
 
-		*perspective = TransposedInversePerspectiveMatrix * RightHandSide;
+		*perspective = transposedInversePerspectiveMatrix * rightHandSide;
 
 		// Clear the perspective partition
-		LocalMatrix.m30 = LocalMatrix.m13 = LocalMatrix.m23 = static_cast<float_t>(0);
-		LocalMatrix.m33 = static_cast<float_t>(1);
+		localMatrix.m30 = localMatrix.m13 = localMatrix.m23 = static_cast<float_t>(0);
+		localMatrix.m33 = static_cast<float_t>(1);
 	}
 	else
 	{
@@ -67,87 +67,87 @@ bool Decompose(Matrix const& modelMatrix, Vector3* translation,
 	}
 
 	// Next take care of translation (easy).
-	*translation = Vector3(LocalMatrix[3]);
-	Vector4& localMatrixColoms4 = reinterpret_cast<Vector4&>(LocalMatrix.m03); 
-	localMatrixColoms4 = Vector4(0, 0, 0, LocalMatrix[3].w);
+	*translation = Vector3(localMatrix[3]);
+	Vector4& localMatrixColoms4 = reinterpret_cast<Vector4&>(localMatrix.m03); 
+	localMatrixColoms4 = Vector4(0, 0, 0, localMatrix[3].w);
 
-	Vector3 Row[3], Pdum3;
+	Vector3 row[3], pdum3;
 
 	// Now get scale and shear.
 	for(int32_t i = 0; i < 3; ++i)
 	for(int32_t j = 0; j < 3; ++j)
-		Row[i][j] = LocalMatrix[static_cast<uint8_t>(i)][j];
+		row[i][j] = localMatrix[static_cast<uint8_t>(i)][j];
 
 	// Compute X scale factor and normalize first row.
-	Scale->x = Row[0].Length();
+	scale->x = row[0].Length();
 
-	Row[0] = ScaleVector(Row[0],1.f);
+	row[0] = ScaleVector(row[0],1.f);
 
 	// Compute XY shear factor and make 2nd row orthogonal to 1st.
-	skew->z = Vector3::Dot(Row[0], Row[1]);
-	Row[1] = Combine(Row[1], Row[0], 1.f, -skew->z);
+	skew->z = Vector3::Dot(row[0], row[1]);
+	row[1] = Combine(row[1], row[0], 1.f, -skew->z);
 
 	// Now, compute Y scale and normalize 2nd row.
-	Scale->y = Row[1].Length();
-	Row[1] = ScaleVector(Row[1], 1.f);
-	skew->z /= Scale->y;
+	scale->y = row[1].Length();
+	row[1] = ScaleVector(row[1], 1.f);
+	skew->z /= scale->y;
 
 	// Compute XZ and YZ shears, orthogonalize 3rd row.
-	skew->y = Vector3::Dot(Row[0], Row[2]);
-	Row[2] = Combine(Row[2], Row[0], 1.f, -skew->y);
-	skew->x = Vector3::Dot(Row[1], Row[2]);
-	Row[2] = Combine(Row[2], Row[1], 1.f, -skew->x);
+	skew->y = Vector3::Dot(row[0], row[2]);
+	row[2] = Combine(row[2], row[0], 1.f, -skew->y);
+	skew->x = Vector3::Dot(row[1], row[2]);
+	row[2] = Combine(row[2], row[1], 1.f, -skew->x);
 
 	// Next, get Z scale and normalize 3rd row.
-	Scale->z = Row[2].Length();
-	Row[2] = ScaleVector(Row[2], 1.f);
-	skew->y /= Scale->z;
-	skew->x /= Scale->z;
+	scale->z = row[2].Length();
+	row[2] = ScaleVector(row[2], 1.f);
+	skew->y /= scale->z;
+	skew->x /= scale->z;
 
 	// At this point, the matrix (in rows[]) is orthonormal.
 	// Check for a coordinate system flip.  If the determinant
 	// is -1, then negate the matrix and the scaling factors.
-	Pdum3 = Vector3::Cross(Row[1], Row[2]); 
-	if(Vector3::Dot(Row[0], Pdum3) < 0)
+	pdum3 = Vector3::Cross(row[1], row[2]); 
+	if(Vector3::Dot(row[0], pdum3) < 0)
 	{
 		for(uint32_t i = 0; i < 3; i++)
 		{
-			Scale[i] *= -1.f;
-			Row[i] *= -1.f;
+			scale[i] *= -1.f;
+			row[i] *= -1.f;
 		}
 	}
 
 	int32_t i, j, k = 0;
 	float_t root = 0.f;
-	float_t trace = Row[0].x + Row[1].y + Row[2].z;
+	float_t trace = row[0].x + row[1].y + row[2].z;
 	
 	if (trace > 0.f)
 	{
 		root = sqrt(trace + 1.0f);
 		orientation->W() = 0.5f * root;
 		root = 0.5f / root;
-		orientation->X() = root * (Row[1].z - Row[2].y);
-		orientation->Y() = root * (Row[2].x - Row[0].z);
-		orientation->Z() = root * (Row[0].y - Row[1].x);
+		orientation->X() = root * (row[1].z - row[2].y);
+		orientation->Y() = root * (row[2].x - row[0].z);
+		orientation->Z() = root * (row[0].y - row[1].x);
 	} 
 	else
 	{
-		static int Next[3] = {1, 2, 0};
+		static int next[3] = {1, 2, 0};
 		i = 0;
-		if(Row[1].y > Row[0].x) i = 1;
-		if(Row[2].z > Row[i][i]) i = 2;
-		j = Next[i];
-		k = Next[j];
+		if(row[1].y > row[0].x) i = 1;
+		if(row[2].z > row[i][i]) i = 2;
+		j = next[i];
+		k = next[j];
 
-		root = sqrt(Row[i][i] - Row[j][j] - Row[k][k] + 1.0f);
+		root = sqrt(row[i][i] - row[j][j] - row[k][k] + 1.0f);
 
 		// ref operator [] ambiguous with Quaternion*
 		Quaternion& ref = *orientation;
 		ref[i] = 0.5f * root;
 		root = 0.5f / root;
-		ref[j] = root * (Row[i][j] + Row[j][i]);
-		ref[k] = root * (Row[i][k] + Row[k][i]);
-		ref.W() = root * (Row[j][k] - Row[k][j]);
+		ref[j] = root * (row[i][j] + row[j][i]);
+		ref[k] = root * (row[i][k] + row[k][i]);
+		ref.W() = root * (row[j][k] - row[k][j]);
 	} 
 
 	return true;

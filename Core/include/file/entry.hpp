@@ -5,6 +5,9 @@
 #include "core.hpp"
 #include "utils/pointer.hpp"
 
+/// @file entry.hpp
+/// @brief Defines the @ref Entry class.
+
 BEGIN_XNOR_CORE
 
 class Directory;

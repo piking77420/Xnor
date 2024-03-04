@@ -7,6 +7,9 @@
 #include "resource/resource.hpp"
 #include "utils/pointer.hpp"
 
+/// @file file.hpp
+/// @brief Defines the @ref File class.
+
 BEGIN_XNOR_CORE
 
 class File : public Entry

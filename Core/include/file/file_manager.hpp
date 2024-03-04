@@ -10,8 +10,12 @@
 #include "utils/logger.hpp"
 #include "utils/pointer.hpp"
 
+/// @file file_manager.hpp
+/// @brief Defines the @ref FileManager class.
+
 BEGIN_XNOR_CORE
 
+/// @brief A class satisfies the @ref EntryT concept if it is derived of @ref Entry.
 template <class T>
 concept EntryT = std::is_base_of_v<Entry, T>;
 
