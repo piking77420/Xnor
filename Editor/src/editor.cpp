@@ -70,8 +70,8 @@ void Editor::CreateDefaultWindows()
 	m_UiWindows.push_back(new HeaderWindow(this));
 	m_UiWindows.push_back(new Hierarchy(this));
 	m_UiWindows.push_back(new ContentBrowser(this, XnorCore::FileManager::Get<XnorCore::Directory>("assets")));
-	m_UiWindows.push_back(new EditorWindow(this));
 	m_UiWindows.push_back(new RenderWindow(this));
+	m_UiWindows.push_back(new EditorWindow(this));
 
 	if (XnorCore::FileManager::Contains(SerializedScenePath))
 		data.currentScene = XnorCore::FileManager::Get<XnorCore::File>(SerializedScenePath);
