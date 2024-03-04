@@ -16,5 +16,5 @@ int main(int, char**)
 
 	editor.Update();
 
-	return 0;
+	return EXIT_SUCCESS;
 }
