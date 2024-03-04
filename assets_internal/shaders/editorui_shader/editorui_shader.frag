@@ -11,5 +11,5 @@ uniform sampler2D uiTexture;
 
 void main()
 {
-	FragColor = vec4(texture(uiTexture,fs_in.TexCoords).rgb,1);
+	FragColor = vec4(texture(uiTexture,fs_in.TexCoords));
 }

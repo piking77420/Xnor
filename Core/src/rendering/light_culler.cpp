@@ -77,7 +77,8 @@ void LightCuller::UpdateLight(const std::vector<const PointLight*>& pointLightCo
 
 	if (!directionalComponent.empty())
 	{
-		const Matrix matrix = Matrix::Trs(Vector3(0.f), directionalComponent[0]->entity->transform.rotation, Vector3(1.f));
+		constexpr float_t scaleFactor = 0.5f;
+		const Matrix matrix = Matrix::Trs(Vector3(0.f), directionalComponent[0]->entity->transform.rotation, Vector3(scaleFactor));
 		const Vector4 direction = matrix * (-Vector4::UnitY()); 
 		
 		gpuLightData.directionalData =
@@ -136,11 +137,23 @@ void LightCuller::DrawLightGizmo(const std::vector<const PointLight*>& pointLigh
 	// ReSharper disable once CppDiscardedPostfixOperatorResult
 	for ([[maybe_unused]] std::map<float_t,GizmoLight>::reverse_iterator it = sortedLight.rbegin(); it != sortedLight.rend(); it++)
 	{
+		float_t scaleFactor = 0.5f;
 		ModelUniformData modelData;
-		modelData.model = mat4::Trs(it->second.pos,Quaternion::Identity(),vec3(1.f));
+		modelData.model = mat4::Trs(it->second.pos,Quaternion::Identity(),vec3(scaleFactor));
 		modelData.normalInvertMatrix = mat4::Identity();
 
-		m_PointLightTexture->BindTexture(0);
+		switch (it->second.type)
+		{
+			case RenderingLight::PointLight:
+				m_PointLightTexture->BindTexture(0);
+				break;
+			case RenderingLight::SpothLight:
+				m_SpotLightTexture->BindTexture(0);
+				break;
+			case RenderingLight::DirLight:
+				m_DirLightTexture->BindTexture(0);
+				break;
+		}
 		
 		Rhi::UpdateModelUniform(modelData);
 		Rhi::DrawModel(m_Quad->GetId());

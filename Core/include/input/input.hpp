@@ -24,7 +24,7 @@ public:
     
     XNOR_ENGINE static bool_t GetMouseButton(MouseButton mouseButton, MouseButtonStatus status = MouseButtonStatus::Down);
     
-    XNOR_ENGINE static bool_t GetGamepadButton(uint32_t gamePadId, GamepadButton gamepadButton, GameButtonStatus buttonStatus);
+    XNOR_ENGINE static bool_t GetGamepadButton(uint32_t gamePadId, GamepadButton gamepadButton, GamepadButtonStatus buttonStatus);
 
     XNOR_ENGINE static void HandleEvent();
     
@@ -48,7 +48,7 @@ private:
     XNOR_ENGINE static inline std::array<GamepadInput, GamepadMax> m_Gamepads;
 
     // For each Status
-    using GameButtonStatuses = std::array<bool_t, static_cast<uint8_t>(GameButtonStatus::Count)>;
+    using GameButtonStatuses = std::array<bool_t, static_cast<uint8_t>(GamepadButtonStatus::Count)>;
     // For each Button
     using GamePadsButton = std::array<GameButtonStatuses, static_cast<uint32_t>(GamepadButton::Count)>;
     // For each Gamepad

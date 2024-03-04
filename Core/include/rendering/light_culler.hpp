@@ -12,7 +12,7 @@
 #include "resource/texture.hpp"
 
 BEGIN_XNOR_CORE
-    class LightCuller
+class LightCuller
 {
 public:
 

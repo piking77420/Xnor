@@ -73,8 +73,8 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	
 	// ForwardPass //
 	ForwardRendering(meshrenderers, &rendererContext);
-	m_LightCuller.DrawLightGizmo(pointLights,spotLights,directionalLights,*rendererContext.camera);
 	m_SkyboxRenderer.DrawSkymap(m_Cube,World::skybox);
+	m_LightCuller.DrawLightGizmo(pointLights,spotLights,directionalLights,*rendererContext.camera);
 	m_RenderBuffer->UnBindFrameBuffer();
 	
 	// DRAW THE FINAL IMAGE TEXTURE

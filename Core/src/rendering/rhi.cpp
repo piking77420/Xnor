@@ -148,6 +148,7 @@ uint32_t Rhi::CreateShaders(const std::vector<ShaderCode>& shaderCodes,const Sha
 
 	ShaderInternal shaderInternal;
 	shaderInternal.depthFunction = shaderCreateInfo.depthFunction;
+	shaderInternal.blendFunction = shaderCreateInfo.blendFunction;
 	
 	m_ShaderMap.emplace(programId,shaderInternal);
 	
