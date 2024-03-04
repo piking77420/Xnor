@@ -1,4 +1,4 @@
-﻿#include "..\..\include\input\input.hpp"
+﻿#include "input\input.hpp"
 
 #include "assimp/Logger.hpp"
 #include "utils/logger.hpp"
@@ -15,7 +15,7 @@ bool Input::GetMouseButton(const MouseButton mouseButton, const MouseButtonStatu
     return m_Mouse.at(static_cast<uint8_t>(mouseButton)).at(static_cast<uint8_t>(status));
 }
 
-bool Input::GetGamePadButton(const uint32_t gamePadId, const GamepadButton gamepadButton, const GameButtonStatus buttonStatus)
+bool Input::GetGamePadButton(const uint32_t gamePadId, const GamepadButton gamepadButton, const GamepadButtonStatus buttonStatus)
 {
     if(gamePadId > GamePadMax)
     {
@@ -122,24 +122,24 @@ void Input::HandleGamePad()
         for (uint32_t k = 0; k < static_cast<uint32_t>(GamepadButton::Count) - 1; k++)
         {
             GameButtonStatuses& statuses = m_GamePadsButton[i].at(k);
-            const bool_t isDown = statuses.at(static_cast<uint8_t>(GameButtonStatus::Down));
-            const bool_t isPress = statuses.at(static_cast<uint8_t>(GameButtonStatus::Press));
+            const bool_t isDown = statuses.at(static_cast<uint8_t>(GamepadButtonStatus::Down));
+            const bool_t isPress = statuses.at(static_cast<uint8_t>(GamepadButtonStatus::Press));
             
             switch (state.buttons[k])
             {
                 case GLFW_RELEASE :
                     if (isDown || isPress)
                     {
-                        statuses.at(static_cast<uint8_t>(GameButtonStatus::Release)) = true;
-                        statuses.at(static_cast<uint8_t>(GameButtonStatus::Down)) = false;
-                        statuses.at(static_cast<uint8_t>(GameButtonStatus::Press)) = false;
+                        statuses.at(static_cast<uint8_t>(GamepadButtonStatus::Release)) = true;
+                        statuses.at(static_cast<uint8_t>(GamepadButtonStatus::Down)) = false;
+                        statuses.at(static_cast<uint8_t>(GamepadButtonStatus::Press)) = false;
                     }
                 break;
                 
                 case GLFW_PRESS :
-                    statuses.at(static_cast<uint8_t>(GameButtonStatus::Release)) = false;
-                    statuses.at(static_cast<uint8_t>(GameButtonStatus::Down)) = true;
-                    statuses.at(static_cast<uint8_t>(GameButtonStatus::Press)) = true;
+                    statuses.at(static_cast<uint8_t>(GamepadButtonStatus::Release)) = false;
+                    statuses.at(static_cast<uint8_t>(GamepadButtonStatus::Down)) = true;
+                    statuses.at(static_cast<uint8_t>(GamepadButtonStatus::Press)) = true;
                     
                 break;
                 
@@ -200,8 +200,8 @@ void Input::Reset()
         {
             for (uint32_t j = 0; j < m_GamePadsButton.at(i).at(k).size(); j++)
             {
-                m_GamePadsButton.at(i).at(k).at(static_cast<uint8_t>(GameButtonStatus::Press)) = false;
-                m_GamePadsButton.at(i).at(k).at(static_cast<uint8_t>(GameButtonStatus::Release)) = false;
+                m_GamePadsButton.at(i).at(k).at(static_cast<uint8_t>(GamepadButtonStatus::Press)) = false;
+                m_GamePadsButton.at(i).at(k).at(static_cast<uint8_t>(GamepadButtonStatus::Release)) = false;
             }
         }
     }

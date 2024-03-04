@@ -176,7 +176,7 @@ enum class MouseButtonStatus : uint8_t
     Count
 };
 
-enum class GameButtonStatus : uint8_t
+enum class GamepadButtonStatus : uint8_t
 {
     Press,
     Down,
@@ -194,7 +194,7 @@ public:
     
     XNOR_ENGINE static bool GetMouseButton(MouseButton mouseButton, MouseButtonStatus status = MouseButtonStatus::Down);
     
-    XNOR_ENGINE static bool GetGamePadButton(uint32_t gamePadId, GamepadButton gamepadButton, GameButtonStatus buttonStatus);
+    XNOR_ENGINE static bool GetGamePadButton(uint32_t gamePadId, GamepadButton gamepadButton, GamepadButtonStatus buttonStatus);
 
     XNOR_ENGINE static void HandleEvent();
     
@@ -218,7 +218,7 @@ private:
     XNOR_ENGINE static inline std::array<GamepadInput,GamePadMax> m_GamePads;
 
     // For each Status
-    using GameButtonStatuses = std::array<bool, static_cast<uint8_t>(GameButtonStatus::Count)>;
+    using GameButtonStatuses = std::array<bool, static_cast<uint8_t>(GamepadButtonStatus::Count)>;
     // For each Button
     using GamePadsButton = std::array<GameButtonStatuses, static_cast<uint32_t>(GamepadButton::Count)>;
     // For each Gamepad

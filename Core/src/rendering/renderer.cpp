@@ -25,6 +25,7 @@ void Renderer::Initialize()
 	InitResources();
 	m_ToneMapping.InitializeResources();
 	m_SkyboxRenderer.InitializeResources();
+	m_LightCuller.InitResources();
 
 	Rhi::PrepareUniform();
 
@@ -50,7 +51,7 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	scene.GetAllComponentOfType<DirectionalLight>(&directionalLights);
 
 	// Update Light
-	UpdateLight(pointLights,spotLights,directionalLights);
+	m_LightCuller.UpdateLight(pointLights,spotLights,directionalLights);
 	
 	// Update Camera
 	CameraUniformData cam;
@@ -58,46 +59,31 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	rendererContext.camera->GetProjection(rendererContext.framebuffer->GetSize(), &cam.projection);
 	cam.cameraPos = rendererContext.camera->pos;
 	Rhi::UpdateCameraUniform(cam);
-
+	
 	Rhi::SetViewport(m_RenderBuffer->GetSize());
+	
 	// Clear MainWindow // 
 	Rhi::ClearColorAndDepth();
 	
-	// Bind for gbuffer pass // 
-	m_GframeBuffer->BindFrameBuffer();
-	Rhi::ClearColorAndDepth();
-	m_GBufferShader->Use();
-	DrawMeshRendersByType(meshrenderers, MaterialType::Opaque);
-	m_GBufferShader->Unuse();
-
-	// Shading Gbuffer Value //
-	m_RenderBuffer->BindFrameBuffer();
-	
-	// Clear color only
-	Rhi::ClearColorAndDepth();
-	m_GBufferShaderLit->Use();
-	Rhi::DrawQuad(m_Quad->GetId());
-	m_GBufferShaderLit->Unuse();
-	// END DEFERRED RENDERING
-
+	DefferedRendering(meshrenderers, &rendererContext);
 	// Blit depth of gbuffer to forward Pass
 	Rhi::BlitFrameBuffer(m_GframeBuffer->GetId(), m_RenderBuffer->GetId(),
 		{0, 0},m_GframeBuffer->GetSize(),
-		{0,0}, m_RenderBuffer->GetSize(), Attachment::Depth, TextureFiltering::Nearest);
+		{0, 0},m_RenderBuffer->GetSize(), Attachment::Depth, TextureFiltering::Nearest);
 	
 	// ForwardPass //
-	DrawAabb(meshrenderers);
-	m_SkyboxRenderer.DrawSkymap(m_Cube, World::skybox);
+	ForwardRendering(meshrenderers, &rendererContext);
+	m_LightCuller.DrawLightGizmo(pointLights,spotLights,directionalLights,*rendererContext.camera);
+	m_SkyboxRenderer.DrawSkymap(m_Cube,World::skybox);
 	m_RenderBuffer->UnBindFrameBuffer();
 	
 	// DRAW THE FINAL IMAGE TEXTURE
-
 	m_ToneMapping.ComputeToneMaping(*m_ColorAttachment,m_Quad);
+
 	
 	if (rendererContext.framebuffer != nullptr)
 	{
 		rendererContext.framebuffer->BindFrameBuffer();
-		
 		Rhi::ClearColorAndDepth();
 		Rhi::SetViewport(rendererContext.framebuffer->GetSize());
 	}
@@ -138,123 +124,6 @@ void Renderer::PrepareRendering(const vec2i windowSize)
 	m_ToneMapping.Initialize(windowSize);
 }
 
-void Renderer::UpdateLight(const std::vector<const PointLight*>& pointLightComponents,
-	const std::vector<const SpotLight*>& spotLightsComponents, const std::vector<const DirectionalLight*>& directionalComponent) const
-{
-	
-	if (directionalComponent.size() > MaxDirectionalLights)
-	{
-		Logger::LogWarning("You cannot have more than 1 directional light in the scene");
-	}
-	
-	GpuLightData gpuLightData
-	{
-		.nbrOfPointLight = static_cast<uint32_t>(pointLightComponents.size()),
-		.nbrOfSpotLight = static_cast<uint32_t>(spotLightsComponents.size())
-	};
-
-	size_t nbrOfpointLight = pointLightComponents.size();
-	nbrOfpointLight = std::clamp<size_t>(nbrOfpointLight, 0, MaxPointLights);
-
-	size_t nbrOfspothLight = spotLightsComponents.size();
-	nbrOfspothLight = std::clamp<size_t>(nbrOfspothLight, 0, MaxSpotLights);
-
-	for (size_t i = 0; i < nbrOfpointLight; i++)
-	{
-		const PointLight* pointLight = pointLightComponents[i];
-		
-		gpuLightData.pointLightData[i] =
-		{
-			.color = pointLight->color,
-			.intensity = pointLight->intensity,
-			.position = pointLight->entity->transform.GetWorldPos(),
-			.radius = 30.f * sqrt(pointLight->intensity),
-		};
-	}
-	gpuLightData.nbrOfPointLight = static_cast<uint32_t>(nbrOfpointLight);
-
-	for (size_t i = 0 ; i < nbrOfspothLight ; i++)
-	{
-		const SpotLight* spotLight = spotLightsComponents[i];
-		const Matrix matrix = Matrix::Trs(Vector3(0.f), spotLight->entity->transform.rotation.Normalized(), Vector3(1.f));
-		const Vector4 direction = matrix * (-Vector4::UnitY());
-		
-		gpuLightData.spotLightData[i] =
-		{
-			.color = spotLight->color,
-			.intensity = spotLight->intensity,
-			.position = spotLight->entity->transform.GetWorldPos(),
-			.cutOff = std::cos(spotLight->cutOff),
-			.direction = { direction.x, direction.y, direction.z },
-			.outerCutOff = std::cos(spotLight->outerCutOff),
-		};
-	}
-	
-	gpuLightData.nbrOfSpotLight = static_cast<uint32_t>(nbrOfspothLight);
-
-	if (!directionalComponent.empty())
-	{
-		const Matrix matrix = Matrix::Trs(Vector3(0.f), directionalComponent[0]->entity->transform.rotation, Vector3(1.f));
-		const Vector4 direction = matrix * (-Vector4::UnitY()); 
-		
-		gpuLightData.directionalData =
-		{
-			.color = directionalComponent[0]->color,
-			.intensity = directionalComponent[0]->intensity,
-			.direction = { direction.x, direction.y, direction.z },
-		};
-	}
-
-	Rhi::UpdateLight(gpuLightData);
-}
-
-void Renderer::DrawLightGizmo(
-	const std::vector<const PointLight*>& pointLightComponents,
-	const std::vector<const SpotLight*>& spotLightsComponents,
-	const  std::vector<const DirectionalLight*>& directionalComponent,const Camera& camera
-) const
-{
-	std::map<float_t, GizmoLight> sortedLight;
-	
-	for (const PointLight* const pointLight : pointLightComponents)
-	{
-		GizmoLight gizmoLight = {
-			.pos = pointLight->entity->transform.position,
-			.type = RenderingLight::PointLight,
-		};
-		
-		const float_t distance = (camera.pos - pointLight->entity->transform.position).SquaredLength();
-		sortedLight.emplace(distance, gizmoLight);
-	}
-	
-	for (const SpotLight* const spotLight : spotLightsComponents)
-	{
-		GizmoLight gizmoLight = {
-			.pos = spotLight->entity->transform.position,
-			.type = RenderingLight::SpothLight
-		};
-		
-		const float_t distance = (camera.pos - spotLight->entity->transform.position).SquaredLength();
-		sortedLight.emplace(distance, gizmoLight);
-	}
-	
-	for (const DirectionalLight* const dirLight : directionalComponent)
-	{
-		GizmoLight gizmoLight = {
-			.pos = dirLight->entity->transform.position,
-			.type = RenderingLight::DirLight
-		};
-		
-		const float_t distance = (camera.pos - dirLight->entity->transform.position).SquaredLength();
-		sortedLight.emplace(distance, gizmoLight);
-	}
-
-	// ReSharper disable once CppDiscardedPostfixOperatorResult
-	for ([[maybe_unused]] std::map<float_t,GizmoLight>::reverse_iterator it = sortedLight.rbegin(); it != sortedLight.rend(); it++)
-	{
-		
-	}
-}
 
 void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers, const MaterialType materialtype) const
 {
@@ -383,6 +252,34 @@ void Renderer::DestroyAttachment() const
 	delete m_DepthAttachment;
 	delete m_ColorAttachment;
 }
+
+void Renderer::DefferedRendering(const std::vector<const MeshRenderer*> meshrenderers,const RendererContext*) const
+{
+	// Bind for gbuffer pass // 
+	m_GframeBuffer->BindFrameBuffer();
+	Rhi::ClearColorAndDepth();
+	m_GBufferShader->Use();
+	DrawMeshRendersByType(meshrenderers, MaterialType::Opaque);
+	m_GBufferShader->Unuse();
+
+	// Shading Gbuffer Value //
+	m_RenderBuffer->BindFrameBuffer();
+	
+	// Clear color only
+	Rhi::ClearColorAndDepth();
+	m_GBufferShaderLit->Use();
+	Rhi::DrawQuad(m_Quad->GetId());
+	m_GBufferShaderLit->Unuse();
+	// END DEFERRED RENDERING
+}
+
+void Renderer::ForwardRendering(const std::vector<const MeshRenderer*> meshrenderers,const RendererContext* rendererContext) const
+{
+	if (rendererContext->isEditor)
+	{	DrawAabb(meshrenderers);
+	}
+}
+
 
 void Renderer::InitResources()
 {

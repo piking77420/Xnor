@@ -122,6 +122,7 @@
     <ClCompile Include="src\rendering\light\light.cpp" />
     <ClCompile Include="src\rendering\light\point_light.cpp" />
     <ClCompile Include="src\rendering\light\spot_light.cpp" />
+    <ClCompile Include="src\rendering\light_culler.cpp" />
     <ClCompile Include="src\rendering\material.cpp" />
     <ClCompile Include="src\rendering\render_pass.cpp" />
     <ClCompile Include="src\rendering\rhi.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="include\rendering\light\light.hpp" />
     <ClInclude Include="include\rendering\light\point_light.hpp" />
     <ClInclude Include="include\rendering\light\spot_light.hpp" />
+    <ClInclude Include="include\rendering\light_culler.hpp" />
     <ClInclude Include="include\rendering\material.hpp" />
     <ClInclude Include="include\rendering\renderer.hpp" />
     <ClInclude Include="include\rendering\renderer_context.hpp" />
