@@ -25,7 +25,7 @@ public:
 	
 	void Update() override;
 
-	void OnWindowRezize() override;
+	void CheckWindowResize() override;
 	
 private:
 	static constexpr const char_t* SerializedScenePath = "assets/scenes/basic_scene.scene.xml";

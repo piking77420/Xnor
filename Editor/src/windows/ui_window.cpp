@@ -42,6 +42,6 @@ void UiWindow::FetchInfo()
     m_Size = Vector2i(static_cast<int32_t>(size.x), static_cast<int32_t>(size.y));
 }
 
-void UiWindow::OnWindowResize([[maybe_unused]]Vector2i newWindowSize)
+void UiWindow::OnWindowResize(const Vector2i)
 {
 }

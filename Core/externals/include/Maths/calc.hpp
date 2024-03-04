@@ -40,6 +40,11 @@ namespace Calc
 	constexpr float Pi = std::numbers::pi_v<float>;
 	
 	/// <summary>
+	///	Shorthand for writing <c>Calc::Pi * 2.f</c>.
+	/// </summary>
+	constexpr float PiTimes2 = Pi * 2.f;
+	
+	/// <summary>
 	///	Shorthand for writing <c>Calc::Pi / 2.f</c>.
 	/// </summary>
 	constexpr float PiOver2 = Pi / 2.f;

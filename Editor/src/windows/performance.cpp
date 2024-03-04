@@ -32,7 +32,7 @@ void Performance::Update()
 {
     m_LastFps = 1.f / XnorCore::Time::GetDeltaTime();
     m_FrameRateArray[m_ArrayIndex] = m_LastFps;
-    m_HighestArrayFps = std::max(*std::ranges::max_element(m_FrameRateArray), static_cast<float_t>(XnorCore::Screen::RefreshRate()));
+    m_HighestArrayFps = std::max(*std::ranges::max_element(m_FrameRateArray), static_cast<float_t>(XnorCore::Screen::GetRefreshRate()));
 
     PROCESS_MEMORY_COUNTERS memory;
     GetProcessMemoryInfo(GetCurrentProcess(), &memory, sizeof(memory));

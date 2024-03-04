@@ -22,27 +22,37 @@ typedef char char_t;
 typedef bool bool_t;
 
 #ifdef XNOR_EXPORT
+/// @brief Macro that declares a DLL export
 #define XNOR_ENGINE __declspec(dllexport)
 #else
+/// @brief Macro that declares a DLL import
 #define XNOR_ENGINE __declspec(dllimport)
 #endif
 
+/// @brief Begins the namespace XnorCore
 #define BEGIN_XNOR_CORE namespace XnorCore {
 
+/// @brief Ends the namespace XnorCore
 #define END_XNOR_CORE }
 
+/// @brief Automatically generates the copy constructors and move operators for a specified type
+/// @param type Type name
 #define DEFAULT_COPY_MOVE_OPERATIONS(type)                      \
     XNOR_ENGINE type(const type& other) = default;              \
     XNOR_ENGINE type(type&& other) = default;                   \
     XNOR_ENGINE type& operator=(const type& other) = default;   \
     XNOR_ENGINE type& operator=(type&& other) = default;
 
+/// @brief Automatically generates the copy constructors and move operators for a specified type (without the @c XNOR_ENGINE macro)
+/// @param type Type name
 #define DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(type)    \
     type(const type& other) = default;                  \
     type(type&& other) = default;                       \
     type& operator=(const type& other) = default;       \
     type& operator=(type&& other) = default;
 
+/// @brief Automatically deletes the copy constructors and move operators for a specified type
+/// @param type Type name
 #define DELETE_COPY_MOVE_OPERATIONS(type)          \
     type(const type& other) = delete;              \
     type(type&& other) = delete;                   \

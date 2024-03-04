@@ -3,22 +3,30 @@
 #include "core.hpp"
 #include "rendering/renderer.hpp"
 
+/// @file application.hpp
+
 BEGIN_XNOR_CORE
 
+/// @brief Application interface, handles the lifetime of most of the sub systems needed for an Xnor application to run
 class Application
 {
 public:
+    /// @brief Renderer of the application
     Renderer renderer;
-    
+
+    /// @brief ctor, Initializes the sub systems
     XNOR_ENGINE Application();
 
+    /// @brief dtor, Destroys the sub systems
     XNOR_ENGINE virtual ~Application();
 
     DEFAULT_COPY_MOVE_OPERATIONS(Application)
 
-    virtual void Update() = 0;
+    /// @brief Main loop of an application
+    XNOR_ENGINE virtual void Update() = 0;
 
-    virtual void OnWindowRezize() = 0;
+    /// @brief Should handle the window resize actions
+    XNOR_ENGINE virtual void CheckWindowResize() = 0;
     
 protected:
     XNOR_ENGINE static inline Application* m_ApplicationInstance = nullptr;

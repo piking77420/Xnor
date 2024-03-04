@@ -47,12 +47,12 @@ void HeaderWindow::DisplayOnEditor()
     ImGui::SetCursorPos(currentimagePos);
 
     if (ImGui::ImageButton(Utils::IntToPointer<ImTextureID>(m_PlayButton->GetId()), { m_ImageSize, m_ImageSize }))
-        World::world->isPlaying = true;
+        World::isPlaying = true;
 }
 
 void HeaderWindow::DisplayOnPlay()
 {
-    if (!World::world->isPlaying)
+    if (!World::isPlaying)
         return;
     
     ImVec2 currentimagePos = { m_ImagePos[1].x, m_ImagePos[1].y };
@@ -61,7 +61,7 @@ void HeaderWindow::DisplayOnPlay()
 
     if (ImGui::ImageButton(Utils::IntToPointer<ImTextureID>(m_PauseButton->GetId()), { m_ImageSize, m_ImageSize }))
     {
-        World::world->isPlaying = false;
+        World::isPlaying = false;
         return;
     }
     

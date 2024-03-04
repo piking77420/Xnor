@@ -8,7 +8,6 @@
 #include "input/time.hpp"
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
-#include "rendering/light/spot_light.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/component/mesh_renderer.hpp"
 #include "scene/component/test_component.hpp"
@@ -51,8 +50,6 @@ Editor::Editor()
 
 	SetupImGuiStyle();
 	CreateDefaultWindows();
-
-	XnorCore::World::world = new XnorCore::World();
 }
 
 Editor::~Editor()
@@ -218,7 +215,7 @@ void Editor::CreateTestScene()
 	using namespace XnorCore;
 	
 	// init Scene //
-	Entity& ent1 = *World::world->Scene.CreateEntity("viking_Room");
+	Entity& ent1 = *World::scene.CreateEntity("viking_Room");
 	MeshRenderer* meshRenderer = ent1.AddComponent<MeshRenderer>();
 	ent1.transform.position = { 0.f, 3.f, 0.f };
 	
@@ -230,25 +227,25 @@ void Editor::CreateTestScene()
 	meshRenderer->material.albedo->Load(vikingRoomTexture);
 	meshRenderer->material.albedo->CreateInRhi();
 
-	Entity& ent2 = *World::world->Scene.CreateEntity("DirectionalLight");
+	Entity& ent2 = *World::scene.CreateEntity("DirectionalLight");
 	DirectionalLight* dirlight = ent2.AddComponent<DirectionalLight>();
 	dirlight->intensity = 0.2f;
 	dirlight->color = { 1.f, 1.f, 1.f };
 
-	Entity& pointLightentity = *World::world->Scene.CreateEntity("PointLight");
+	Entity& pointLightentity = *World::scene.CreateEntity("PointLight");
 	PointLight* pointLight = pointLightentity.AddComponent<PointLight>();
 	pointLight->color = { 7.f, 0.f, 3.f };
 	pointLightentity.AddComponent<TestComponent>();
 	pointLightentity.transform.position = { 0.f, 2.f, -2.f };
 	
-	Entity& ent3 = *World::world->Scene.CreateEntity("Plane");
+	Entity& ent3 = *World::scene.CreateEntity("Plane");
 	meshRenderer = ent3.AddComponent<MeshRenderer>();
 	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
 	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/wood.jpg");
 	ent3.transform.scale = { 10.f, 0.1f, 10.f };
 	ent3.transform.position -= { 0.f, -0.2f, 0.f};
 	
-	Entity& ent4 = *World::world->Scene.CreateEntity("CubeMinecraft");
+	Entity& ent4 = *World::scene.CreateEntity("CubeMinecraft");
 	ent4.transform.position = { 2.f, 0, 2.f};
 	meshRenderer = ent4.AddComponent<MeshRenderer>();
 	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
@@ -263,7 +260,7 @@ void Editor::CreateTestScene()
 		"assets/skybox/front.jpg",
 		"assets/skybox/back.jpg"
 	};
-	World::world->skybox.LoadCubeMap(testCubeMap);
+	World::skybox.LoadCubeMap(testCubeMap);
 }
 
 void Editor::MenuBar() const
@@ -286,7 +283,7 @@ void Editor::MenuBar() const
 					path = data.currentScene->GetPathString();
 				}
 				XnorCore::Serializer::StartSerialization(path);
-				XnorCore::World::world->Scene.Serialize();
+				XnorCore::World::scene.Serialize();
 				XnorCore::Serializer::EndSerialization();
 			}
 			
@@ -333,7 +330,7 @@ void Editor::Update()
 		Window::PollEvents();
 		Input::HandleEvent();
 		BeginFrame();
-		OnWindowRezize();
+		CheckWindowResize();
 
 		ImGui::Begin("Renderer Settings");
 		if (ImGui::Button("Recompile Shader"))
@@ -347,11 +344,9 @@ void Editor::Update()
 		EndFrame();
 		renderer.SwapBuffers();
 	}
-	
-	delete World::world;
 }
 
-void Editor::OnWindowRezize()
+void Editor::CheckWindowResize()
 {
 	if (!XnorCore::Window::resizeFrameBuffer)
 		return;
@@ -381,20 +376,16 @@ void Editor::EndFrame()
 
 void Editor::WorldBehaviours()
 {
-	XnorCore::World* const w = XnorCore::World::world;
-	if (w == nullptr)
-		return;
-
-	w->hierarchy.Update(w->Scene.GetEntities());
+	XnorCore::World::hierarchy.Update(XnorCore::World::scene.GetEntities());
 	
-	if (w->isPlaying)
+	if (XnorCore::World::isPlaying)
 	{
-		if (!w->hasStarted)
+		if (!XnorCore::World::hasStarted)
 		{
-			w->Begin();
-			w->hasStarted = true;
+			XnorCore::World::Begin();
+			XnorCore::World::hasStarted = true;
 		}
 
-		w->Update();
+		XnorCore::World::Update();
 	}
 }

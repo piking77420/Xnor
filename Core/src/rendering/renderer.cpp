@@ -35,9 +35,9 @@ void Renderer::Shutdown()
 	DestroyAttachment();
 }
 
-void Renderer::RenderScene(const World& world, const RendererContext& rendererContext) const
+void Renderer::RenderScene(const RendererContext& rendererContext) const
 {
-	const Scene& scene = world.Scene;
+	const Scene& scene = World::scene;
 	
 	std::vector<const MeshRenderer*> meshrenderers;
 	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderers);
@@ -81,13 +81,13 @@ void Renderer::RenderScene(const World& world, const RendererContext& rendererCo
 	// END DEFERRED RENDERING
 
 	// Blit depth of gbuffer to forward Pass
-	Rhi::BlitFrameBuffer(m_GframeBuffer->GetId(),m_RenderBuffer->GetId(),
-		{0,0},m_GframeBuffer->GetSize(),
-		{0,0},m_RenderBuffer->GetSize(),Attachment::Depth,TextureFiltering::Nearest);
+	Rhi::BlitFrameBuffer(m_GframeBuffer->GetId(), m_RenderBuffer->GetId(),
+		{0, 0},m_GframeBuffer->GetSize(),
+		{0,0}, m_RenderBuffer->GetSize(), Attachment::Depth, TextureFiltering::Nearest);
 	
 	// ForwardPass //
 	DrawAabb(meshrenderers);
-	m_SkyboxRenderer.DrawSkymap(m_Cube,world.skybox);
+	m_SkyboxRenderer.DrawSkymap(m_Cube, World::skybox);
 	m_RenderBuffer->UnBindFrameBuffer();
 	
 	// DRAW THE FINAL IMAGE TEXTURE

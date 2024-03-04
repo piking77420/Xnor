@@ -38,7 +38,10 @@ struct XNOR_ENGINE Color
     [[nodiscard]]
     static constexpr Color Magenta();
 
-    uint8_t r, g, b, a = 0xFF;
+    uint8_t r = 0;
+    uint8_t g = 0;
+    uint8_t b = 0;
+    uint8_t a = 0xFF;
 
     [[nodiscard]]
     Color() = default;
@@ -64,7 +67,10 @@ using ColorRgb = Color;
 ///        It uses values from 0 to 1. The default alpha value is 1.
 struct XNOR_ENGINE Colorf
 {
-    float_t r, g, b, a = 1.f;
+    float_t r = 0.f;
+    float_t g = 0.f;
+    float_t b = 0.f;
+    float_t a = 1.f;
 
     [[nodiscard]]
     Colorf() = default;
@@ -84,7 +90,10 @@ struct XNOR_ENGINE Colorf
 ///        It uses values from 0 to 255 (0xFF). The default alpha value is 255.
 struct XNOR_ENGINE ColorHsv
 {
-    uint8_t h, s, v, a = 0xFF;
+    uint8_t h = 0;
+    uint8_t s = 0;
+    uint8_t v = 0;
+    uint8_t a = 0xFF;
 
     ColorHsv() = default;
 
