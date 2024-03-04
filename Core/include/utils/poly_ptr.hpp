@@ -9,7 +9,7 @@ public:
     PolyPtr();
     ~PolyPtr();
 
-    DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(PolyPtr)
+    DEFAULT_COPY_MOVE_OPERATIONS(PolyPtr)
 
     template <typename U>
     void Create();

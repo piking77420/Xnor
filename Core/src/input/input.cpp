@@ -112,11 +112,11 @@ void Input::HandleGamePad()
         if (!glfwGetGamepadState(static_cast<int32_t>(i), &state))
             return;
         
-        for (uint32_t k = 0; k < static_cast<uint32_t>(GamePadAxes::Count); k++)
+        for (uint32_t k = 0; k < static_cast<uint32_t>(GamepadAxes::Count); k++)
         {
             if(state.axes[k] <= NullAnalogValue)
                 continue;
-            m_GamePads[i].m_AxesValue[k] = state.axes[k];
+            m_GamePads[i].axesValue[k] = state.axes[k];
         }
 
         for (uint32_t k = 0; k < static_cast<uint32_t>(GamepadButton::Count) - 1; k++)

@@ -2,17 +2,12 @@
 
 using namespace XnorCore;
 
-
-World::World()
-{
-}
-
 void World::Begin()
 {
-    Scene.Begin();
+    scene.Begin();
 }
 
 void World::Update()
 {
-    Scene.Update();
+    scene.Update();
 }

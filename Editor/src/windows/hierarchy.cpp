@@ -17,8 +17,7 @@ Hierarchy::Hierarchy(Editor* editor)
 
 void Hierarchy::Display()
 {
-    // TODO fetch current loaded scene
-    XnorCore::Scene& scene = XnorCore::World::world->Scene;
+    XnorCore::Scene& scene = XnorCore::World::scene;
   
     const XnorCore::List<XnorCore::Entity*>& entities = scene.GetEntities();
 

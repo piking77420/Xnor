@@ -9,7 +9,6 @@
 
 BEGIN_XNOR_CORE
 
-
 class SkyboxRenderer
 {
 public:
@@ -17,13 +16,13 @@ public:
 
     XNOR_ENGINE ~SkyboxRenderer() = default;
 
+    DEFAULT_COPY_MOVE_OPERATIONS(SkyboxRenderer)
+
     XNOR_ENGINE void InitializeResources();
 
     XNOR_ENGINE void DrawSkymap(const Pointer<Model>& cubeModel,const Skybox& skybox) const;
   
 private:
-
- 
     Pointer<Shader> m_SkyboxDrawerShader;
 };
 

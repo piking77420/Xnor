@@ -16,7 +16,7 @@ public:
 
     ~RenderWindow() override;
     
-    DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(RenderWindow);
+    DEFAULT_COPY_MOVE_OPERATIONS(RenderWindow);
     
     void Display() override;
 

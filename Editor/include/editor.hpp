@@ -21,11 +21,11 @@ public:
 
 	~Editor() override;
 
-	DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(Editor)
+	DEFAULT_COPY_MOVE_OPERATIONS(Editor)
 	
 	void Update() override;
 
-	void OnWindowRezize() override;
+	void CheckWindowResize() override;
 	
 private:
 	static constexpr const char_t* SerializedScenePath = "assets/scenes/basic_scene.scene.xml";

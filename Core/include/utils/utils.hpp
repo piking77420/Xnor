@@ -17,49 +17,90 @@
 #include "utils/list.hpp"
 #include "utils/pointer.hpp"
 
+/// @file utils.hpp
+
 BEGIN_XNOR_CORE
 
 class File;
 class Directory;
 class Entry;
 
+/// @brief Namespace containing utility functions that don't belong anywhere else
 namespace Utils
 {
+    /// @brief Converts a integral number to a valid pointer without illegal size operations
+    /// @tparam PtrT Type of the pointer, must be a pointer type
+    /// @tparam IntT Type of the number, must be integral
+    /// @param number Number to convert
+    /// @return Pointer representation of the number
     template <typename PtrT, typename IntT>
     [[nodiscard]]
     constexpr PtrT IntToPointer(IntT number);
 
-    template <typename T>
-    [[nodiscard]]
-    constexpr T* GetAddress(const void* obj, size_t offset, size_t element);
-    
+    /// @brief Horizontally aligns the cursor of ImGui to be centered around a specific portion of the available space
+    /// @param objectWidth Width of the element to align
+    /// @param alignment In window alignment, 0.5f by default to center the object
     XNOR_ENGINE void AlignImGuiCursor(float_t objectWidth, float_t alignment = 0.5f);
 
+    /// @brief Converts a Vector2 to an ImVec2
+    /// @param v Vector2 to convert
+    /// @return ImVec2 representation
     [[nodiscard]]
-    XNOR_ENGINE ImVec2 ToImVec(Vector2 v);
+    XNOR_ENGINE constexpr ImVec2 ToImVec(Vector2 v);
 
+    /// @brief Converts an ImVec2 to a Vector2
+    /// @param v ImVec2 to convert
+    /// @return Vector2 representation
     [[nodiscard]]
-    XNOR_ENGINE Vector2 FromImVec(ImVec2 v);
+    XNOR_ENGINE constexpr Vector2 FromImVec(ImVec2 v);
 
+    /// @brief Converts a @ref Color to an ImVec4
+    /// @param color Color to convert
+    /// @return ImVec4 representation
     [[nodiscard]]
-    XNOR_ENGINE ImVec4 ToImCol(Color color);
+    XNOR_ENGINE constexpr ImVec4 ToImCol(Color color);
 
+    /// @brief Converts a @ref Colorf to an ImVec4
+    /// @param color Colorf to convert
+    /// @return ImVec4 representation
     [[nodiscard]]
-    XNOR_ENGINE ImVec4 ToImCol(const Colorf& color);
+    XNOR_ENGINE constexpr ImVec4 ToImCol(const Colorf& color);
 
+    /// @brief Converts a @ref ColorHsv to an ImVec4
+    /// @param color ColorHsv to convert
+    /// @return ImVec4 representation
     [[nodiscard]]
-    XNOR_ENGINE ImVec4 ToImCol(ColorHsv color);
+    XNOR_ENGINE constexpr ImVec4 ToImCol(ColorHsv color);
 
+    /// @brief Converts an ImVec4 to a @ref Colorf
+    /// @param color ImVec4 to convert
+    /// @return Colorf representation
     [[nodiscard]]
-    XNOR_ENGINE Colorf FromImCol(const ImVec4& color);
+    XNOR_ENGINE constexpr Colorf FromImCol(const ImVec4& color);
 
+    /// @brief Humanizes the provided string
+    ///
+    /// The process converts a PascalCase styled word to a humanized version that puts spaces between each words and adds an uppercase at the very beginning
+    ///
+    /// e.g. RequiresUIReloadAttribute will become Requires UI Reload Attribute
+    /// @param str String to humanize
+    /// @return Result
     [[nodiscard]]
     XNOR_ENGINE std::string HumanizeString(const std::string& str);
 
+    /// @brief Normalizes an angle (clamps its value between 0 and 2 * PI)
+    /// @param angle Angle to normalize
+    /// @return Normalized representation
     XNOR_ENGINE float_t NormalizeAngle(float_t angle);
 
+    /// @brief Normalizes a set of 3 angles in a Vector3 (clamps their value between 0 and 2 * PI)
+    /// @param angles Vector3 of angles to normalize
+    /// @return Normalized representation
     XNOR_ENGINE Vector3 NormalizeAngles(Vector3 angles);
 
+    /// @brief Converts a quaternion to its euler angle representation
+    /// @param rot Quaternion to convert
+    /// @return Euler representation
     XNOR_ENGINE Vector3 GetQuaternionEulerAngles(const Quaternion& rot);
 
     /// @brief Equivalent of a @c dynamic_cast for @ref Pointer "Pointers".
@@ -76,18 +117,33 @@ namespace Utils
     [[nodiscard]]
     Pointer<T> DynamicPointerCast(const Pointer<U>& value);
 
+    /// @brief Opens the specified entry in the file explorer
+    /// @param entry Entry
     XNOR_ENGINE void OpenInExplorer(const Entry& entry);
 
+    /// @brief Opens the specified directory in the file explorer
+    /// @param directory Directory
     XNOR_ENGINE void OpenInExplorer(const Directory& directory);
 
+    /// @brief Opens the specified file in the file explorer
+    /// @param file File
     XNOR_ENGINE void OpenInExplorer(const File& file);
 
+    /// @brief Opens the specified path in the file explorer
+    /// @param path File system path
     XNOR_ENGINE void OpenInExplorer(const std::filesystem::path& path);
 
+    /// @brief Opens the specified path in the file explorer
+    /// @param path File system path
+    /// @param isFile Whether path is a file or a directory
     XNOR_ENGINE void OpenInExplorer(const std::filesystem::path& path, bool isFile);
 
+    /// @brief Opens the specified file on the user's computer
+    /// @param file File
     XNOR_ENGINE void OpenFile(const File& file);
 
+    /// @brief Opens the specified file on the user's computer
+    /// @param filepath File system path
     XNOR_ENGINE void OpenFile(const std::filesystem::path& filepath);
 }
 
@@ -97,13 +153,39 @@ constexpr PtrT Utils::IntToPointer(const IntT number)
     static_assert(std::is_pointer_v<PtrT>, "PtrT must be a raw pointer type, ex: PtrT=int*");
     static_assert(std::is_integral_v<IntT>, "IntT must be an integral type, ex: IntT=int");
     
-    return reinterpret_cast<const PtrT>(const_cast<uint8_t* const>(reinterpret_cast<const uint8_t* const>(1) + static_cast<const size_t>(number) - 1));
+    return reinterpret_cast<PtrT>(reinterpret_cast<uint8_t*>(1) + static_cast<const size_t>(number) - 1);
 }
 
-template <typename T>
-constexpr T* Utils::GetAddress(const void* const obj, const size_t offset, const size_t element)
+constexpr ImVec2 Utils::ToImVec(const Vector2 v)
 {
-    return const_cast<T* const>(reinterpret_cast<const T* const>(static_cast<const uint8_t* const>(obj) + offset + sizeof(T) * element));
+    return ImVec2(v.x, v.y);
+}
+
+constexpr Vector2 Utils::FromImVec(const ImVec2 v)
+{
+    return Vector2(v.x, v.y);
+}
+
+constexpr ImVec4 Utils::ToImCol(const Color color)
+{
+    const Colorf c = static_cast<Colorf>(color);
+    return ImVec4(c.r, c.g, c.b, c.a);
+}
+
+constexpr ImVec4 Utils::ToImCol(const Colorf& color)
+{
+    return ImVec4(color.r, color.g, color.b, color.a);
+}
+
+constexpr ImVec4 Utils::ToImCol(const ColorHsv color)
+{
+    const Colorf c = static_cast<Colorf>(static_cast<Color>(color));
+    return ImVec4(c.r, c.g, c.b, c.a);
+}
+
+constexpr Colorf Utils::FromImCol(const ImVec4& color)
+{
+    return Colorf(color.x, color.y, color.z, color.w);
 }
 
 template <typename T, typename U>

@@ -5,34 +5,36 @@
 #include "skybox.hpp"
 #include "scene/scene.hpp"
 
+/// @file world.hpp
+
 BEGIN_XNOR_CORE
 
-
+/// @brief Represents a world, it's a superset of a scene and encapsulates one
 class World
 {
+    STATIC_CLASS(World)
+    
 public:
-    XNOR_ENGINE static inline World* world = nullptr;
+    /// @brief Called once when the world starts playing
+    XNOR_ENGINE static void Begin();
     
-    bool isPlaying = false;
-    
-    bool hasStarted = false;
-    
-    Scene Scene;
+    /// @brief Called every frame when the world is playing
+    XNOR_ENGINE static void Update();
 
-    SceneGraph hierarchy;
+    /// @brief Whether the world is playing/running
+    XNOR_ENGINE static inline bool_t isPlaying = false;
 
-    Skybox skybox;
-    
-    XNOR_ENGINE World();
+    /// @brief Whether the world is playing/running
+    XNOR_ENGINE static inline bool_t hasStarted = false;
 
-    XNOR_ENGINE ~World() = default;
-    
-    XNOR_ENGINE void Begin();
-    
-    XNOR_ENGINE void Update();
+    /// @brief The currently loaded scene in the world
+    XNOR_ENGINE static inline Scene scene;
 
+    /// @brief Handler for the scene hierarchy
+    XNOR_ENGINE static inline SceneGraph hierarchy;
 
-private:
+    /// @brief Skybox handler
+    XNOR_ENGINE static inline Skybox skybox;
 };
 
 END_XNOR_CORE

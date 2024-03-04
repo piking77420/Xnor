@@ -5,21 +5,32 @@
 #include "core.hpp"
 #include "window.hpp"
 
+/// @file screen.hpp
+
 BEGIN_XNOR_CORE
 
-class Screen
+/// @brief Represents a screen/monitor
+class XNOR_ENGINE Screen
 {
     STATIC_CLASS(Screen)
     
 public:
-    XNOR_ENGINE static Vector2i Size();
+    /// @brief Gets the size of the screen
+    /// @return Screen size
+    static Vector2i GetSize();
 
-    XNOR_ENGINE static int32_t RefreshRate();
+    /// @brief Gets the refresh rate of the screen
+    /// @return Refresh rate
+    static int32_t GetRefreshRate();
 
+    /// @brief Initializes the screen data
     static void Initialize();
 
 private:
+    /// @brief Native handle for the monitor
     static inline GLFWmonitor* m_Monitor = nullptr;
+    
+    /// @brief Native handle for the monitor
     static inline const GLFWvidmode* m_VideoMode = nullptr;
 };
 

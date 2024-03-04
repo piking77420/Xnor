@@ -23,6 +23,8 @@ class Renderer
 public:
     Vector4 clearColor;
 
+    DEFAULT_COPY_MOVE_OPERATIONS(Renderer)
+
     XNOR_ENGINE explicit Renderer();
     
     XNOR_ENGINE ~Renderer();
@@ -31,7 +33,7 @@ public:
     
     XNOR_ENGINE void Shutdown();
     
-    XNOR_ENGINE void RenderScene(const World& world, const RendererContext& rendererContext) const;
+    XNOR_ENGINE void RenderScene(const RendererContext& rendererContext) const;
 
     XNOR_ENGINE void CompileShader(); 
     
@@ -85,7 +87,7 @@ private:
     
     XNOR_ENGINE void DrawLightGizmo(const std::vector<const PointLight*>& pointLightComponents,
         const std::vector<const SpotLight*>& spotLightsComponents,
-        const std::vector<const DirectionalLight*>& directionalComponent,const Camera& camera) const;
+        const std::vector<const DirectionalLight*>& directionalComponent, const Camera& camera) const;
 
     XNOR_ENGINE void DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers,MaterialType materialtype) const;
     

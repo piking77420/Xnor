@@ -7,45 +7,73 @@
 #include "Maths/vector2i.hpp"
 #include "resource/texture.hpp"
 
+/// @file window.hpp
+
 BEGIN_XNOR_CORE
 
+/// @brief A wrapper for the main window
 class XNOR_ENGINE Window
 {
 	STATIC_CLASS(Window)
 	
 public:
-	static inline bool resizeFrameBuffer = false;
+	/// @brief Whether the frame buffer was resized last frame
+	static inline bool_t resizeFrameBuffer = false;
 
+	/// @brief Initializes the window
 	static void Initialize();
 
+	/// @brief Terminates the window
 	static void Shutdown();
 
+	/// @brief Gets the size in pixels of the window
+	/// @return Size
 	[[nodiscard]]
 	static Vector2i GetSize();
 
+	/// @brief Gets whether the window should close
+	/// @return Should close
 	[[nodiscard]]
-	static bool ShouldClose();
+	static bool_t ShouldClose();
 
+	/// @brief Polls the events of the window
 	static void PollEvents();
-	
+
+	/// @brief Sets the window to be the current context
 	static void MakeContextCurrent();
 
+	/// @brief Gets the time elapsed since the window was created
+	/// @return Time elapsed
 	[[nodiscard]]
-	static double GetTime();
+	static double_t GetTime();
 
+	/// @brief Gets the native handle of the window
+	/// @return Native handle
 	[[nodiscard]]
 	static GLFWwindow* GetHandle();
 
+	/// @brief Displays the window
 	static void Show();
 
+	/// @brief Sets the icon for the window
+	/// @param icon Icon
 	static void SetIcon(Texture& icon);
 
-	static void HideCursor(bool value);
+	/// @brief Handles hiding or displaying the cursor
+	/// @param value @c true hides, @c false displays
+	static void HideCursor(bool_t value);
 
 private:
-	static void GlfwResizeFramebuffer(GLFWwindow* window, int width, int height);
-	
+	/// @brief Callback when the window is resized
+	/// @param window Native window handle
+	/// @param width New width
+	/// @param height New height
+	static void GlfwResizeFramebuffer(GLFWwindow* window, int32_t width, int32_t height);
+
+	/// @brief Native window handle
 	static inline GLFWwindow* m_Window = nullptr;
+
+	/// @brief Window size
 	static inline Vector2i m_Size = { 1280, 720 };
 };
 	

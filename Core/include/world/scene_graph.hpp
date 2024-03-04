@@ -19,9 +19,9 @@ BEGIN_XNOR_CORE
 class SceneGraph
 {
 public:
-    XNOR_ENGINE  SceneGraph() = default;
+    XNOR_ENGINE SceneGraph() = default;
 
-    XNOR_ENGINE  ~SceneGraph() = default;
+    XNOR_ENGINE ~SceneGraph() = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(SceneGraph)
 
@@ -32,8 +32,7 @@ public:
     XNOR_ENGINE static void OnAttachToParent(Entity& entity);
     
 private:
-
-    XNOR_ENGINE static  Matrix GetTrsOfParents(const Entity& parent);
+    XNOR_ENGINE static Matrix GetTrsOfParents(const Entity& parent);
     
     XNOR_ENGINE void UpdateTransform(Entity& entity);
 };

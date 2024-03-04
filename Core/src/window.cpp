@@ -35,7 +35,7 @@ Vector2i Window::GetSize()
 	return m_Size;
 }
 
-bool Window::ShouldClose()
+bool_t Window::ShouldClose()
 {
 	return glfwWindowShouldClose(m_Window);
 }
@@ -50,7 +50,7 @@ void Window::MakeContextCurrent()
 	glfwMakeContextCurrent(m_Window);
 }
 
-double Window::GetTime()
+double_t Window::GetTime()
 {
 	return glfwGetTime();
 }
@@ -85,19 +85,22 @@ void Window::SetIcon(Texture& icon)
 	glfwSetWindowIcon(m_Window, 1, &image);
 }
 
-void Window::HideCursor(const bool value)
+void Window::HideCursor(const bool_t value)
 {
 	glfwSetInputMode(m_Window, GLFW_CURSOR, value ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
 }
 
-void Window::GlfwResizeFramebuffer(GLFWwindow*, int, int)
+void Window::GlfwResizeFramebuffer(GLFWwindow*, const int32_t width, const int32_t height)
 {
-	glfwGetFramebufferSize(m_Window, &m_Size.x, &m_Size.y);
+	m_Size.x = width;
+	m_Size.y = height;
+
 	while (m_Size.x == 0 || m_Size.y == 0)
 	{
 		glfwGetFramebufferSize(m_Window, &m_Size.x, &m_Size.y);
 
 		glfwWaitEvents();
 	}
+	
 	resizeFrameBuffer = true;
 }

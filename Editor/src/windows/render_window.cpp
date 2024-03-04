@@ -30,10 +30,7 @@ RenderWindow::~RenderWindow()
 
 void RenderWindow::Display()
 {
-    if (XnorCore::World::world != nullptr)
-    {
-        m_Editor->renderer.RenderScene(*XnorCore::World::world, m_RendererContext);
-    }
+    m_Editor->renderer.RenderScene(m_RendererContext);
     
     ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_ColorTexture->GetId()), ImGui::GetContentRegionAvail(), {1, 1},{0, 0});
 }

@@ -18,38 +18,6 @@ void Utils::AlignImGuiCursor(const float_t objectWidth, const float_t alignment)
         ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
 }
 
-ImVec2 Utils::ToImVec(const Vector2 v)
-{
-    return ImVec2(v.x, v.y);
-}
-
-Vector2 Utils::FromImVec(const ImVec2 v)
-{
-    return Vector2(v.x, v.y);
-}
-
-ImVec4 Utils::ToImCol(const Color color)
-{
-    const Colorf c = static_cast<Colorf>(color);
-    return ImVec4(c.r, c.g, c.b, c.a);
-}
-
-ImVec4 Utils::ToImCol(const Colorf& color)
-{
-    return ImVec4(color.r, color.g, color.b, color.a);
-}
-
-ImVec4 Utils::ToImCol(const ColorHsv color)
-{
-    const Colorf c = static_cast<Colorf>(static_cast<Color>(color));
-    return ImVec4(c.r, c.g, c.b, c.a);
-}
-
-Colorf Utils::FromImCol(const ImVec4& color)
-{
-    return Colorf(color.x, color.y, color.z, color.w);
-}
-
 std::string Utils::HumanizeString(const std::string& str)
 {
     // Regex: https://regex101.com/r/3rQ25V/5
@@ -94,21 +62,24 @@ std::string Utils::HumanizeString(const std::string& str)
 
 float_t Utils::NormalizeAngle(float_t angle)
 {
-    while (angle > Calc::Pi * 2.f)
-        angle -= Calc::Pi * 2.f;
+    while (angle > Calc::PiTimes2)
+        angle -= Calc::PiTimes2;
         
     while (angle < 0)
-        angle += Calc::Pi * 2.f;
+        angle += Calc::PiTimes2;
         
     return angle;
 }
 
-Vector3 Utils::NormalizeAngles(Vector3 angles)
+Vector3 Utils::NormalizeAngles(const Vector3 angles)
 {
-    angles.x = NormalizeAngle(angles.x);
-    angles.y = NormalizeAngle(angles.y);
-    angles.z = NormalizeAngle(angles.z);
-    return angles;
+    const Vector3 normalized = Vector3(
+        NormalizeAngle(angles.x),
+        NormalizeAngle(angles.y),
+        NormalizeAngle(angles.z)
+    );
+    
+    return normalized;
 }
 
 Vector3 Utils::GetQuaternionEulerAngles(const Quaternion& rot)
@@ -166,8 +137,10 @@ void Utils::OpenInExplorer(const std::filesystem::path& path)
 void Utils::OpenInExplorer(const std::filesystem::path& path, const bool isFile)
 {
     std::string command = "start explorer ";
+    
     if (isFile)
         command += "/select,";
+    
     command += absolute(path).string();
     std::system(command.c_str());  // NOLINT(concurrency-mt-unsafe)
 }

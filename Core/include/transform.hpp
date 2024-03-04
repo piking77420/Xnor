@@ -11,14 +11,16 @@
 #include "serialization/serializer.hpp"
 #include "utils/reflectable.hpp"
 
+/// @file transform.hpp
+
 BEGIN_XNOR_CORE
 
-class Transform final : public Reflectable
+class XNOR_ENGINE Transform final : public Reflectable
 {
 	REFLECTABLE_IMPL_MINIMAL(Transform)
 
 public:
-	XNOR_ENGINE Vector3 GetWorldPos() const;
+	Vector3 GetWorldPos() const;
 	
 	Vector3 position;
 	Vector3 eulerRotation; 

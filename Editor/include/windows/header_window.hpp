@@ -16,7 +16,7 @@ public:
     
     ~HeaderWindow() override = default;
 
-    DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(HeaderWindow)
+    DEFAULT_COPY_MOVE_OPERATIONS(HeaderWindow)
     
     void Display() override;
 
