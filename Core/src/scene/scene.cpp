@@ -25,7 +25,7 @@ Entity* Scene::GetEntityById(const Guid& xnorGuid)
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)
     {
-        if (m_Entities[i]->GetId() == xnorGuid)
+        if (m_Entities[i]->GetGuid() == xnorGuid)
         {
             return m_Entities[i];
         }
@@ -58,8 +58,9 @@ void Scene::DestroyEntity(Entity* const entity)
     delete entity;
 }
 
-bool Scene::HasEntity(const Entity* const entity) const
+bool_t Scene::HasEntity(const Entity* const entity) const
 {
+    // TODO fix this thing
     return m_Entities.Contains(const_cast<Entity* const>(entity));
 }
 

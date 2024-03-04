@@ -147,9 +147,9 @@ void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name)
             if (payload)
             {
                 XnorCore::Pointer<XnorCore::Resource> dragged = *static_cast<XnorCore::Pointer<XnorCore::Resource>*>(payload->Data);
-            
+
                 XnorCore::Resource* raw = static_cast<XnorCore::Resource*>(dragged);
-                if (typeid(*raw).hash_code() == typeid(PtrT).hash_code())
+                if (typeid(*raw).hash_code() == XnorCore::Utils::GetTypeHash<PtrT>())
                 {
                     *reinterpret_cast<decltype(dragged)*>(obj) = dragged;
                 }
@@ -161,7 +161,7 @@ void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name)
 }
 
 #define POLY_PTR_IF_INSP(type)\
-if (hash == typeid(type).hash_code())\
+if (hash == XnorCore::Utils::GetTypeHash<type>())\
 {\
     DisplayObject<type>(obj->Cast<type>(), XnorCore::Reflection::GetTypeInfo<type>());\
 }\
@@ -190,7 +190,7 @@ void Inspector::DisplayObject(ReflectT* const obj, const XnorCore::TypeDescripto
     const float_t textSize = ImGui::CalcTextSize(typeName).x;
     XnorCore::Utils::AlignImGuiCursor(textSize);
     ImGui::Text("%s", typeName);
-    
+
     refl::util::for_each(desc.members, [&]<typename T>(const T member)
     {
         constexpr bool_t hidden = XnorCore::Reflection::HasAttribute<XnorCore::HideInInspector>(member); 

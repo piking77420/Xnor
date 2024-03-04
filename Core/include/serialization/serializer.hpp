@@ -87,7 +87,7 @@ private:
 template <typename T>
 void Serializer::FetchAttribute(const std::string& attributeName, const T& value)
 {
-    if constexpr (Meta::IsSame<std::string, T> || Meta::IsSame<const char*, T>)
+    if constexpr (Meta::IsAny<T, std::string, const char_t*>)
     {
         FetchAttributeInternal(attributeName, value);
     }
@@ -122,7 +122,7 @@ void Serializer::Serialize(const ReflectT* const obj, const bool_t isRoot)
                 using MemberT = typename T::value_type;
                 const constexpr char_t* const name = member.name.c_str();
 
-                if constexpr (std::is_array_v<MemberT>)
+                if constexpr (Meta::IsArray<MemberT>)
                 {
                     SerializeArrayType<MemberT>(&member.get(obj), name, flags);
                 }
@@ -149,9 +149,9 @@ void Serializer::Serialize(const ReflectT* const obj, const bool_t isRoot)
 }
 
 template <typename ReflectT>
-void Serializer::Deserialize([[maybe_unused]] ReflectT* obj)
+void Serializer::Deserialize(ReflectT* const)
 {
-    // const TypeInfo& info = TypeInfo::Get<ReflectT>();
+    // TODO Deserialize
 }
 
 template <typename MemberT>
@@ -165,29 +165,29 @@ void Serializer::SerializeSimpleType(const MemberT* ptr, const char_t* name, con
     {
         // DisplayColor<MemberT>(ptr, name);
     }
-    else if constexpr (std::is_pointer_v<MemberT>)
+    else if constexpr (Meta::IsPointer<MemberT>)
     {
         if (flags & EXPAND_POINTER)
         {
-            Serialize<std::remove_pointer_t<MemberT>>(*ptr, false);
+            Serialize<Meta::RemovePointerSpecifier<MemberT>>(*ptr, false);
         }
         else
         {
             if (*ptr == nullptr)
                 FetchAttribute(name, Guid());
             else
-                FetchAttribute(name, static_cast<std::string>((*ptr)->GetId()));
+                FetchAttribute(name, static_cast<std::string>((*ptr)->GetGuid()));
         }
     }
     else if constexpr (Meta::IsPolyPtr<MemberT>)
     {
         const size_t hash = ptr->GetHash();
         
-#define POLY_PTR_IF_SER(type)\
-if (hash == typeid(type).hash_code())\
-{\
-Serialize<type>(ptr->Cast<type>(), false);\
-}\
+#define POLY_PTR_IF_SER(type)                       \
+if (hash == XnorCore::Utils::GetTypeHash<type>())   \
+{                                                   \
+Serialize<type>(ptr->Cast<type>(), false);          \
+}                                                   \
         // TODO find a less ugly solution to that
 
         POLY_PTR_IF_SER(MeshRenderer);
@@ -200,7 +200,7 @@ Serialize<type>(ptr->Cast<type>(), false);\
     {
         if (flags & EXPAND_POINTER)
         {
-            // Serialize<std::remove_pointer_t<typename MemberT::Type>>(*ptr, false);
+            // Serialize<Meta::RemovePointerSpecifier<typename MemberT::Type>>(*ptr, false);
         }
         else
         {
@@ -221,8 +221,9 @@ Serialize<type>(ptr->Cast<type>(), false);\
 }
 
 template <typename MemberT>
-void Serializer::SerializeArrayType([[maybe_unused]] const MemberT* ptr, [[maybe_unused]] const char_t* name, [[maybe_unused]] const size_t flags)
+void Serializer::SerializeArrayType(const MemberT*, const char_t*, const size_t)
 {
+    // TODO SerializeArrayType
 }
 
 template <typename MemberT>
@@ -245,7 +246,7 @@ constexpr size_t Serializer::GetFlags(const T member)
 {
     size_t flags = NONE; 
 
-    if constexpr (refl::descriptor::has_attribute<ExpandPointer>(member))
+    if constexpr (Reflection::HasAttribute<ExpandPointer>(member))
         flags |= EXPAND_POINTER;
 
     return flags;

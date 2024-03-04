@@ -44,6 +44,7 @@ public:
 
 END_XNOR_CORE
 
+/// @private
 REFL_AUTO(type(XnorCore::Transform),
 	field(position),
 	field(eulerRotation),
