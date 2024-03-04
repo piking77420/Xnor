@@ -324,7 +324,6 @@ void Editor::Update()
 		BeginFrame();
 		OnWindowRezize();
 
-
 		ImGui::Begin("Renderer Settings");
 		if (ImGui::Button("Recompile Shader"))
 			renderer.CompileShader();
@@ -343,7 +342,7 @@ void Editor::Update()
 
 void Editor::OnWindowRezize()
 {
-	if(!XnorCore::Window::resizeFrameBuffer)
+	if (!XnorCore::Window::resizeFrameBuffer)
 		return;
 
 	const Vector2i newWindowSize = XnorCore::Window::GetSize();

@@ -666,13 +666,13 @@ void List<T>::CheckShrink(const size_t newSize)
 template <typename T>
 T* List<T>::Access(const size_t index)
 {
-    return static_cast<T*>(static_cast<void*>(static_cast<uint8_t*>(static_cast<void*>(m_Data)) + index * m_TypeSize));
+    return reinterpret_cast<T*>(reinterpret_cast<uint8_t*>(m_Data) + index * m_TypeSize);
 }
 
 template <typename T>
 const T* List<T>::Access(const size_t index) const
 {
-    return static_cast<const T*>(static_cast<const void*>(static_cast<const uint8_t*>(static_cast<const void*>(m_Data)) + index * m_TypeSize));
+    return reinterpret_cast<const T*>(reinterpret_cast<const uint8_t*>(m_Data) + index * m_TypeSize);
 }
 
 END_XNOR_CORE
