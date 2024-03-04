@@ -290,7 +290,7 @@ uint32_t Rhi::GetBlendValueOpengl(BlendValue blendFunction)
 		case BlendValue::ONE_MINUS_CONSTANT_ALPHA:
 			return GL_ONE_MINUS_CONSTANT_ALPHA;
 
-		default:
+		default:  // NOLINT(clang-diagnostic-covered-switch-default)
 			return GL_ONE; 
 	}
 }
@@ -526,12 +526,11 @@ void Rhi::ReadAttachement(
 	const int32_t x,
 	const int32_t y,
 	const TextureFormat textureFormat,
-	const TextureInternalFormat textureInternalFormat,
+	const TextureInternalFormat ,
 	void* output
 )
 {
 	const GLenum format = GetOpenGlTextureFormat(textureFormat);
-	const GLenum internalFormat = GetOpenglInternalFormat(textureInternalFormat);
 	
 	glReadBuffer(GL_COLOR_ATTACHMENT0 + static_cast<GLint>(attachmentIndex)); 
 	glReadPixels(x, y, 1, 1, format, GL_UNSIGNED_BYTE, output);

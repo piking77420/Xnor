@@ -13,10 +13,10 @@ void LightCuller::InitResources()
 	m_DirLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/dirlight_icon.png");
 	m_PointLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/point_light.png");
 	m_SpotLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/spot_light.png");
-	m_editorUI = ResourceManager::Get<Shader>("editorui_shader");
-	m_editorUI->SetBlendFunction({true,BlendValue::SRC_ALPHA,BlendValue::ONE_MINUS_SRC_ALPHA});
-	m_editorUI->CreateInRhi();
-	m_editorUI->SetInt("uiTexture",0);
+	m_EditorUi = ResourceManager::Get<Shader>("editorui_shader");
+	m_EditorUi->SetBlendFunction({true,BlendValue::SRC_ALPHA,BlendValue::ONE_MINUS_SRC_ALPHA});
+	m_EditorUi->CreateInRhi();
+	m_EditorUi->SetInt("uiTexture",0);
 	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
 	
 }
@@ -133,14 +133,23 @@ void LightCuller::DrawLightGizmo(const std::vector<const PointLight*>& pointLigh
 		sortedLight.emplace(distance, gizmoLight);
 	}
 	
-	m_editorUI->Use();
+	m_EditorUi->Use();
 	// ReSharper disable once CppDiscardedPostfixOperatorResult
-	for ([[maybe_unused]] std::map<float_t,GizmoLight>::reverse_iterator it = sortedLight.rbegin(); it != sortedLight.rend(); it++)
+	for (std::map<float_t,GizmoLight>::reverse_iterator it = sortedLight.rbegin(); it != sortedLight.rend(); it++)
 	{
-		float_t scaleFactor = 0.2f;
 		ModelUniformData modelData;
-		modelData.model = mat4::Trs(it->second.pos,Quaternion::Identity(),vec3(scaleFactor));
-		modelData.normalInvertMatrix = mat4::Identity();
+		float_t scaleScalar = m_ScaleFactor;
+		
+		float_t distance = (it->second.pos - camera.pos).SquaredLength();
+		if(distance < m_MinDistance * m_MinDistance)
+		{
+			scaleScalar = scaleScalar * (1.f/distance) * (1.f/distance);
+		}
+		
+		scaleScalar = std::clamp(scaleScalar,m_MaxScalarFactor,m_MinScalarFactor);
+		Matrix scale = Matrix::Scaling(Vector3(scaleScalar));
+		modelData.model = (scale * Matrix::LookAt(it->second.pos,camera.pos,Vector3::UnitY())).Inverted();
+		modelData.normalInvertMatrix = Matrix::Identity();
 
 		switch (it->second.type)
 		{
@@ -161,5 +170,5 @@ void LightCuller::DrawLightGizmo(const std::vector<const PointLight*>& pointLigh
 		Rhi::DrawModel(m_Quad->GetId());
 
 	}
-	m_editorUI->Unuse();
+	m_EditorUi->Unuse();
 }

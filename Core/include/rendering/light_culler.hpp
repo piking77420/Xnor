@@ -50,8 +50,13 @@ private:
     Pointer<Texture> m_DirLightTexture;
     Pointer<Texture> m_SpotLightTexture;
 
-    Pointer<Shader> m_editorUI;
+    Pointer<Shader> m_EditorUi;
     Pointer<Model> m_Quad;
+
+    float_t m_ScaleFactor = 2.f;
+    float_t m_MinDistance = 1.f;
+    float_t m_MinScalarFactor = 10.f;
+    float_t m_MaxScalarFactor = m_ScaleFactor;
 
 };
 

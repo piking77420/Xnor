@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core.hpp"
-#include "resource/cubemap.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
 #include "utils/pointer.hpp"
