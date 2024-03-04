@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core.hpp"
+#include "light_culler.hpp"
 #include "renderer_context.hpp"
 #include "skybox_renderer.hpp"
 #include "tone_mapping.hpp"
@@ -41,18 +42,7 @@ public:
     XNOR_ENGINE void PrepareRendering(Vector2i windowSize);
 
 private:
-    enum class RenderingLight
-    {
-        PointLight,
-        SpothLight,
-        DirLight
-    };
-
-    struct GizmoLight
-    {
-        Vector3 pos;
-        RenderingLight type;
-    };
+    LightCuller m_LightCuller;
     
     FrameBuffer* m_GframeBuffer = nullptr;
     // Deferred attachment GBuffers
@@ -80,6 +70,10 @@ private:
 
     ToneMapping m_ToneMapping;
     SkyboxRenderer m_SkyboxRenderer;
+
+    XNOR_ENGINE void DefferedRendering(const std::vector<const MeshRenderer*> meshrenderers,const RendererContext* rendererContext) const;
+
+    XNOR_ENGINE void ForwardRendering(const std::vector<const MeshRenderer*> meshrenderers,const RendererContext* rendererContext) const;
     
     XNOR_ENGINE void InitResources();
     
@@ -89,10 +83,6 @@ private:
     
     XNOR_ENGINE void DestroyAttachment() const;
     
-    XNOR_ENGINE void UpdateLight(const std::vector<const PointLight*>& pointLightComponents,
-        const std::vector<const SpotLight*>& spotLightsComponents,
-        const std::vector<const DirectionalLight*>& directionalComponent) const;
-
     XNOR_ENGINE void DrawLightGizmo(const std::vector<const PointLight*>& pointLightComponents,
         const std::vector<const SpotLight*>& spotLightsComponents,
         const std::vector<const DirectionalLight*>& directionalComponent,const Camera& camera) const;

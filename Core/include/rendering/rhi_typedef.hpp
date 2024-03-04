@@ -242,7 +242,7 @@ enum class BlendValue
 
 struct BlendFunction
 {
-	bool IsBlanding = false;
+	bool IsBlending = false;
 	BlendValue sValue;
 	BlendValue dValue;
 };

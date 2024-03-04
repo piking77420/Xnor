@@ -89,7 +89,7 @@ private:
 	DepthFunction m_DepthFunction = DepthFunction::LESS;
 	BlendFunction m_BlendFunction =
 	{
-		.IsBlanding = false,
+		.IsBlending = false,
 		.sValue = BlendValue::ONE,
 		.dValue = BlendValue::ZERO
 	};

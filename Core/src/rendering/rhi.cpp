@@ -164,7 +164,7 @@ void Rhi::UseShader(const uint32_t shaderId)
 	
 	glDepthFunc(GetOpengDepthEnum(shaderInternal.depthFunction));
 	
-	if(shaderInternal.blendFunction.IsBlanding)
+	if(shaderInternal.blendFunction.IsBlending)
 	{
 		const uint32_t srcValue =  GetBlendValueOpengl(shaderInternal.blendFunction.sValue);
 		const uint32_t destValue =  GetBlendValueOpengl(shaderInternal.blendFunction.dValue);
