@@ -14,7 +14,7 @@ Model::~Model()
     Rhi::DestroyModel(m_ModelId);
 }
 
-void Model::Load(const uint8_t* buffer, const int64_t length)
+bool_t Model::Load(const uint8_t* buffer, const int64_t length)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFileFromMemory(buffer, length, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FindInvalidData | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace);
@@ -22,25 +22,25 @@ void Model::Load(const uint8_t* buffer, const int64_t length)
     if (!scene)
     {
         Logger::LogError("An error occured while loading model: {}. Assimp error: {}", m_Name, importer.GetErrorString());
-        return;
+        return false;
     }
 
     if (!scene->HasMeshes())
     {
         Logger::LogError("Invalid mesh format, should contain a model: {}", m_Name);
-        return;
+        return false;
     }
 
     if (scene->mNumMeshes > 1)
     {
         Logger::LogError("Invalid mesh format, should only contain a single model: {}", m_Name);
-        return;
+        return false;
     }
    
-    Load(*scene->mMeshes[0]);
+    return Load(*scene->mMeshes[0]);
 }
 
-void Model::Load(const aiMesh& loadedData)
+bool_t Model::Load(const aiMesh& loadedData)
 {
     m_Vertices.resize(loadedData.mNumVertices);
     
@@ -53,7 +53,6 @@ void Model::Load(const aiMesh& loadedData)
         vert.tangent = Vector3(&loadedData.mBitangents[i].x);
         vert.bitangent = Vector3::Cross(vert.normal,vert.tangent);
     }
-    
 
     m_Indices.resize(static_cast<size_t>(loadedData.mNumFaces) * 3);
     
@@ -63,7 +62,7 @@ void Model::Load(const aiMesh& loadedData)
         if (face.mNumIndices != 3)
         {
             Logger::LogError("Model data should be triangulated: {}", m_Name);
-            return;
+            return false;
         }
     
         const uint32_t baseIndex = i * 3;
@@ -79,6 +78,8 @@ void Model::Load(const aiMesh& loadedData)
     }
 
     m_Loaded = true;
+
+    return true;
 }
 
 void Model::CreateInRhi()

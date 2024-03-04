@@ -8,16 +8,18 @@
 
 using namespace XnorCore;
 
-void Cubemap::Load(const uint8_t*, int64_t)
+bool_t Cubemap::Load(const uint8_t*, int64_t)
 {
     // TO do how to manager 6 resource texture with one buffer
     Logger::LogError("Non Implemented function");
+    return false;
 }
 
-void Cubemap::Load(const Pointer<File>&)
+bool_t Cubemap::Load(const Pointer<File>&)
 {
     // Could work with meta data file
     Logger::LogError("Non Implemented function");
+    return false;
 }
 
 void Cubemap::CreateInRhi()

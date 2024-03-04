@@ -8,6 +8,7 @@
 
 #include "core.hpp"
 #include "utils.hpp"
+#include "utils/formatter.hpp"
 #include "utils/tsqueue.hpp"
 
 BEGIN_XNOR_CORE

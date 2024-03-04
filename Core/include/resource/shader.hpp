@@ -44,11 +44,11 @@ public:
 	
 	using Resource::Resource;
 	
-	XNOR_ENGINE void Load(const Pointer<File>& shader) override;
+	XNOR_ENGINE bool_t Load(const Pointer<File>& shader) override;
 	
-	XNOR_ENGINE void Load(const uint8_t* buffer, int64_t length) override;
+	XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;
 	
-	XNOR_ENGINE void Load(const char_t* buffer, int64_t length, ShaderType type);
+	XNOR_ENGINE bool_t Load(const char_t* buffer, int64_t length, ShaderType type);
 
 	XNOR_ENGINE void CreateInRhi() override;
 

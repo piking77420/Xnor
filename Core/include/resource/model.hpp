@@ -93,9 +93,9 @@ public:
 
     XNOR_ENGINE ~Model() override;
     
-    XNOR_ENGINE void Load(const uint8_t* buffer, int64_t length) override;
+    XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;
     
-    XNOR_ENGINE void Load(const aiMesh& loadedData);
+    XNOR_ENGINE bool_t Load(const aiMesh& loadedData);
 
     XNOR_ENGINE void CreateInRhi() override;
 

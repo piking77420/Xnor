@@ -37,27 +37,23 @@ Texture::Texture(const TextureInternalFormat textureInternalFormat, const Vector
 Texture::~Texture()
 {
     if (m_LoadedInRhi)
-    {
         Texture::DestroyInRhi();
-    }
     
     if (m_Loaded)
-    {
         Texture::Unload();
-    }
 }
 
-void Texture::Load(const uint8_t* buffer, const int64_t length)
+bool Texture::Load(const uint8_t* buffer, const int64_t length)
 {
     stbi_set_flip_vertically_on_load(loadData.flipVertically);
     m_Data = stbi_load_from_memory(buffer, static_cast<int32_t>(length), &m_Size.x, &m_Size.y, &m_DataChannels, loadData.desiredChannels);
     m_TextureFormat = Rhi::GetFormat(m_DataChannels);
     m_Loaded = true;
+    return true;
 }
 
 void Texture::CreateInRhi()
 {
-
     const TextureCreateInfo textureCreateInfo
     {
         m_Data,

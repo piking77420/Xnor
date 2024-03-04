@@ -50,7 +50,7 @@ public:
     
     XNOR_ENGINE ~Texture() override;
     
-    XNOR_ENGINE void Load(const uint8_t* buffer, int64_t length) override;
+    XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;
 
     XNOR_ENGINE void CreateInRhi() override;
 

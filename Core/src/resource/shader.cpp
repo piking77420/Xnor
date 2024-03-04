@@ -19,41 +19,50 @@ ShaderType Shader::FileExtensionToType(const std::string& extension)
     throw std::invalid_argument("Invalid file extension for shader");
 }
 
-void Shader::Load(const Pointer<File>& shader)
+bool_t Shader::Load(const Pointer<File>& shader)
 {
     ShaderType&& type = FileExtensionToType(shader->GetExtension());
-    Load(shader->GetData(), shader->GetSize(), type);
+
+    if (!Load(shader->GetData(), shader->GetSize(), type))
+        return false;
 
     m_Files[static_cast<size_t>(type)] = shader;
+    
     m_Loaded = true;
+    
+    return true;
 }
 
-void Shader::Load(const uint8_t*, int64_t)
+bool_t Shader::Load(const uint8_t*, int64_t)
 {
     throw std::runtime_error("Cannot load shader without shader type information");
 }
 
-void Shader::Load(const char_t* buffer, const int64_t length, const ShaderType type)
+bool_t Shader::Load(const char_t* buffer, const int64_t length, const ShaderType type)
 {
     ShaderCode& code = m_Code[static_cast<size_t>(type)];
     code.code = buffer;
     code.codeLength = static_cast<int32_t>(length);
     code.type = type;
+    
     m_Loaded = true;
+    
+    return true;
 }
 
 void Shader::CreateInRhi()
 {
     std::vector<ShaderCode> code(m_Code.size());
     std::ranges::copy(m_Code, code.begin());
-    m_Id = Rhi::CreateShaders(code, {m_DepthFunction,m_BlendFunction});
+    
+    m_Id = Rhi::CreateShaders(code, { m_DepthFunction, m_BlendFunction });
     m_LoadedInRhi = true;
-   
 }
 
 void Shader::DestroyInRhi()
 {
     Rhi::DestroyProgram(m_Id);
+    
     m_Id = 0;
     m_LoadedInRhi = false;
 }

@@ -3,8 +3,8 @@
 // ReSharper disable CppInconsistentNaming
 
 #include "core.hpp"
-#include "utils/meta_programming.hpp"
 #include "refl/refl.hpp"
+#include "utils/meta_programming.hpp"
 
 BEGIN_XNOR_CORE
 

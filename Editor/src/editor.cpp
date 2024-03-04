@@ -28,10 +28,7 @@ Editor::Editor()
 	const XnorCore::Pointer<XnorCore::File> logoFile = XnorCore::FileManager::Get("assets_internal/editor/logo.png");
 	XnorCore::Pointer<XnorCore::Texture> logo = XnorCore::ResourceManager::Get<XnorCore::Texture>(logoFile);
 	logo->loadData.desiredChannels = 4;
-	logo->DestroyInRhi();
-	logo->Unload();
-	logo->Load(logoFile);
-	logo->CreateInRhi();
+	logo->Reload(logoFile);
 	XnorCore::Window::SetIcon(*logo);
 	
 	IMGUI_CHECKVERSION();

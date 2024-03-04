@@ -20,16 +20,42 @@ public:
     DEFAULT_COPY_MOVE_OPERATIONS(Resource)
 
     /// @brief Load resource from memory.
-    XNOR_ENGINE virtual void Load(const uint8_t* buffer, int64_t length) = 0;
+    ///
+    /// @returns @c true if the loading succeeded, @c false otherwise.
+    XNOR_ENGINE virtual bool_t Load(const uint8_t* buffer, int64_t length) = 0;
 
     /// @brief Load resource from file.
-    XNOR_ENGINE virtual void Load(const Pointer<File>& file);
+    ///
+    /// @returns @c true if the loading succeeded, @c false otherwise.
+    XNOR_ENGINE virtual bool_t Load(const Pointer<File>& file);
 
     XNOR_ENGINE virtual void CreateInRhi();
 
     XNOR_ENGINE virtual void DestroyInRhi();
 
     XNOR_ENGINE virtual void Unload() = 0;
+
+    /// @brief Unloads and then loads back this @ref Resource.
+    ///
+    /// This is effectively equivalent to calling @ref Unload and then @ref Load(const uint8_t* buffer, int64_t length) "Load".
+    /// 
+    /// @returns @c true if the loading succeeded, @c false otherwise.
+    XNOR_ENGINE virtual bool_t Reload(const uint8_t* buffer, int64_t length, bool_t reloadInRhi = true);
+
+    /// @brief Unloads and then loads back this @ref Resource.
+    ///
+    /// This is effectively equivalent to calling @ref Unload and then @ref Load(const Pointer<File>&) "Load".
+    /// 
+    /// @returns @c true if the loading succeeded, @c false otherwise.
+    XNOR_ENGINE virtual bool_t Reload(const Pointer<File>& file, bool_t reloadInRhi = true);
+
+    /// @brief Unloads and then loads back this @ref Resource.
+    ///
+    /// This is effectively equivalent to calling @ref Unload and then @ref Load(const Pointer<File>&)
+    /// using @ref FileManager::Get(const std::filesystem::path&) as a parameter.
+    /// 
+    /// @returns @c true if the loading succeeded, @c false otherwise.
+    XNOR_ENGINE virtual bool_t Reload(bool_t reloadInRhi = true);
     
     [[nodiscard]]
     XNOR_ENGINE bool_t GetLoaded() const;
