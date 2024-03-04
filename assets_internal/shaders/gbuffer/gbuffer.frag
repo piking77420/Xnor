@@ -41,7 +41,7 @@ void main()
     {
         // Compute NormalMap
         vec3 normal = texture(material.normalMap, fs_in.TexCoords).rgb;
-        normal = normal;   
+        normal = normal  * 2.0f - 1.0f;   
         gNormal.rgb = normalize(fs_in.TBN * normal); 
     }   
 

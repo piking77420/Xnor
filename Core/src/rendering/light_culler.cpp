@@ -137,7 +137,7 @@ void LightCuller::DrawLightGizmo(const std::vector<const PointLight*>& pointLigh
 	// ReSharper disable once CppDiscardedPostfixOperatorResult
 	for ([[maybe_unused]] std::map<float_t,GizmoLight>::reverse_iterator it = sortedLight.rbegin(); it != sortedLight.rend(); it++)
 	{
-		float_t scaleFactor = 0.5f;
+		float_t scaleFactor = 0.2f;
 		ModelUniformData modelData;
 		modelData.model = mat4::Trs(it->second.pos,Quaternion::Identity(),vec3(scaleFactor));
 		modelData.normalInvertMatrix = mat4::Identity();
@@ -147,9 +147,11 @@ void LightCuller::DrawLightGizmo(const std::vector<const PointLight*>& pointLigh
 			case RenderingLight::PointLight:
 				m_PointLightTexture->BindTexture(0);
 				break;
+			
 			case RenderingLight::SpothLight:
 				m_SpotLightTexture->BindTexture(0);
 				break;
+			
 			case RenderingLight::DirLight:
 				m_DirLightTexture->BindTexture(0);
 				break;

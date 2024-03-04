@@ -27,7 +27,7 @@ public:
 
     XNOR_ENGINE explicit Renderer();
     
-    XNOR_ENGINE ~Renderer();
+    XNOR_ENGINE ~Renderer() = default;
     
     XNOR_ENGINE void Initialize();
     

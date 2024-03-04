@@ -14,10 +14,6 @@ Renderer::Renderer()
 {
 }
 
-Renderer::~Renderer()
-{
-}
-
 void Renderer::Initialize()
 {
 	Rhi::SetClearColor(clearColor);
@@ -74,7 +70,12 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	// ForwardPass //
 	ForwardRendering(meshrenderers, &rendererContext);
 	m_SkyboxRenderer.DrawSkymap(m_Cube,World::skybox);
-	m_LightCuller.DrawLightGizmo(pointLights,spotLights,directionalLights,*rendererContext.camera);
+	if(rendererContext.isEditor)
+	{
+		m_LightCuller.DrawLightGizmo(pointLights,spotLights,directionalLights,*rendererContext.camera);
+		
+	}
+	
 	m_RenderBuffer->UnBindFrameBuffer();
 	
 	// DRAW THE FINAL IMAGE TEXTURE
@@ -276,8 +277,10 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*> meshrend
 void Renderer::ForwardRendering(const std::vector<const MeshRenderer*> meshrenderers,const RendererContext* rendererContext) const
 {
 	if (rendererContext->isEditor)
-	{	DrawAabb(meshrenderers);
+	{
+		DrawAabb(meshrenderers);
 	}
+	// TODO draw translucentObject
 }
 
 
