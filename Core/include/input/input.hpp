@@ -6,6 +6,7 @@
 #include "core.hpp"
 #include "gamepad_input.hpp"
 #include "window.hpp"
+#include "utils/meta_programming.hpp"
 
 /// @file input.hpp
 /// @brief Defines the @ref GamepadInput struct and the @ref GamepadAxes and @ref GamepadButton enumerations.
@@ -243,7 +244,7 @@ private:
 template <class T>
 T Input::GetCursorPos()
 {
-    static_assert(std::is_same_v<T, Vector2> || std::is_same_v<T, Vector2i>, "Mouse pos must be a valid Vector2 type");
+    static_assert(Meta::IsSame<T, Vector2> || Meta::IsSame<T, Vector2i>, "Mouse pos must be a valid Vector2 type");
     
     return static_cast<T>(m_MousePos);
 }

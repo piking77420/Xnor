@@ -9,23 +9,36 @@
 
 #include "core.hpp"
 #include "serialization/serializer.hpp"
-#include "utils/reflectable.hpp"
+#include "utils/serializable.hpp"
 
 /// @file transform.hpp
 
 BEGIN_XNOR_CORE
 
-class XNOR_ENGINE Transform final : public Reflectable
+/// @brief Represents a 3D transformation, containing Position, Rotation and Scaling
+class XNOR_ENGINE Transform final : public Serializable
 {
 	REFLECTABLE_IMPL_MINIMAL(Transform)
 
 public:
+	/// @brief Gets the world position of the transform
+	/// @return World position
+	[[nodiscard]]
 	Vector3 GetWorldPos() const;
-	
+
+	/// @brief Position
 	Vector3 position;
-	Vector3 eulerRotation; 
+
+	/// @brief Euler rotation
+	Vector3 eulerRotation;
+
+	/// @brief Scaling
 	Vector3 scale = Vector3(1.f);
+
+	/// @brief Quaternion associated with the euler rotation
 	Quaternion rotation = Quaternion::Identity();
+
+	/// @brief World transformation matrix of the transform
 	Matrix worldMatrix = Matrix::Identity();
 };
 
@@ -37,7 +50,7 @@ REFL_AUTO(type(XnorCore::Transform),
 	field(scale)
 )
 
-template<>
+template <>
 struct std::formatter<XnorCore::Transform>
 {
 	template<class ParseContext>
@@ -54,7 +67,7 @@ private:
 	bool m_WorldMatrix = false;
 };
 
-template<class ParseContext>
+template <class ParseContext>
 constexpr typename ParseContext::iterator std::formatter<XnorCore::Transform>::parse(ParseContext& ctx)
 {
 	auto it = ctx.begin();
@@ -64,13 +77,13 @@ constexpr typename ParseContext::iterator std::formatter<XnorCore::Transform>::p
 	if (*it == 'm')
 	{
 		m_Multiline = true;
-		it++;
+		++it;
 	}
 
 	if (*it == 'M')
 	{
 		m_WorldMatrix = true;
-		it++;
+		++it;
 	}
 
 	if (*it == 'q')
@@ -79,7 +92,7 @@ constexpr typename ParseContext::iterator std::formatter<XnorCore::Transform>::p
 			throw std::format_error("Invalid format args for XnorCore::Transform: cannot use option 'q' with option 'M'");
             
 		m_QuaternionRotation = true;
-		it++;
+		++it;
 	}
 
 	if (*it == 'd')
@@ -88,7 +101,7 @@ constexpr typename ParseContext::iterator std::formatter<XnorCore::Transform>::p
 			throw std::format_error("Invalid format args for XnorCore::Transform: cannot use option 'd' with option 'M' or 'q'");
             
 		m_DegreeRotation = true;
-		it++;
+		++it;
 	}
 
 	while (*it != '}' && it != ctx.end())
@@ -97,7 +110,7 @@ constexpr typename ParseContext::iterator std::formatter<XnorCore::Transform>::p
 	return it;
 }
 
-template<class FormatContext>
+template <class FormatContext>
 typename FormatContext::iterator std::formatter<XnorCore::Transform>::format(
 	const XnorCore::Transform& transform,
 	FormatContext& ctx

@@ -83,11 +83,6 @@ void Scene::DestroyEntityChildren(Entity* const entity)
     entity->m_Children.Clear();
 }
 
-Scene::Scene()
-{
-    CreateTypeInfo();
-}
-
 Scene::~Scene()
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)

@@ -7,12 +7,12 @@
 
 BEGIN_XNOR_CORE
 
-class Scene : public Reflectable
+class Scene : public Serializable
 {
     REFLECTABLE_IMPL_H(Scene)
     
 public:
-    XNOR_ENGINE Scene();
+    XNOR_ENGINE Scene() = default;
 
     XNOR_ENGINE ~Scene() override;
 

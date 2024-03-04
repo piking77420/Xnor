@@ -9,14 +9,14 @@
 #include "utils/guid.hpp"
 #include "utils/list.hpp"
 #include "utils/poly_ptr.hpp"
-#include "utils/reflectable.hpp"
+#include "utils/serializable.hpp"
 
 BEGIN_XNOR_CORE
 
 template <class T>
 concept ComponentT = std::is_base_of_v<Component, T>;
 
-class Entity : public Reflectable
+class Entity : public Serializable
 {
     REFLECTABLE_IMPL_H(Entity)
 

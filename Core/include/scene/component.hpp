@@ -1,13 +1,13 @@
 ﻿#pragma once
 
 #include "core.hpp"
-#include "utils/reflectable.hpp"
+#include "utils/serializable.hpp"
 
 BEGIN_XNOR_CORE
 
 class Entity;
 
-class XNOR_ENGINE Component : public Reflectable
+class XNOR_ENGINE Component : public Serializable
 {
     REFLECTABLE_IMPL_MINIMAL(Component)
     
