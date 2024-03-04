@@ -38,7 +38,7 @@ void Entity::Update()
     }
 }
 
-const Guid& Entity::GetId() const
+const Guid& Entity::GetGuid() const
 {
     return m_EntityId;
 }
@@ -48,7 +48,7 @@ Entity* Entity::GetParent() const
     return m_Parent;
 }
 
-bool Entity::HasParent() const
+bool_t Entity::HasParent() const
 {
     return m_Parent != nullptr;
 }
@@ -63,12 +63,12 @@ size_t Entity::GetChildCount() const
     return m_Children.GetSize();
 }
 
-bool Entity::HasChildren() const
+bool_t Entity::HasChildren() const
 {
     return GetChildCount() != 0;
 }
 
-bool Entity::IsAParentOf(const Entity* child) const
+bool_t Entity::IsAParentOf(const Entity* child) const
 {
     const Entity* e = child->m_Parent;
 
@@ -139,7 +139,7 @@ void Entity::RemoveChild(Entity* const child)
     child->m_Parent = nullptr;
 }
 
-bool Entity::operator==(const Entity& entity) const
+bool_t Entity::operator==(const Entity& entity) const
 {
     return m_EntityId == entity.m_EntityId;
 }

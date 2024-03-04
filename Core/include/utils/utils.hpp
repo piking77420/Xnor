@@ -3,7 +3,6 @@
 
 #include <filesystem>
 #include <type_traits>
-#include <vector>
 
 #include <Maths/quaternion.hpp>
 #include <Maths/vector2.hpp>
@@ -37,6 +36,13 @@ namespace Utils
     [[nodiscard]]
     constexpr PtrT IntToPointer(IntT number);
 
+    /// @brief Gets the hash code of a specified type
+    /// @tparam T Type
+    /// @return Hash
+    template <typename T>
+    [[nodiscard]]
+    size_t GetTypeHash();
+
     /// @brief Horizontally aligns the cursor of ImGui to be centered around a specific portion of the available space
     /// @param objectWidth Width of the element to align
     /// @param alignment In window alignment, 0.5f by default to center the object
@@ -54,11 +60,11 @@ namespace Utils
     [[nodiscard]]
     XNOR_ENGINE constexpr Vector2 FromImVec(ImVec2 v);
 
-    /// @brief Converts a @ref Color to an ImVec4
-    /// @param color Color to convert
+    /// @brief Converts a @ref ColorRgb to an ImVec4
+    /// @param color ColorRgb to convert
     /// @return ImVec4 representation
     [[nodiscard]]
-    XNOR_ENGINE constexpr ImVec4 ToImCol(Color color);
+    XNOR_ENGINE constexpr ImVec4 ToImCol(ColorRgb color);
 
     /// @brief Converts a @ref Colorf to an ImVec4
     /// @param color Colorf to convert
@@ -166,7 +172,7 @@ constexpr Vector2 Utils::FromImVec(const ImVec2 v)
     return Vector2(v.x, v.y);
 }
 
-constexpr ImVec4 Utils::ToImCol(const Color color)
+constexpr ImVec4 Utils::ToImCol(const ColorRgb color)
 {
     const Colorf c = static_cast<Colorf>(color);
     return ImVec4(c.r, c.g, c.b, c.a);
@@ -179,13 +185,19 @@ constexpr ImVec4 Utils::ToImCol(const Colorf& color)
 
 constexpr ImVec4 Utils::ToImCol(const ColorHsv color)
 {
-    const Colorf c = static_cast<Colorf>(static_cast<Color>(color));
+    const Colorf c = static_cast<Colorf>(static_cast<ColorRgb>(color));
     return ImVec4(c.r, c.g, c.b, c.a);
 }
 
 constexpr Colorf Utils::FromImCol(const ImVec4& color)
 {
     return Colorf(color.x, color.y, color.z, color.w);
+}
+
+template <typename T>
+size_t Utils::GetTypeHash()
+{
+    return typeid(T).hash_code();
 }
 
 template <typename T, typename U>

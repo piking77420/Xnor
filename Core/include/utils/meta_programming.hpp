@@ -6,7 +6,6 @@
 ///
 /// @brief Defines utilities for meta programming and template manipulation
 
-#include <tuple>
 #include <type_traits>
 
 #include <Maths/quaternion.hpp>
@@ -48,12 +47,29 @@ namespace Meta
     template <typename T>
     constexpr bool_t IsArray = std::is_array_v<T>;
 
+    /// @brief Checks whether @c T is a pointer
+    /// @tparam T Type
+    template <typename T>
+    constexpr bool_t IsPointer = std::is_pointer_v<T>;
+
+    /// @brief Checks whether @c T is an enum
+    /// @tparam T Type
+    template <typename T>
+    constexpr bool_t IsEnum = std::is_enum_v<T>;
+
     /// @brief Removes the array specification from @c T
     ///
     /// e.g. if @c T was @c int[4], then @c RemoveArraySpecifier<T> will be @c int
     ///
     template <typename T>
     using RemoveArraySpecifier = std::remove_extent_t<T>;
+
+    /// @brief Removes the pointer specification from @c T
+    ///
+    /// e.g. if @c T was @c int*, then @c RemovePointerSpecifier<T> will be @c int
+    ///
+    template <typename T>
+    using RemovePointerSpecifier = std::remove_pointer_t<T>;
 
     /// @brief Checks whether the type is a @c std::vector
     template <typename>

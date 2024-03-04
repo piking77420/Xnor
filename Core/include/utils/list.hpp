@@ -5,6 +5,9 @@
 
 #include "core.hpp"
 
+/// @file list.hpp
+/// @brief Defines the @ref List class.
+
 BEGIN_XNOR_CORE
 
 /// @brief A dynamic array implementation.

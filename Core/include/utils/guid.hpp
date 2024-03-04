@@ -7,22 +7,32 @@
 
 #include "core.hpp"
 
+/// @file guid.hpp
+/// @brief Defines the @ref Guid class.
+
 BEGIN_XNOR_CORE
 
+/// @brief Stands for Global Unique Identifier, it represents a unique ID that's used to link pointers during serialization and deserialization
 class XNOR_ENGINE Guid final
 {
 public:
     constexpr Guid() = default;
 
+    /// @brief Creates a new @ref Guid
+    /// @return New guid
     static Guid New();
 
+    /// @brief Compares 2 @ref Guid
+    /// @param other Other guid
+    /// @return Whether the @ref Guid are equals
     [[nodiscard]]
-    bool operator==(const Guid& other) const;
+    bool_t operator==(const Guid& other) const;
 
+    /// @brief Converts a @ref Guid to a string representation
     explicit operator std::string() const;
 
 private:
-    static constexpr inline uint64_t Data4Size = 8;
+    static constexpr inline size_t Data4Size = 8;
     
     uint32_t m_Data1 = 0;
     uint16_t m_Data2 = 0;

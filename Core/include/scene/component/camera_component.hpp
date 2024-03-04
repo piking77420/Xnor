@@ -2,12 +2,18 @@
 
 #include "core.hpp"
 #include "rendering/camera.hpp"
+#include "scene/component.hpp"
+
+/// @file camera_component.hpp
+/// @brief Defines the @ref CameraComponent class.
 
 BEGIN_XNOR_CORE
 
-class XNOR_ENGINE CameraComponent
+/// @brief Component that encapsulates a @ref Camera
+class XNOR_ENGINE CameraComponent : public Component
 {
 public:
+	/// @brief Camera
 	Camera camera;
 };
 

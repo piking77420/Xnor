@@ -13,126 +13,185 @@ BEGIN_XNOR_CORE
 struct ColorHsv;
 struct Colorf;
 
-/// @brief The @ref Color struct represents a color in RGBA color space.
+/// @brief The ColorRgb struct represents a color in RGBA color space.
 ///        It uses values from 0 to 255 (0xFF). The default alpha value is 255.
-struct XNOR_ENGINE Color
+struct XNOR_ENGINE ColorRgb
 {
+    /// @brief Constant for white
+    /// @return Color
     [[nodiscard]]
-    static constexpr Color White();
+    static constexpr ColorRgb White();
+    
+    /// @brief Constant for gray
+    /// @return Color
     [[nodiscard]]
-    static constexpr Color Gray();
+    static constexpr ColorRgb Gray();
+    
+    /// @brief Constant for black
+    /// @return Color
     [[nodiscard]]
-    static constexpr Color Black();
+    static constexpr ColorRgb Black();
+    
+    /// @brief Constant for red
+    /// @return Color
+    [[nodiscard]]
+    static constexpr ColorRgb Red();
+    
+    /// @brief Constant for green
+    /// @return Color
+    [[nodiscard]]
+    static constexpr ColorRgb Green();
+    
+    /// @brief Constant for blue
+    /// @return Color
+    [[nodiscard]]
+    static constexpr ColorRgb Blue();
+    
+    /// @brief Constant for yellow
+    /// @return Color
+    [[nodiscard]]
+    static constexpr ColorRgb Yellow();
+    
+    /// @brief Constant for cyan
+    /// @return Color
+    [[nodiscard]]
+    static constexpr ColorRgb Cyan();
+    
+    /// @brief Constant for magenta
+    /// @return Color
+    [[nodiscard]]
+    static constexpr ColorRgb Magenta();
 
-    [[nodiscard]]
-    static constexpr Color Red();
-    [[nodiscard]]
-    static constexpr Color Green();
-    [[nodiscard]]
-    static constexpr Color Blue();
-
-    [[nodiscard]]
-    static constexpr Color Yellow();
-    [[nodiscard]]
-    static constexpr Color Cyan();
-    [[nodiscard]]
-    static constexpr Color Magenta();
-
+    /// @brief Red component
     uint8_t r = 0;
+    /// @brief Green component
     uint8_t g = 0;
+    /// @brief Blue component
     uint8_t b = 0;
+    /// @brief Alpha component
     uint8_t a = 0xFF;
 
     [[nodiscard]]
-    Color() = default;
+    ColorRgb() = default;
 
+    /// @brief Constructs a color using a 32 bit RGBA constant
+    /// @param rgba R G B A, with each component taking 8 bits and in this order
     [[nodiscard]]
-    constexpr explicit Color(const uint32_t rgba)
+    constexpr explicit ColorRgb(const uint32_t rgba)
         : r(static_cast<uint8_t>(rgba >> 24)), g(static_cast<uint8_t>(rgba >> 16)), b(static_cast<uint8_t>(rgba >> 8)), a(static_cast<uint8_t>(rgba)) {}
-    
+
+    /// @brief Constructs a color with each specified component
+    /// @param r Red component
+    /// @param g Green component
+    /// @param b Blue component
+    /// @param a Alpha component
     [[nodiscard]]
-    constexpr Color(const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a = 0xFF)
+    constexpr ColorRgb(const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a = 0xFF)
         : r(r), g(g), b(b), a(a) {}
 
+    /// @brief Converts the @ref ColorRgb to a @ref ColorHsv
     [[nodiscard]]
     constexpr explicit operator ColorHsv() const;
     
+    /// @brief Converts the @ref ColorRgb to a @ref Colorf
     [[nodiscard]]
     constexpr explicit operator Colorf() const;
 };
 
-using ColorRgb = Color;
-
-/// @brief The @ref Colorf struct represents a color in RGBA color space.
+/// @brief The Colorf struct represents a color in RGBA color space.
 ///        It uses values from 0 to 1. The default alpha value is 1.
 struct XNOR_ENGINE Colorf
 {
+    /// @brief Red component
     float_t r = 0.f;
+    /// @brief Green component
     float_t g = 0.f;
+    /// @brief Blue component
     float_t b = 0.f;
+    /// @brief Alpha component
     float_t a = 1.f;
 
     [[nodiscard]]
     Colorf() = default;
 
+    /// @brief Constructs a color with each specified component
+    /// @param r Red component
+    /// @param g Green component
+    /// @param b Blue component
+    /// @param a Alpha component
     [[nodiscard]]
     constexpr Colorf(const float_t r, const float_t g, const float_t b, const float_t a = 1.f)
         : r(r), g(g), b(b), a(a) {}
 
+    /// @brief Converts the @ref Colorf to a @ref ColorRgb
     [[nodiscard]]
-    constexpr explicit operator Color() const;
+    constexpr explicit operator ColorRgb() const;
 
+    /// @brief Converts the @ref Colorf to a @ref ColorHsv
     [[nodiscard]]
     constexpr explicit operator ColorHsv() const;
 };
 
-/// @brief The @ref ColorHSV struct represents a color in HSVA color space.
+/// @brief The ColorHsv struct represents a color in HSVA color space.
 ///        It uses values from 0 to 255 (0xFF). The default alpha value is 255.
 struct XNOR_ENGINE ColorHsv
 {
+    /// @brief Hue component
     uint8_t h = 0;
+    /// @brief Saturation component
     uint8_t s = 0;
+    /// @brief Value component
     uint8_t v = 0;
+    /// @brief Alpha component
     uint8_t a = 0xFF;
 
     ColorHsv() = default;
 
+    /// @brief Constructs a color using a 32 bit HSVA constant
+    /// @param hsva H S V A, with each component taking 8 bits and in this order
     [[nodiscard]]
     constexpr explicit ColorHsv(const uint32_t hsva)
         : h(static_cast<uint8_t>(hsva >> 24)), s(static_cast<uint8_t>(hsva >> 16)), v(static_cast<uint8_t>(hsva >> 8)), a(static_cast<uint8_t>(hsva)) {}
-    
+
+    /// @brief Constructs a color with each specified component
+    /// @param h Hue component
+    /// @param s Saturation component
+    /// @param v Value component
+    /// @param a Alpha component
     [[nodiscard]]
     constexpr ColorHsv(const uint8_t h, const uint8_t s, const uint8_t v, const uint8_t a = 0xFF)
         : h(h), s(s), v(v), a(a) {}
 
+    /// @brief Converts the @ref ColorHsv to a @ref ColorRgb
     [[nodiscard]]
-    constexpr explicit operator Color() const;
+    constexpr explicit operator ColorRgb() const;
     
+    /// @brief Converts the @ref ColorHsv to a @ref Colorf
     [[nodiscard]]
     constexpr explicit operator Colorf() const;
 };
 
-constexpr Color Color::White() { return Color(0xFF, 0xFF, 0xFF); }
+constexpr ColorRgb ColorRgb::White() { return ColorRgb(0xFF, 0xFF, 0xFF); }
 
-constexpr Color Color::Gray() { return Color(0x7F, 0x7F, 0x7F); }
+constexpr ColorRgb ColorRgb::Gray() { return ColorRgb(0x7F, 0x7F, 0x7F); }
 
-constexpr Color Color::Black() { return Color(0x00, 0x00, 0x00); }
+constexpr ColorRgb ColorRgb::Black() { return ColorRgb(0x00, 0x00, 0x00); }
 
-constexpr Color Color::Red() { return Color(0xFF, 0x00, 0x00); }
+constexpr ColorRgb ColorRgb::Red() { return ColorRgb(0xFF, 0x00, 0x00); }
 
-constexpr Color Color::Green() { return Color(0x00, 0xFF, 0x00); }
+constexpr ColorRgb ColorRgb::Green() { return ColorRgb(0x00, 0xFF, 0x00); }
 
-constexpr Color Color::Blue() { return Color(0x00, 0x00, 0xFF); }
+constexpr ColorRgb ColorRgb::Blue() { return ColorRgb(0x00, 0x00, 0xFF); }
 
-constexpr Color Color::Yellow() { return Color(0xFF, 0xFF, 0x00); }
+constexpr ColorRgb ColorRgb::Yellow() { return ColorRgb(0xFF, 0xFF, 0x00); }
 
-constexpr Color Color::Cyan() { return Color(0x00, 0xFF, 0xFF); }
+constexpr ColorRgb ColorRgb::Cyan() { return ColorRgb(0x00, 0xFF, 0xFF); }
 
-constexpr Color Color::Magenta() { return Color(0xFF, 0x00, 0xFF); }
+constexpr ColorRgb ColorRgb::Magenta() { return ColorRgb(0xFF, 0x00, 0xFF); }
 
 constexpr uint8_t HueAngle = 43;
 
-constexpr Color::operator ColorHsv() const
+constexpr ColorRgb::operator ColorHsv() const
 {
     ColorHsv hsv = { 0, 0, 0, a };
     const uint8_t minVal = std::min(std::min(r, g), b);
@@ -157,7 +216,7 @@ constexpr Color::operator ColorHsv() const
     return hsv;
 }
 
-constexpr ColorHsv::operator Color() const
+constexpr ColorHsv::operator ColorRgb() const
 {
     const uint8_t hi = h / HueAngle;
     const uint8_t f = h % HueAngle * 6;
@@ -222,14 +281,14 @@ constexpr ColorHsv::operator Colorf() const
 }
 
 [[nodiscard]]
-constexpr Color operator+(const Color c1, const Color c2)
+constexpr ColorRgb operator+(const ColorRgb c1, const ColorRgb c2)
 {
     const uint16_t r = c1.r + c2.r;
     const uint16_t g = c1.g + c2.g;
     const uint16_t b = c1.b + c2.b;
     const uint16_t a = c1.a + c2.a;
     
-    return Color(
+    return ColorRgb(
         r > 0xFF ? 0xFF : static_cast<uint8_t>(r),
         g > 0xFF ? 0xFF : static_cast<uint8_t>(g),
         b > 0xFF ? 0xFF : static_cast<uint8_t>(b),
@@ -238,7 +297,7 @@ constexpr Color operator+(const Color c1, const Color c2)
 }
 
 [[nodiscard]]
-constexpr Color operator*(const Color c1, const Color c2)
+constexpr ColorRgb operator*(const ColorRgb c1, const ColorRgb c2)
 {
     const uint16_t r = c1.r * c2.r;
     const uint16_t g = c1.g * c2.g;
@@ -246,7 +305,7 @@ constexpr Color operator*(const Color c1, const Color c2)
     const uint16_t a = c1.a * c2.a;
 
     // Check for overflow before setting the value
-    return Color(
+    return ColorRgb(
         r > 0xFF ? 0xFF : static_cast<uint8_t>(r),
         g > 0xFF ? 0xFF : static_cast<uint8_t>(g),
         b > 0xFF ? 0xFF : static_cast<uint8_t>(b),
@@ -255,7 +314,7 @@ constexpr Color operator*(const Color c1, const Color c2)
 }
 
 [[nodiscard]]
-constexpr Color operator*(const Color color, const float_t alphaFactor) { return Color(color.r, color.g, color.b, static_cast<uint8_t>(static_cast<float_t>(color.a) * alphaFactor)); }
+constexpr ColorRgb operator*(const ColorRgb color, const float_t alphaFactor) { return ColorRgb(color.r, color.g, color.b, static_cast<uint8_t>(static_cast<float_t>(color.a) * alphaFactor)); }
 
 [[nodiscard]]
 constexpr Colorf operator*(const Colorf c1, const Colorf c2) { return Colorf(c1.r * c2.r, c1.g * c2.g, c1.b * c2.b, c1.a * c2.a); }
@@ -263,9 +322,9 @@ constexpr Colorf operator*(const Colorf c1, const Colorf c2) { return Colorf(c1.
 [[nodiscard]]
 constexpr Colorf operator*(const Colorf color, const float_t alphaFactor) { return Colorf(color.r, color.g, color.b, color.a * alphaFactor); }
 
-constexpr Colorf::operator Color() const
+constexpr Colorf::operator ColorRgb() const
 {
-    return Color(static_cast<uint8_t>(r) * 255, static_cast<uint8_t>(g) * 255, static_cast<uint8_t>(b) * 255, static_cast<uint8_t>(a) * 255);
+    return ColorRgb(static_cast<uint8_t>(r) * 255, static_cast<uint8_t>(g) * 255, static_cast<uint8_t>(b) * 255, static_cast<uint8_t>(a) * 255);
 }
 
 constexpr Colorf::operator ColorHsv() const
@@ -273,9 +332,9 @@ constexpr Colorf::operator ColorHsv() const
     return static_cast<ColorHsv>(static_cast<ColorRgb>(*this));
 }
 
-constexpr Color::operator Colorf() const
+constexpr ColorRgb::operator Colorf() const
 {
-    return Colorf(static_cast<float>(r) / 255.f, static_cast<float>(g) / 255.f, static_cast<float>(b) / 255.f, static_cast<float>(a) / 255.f);
+    return Colorf(static_cast<float_t>(r) / 255.f, static_cast<float_t>(g) / 255.f, static_cast<float_t>(b) / 255.f, static_cast<float_t>(a) / 255.f);
 }
 
 END_XNOR_CORE

@@ -69,9 +69,9 @@ public:
     virtual void Deserialize() = 0;
 };
 
-/// @brief Concept that forces a type to be a child of @ref Reflectable
+/// @brief Concept that forces a type to be a child of @ref Serializable
 template <class T>
-concept ReflectT = Meta::IsBaseOf<Serializable, T>;
+concept SerializableT = Meta::IsBaseOf<Serializable, T>;
 
 /// @brief Implements the reflection in a .cpp file, it provides a body for @ref Serialize and @ref Deserialize
 /// @param type Type name

@@ -4,11 +4,3 @@
 using namespace XnorCore;
 
 REFLECTABLE_IMPL_CPP(Component)
-
-void Component::Begin()
-{
-}
-
-void Component::Update()
-{
-}

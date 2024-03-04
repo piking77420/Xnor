@@ -148,8 +148,8 @@ void ContentBrowser::DisplayDirectoryHierarchy(const XnorCore::Pointer<XnorCore:
 void ContentBrowser::DisplayEntry(
     const XnorCore::Pointer<XnorCore::Entry>& entry,
     const XnorCore::Pointer<XnorCore::Texture>& texture,
-    bool_t* hovered,
-    bool_t* clicked
+    bool_t* const hovered,
+    bool_t* const clicked
 )
 {
     const float_t oldCursorPos = ImGui::GetCursorPosX();
@@ -217,6 +217,7 @@ void ContentBrowser::DisplayEntry(
             }
             else
             {
+                // ReSharper disable once CppTooWideScope
                 XnorCore::Pointer<XnorCore::Directory>&& directory = XnorCore::Utils::DynamicPointerCast<XnorCore::Directory>(entry);
                 if (directory)
                 {

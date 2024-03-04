@@ -18,12 +18,10 @@ Guid Guid::New()
 	return guid;
 }
 
-bool Guid::operator==(const Guid& other) const
+bool_t Guid::operator==(const Guid& other) const
 {
-	return
-	    reinterpret_cast<const uint64_t*>(this)[0] == reinterpret_cast<const uint64_t*>(&other)[0] &&
-	    reinterpret_cast<const uint64_t*>(this)[1] == reinterpret_cast<const uint64_t*>(&other)[1]
-	;
+	return reinterpret_cast<const uint64_t*>(this)[0] == reinterpret_cast<const uint64_t*>(&other)[0] &&
+		   reinterpret_cast<const uint64_t*>(this)[1] == reinterpret_cast<const uint64_t*>(&other)[1];
 }
 
 Guid::operator std::string() const
