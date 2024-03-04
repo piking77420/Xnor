@@ -931,6 +931,6 @@ Always put a space before and after mathematical operators. For pointer and refe
 
 #### Templates and Casts
 
-Never put extra spaces in template declarations.
+Always put one extra space in template declarations.
 
 Always put one after a C-style cast. However, as stated in [the Casting section](#casting), you should use C++ casts, and because these are in a function-style form, an extra space isn't necessary.

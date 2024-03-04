@@ -269,7 +269,14 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		ModelUniformData modelData;
 
 		modelData.model = transform.worldMatrix;
-		modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
+		try
+		{
+			modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
+		}
+		catch (const std::invalid_argument&)
+		{
+			modelData.normalInvertMatrix = Matrix::Identity();
+		}
 		Rhi::UpdateModelUniform(modelData);
 
 		if (meshRenderer->material.albedo.IsValid())

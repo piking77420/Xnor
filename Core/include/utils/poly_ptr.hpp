@@ -4,13 +4,12 @@ template <typename T>
 class PolyPtr
 {
 public:
-    static void Destroy(PolyPtr* ptr);
-    
-public:
-    using value_type = T;
+    using Type = T;
     
     PolyPtr();
     ~PolyPtr();
+
+    DEFAULT_COPY_MOVE_OPERATIONS_NO_ENGINE(PolyPtr)
 
     template <typename U>
     void Create();
@@ -53,17 +52,6 @@ private:
 };
 
 template <typename T>
-void PolyPtr<T>::Destroy(PolyPtr* const ptr)
-{
-    if (ptr->m_Ptr)
-    {
-        delete ptr->m_Ptr;
-        ptr->m_Hash = 0;
-        ptr->m_Ptr = nullptr;
-    }
-}
-
-template <typename T>
 PolyPtr<T>::PolyPtr()
 {
     m_Ptr = nullptr;
@@ -73,7 +61,12 @@ PolyPtr<T>::PolyPtr()
 template <typename T>
 PolyPtr<T>::~PolyPtr()
 {
-    PolyPtr::Destroy(this);
+    if (m_Ptr)
+    {
+        delete m_Ptr;
+        m_Hash = 0;
+        m_Ptr = nullptr;
+    }
 }
 
 template <typename T>

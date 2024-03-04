@@ -21,11 +21,6 @@ Entity::Entity()
 
 Entity::~Entity()
 {
-    for (size_t i = 0; i < m_Components.GetSize(); i++)
-    {
-        PolyPtr<Component>::Destroy(&m_Components[i]);
-    }
-
     m_Components.Clear();
 }
 

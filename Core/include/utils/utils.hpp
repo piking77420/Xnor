@@ -25,7 +25,7 @@ class Entry;
 
 namespace Utils
 {
-    template<typename PtrT, typename IntT>
+    template <typename PtrT, typename IntT>
     [[nodiscard]]
     constexpr PtrT IntToPointer(IntT number);
 
@@ -72,7 +72,7 @@ namespace Utils
     /// @tparam U The type to dynamically cast from.
     /// @param value The @ref Pointer to cast from.
     /// @return A null @ref Pointer if the cast failed. Otherwise, the cast result.
-    template<typename T, typename U>
+    template <typename T, typename U>
     [[nodiscard]]
     Pointer<T> DynamicPointerCast(const Pointer<U>& value);
 
@@ -91,7 +91,7 @@ namespace Utils
     XNOR_ENGINE void OpenFile(const std::filesystem::path& filepath);
 }
 
-template<typename PtrT, typename IntT>
+template <typename PtrT, typename IntT>
 constexpr PtrT Utils::IntToPointer(const IntT number)
 {
     static_assert(std::is_pointer_v<PtrT>, "PtrT must be a raw pointer type, ex: PtrT=int*");
@@ -106,7 +106,7 @@ constexpr T* Utils::GetAddress(const void* const obj, const size_t offset, const
     return const_cast<T* const>(reinterpret_cast<const T* const>(static_cast<const uint8_t* const>(obj) + offset + sizeof(T) * element));
 }
 
-template<typename T, typename U>
+template <typename T, typename U>
 Pointer<T> Utils::DynamicPointerCast(const Pointer<U>& value)
 {
     if (!value)

@@ -22,10 +22,7 @@ public:
     /// @brief The type of the List<T>, refers to T
     using Type = T;
 
-    List(const List& other) = delete;
-    List(List&& other) = delete;
-    List& operator=(const List& other) = delete;
-    List& operator=(List&& other) = delete;
+    DELETE_COPY_MOVE_OPERATIONS(List)
 
     /// @brief Creates an empty list with a capacity of 0
     explicit List();

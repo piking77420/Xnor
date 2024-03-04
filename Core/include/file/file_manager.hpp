@@ -12,7 +12,7 @@
 
 BEGIN_XNOR_CORE
 
-template<class T>
+template <class T>
 concept EntryT = std::is_base_of_v<Entry, T>;
 
 class FileManager final
@@ -40,7 +40,7 @@ public:
     /// @tparam T The type of @ref Entry to get.
     /// @param path The system path to get the @ref Entry of.
     /// @return The @ref Entry corresponding to the given @p path, or nullptr if it hasn't been added yet.
-    template<EntryT T = File>
+    template <EntryT T = File>
     [[nodiscard]]
     static Pointer<T> Get(const std::filesystem::path& path);
 
@@ -51,7 +51,7 @@ public:
     /// @brief Finds the first @ref Entry of type @p T.
     /// @tparam T The type of @ref Entry to find.
     /// @return The first @ref Entry of type @p T.
-    template<EntryT T = File>
+    template <EntryT T = File>
     [[nodiscard]]
     static Pointer<T> Find();
 
@@ -61,19 +61,19 @@ public:
     /// called for each stored @ref Entry.
     /// @return The first @ref Entry for which the @p predicate returned @c true. If every @ref Entry
     /// returned @c false, instead return a null @ref Pointer.
-    template<EntryT T = File>
+    template <EntryT T = File>
     [[nodiscard]]
     static Pointer<T> Find(std::function<bool(Pointer<T>)>&& predicate);
 
     /// @brief Finds all @ref Entry "Entries" of type @p T.
     /// @tparam T The type of @ref Entry to find.
     /// @return All stored @ref Entry "Entries" of type @p T.
-    template<EntryT T = File>
+    template <EntryT T = File>
     [[nodiscard]]
     static std::vector<Pointer<T>> FindAll();
     
     /// @see @ref FileManager::FindAll()
-    template<EntryT T = File>
+    template <EntryT T = File>
     static void FindAll(std::vector<Pointer<T>>* result);
     
     /// @brief Finds a list of @ref Entry "Entries" based on a predicate.
@@ -82,12 +82,12 @@ public:
     /// called for each stored @ref Entry.
     /// @return The first @ref Entry for which the @p predicate returned @c true. If every @ref Entry
     /// returned @c false, instead return a null @ref Pointer.
-    template<EntryT T = File>
+    template <EntryT T = File>
     [[nodiscard]]
     static std::vector<Pointer<T>> FindAll(std::function<bool(Pointer<T>)>&& predicate);
 
     /// @see @ref FileManager::FindAll(std::function<bool(Pointer<T>)>&&)
-    template<EntryT T = File>
+    template <EntryT T = File>
     static void FindAll(std::function<bool(Pointer<T>)>&& predicate, std::vector<Pointer<T>>* result);
 
     XNOR_ENGINE static void Unload(const std::filesystem::path& path);
@@ -100,7 +100,7 @@ private:
     XNOR_ENGINE static inline std::map<std::filesystem::path, Pointer<Entry>> m_Entries;
 };
 
-template<EntryT T>
+template <EntryT T>
 Pointer<T> FileManager::Get(const std::filesystem::path& path)
 {
     if (!Contains(path))
@@ -112,7 +112,7 @@ Pointer<T> FileManager::Get(const std::filesystem::path& path)
     return static_cast<Pointer<T>>(m_Entries.at(path));
 }
 
-template<EntryT T>
+template <EntryT T>
 Pointer<T> FileManager::Find()
 {
     for (auto&& mapEntry : m_Entries)
@@ -126,7 +126,7 @@ Pointer<T> FileManager::Find()
     return nullptr;
 }
 
-template<EntryT T>
+template <EntryT T>
 Pointer<T> FileManager::Find(std::function<bool(Pointer<T>)>&& predicate)
 {
     for (auto&& mapEntry : m_Entries)
@@ -140,7 +140,7 @@ Pointer<T> FileManager::Find(std::function<bool(Pointer<T>)>&& predicate)
     return nullptr;
 }
 
-template<EntryT T>
+template <EntryT T>
 std::vector<Pointer<T>> FileManager::FindAll()
 {
     std::vector<Pointer<T>> result;
@@ -148,7 +148,7 @@ std::vector<Pointer<T>> FileManager::FindAll()
     return result;
 }
 
-template<EntryT T>
+template <EntryT T>
 void FileManager::FindAll(std::vector<Pointer<T>>* result)
 {
     result->clear();
@@ -162,7 +162,7 @@ void FileManager::FindAll(std::vector<Pointer<T>>* result)
     }
 }
 
-template<EntryT T>
+template <EntryT T>
 std::vector<Pointer<T>> FileManager::FindAll(std::function<bool(Pointer<T>)>&& predicate)
 {
     std::vector<Pointer<T>> result;
@@ -170,7 +170,7 @@ std::vector<Pointer<T>> FileManager::FindAll(std::function<bool(Pointer<T>)>&& p
     return result;
 }
 
-template<EntryT T>
+template <EntryT T>
 void FileManager::FindAll(std::function<bool(Pointer<T>)>&& predicate, std::vector<Pointer<T>>* result)
 {
     result->clear();

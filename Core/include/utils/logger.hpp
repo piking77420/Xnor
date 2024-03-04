@@ -36,22 +36,22 @@ public:
     // You cannot instantiate this class
     Logger() = delete;
 
-    template<class... Args>
+    template <class... Args>
     static void Log(LogLevel level, const std::string& format, Args&&... args);
 
-    template<class... Args>
+    template <class... Args>
     static void LogDebug(const std::string& format, Args&&... args);
 
-    template<class... Args>
+    template <class... Args>
     static void LogInfo(const std::string& format, Args&&... args);
 
-    template<class... Args>
+    template <class... Args>
     static void LogWarning(const std::string& format, Args&&... args);
 
-    template<class... Args>
+    template <class... Args>
     static void LogError(const std::string& format, Args&&... args);
 
-    template<class... Args>
+    template <class... Args>
     static void LogFatal(const std::string& format, Args&&... args);
 
     static void OpenFile(const std::filesystem::path& filename);
@@ -92,7 +92,7 @@ private:
     static void PrintLog(const LogEntry& log);
 };
 
-template<class... Args>
+template <class... Args>
 void Logger::Log(const LogLevel level, const std::string& format, Args&&... args)
 {
     if (level < minimumConsoleLevel && level < minimumFileLevel)
@@ -102,31 +102,31 @@ void Logger::Log(const LogLevel level, const std::string& format, Args&&... args
     m_CondVar.notify_one();
 }
 
-template<class... Args>
+template <class... Args>
 void Logger::LogDebug(const std::string& format, Args&&... args)
 {
     Logger::Log(LogLevel::Debug, format, std::forward<Args>(args)...);
 }
 
-template<class... Args>
+template <class... Args>
 void Logger::LogInfo(const std::string& format, Args&&... args)
 {
     Logger::Log(LogLevel::Info, format, std::forward<Args>(args)...);
 }
 
-template<class... Args>
+template <class... Args>
 void Logger::LogWarning(const std::string& format, Args&&... args)
 {
     Logger::Log(LogLevel::Warning, format, std::forward<Args>(args)...);
 }
 
-template<class... Args>
+template <class... Args>
 void Logger::LogError(const std::string& format, Args&&... args)
 {
     Logger::Log(LogLevel::Error, format, std::forward<Args>(args)...);
 }
 
-template<class... Args>
+template <class... Args>
 void Logger::LogFatal(const std::string& format, Args&&... args)
 {
     Logger::Log(LogLevel::Fatal, format, std::forward<Args>(args)...);

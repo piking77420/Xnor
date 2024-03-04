@@ -7,10 +7,10 @@
 
 // These definitions must be in the global namespace
 
-template<>
+template <>
 struct std::formatter<std::filesystem::path>
 {
-    template<class ParseContext>
+    template <class ParseContext>
     constexpr typename ParseContext::iterator parse(ParseContext& ctx)
     {
         auto it = ctx.begin();
@@ -23,7 +23,7 @@ struct std::formatter<std::filesystem::path>
         return it;
     }
     
-    template<class FormatContext>
+    template <class FormatContext>
     typename FormatContext::iterator format(const std::filesystem::path& path, FormatContext& ctx) const
     {
         std::ostringstream out;

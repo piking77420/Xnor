@@ -8,15 +8,15 @@
 
 BEGIN_XNOR_CORE
 
-template<typename T>
+template <typename T>
 class Pointer;
 
 /// @brief Reference counter for the <c>Pointer</c> class. This shouldn't be used for anything else.
-template<typename T>
+template <typename T>
 class ReferenceCounter
 {
 public:
-    template<typename... Args>
+    template <typename... Args>
     explicit ReferenceCounter(Args&&... args);
 
     ReferenceCounter(const ReferenceCounter& other) = delete;
@@ -58,14 +58,14 @@ private:
     std::vector<Pointer<T>*> m_WeakReferenceOwners;
 };
 
-template<typename T>
-template<typename... Args>
+template <typename T>
+template <typename... Args>
 ReferenceCounter<T>::ReferenceCounter(Args&&... args) // NOLINT(cppcoreguidelines-missing-std-forward)
     : m_Pointer(new T(std::forward<Args>(args)...))
 {
 }
 
-template<typename T>
+template <typename T>
 ReferenceCounter<T>::~ReferenceCounter()
 {
     for (auto& weakReferenceOwner : m_WeakReferenceOwners)
@@ -74,19 +74,19 @@ ReferenceCounter<T>::~ReferenceCounter()
     delete m_Pointer;
 }
 
-template<typename T>
+template <typename T>
 void ReferenceCounter<T>::IncStrong()
 {
     m_Strong++;
 }
 
-template<typename T>
+template <typename T>
 void ReferenceCounter<T>::IncWeak(Pointer<T>* weakReferenceOwner)
 {
     m_WeakReferenceOwners.push_back(weakReferenceOwner);
 }
 
-template<typename T>
+template <typename T>
 bool ReferenceCounter<T>::DecStrong()
 {
     if (m_Strong == 0 || --m_Strong == 0)
@@ -95,7 +95,7 @@ bool ReferenceCounter<T>::DecStrong()
     return false;
 }
 
-template<typename T>
+template <typename T>
 void ReferenceCounter<T>::DecWeak(const Pointer<T>* const weakReferenceOwner)
 {
     const auto&& it = std::find(m_WeakReferenceOwners.begin(), m_WeakReferenceOwners.end(), weakReferenceOwner);
@@ -106,25 +106,25 @@ void ReferenceCounter<T>::DecWeak(const Pointer<T>* const weakReferenceOwner)
     m_WeakReferenceOwners.erase(it);
 }
 
-template<typename T>
+template <typename T>
 uint64_t ReferenceCounter<T>::GetStrong() const
 {
     return m_Strong;
 }
 
-template<typename T>
+template <typename T>
 uint64_t ReferenceCounter<T>::GetWeak() const
 {
     return m_WeakReferenceOwners.size();
 }
 
-template<typename T>
+template <typename T>
 T* ReferenceCounter<T>::GetPointer()
 {
     return m_Pointer;
 }
 
-template<typename T>
+template <typename T>
 const T* ReferenceCounter<T>::GetPointer() const
 {
     return m_Pointer;
