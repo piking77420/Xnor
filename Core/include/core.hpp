@@ -46,6 +46,10 @@ typedef bool bool_t;
 /// @brief Ends the @ref XnorCore namespace.
 #define END_XNOR_CORE }
 
+/// @namespace XnorCore
+/// @brief Contains all declarations of the XNOR Engine.
+namespace XnorCore {}
+
 /// @brief Creates default copy and move operations for a given @p type.
 ///
 /// @paragraph usage Usage

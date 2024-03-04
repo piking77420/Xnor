@@ -179,6 +179,8 @@
     <ClInclude Include="include\file\file_manager.hpp" />
     <ClInclude Include="include\input\input.hpp" />
     <ClInclude Include="include\input\gamepad_input.hpp" />
+    <ClInclude Include="include\input\keyboard_input.hpp" />
+    <ClInclude Include="include\input\mouse_input.hpp" />
     <ClInclude Include="include\input\time.hpp" />
     <ClInclude Include="include\rendering\camera.hpp" />
     <ClInclude Include="include\rendering\frame_buffer.hpp" />

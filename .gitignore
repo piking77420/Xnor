@@ -523,7 +523,8 @@ FodyWeavers.xsd
 
 !assets/**
 
-doc/**
+Core/doc/**
+Editor/doc/**
 
 !*.vcxproj.user
 

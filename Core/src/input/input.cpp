@@ -15,20 +15,20 @@ bool Input::GetMouseButton(const MouseButton mouseButton, const MouseButtonStatu
     return m_Mouse.at(static_cast<uint8_t>(mouseButton)).at(static_cast<uint8_t>(status));
 }
 
-bool Input::GetGamePadButton(const uint32_t gamePadId, const GamepadButton gamepadButton, const GameButtonStatus buttonStatus)
+bool Input::GetGamepadButton(const uint32_t gamePadId, const GamepadButton gamepadButton, const GameButtonStatus buttonStatus)
 {
-    if(gamePadId > GamePadMax)
+    if (gamePadId > GamepadMax)
     {
         Logger::LogFatal("Gamepad Id none valid  = {}",gamePadId);
         throw std::exception("Gamepad Id none valid");
     }
 
-    return m_GamePadsButton.at(gamePadId).at(static_cast<uint32_t>(gamepadButton)).at(static_cast<uint32_t>(buttonStatus));
+    return m_GamepadsButton.at(gamePadId).at(static_cast<uint32_t>(gamepadButton)).at(static_cast<uint32_t>(buttonStatus));
 }
 
 void Input::HandleEvent()
 {
-    HandleGamePad();
+    HandleGamepad();
 }
 
 void Input::HandleKeyboard(GLFWwindow*, const int32_t key, const int32_t, const int32_t action, const int32_t)
@@ -86,25 +86,27 @@ void Input::MouseCursorPos(GLFWwindow*, const double_t xpos, const double_t ypos
     m_MousePos = Vector2(static_cast<float_t>(xpos), static_cast<float_t>(ypos));
 }
 
-void Input::HandleJoyStickCallBack(int jid, int event)
+void Input::HandleJoyStickCallBack(const int32_t jid, const int32_t event)
 {
     switch (event)
     {
-        case GLFW_CONNECTED :
-            m_GamePads[jid].isConnected = true;
-        break;
+        case GLFW_CONNECTED:
+            m_Gamepads[jid].isConnected = true;
+            break;
 
-        case GLFW_DISCONNECTED :
-            m_GamePads[jid].isConnected = false;
-        break;
-        default:;
+        case GLFW_DISCONNECTED:
+            m_Gamepads[jid].isConnected = false;
+            break;
+        
+        default:
+            break;
     }
 }
-void Input::HandleGamePad()
+void Input::HandleGamepad()
 {
-    for (uint32_t i = 0; i < GamePadMax ; i++)
+    for (uint32_t i = 0; i < GamepadMax ; i++)
     {
-        if (!m_GamePads[i].isConnected)
+        if (!m_Gamepads[i].isConnected)
             continue;
 
         GLFWgamepadstate state;
@@ -112,36 +114,36 @@ void Input::HandleGamePad()
         if (!glfwGetGamepadState(static_cast<int32_t>(i), &state))
             return;
         
-        for (uint32_t k = 0; k < static_cast<uint32_t>(GamepadAxes::Count); k++)
+        for (uint32_t k = 0; k < static_cast<uint32_t>(GamepadAxis::Count); k++)
         {
-            if(state.axes[k] <= NullAnalogValue)
+            if (state.axes[k] <= NullAnalogValue)
                 continue;
-            m_GamePads[i].axesValue[k] = state.axes[k];
+            m_Gamepads[i].axesValue[k] = state.axes[k];
         }
 
         for (uint32_t k = 0; k < static_cast<uint32_t>(GamepadButton::Count) - 1; k++)
         {
-            GameButtonStatuses& statuses = m_GamePadsButton[i].at(k);
+            GameButtonStatuses& statuses = m_GamepadsButton[i].at(k);
             const bool_t isDown = statuses.at(static_cast<uint8_t>(GameButtonStatus::Down));
             const bool_t isPress = statuses.at(static_cast<uint8_t>(GameButtonStatus::Press));
             
             switch (state.buttons[k])
             {
-                case GLFW_RELEASE :
+                case GLFW_RELEASE:
                     if (isDown || isPress)
                     {
                         statuses.at(static_cast<uint8_t>(GameButtonStatus::Release)) = true;
                         statuses.at(static_cast<uint8_t>(GameButtonStatus::Down)) = false;
                         statuses.at(static_cast<uint8_t>(GameButtonStatus::Press)) = false;
                     }
-                break;
+                    break;
                 
-                case GLFW_PRESS :
+                case GLFW_PRESS:
                     statuses.at(static_cast<uint8_t>(GameButtonStatus::Release)) = false;
                     statuses.at(static_cast<uint8_t>(GameButtonStatus::Down)) = true;
                     statuses.at(static_cast<uint8_t>(GameButtonStatus::Press)) = true;
                     
-                break;
+                    break;
                 
                 default:
                     break;
@@ -152,7 +154,6 @@ void Input::HandleGamePad()
 
 void Input::ResetKey()
 {
-
     GLFWwindow* const windowPtr = Window::GetHandle();
 
     glfwSetKeyCallback(windowPtr, HandleKeyboard);
@@ -168,12 +169,12 @@ void Input::ResetKey()
     m_Mouse.fill(defaultMouseButtons);
 }
 
-void Input::CheckGamePadAtLaunch()
+void Input::CheckGamepadAtLaunch()
 {
-    for (int32_t i = 0; i < static_cast<int32_t>(GamePadMax); i++)
+    for (int32_t i = 0; i < static_cast<int32_t>(GamepadMax); i++)
     {
         const int32_t present = glfwJoystickPresent(i);
-        m_GamePads.at(i).isConnected = static_cast<bool_t>(present);
+        m_Gamepads.at(i).isConnected = static_cast<bool_t>(present);
     }
 }
 
@@ -194,14 +195,14 @@ void Input::Reset()
         statuses.at(static_cast<uint8_t>(KeyStatus::Repeat)) = false;
     }
 
-    for (uint32_t i = 0; i < m_GamePadsButton.size(); i++)
+    for (auto& i : m_GamepadsButton)
     {
-        for (uint32_t k = 0; k < m_GamePadsButton.at(i).size(); k++)
+        for (uint32_t k = 0; k < i.size(); k++)
         {
-            for (uint32_t j = 0; j < m_GamePadsButton.at(i).at(k).size(); j++)
+            for (uint32_t j = 0; j < i.at(k).size(); j++)
             {
-                m_GamePadsButton.at(i).at(k).at(static_cast<uint8_t>(GameButtonStatus::Press)) = false;
-                m_GamePadsButton.at(i).at(k).at(static_cast<uint8_t>(GameButtonStatus::Release)) = false;
+                i.at(k).at(static_cast<uint8_t>(GameButtonStatus::Press)) = false;
+                i.at(k).at(static_cast<uint8_t>(GameButtonStatus::Release)) = false;
             }
         }
     }
@@ -211,7 +212,7 @@ void Input::Reset()
 
 void Input::Initialize()
 {
-    GLFWwindow* const windowPtr = static_cast<GLFWwindow*>(Window::GetHandle());
+    GLFWwindow* const windowPtr = Window::GetHandle();
 
     glfwSetKeyCallback(windowPtr, HandleKeyboard);
     glfwSetMouseButtonCallback(windowPtr, HandleMouseButton);
@@ -226,6 +227,6 @@ void Input::Initialize()
     defaultMouseButtons.fill(false);
     m_Mouse.fill(defaultMouseButtons);
 
-    CheckGamePadAtLaunch();
+    CheckGamepadAtLaunch();
 }
 
