@@ -110,22 +110,30 @@ public:
     template <typename U>
     explicit Pointer(Pointer<U>&& other) noexcept;
 
-    /// @brief Creates a Pointer, allocating @c sizeof(Type)
+    /// @brief Creates a Pointer, calling @c new with @p T and forwarding all given arguments to its constructor.
     template <typename... Args>
     explicit Pointer(Args&&... args);
 
+    /// @brief Destroys this Pointer, deallocating any memory if this is the last strong reference.
     virtual ~Pointer();
 
-    /// @brief Creates a new strong reference to this pointer
+    /// @brief Creates a new strong reference to this pointer.
     [[nodiscard]]
     Pointer CreateStrongReference() const;
 
+    /// @brief Gets the underlying raw pointer.
+    ///
+    /// This is equivalent to calling Pointer::operator T*() const;
     [[nodiscard]]
     const T* Get() const;
 
+    /// @brief Gets the underlying raw pointer.
+    ///
+    /// This is equivalent to calling Pointer::operator T*();
     [[nodiscard]]
     T* Get();
 
+    /// @brief Returns whether this Pointer is @c nullptr.
     [[nodiscard]]
     bool_t IsValid() const;
 
@@ -135,31 +143,40 @@ public:
     /// @brief Converts this @ref Pointer to a weak reference.
     void ToWeakReference();
 
+    /// @brief Returns the underlying ReferenceCounter.
     [[nodiscard]]
     const ReferenceCounter<T>* GetReferenceCounter() const;
 
+    /// @brief Returns whether this Pointer is holding a strong reference.
     [[nodiscard]]
     bool_t GetIsStrongReference() const;
 
-    /// @brief Resets this @ref Pointer to a @c nullptr.
+    /// @brief Resets this Pointer to a @c nullptr.
     ///
     /// @warning
     /// This function is used internally and is not meant to be used except if you really know what you
     /// are doing. This doesn't free the potentially allocated memory. Use it at your own risks.
     void Reset();
 
+    /// @brief Sets this Pointer to the values of @p other.
     Pointer& operator=(const Pointer& other);
 
+    /// @brief Sets this Pointer to the values of @p other, moving all the data.
     Pointer& operator=(Pointer&& other) noexcept;
 
+    /// @brief Sets this Pointer to @c nullptr.
     Pointer& operator=(nullptr_t);
 
+    /// @brief Sets this Pointer to the values of @p other which is a Pointer of another Type.
     template <typename U>
     Pointer& operator=(const Pointer<U>& other);
 
+    /// @brief Sets this Pointer to the values of @p other which is a Pointer of another Type, moving all the data.
     template <typename U>
     Pointer& operator=(Pointer<U>&& other) noexcept;
 
+    // TODO: Should have overloads for const Pointers
+    /// @brief Converts this Pointer to its underlying raw pointer.
     [[nodiscard]]
     explicit operator T*() const;
 
