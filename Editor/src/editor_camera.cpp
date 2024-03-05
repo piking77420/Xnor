@@ -109,7 +109,7 @@ void EditorCamera::OnMiddleButton()
     {
         m_ComputeDeltaMouse = true;
         const Vector3 vector = (m_EditorRefCamera->right * -m_MouseOffSet.x) + (m_EditorRefCamera->up * m_MouseOffSet.y);
-        m_EditorRefCamera->pos += vector * Time::GetDeltaTime() * m_CameraSpeed;
+        m_EditorRefCamera->position += vector * Time::GetDeltaTime() * m_CameraSpeed;
     }
     
     if (ImGui::IsMouseReleased(ImGuiMouseButton_Middle))
@@ -178,7 +178,7 @@ void EditorCamera::GoToObject()
     if (!m_GotoObject)
         return;
     
-    Vector3 forwardVec = (m_ObjectPos - m_EditorRefCamera->pos);
+    Vector3 forwardVec = (m_ObjectPos - m_EditorRefCamera->position);
     const float_t distance = forwardVec.Length();
         
     if (distance <= m_DistanceToStop)
@@ -188,7 +188,7 @@ void EditorCamera::GoToObject()
     }
     
     forwardVec *= 1.f / distance;
-    m_EditorRefCamera->pos = Vector3::Lerp(m_EditorRefCamera->pos, m_EditorRefCamera->pos + forwardVec, XnorCore::Time::GetDeltaTime() * distance);
+    m_EditorRefCamera->position = Vector3::Lerp(m_EditorRefCamera->position, m_EditorRefCamera->position + forwardVec, XnorCore::Time::GetDeltaTime() * distance);
 }
 
 void EditorCamera::AddMovement(const Vector3& movement)
@@ -196,6 +196,6 @@ void EditorCamera::AddMovement(const Vector3& movement)
     if (movement == Vector3::Zero())
         return;
     
-    m_EditorRefCamera->pos += movement;
+    m_EditorRefCamera->position += movement;
     m_GotoObject = false;
 }

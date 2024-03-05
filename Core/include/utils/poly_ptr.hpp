@@ -3,7 +3,7 @@
 #include "utils/utils.hpp"
 
 /// @file poly_ptr.hpp
-/// @brief Defines the @ref PolyPtr class.
+/// @brief Defines the PolyPtr class.
 
 BEGIN_XNOR_CORE
 

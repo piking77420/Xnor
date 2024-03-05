@@ -12,7 +12,7 @@
 #include "utils/serializable.hpp"
 
 /// @file entity.hpp
-/// @brief Defines the @ref Entity class.
+/// @brief Defines the Entity class.
 
 BEGIN_XNOR_CORE
 

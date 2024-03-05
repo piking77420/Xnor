@@ -53,7 +53,7 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	CameraUniformData cam;
 	rendererContext.camera->GetView(&cam.view);
 	rendererContext.camera->GetProjection(rendererContext.framebuffer->GetSize(), &cam.projection);
-	cam.cameraPos = rendererContext.camera->pos;
+	cam.cameraPos = rendererContext.camera->position;
 	Rhi::UpdateCameraUniform(cam);
 	
 	Rhi::SetViewport(m_RenderBuffer->GetSize());

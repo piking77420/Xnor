@@ -4,7 +4,7 @@
 #include "utils/serializable.hpp"
 
 /// @file component.hpp
-/// @brief Defines the @ref Component class.
+/// @brief Defines the Component class.
 
 BEGIN_XNOR_CORE
 

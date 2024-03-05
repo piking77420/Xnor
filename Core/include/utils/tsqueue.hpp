@@ -5,6 +5,7 @@
 
 BEGIN_XNOR_CORE
 
+/// @file tsqueue.hpp
 /// @brief Thread-Safe Queue
 /// 
 /// @tparam T The type of data to store.

@@ -107,7 +107,7 @@ void LightCuller::DrawLightGizmo(const std::vector<const PointLight*>& pointLigh
 			.type = RenderingLight::PointLight,
 		};
 		
-		const float_t distance = (camera.pos - pointLight->entity->transform.position).SquaredLength();
+		const float_t distance = (camera.position - pointLight->entity->transform.position).SquaredLength();
 		sortedLight.emplace(distance, gizmoLight);
 	}
 	
@@ -118,7 +118,7 @@ void LightCuller::DrawLightGizmo(const std::vector<const PointLight*>& pointLigh
 			.type = RenderingLight::SpothLight
 		};
 		
-		const float_t distance = (camera.pos - spotLight->entity->transform.position).SquaredLength();
+		const float_t distance = (camera.position - spotLight->entity->transform.position).SquaredLength();
 		sortedLight.emplace(distance, gizmoLight);
 	}
 	
@@ -129,7 +129,7 @@ void LightCuller::DrawLightGizmo(const std::vector<const PointLight*>& pointLigh
 			.type = RenderingLight::DirLight
 		};
 		
-		const float_t distance = (camera.pos - dirLight->entity->transform.position).SquaredLength();
+		const float_t distance = (camera.position - dirLight->entity->transform.position).SquaredLength();
 		sortedLight.emplace(distance, gizmoLight);
 	}
 	
@@ -140,7 +140,7 @@ void LightCuller::DrawLightGizmo(const std::vector<const PointLight*>& pointLigh
 		ModelUniformData modelData;
 		float_t scaleScalar = m_ScaleFactor;
 		
-		float_t distance = (it->second.pos - camera.pos).SquaredLength();
+		float_t distance = (it->second.pos - camera.position).SquaredLength();
 		if(distance < m_MinDistance * m_MinDistance)
 		{
 			scaleScalar = scaleScalar * (1.f/distance) * (1.f/distance);
@@ -148,7 +148,7 @@ void LightCuller::DrawLightGizmo(const std::vector<const PointLight*>& pointLigh
 		
 		scaleScalar = std::clamp(scaleScalar,m_MaxScalarFactor,m_MinScalarFactor);
 		Matrix scale = Matrix::Scaling(Vector3(scaleScalar));
-		modelData.model = (scale * Matrix::LookAt(it->second.pos,camera.pos,Vector3::UnitY())).Inverted();
+		modelData.model = (scale * Matrix::LookAt(it->second.pos,camera.position,Vector3::UnitY())).Inverted();
 		modelData.normalInvertMatrix = Matrix::Identity();
 
 		switch (it->second.type)
