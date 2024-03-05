@@ -102,13 +102,13 @@ void Rhi::DestroyProgram(const uint32_t shaderId)
 void Rhi::CheckCompilationError(const uint32_t shaderId, const std::string& type)
 {
 	int success;
-	char infoLog[1024];
+	std::string infoLog(1024, '\0');
 	if (type != "PROGRAM")
 	{
 		glGetShaderiv(shaderId, GL_COMPILE_STATUS, &success);
 		if (!success)
 		{
-			glGetShaderInfoLog(shaderId, 1024, nullptr, infoLog);
+			glGetShaderInfoLog(shaderId, 1024, nullptr, infoLog.data());
 			Logger::LogError("Error while compiling shader of type {}: {}", type.c_str(), infoLog);
 		}
 	}
@@ -117,7 +117,7 @@ void Rhi::CheckCompilationError(const uint32_t shaderId, const std::string& type
 		glGetProgramiv(shaderId, GL_LINK_STATUS, &success);
 		if (!success)
 		{
-			glGetProgramInfoLog(shaderId, 1024, nullptr, infoLog);
+			glGetProgramInfoLog(shaderId, 1024, nullptr, infoLog.data());
 			Logger::LogError("Error while linking shader program of type {}: {}", type.c_str(), infoLog);
 		}
 	}

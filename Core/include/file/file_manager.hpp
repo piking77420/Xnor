@@ -10,11 +10,11 @@
 #include "utils/pointer.hpp"
 
 /// @file file_manager.hpp
-/// @brief Defines the @ref FileManager class.
+/// @brief Defines the FileManager class.
 
 BEGIN_XNOR_CORE
 
-/// @brief A class satisfies the @ref EntryT concept if it is derived of @ref Entry.
+/// @brief A class satisfies the EntryT concept if it is derived of @ref Entry.
 template <class T>
 concept EntryT = std::is_base_of_v<Entry, T>;
 
@@ -24,7 +24,7 @@ concept EntryT = std::is_base_of_v<Entry, T>;
 /// function: @ref FileManager::Add and @ref FileManager::Load for @ref File "Files",and @ref FileManager::AddDirectory and
 /// @ref FileManager::LoadDirectory for @ref Directory "Directories".
 ///
-/// @paragraph usage Usage
+/// ### Usage
 /// 
 class FileManager final
 {

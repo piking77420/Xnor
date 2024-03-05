@@ -22,23 +22,23 @@ bool synchronizing = false;
 bool running = true;
 std::ofstream file;
 
-void Logger::OpenFile(const std::filesystem::path &filename)
+void Logger::OpenFile(const std::filesystem::path &filepath)
 {
     CloseFile();
     
-    const bool exists = std::filesystem::exists(filename);
+    const bool exists = std::filesystem::exists(filepath);
     if (!exists)
-        create_directories(filename.parent_path());
+        create_directories(filepath.parent_path());
 
-    file.open(filename, std::ios_base::out | std::ios_base::app);
+    file.open(filepath, std::ios_base::out | std::ios_base::app);
 
     if (!file.is_open() || !file.good())
     {
-        LogWarning("Could not open log file for writing: {}", absolute(filename));
+        LogWarning("Could not open log file for writing: {}", absolute(filepath));
         return;
     }
 
-    LogInfo("Logging to file: {}", filename);
+    LogInfo("Logging to file: {}", filepath);
 
     // If the file already exists, add newlines to space from the last log
     if (!exists)
@@ -54,11 +54,11 @@ void Logger::OpenFile(const std::filesystem::path &filename)
 
         // Read file contents to count empty lines and therefore know how many logs
         // where written in the file.
-        std::ifstream in(filename);
+        std::ifstream in(filepath);
 
         if (!in.is_open() || !in.good())
         {
-            LogWarning("Could not open log file for reading: {}", absolute(filename));
+            LogWarning("Could not open log file for reading: {}", absolute(filepath));
         }
         else
         {
