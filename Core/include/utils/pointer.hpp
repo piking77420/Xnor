@@ -175,7 +175,7 @@ public:
     template <typename U>
     Pointer& operator=(Pointer<U>&& other) noexcept;
 
-    /// @brief Converts this Pointer to its underlying raw pointer.
+    /// @brief Converts this @c const Pointer to its underlying @c const raw pointer.
     [[nodiscard]]
     explicit operator const T*() const;
 
@@ -183,23 +183,37 @@ public:
     [[nodiscard]]
     explicit operator T*();
 
+    /// @brief Converts this Pointer to its string representation.
+    ///
+    /// The resulting string will be in the following form:
+    /// @code
+    /// { ptr=<address>, sRefs=<strongReferenceCount>, wRefs=<weakReferenceCount>, isSRef=<isStrongReference> }
+    /// @endcode
     [[nodiscard]]
+#ifdef DOXYGEN
+    explicit operator stdstring() const;
+#else
     explicit operator std::string() const;
+#endif
 
     // ReSharper disable once CppNonExplicitConversionOperator
     /// @brief Converts this @ref Pointer to a @c bool_t the same way a raw pointer would.
     [[nodiscard]]
     operator bool_t() const;
 
+    /// @brief Dereferences this Pointer, which gives a reference to the underlying Type.
     [[nodiscard]]
     T& operator*();
     
+    /// @brief Dereferences this @c const Pointer, which gives a @c const reference to the underlying Type.
     [[nodiscard]]
     const T& operator*() const;
 
+    /// @brief Dereferences this Pointer, which gives a reference to the underlying Type.
     [[nodiscard]]
     T* operator->();
     
+    /// @brief Dereferences this @c const Pointer, which gives a @c const reference to the underlying Type.
     [[nodiscard]]
     const T* operator->() const;
     
@@ -370,6 +384,7 @@ Pointer<T>& Pointer<T>::operator=(nullptr_t)
     return *this;
 }
 
+#ifndef DOXYGEN
 template <typename T>
 template <typename U>
 Pointer<T>& Pointer<T>::operator=(const Pointer<U>& other)
@@ -403,6 +418,7 @@ Pointer<T>& Pointer<T>::operator=(Pointer<U>&& other) noexcept
     
     return *this;
 }
+#endif
 
 template <typename T>
 Pointer<T>::operator const T*() const
@@ -421,7 +437,11 @@ Pointer<T>::operator T*()
 }
 
 template <typename T>
+#ifdef DOXYGEN
+Pointer<T>::operator stdstring() const
+#else
 Pointer<T>::operator std::string() const
+#endif
 {
     return std::format(
         "{{ ptr={:p}, sRefs={:d}, wRefs={:d}, isSRef={} }}",
@@ -541,16 +561,9 @@ bool operator==(const Pointer<T>& a, const nullptr_t) { return !a.IsValid(); }
 template <typename T>
 bool operator!=(const Pointer<T>& a, const nullptr_t) { return a.IsValid(); }
 
+/// @brief Prints the given Pointer to an output stream according to the @ref XnorCore::Pointer<T>::operator stdstring() const "Pointer to string conversion".
 template <typename T>
-std::ostream& operator<<(std::ostream& stream, const Pointer<T>& ptr)
-{
-    return stream
-        << "Pointer{ ptr=" << static_cast<const T*>(ptr)
-        << ", strRefs=" << ptr.GetReferenceCounter()->GetStrong()
-        << ", wRefs=" << ptr.GetReferenceCounter()->GetWeak()
-        << ", isStrRef=" << std::boolalpha << ptr.GetIsStrongReference()
-        << " }" << std::endl;
-}
+std::ostream& operator<<(std::ostream& stream, const Pointer<T>& ptr) { return stream << static_cast<std::string>(ptr); }
 
 END_XNOR_CORE
 
