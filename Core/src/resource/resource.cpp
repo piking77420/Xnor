@@ -59,12 +59,12 @@ bool_t Resource::Reload(const bool_t reloadInRhi)
     return Reload(FileManager::Get(m_Name), reloadInRhi);
 }
 
-bool_t Resource::GetLoaded() const
+bool_t Resource::IsLoaded() const
 {
     return m_Loaded;
 }
 
-bool_t Resource::GetLoadedInRhi() const
+bool_t Resource::IsLoadedInRhi() const
 {
     return m_LoadedInRhi;
 }

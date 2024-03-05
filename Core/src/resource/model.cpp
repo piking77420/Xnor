@@ -112,7 +112,7 @@ uint32_t Model::GetId() const
     return  m_ModelId;
 }
 
-ModelAABB Model::GetAabb() const
+ModelAabb Model::GetAabb() const
 {
     return m_Aabb;
 }

@@ -6,8 +6,12 @@
 
 BEGIN_XNOR_CORE
 
+/// @file resource.hpp
+/// @brief Defines the Resource class
+
 class File;
 
+/// @brief Interface for resources, which encapsulates most objects used in the engine that come from a file
 class Resource
 {
 public:
@@ -58,10 +62,10 @@ public:
     XNOR_ENGINE virtual bool_t Reload(bool_t reloadInRhi = true);
     
     [[nodiscard]]
-    XNOR_ENGINE bool_t GetLoaded() const;
+    XNOR_ENGINE bool_t IsLoaded() const;
 
     [[nodiscard]]
-    XNOR_ENGINE bool_t GetLoadedInRhi() const;
+    XNOR_ENGINE bool_t IsLoadedInRhi() const;
 
     [[nodiscard]]
     XNOR_ENGINE std::string GetName() const;

@@ -26,7 +26,7 @@ public:
 
 	XNOR_ENGINE void UnBindFrameBuffer() const;
 
-	XNOR_ENGINE void ReadPixel(uint32_t attachmentIndex,vec2i position,TextureFormat textureFormat,TextureInternalFormat textureInternalFormat,void* output) const;
+	XNOR_ENGINE void ReadPixel(uint32_t attachmentIndex, Vector2i position, TextureFormat textureFormat, TextureInternalFormat textureInternalFormat, void* output) const;
 
 	XNOR_ENGINE uint32_t GetId() const;
 	

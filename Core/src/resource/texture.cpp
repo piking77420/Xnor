@@ -12,7 +12,7 @@ Texture::Texture(const TextureCreateInfo& createInfo)
     , m_TextureFiltering(createInfo.textureFiltering), m_TextureWrapping(createInfo.textureWrapping)
     , m_TextureInternalFormat(createInfo.textureInternalFormat)
 {
-    Rhi::CreateTexture2D(&m_Id, createInfo);
+    m_Id = Rhi::CreateTexture2D(createInfo);
     m_LoadedInRhi = true;
 }
 
@@ -30,7 +30,7 @@ Texture::Texture(const TextureInternalFormat textureFormat, const Vector2i size)
         m_TextureInternalFormat
     };
     
-    Rhi::CreateTexture2D(&m_Id,createInfo);
+    m_Id = Rhi::CreateTexture2D(createInfo);
     m_LoadedInRhi = true;
 }
 
@@ -47,7 +47,7 @@ bool Texture::Load(const uint8_t* buffer, const int64_t length)
 {
     stbi_set_flip_vertically_on_load(loadData.flipVertically);
     m_Data = stbi_load_from_memory(buffer, static_cast<int32_t>(length), &m_Size.x, &m_Size.y, &m_DataChannels, loadData.desiredChannels);
-    m_TextureFormat = Rhi::GetFormat(m_DataChannels);
+    m_TextureFormat = Rhi::GetTextureFormatFromChannels(m_DataChannels);
     m_Loaded = true;
     return true;
 }
@@ -66,14 +66,14 @@ void Texture::CreateInRhi()
         DataType::UnsignedByte
     };
     
-    Rhi::CreateTexture2D(&m_Id, textureCreateInfo);
+    m_Id = Rhi::CreateTexture2D(textureCreateInfo);
     
     m_LoadedInRhi = true;
 }
 
 void Texture::DestroyInRhi()
 {
-    Rhi::DestroyTexture(&m_Id);
+    Rhi::DestroyTexture(m_Id);
     
     m_LoadedInRhi = false;
 }
