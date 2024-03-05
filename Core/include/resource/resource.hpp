@@ -15,6 +15,7 @@ class File;
 class Resource
 {
 public:
+    /// @brief Constructs a default Resource.
     XNOR_ENGINE Resource() = default;
 
     /// @brief Creates a Resource with the given @p name.
@@ -43,24 +44,24 @@ public:
     /// @brief Unloads the loaded data.
     XNOR_ENGINE virtual void Unload();
 
-    /// @brief Unloads and then loads back this @ref Resource.
+    /// @brief Unloads and then loads back this Resource.
     ///
-    /// This is effectively equivalent to calling @ref Unload and then @ref Load(const uint8_t* buffer, int64_t length) "Load".
+    /// This is effectively equivalent to calling Unload and then @ref Load(const uint8_t* buffer, int64_t length) "Load".
     /// 
     /// @returns @c true if the loading succeeded, @c false otherwise.
     XNOR_ENGINE virtual bool_t Reload(const uint8_t* buffer, int64_t length, bool_t reloadInRhi = true);
 
-    /// @brief Unloads and then loads back this @ref Resource.
+    /// @brief Unloads and then loads back this Resource.
     ///
-    /// This is effectively equivalent to calling @ref Unload and then @ref Load(const Pointer<File>&) "Load".
+    /// This is effectively equivalent to calling Unload and then @ref Load(const Pointer<File>&) "Load".
     /// 
     /// @returns @c true if the loading succeeded, @c false otherwise.
     XNOR_ENGINE virtual bool_t Reload(const Pointer<File>& file, bool_t reloadInRhi = true);
 
-    /// @brief Unloads and then loads back this @ref Resource.
+    /// @brief Unloads and then loads back this Resource.
     ///
-    /// This is effectively equivalent to calling @ref Unload and then @ref Load(const Pointer<File>&)
-    /// using @ref FileManager::Get(const std::filesystem::path&) as a parameter.
+    /// This is effectively equivalent to calling Unload and then Load(const Pointer<File>&)
+    /// using FileManager::Get(const std::filesystem::path&) as a parameter.
     /// 
     /// @returns @c true if the loading succeeded, @c false otherwise.
     XNOR_ENGINE virtual bool_t Reload(bool_t reloadInRhi = true);

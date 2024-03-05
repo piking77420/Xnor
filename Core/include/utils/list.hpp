@@ -12,7 +12,7 @@ BEGIN_XNOR_CORE
 
 /// @brief A dynamic array implementation.
 /// 
-/// @paragraph reasons Reasons
+/// ### Reasons
 /// A more user friendly list than @c std::vector, based on how @c %List is done in C#
 /// The internal structure and workings are similar to how std::vector works, it uses a capacity that grows exponentially based on powers of 2
 /// 

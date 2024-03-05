@@ -21,19 +21,19 @@ class ResourceManager final
 public:
     static constexpr const char_t* ReservedShaderPrefix = "_shaders/";
     
-    /// @brief Creates the @ref Resource corresponding to the given @p name without loading it.
+    /// @brief Creates the Resource corresponding to the given @p name without loading it.
     template <ResourceT T>
     static Pointer<T> Add(std::string name);
     
-    /// @brief Creates the @ref Resource corresponding to the given @p file without loading it.
+    /// @brief Creates the Resource corresponding to the given @p file without loading it.
     template <ResourceT T>
     static Pointer<T> Add(const Pointer<File>& file);
 
-    /// @brief Creates the @ref Resource corresponding to the given @p file and loads it.
+    /// @brief Creates the Resource corresponding to the given @p file and loads it.
     template <ResourceT T>
     static Pointer<T> Load(const Pointer<File>& file);
 
-    /// @brief Creates the @ref Resource "Resources" corresponding to each @ref FileManager entry.
+    /// @brief Creates the Resource corresponding to each @ref FileManager entry.
     XNOR_ENGINE static void LoadAll();
 
     [[nodiscard]]
@@ -54,32 +54,32 @@ public:
 
     XNOR_ENGINE static void Rename(const Pointer<Resource>& resource, const std::string& newName);
 
-    /// @brief Finds all @ref Resource "Resources" of type @p T.
-    /// @tparam T The type of @ref Resource to find.
-    /// @return All stored @ref Resource "Resources" of type @p T.
+    /// @brief Finds all Resource of type @p T.
+    /// @tparam T The type of Resource to find.
+    /// @return All stored Resource of type @p T.
     template <ResourceT T>
     [[nodiscard]]
     static std::vector<Pointer<T>> FindAll();
     
-    /// @see @ref ResourceManager::FindAll()
+    /// @see ResourceManager::FindAll()
     template <ResourceT T>
     static void FindAll(std::vector<Pointer<T>>* result);
 
-    /// @brief Finds a specific @ref Resource based on a predicate.
-    /// @tparam T The type of @ref Resource to find.
-    /// @param predicate The predicate used to find the correct @ref Resource. This function will be
-    /// called for each stored @ref Resource.
-    /// @return The first @ref Resource for which the @p predicate returned @c true. If every @ref Resource
+    /// @brief Finds a specific Resource based on a predicate.
+    /// @tparam T The type of Resource to find.
+    /// @param predicate The predicate used to find the correct Resource. This function will be
+    /// called for each stored Resource.
+    /// @return The first Resource for which the @p predicate returned @c true. If every Resource
     /// returned @c false, instead return a null @ref Pointer.
     template <ResourceT T = Resource>
     [[nodiscard]]
     static Pointer<T> Find(std::function<bool(Pointer<T>)>&& predicate);
     
-    /// @brief Finds a list of @ref Resource "Resources" based on a predicate.
-    /// @tparam T The type of @ref Resource to find.
-    /// @param predicate The predicate used to find the correct @ref Resource. This function will be
-    /// called for each stored @ref Resource.
-    /// @return The first @ref Resource for which the @p predicate returned @c true. If every @ref Resource
+    /// @brief Finds a list of Resource based on a predicate.
+    /// @tparam T The type of Resource to find.
+    /// @param predicate The predicate used to find the correct Resource. This function will be
+    /// called for each stored Resource.
+    /// @return The first Resource for which the @p predicate returned @c true. If every Resource
     /// returned @c false, instead return a null @ref Pointer.
     template <ResourceT T = Resource>
     [[nodiscard]]
