@@ -372,7 +372,3 @@ void Renderer::RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRende
 		Rhi::DrawModel(mesh->model->GetId());
 	}
 }
-
-void Renderer::ShadowPathSpotLight([[maybe_unused]]const std::vector<const SpotLight*>& spotLights)
-{
-}

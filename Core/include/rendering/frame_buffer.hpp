@@ -32,7 +32,7 @@ public:
 	
 private:
 	Vector2i m_FrameBufferSize = Window::GetSize();
-	uint32_t m_Id;
+	uint32_t m_Id = 0;
 };
 
 END_XNOR_CORE

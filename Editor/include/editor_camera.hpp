@@ -13,10 +13,16 @@ class EditorCamera
     static constexpr float_t MaxPitch = 89.0f;
 
 public:
-    void UpdateCamera(const Editor& editor, XnorCore::Camera& camera);
+
+    DEFAULT_COPY_MOVE_OPERATIONS(EditorCamera)
+
+    EditorCamera(Editor& editor, XnorCore::Camera& camera);
     
+    void UpdateCamera();
+    
+    void OnPressGoToObject();
 private:
-    const Editor* m_EditorRef = nullptr;
+    Editor* m_EditorRef = nullptr;
     XnorCore::Camera* m_EditorRefCamera = nullptr;
 
     // Go to object variable
@@ -35,7 +41,6 @@ private:
     bool_t m_FirstMove = false;
     bool_t m_ComputeDeltaMouse = false;
     bool_t m_ResetDeltaMouse = false;
-    bool_t m_GotoObject = false;
     
     void ResetDeltatMouse();
 
@@ -49,7 +54,6 @@ private:
 
     void ComputeDeltaMouse();
 
-    void OnPressGoToObject();
 
     void GoToObject();
 

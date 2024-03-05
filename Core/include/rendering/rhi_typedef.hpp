@@ -310,4 +310,5 @@ enum Gbuffer : int32_t
 	GbufferAlbedo
 };
 
+
 END_XNOR_CORE

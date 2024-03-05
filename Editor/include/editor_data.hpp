@@ -10,10 +10,10 @@ BEGIN_XNOR_EDITOR
 struct EditorData
 {
     XnorCore::Entity* selectedEntity = nullptr;
+    bool_t gotoObject = false;
     
     XnorCore::Camera gameCam;
     XnorCore::Camera editorCam;
-
     XnorCore::Pointer<XnorCore::File> currentScene;
 };
 
