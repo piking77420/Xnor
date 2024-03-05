@@ -254,10 +254,10 @@ void Renderer::DestroyAttachment() const
 }
 
 void Renderer::DrawLightGizmo(
-	const std::vector<const PointLight*>& pointLightComponents,
-	const std::vector<const SpotLight*>& spotLightsComponents,
-	const std::vector<const DirectionalLight*>& directionalComponent,
-	const Camera& camera
+	const std::vector<const PointLight*>&,
+	const std::vector<const SpotLight*>&,
+	const std::vector<const DirectionalLight*>&,
+	const Camera&
 ) const
 {
 }

@@ -11,6 +11,9 @@
 #include "utils/formatter.hpp"
 #include "utils/tsqueue.hpp"
 
+/// @file logger.hpp
+/// @brief Defines the Logger static class
+
 BEGIN_XNOR_CORE
 
 /// @brief Static class used to log messages to the console and/or a file.

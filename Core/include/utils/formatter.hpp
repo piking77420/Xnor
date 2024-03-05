@@ -5,13 +5,15 @@
 #include <format>
 #include <sstream>
 
+#include "core.hpp"
+
 /// @file formatter.hpp
 /// @brief Defines template specializations of @c std::formatter for external types.
 ///
 /// This file also defines the Formattable concept, as it seems it isn't included in the C++23 MSVC STL.
 ///
-/// @see <a href="https://en.cppreference.com/w/cpp/utility/format/formatter">std::formatter<a>
-/// @see <a href="https://en.cppreference.com/w/cpp/utility/format/formattable">std::formattable<a>
+/// @see <a href="https://en.cppreference.com/w/cpp/utility/format/formatter">std::formatter</a>
+/// @see <a href="https://en.cppreference.com/w/cpp/utility/format/formattable">std::formattable</a>
 
 BEGIN_XNOR_CORE
 
@@ -31,6 +33,8 @@ END_XNOR_CORE
 // These definitions must be in the std namespace
 
 /// @brief @c std::formatter template specialization for the @c std::filesystem::path type.
+///
+/// @see <a href="https://en.cppreference.com/w/cpp/filesystem/path">std::filesystem::path</a>
 template <>
 struct std::formatter<std::filesystem::path>
 {

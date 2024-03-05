@@ -8,17 +8,20 @@
 #include "resource.hpp"
 #include "rendering/rhi_typedef.hpp"
 
-BEGIN_XNOR_CORE
+/// @file texture.hpp
+/// @brief Defines the Texture class
 
-struct TextureLoadData
-{
-    int32_t desiredChannels = 0;
-    bool_t flipVertically = false;
-};
+BEGIN_XNOR_CORE
 
 class Texture : public Resource
 {
 public:
+    struct LoadData
+    {
+        int32_t desiredChannels = 0;
+        bool_t flipVertically = false;
+    };
+
     XNOR_ENGINE static inline constexpr std::array<const char_t*, 11> FileExtensions
     {
         ".jpg",
@@ -34,7 +37,7 @@ public:
         ".ppm"
     };
     
-    TextureLoadData loadData;
+    LoadData loadData;
     
     // Same constructor from base class
     using Resource::Resource;

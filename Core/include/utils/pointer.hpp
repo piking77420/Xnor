@@ -11,6 +11,7 @@
 BEGIN_XNOR_CORE
 
 /// @brief Used to default-construct the value of a Pointer.
+/// 
 /// @see Pointer::Pointer(Construct)
 struct Construct {};
 
@@ -513,41 +514,33 @@ std::ostream& operator<<(std::ostream& stream, const Pointer<T>& ptr)
 
 END_XNOR_CORE
 
+/// @brief @c std::formatter template specialization for the XnorCore::Pointer type.
 template <typename T>
 struct std::formatter<XnorCore::Pointer<T>>  // NOLINT(cert-dcl58-cpp)
 {
+    /// @brief Parses the input formatting options.
     template <class ParseContext>
-    constexpr typename ParseContext::iterator parse(ParseContext& ctx);
-
-    template <class FormatContext>
-    typename FormatContext::iterator format(const XnorCore::Pointer<T>& pointer, FormatContext& ctx) const;
-};
-
-template <typename T>
-template <class FormatContext>
-typename FormatContext::iterator std::formatter<XnorCore::Pointer<T>>::format(
-    const XnorCore::Pointer<T>& pointer,
-    FormatContext& ctx
-) const
-{
-    std::ostringstream out;
-        
-    out << "0x" << reinterpret_cast<void*>(static_cast<T*>(pointer));
-        
-    return std::ranges::copy(std::move(out).str(), ctx.out()).out;
-}
-
-// ReSharper disable once CppMemberFunctionMayBeStatic
-template <typename T>
-template <class ParseContext>
-constexpr typename ParseContext::iterator std::formatter<XnorCore::Pointer<T>>::parse(ParseContext& ctx)
-{
-    auto it = ctx.begin();
-    if (it == ctx.end())
+    constexpr typename ParseContext::iterator parse(ParseContext& ctx)
+    {
+        auto it = ctx.begin();
+        if (it == ctx.end())
+            return it;
+ 
+        if (*it != '}')
+            throw std::format_error("Invalid format args for XnorCore::Pointer");
+ 
         return it;
- 
-    if (*it != '}')
-        throw std::format_error("Invalid format args for XnorCore::Pointer");
- 
-    return it;
-}
+    }
+
+    // ReSharper disable once CppMemberFunctionMayBeStatic
+    /// @brief Formats a string using the given instance of XnorCore::Pointer, according to the given options in the parse function.
+    template <class FormatContext>
+    typename FormatContext::iterator format(const XnorCore::Pointer<T>& pointer, FormatContext& ctx) const
+    {
+        std::ostringstream out;
+        
+        out << "0x" << reinterpret_cast<void*>(static_cast<T*>(pointer));
+        
+        return std::ranges::copy(std::move(out).str(), ctx.out()).out;
+    }
+};
