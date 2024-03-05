@@ -16,8 +16,8 @@ Texture::Texture(const TextureCreateInfo& createInfo)
     m_LoadedInRhi = true;
 }
 
-Texture::Texture(const TextureInternalFormat textureFormat, const Vector2i size) : m_Data(nullptr)
-  , m_Size(size) , m_TextureInternalFormat(textureFormat)
+Texture::Texture(const TextureInternalFormat textureFormat, const Vector2i size)
+    : m_Size(size), m_TextureInternalFormat(textureFormat)
 {
     const TextureCreateInfo createInfo
     {
