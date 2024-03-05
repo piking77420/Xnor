@@ -254,6 +254,7 @@ constexpr ColorRgb ColorRgb::Cyan() { return ColorRgb(0x00, 0xFF, 0xFF); }
 
 constexpr ColorRgb ColorRgb::Magenta() { return ColorRgb(0xFF, 0x00, 0xFF); }
 
+/// @brief Hue angle
 constexpr uint8_t HueAngle = 43;
 
 constexpr ColorRgb::operator ColorRgba() const { return ColorRgba(r, g, b); }
@@ -372,6 +373,10 @@ constexpr ColorHsv::operator Colorf() const
     return static_cast<Colorf>(color);
 }
 
+/// @brief Adds 2 @ref ColorRgb, caps at the max value of the components and doesn't allow overflow
+/// @param c1 A
+/// @param c2 B
+/// @return A + B
 [[nodiscard]]
 constexpr ColorRgb operator+(const ColorRgb c1, const ColorRgb c2)
 {
@@ -386,6 +391,10 @@ constexpr ColorRgb operator+(const ColorRgb c1, const ColorRgb c2)
     );
 }
 
+/// @brief Multiplies 2 @ref ColorRgb, caps at the max value of the components and doesn't allow overflow
+/// @param c1 A
+/// @param c2 B
+/// @return A * B
 [[nodiscard]]
 constexpr ColorRgb operator*(const ColorRgb c1, const ColorRgb c2)
 {
@@ -401,6 +410,10 @@ constexpr ColorRgb operator*(const ColorRgb c1, const ColorRgb c2)
     );
 }
 
+/// @brief Adds 2 @ref ColorRgba, caps at the max value of the components and doesn't allow overflow
+/// @param c1 A
+/// @param c2 B
+/// @return A + B
 [[nodiscard]]
 constexpr ColorRgba operator+(const ColorRgba c1, const ColorRgba c2)
 {
@@ -417,6 +430,10 @@ constexpr ColorRgba operator+(const ColorRgba c1, const ColorRgba c2)
     );
 }
 
+/// @brief Multiplies 2 @ref ColorRgba, caps at the max value of the components and doesn't allow overflow
+/// @param c1 A
+/// @param c2 B
+/// @return A + B
 [[nodiscard]]
 constexpr ColorRgba operator*(const ColorRgba c1, const ColorRgba c2)
 {
@@ -434,14 +451,35 @@ constexpr ColorRgba operator*(const ColorRgba c1, const ColorRgba c2)
     );
 }
 
+/// @brief Multiplies the alpha component of a @ref ColorRgba
+/// @param color Color
+/// @param alphaFactor Alpha factor
+/// @return Color.a * AlphaFactor
 [[nodiscard]]
-constexpr ColorRgba operator*(const ColorRgba color, const float_t alphaFactor) { return ColorRgba(color.r, color.g, color.b, static_cast<uint8_t>(static_cast<float_t>(color.a) * alphaFactor)); }
+constexpr ColorRgba operator*(const ColorRgba color, const float_t alphaFactor)
+{
+    return ColorRgba(color.r, color.g, color.b, static_cast<uint8_t>(static_cast<float_t>(color.a) * alphaFactor));
+}
 
+/// @brief Multiplies 2 @ref Colorf, caps at the max value of the components and doesn't allow overflow
+/// @param c1 A
+/// @param c2 B
+/// @return A * B
 [[nodiscard]]
-constexpr Colorf operator*(const Colorf c1, const Colorf c2) { return Colorf(c1.r * c2.r, c1.g * c2.g, c1.b * c2.b, c1.a * c2.a); }
+constexpr Colorf operator*(const Colorf& c1, const Colorf& c2)
+{
+    return Colorf(c1.r * c2.r, c1.g * c2.g, c1.b * c2.b, c1.a * c2.a);
+}
 
+/// @brief Multiplies the alpha component of a @ref Colorf
+/// @param color Color
+/// @param alphaFactor Alpha factor
+/// @return Color.a * AlphaFactor
 [[nodiscard]]
-constexpr Colorf operator*(const Colorf color, const float_t alphaFactor) { return Colorf(color.r, color.g, color.b, color.a * alphaFactor); }
+constexpr Colorf operator*(const Colorf color, const float_t alphaFactor)
+{
+    return Colorf(color.r, color.g, color.b, color.a * alphaFactor);
+}
 
 constexpr Colorf::operator ColorRgb() const { return ColorRgb(static_cast<uint8_t>(r) * 255, static_cast<uint8_t>(g) * 255, static_cast<uint8_t>(b) * 255); }
 
@@ -478,6 +516,9 @@ constexpr ColorRgba::operator ColorHsv() const
     return hsv;
 }
 
-constexpr ColorRgba::operator Colorf() const { return Colorf(static_cast<float_t>(r) / 255.f, static_cast<float_t>(g) / 255.f, static_cast<float_t>(b) / 255.f, static_cast<float_t>(a) / 255.f); }
+constexpr ColorRgba::operator Colorf() const
+{
+    return Colorf(static_cast<float_t>(r) / 255.f, static_cast<float_t>(g) / 255.f, static_cast<float_t>(b) / 255.f, static_cast<float_t>(a) / 255.f);
+}
 
 END_XNOR_CORE

@@ -10,7 +10,7 @@
  
 BEGIN_XNOR_CORE
 
-/// @brief Represents a scene, encapsulates a @ref List of @ref Entity and provides utility functions to manipulate said entities
+/// @brief Represents a scene, encapsulates a List of Entity and provides utility functions to manipulate said entities
 class Scene : public Serializable
 {
     REFLECTABLE_IMPL_H(Scene)

@@ -30,9 +30,6 @@ public:
     /// @brief The currently loaded scene in the world
     XNOR_ENGINE static inline Scene scene;
 
-    /// @brief Handler for the scene hierarchy
-    XNOR_ENGINE static inline SceneGraph hierarchy;
-
     /// @brief Skybox handler
     XNOR_ENGINE static inline Skybox skybox;
 };

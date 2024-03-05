@@ -373,7 +373,7 @@ void Editor::EndFrame()
 
 void Editor::WorldBehaviours()
 {
-	XnorCore::World::hierarchy.Update(XnorCore::World::scene.GetEntities());
+	XnorCore::SceneGraph::Update(XnorCore::World::scene.GetEntities());
 	
 	if (XnorCore::World::isPlaying)
 	{
