@@ -6,7 +6,7 @@
 #include "core.hpp"
 
 /// @file list.hpp
-/// @brief Defines the @ref List class.
+/// @brief Defines the List class.
 
 BEGIN_XNOR_CORE
 

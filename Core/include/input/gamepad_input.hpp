@@ -65,7 +65,7 @@ constexpr double_t NullAnalogValue = 1.5259022e-05;
 struct GamepadInput
 {
     bool isConnected = false;
-    std::array<float_t,static_cast<uint32_t>(GamepadAxis::Count)> axesValue;
+    std::array<float_t, static_cast<uint32_t>(GamepadAxis::Count)> axesValue{};
 };
 
 END_XNOR_CORE

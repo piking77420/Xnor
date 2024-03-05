@@ -8,7 +8,7 @@
 #include "core.hpp"
 
 /// @file guid.hpp
-/// @brief Defines the @ref Guid class.
+/// @brief Defines the Guid class.
 
 BEGIN_XNOR_CORE
 
