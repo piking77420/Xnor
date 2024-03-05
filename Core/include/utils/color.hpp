@@ -8,6 +8,9 @@
 #undef min
 #undef max
 
+/// @file color.hpp
+/// @brief Defines multiple color structs.
+
 BEGIN_XNOR_CORE
 
 struct ColorRgba;

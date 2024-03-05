@@ -55,12 +55,14 @@ public:
 
     /// @brief Renames the Entry with the specified path to another path.
     ///
-    /// This only changes the key required to get the Entry without any side effects.
+    /// @note This function only renames the key used to store this Entry, and doesn't in any case rename the Entry itself.
+    /// For this exact reason, using Entry::SetName instead is the preferred way or renaming a Entry.
     XNOR_ENGINE static void Rename(const std::filesystem::path& path, const std::filesystem::path& newPath);
 
     /// @brief Renames the specified Entry to another path.
     ///
-    /// This only changes the key required to get the Entry without any side effects.
+    /// @note This function only renames the key used to store this Entry, and doesn't in any case rename the Entry itself.
+    /// For this exact reason, using Entry::SetName instead is the preferred way or renaming a Entry.
     XNOR_ENGINE static void Rename(const Pointer<Entry>& entry, const std::filesystem::path& newPath);
 
     /// @brief Finds the first Entry of type @p T.

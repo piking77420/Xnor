@@ -8,43 +8,59 @@
 #include "utils/pointer.hpp"
 
 /// @file file.hpp
-/// @brief Defines the @ref File class.
+/// @brief Defines the File class.
 
 BEGIN_XNOR_CORE
 
 class File : public Entry
 {
 public:
+    /// @brief Constructs a File corresponding to the given @p path.
     [[nodiscard]]
     XNOR_ENGINE explicit File(std::filesystem::path&& filepath);
 
+    /// @brief Destructs the File instance by calling Unload.
     XNOR_ENGINE ~File() override;
 
     DEFAULT_COPY_MOVE_OPERATIONS(File)
 
-    XNOR_ENGINE bool Load() override;
+    /// @brief Loads the contents of this File.
+    XNOR_ENGINE bool_t Load() override;
 
+    /// @brief Unloads the contents of this File.
+    /// 
+    /// @returns @c false if an error occured while loading.
     XNOR_ENGINE void Unload() override;
-    
+
+    /// @brief Returns the name of this File without the file extension.
     [[nodiscard]]
     XNOR_ENGINE std::string GetNameNoExtension() const;
     
+    /// @brief Returns the file extension of this File.
     [[nodiscard]]
     XNOR_ENGINE std::string GetExtension() const;
 
+    /// @brief Returns a @c const pointer to the raw loaded data.
     template<typename T = char_t>
     [[nodiscard]]
     const T* GetData() const;
 
+    /// @brief Returns a pointer to the raw loaded data.
     template<typename T = char_t>
     [[nodiscard]]
     T* GetData();
-    
+
+    /// @brief Returns the size of the loaded data.
     [[nodiscard]]
     XNOR_ENGINE int64_t GetSize() const;
-    
+
+    /// @brief Sets the name of this File.
     XNOR_ENGINE void SetName(const std::string& newName) override;
-    
+
+    /// @brief Returns the stored Pointer to the Resource loaded from this File.
+    ///
+    /// Note that a Resource doesn't need to be loaded from a File and can instead be loaded from raw data.
+    /// This implies that the return value of this function can be a @c nullptr.
     [[nodiscard]]
     XNOR_ENGINE Pointer<Resource> GetResource() const;
     

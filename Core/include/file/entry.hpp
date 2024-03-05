@@ -30,43 +30,61 @@ public:
     /// @returns @c false if an error occured while loading.
     XNOR_ENGINE virtual bool_t Load() = 0;
 
+    /// @brief Unloads the contents of this Entry.
     XNOR_ENGINE virtual void Unload() = 0;
 
     /// @brief Reloads the contents of this Entry.
     ///
     /// This if effectively the same as calling Unload() and then Load().
     XNOR_ENGINE virtual bool_t Reload();
-    
+
+    /// @brief Returns the corresponding filesystem path.
     [[nodiscard]]
     XNOR_ENGINE const std::filesystem::path& GetPath() const;
-    
+
+    /// @brief Returns the string representation of GetPath.
     [[nodiscard]]
     XNOR_ENGINE std::string GetPathString() const;
-    
+
+    /// @brief Returns this Entry name.
     [[nodiscard]]
     XNOR_ENGINE std::string GetName() const;
 
     /// @brief Renames this Entry on the file system.
+    ///
+    /// This function also renames the File entry in the FileManager using FileManager::Rename(const std::filesystem::path&, const std::filesystem::path&).
+    /// 
     /// @param newName The new name of this Entry.
     XNOR_ENGINE virtual void SetName(const std::string& newName);
-    
+
+    /// @brief Returns whether this Entry has been loaded.
     [[nodiscard]]
     XNOR_ENGINE bool_t GetLoaded() const;
 
     /// @brief Sets the new path of this Entry.
     virtual void SetParent(Pointer<Directory>&& newParent);
-    
+
+    /// @brief Returns a Pointer to the parent Directory of this Entry, with a strong reference stored in the FileManager.
     [[nodiscard]]
     XNOR_ENGINE Pointer<Directory> GetParent();
 
 protected:
+    /// @brief The underlying filesystem path of this Entry.
     std::filesystem::path m_Path;
+    /// @brief The name of this Entry.
     std::string m_Name;
-    
+
+    /// @brief Whether this Entry has been loaded.
+    /// 
+    /// Default implementation of Load and Unload functions in the Entry class already change this value accordingly.
+    /// Any override of such function must either call the parent implementation or update this variable so that GetLoaded
+    /// returns the correct state.
     bool_t m_Loaded = false;
 
+    /// @brief The parent of this Entry.
     Pointer<Directory> m_Parent;
 
+    /// @brief Updates fields of this class using the new value of m_Path.
     virtual void UpdateUtilityValues();
 };
 

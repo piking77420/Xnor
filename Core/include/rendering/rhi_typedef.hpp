@@ -3,6 +3,9 @@
 #include "core.hpp"
 #include "Maths/matrix.hpp"
 
+/// @file rhi_typedef.hpp
+/// @brief Defines some types and enumerations needed by the Rhi.
+
 BEGIN_XNOR_CORE
 
 class Texture;

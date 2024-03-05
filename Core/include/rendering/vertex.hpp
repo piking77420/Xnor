@@ -4,6 +4,9 @@
 #include "Maths/vector2.hpp"
 #include "Maths/vector3.hpp"
 
+/// @file vertex.hpp
+/// @brief Defines the Vertex class.
+
 BEGIN_XNOR_CORE
 
 /// @see <a href="https://en.wikipedia.org/wiki/Vertex_(computer_graphics)">Vertex Wikipedia page</a>
