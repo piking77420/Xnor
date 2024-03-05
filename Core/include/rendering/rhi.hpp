@@ -229,7 +229,7 @@ private:
 
 	// Texture 
 	XNOR_ENGINE static void AllocTexture2D(uint32_t textureId, const TextureCreateInfo& textureCreateInfo);
-	XNOR_ENGINE static void CreateTexture(uint32_t* textureId,TextureType textureType);
+	XNOR_ENGINE static uint32_t CreateTexture(TextureType textureType);
 
 	// Enum to OpenglEnum
 	XNOR_ENGINE static uint32_t GetOpengDepthEnum(DepthFunction depthFunction);

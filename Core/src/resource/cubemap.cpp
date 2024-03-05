@@ -22,7 +22,7 @@ void Cubemap::CreateInRhi()
         .dataType = DataType::UnsignedByte
     };
 
-    Rhi::CreateCubeMap(&m_Id, createCubeMapInfo);
+    m_Id = Rhi::CreateCubeMap(createCubeMapInfo);
     m_LoadedInRhi = true;
 }
 

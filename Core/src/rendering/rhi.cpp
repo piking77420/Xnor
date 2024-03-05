@@ -174,8 +174,8 @@ void Rhi::UseShader(const uint32_t shaderId)
 	}
 	else
 	{
-		const uint32_t srcValue = GetBlendValueOpengl(BlendValue::ONE);
-		const uint32_t destValue = GetBlendValueOpengl(BlendValue::ZERO);
+		const uint32_t srcValue = GetBlendValueOpengl(BlendValue::One);
+		const uint32_t destValue = GetBlendValueOpengl(BlendValue::Zero);
 		glBlendFunc(srcValue, destValue);
 	}
 	
@@ -223,9 +223,11 @@ void Rhi::SetUniform(const UniformType uniformType, const void* const data, cons
 	}
 }
 
-void Rhi::CreateTexture(uint32_t* const textureId, const TextureType textureType)
+uint32_t Rhi::CreateTexture(const TextureType textureType)
 {
-	glCreateTextures(GetOpenglTextureType(textureType), 1, textureId);
+	uint32_t textureId = 0;
+	glCreateTextures(GetOpenglTextureType(textureType), 1, &textureId);
+	return textureId;
 }
 
 uint32_t Rhi::GetOpenglTextureFilter(const TextureFiltering textureFiltering)
@@ -249,46 +251,46 @@ uint32_t Rhi::GetBlendValueOpengl(const BlendValue blendFunction)
 {
 	switch (blendFunction)
 	{
-		case BlendValue::ZERO:
+		case BlendValue::Zero:
 			return GL_ZERO;
 			
-		case BlendValue::ONE:
+		case BlendValue::One:
 			return GL_ONE;
 			
-		case BlendValue::SRC_COLOR:
+		case BlendValue::SrcColor:
 			return GL_SRC_COLOR;
 			
-		case BlendValue::ONE_MINUS_SRC_COLOR:
+		case BlendValue::OneMinusSrcColor:
 			return GL_ONE_MINUS_SRC_COLOR;
 			
-		case BlendValue::DST_COLOR:
+		case BlendValue::DstColor:
 			return GL_DST_COLOR;
 			
-		case BlendValue::ONE_MINUS_DST_COLOR:
+		case BlendValue::OneMinusDstColor:
 			return GL_ONE_MINUS_DST_COLOR;
 			
-		case BlendValue::SRC_ALPHA:
+		case BlendValue::SrcAlpha:
 			return GL_SRC_ALPHA;
 			
-		case BlendValue::ONE_MINUS_SRC_ALPHA:
+		case BlendValue::OneMinusSrcAlpha:
 			return GL_ONE_MINUS_SRC_ALPHA;
 			
-		case BlendValue::DST_ALPHA:
+		case BlendValue::DstAlpha:
 			return GL_DST_ALPHA;
 			
-		case BlendValue::ONE_MINUS_DST_ALPHA:
+		case BlendValue::OneMinusDstAlpha:
 			return GL_ONE_MINUS_DST_ALPHA;
 			
-		case BlendValue::CONSTANT_COLOR:
+		case BlendValue::ConstantColor:
 			return GL_CONSTANT_COLOR;
 			
-		case BlendValue::ONE_MINUS_CONSTANT_COLOR:
+		case BlendValue::OneMinusConstantColor:
 			return GL_ONE_MINUS_CONSTANT_COLOR;
 			
-		case BlendValue::CONSTANT_ALPHA:
+		case BlendValue::ConstantAlpha:
 			return GL_CONSTANT_ALPHA;
 			
-		case BlendValue::ONE_MINUS_CONSTANT_ALPHA:
+		case BlendValue::OneMinusConstantAlpha:
 			return GL_ONE_MINUS_CONSTANT_ALPHA;
 	}
 
@@ -299,28 +301,28 @@ uint32_t Rhi::GetOpengDepthEnum(const DepthFunction depthFunction)
 {
 	switch (depthFunction)
 	{
-		case DepthFunction::ALWAYS:
+		case DepthFunction::Always:
 			return GL_ALWAYS;
 
-		case DepthFunction::NEVER:
+		case DepthFunction::Never:
 			return GL_NEVER;
 
-		case DepthFunction::LESS:
+		case DepthFunction::Less:
 			return GL_LESS;
 
-		case DepthFunction::EQUAL:
+		case DepthFunction::Equal:
 			return GL_EQUAL;
 
-		case DepthFunction::LEAQUAL:
+		case DepthFunction::LessEqual:
 			return GL_LEQUAL;
 
-		case DepthFunction::GREATER:
+		case DepthFunction::Greater:
 			return GL_GREATER;
 
-		case DepthFunction::NOTEQUAL:
+		case DepthFunction::NotEqual:
 			return GL_NOTEQUAL;
 
-		case DepthFunction::GEQUAL:
+		case DepthFunction::GreaterEqual:
 			return GL_GEQUAL;
 	}
 
@@ -361,9 +363,7 @@ void Rhi::AllocTexture2D(const uint32_t textureId, const TextureCreateInfo& text
 
 uint32_t Rhi::CreateTexture2D(const TextureCreateInfo& textureCreateInfo)
 {
-	uint32_t textureId;
-	
-	CreateTexture(&textureId,TextureType::Texture2D);
+	const uint32_t textureId = CreateTexture(TextureType::Texture2D);
 
 	const GLint openglTextureFilter =  static_cast<GLint>(GetOpenglTextureFilter(textureCreateInfo.textureFiltering));
 	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(textureCreateInfo.textureWrapping));
@@ -662,7 +662,7 @@ uint32_t Rhi::GetOpenglInternalFormat(const TextureInternalFormat textureFormat)
 		case TextureInternalFormat::DepthComponent32:
 			return GL_DEPTH_COMPONENT32;
 		
-		case TextureInternalFormat::DepthComponent32f:
+		case TextureInternalFormat::DepthComponent32F:
 			return GL_DEPTH_COMPONENT32F;
 		
 		case TextureInternalFormat::DepthStencil:

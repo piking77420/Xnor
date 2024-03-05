@@ -14,7 +14,7 @@ void LightCuller::InitResources()
 	m_PointLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/point_light.png");
 	m_SpotLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/spot_light.png");
 	m_EditorUi = ResourceManager::Get<Shader>("editorui_shader");
-	m_EditorUi->SetBlendFunction({true,BlendValue::SRC_ALPHA,BlendValue::ONE_MINUS_SRC_ALPHA});
+	m_EditorUi->SetBlendFunction({true,BlendValue::SrcAlpha,BlendValue::OneMinusSrcAlpha});
 	m_EditorUi->CreateInRhi();
 	m_EditorUi->SetInt("uiTexture",0);
 	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
@@ -36,11 +36,9 @@ void LightCuller::UpdateLight(const std::vector<const PointLight*>& pointLightCo
 		.nbrOfSpotLight = static_cast<uint32_t>(spotLightsComponents.size())
 	};
 
-	size_t nbrOfpointLight = pointLightComponents.size();
-	nbrOfpointLight = std::clamp<size_t>(nbrOfpointLight, 0, MaxPointLights);
-
-	size_t nbrOfspothLight = spotLightsComponents.size();
-	nbrOfspothLight = std::clamp<size_t>(nbrOfspothLight, 0, MaxSpotLights);
+	const size_t nbrOfpointLight = std::clamp<size_t>(pointLightComponents.size(), 0, MaxPointLights);
+	const size_t nbrOfSpotLight = std::clamp<size_t>(spotLightsComponents.size(), 0, MaxSpotLights);
+	const size_t nbrOfDirectionalLight = std::clamp<size_t>(directionalComponent.size(), 0, MaxSpotLights);
 
 	for (size_t i = 0; i < nbrOfpointLight; i++)
 	{
@@ -56,7 +54,7 @@ void LightCuller::UpdateLight(const std::vector<const PointLight*>& pointLightCo
 	}
 	gpuLightData.nbrOfPointLight = static_cast<uint32_t>(nbrOfpointLight);
 
-	for (size_t i = 0 ; i < nbrOfspothLight ; i++)
+	for (size_t i = 0 ; i < nbrOfSpotLight ; i++)
 	{
 		const SpotLight* spotLight = spotLightsComponents[i];
 		const Matrix matrix = Matrix::Trs(Vector3(0.f), spotLight->entity->transform.rotation.Normalized(), Vector3(1.f));
@@ -73,15 +71,15 @@ void LightCuller::UpdateLight(const std::vector<const PointLight*>& pointLightCo
 		};
 	}
 	
-	gpuLightData.nbrOfSpotLight = static_cast<uint32_t>(nbrOfspothLight);
+	gpuLightData.nbrOfSpotLight = static_cast<uint32_t>(nbrOfSpotLight);
 
-	if (!directionalComponent.empty())
+	for (size_t i = 0 ; i < nbrOfDirectionalLight ; i++)
 	{
 		constexpr float_t scaleFactor = 0.5f;
-		const Matrix matrix = Matrix::Trs(Vector3(0.f), directionalComponent[0]->entity->transform.rotation, Vector3(scaleFactor));
-		const Vector4 direction = matrix * (-Vector4::UnitY()); 
+		const Matrix matrix = Matrix::Trs(Vector3(0.f), directionalComponent[i]->entity->transform.rotation, Vector3(scaleFactor));
+		const Vector4 direction = matrix * -Vector4::UnitY(); 
 		
-		gpuLightData.directionalData =
+		gpuLightData.directionalData[i] =
 		{
 			.color = directionalComponent[0]->color,
 			.intensity = directionalComponent[0]->intensity,
@@ -89,9 +87,7 @@ void LightCuller::UpdateLight(const std::vector<const PointLight*>& pointLightCo
 		};
 	}
 
-
 	Rhi::UpdateLight(gpuLightData);
-
 }
 
 void LightCuller::DrawLightGizmo(const std::vector<const PointLight*>& pointLightComponents,

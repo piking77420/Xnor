@@ -12,12 +12,12 @@ FrameBuffer::FrameBuffer(const vec2i size)
 
 FrameBuffer::~FrameBuffer()
 {
-	Rhi::DestroyFrameBuffer(&m_Id);
+	Rhi::DestroyFrameBuffer(m_Id);
 }
 
 void FrameBuffer::Create(const RenderPass& renderPass, const std::vector<const Texture*>& attachements)
 {
-	Rhi::CreateFrameBuffer(&m_Id, renderPass, attachements);
+	m_Id = Rhi::CreateFrameBuffer(renderPass, attachements);
 }
 
 Vector2i FrameBuffer::GetSize() const

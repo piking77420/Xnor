@@ -134,12 +134,12 @@ public:
 private:
 	uint32_t m_Id = 0;
 	
-	DepthFunction m_DepthFunction = DepthFunction::LESS;
+	DepthFunction m_DepthFunction = DepthFunction::Less;
 	BlendFunction m_BlendFunction =
 	{
 		.isBlending = false,
-		.sValue = BlendValue::ONE,
-		.dValue = BlendValue::ZERO
+		.sValue = BlendValue::One,
+		.dValue = BlendValue::Zero
 	};
 		
 
