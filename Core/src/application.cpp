@@ -3,6 +3,7 @@
 #include "screen.hpp"
 #include "file/file_manager.hpp"
 #include "input/input.hpp"
+#include "rendering/rhi.hpp"
 #include "resource/resource_manager.hpp"
 
 using namespace XnorCore;

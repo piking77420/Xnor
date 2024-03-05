@@ -7,9 +7,8 @@
 #include "renderer_context.hpp"
 #include "skybox_renderer.hpp"
 #include "tone_mapping.hpp"
-#include "rendering/rhi.hpp"
+#include "rendering/render_pass.hpp"
 #include "resource/model.hpp"
-#include "scene/scene.hpp"
 #include "world/world.hpp"
 
 /// @file renderer.hpp

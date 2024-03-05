@@ -1,5 +1,6 @@
 #include "rendering/tone_mapping.hpp"
 
+#include "rendering/render_pass.hpp"
 #include "rendering/rhi.hpp"
 #include "resource/resource_manager.hpp"
 

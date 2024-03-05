@@ -1,6 +1,6 @@
 #include "rendering/renderer.hpp"
 
-
+#include "rendering/rhi.hpp"
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
 #include "rendering/light/spot_light.hpp"
