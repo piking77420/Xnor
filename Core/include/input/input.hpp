@@ -7,9 +7,10 @@
 #include "input/gamepad_input.hpp"
 #include "input/keyboard_input.hpp"
 #include "input/mouse_input.hpp"
+#include "utils/meta_programming.hpp"
 
 /// @file input.hpp
-/// @brief Defines the @ref Input static class.
+/// @brief Defines the Input static class.
 
 BEGIN_XNOR_CORE
 
@@ -19,20 +20,38 @@ class Input
     STATIC_CLASS(Input)
     
 public:
-    /// @brief 
+    /// @brief Checks if a specified key is of the specified status
+    /// @param key Key to check
+    /// @param status Key status
+    /// @return Result
     XNOR_ENGINE static bool_t GetKey(Key key, KeyStatus status = KeyStatus::Down);
-    
+
+    /// @brief Checks if a specified mouse button is of the specified status
+    /// @param mouseButton Mouse button to check
+    /// @param status Mouse button status
+    /// @return Result
     XNOR_ENGINE static bool_t GetMouseButton(MouseButton mouseButton, MouseButtonStatus status = MouseButtonStatus::Down);
-    
+
+    /// @brief Checks if a specified gamepad button is of the specified status
+    /// @param gamePadId Gamepad id
+    /// @param gamepadButton Gamepad button to check
+    /// @param buttonStatus Gamepad button status
+    /// @return Result
     XNOR_ENGINE static bool_t GetGamepadButton(uint32_t gamePadId, GamepadButton gamepadButton, GamepadButtonStatus buttonStatus);
 
+    /// @brief Processes the input events
     XNOR_ENGINE static void HandleEvent();
-    
+
+    /// @brief Gets the mouse position
+    /// @tparam T Vector2 type
+    /// @return Mouse position
     template <class T>
-    static T GetCursorPos();
-    
+    static T GetMousePosition();
+
+    /// @brief Initializes the input manager
     XNOR_ENGINE static void Initialize();
 
+    /// @brief Resets the input manager
     XNOR_ENGINE static void Reset();
 
 private:
@@ -72,9 +91,9 @@ private:
 };
 
 template <class T>
-T Input::GetCursorPos()
+T Input::GetMousePosition()
 {
-    static_assert(std::is_same_v<T, Vector2> || std::is_same_v<T, Vector2i>, "Mouse pos must be a valid Vector2 type");
+    static_assert(Meta::IsAny<T, Vector2, Vector2i>, "GetMousePosition<T> only works with T as a Vector2");
     
     return static_cast<T>(m_MousePos);
 }
