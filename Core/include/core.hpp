@@ -7,7 +7,7 @@
 /// @file core.hpp
 /// @brief This file is meant to be included by every single other header file of this project.
 ///
-/// It includes the standard headers @c <cmath> and @c <cstdint> so that types such as
+/// It includes the standard headers @c \<cmath> and @c \<cstdint> so that types such as
 /// @c int8_t or @c float_t are defined. It also defines typedefs for @ref char_t and
 /// @ref bool_t, as they aren't defined by those standard headers.
 ///
@@ -17,7 +17,7 @@
 // ReSharper disable once CppEnforceTypeAliasCodeStyle
 /// @brief Equivalent to <c>char</c>.
 /// 
-/// @paragraph core_char_reason Reason
+/// ### Reason
 /// We use a typedef here instead of a type alias for consistency
 /// with how the other integral types are defined in the <c>cstdint</c> header.
 /// Also, we need to manually add this type because it is considered
