@@ -6,7 +6,7 @@
 
 #include "material.hpp"
 #include "rhi_typedef.hpp"
-#include "uniformBuffer.hpp"
+#include "uniform_buffer.hpp"
 #include "vertex.hpp"
 #include "resource/model.hpp"
 

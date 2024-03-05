@@ -242,7 +242,7 @@ enum class BlendValue
 
 struct BlendFunction
 {
-	bool IsBlending = false;
+	bool isBlending = false;
 	BlendValue sValue;
 	BlendValue dValue;
 };
@@ -256,9 +256,9 @@ struct ShaderCreateInfo
 struct PointLightData
 {
 	Vector3 color;
-	float_t intensity;
+	float_t intensity{};
 	Vector3 position;
-	float_t radius;
+	float_t radius{};
 };
 
 struct SpotLightData
@@ -274,7 +274,7 @@ struct SpotLightData
 struct DirectionalData
 {
 	Vector3 color;
-	float_t intensity;
+	float_t intensity{};
 	Vector3 direction;
 };
 

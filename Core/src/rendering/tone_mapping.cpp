@@ -14,7 +14,7 @@ void ToneMapping::InitializeResources()
     m_Aces->Unuse();
 }
 
-void ToneMapping::Initialize(const Vector2i windowSize)
+void ToneMapping::Prepare(const Vector2i windowSize)
 {
     m_FrameBuffer = new FrameBuffer(windowSize);
     m_ColorAttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);
@@ -30,16 +30,16 @@ void ToneMapping::Initialize(const Vector2i windowSize)
     const RenderPass renderPass(attachementsType);
     const std::vector<const Texture*> targets = { m_ColorAttachment };
 
-    m_FrameBuffer->Create(renderPass,targets);
+    m_FrameBuffer->Create(renderPass, targets);
 }
 
-void ToneMapping::ComputeToneMaping(const Texture& imageWithoutToneMapping, const Pointer<Model>& cubeMode) const
+void ToneMapping::ComputeToneMaping(const Texture& imageWithoutToneMapping, const Pointer<Model>& quadModel) const
 {
     m_FrameBuffer->BindFrameBuffer();
 
     m_Aces->Use();
     imageWithoutToneMapping.BindTexture(10);
-    Rhi::DrawQuad(cubeMode->GetId());
+    Rhi::DrawQuad(quadModel->GetId());
     m_Aces->Unuse();
     m_FrameBuffer->UnBindFrameBuffer();
 }
@@ -52,7 +52,7 @@ const Texture& ToneMapping::GetToneMapedImage() const
 void ToneMapping::OnResizeWindow(const Vector2i windowSize)
 {
     Destroy();
-    Initialize(windowSize);
+    Prepare(windowSize);
 }
 
 void ToneMapping::Destroy() const

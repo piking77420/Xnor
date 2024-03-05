@@ -17,7 +17,7 @@ void SkyboxRenderer::InitializeResources()
     m_SkyboxDrawerShader->SetInt("skybox",0);
 }
 
-void SkyboxRenderer::DrawSkymap(const Pointer<Model>& cubeModel,const Skybox& skybox) const
+void SkyboxRenderer::DrawSkymap(const Pointer<Model>& cubeModel, const Skybox& skybox) const
 {
     m_SkyboxDrawerShader->Use();
     skybox.GetCubeMap()->BindTexture(0);
