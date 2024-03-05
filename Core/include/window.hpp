@@ -41,12 +41,7 @@ public:
 
 	/// @brief Sets the window to be the current context
 	static void MakeContextCurrent();
-
-	/// @brief Gets the time elapsed since the window was created
-	/// @return Time elapsed
-	[[nodiscard]]
-	static double_t GetTime();
-
+	
 	/// @brief Gets the native handle of the window
 	/// @return Native handle
 	[[nodiscard]]

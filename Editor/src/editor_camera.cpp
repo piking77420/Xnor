@@ -7,10 +7,13 @@
 using namespace XnorEditor;
 
 
-void EditorCamera::UpdateCamera(const Editor& editor, XnorCore::Camera& camera)
+EditorCamera::EditorCamera(Editor& editor, XnorCore::Camera& camera) : m_EditorRef(&editor), m_EditorRefCamera(&camera) 
 {
-    m_EditorRef = &editor;
-    m_EditorRefCamera = &camera;
+    
+}
+
+void EditorCamera::UpdateCamera()
+{   
   
     if (m_ComputeDeltaMouse)
     {
@@ -22,7 +25,6 @@ void EditorCamera::UpdateCamera(const Editor& editor, XnorCore::Camera& camera)
     OnMiddleButton();
     CameraOnRightClick();
     EditorCameraMovement();
-    OnPressGoToObject();
 
     if (m_ResetDeltaMouse)
     {
@@ -115,7 +117,6 @@ void EditorCamera::OnMiddleButton()
     if (ImGui::IsMouseReleased(ImGuiMouseButton_Middle))
     {
         m_ResetDeltaMouse = true;
-        
     }
 }
 
@@ -138,22 +139,25 @@ void EditorCamera::ComputeDeltaMouse()
 
 void EditorCamera::OnPressGoToObject()
 {
-    GoToObject();
-    
-    if (m_EditorRef->data.selectedEntity == nullptr || m_GotoObject)
+    if (m_EditorRef->data.selectedEntity == nullptr)
         return;
-    
-    if (!ImGui::IsKeyPressed(ImGuiKey_F))
-    {
-        return;
-    }
-    m_GotoObject = true;
-    
-    ResetDeltatMouse();
 
+    if (ImGui::IsKeyPressed(ImGuiKey_F))
+    {
+        m_EditorRef->data.gotoObject = true;
+    }
+    
+    GoToObject();
+
+    if (!m_EditorRef->data.gotoObject)
+        return;
+    
     const XnorCore::Entity& currentEntiy = *m_EditorRef->data.selectedEntity;
     const XnorCore::MeshRenderer* meshRenderer = currentEntiy.GetComponent<XnorCore::MeshRenderer>();
     m_ObjectPos = currentEntiy.transform.position;
+    m_EditorRefCamera->LookAt(m_ObjectPos);
+    m_ResetDeltaMouse = true;
+    
     
     if (meshRenderer == nullptr)
     {
@@ -169,13 +173,13 @@ void EditorCamera::OnPressGoToObject()
         m_DistanceToStop = correctVec.Length();
     }
     
-    m_EditorRefCamera->LookAt(m_ObjectPos);
-    m_GotoObject = true;
+    m_EditorRef->data.gotoObject = true;
+
 }
 
 void EditorCamera::GoToObject()
 {
-    if (!m_GotoObject)
+    if (!m_EditorRef->data.gotoObject)
         return;
     
     Vector3 forwardVec = (m_ObjectPos - m_EditorRefCamera->position);
@@ -183,7 +187,7 @@ void EditorCamera::GoToObject()
         
     if (distance <= m_DistanceToStop)
     {
-        m_GotoObject = false;
+        m_EditorRef->data.gotoObject = false;
         return;
     }
     
@@ -197,5 +201,5 @@ void EditorCamera::AddMovement(const Vector3& movement)
         return;
     
     m_EditorRefCamera->position += movement;
-    m_GotoObject = false;
+    m_EditorRef->data.gotoObject = false;
 }

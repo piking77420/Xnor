@@ -95,7 +95,6 @@ private:
 
     XNOR_ENGINE void RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRenderers);
     
-    XNOR_ENGINE void ShadowPathSpotLight(const std::vector<const SpotLight*>& spotLights);
 };
 
 END_XNOR_CORE
