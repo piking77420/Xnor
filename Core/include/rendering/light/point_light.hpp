@@ -3,9 +3,13 @@
 #include "core.hpp"
 #include "light.hpp"
 
+/// @file point_light.hpp
+/// @brief Defines the PointLight class
+
 BEGIN_XNOR_CORE
 
-class PointLight :  public Light
+/// @brief Handles a point light
+class PointLight : public Light
 {
     REFLECTABLE_IMPL_MINIMAL(PointLight)
     
@@ -19,6 +23,4 @@ public:
 
 END_XNOR_CORE
 
-REFL_AUTO(type(XnorCore::PointLight, bases<XnorCore::Light>)
-);
-
+REFL_AUTO(type(XnorCore::PointLight, bases<XnorCore::Light>))

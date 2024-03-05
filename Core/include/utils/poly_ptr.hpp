@@ -10,10 +10,9 @@ BEGIN_XNOR_CORE
 /// @brief PolyPtr is an abstraction for polymorphic pointers (hence the name), the idea is that it allows the same behavior of typeid(ptr)
 /// even with a class that isn't pure virtual
 /// 
-/// @paragraph reason Reason
 /// This was needed for reflection, because the @ref Component class isn't pure virtual, but we use a @ref List of @ref Component pointers in @ref Entity.
 ///
-/// The @ref PolyPtr allows us to get the needed information for reflection without too much overhead 
+/// The PolyPtr allows us to get the needed information for reflection without too much overhead 
 /// 
 /// @tparam T Base type
 template <typename T>

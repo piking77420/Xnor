@@ -189,7 +189,7 @@
     <ClInclude Include="include\rendering\light\light.hpp" />
     <ClInclude Include="include\rendering\light\point_light.hpp" />
     <ClInclude Include="include\rendering\light\spot_light.hpp" />
-    <ClInclude Include="include\rendering\light_culler.hpp" />
+    <ClInclude Include="include\rendering\light_manager.hpp" />
     <ClInclude Include="include\rendering\material.hpp" />
     <ClInclude Include="include\rendering\renderer.hpp" />
     <ClInclude Include="include\rendering\renderer_context.hpp" />

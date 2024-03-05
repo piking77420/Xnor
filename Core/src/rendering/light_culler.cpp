@@ -1,4 +1,4 @@
-﻿#include "rendering/light_culler.hpp"
+﻿#include "..\..\include\rendering\light_manager.hpp"
 
 #include "rendering/rhi.hpp"
 #include "rendering/rhi_typedef.hpp"
@@ -8,7 +8,7 @@
 
 using namespace XnorCore;
 
-void LightCuller::InitResources()
+void LightManager::InitResources()
 {
 	m_DirLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/dirlight_icon.png");
 	m_PointLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/point_light.png");
@@ -21,7 +21,7 @@ void LightCuller::InitResources()
 	
 }
 
-void LightCuller::UpdateLight(const std::vector<const PointLight*>& pointLightComponents,
+void LightManager::UpdateLight(const std::vector<const PointLight*>& pointLightComponents,
                               const std::vector<const SpotLight*>& spotLightsComponents,
                               const std::vector<const DirectionalLight*>& directionalComponent) const
 {
@@ -90,7 +90,7 @@ void LightCuller::UpdateLight(const std::vector<const PointLight*>& pointLightCo
 	Rhi::UpdateLight(gpuLightData);
 }
 
-void LightCuller::DrawLightGizmo(const std::vector<const PointLight*>& pointLightComponents,
+void LightManager::DrawLightGizmo(const std::vector<const PointLight*>& pointLightComponents,
 	const std::vector<const SpotLight*>& spotLightsComponents,
 	const std::vector<const DirectionalLight*>& directionalComponent, const Camera& camera) const
 {
