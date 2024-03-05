@@ -8,20 +8,6 @@
 
 using namespace XnorCore;
 
-bool_t Cubemap::Load(const uint8_t*, int64_t)
-{
-    // TODO handle loading a cubemap via a raw buffer
-    Logger::LogError("Non Implemented function");
-    return false;
-}
-
-bool_t Cubemap::Load(const Pointer<File>&)
-{
-    // Could work with meta data file
-    Logger::LogError("Non Implemented function");
-    return false;
-}
-
 void Cubemap::CreateInRhi()
 {
     const CreateCubeMapInfo createCubeMapInfo

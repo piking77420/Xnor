@@ -37,11 +37,6 @@ bool_t Shader::Load(const Pointer<File>& shader)
     return true;
 }
 
-bool_t Shader::Load(const uint8_t* const, const int64_t)
-{
-    throw std::runtime_error("Cannot load shader without shader type information");
-}
-
 bool_t Shader::Load(const char_t* const buffer, const int64_t length, const ShaderType type)
 {
     ShaderCode& code = m_Code[static_cast<size_t>(type)];

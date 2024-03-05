@@ -57,15 +57,12 @@ public:
 
 	using Resource::Resource;
 
+	using Resource::Load;
+
 	/// @brief Loads a single shader file
 	/// @param shader File
 	/// @return Whether the load succeeded
 	XNOR_ENGINE bool_t Load(const Pointer<File>& shader) override;
-
-	/// @brief [UNIMPLEMENTED]
-	/// @param buffer Raw data
-	/// @param length Raw data length
-	XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;
 
 	/// @brief Loads raw shader code
 	/// @param buffer Raw data

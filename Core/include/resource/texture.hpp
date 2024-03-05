@@ -13,15 +13,20 @@
 
 BEGIN_XNOR_CORE
 
+/// @brief Represents an image in memory.
 class Texture : public Resource
 {
 public:
+    /// @brief Options for loading the data of a Texture.
+    ///
+    /// @see Texture::loadData
     struct LoadData
     {
         int32_t desiredChannels = 0;
         bool_t flipVertically = false;
     };
 
+    /// @brief Allowed extensions for texture files
     XNOR_ENGINE static inline constexpr std::array<const char_t*, 11> FileExtensions
     {
         ".jpg",
@@ -36,7 +41,10 @@ public:
         ".pgm",
         ".ppm"
     };
-    
+
+    /// @brief Options to use when loading this Texture.
+    ///
+    /// This doesn't affect an already-loaded Texture. If necessary, change these settings and then call Texture::Reload for the changes to take effect.
     LoadData loadData;
     
     // Same constructor from base class

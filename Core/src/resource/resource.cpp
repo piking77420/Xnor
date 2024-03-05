@@ -3,6 +3,7 @@
 #include "file/file.hpp"
 #include "file/file_manager.hpp"
 #include "resource/resource_manager.hpp"
+// ReSharper disable once CppUnusedIncludeDirective
 #include "utils/formatter.hpp"
 #include "utils/logger.hpp"
 
@@ -12,6 +13,13 @@ Resource::Resource(std::string name)
     : m_Name(std::move(name))
     , m_Guid(Guid::New())
 {
+}
+
+Resource::~Resource() = default;
+
+bool_t Resource::Load(const uint8_t*, int64_t)
+{
+    return false;
 }
 
 bool_t Resource::Load(const Pointer<File>& file)
@@ -32,14 +40,22 @@ void Resource::DestroyInRhi()
     m_LoadedInRhi = false;
 }
 
+void Resource::Unload()
+{
+}
+
 bool_t Resource::Reload(const uint8_t* buffer, const int64_t length, const bool_t reloadInRhi)
 {
     if (reloadInRhi)
         DestroyInRhi();
+    
     Unload();
+    
     const bool_t result = Load(buffer, length);
+    
     if (reloadInRhi)
         CreateInRhi();
+    
     return result;
 }
 
@@ -47,10 +63,14 @@ bool_t Resource::Reload(const Pointer<File>& file, const bool_t reloadInRhi)
 {
     if (reloadInRhi)
         DestroyInRhi();
+    
     Unload();
+    
     const bool_t result = Load(file);
+    
     if (reloadInRhi)
         CreateInRhi();
+    
     return result;
 }
 
