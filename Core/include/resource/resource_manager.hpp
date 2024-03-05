@@ -142,7 +142,7 @@ Pointer<T> ResourceManager::Load(const Pointer<File>& file)
     if (Contains(file->GetPathString()))
     {
         Pointer<T> resource = GetNoCheck<T>(file->GetPathString());
-        const bool loaded = resource->GetLoaded();
+        const bool loaded = resource->IsLoaded();
         Logger::LogWarning(
             "This resource has already been {}, consider using ResourceManager::Get instead{}",
             loaded ? "loaded" : "added but isn't loaded",
@@ -270,10 +270,10 @@ void ResourceManager::Unload(const Pointer<T>& resource)
         Pointer<Resource>& storedResource = it->second;
         if (storedResource == Utils::DynamicPointerCast<Resource>(resource))
         {
-            if (storedResource->GetLoadedInRhi())
+            if (storedResource->IsLoadedInRhi())
                 storedResource->DestroyInRhi();
             
-            if (storedResource->GetLoaded())
+            if (storedResource->IsLoaded())
                 storedResource->Unload();
 
             it = m_Resources.erase(it);

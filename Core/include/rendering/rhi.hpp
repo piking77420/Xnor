@@ -10,76 +10,193 @@
 #include "vertex.hpp"
 #include "resource/model.hpp"
 
+/// @file rhi.hpp
+/// Defines the Rhi static class
+
 BEGIN_XNOR_CORE
 
+/// @brief Stands for Render Hardware Interface, provides a set of functions that interface between the application and the rendering API
 class Rhi
 {
 	STATIC_CLASS(Rhi)
 	
 public:
 	// Utils
+
+	/// @brief Sets the polygon mode
+	/// @param face Polygon face
+	/// @param mode Polygon mode
 	XNOR_ENGINE static void SetPolygonMode(PolygonFace face, PolygonMode mode);
+	
+	/// @brief Sets the viewport mode
+	/// @param screenSize Screen size
 	XNOR_ENGINE static void SetViewport(Vector2i screenSize);
+
+	/// @brief Draws a quad
+	/// @param quadId Quad id
 	XNOR_ENGINE static void DrawQuad(uint32_t quadId);
 
 	// Model
-	XNOR_ENGINE static uint32_t CreateModel(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indicies);
-	XNOR_ENGINE static bool DestroyModel(uint32_t modelId);
+
+	/// @brief Creates a model
+	/// @param vertices Model vertices
+	/// @param indices Model indices
+	/// @return Model id
+	[[nodiscard]]
+	XNOR_ENGINE static uint32_t CreateModel(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
+
+	/// @brief Destroys a model
+	/// @param modelId Model id
+	/// @return Whether the model could be destroyed
+	XNOR_ENGINE static bool_t DestroyModel(uint32_t modelId);
+
+	/// @brief Draws a model
+	/// @param modelId Model id
 	XNOR_ENGINE static void DrawModel(uint32_t modelId); 
 	
 	// Shader
+
+	/// @brief Destroy a shader program
+	/// @param shaderId Shader id
 	XNOR_ENGINE static void DestroyProgram(uint32_t shaderId);
+
+	/// @brief Checks for compilation errors for shaders
+	/// @param shaderId Shader id
+	/// @param type Type
 	XNOR_ENGINE static void CheckCompilationError(uint32_t shaderId, const std::string& type);
-	XNOR_ENGINE static uint32_t CreateShaders(const std::vector<ShaderCode>& shaderCodes,const ShaderCreateInfo& shaderCreateInfo);
+
+	/// @brief Creates a shader program using multiple shaders
+	/// @param shaderCodes Shader codes
+	/// @param shaderCreateInfo Create info
+	/// @return Shader id
+	[[nodiscard]]
+	XNOR_ENGINE static uint32_t CreateShaders(const std::vector<ShaderCode>& shaderCodes, const ShaderCreateInfo& shaderCreateInfo);
+
+	/// @brief Binds a shader for use
+	/// @param shaderId Shader id
 	XNOR_ENGINE static void UseShader(uint32_t shaderId);
+	
+	/// @brief Unbinds the current shader
 	XNOR_ENGINE static void UnuseShader();
 
-	XNOR_ENGINE static void SetUniform(UniformType uniformType, const void* data, uint32_t shaderId, const char* uniformKey);
+	/// @brief Sets a uniform variable in a shader
+	/// @param uniformType Uniform type
+	/// @param data Pointer to data
+	/// @param shaderId Shader id
+	/// @param uniformKey Uniform variable name
+	XNOR_ENGINE static void SetUniform(UniformType uniformType, const void* data, uint32_t shaderId, const char_t* uniformKey);
 	
-	// TEXTURE
-	XNOR_ENGINE static void CreateTexture2D(uint32_t* textureId, const TextureCreateInfo& textureCreateInfo);
-	XNOR_ENGINE static void DestroyTexture(uint32_t* textureId);
-	XNOR_ENGINE static void BindTexture(uint32_t unit,uint32_t textureId);
+	// Texture
+
+	/// @brief Creates a 2D texture
+	/// @param textureCreateInfo Texture create info
+	/// @return Texture id
+	XNOR_ENGINE static uint32_t CreateTexture2D(const TextureCreateInfo& textureCreateInfo);
+	
+	/// @brief Destroys a texture
+	/// @param textureId Texture id
+	XNOR_ENGINE static void DestroyTexture(uint32_t textureId);
+
+	/// @brief Binds a texture
+	/// @param unit Texture unit
+	/// @param textureId Texture id
+	XNOR_ENGINE static void BindTexture(uint32_t unit, uint32_t textureId);
+
 	// CubeMap
-	XNOR_ENGINE static void CreateCubeMap(uint32_t* textureId, const CreateCubeMapInfo& createCubeMapInfo);
+
+	/// @brief Creates a cubemap 
+	/// @param createCubeMapInfo Cubemap create info
+	/// @return textureId Texture id
+	XNOR_ENGINE static uint32_t CreateCubeMap(const CreateCubeMapInfo& createCubeMapInfo);
 
 	// FrameBuffer
-	XNOR_ENGINE static void CreateFrameBuffer(uint32_t* frameBufferId,const RenderPass& renderPass,const std::vector<const Texture*>& attechements);
-	XNOR_ENGINE static void DestroyFrameBuffer(uint32_t* frameBufferId);
-	XNOR_ENGINE static void BlitFrameBuffer(uint32_t readBuffer, uint32_t targetBuffer, Vector2i src0Size, Vector2i src1Size,
-		Vector2i target0Size,Vector2i target1Size,Attachment attachmentTarget, TextureFiltering textureFiltering);
+
+	/// @brief Create a framebuffer
+	/// @param renderPass Associated @ref RenderPass
+	/// @param attachments @ref Texture attachments
+	/// @return Framebuffer id
+	XNOR_ENGINE static uint32_t CreateFrameBuffer(const RenderPass& renderPass, const std::vector<const Texture*>& attachments);
+
+	/// @brief Destroys a framebuffer
+	/// @param frameBufferId Framebuffer id
+	XNOR_ENGINE static void DestroyFrameBuffer(uint32_t frameBufferId);
+
+	/// @brief Performs a blit framebuffer operation, which copies a region of pixels from one framebuffer to another
+	/// @param readBuffer Source framebuffer id
+	/// @param targetBuffer Target framebuffer id
+	/// @param srcTopLeft Top left position of the source region
+	/// @param srcBottomRight Bottom right position of the source region
+	/// @param targetTopLeft Top left position of the target region
+	/// @param targetBottomRight Top left position of the target region
+	/// @param attachmentTarget Target attachment
+	/// @param textureFiltering Interpolation to be applied
+	XNOR_ENGINE static void BlitFrameBuffer(uint32_t readBuffer, uint32_t targetBuffer, Vector2i srcTopLeft, Vector2i srcBottomRight,
+		Vector2i targetTopLeft, Vector2i targetBottomRight, Attachment attachmentTarget, TextureFiltering textureFiltering);
+
+	/// @brief Binds a framebuffer
+	/// @param frameBufferId Framebuffer id
 	XNOR_ENGINE static void BindFrameBuffer(uint32_t frameBufferId);
+
+	/// @brief Unbinds a framebuffer
 	XNOR_ENGINE static void UnbindFrameBuffer();
 
-	XNOR_ENGINE static void ReadAttachement(uint32_t attachmentIndex,int32_t x, int32_t y,TextureFormat textureFormat,TextureInternalFormat textureInternalFormat,void* output);
+	/// @brief Reads a single pixel of an attachment
+	/// @param attachmentIndex Attachment index
+	/// @param position Pixel position
+	/// @param textureFormat Texture format
+	/// @param textureInternalFormat Texture internal format
+	/// @param output Output pointer
+	XNOR_ENGINE static void GetPixelFromAttachement(uint32_t attachmentIndex, Vector2i position, TextureFormat textureFormat, TextureInternalFormat textureInternalFormat, void* output);
 
+	/// @brief Swaps the front and back buffer
 	XNOR_ENGINE static void SwapBuffers();
-	
+
+	/// @brief Initializes the Rhi
 	XNOR_ENGINE static void Initialize();
 
+	/// @brief Shutdowns the Rhi
 	XNOR_ENGINE static void Shutdown();
 
+	/// @brief Prepares the default uniform buffers
 	XNOR_ENGINE static void PrepareUniform();
 
+	/// @brief Sets the clear color
+	/// @param color Clear color
 	XNOR_ENGINE static void SetClearColor(const Vector4& color);
-	
+
+	/// @brief Clears the color and depth buffer
 	XNOR_ENGINE static void ClearColorAndDepth();
-	
+
+	/// @brief Clears the color buffer
 	XNOR_ENGINE static void ClearColor();
 
+	/// @brief Clears the depth buffer
 	XNOR_ENGINE static void ClearDepth();
-	
+
+	/// @brief Updates the model @ref UniformBuffer
+	/// @param modelUniformData Data
 	XNOR_ENGINE static void UpdateModelUniform(const ModelUniformData& modelUniformData);
 
+	/// @brief Updates the camera @ref UniformBuffer
+	/// @param cameraUniformData Data
 	XNOR_ENGINE static void UpdateCameraUniform(const CameraUniformData& cameraUniformData);
 
+	/// @brief Updates the light @ref UniformBuffer
+	/// @param lightData Data
 	XNOR_ENGINE static void UpdateLight(const GpuLightData& lightData);
-
-	XNOR_ENGINE static void BindMaterial(const Material& material);
 	
-	XNOR_ENGINE static void UpdateShadowMapingData(const ShadowMappingData& shadowMappingData);
+	/// @brief Updates the shadow mapping @ref UniformBuffer
+	/// @param shadowMappingData Data
+	XNOR_ENGINE static void UpdateShadowMappingData(const ShadowMappingData& shadowMappingData);
 
-	XNOR_ENGINE static TextureFormat GetFormat(const uint32_t textureFormat);
+	/// @brief Binds a @ref Material
+	/// @param material Material
+	XNOR_ENGINE static void BindMaterial(const Material& material);
+
+	/// @brief Gets the texture format based on the number of color channels
+	/// @param channels Color channels
+	/// @return Texture format
+	XNOR_ENGINE static TextureFormat GetTextureFormatFromChannels(uint32_t channels);
 
 private:
 	struct ModelInternal
@@ -89,12 +206,12 @@ private:
 		uint32_t ebo = 0;
 		uint32_t nbrOfVertex = 0;
 		uint32_t nbrOfIndicies = 0;
-		ModelAABB aabb;
+		ModelAabb aabb;
 	};
 	
 	struct ShaderInternal
 	{
-		DepthFunction depthFunction;
+		DepthFunction depthFunction{};
 		BlendFunction blendFunction;
 		std::map<std::string, uint32_t> uniformMap;
 	};
@@ -106,12 +223,12 @@ private:
 
 	XNOR_ENGINE static void IsShaderValid(uint32_t shaderId);
 	
-	XNOR_ENGINE static int32_t GetUniformInMap(uint32_t shaderId, const char* uniformKey);
+	XNOR_ENGINE static int32_t GetUniformInMap(uint32_t shaderId, const char_t* uniformKey);
 
 	XNOR_ENGINE static uint32_t GetOpenglDataType(DataType dataType);
 
 	// Texture 
-	XNOR_ENGINE static void AllocTexture2D(const uint32_t* textureId, const TextureCreateInfo& textureCreateInfo);
+	XNOR_ENGINE static void AllocTexture2D(uint32_t textureId, const TextureCreateInfo& textureCreateInfo);
 	XNOR_ENGINE static void CreateTexture(uint32_t* textureId,TextureType textureType);
 
 	// Enum to OpenglEnum

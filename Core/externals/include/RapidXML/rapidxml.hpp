@@ -318,7 +318,7 @@ namespace rapidxml
 
         // Compare strings for equality
         template<class Ch>
-        inline bool compare(const Ch *p1, std::size_t size1, const Ch *p2, std::size_t size2, bool case_sensitive)
+        inline bool compare(const Ch *p1, std::size_t size1, const Ch *p2, const std::size_t size2, const bool case_sensitive)
         {
             if (size1 != size2)
                 return false;
@@ -577,7 +577,7 @@ namespace rapidxml
             return ptr + alignment;
         }
         
-        char *allocate_raw(std::size_t size)
+        char *allocate_raw(const std::size_t size)
         {
             // Allocate
             void *memory;   
@@ -597,7 +597,7 @@ namespace rapidxml
             return static_cast<char *>(memory);
         }
         
-        void *allocate_aligned(std::size_t size)
+        void *allocate_aligned(const std::size_t size)
         {
             // Calculate aligned pointer
             char *result = align(m_ptr);
@@ -717,7 +717,7 @@ namespace rapidxml
         //! Use name(const Ch *) function to have the length automatically calculated (string must be zero terminated).
         //! \param name Name of node to set. Does not have to be zero terminated.
         //! \param size Size of name, in characters. This does not include zero terminator, if one is present.
-        void name(const Ch *name, std::size_t size)
+        void name(const Ch *name, const std::size_t size)
         {
             m_name = const_cast<Ch *>(name);
             m_name_size = size;
@@ -747,7 +747,7 @@ namespace rapidxml
         //! If you want to manipulate data of elements using values, use parser flag rapidxml::parse_no_data_nodes to prevent creation of data nodes by the parser.
         //! \param value value of node to set. Does not have to be zero terminated.
         //! \param size Size of value, in characters. This does not include zero terminator, if one is present.
-        void value(const Ch *value, std::size_t size)
+        void value(const Ch *value, const std::size_t size)
         {
             m_value = const_cast<Ch *>(value);
             m_value_size = size;
@@ -897,7 +897,7 @@ namespace rapidxml
         //! Constructs an empty node with the specified type. 
         //! Consider using memory_pool of appropriate document to allocate nodes manually.
         //! \param type Type of node to construct.
-        xml_node(node_type type) : m_type(type), m_first_node(0), m_last_node(nullptr), m_first_attribute(0), m_last_attribute(nullptr), m_prev_sibling(nullptr), m_next_sibling(nullptr)
+        xml_node(const node_type type) : m_type(type), m_first_node(0), m_last_node(nullptr), m_first_attribute(0), m_last_attribute(nullptr), m_prev_sibling(nullptr), m_next_sibling(nullptr)
         {
         }
 
@@ -1058,7 +1058,7 @@ namespace rapidxml
     
         //! Sets type of node.
         //! \param type Type of node to set.
-        void type(node_type type)
+        void type(const node_type type)
         {
             m_type = type;
         }

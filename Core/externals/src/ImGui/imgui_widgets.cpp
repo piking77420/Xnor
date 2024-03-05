@@ -145,7 +145,7 @@ static ImVec2           InputTextCalcTextSizeW(ImGuiContext* ctx, const ImWchar*
 // - BulletTextV()
 //-------------------------------------------------------------------------
 
-void ImGui::TextEx(const char* text, const char* text_end, ImGuiTextFlags flags)
+void ImGui::TextEx(const char* text, const char* text_end, const ImGuiTextFlags flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -266,7 +266,7 @@ void ImGui::Text(const char* fmt, ...)
     va_end(args);
 }
 
-void ImGui::TextV(const char* fmt, va_list args)
+void ImGui::TextV(const char* fmt, const va_list args)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -285,7 +285,7 @@ void ImGui::TextColored(const ImVec4& col, const char* fmt, ...)
     va_end(args);
 }
 
-void ImGui::TextColoredV(const ImVec4& col, const char* fmt, va_list args)
+void ImGui::TextColoredV(const ImVec4& col, const char* fmt, const va_list args)
 {
     PushStyleColor(ImGuiCol_Text, col);
     TextV(fmt, args);
@@ -300,7 +300,7 @@ void ImGui::TextDisabled(const char* fmt, ...)
     va_end(args);
 }
 
-void ImGui::TextDisabledV(const char* fmt, va_list args)
+void ImGui::TextDisabledV(const char* fmt, const va_list args)
 {
     ImGuiContext& g = *GImGui;
     PushStyleColor(ImGuiCol_Text, g.Style.Colors[ImGuiCol_TextDisabled]);
@@ -316,7 +316,7 @@ void ImGui::TextWrapped(const char* fmt, ...)
     va_end(args);
 }
 
-void ImGui::TextWrappedV(const char* fmt, va_list args)
+void ImGui::TextWrappedV(const char* fmt, const va_list args)
 {
     ImGuiContext& g = *GImGui;
     const bool need_backup = (g.CurrentWindow->DC.TextWrapPos < 0.0f);  // Keep existing wrap position if one is already set
@@ -336,7 +336,7 @@ void ImGui::LabelText(const char* label, const char* fmt, ...)
 }
 
 // Add a label+text combo aligned to other label+value widgets
-void ImGui::LabelTextV(const char* label, const char* fmt, va_list args)
+void ImGui::LabelTextV(const char* label, const char* fmt, const va_list args)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -373,7 +373,7 @@ void ImGui::BulletText(const char* fmt, ...)
 }
 
 // Text with a little bullet aligned to the typical tree node.
-void ImGui::BulletTextV(const char* fmt, va_list args)
+void ImGui::BulletTextV(const char* fmt, const va_list args)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -690,7 +690,7 @@ bool ImGui::ButtonBehavior(const ImRect& bb, ImGuiID id, bool* out_hovered, bool
     return pressed;
 }
 
-bool ImGui::ButtonEx(const char* label, const ImVec2& size_arg, ImGuiButtonFlags flags)
+bool ImGui::ButtonEx(const char* label, const ImVec2& size_arg, const ImGuiButtonFlags flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -749,7 +749,7 @@ bool ImGui::SmallButton(const char* label)
 
 // Tip: use ImGui::PushID()/PopID() to push indices or pointers in the ID stack.
 // Then you can keep 'str_id' empty or the same for all your buttons (instead of creating a string based on a non-string id)
-bool ImGui::InvisibleButton(const char* str_id, const ImVec2& size_arg, ImGuiButtonFlags flags)
+bool ImGui::InvisibleButton(const char* str_id, const ImVec2& size_arg, const ImGuiButtonFlags flags)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = GetCurrentWindow();
@@ -773,7 +773,7 @@ bool ImGui::InvisibleButton(const char* str_id, const ImVec2& size_arg, ImGuiBut
     return pressed;
 }
 
-bool ImGui::ArrowButtonEx(const char* str_id, ImGuiDir dir, ImVec2 size, ImGuiButtonFlags flags)
+bool ImGui::ArrowButtonEx(const char* str_id, const ImGuiDir dir, const ImVec2 size, const ImGuiButtonFlags flags)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = GetCurrentWindow();
@@ -801,14 +801,14 @@ bool ImGui::ArrowButtonEx(const char* str_id, ImGuiDir dir, ImVec2 size, ImGuiBu
     return pressed;
 }
 
-bool ImGui::ArrowButton(const char* str_id, ImGuiDir dir)
+bool ImGui::ArrowButton(const char* str_id, const ImGuiDir dir)
 {
     float sz = GetFrameHeight();
     return ArrowButtonEx(str_id, dir, ImVec2(sz, sz), ImGuiButtonFlags_None);
 }
 
 // Button to close a window
-bool ImGui::CloseButton(ImGuiID id, const ImVec2& pos)
+bool ImGui::CloseButton(const ImGuiID id, const ImVec2& pos)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -847,7 +847,7 @@ bool ImGui::CloseButton(ImGuiID id, const ImVec2& pos)
 }
 
 // The Collapse button also functions as a Dock Menu button.
-bool ImGui::CollapseButton(ImGuiID id, const ImVec2& pos, ImGuiDockNode* dock_node)
+bool ImGui::CollapseButton(const ImGuiID id, const ImVec2& pos, ImGuiDockNode* dock_node)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -878,13 +878,13 @@ bool ImGui::CollapseButton(ImGuiID id, const ImVec2& pos, ImGuiDockNode* dock_no
     return pressed;
 }
 
-ImGuiID ImGui::GetWindowScrollbarID(ImGuiWindow* window, ImGuiAxis axis)
+ImGuiID ImGui::GetWindowScrollbarID(ImGuiWindow* window, const ImGuiAxis axis)
 {
     return window->GetID(axis == ImGuiAxis_X ? "#SCROLLX" : "#SCROLLY");
 }
 
 // Return scrollbar rectangle, must only be called for corresponding axis if window->ScrollbarX/Y is set.
-ImRect ImGui::GetWindowScrollbarRect(ImGuiWindow* window, ImGuiAxis axis)
+ImRect ImGui::GetWindowScrollbarRect(ImGuiWindow* window, const ImGuiAxis axis)
 {
     const ImRect outer_rect = window->Rect();
     const ImRect inner_rect = window->InnerRect;
@@ -897,7 +897,7 @@ ImRect ImGui::GetWindowScrollbarRect(ImGuiWindow* window, ImGuiAxis axis)
         return ImRect(ImMax(outer_rect.Min.x, outer_rect.Max.x - border_size - scrollbar_size), inner_rect.Min.y, outer_rect.Max.x - border_size, inner_rect.Max.y - border_size);
 }
 
-void ImGui::Scrollbar(ImGuiAxis axis)
+void ImGui::Scrollbar(const ImGuiAxis axis)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -932,7 +932,7 @@ void ImGui::Scrollbar(ImGuiAxis axis)
 // - We store values as normalized ratio and in a form that allows the window content to change while we are holding on a scrollbar
 // - We handle both horizontal and vertical scrollbars, which makes the terminology not ideal.
 // Still, the code should probably be made simpler..
-bool ImGui::ScrollbarEx(const ImRect& bb_frame, ImGuiID id, ImGuiAxis axis, ImS64* p_scroll_v, ImS64 size_avail_v, ImS64 size_contents_v, ImDrawFlags flags)
+bool ImGui::ScrollbarEx(const ImRect& bb_frame, const ImGuiID id, const ImGuiAxis axis, ImS64* p_scroll_v, const ImS64 size_avail_v, const ImS64 size_contents_v, const ImDrawFlags flags)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -1025,7 +1025,7 @@ bool ImGui::ScrollbarEx(const ImRect& bb_frame, ImGuiID id, ImGuiAxis axis, ImS6
 
 // - Read about ImTextureID here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
 // - 'uv0' and 'uv1' are texture coordinates. Read about them from the same link above.
-void ImGui::Image(ImTextureID user_texture_id, const ImVec2& image_size, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& tint_col, const ImVec4& border_col)
+void ImGui::Image(const ImTextureID user_texture_id, const ImVec2& image_size, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& tint_col, const ImVec4& border_col)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -1046,7 +1046,7 @@ void ImGui::Image(ImTextureID user_texture_id, const ImVec2& image_size, const I
 
 // ImageButton() is flawed as 'id' is always derived from 'texture_id' (see #2464 #1390)
 // We provide this internal helper to write your own variant while we figure out how to redesign the public ImageButton() API.
-bool ImGui::ImageButtonEx(ImGuiID id, ImTextureID texture_id, const ImVec2& image_size, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& bg_col, const ImVec4& tint_col, ImGuiButtonFlags flags)
+bool ImGui::ImageButtonEx(const ImGuiID id, const ImTextureID texture_id, const ImVec2& image_size, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& bg_col, const ImVec4& tint_col, const ImGuiButtonFlags flags)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = GetCurrentWindow();
@@ -1074,7 +1074,7 @@ bool ImGui::ImageButtonEx(ImGuiID id, ImTextureID texture_id, const ImVec2& imag
 }
 
 // Note that ImageButton() adds style.FramePadding*2.0f to provided size. This is in order to facilitate fitting an image in a button.
-bool ImGui::ImageButton(const char* str_id, ImTextureID user_texture_id, const ImVec2& image_size, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& bg_col, const ImVec4& tint_col)
+bool ImGui::ImageButton(const char* str_id, const ImTextureID user_texture_id, const ImVec2& image_size, const ImVec2& uv0, const ImVec2& uv1, const ImVec4& bg_col, const ImVec4& tint_col)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -1089,7 +1089,7 @@ bool ImGui::ImageButton(const char* str_id, ImTextureID user_texture_id, const I
 // - new ImageButton() requires an explicit 'const char* str_id'    Old ImageButton() used opaque imTextureId (created issue with: multiple buttons with same image, transient texture id values, opaque computation of ID)
 // - new ImageButton() always use style.FramePadding                Old ImageButton() had an override argument.
 // If you need to change padding with new ImageButton() you can use PushStyleVar(ImGuiStyleVar_FramePadding, value), consistent with other Button functions.
-bool ImGui::ImageButton(ImTextureID user_texture_id, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, int frame_padding, const ImVec4& bg_col, const ImVec4& tint_col)
+bool ImGui::ImageButton(ImTextureID user_texture_id, const ImVec2& size, const ImVec2& uv0, const ImVec2& uv1, const int frame_padding, const ImVec4& bg_col, const ImVec4& tint_col)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -1194,27 +1194,27 @@ bool ImGui::CheckboxFlagsT(const char* label, T* flags, T flags_value)
     return pressed;
 }
 
-bool ImGui::CheckboxFlags(const char* label, int* flags, int flags_value)
+bool ImGui::CheckboxFlags(const char* label, int* flags, const int flags_value)
 {
     return CheckboxFlagsT(label, flags, flags_value);
 }
 
-bool ImGui::CheckboxFlags(const char* label, unsigned int* flags, unsigned int flags_value)
+bool ImGui::CheckboxFlags(const char* label, unsigned int* flags, const unsigned int flags_value)
 {
     return CheckboxFlagsT(label, flags, flags_value);
 }
 
-bool ImGui::CheckboxFlags(const char* label, ImS64* flags, ImS64 flags_value)
+bool ImGui::CheckboxFlags(const char* label, ImS64* flags, const ImS64 flags_value)
 {
     return CheckboxFlagsT(label, flags, flags_value);
 }
 
-bool ImGui::CheckboxFlags(const char* label, ImU64* flags, ImU64 flags_value)
+bool ImGui::CheckboxFlags(const char* label, ImU64* flags, const ImU64 flags_value)
 {
     return CheckboxFlagsT(label, flags, flags_value);
 }
 
-bool ImGui::RadioButton(const char* label, bool active)
+bool ImGui::RadioButton(const char* label, const bool active)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -1269,7 +1269,7 @@ bool ImGui::RadioButton(const char* label, bool active)
 }
 
 // FIXME: This would work nicely if it was a public template, e.g. 'template<T> RadioButton(const char* label, T* v, T v_button)', but I'm not sure how we would expose it..
-bool ImGui::RadioButton(const char* label, int* v, int v_button)
+bool ImGui::RadioButton(const char* label, int* v, const int v_button)
 {
     const bool pressed = RadioButton(label, *v == v_button);
     if (pressed)
@@ -1400,7 +1400,7 @@ void ImGui::AlignTextToFramePadding()
 // Horizontal/vertical separating line
 // FIXME: Surprisingly, this seemingly trivial widget is a victim of many different legacy/tricky layout issues.
 // Note how thickness == 1.0f is handled specifically as not moving CursorPos by 'thickness', but other values are.
-void ImGui::SeparatorEx(ImGuiSeparatorFlags flags, float thickness)
+void ImGui::SeparatorEx(const ImGuiSeparatorFlags flags, const float thickness)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -1482,7 +1482,7 @@ void ImGui::Separator()
     SeparatorEx(flags, 1.0f);
 }
 
-void ImGui::SeparatorTextEx(ImGuiID id, const char* label, const char* label_end, float extra_w)
+void ImGui::SeparatorTextEx(const ImGuiID id, const char* label, const char* label_end, const float extra_w)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -1548,7 +1548,7 @@ void ImGui::SeparatorText(const char* label)
 }
 
 // Using 'hover_visibility_delay' allows us to hide the highlight and mouse cursor for a short time, which can be convenient to reduce visual noise.
-bool ImGui::SplitterBehavior(const ImRect& bb, ImGuiID id, ImGuiAxis axis, float* size1, float* size2, float min_size1, float min_size2, float hover_extend, float hover_visibility_delay, ImU32 bg_col)
+bool ImGui::SplitterBehavior(const ImRect& bb, const ImGuiID id, const ImGuiAxis axis, float* size1, float* size2, const float min_size1, const float min_size2, const float hover_extend, const float hover_visibility_delay, const ImU32 bg_col)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -1617,7 +1617,7 @@ static int IMGUI_CDECL ShrinkWidthItemComparer(const void* lhs, const void* rhs)
 
 // Shrink excess width from a set of item, by removing width from the larger items first.
 // Set items Width to -1.0f to disable shrinking this item.
-void ImGui::ShrinkWidths(ImGuiShrinkWidthItem* items, int count, float width_excess)
+void ImGui::ShrinkWidths(ImGuiShrinkWidthItem* items, const int count, float width_excess)
 {
     if (count == 1)
     {
@@ -1670,7 +1670,7 @@ void ImGui::ShrinkWidths(ImGuiShrinkWidthItem* items, int count, float width_exc
 // - Combo()
 //-------------------------------------------------------------------------
 
-static float CalcMaxPopupHeightFromItemCount(int items_count)
+static float CalcMaxPopupHeightFromItemCount(const int items_count)
 {
     ImGuiContext& g = *GImGui;
     if (items_count <= 0)
@@ -1678,7 +1678,7 @@ static float CalcMaxPopupHeightFromItemCount(int items_count)
     return (g.FontSize + g.Style.ItemSpacing.y) * items_count - g.Style.ItemSpacing.y + (g.Style.WindowPadding.y * 2);
 }
 
-bool ImGui::BeginCombo(const char* label, const char* preview_value, ImGuiComboFlags flags)
+bool ImGui::BeginCombo(const char* label, const char* preview_value, const ImGuiComboFlags flags)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = GetCurrentWindow();
@@ -1756,7 +1756,7 @@ bool ImGui::BeginCombo(const char* label, const char* preview_value, ImGuiComboF
     return BeginComboPopup(popup_id, bb, flags);
 }
 
-bool ImGui::BeginComboPopup(ImGuiID popup_id, const ImRect& bb, ImGuiComboFlags flags)
+bool ImGui::BeginComboPopup(const ImGuiID popup_id, const ImRect& bb, ImGuiComboFlags flags)
 {
     ImGuiContext& g = *GImGui;
     if (!IsPopupOpen(popup_id, ImGuiPopupFlags_None))
@@ -1879,14 +1879,14 @@ void ImGui::EndComboPreview()
 }
 
 // Getter for the old Combo() API: const char*[]
-static const char* Items_ArrayGetter(void* data, int idx)
+static const char* Items_ArrayGetter(void* data, const int idx)
 {
     const char* const* items = (const char* const*)data;
     return items[idx];
 }
 
 // Getter for the old Combo() API: "item1\0item2\0item3\0"
-static const char* Items_SingleStringGetter(void* data, int idx)
+static const char* Items_SingleStringGetter(void* data, const int idx)
 {
     const char* items_separated_by_zeros = (const char*)data;
     int items_count = 0;
@@ -1902,7 +1902,7 @@ static const char* Items_SingleStringGetter(void* data, int idx)
 }
 
 // Old API, prefer using BeginCombo() nowadays if you can.
-bool ImGui::Combo(const char* label, int* current_item, const char* (*getter)(void* user_data, int idx), void* user_data, int items_count, int popup_max_height_in_items)
+bool ImGui::Combo(const char* label, int* current_item, const char* (*getter)(void* user_data, int idx), void* user_data, const int items_count, const int popup_max_height_in_items)
 {
     ImGuiContext& g = *GImGui;
 
@@ -1948,14 +1948,14 @@ bool ImGui::Combo(const char* label, int* current_item, const char* (*getter)(vo
 }
 
 // Combo box helper allowing to pass an array of strings.
-bool ImGui::Combo(const char* label, int* current_item, const char* const items[], int items_count, int height_in_items)
+bool ImGui::Combo(const char* label, int* current_item, const char* const items[], const int items_count, const int height_in_items)
 {
     const bool value_changed = Combo(label, current_item, Items_ArrayGetter, (void*)items, items_count, height_in_items);
     return value_changed;
 }
 
 // Combo box helper allowing to pass all items in a single string literal holding multiple zero-terminated items "item1\0item2\0"
-bool ImGui::Combo(const char* label, int* current_item, const char* items_separated_by_zeros, int height_in_items)
+bool ImGui::Combo(const char* label, int* current_item, const char* items_separated_by_zeros, const int height_in_items)
 {
     int items_count = 0;
     const char* p = items_separated_by_zeros;       // FIXME-OPT: Avoid computing this, or at least only when combo is open
@@ -1971,7 +1971,7 @@ bool ImGui::Combo(const char* label, int* current_item, const char* items_separa
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 
 struct ImGuiGetNameFromIndexOldToNewCallbackData { void* UserData; bool (*OldCallback)(void*, int, const char**); };
-static const char* ImGuiGetNameFromIndexOldToNewCallback(void* user_data, int idx)
+static const char* ImGuiGetNameFromIndexOldToNewCallback(void* user_data, const int idx)
 {
     ImGuiGetNameFromIndexOldToNewCallbackData* data = (ImGuiGetNameFromIndexOldToNewCallbackData*)user_data;
     const char* s = NULL;
@@ -1979,12 +1979,12 @@ static const char* ImGuiGetNameFromIndexOldToNewCallback(void* user_data, int id
     return s;
 }
 
-bool ImGui::ListBox(const char* label, int* current_item, bool (*old_getter)(void*, int, const char**), void* user_data, int items_count, int height_in_items)
+bool ImGui::ListBox(const char* label, int* current_item, bool (*old_getter)(void*, int, const char**), void* user_data, const int items_count, const int height_in_items)
 {
     ImGuiGetNameFromIndexOldToNewCallbackData old_to_new_data = { user_data, old_getter };
     return ListBox(label, current_item, ImGuiGetNameFromIndexOldToNewCallback, &old_to_new_data, items_count, height_in_items);
 }
-bool ImGui::Combo(const char* label, int* current_item, bool (*old_getter)(void*, int, const char**), void* user_data, int items_count, int popup_max_height_in_items)
+bool ImGui::Combo(const char* label, int* current_item, bool (*old_getter)(void*, int, const char**), void* user_data, const int items_count, const int popup_max_height_in_items)
 {
     ImGuiGetNameFromIndexOldToNewCallbackData old_to_new_data = { user_data, old_getter };
     return Combo(label, current_item, ImGuiGetNameFromIndexOldToNewCallback, &old_to_new_data, items_count, popup_max_height_in_items);
@@ -2025,13 +2025,13 @@ static const ImGuiDataTypeInfo GDataTypeInfo[] =
 };
 IM_STATIC_ASSERT(IM_ARRAYSIZE(GDataTypeInfo) == ImGuiDataType_COUNT);
 
-const ImGuiDataTypeInfo* ImGui::DataTypeGetInfo(ImGuiDataType data_type)
+const ImGuiDataTypeInfo* ImGui::DataTypeGetInfo(const ImGuiDataType data_type)
 {
     IM_ASSERT(data_type >= 0 && data_type < ImGuiDataType_COUNT);
     return &GDataTypeInfo[data_type];
 }
 
-int ImGui::DataTypeFormatString(char* buf, int buf_size, ImGuiDataType data_type, const void* p_data, const char* format)
+int ImGui::DataTypeFormatString(char* buf, const int buf_size, const ImGuiDataType data_type, const void* p_data, const char* format)
 {
     // Signedness doesn't matter when pushing integer arguments
     if (data_type == ImGuiDataType_S32 || data_type == ImGuiDataType_U32)
@@ -2054,7 +2054,7 @@ int ImGui::DataTypeFormatString(char* buf, int buf_size, ImGuiDataType data_type
     return 0;
 }
 
-void ImGui::DataTypeApplyOp(ImGuiDataType data_type, int op, void* output, const void* arg1, const void* arg2)
+void ImGui::DataTypeApplyOp(const ImGuiDataType data_type, const int op, void* output, const void* arg1, const void* arg2)
 {
     IM_ASSERT(op == '+' || op == '-');
     switch (data_type)
@@ -2106,7 +2106,7 @@ void ImGui::DataTypeApplyOp(ImGuiDataType data_type, int op, void* output, const
 
 // User can input math operators (e.g. +100) to edit a numerical values.
 // NB: This is _not_ a full expression evaluator. We should probably add one and replace this dumb mess..
-bool ImGui::DataTypeApplyFromText(const char* buf, ImGuiDataType data_type, void* p_data, const char* format)
+bool ImGui::DataTypeApplyFromText(const char* buf, const ImGuiDataType data_type, void* p_data, const char* format)
 {
     while (ImCharIsBlankA(*buf))
         buf++;
@@ -2156,7 +2156,7 @@ static int DataTypeCompareT(const T* lhs, const T* rhs)
     return 0;
 }
 
-int ImGui::DataTypeCompare(ImGuiDataType data_type, const void* arg_1, const void* arg_2)
+int ImGui::DataTypeCompare(const ImGuiDataType data_type, const void* arg_1, const void* arg_2)
 {
     switch (data_type)
     {
@@ -2185,7 +2185,7 @@ static bool DataTypeClampT(T* v, const T* v_min, const T* v_max)
     return false;
 }
 
-bool ImGui::DataTypeClamp(ImGuiDataType data_type, void* p_data, const void* p_min, const void* p_max)
+bool ImGui::DataTypeClamp(const ImGuiDataType data_type, void* p_data, const void* p_min, const void* p_max)
 {
     switch (data_type)
     {
@@ -2205,7 +2205,7 @@ bool ImGui::DataTypeClamp(ImGuiDataType data_type, void* p_data, const void* p_m
     return false;
 }
 
-static float GetMinimumStepAtDecimalPrecision(int decimal_precision)
+static float GetMinimumStepAtDecimalPrecision(const int decimal_precision)
 {
     static const float min_steps[10] = { 1.0f, 0.1f, 0.01f, 0.001f, 0.0001f, 0.00001f, 0.000001f, 0.0000001f, 0.00000001f, 0.000000001f };
     if (decimal_precision < 0)
@@ -2214,7 +2214,7 @@ static float GetMinimumStepAtDecimalPrecision(int decimal_precision)
 }
 
 template<typename TYPE>
-TYPE ImGui::RoundScalarWithFormatT(const char* format, ImGuiDataType data_type, TYPE v)
+TYPE ImGui::RoundScalarWithFormatT(const char* format, const ImGuiDataType data_type, TYPE v)
 {
     IM_UNUSED(data_type);
     IM_ASSERT(data_type == ImGuiDataType_Float || data_type == ImGuiDataType_Double);
@@ -2259,7 +2259,7 @@ TYPE ImGui::RoundScalarWithFormatT(const char* format, ImGuiDataType data_type, 
 
 // This is called by DragBehavior() when the widget is active (held by mouse or being manipulated with Nav controls)
 template<typename TYPE, typename SIGNEDTYPE, typename FLOATTYPE>
-bool ImGui::DragBehaviorT(ImGuiDataType data_type, TYPE* v, float v_speed, const TYPE v_min, const TYPE v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::DragBehaviorT(const ImGuiDataType data_type, TYPE* v, float v_speed, const TYPE v_min, const TYPE v_max, const char* format, const ImGuiSliderFlags flags)
 {
     ImGuiContext& g = *GImGui;
     const ImGuiAxis axis = (flags & ImGuiSliderFlags_Vertical) ? ImGuiAxis_Y : ImGuiAxis_X;
@@ -2377,7 +2377,7 @@ bool ImGui::DragBehaviorT(ImGuiDataType data_type, TYPE* v, float v_speed, const
     return true;
 }
 
-bool ImGui::DragBehavior(ImGuiID id, ImGuiDataType data_type, void* p_v, float v_speed, const void* p_min, const void* p_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::DragBehavior(const ImGuiID id, const ImGuiDataType data_type, void* p_v, const float v_speed, const void* p_min, const void* p_max, const char* format, const ImGuiSliderFlags flags)
 {
     // Read imgui.cpp "API BREAKING CHANGES" section for 1.78 if you hit this assert.
     IM_ASSERT((flags == 1 || (flags & ImGuiSliderFlags_InvalidMask_) == 0) && "Invalid ImGuiSliderFlags flags! Has the 'float power' argument been mistakenly cast to flags? Call function with ImGuiSliderFlags_Logarithmic flags instead.");
@@ -2416,7 +2416,7 @@ bool ImGui::DragBehavior(ImGuiID id, ImGuiDataType data_type, void* p_v, float v
 
 // Note: p_data, p_min and p_max are _pointers_ to a memory address holding the data. For a Drag widget, p_min and p_max are optional.
 // Read code of e.g. DragFloat(), DragInt() etc. or examples in 'Demo->Widgets->Data Types' to understand how to use this function directly.
-bool ImGui::DragScalar(const char* label, ImGuiDataType data_type, void* p_data, float v_speed, const void* p_min, const void* p_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::DragScalar(const char* label, const ImGuiDataType data_type, void* p_data, const float v_speed, const void* p_min, const void* p_max, const char* format, const ImGuiSliderFlags flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -2503,7 +2503,7 @@ bool ImGui::DragScalar(const char* label, ImGuiDataType data_type, void* p_data,
     return value_changed;
 }
 
-bool ImGui::DragScalarN(const char* label, ImGuiDataType data_type, void* p_data, int components, float v_speed, const void* p_min, const void* p_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::DragScalarN(const char* label, const ImGuiDataType data_type, void* p_data, const int components, const float v_speed, const void* p_min, const void* p_max, const char* format, const ImGuiSliderFlags flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -2538,28 +2538,28 @@ bool ImGui::DragScalarN(const char* label, ImGuiDataType data_type, void* p_data
     return value_changed;
 }
 
-bool ImGui::DragFloat(const char* label, float* v, float v_speed, float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::DragFloat(const char* label, float* v, const float v_speed, const float v_min, const float v_max, const char* format, const ImGuiSliderFlags flags)
 {
     return DragScalar(label, ImGuiDataType_Float, v, v_speed, &v_min, &v_max, format, flags);
 }
 
-bool ImGui::DragFloat2(const char* label, float v[2], float v_speed, float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::DragFloat2(const char* label, float v[2], const float v_speed, const float v_min, const float v_max, const char* format, const ImGuiSliderFlags flags)
 {
     return DragScalarN(label, ImGuiDataType_Float, v, 2, v_speed, &v_min, &v_max, format, flags);
 }
 
-bool ImGui::DragFloat3(const char* label, float v[3], float v_speed, float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::DragFloat3(const char* label, float v[3], const float v_speed, const float v_min, const float v_max, const char* format, const ImGuiSliderFlags flags)
 {
     return DragScalarN(label, ImGuiDataType_Float, v, 3, v_speed, &v_min, &v_max, format, flags);
 }
 
-bool ImGui::DragFloat4(const char* label, float v[4], float v_speed, float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::DragFloat4(const char* label, float v[4], const float v_speed, const float v_min, const float v_max, const char* format, const ImGuiSliderFlags flags)
 {
     return DragScalarN(label, ImGuiDataType_Float, v, 4, v_speed, &v_min, &v_max, format, flags);
 }
 
 // NB: You likely want to specify the ImGuiSliderFlags_AlwaysClamp when using this.
-bool ImGui::DragFloatRange2(const char* label, float* v_current_min, float* v_current_max, float v_speed, float v_min, float v_max, const char* format, const char* format_max, ImGuiSliderFlags flags)
+bool ImGui::DragFloatRange2(const char* label, float* v_current_min, float* v_current_max, const float v_speed, const float v_min, const float v_max, const char* format, const char* format_max, const ImGuiSliderFlags flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -2592,28 +2592,28 @@ bool ImGui::DragFloatRange2(const char* label, float* v_current_min, float* v_cu
 }
 
 // NB: v_speed is float to allow adjusting the drag speed with more precision
-bool ImGui::DragInt(const char* label, int* v, float v_speed, int v_min, int v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::DragInt(const char* label, int* v, const float v_speed, const int v_min, const int v_max, const char* format, const ImGuiSliderFlags flags)
 {
     return DragScalar(label, ImGuiDataType_S32, v, v_speed, &v_min, &v_max, format, flags);
 }
 
-bool ImGui::DragInt2(const char* label, int v[2], float v_speed, int v_min, int v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::DragInt2(const char* label, int v[2], const float v_speed, const int v_min, const int v_max, const char* format, const ImGuiSliderFlags flags)
 {
     return DragScalarN(label, ImGuiDataType_S32, v, 2, v_speed, &v_min, &v_max, format, flags);
 }
 
-bool ImGui::DragInt3(const char* label, int v[3], float v_speed, int v_min, int v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::DragInt3(const char* label, int v[3], const float v_speed, const int v_min, const int v_max, const char* format, const ImGuiSliderFlags flags)
 {
     return DragScalarN(label, ImGuiDataType_S32, v, 3, v_speed, &v_min, &v_max, format, flags);
 }
 
-bool ImGui::DragInt4(const char* label, int v[4], float v_speed, int v_min, int v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::DragInt4(const char* label, int v[4], const float v_speed, const int v_min, const int v_max, const char* format, const ImGuiSliderFlags flags)
 {
     return DragScalarN(label, ImGuiDataType_S32, v, 4, v_speed, &v_min, &v_max, format, flags);
 }
 
 // NB: You likely want to specify the ImGuiSliderFlags_AlwaysClamp when using this.
-bool ImGui::DragIntRange2(const char* label, int* v_current_min, int* v_current_max, float v_speed, int v_min, int v_max, const char* format, const char* format_max, ImGuiSliderFlags flags)
+bool ImGui::DragIntRange2(const char* label, int* v_current_min, int* v_current_max, const float v_speed, const int v_min, const int v_max, const char* format, const char* format_max, const ImGuiSliderFlags flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -2670,7 +2670,7 @@ bool ImGui::DragIntRange2(const char* label, int* v_current_min, int* v_current_
 
 // Convert a value v in the output space of a slider into a parametric position on the slider itself (the logical opposite of ScaleValueFromRatioT)
 template<typename TYPE, typename SIGNEDTYPE, typename FLOATTYPE>
-float ImGui::ScaleRatioFromValueT(ImGuiDataType data_type, TYPE v, TYPE v_min, TYPE v_max, bool is_logarithmic, float logarithmic_zero_epsilon, float zero_deadzone_halfsize)
+float ImGui::ScaleRatioFromValueT(const ImGuiDataType data_type, TYPE v, TYPE v_min, TYPE v_max, const bool is_logarithmic, float logarithmic_zero_epsilon, const float zero_deadzone_halfsize)
 {
     if (v_min == v_max)
         return 0.0f;
@@ -2727,7 +2727,7 @@ float ImGui::ScaleRatioFromValueT(ImGuiDataType data_type, TYPE v, TYPE v_min, T
 
 // Convert a parametric position on a slider into a value v in the output space (the logical opposite of ScaleRatioFromValueT)
 template<typename TYPE, typename SIGNEDTYPE, typename FLOATTYPE>
-TYPE ImGui::ScaleValueFromRatioT(ImGuiDataType data_type, float t, TYPE v_min, TYPE v_max, bool is_logarithmic, float logarithmic_zero_epsilon, float zero_deadzone_halfsize)
+TYPE ImGui::ScaleValueFromRatioT(const ImGuiDataType data_type, float t, TYPE v_min, TYPE v_max, const bool is_logarithmic, float logarithmic_zero_epsilon, const float zero_deadzone_halfsize)
 {
     // We special-case the extents because otherwise our logarithmic fudging can lead to "mathematically correct"
     // but non-intuitive behaviors like a fully-left slider not actually reaching the minimum value. Also generally simpler.
@@ -2794,7 +2794,7 @@ TYPE ImGui::ScaleValueFromRatioT(ImGuiDataType data_type, float t, TYPE v_min, T
 
 // FIXME: Try to move more of the code into shared SliderBehavior()
 template<typename TYPE, typename SIGNEDTYPE, typename FLOATTYPE>
-bool ImGui::SliderBehaviorT(const ImRect& bb, ImGuiID id, ImGuiDataType data_type, TYPE* v, const TYPE v_min, const TYPE v_max, const char* format, ImGuiSliderFlags flags, ImRect* out_grab_bb)
+bool ImGui::SliderBehaviorT(const ImRect& bb, const ImGuiID id, const ImGuiDataType data_type, TYPE* v, const TYPE v_min, const TYPE v_max, const char* format, const ImGuiSliderFlags flags, ImRect* out_grab_bb)
 {
     ImGuiContext& g = *GImGui;
     const ImGuiStyle& style = g.Style;
@@ -2970,7 +2970,7 @@ bool ImGui::SliderBehaviorT(const ImRect& bb, ImGuiID id, ImGuiDataType data_typ
 // For 32-bit and larger types, slider bounds are limited to half the natural type range.
 // So e.g. an integer Slider between INT_MAX-10 and INT_MAX will fail, but an integer Slider between INT_MAX/2-10 and INT_MAX/2 will be ok.
 // It would be possible to lift that limitation with some work but it doesn't seem to be worth it for sliders.
-bool ImGui::SliderBehavior(const ImRect& bb, ImGuiID id, ImGuiDataType data_type, void* p_v, const void* p_min, const void* p_max, const char* format, ImGuiSliderFlags flags, ImRect* out_grab_bb)
+bool ImGui::SliderBehavior(const ImRect& bb, const ImGuiID id, const ImGuiDataType data_type, void* p_v, const void* p_min, const void* p_max, const char* format, const ImGuiSliderFlags flags, ImRect* out_grab_bb)
 {
     // Read imgui.cpp "API BREAKING CHANGES" section for 1.78 if you hit this assert.
     IM_ASSERT((flags == 1 || (flags & ImGuiSliderFlags_InvalidMask_) == 0) && "Invalid ImGuiSliderFlags flag!  Has the 'float power' argument been mistakenly cast to flags? Call function with ImGuiSliderFlags_Logarithmic flags instead.");
@@ -3007,7 +3007,7 @@ bool ImGui::SliderBehavior(const ImRect& bb, ImGuiID id, ImGuiDataType data_type
 
 // Note: p_data, p_min and p_max are _pointers_ to a memory address holding the data. For a slider, they are all required.
 // Read code of e.g. SliderFloat(), SliderInt() etc. or examples in 'Demo->Widgets->Data Types' to understand how to use this function directly.
-bool ImGui::SliderScalar(const char* label, ImGuiDataType data_type, void* p_data, const void* p_min, const void* p_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::SliderScalar(const char* label, const ImGuiDataType data_type, void* p_data, const void* p_min, const void* p_max, const char* format, const ImGuiSliderFlags flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -3090,7 +3090,7 @@ bool ImGui::SliderScalar(const char* label, ImGuiDataType data_type, void* p_dat
 }
 
 // Add multiple sliders on 1 line for compact edition of multiple components
-bool ImGui::SliderScalarN(const char* label, ImGuiDataType data_type, void* v, int components, const void* v_min, const void* v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::SliderScalarN(const char* label, const ImGuiDataType data_type, void* v, const int components, const void* v_min, const void* v_max, const char* format, const ImGuiSliderFlags flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -3125,27 +3125,27 @@ bool ImGui::SliderScalarN(const char* label, ImGuiDataType data_type, void* v, i
     return value_changed;
 }
 
-bool ImGui::SliderFloat(const char* label, float* v, float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::SliderFloat(const char* label, float* v, const float v_min, const float v_max, const char* format, const ImGuiSliderFlags flags)
 {
     return SliderScalar(label, ImGuiDataType_Float, v, &v_min, &v_max, format, flags);
 }
 
-bool ImGui::SliderFloat2(const char* label, float v[2], float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::SliderFloat2(const char* label, float v[2], const float v_min, const float v_max, const char* format, const ImGuiSliderFlags flags)
 {
     return SliderScalarN(label, ImGuiDataType_Float, v, 2, &v_min, &v_max, format, flags);
 }
 
-bool ImGui::SliderFloat3(const char* label, float v[3], float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::SliderFloat3(const char* label, float v[3], const float v_min, const float v_max, const char* format, const ImGuiSliderFlags flags)
 {
     return SliderScalarN(label, ImGuiDataType_Float, v, 3, &v_min, &v_max, format, flags);
 }
 
-bool ImGui::SliderFloat4(const char* label, float v[4], float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::SliderFloat4(const char* label, float v[4], const float v_min, const float v_max, const char* format, const ImGuiSliderFlags flags)
 {
     return SliderScalarN(label, ImGuiDataType_Float, v, 4, &v_min, &v_max, format, flags);
 }
 
-bool ImGui::SliderAngle(const char* label, float* v_rad, float v_degrees_min, float v_degrees_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::SliderAngle(const char* label, float* v_rad, const float v_degrees_min, const float v_degrees_max, const char* format, const ImGuiSliderFlags flags)
 {
     if (format == NULL)
         format = "%.0f deg";
@@ -3155,7 +3155,7 @@ bool ImGui::SliderAngle(const char* label, float* v_rad, float v_degrees_min, fl
     return value_changed;
 }
 
-bool ImGui::SliderAngle3(const char* label, float v_rad[3], float v_degrees_min, float v_degrees_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::SliderAngle3(const char* label, float v_rad[3], const float v_degrees_min, const float v_degrees_max, const char* format, const ImGuiSliderFlags flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -3189,27 +3189,27 @@ bool ImGui::SliderAngle3(const char* label, float v_rad[3], float v_degrees_min,
     return value_changed;
 }
 
-bool ImGui::SliderInt(const char* label, int* v, int v_min, int v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::SliderInt(const char* label, int* v, const int v_min, const int v_max, const char* format, const ImGuiSliderFlags flags)
 {
     return SliderScalar(label, ImGuiDataType_S32, v, &v_min, &v_max, format, flags);
 }
 
-bool ImGui::SliderInt2(const char* label, int v[2], int v_min, int v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::SliderInt2(const char* label, int v[2], const int v_min, const int v_max, const char* format, const ImGuiSliderFlags flags)
 {
     return SliderScalarN(label, ImGuiDataType_S32, v, 2, &v_min, &v_max, format, flags);
 }
 
-bool ImGui::SliderInt3(const char* label, int v[3], int v_min, int v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::SliderInt3(const char* label, int v[3], const int v_min, const int v_max, const char* format, const ImGuiSliderFlags flags)
 {
     return SliderScalarN(label, ImGuiDataType_S32, v, 3, &v_min, &v_max, format, flags);
 }
 
-bool ImGui::SliderInt4(const char* label, int v[4], int v_min, int v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::SliderInt4(const char* label, int v[4], const int v_min, const int v_max, const char* format, const ImGuiSliderFlags flags)
 {
     return SliderScalarN(label, ImGuiDataType_S32, v, 4, &v_min, &v_max, format, flags);
 }
 
-bool ImGui::VSliderScalar(const char* label, const ImVec2& size, ImGuiDataType data_type, void* p_data, const void* p_min, const void* p_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::VSliderScalar(const char* label, const ImVec2& size, const ImGuiDataType data_type, void* p_data, const void* p_min, const void* p_max, const char* format, const ImGuiSliderFlags flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -3269,12 +3269,12 @@ bool ImGui::VSliderScalar(const char* label, const ImVec2& size, ImGuiDataType d
     return value_changed;
 }
 
-bool ImGui::VSliderFloat(const char* label, const ImVec2& size, float* v, float v_min, float v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::VSliderFloat(const char* label, const ImVec2& size, float* v, const float v_min, const float v_max, const char* format, const ImGuiSliderFlags flags)
 {
     return VSliderScalar(label, size, ImGuiDataType_Float, v, &v_min, &v_max, format, flags);
 }
 
-bool ImGui::VSliderInt(const char* label, const ImVec2& size, int* v, int v_min, int v_max, const char* format, ImGuiSliderFlags flags)
+bool ImGui::VSliderInt(const char* label, const ImVec2& size, int* v, const int v_min, const int v_max, const char* format, const ImGuiSliderFlags flags)
 {
     return VSliderScalar(label, size, ImGuiDataType_S32, v, &v_min, &v_max, format, flags);
 }
@@ -3338,7 +3338,7 @@ const char* ImParseFormatFindEnd(const char* fmt)
 //  fmt = "%.3f"       -> return fmt
 //  fmt = "hello %.3f" -> return fmt + 6
 //  fmt = "%.3f hello" -> return buf written with "%.3f"
-const char* ImParseFormatTrimDecorations(const char* fmt, char* buf, size_t buf_size)
+const char* ImParseFormatTrimDecorations(const char* fmt, char* buf, const size_t buf_size)
 {
     const char* fmt_start = ImParseFormatFindStart(fmt);
     if (fmt_start[0] != '%')
@@ -3353,7 +3353,7 @@ const char* ImParseFormatTrimDecorations(const char* fmt, char* buf, size_t buf_
 // Sanitize format
 // - Zero terminate so extra characters after format (e.g. "%f123") don't confuse atof/atoi
 // - stb_sprintf.h supports several new modifiers which format numbers in a way that also makes them incompatible atof/atoi.
-void ImParseFormatSanitizeForPrinting(const char* fmt_in, char* fmt_out, size_t fmt_out_size)
+void ImParseFormatSanitizeForPrinting(const char* fmt_in, char* fmt_out, const size_t fmt_out_size)
 {
     const char* fmt_end = ImParseFormatFindEnd(fmt_in);
     IM_UNUSED(fmt_out_size);
@@ -3368,7 +3368,7 @@ void ImParseFormatSanitizeForPrinting(const char* fmt_in, char* fmt_out, size_t 
 }
 
 // - For scanning we need to remove all width and precision fields and flags "%+3.7f" -> "%f". BUT don't strip types like "%I64d" which includes digits. ! "%07I64d" -> "%I64d"
-const char* ImParseFormatSanitizeForScanning(const char* fmt_in, char* fmt_out, size_t fmt_out_size)
+const char* ImParseFormatSanitizeForScanning(const char* fmt_in, char* fmt_out, const size_t fmt_out_size)
 {
     const char* fmt_end = ImParseFormatFindEnd(fmt_in);
     const char* fmt_out_begin = fmt_out;
@@ -3403,7 +3403,7 @@ static const char* ImAtoi(const char* src, TYPE* output)
 
 // Parse display precision back from the display format string
 // FIXME: This is still used by some navigation code path to infer a minimum tweak step, but we should aim to rework widgets so it isn't needed.
-int ImParseFormatPrecision(const char* fmt, int default_precision)
+int ImParseFormatPrecision(const char* fmt, const int default_precision)
 {
     fmt = ImParseFormatFindStart(fmt);
     if (fmt[0] != '%')
@@ -3427,7 +3427,7 @@ int ImParseFormatPrecision(const char* fmt, int default_precision)
 
 // Create text input in place of another active widget (e.g. used when doing a CTRL+Click on drag/slider widgets)
 // FIXME: Facilitate using this in variety of other situations.
-bool ImGui::TempInputText(const ImRect& bb, ImGuiID id, const char* label, char* buf, int buf_size, ImGuiInputTextFlags flags)
+bool ImGui::TempInputText(const ImRect& bb, const ImGuiID id, const char* label, char* buf, const int buf_size, const ImGuiInputTextFlags flags)
 {
     // On the first frame, g.TempInputTextId == 0, then on subsequent frames it becomes == id.
     // We clear ActiveID on the first frame to allow the InputText() taking it back.
@@ -3450,7 +3450,7 @@ bool ImGui::TempInputText(const ImRect& bb, ImGuiID id, const char* label, char*
 // Note that Drag/Slider functions are only forwarding the min/max values clamping values if the ImGuiSliderFlags_AlwaysClamp flag is set!
 // This is intended: this way we allow CTRL+Click manual input to set a value out of bounds, for maximum flexibility.
 // However this may not be ideal for all uses, as some user code may break on out of bound values.
-bool ImGui::TempInputScalar(const ImRect& bb, ImGuiID id, const char* label, ImGuiDataType data_type, void* p_data, const char* format, const void* p_clamp_min, const void* p_clamp_max)
+bool ImGui::TempInputScalar(const ImRect& bb, const ImGuiID id, const char* label, const ImGuiDataType data_type, void* p_data, const char* format, const void* p_clamp_min, const void* p_clamp_max)
 {
     // FIXME: May need to clarify display behavior if format doesn't contain %.
     // "%d" -> "%d" / "There are %d items" -> "%d" / "items" -> "%d" (fallback). Also see #6405
@@ -3492,7 +3492,7 @@ bool ImGui::TempInputScalar(const ImRect& bb, ImGuiID id, const char* label, ImG
 
 // Note: p_data, p_step, p_step_fast are _pointers_ to a memory address holding the data. For an Input widget, p_step and p_step_fast are optional.
 // Read code of e.g. InputFloat(), InputInt() etc. or examples in 'Demo->Widgets->Data Types' to understand how to use this function directly.
-bool ImGui::InputScalar(const char* label, ImGuiDataType data_type, void* p_data, const void* p_step, const void* p_step_fast, const char* format, ImGuiInputTextFlags flags)
+bool ImGui::InputScalar(const char* label, const ImGuiDataType data_type, void* p_data, const void* p_step, const void* p_step_fast, const char* format, ImGuiInputTextFlags flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -3564,7 +3564,7 @@ bool ImGui::InputScalar(const char* label, ImGuiDataType data_type, void* p_data
     return value_changed;
 }
 
-bool ImGui::InputScalarN(const char* label, ImGuiDataType data_type, void* p_data, int components, const void* p_step, const void* p_step_fast, const char* format, ImGuiInputTextFlags flags)
+bool ImGui::InputScalarN(const char* label, const ImGuiDataType data_type, void* p_data, const int components, const void* p_step, const void* p_step_fast, const char* format, const ImGuiInputTextFlags flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -3599,49 +3599,49 @@ bool ImGui::InputScalarN(const char* label, ImGuiDataType data_type, void* p_dat
     return value_changed;
 }
 
-bool ImGui::InputFloat(const char* label, float* v, float step, float step_fast, const char* format, ImGuiInputTextFlags flags)
+bool ImGui::InputFloat(const char* label, float* v, float step, float step_fast, const char* format, const ImGuiInputTextFlags flags)
 {
     return InputScalar(label, ImGuiDataType_Float, (void*)v, (void*)(step > 0.0f ? &step : NULL), (void*)(step_fast > 0.0f ? &step_fast : NULL), format, flags);
 }
 
-bool ImGui::InputFloat2(const char* label, float v[2], const char* format, ImGuiInputTextFlags flags)
+bool ImGui::InputFloat2(const char* label, float v[2], const char* format, const ImGuiInputTextFlags flags)
 {
     return InputScalarN(label, ImGuiDataType_Float, v, 2, NULL, NULL, format, flags);
 }
 
-bool ImGui::InputFloat3(const char* label, float v[3], const char* format, ImGuiInputTextFlags flags)
+bool ImGui::InputFloat3(const char* label, float v[3], const char* format, const ImGuiInputTextFlags flags)
 {
     return InputScalarN(label, ImGuiDataType_Float, v, 3, NULL, NULL, format, flags);
 }
 
-bool ImGui::InputFloat4(const char* label, float v[4], const char* format, ImGuiInputTextFlags flags)
+bool ImGui::InputFloat4(const char* label, float v[4], const char* format, const ImGuiInputTextFlags flags)
 {
     return InputScalarN(label, ImGuiDataType_Float, v, 4, NULL, NULL, format, flags);
 }
 
-bool ImGui::InputInt(const char* label, int* v, int step, int step_fast, ImGuiInputTextFlags flags)
+bool ImGui::InputInt(const char* label, int* v, int step, int step_fast, const ImGuiInputTextFlags flags)
 {
     // Hexadecimal input provided as a convenience but the flag name is awkward. Typically you'd use InputText() to parse your own data, if you want to handle prefixes.
     const char* format = (flags & ImGuiInputTextFlags_CharsHexadecimal) ? "%08X" : "%d";
     return InputScalar(label, ImGuiDataType_S32, (void*)v, (void*)(step > 0 ? &step : NULL), (void*)(step_fast > 0 ? &step_fast : NULL), format, flags);
 }
 
-bool ImGui::InputInt2(const char* label, int v[2], ImGuiInputTextFlags flags)
+bool ImGui::InputInt2(const char* label, int v[2], const ImGuiInputTextFlags flags)
 {
     return InputScalarN(label, ImGuiDataType_S32, v, 2, NULL, NULL, "%d", flags);
 }
 
-bool ImGui::InputInt3(const char* label, int v[3], ImGuiInputTextFlags flags)
+bool ImGui::InputInt3(const char* label, int v[3], const ImGuiInputTextFlags flags)
 {
     return InputScalarN(label, ImGuiDataType_S32, v, 3, NULL, NULL, "%d", flags);
 }
 
-bool ImGui::InputInt4(const char* label, int v[4], ImGuiInputTextFlags flags)
+bool ImGui::InputInt4(const char* label, int v[4], const ImGuiInputTextFlags flags)
 {
     return InputScalarN(label, ImGuiDataType_S32, v, 4, NULL, NULL, "%d", flags);
 }
 
-bool ImGui::InputDouble(const char* label, double* v, double step, double step_fast, const char* format, ImGuiInputTextFlags flags)
+bool ImGui::InputDouble(const char* label, double* v, double step, double step_fast, const char* format, const ImGuiInputTextFlags flags)
 {
     return InputScalar(label, ImGuiDataType_Double, (void*)v, (void*)(step > 0.0 ? &step : NULL), (void*)(step_fast > 0.0 ? &step_fast : NULL), format, flags);
 }
@@ -3659,18 +3659,18 @@ bool ImGui::InputDouble(const char* label, double* v, double step, double step_f
 // - DebugNodeInputTextState() [Internal]
 //-------------------------------------------------------------------------
 
-bool ImGui::InputText(const char* label, char* buf, size_t buf_size, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
+bool ImGui::InputText(const char* label, char* buf, const size_t buf_size, const ImGuiInputTextFlags flags, const ImGuiInputTextCallback callback, void* user_data)
 {
     IM_ASSERT(!(flags & ImGuiInputTextFlags_Multiline)); // call InputTextMultiline()
     return InputTextEx(label, NULL, buf, (int)buf_size, ImVec2(0, 0), flags, callback, user_data);
 }
 
-bool ImGui::InputTextMultiline(const char* label, char* buf, size_t buf_size, const ImVec2& size, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
+bool ImGui::InputTextMultiline(const char* label, char* buf, const size_t buf_size, const ImVec2& size, const ImGuiInputTextFlags flags, const ImGuiInputTextCallback callback, void* user_data)
 {
     return InputTextEx(label, NULL, buf, (int)buf_size, size, flags | ImGuiInputTextFlags_Multiline, callback, user_data);
 }
 
-bool ImGui::InputTextWithHint(const char* label, const char* hint, char* buf, size_t buf_size, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data)
+bool ImGui::InputTextWithHint(const char* label, const char* hint, char* buf, const size_t buf_size, const ImGuiInputTextFlags flags, const ImGuiInputTextCallback callback, void* user_data)
 {
     IM_ASSERT(!(flags & ImGuiInputTextFlags_Multiline)); // call InputTextMultiline() or  InputTextEx() manually if you need multi-line + hint.
     return InputTextEx(label, hint, buf, (int)buf_size, ImVec2(0, 0), flags, callback, user_data);
@@ -3690,7 +3690,7 @@ static int InputTextCalcTextLenAndLineCount(const char* text_begin, const char**
     return line_count;
 }
 
-static ImVec2 InputTextCalcTextSizeW(ImGuiContext* ctx, const ImWchar* text_begin, const ImWchar* text_end, const ImWchar** remaining, ImVec2* out_offset, bool stop_on_new_line)
+static ImVec2 InputTextCalcTextSizeW(ImGuiContext* ctx, const ImWchar* text_begin, const ImWchar* text_end, const ImWchar** remaining, ImVec2* out_offset, const bool stop_on_new_line)
 {
     ImGuiContext& g = *ctx;
     ImFont* font = g.Font;
@@ -3740,11 +3740,11 @@ namespace ImStb
 {
 
 static int     STB_TEXTEDIT_STRINGLEN(const ImGuiInputTextState* obj)                             { return obj->CurLenW; }
-static ImWchar STB_TEXTEDIT_GETCHAR(const ImGuiInputTextState* obj, int idx)                      { IM_ASSERT(idx <= obj->CurLenW); return obj->TextW[idx]; }
-static float   STB_TEXTEDIT_GETWIDTH(ImGuiInputTextState* obj, int line_start_idx, int char_idx)  { ImWchar c = obj->TextW[line_start_idx + char_idx]; if (c == '\n') return IMSTB_TEXTEDIT_GETWIDTH_NEWLINE; ImGuiContext& g = *obj->Ctx; return g.Font->GetCharAdvance(c) * (g.FontSize / g.Font->FontSize); }
-static int     STB_TEXTEDIT_KEYTOTEXT(int key)                                                    { return key >= 0x200000 ? 0 : key; }
+static ImWchar STB_TEXTEDIT_GETCHAR(const ImGuiInputTextState* obj, const int idx)                      { IM_ASSERT(idx <= obj->CurLenW); return obj->TextW[idx]; }
+static float   STB_TEXTEDIT_GETWIDTH(ImGuiInputTextState* obj, const int line_start_idx, const int char_idx)  { ImWchar c = obj->TextW[line_start_idx + char_idx]; if (c == '\n') return IMSTB_TEXTEDIT_GETWIDTH_NEWLINE; ImGuiContext& g = *obj->Ctx; return g.Font->GetCharAdvance(c) * (g.FontSize / g.Font->FontSize); }
+static int     STB_TEXTEDIT_KEYTOTEXT(const int key)                                                    { return key >= 0x200000 ? 0 : key; }
 static ImWchar STB_TEXTEDIT_NEWLINE = '\n';
-static void    STB_TEXTEDIT_LAYOUTROW(StbTexteditRow* r, ImGuiInputTextState* obj, int line_start_idx)
+static void    STB_TEXTEDIT_LAYOUTROW(StbTexteditRow* r, ImGuiInputTextState* obj, const int line_start_idx)
 {
     const ImWchar* text = obj->TextW.Data;
     const ImWchar* text_remaining = NULL;
@@ -3757,12 +3757,12 @@ static void    STB_TEXTEDIT_LAYOUTROW(StbTexteditRow* r, ImGuiInputTextState* ob
     r->num_chars = (int)(text_remaining - (text + line_start_idx));
 }
 
-static bool is_separator(unsigned int c)
+static bool is_separator(const unsigned int c)
 {
     return c==',' || c==';' || c=='(' || c==')' || c=='{' || c=='}' || c=='[' || c==']' || c=='|' || c=='\n' || c=='\r' || c=='.' || c=='!';
 }
 
-static int is_word_boundary_from_right(ImGuiInputTextState* obj, int idx)
+static int is_word_boundary_from_right(ImGuiInputTextState* obj, const int idx)
 {
     // When ImGuiInputTextFlags_Password is set, we don't want actions such as CTRL+Arrow to leak the fact that underlying data are blanks or separators.
     if ((obj->Flags & ImGuiInputTextFlags_Password) || idx <= 0)
@@ -3774,7 +3774,7 @@ static int is_word_boundary_from_right(ImGuiInputTextState* obj, int idx)
     bool curr_separ = is_separator(obj->TextW[idx]);
     return ((prev_white || prev_separ) && !(curr_separ || curr_white)) || (curr_separ && !prev_separ);
 }
-static int is_word_boundary_from_left(ImGuiInputTextState* obj, int idx)
+static int is_word_boundary_from_left(ImGuiInputTextState* obj, const int idx)
 {
     if ((obj->Flags & ImGuiInputTextFlags_Password) || idx <= 0)
         return 0;
@@ -3788,11 +3788,11 @@ static int is_word_boundary_from_left(ImGuiInputTextState* obj, int idx)
 static int  STB_TEXTEDIT_MOVEWORDLEFT_IMPL(ImGuiInputTextState* obj, int idx)   { idx--; while (idx >= 0 && !is_word_boundary_from_right(obj, idx)) idx--; return idx < 0 ? 0 : idx; }
 static int  STB_TEXTEDIT_MOVEWORDRIGHT_MAC(ImGuiInputTextState* obj, int idx)   { idx++; int len = obj->CurLenW; while (idx < len && !is_word_boundary_from_left(obj, idx)) idx++; return idx > len ? len : idx; }
 static int  STB_TEXTEDIT_MOVEWORDRIGHT_WIN(ImGuiInputTextState* obj, int idx)   { idx++; int len = obj->CurLenW; while (idx < len && !is_word_boundary_from_right(obj, idx)) idx++; return idx > len ? len : idx; }
-static int  STB_TEXTEDIT_MOVEWORDRIGHT_IMPL(ImGuiInputTextState* obj, int idx)  { ImGuiContext& g = *obj->Ctx; if (g.IO.ConfigMacOSXBehaviors) return STB_TEXTEDIT_MOVEWORDRIGHT_MAC(obj, idx); else return STB_TEXTEDIT_MOVEWORDRIGHT_WIN(obj, idx); }
+static int  STB_TEXTEDIT_MOVEWORDRIGHT_IMPL(ImGuiInputTextState* obj, const int idx)  { ImGuiContext& g = *obj->Ctx; if (g.IO.ConfigMacOSXBehaviors) return STB_TEXTEDIT_MOVEWORDRIGHT_MAC(obj, idx); else return STB_TEXTEDIT_MOVEWORDRIGHT_WIN(obj, idx); }
 #define STB_TEXTEDIT_MOVEWORDLEFT   STB_TEXTEDIT_MOVEWORDLEFT_IMPL  // They need to be #define for stb_textedit.h
 #define STB_TEXTEDIT_MOVEWORDRIGHT  STB_TEXTEDIT_MOVEWORDRIGHT_IMPL
 
-static void STB_TEXTEDIT_DELETECHARS(ImGuiInputTextState* obj, int pos, int n)
+static void STB_TEXTEDIT_DELETECHARS(ImGuiInputTextState* obj, const int pos, const int n)
 {
     ImWchar* dst = obj->TextW.Data + pos;
 
@@ -3808,7 +3808,7 @@ static void STB_TEXTEDIT_DELETECHARS(ImGuiInputTextState* obj, int pos, int n)
     *dst = '\0';
 }
 
-static bool STB_TEXTEDIT_INSERTCHARS(ImGuiInputTextState* obj, int pos, const ImWchar* new_text, int new_text_len)
+static bool STB_TEXTEDIT_INSERTCHARS(ImGuiInputTextState* obj, const int pos, const ImWchar* new_text, const int new_text_len)
 {
     const bool is_resizable = (obj->Flags & ImGuiInputTextFlags_CallbackResize) != 0;
     const int text_len = obj->CurLenW;
@@ -3865,7 +3865,7 @@ static bool STB_TEXTEDIT_INSERTCHARS(ImGuiInputTextState* obj, int pos, const Im
 
 // stb_textedit internally allows for a single undo record to do addition and deletion, but somehow, calling
 // the stb_textedit_paste() function creates two separate records, so we perform it manually. (FIXME: Report to nothings/stb?)
-static void stb_textedit_replace(ImGuiInputTextState* str, STB_TexteditState* state, const IMSTB_TEXTEDIT_CHARTYPE* text, int text_len)
+static void stb_textedit_replace(ImGuiInputTextState* str, STB_TexteditState* state, const IMSTB_TEXTEDIT_CHARTYPE* text, const int text_len)
 {
     stb_text_makeundo_replace(str, state, 0, str->CurLenW, text_len);
     ImStb::STB_TEXTEDIT_DELETECHARS(str, 0, str->CurLenW);
@@ -3883,7 +3883,7 @@ static void stb_textedit_replace(ImGuiInputTextState* str, STB_TexteditState* st
 
 } // namespace ImStb
 
-void ImGuiInputTextState::OnKeyPressed(int key)
+void ImGuiInputTextState::OnKeyPressed(const int key)
 {
     stb_textedit_key(this, &Stb, key);
     CursorFollow = true;
@@ -3898,7 +3898,7 @@ ImGuiInputTextCallbackData::ImGuiInputTextCallbackData()
 // Public API to manipulate UTF-8 text
 // We expose UTF-8 to the user (unlike the STB_TEXTEDIT_* functions which are manipulating wchar)
 // FIXME: The existence of this rarely exercised code path is a bit of a nuisance.
-void ImGuiInputTextCallbackData::DeleteChars(int pos, int bytes_count)
+void ImGuiInputTextCallbackData::DeleteChars(const int pos, const int bytes_count)
 {
     IM_ASSERT(pos + bytes_count <= BufTextLen);
     char* dst = Buf + pos;
@@ -3916,7 +3916,7 @@ void ImGuiInputTextCallbackData::DeleteChars(int pos, int bytes_count)
     BufTextLen -= bytes_count;
 }
 
-void ImGuiInputTextCallbackData::InsertChars(int pos, const char* new_text, const char* new_text_end)
+void ImGuiInputTextCallbackData::InsertChars(const int pos, const char* new_text, const char* new_text_end)
 {
     // Accept null ranges
     if (new_text == new_text_end)
@@ -3953,7 +3953,7 @@ void ImGuiInputTextCallbackData::InsertChars(int pos, const char* new_text, cons
 }
 
 // Return false to discard a character.
-static bool InputTextFilterCharacter(ImGuiContext* ctx, unsigned int* p_char, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data, ImGuiInputSource input_source)
+static bool InputTextFilterCharacter(ImGuiContext* ctx, unsigned int* p_char, const ImGuiInputTextFlags flags, const ImGuiInputTextCallback callback, void* user_data, const ImGuiInputSource input_source)
 {
     IM_ASSERT(input_source == ImGuiInputSource_Keyboard || input_source == ImGuiInputSource_Clipboard);
     unsigned int c = *p_char;
@@ -4057,7 +4057,7 @@ static bool InputTextFilterCharacter(ImGuiContext* ctx, unsigned int* p_char, Im
 // Find the shortest single replacement we can make to get the new text from the old text.
 // Important: needs to be run before TextW is rewritten with the new characters because calling STB_TEXTEDIT_GETCHAR() at the end.
 // FIXME: Ideally we should transition toward (1) making InsertChars()/DeleteChars() update undo-stack (2) discourage (and keep reconcile) or obsolete (and remove reconcile) accessing buffer directly.
-static void InputTextReconcileUndoStateAfterUserCallback(ImGuiInputTextState* state, const char* new_buf_a, int new_length_a)
+static void InputTextReconcileUndoStateAfterUserCallback(ImGuiInputTextState* state, const char* new_buf_a, const int new_length_a)
 {
     ImGuiContext& g = *GImGui;
     const ImWchar* old_buf = state->TextW.Data;
@@ -4093,7 +4093,7 @@ static void InputTextReconcileUndoStateAfterUserCallback(ImGuiInputTextState* st
 // we need some form of hook to reapply data back to user buffer on deactivation frame. (#4714)
 // It would be more desirable that we discourage users from taking advantage of the "user not retaining data" trick,
 // but that more likely be attractive when we do have _NoLiveEdit flag available.
-void ImGui::InputTextDeactivateHook(ImGuiID id)
+void ImGui::InputTextDeactivateHook(const ImGuiID id)
 {
     ImGuiContext& g = *GImGui;
     ImGuiInputTextState* state = &g.InputTextState;
@@ -5138,7 +5138,7 @@ void ImGui::DebugNodeInputTextState(ImGuiInputTextState* state)
 // - ColorPickerOptionsPopup() [Internal]
 //-------------------------------------------------------------------------
 
-bool ImGui::ColorEdit3(const char* label, float col[3], ImGuiColorEditFlags flags)
+bool ImGui::ColorEdit3(const char* label, float col[3], const ImGuiColorEditFlags flags)
 {
     return ColorEdit4(label, col, flags | ImGuiColorEditFlags_NoAlpha);
 }
@@ -5422,7 +5422,7 @@ bool ImGui::ColorEdit4(const char* label, float col[4], ImGuiColorEditFlags flag
     return value_changed;
 }
 
-bool ImGui::ColorPicker3(const char* label, float col[3], ImGuiColorEditFlags flags)
+bool ImGui::ColorPicker3(const char* label, float col[3], const ImGuiColorEditFlags flags)
 {
     float col4[4] = { col[0], col[1], col[2], 1.0f };
     if (!ColorPicker4(label, col4, flags | ImGuiColorEditFlags_NoAlpha))
@@ -5432,7 +5432,7 @@ bool ImGui::ColorPicker3(const char* label, float col[3], ImGuiColorEditFlags fl
 }
 
 // Helper for ColorPicker4()
-static void RenderArrowsForVerticalBar(ImDrawList* draw_list, ImVec2 pos, ImVec2 half_sz, float bar_w, float alpha)
+static void RenderArrowsForVerticalBar(ImDrawList* draw_list, const ImVec2 pos, const ImVec2 half_sz, const float bar_w, const float alpha)
 {
     ImU32 alpha8 = IM_F32_TO_INT8_SAT(alpha);
     ImGui::RenderArrowPointingAt(draw_list, ImVec2(pos.x + half_sz.x + 1,         pos.y), ImVec2(half_sz.x + 2, half_sz.y + 1), ImGuiDir_Right, IM_COL32(0,0,0,alpha8));
@@ -5918,7 +5918,7 @@ void ImGui::SetColorEditOptions(ImGuiColorEditFlags flags)
 }
 
 // Note: only access 3 floats if ImGuiColorEditFlags_NoAlpha flag is set.
-void ImGui::ColorTooltip(const char* text, const float* col, ImGuiColorEditFlags flags)
+void ImGui::ColorTooltip(const char* text, const float* col, const ImGuiColorEditFlags flags)
 {
     ImGuiContext& g = *GImGui;
 
@@ -5953,7 +5953,7 @@ void ImGui::ColorTooltip(const char* text, const float* col, ImGuiColorEditFlags
     EndTooltip();
 }
 
-void ImGui::ColorEditOptionsPopup(const float* col, ImGuiColorEditFlags flags)
+void ImGui::ColorEditOptionsPopup(const float* col, const ImGuiColorEditFlags flags)
 {
     bool allow_opt_inputs = !(flags & ImGuiColorEditFlags_DisplayMask_);
     bool allow_opt_datatype = !(flags & ImGuiColorEditFlags_DataTypeMask_);
@@ -6006,7 +6006,7 @@ void ImGui::ColorEditOptionsPopup(const float* col, ImGuiColorEditFlags flags)
     g.LockMarkEdited--;
 }
 
-void ImGui::ColorPickerOptionsPopup(const float* ref_col, ImGuiColorEditFlags flags)
+void ImGui::ColorPickerOptionsPopup(const float* ref_col, const ImGuiColorEditFlags flags)
 {
     bool allow_opt_picker = !(flags & ImGuiColorEditFlags_PickerMask_);
     bool allow_opt_alpha_bar = !(flags & ImGuiColorEditFlags_NoAlpha) && !(flags & ImGuiColorEditFlags_AlphaBar);
@@ -6087,17 +6087,17 @@ bool ImGui::TreeNode(const char* label)
     return TreeNodeBehavior(window->GetID(label), 0, label, NULL);
 }
 
-bool ImGui::TreeNodeV(const char* str_id, const char* fmt, va_list args)
+bool ImGui::TreeNodeV(const char* str_id, const char* fmt, const va_list args)
 {
     return TreeNodeExV(str_id, 0, fmt, args);
 }
 
-bool ImGui::TreeNodeV(const void* ptr_id, const char* fmt, va_list args)
+bool ImGui::TreeNodeV(const void* ptr_id, const char* fmt, const va_list args)
 {
     return TreeNodeExV(ptr_id, 0, fmt, args);
 }
 
-bool ImGui::TreeNodeEx(const char* label, ImGuiTreeNodeFlags flags)
+bool ImGui::TreeNodeEx(const char* label, const ImGuiTreeNodeFlags flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -6106,7 +6106,7 @@ bool ImGui::TreeNodeEx(const char* label, ImGuiTreeNodeFlags flags)
     return TreeNodeBehavior(window->GetID(label), flags, label, NULL);
 }
 
-bool ImGui::TreeNodeEx(const char* str_id, ImGuiTreeNodeFlags flags, const char* fmt, ...)
+bool ImGui::TreeNodeEx(const char* str_id, const ImGuiTreeNodeFlags flags, const char* fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
@@ -6115,7 +6115,7 @@ bool ImGui::TreeNodeEx(const char* str_id, ImGuiTreeNodeFlags flags, const char*
     return is_open;
 }
 
-bool ImGui::TreeNodeEx(const void* ptr_id, ImGuiTreeNodeFlags flags, const char* fmt, ...)
+bool ImGui::TreeNodeEx(const void* ptr_id, const ImGuiTreeNodeFlags flags, const char* fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
@@ -6124,7 +6124,7 @@ bool ImGui::TreeNodeEx(const void* ptr_id, ImGuiTreeNodeFlags flags, const char*
     return is_open;
 }
 
-bool ImGui::TreeNodeExV(const char* str_id, ImGuiTreeNodeFlags flags, const char* fmt, va_list args)
+bool ImGui::TreeNodeExV(const char* str_id, const ImGuiTreeNodeFlags flags, const char* fmt, const va_list args)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -6135,7 +6135,7 @@ bool ImGui::TreeNodeExV(const char* str_id, ImGuiTreeNodeFlags flags, const char
     return TreeNodeBehavior(window->GetID(str_id), flags, label, label_end);
 }
 
-bool ImGui::TreeNodeExV(const void* ptr_id, ImGuiTreeNodeFlags flags, const char* fmt, va_list args)
+bool ImGui::TreeNodeExV(const void* ptr_id, const ImGuiTreeNodeFlags flags, const char* fmt, const va_list args)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -6146,14 +6146,14 @@ bool ImGui::TreeNodeExV(const void* ptr_id, ImGuiTreeNodeFlags flags, const char
     return TreeNodeBehavior(window->GetID(ptr_id), flags, label, label_end);
 }
 
-void ImGui::TreeNodeSetOpen(ImGuiID id, bool open)
+void ImGui::TreeNodeSetOpen(const ImGuiID id, const bool open)
 {
     ImGuiContext& g = *GImGui;
     ImGuiStorage* storage = g.CurrentWindow->DC.StateStorage;
     storage->SetInt(id, open ? 1 : 0);
 }
 
-bool ImGui::TreeNodeUpdateNextOpen(ImGuiID id, ImGuiTreeNodeFlags flags)
+bool ImGui::TreeNodeUpdateNextOpen(const ImGuiID id, const ImGuiTreeNodeFlags flags)
 {
     if (flags & ImGuiTreeNodeFlags_Leaf)
         return true;
@@ -6199,7 +6199,7 @@ bool ImGui::TreeNodeUpdateNextOpen(ImGuiID id, ImGuiTreeNodeFlags flags)
     return is_open;
 }
 
-bool ImGui::TreeNodeBehavior(ImGuiID id, ImGuiTreeNodeFlags flags, const char* label, const char* label_end)
+bool ImGui::TreeNodeBehavior(const ImGuiID id, const ImGuiTreeNodeFlags flags, const char* label, const char* label_end)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -6443,7 +6443,7 @@ void ImGui::TreePush(const void* ptr_id)
     PushID(ptr_id);
 }
 
-void ImGui::TreePushOverrideID(ImGuiID id)
+void ImGui::TreePushOverrideID(const ImGuiID id)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -6484,7 +6484,7 @@ float ImGui::GetTreeNodeToLabelSpacing()
 }
 
 // Set next TreeNode/CollapsingHeader open state.
-void ImGui::SetNextItemOpen(bool is_open, ImGuiCond cond)
+void ImGui::SetNextItemOpen(const bool is_open, const ImGuiCond cond)
 {
     ImGuiContext& g = *GImGui;
     if (g.CurrentWindow->SkipItems)
@@ -6496,7 +6496,7 @@ void ImGui::SetNextItemOpen(bool is_open, ImGuiCond cond)
 
 // CollapsingHeader returns true when opened but do not indent nor push into the ID stack (because of the ImGuiTreeNodeFlags_NoTreePushOnOpen flag).
 // This is basically the same as calling TreeNodeEx(label, ImGuiTreeNodeFlags_CollapsingHeader). You can remove the _NoTreePushOnOpen flag if you want behavior closer to normal TreeNode().
-bool ImGui::CollapsingHeader(const char* label, ImGuiTreeNodeFlags flags)
+bool ImGui::CollapsingHeader(const char* label, const ImGuiTreeNodeFlags flags)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -6552,7 +6552,7 @@ bool ImGui::CollapsingHeader(const char* label, bool* p_visible, ImGuiTreeNodeFl
 // But you need to make sure the ID is unique, e.g. enclose calls in PushID/PopID or use ##unique_id.
 // With this scheme, ImGuiSelectableFlags_SpanAllColumns and ImGuiSelectableFlags_AllowOverlap are also frequently used flags.
 // FIXME: Selectable() with (size.x == 0.0f) and (SelectableTextAlign.x > 0.0f) followed by SameLine() is currently not supported.
-bool ImGui::Selectable(const char* label, bool selected, ImGuiSelectableFlags flags, const ImVec2& size_arg)
+bool ImGui::Selectable(const char* label, bool selected, const ImGuiSelectableFlags flags, const ImVec2& size_arg)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -6702,7 +6702,7 @@ bool ImGui::Selectable(const char* label, bool selected, ImGuiSelectableFlags fl
     return pressed; //-V1020
 }
 
-bool ImGui::Selectable(const char* label, bool* p_selected, ImGuiSelectableFlags flags, const ImVec2& size_arg)
+bool ImGui::Selectable(const char* label, bool* p_selected, const ImGuiSelectableFlags flags, const ImVec2& size_arg)
 {
     if (Selectable(label, *p_selected, flags, size_arg))
     {
@@ -6724,7 +6724,7 @@ bool ImGui::Selectable(const char* label, bool* p_selected, ImGuiSelectableFlags
 //       if (ImGuiTypingSelectRequest* req = ImGui::GetTypingSelectRequest())
 //           focus_idx = ImGui::TypingSelectFindMatch(req, my_items.size(), [](void*, int n) { return my_items[n]->Name; }, &my_items, -1);
 // However the code is written in a way where calling it from multiple locations is safe (e.g. to obtain buffer).
-ImGuiTypingSelectRequest* ImGui::GetTypingSelectRequest(ImGuiTypingSelectFlags flags)
+ImGuiTypingSelectRequest* ImGui::GetTypingSelectRequest(const ImGuiTypingSelectFlags flags)
 {
     ImGuiContext& g = *GImGui;
     ImGuiTypingSelectState* data = &g.TypingSelectState;
@@ -6834,7 +6834,7 @@ static int ImStrimatchlen(const char* s1, const char* s1_end, const char* s2)
 // - it is better to NOT display a tooltip of other on-screen display indicator.
 // - the index of the currently focused item is required.
 //   if your SetNextItemSelectionData() values are indices, you can obtain it from ImGuiMultiSelectIO::NavIdItem, otherwise from g.NavLastValidSelectionUserData.
-int ImGui::TypingSelectFindMatch(ImGuiTypingSelectRequest* req, int items_count, const char* (*get_item_name_func)(void*, int), void* user_data, int nav_item_idx)
+int ImGui::TypingSelectFindMatch(ImGuiTypingSelectRequest* req, const int items_count, const char* (*get_item_name_func)(void*, int), void* user_data, const int nav_item_idx)
 {
     if (req == NULL || req->SelectRequest == false) // Support NULL parameter so both calls can be done from same spot.
         return -1;
@@ -6849,7 +6849,7 @@ int ImGui::TypingSelectFindMatch(ImGuiTypingSelectRequest* req, int items_count,
 }
 
 // Special handling when a single character is repeated: perform search on a single letter and goes to next.
-int ImGui::TypingSelectFindNextSingleCharMatch(ImGuiTypingSelectRequest* req, int items_count, const char* (*get_item_name_func)(void*, int), void* user_data, int nav_item_idx)
+int ImGui::TypingSelectFindNextSingleCharMatch(ImGuiTypingSelectRequest* req, const int items_count, const char* (*get_item_name_func)(void*, int), void* user_data, const int nav_item_idx)
 {
     // FIXME: Assume selection user data is index. Would be extremely practical.
     //if (nav_item_idx == -1)
@@ -6874,7 +6874,7 @@ int ImGui::TypingSelectFindNextSingleCharMatch(ImGuiTypingSelectRequest* req, in
     return first_match_idx; // First result
 }
 
-int ImGui::TypingSelectFindBestLeadingMatch(ImGuiTypingSelectRequest* req, int items_count, const char* (*get_item_name_func)(void*, int), void* user_data)
+int ImGui::TypingSelectFindBestLeadingMatch(ImGuiTypingSelectRequest* req, const int items_count, const char* (*get_item_name_func)(void*, int), void* user_data)
 {
     int longest_match_idx = -1;
     int longest_match_len = 0;
@@ -6908,7 +6908,7 @@ void ImGui::DebugNodeTypingSelectState(ImGuiTypingSelectState* data)
 // [SECTION] Widgets: Multi-Select support
 //-------------------------------------------------------------------------
 
-void ImGui::SetNextItemSelectionUserData(ImGuiSelectionUserData selection_user_data)
+void ImGui::SetNextItemSelectionUserData(const ImGuiSelectionUserData selection_user_data)
 {
     // Note that flags will be cleared by ItemAdd(), so it's only useful for Navigation code!
     // This designed so widgets can also cheaply set this before calling ItemAdd(), so we are not tied to MultiSelect api.
@@ -6980,7 +6980,7 @@ void ImGui::EndListBox()
     EndGroup(); // This is only required to be able to do IsItemXXX query on the whole ListBox including label
 }
 
-bool ImGui::ListBox(const char* label, int* current_item, const char* const items[], int items_count, int height_items)
+bool ImGui::ListBox(const char* label, int* current_item, const char* const items[], const int items_count, const int height_items)
 {
     const bool value_changed = ListBox(label, current_item, Items_ArrayGetter, (void*)items, items_count, height_items);
     return value_changed;
@@ -6988,7 +6988,7 @@ bool ImGui::ListBox(const char* label, int* current_item, const char* const item
 
 // This is merely a helper around BeginListBox(), EndListBox().
 // Considering using those directly to submit custom data or store selection differently.
-bool ImGui::ListBox(const char* label, int* current_item, const char* (*getter)(void* user_data, int idx), void* user_data, int items_count, int height_in_items)
+bool ImGui::ListBox(const char* label, int* current_item, const char* (*getter)(void* user_data, int idx), void* user_data, const int items_count, int height_in_items)
 {
     ImGuiContext& g = *GImGui;
 
@@ -7045,7 +7045,7 @@ bool ImGui::ListBox(const char* label, int* current_item, const char* (*getter)(
 // - others https://github.com/ocornut/imgui/wiki/Useful-Extensions
 //-------------------------------------------------------------------------
 
-int ImGui::PlotEx(ImGuiPlotType plot_type, const char* label, float (*values_getter)(void* data, int idx), void* data, int values_count, int values_offset, const char* overlay_text, float scale_min, float scale_max, const ImVec2& size_arg)
+int ImGui::PlotEx(const ImGuiPlotType plot_type, const char* label, float (*values_getter)(void* data, int idx), void* data, const int values_count, const int values_offset, const char* overlay_text, float scale_min, float scale_max, const ImVec2& size_arg)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = GetCurrentWindow();
@@ -7165,34 +7165,34 @@ struct ImGuiPlotArrayGetterData
     const float* Values;
     int Stride;
 
-    ImGuiPlotArrayGetterData(const float* values, int stride) { Values = values; Stride = stride; }
+    ImGuiPlotArrayGetterData(const float* values, const int stride) { Values = values; Stride = stride; }
 };
 
-static float Plot_ArrayGetter(void* data, int idx)
+static float Plot_ArrayGetter(void* data, const int idx)
 {
     ImGuiPlotArrayGetterData* plot_data = (ImGuiPlotArrayGetterData*)data;
     const float v = *(const float*)(const void*)((const unsigned char*)plot_data->Values + (size_t)idx * plot_data->Stride);
     return v;
 }
 
-void ImGui::PlotLines(const char* label, const float* values, int values_count, int values_offset, const char* overlay_text, float scale_min, float scale_max, ImVec2 graph_size, int stride)
+void ImGui::PlotLines(const char* label, const float* values, const int values_count, const int values_offset, const char* overlay_text, const float scale_min, const float scale_max, const ImVec2 graph_size, const int stride)
 {
     ImGuiPlotArrayGetterData data(values, stride);
     PlotEx(ImGuiPlotType_Lines, label, &Plot_ArrayGetter, (void*)&data, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size);
 }
 
-void ImGui::PlotLines(const char* label, float (*values_getter)(void* data, int idx), void* data, int values_count, int values_offset, const char* overlay_text, float scale_min, float scale_max, ImVec2 graph_size)
+void ImGui::PlotLines(const char* label, float (*values_getter)(void* data, int idx), void* data, const int values_count, const int values_offset, const char* overlay_text, const float scale_min, const float scale_max, const ImVec2 graph_size)
 {
     PlotEx(ImGuiPlotType_Lines, label, values_getter, data, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size);
 }
 
-void ImGui::PlotHistogram(const char* label, const float* values, int values_count, int values_offset, const char* overlay_text, float scale_min, float scale_max, ImVec2 graph_size, int stride)
+void ImGui::PlotHistogram(const char* label, const float* values, const int values_count, const int values_offset, const char* overlay_text, const float scale_min, const float scale_max, const ImVec2 graph_size, const int stride)
 {
     ImGuiPlotArrayGetterData data(values, stride);
     PlotEx(ImGuiPlotType_Histogram, label, &Plot_ArrayGetter, (void*)&data, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size);
 }
 
-void ImGui::PlotHistogram(const char* label, float (*values_getter)(void* data, int idx), void* data, int values_count, int values_offset, const char* overlay_text, float scale_min, float scale_max, ImVec2 graph_size)
+void ImGui::PlotHistogram(const char* label, float (*values_getter)(void* data, int idx), void* data, const int values_count, const int values_offset, const char* overlay_text, const float scale_min, const float scale_max, const ImVec2 graph_size)
 {
     PlotEx(ImGuiPlotType_Histogram, label, values_getter, data, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size);
 }
@@ -7204,22 +7204,22 @@ void ImGui::PlotHistogram(const char* label, float (*values_getter)(void* data, 
 // - Value()
 //-------------------------------------------------------------------------
 
-void ImGui::Value(const char* prefix, bool b)
+void ImGui::Value(const char* prefix, const bool b)
 {
     Text("%s: %s", prefix, (b ? "true" : "false"));
 }
 
-void ImGui::Value(const char* prefix, int v)
+void ImGui::Value(const char* prefix, const int v)
 {
     Text("%s: %d", prefix, v);
 }
 
-void ImGui::Value(const char* prefix, unsigned int v)
+void ImGui::Value(const char* prefix, const unsigned int v)
 {
     Text("%s: %d", prefix, v);
 }
 
-void ImGui::Value(const char* prefix, float v, const char* float_format)
+void ImGui::Value(const char* prefix, const float v, const char* float_format)
 {
     if (float_format)
     {
@@ -7248,7 +7248,7 @@ void ImGui::Value(const char* prefix, float v, const char* float_format)
 //-------------------------------------------------------------------------
 
 // Helpers for internal use
-void ImGuiMenuColumns::Update(float spacing, bool window_reappearing)
+void ImGuiMenuColumns::Update(const float spacing, const bool window_reappearing)
 {
     if (window_reappearing)
         memset(Widths, 0, sizeof(Widths));
@@ -7259,7 +7259,7 @@ void ImGuiMenuColumns::Update(float spacing, bool window_reappearing)
     NextTotalWidth = 0;
 }
 
-void ImGuiMenuColumns::CalcNextTotalWidth(bool update_offsets)
+void ImGuiMenuColumns::CalcNextTotalWidth(const bool update_offsets)
 {
     ImU16 offset = 0;
     bool want_spacing = false;
@@ -7280,7 +7280,7 @@ void ImGuiMenuColumns::CalcNextTotalWidth(bool update_offsets)
     NextTotalWidth = offset;
 }
 
-float ImGuiMenuColumns::DeclColumns(float w_icon, float w_label, float w_shortcut, float w_mark)
+float ImGuiMenuColumns::DeclColumns(const float w_icon, const float w_label, const float w_shortcut, const float w_mark)
 {
     Widths[0] = ImMax(Widths[0], (ImU16)w_icon);
     Widths[1] = ImMax(Widths[1], (ImU16)w_label);
@@ -7374,7 +7374,7 @@ void ImGui::EndMenuBar()
 // Important: calling order matters!
 // FIXME: Somehow overlapping with docking tech.
 // FIXME: The "rect-cut" aspect of this could be formalized into a lower-level helper (rect-cut: https://halt.software/dead-simple-layouts)
-bool ImGui::BeginViewportSideBar(const char* name, ImGuiViewport* viewport_p, ImGuiDir dir, float axis_size, ImGuiWindowFlags window_flags)
+bool ImGui::BeginViewportSideBar(const char* name, ImGuiViewport* viewport_p, const ImGuiDir dir, const float axis_size, ImGuiWindowFlags window_flags)
 {
     IM_ASSERT(dir != ImGuiDir_None);
 
@@ -7471,7 +7471,7 @@ static bool IsRootOfOpenMenuSet()
     return upper_popup->Window && (upper_popup->Window->Flags & ImGuiWindowFlags_ChildMenu) && ImGui::IsWindowChildOf(upper_popup->Window, window, true, false);
 }
 
-bool ImGui::BeginMenuEx(const char* label, const char* icon, bool enabled)
+bool ImGui::BeginMenuEx(const char* label, const char* icon, const bool enabled)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -7671,7 +7671,7 @@ bool ImGui::BeginMenuEx(const char* label, const char* icon, bool enabled)
     return menu_is_open;
 }
 
-bool ImGui::BeginMenu(const char* label, bool enabled)
+bool ImGui::BeginMenu(const char* label, const bool enabled)
 {
     return BeginMenuEx(label, NULL, enabled);
 }
@@ -7694,7 +7694,7 @@ void ImGui::EndMenu()
     EndPopup();
 }
 
-bool ImGui::MenuItemEx(const char* label, const char* icon, const char* shortcut, bool selected, bool enabled)
+bool ImGui::MenuItemEx(const char* label, const char* icon, const char* shortcut, const bool selected, const bool enabled)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -7770,12 +7770,12 @@ bool ImGui::MenuItemEx(const char* label, const char* icon, const char* shortcut
     return pressed;
 }
 
-bool ImGui::MenuItem(const char* label, const char* shortcut, bool selected, bool enabled)
+bool ImGui::MenuItem(const char* label, const char* shortcut, const bool selected, const bool enabled)
 {
     return MenuItemEx(label, NULL, shortcut, selected, enabled);
 }
 
-bool ImGui::MenuItem(const char* label, const char* shortcut, bool* p_selected, bool enabled)
+bool ImGui::MenuItem(const char* label, const char* shortcut, bool* p_selected, const bool enabled)
 {
     if (MenuItemEx(label, NULL, shortcut, p_selected ? *p_selected : false, enabled))
     {
@@ -7877,7 +7877,7 @@ static ImGuiPtrOrIndex GetTabBarRefFromTabBar(ImGuiTabBar* tab_bar)
     return ImGuiPtrOrIndex(tab_bar);
 }
 
-bool    ImGui::BeginTabBar(const char* str_id, ImGuiTabBarFlags flags)
+bool    ImGui::BeginTabBar(const char* str_id, const ImGuiTabBarFlags flags)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -8272,7 +8272,7 @@ static float ImGui::TabBarCalcMaxTabWidth()
     return g.FontSize * 20.0f;
 }
 
-ImGuiTabItem* ImGui::TabBarFindTabByID(ImGuiTabBar* tab_bar, ImGuiID tab_id)
+ImGuiTabItem* ImGui::TabBarFindTabByID(ImGuiTabBar* tab_bar, const ImGuiID tab_id)
 {
     if (tab_id != 0)
         for (int n = 0; n < tab_bar->Tabs.Size; n++)
@@ -8282,7 +8282,7 @@ ImGuiTabItem* ImGui::TabBarFindTabByID(ImGuiTabBar* tab_bar, ImGuiID tab_id)
 }
 
 // Order = visible order, not submission order! (which is tab->BeginOrder)
-ImGuiTabItem* ImGui::TabBarFindTabByOrder(ImGuiTabBar* tab_bar, int order)
+ImGuiTabItem* ImGui::TabBarFindTabByOrder(ImGuiTabBar* tab_bar, const int order)
 {
     if (order < 0 || order >= tab_bar->Tabs.Size)
         return NULL;
@@ -8342,7 +8342,7 @@ void ImGui::TabBarAddTab(ImGuiTabBar* tab_bar, ImGuiTabItemFlags tab_flags, ImGu
 }
 
 // The *TabId fields are already set by the docking system _before_ the actual TabItem was created, so we clear them regardless.
-void ImGui::TabBarRemoveTab(ImGuiTabBar* tab_bar, ImGuiID tab_id)
+void ImGui::TabBarRemoveTab(ImGuiTabBar* tab_bar, const ImGuiID tab_id)
 {
     if (ImGuiTabItem* tab = TabBarFindTabByID(tab_bar, tab_id))
         tab_bar->Tabs.erase(tab);
@@ -8383,7 +8383,7 @@ static float ImGui::TabBarScrollClamp(ImGuiTabBar* tab_bar, float scrolling)
 }
 
 // Note: we may scroll to tab that are not selected! e.g. using keyboard arrow keys
-static void ImGui::TabBarScrollToTab(ImGuiTabBar* tab_bar, ImGuiID tab_id, ImGuiTabBarSection* sections)
+static void ImGui::TabBarScrollToTab(ImGuiTabBar* tab_bar, const ImGuiID tab_id, ImGuiTabBarSection* sections)
 {
     ImGuiTabItem* tab = TabBarFindTabByID(tab_bar, tab_id);
     if (tab == NULL)
@@ -8421,7 +8421,7 @@ void ImGui::TabBarQueueFocus(ImGuiTabBar* tab_bar, ImGuiTabItem* tab)
     tab_bar->NextSelectedTabId = tab->ID;
 }
 
-void ImGui::TabBarQueueReorder(ImGuiTabBar* tab_bar, ImGuiTabItem* tab, int offset)
+void ImGui::TabBarQueueReorder(ImGuiTabBar* tab_bar, ImGuiTabItem* tab, const int offset)
 {
     IM_ASSERT(offset != 0);
     IM_ASSERT(tab_bar->ReorderRequestTabId == 0);
@@ -8429,7 +8429,7 @@ void ImGui::TabBarQueueReorder(ImGuiTabBar* tab_bar, ImGuiTabItem* tab, int offs
     tab_bar->ReorderRequestOffset = (ImS16)offset;
 }
 
-void ImGui::TabBarQueueReorderFromMousePos(ImGuiTabBar* tab_bar, ImGuiTabItem* src_tab, ImVec2 mouse_pos)
+void ImGui::TabBarQueueReorderFromMousePos(ImGuiTabBar* tab_bar, ImGuiTabItem* src_tab, const ImVec2 mouse_pos)
 {
     ImGuiContext& g = *GImGui;
     IM_ASSERT(tab_bar->ReorderRequestTabId == 0);
@@ -8608,7 +8608,7 @@ static ImGuiTabItem* ImGui::TabBarTabListPopupButton(ImGuiTabBar* tab_bar)
 // - TabItemLabelAndCloseButton() [Internal]
 //-------------------------------------------------------------------------
 
-bool    ImGui::BeginTabItem(const char* label, bool* p_open, ImGuiTabItemFlags flags)
+bool    ImGui::BeginTabItem(const char* label, bool* p_open, const ImGuiTabItemFlags flags)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -8651,7 +8651,7 @@ void    ImGui::EndTabItem()
         PopID();
 }
 
-bool    ImGui::TabItemButton(const char* label, ImGuiTabItemFlags flags)
+bool    ImGui::TabItemButton(const char* label, const ImGuiTabItemFlags flags)
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
@@ -8975,7 +8975,7 @@ void    ImGui::SetTabItemClosed(const char* label)
     }
 }
 
-ImVec2 ImGui::TabItemCalcSize(const char* label, bool has_close_button_or_unsaved_marker)
+ImVec2 ImGui::TabItemCalcSize(const char* label, const bool has_close_button_or_unsaved_marker)
 {
     ImGuiContext& g = *GImGui;
     ImVec2 label_size = CalcTextSize(label, NULL, true);
@@ -8992,7 +8992,7 @@ ImVec2 ImGui::TabItemCalcSize(ImGuiWindow* window)
     return TabItemCalcSize(window->Name, window->HasCloseButton || (window->Flags & ImGuiWindowFlags_UnsavedDocument));
 }
 
-void ImGui::TabItemBackground(ImDrawList* draw_list, const ImRect& bb, ImGuiTabItemFlags flags, ImU32 col)
+void ImGui::TabItemBackground(ImDrawList* draw_list, const ImRect& bb, const ImGuiTabItemFlags flags, const ImU32 col)
 {
     // While rendering tabs, we trim 1 pixel off the top of our bounding box so they can fit within a regular frame height while looking "detached" from it.
     ImGuiContext& g = *GImGui;
@@ -9019,7 +9019,7 @@ void ImGui::TabItemBackground(ImDrawList* draw_list, const ImRect& bb, ImGuiTabI
 
 // Render text label (with custom clipping) + Unsaved Document marker + Close Button logic
 // We tend to lock style.FramePadding for a given tab-bar, hence the 'frame_padding' parameter.
-void ImGui::TabItemLabelAndCloseButton(ImDrawList* draw_list, const ImRect& bb, ImGuiTabItemFlags flags, ImVec2 frame_padding, const char* label, ImGuiID tab_id, ImGuiID close_button_id, bool is_contents_visible, bool* out_just_closed, bool* out_text_clipped)
+void ImGui::TabItemLabelAndCloseButton(ImDrawList* draw_list, const ImRect& bb, const ImGuiTabItemFlags flags, const ImVec2 frame_padding, const char* label, const ImGuiID tab_id, const ImGuiID close_button_id, bool is_contents_visible, bool* out_just_closed, bool* out_text_clipped)
 {
     ImGuiContext& g = *GImGui;
     ImVec2 label_size = CalcTextSize(label, NULL, true);

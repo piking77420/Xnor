@@ -24,7 +24,6 @@ void Renderer::Initialize()
 	m_LightCuller.InitResources();
 
 	Rhi::PrepareUniform();
-
 }
 
 void Renderer::Shutdown()
@@ -349,7 +348,7 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 			continue;
 		
 		const Transform& transform =  meshRenderer->entity->transform;
-		const ModelAABB&& modelAabb = meshRenderer->model->GetAabb();
+		const ModelAabb&& modelAabb = meshRenderer->model->GetAabb();
 		
 		const Vector3&& aabbSize = (modelAabb.max - modelAabb.min) * 0.5f;
 		const Vector3&& center  = (modelAabb.max + modelAabb.min) * 0.5f;

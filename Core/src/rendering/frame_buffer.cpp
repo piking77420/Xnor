@@ -35,19 +35,12 @@ void FrameBuffer::UnBindFrameBuffer() const
 	Rhi::BindFrameBuffer(0);
 }
 
-void FrameBuffer::ReadPixel(
-	uint32_t attachmentIndex,
-	vec2i position,
-	TextureFormat textureFormat,
-	TextureInternalFormat textureInternalFormat,
-	void* output
-) const
+void FrameBuffer::ReadPixel(const uint32_t attachmentIndex, const Vector2i position, const TextureFormat textureFormat, const TextureInternalFormat textureInternalFormat, void* const output) const
 {
 	BindFrameBuffer();
-	Rhi::ReadAttachement(attachmentIndex,position.x,position.y,textureFormat,textureInternalFormat,output);
+	Rhi::GetPixelFromAttachement(attachmentIndex, position, textureFormat, textureInternalFormat, output);
 	UnBindFrameBuffer();
 }
-
 
 uint32_t FrameBuffer::GetId() const
 {
