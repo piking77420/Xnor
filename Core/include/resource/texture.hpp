@@ -82,13 +82,13 @@ public:
     [[nodiscard]]
     XNOR_ENGINE uint32_t GetId() const;
 
-    XNOR_ENGINE const TextureFiltering GetTextureFiltering() const;
+    XNOR_ENGINE TextureFiltering GetTextureFiltering() const;
 
-    XNOR_ENGINE const TextureWrapping GetTextureWrapping() const;
+    XNOR_ENGINE TextureWrapping GetTextureWrapping() const;
     
-    XNOR_ENGINE const TextureInternalFormat GetInternalFormat() const;
+    XNOR_ENGINE TextureInternalFormat GetInternalFormat() const;
 
-    XNOR_ENGINE const TextureFormat GetTextureFormat() const;
+    XNOR_ENGINE TextureFormat GetTextureFormat() const;
 
 private:
     uint8_t* m_Data = nullptr;

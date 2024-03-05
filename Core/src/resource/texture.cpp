@@ -16,8 +16,8 @@ Texture::Texture(const TextureCreateInfo& createInfo)
     m_LoadedInRhi = true;
 }
 
-Texture::Texture(const TextureInternalFormat textureInternalFormat, const Vector2i size) : m_Data(nullptr)
-  , m_Size(size) , m_TextureInternalFormat(textureInternalFormat)
+Texture::Texture(const TextureInternalFormat textureFormat, const Vector2i size) : m_Data(nullptr)
+  , m_Size(size) , m_TextureInternalFormat(textureFormat)
 {
     const TextureCreateInfo createInfo
     {
@@ -102,14 +102,14 @@ int32_t Texture::GetChannels() const
     return loadData.desiredChannels != 0 ? loadData.desiredChannels : m_DataChannels;
 }
 
-void Texture::BindTexture([[maybe_unused]] const uint32_t index) const
+void Texture::BindTexture(const uint32_t index) const
 {
-    Rhi::BindTexture(index,m_Id);
+    Rhi::BindTexture(index, m_Id);
 }
 
-void Texture::UnbindTexture(uint32_t index) const
+void Texture::UnbindTexture(const uint32_t index) const
 {
-    Rhi::BindTexture(index,0);
+    Rhi::BindTexture(index, 0);
 }
 
 uint32_t Texture::GetId() const
@@ -117,22 +117,22 @@ uint32_t Texture::GetId() const
     return m_Id;
 }
 
-const TextureFiltering Texture::GetTextureFiltering() const
+TextureFiltering Texture::GetTextureFiltering() const
 {
     return m_TextureFiltering;
 }
 
-const TextureWrapping Texture::GetTextureWrapping() const
+TextureWrapping Texture::GetTextureWrapping() const
 {
-    return  m_TextureWrapping;
+    return m_TextureWrapping;
 }
 
-const TextureInternalFormat Texture::GetInternalFormat() const
+TextureInternalFormat Texture::GetInternalFormat() const
 {
     return m_TextureInternalFormat;
 }
 
-const TextureFormat Texture::GetTextureFormat() const
+TextureFormat Texture::GetTextureFormat() const
 {
     return m_TextureFormat;
 }

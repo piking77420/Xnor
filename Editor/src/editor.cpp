@@ -212,7 +212,7 @@ void Editor::CreateTestScene()
 	using namespace XnorCore;
 	
 	// init Scene //
-	Entity& ent1 = *World::scene.CreateEntity("viking_Room");
+	Entity& ent1 = *World::scene.CreateEntity("VikingRoom");
 	MeshRenderer* meshRenderer = ent1.AddComponent<MeshRenderer>();
 	ent1.transform.position = { 0.f, 3.f, 0.f };
 	
