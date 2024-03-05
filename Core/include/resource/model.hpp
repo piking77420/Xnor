@@ -103,13 +103,17 @@ public:
     
     XNOR_ENGINE void Unload() override;
 
+    /// @brief Gets the id of the model
+    /// @return Model id
     [[nodiscard]]
     XNOR_ENGINE uint32_t GetId() const;
 
+    /// @brief Gets the Aabb bounding box of the model
+    /// @return Aabb bounding box
     XNOR_ENGINE ModelAabb GetAabb() const;
     
 private:
-    XNOR_ENGINE bool HadToComputeAabb(const aiAABB& assimpAabb);
+    XNOR_ENGINE void ComputeAabb(const aiAABB& assimpAabb);
     
     std::vector<Vertex> m_Vertices;
     std::vector<uint32_t> m_Indices;

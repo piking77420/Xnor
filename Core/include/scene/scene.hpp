@@ -22,13 +22,13 @@ public:
 
     DEFAULT_COPY_MOVE_OPERATIONS(Scene)
 
-    /// @brief Gets all of the specified @ref Component in every entity in the scene
+    /// @brief Gets all of the specified Component in every entity in the scene
     /// @tparam ComponentT Component type
     /// @param components Result components
     template <class ComponentT>
     void GetAllComponentOfType(std::vector<const ComponentT*>* components) const;
 
-    /// @brief Gets all of the specified @ref Component in every entity in the scene
+    /// @brief Gets all of the specified Component in every entity in the scene
     /// @tparam ComponentT Component type
     /// @param components Result components
     template <class ComponentT>
@@ -40,7 +40,7 @@ public:
     /// @brief Updates the scene
     XNOR_ENGINE void Update();
 
-    /// @brief Tries to find an entity in the scene via a @ref Guid
+    /// @brief Tries to find an entity in the scene via a Guid
     /// @param xnorGuid Guid
     /// @return Entity, can be @c nullptr
     [[nodiscard]]
@@ -62,8 +62,8 @@ public:
     [[nodiscard]]
     XNOR_ENGINE bool_t HasEntity(const Entity* entity) const;
 
-    /// @brief Gets the @ref List of @ref Entity of the scene
-    /// @return @ref List of @ref Entity
+    /// @brief Gets the List of Entity of the scene
+    /// @return List of Entity
     [[nodiscard]]
     XNOR_ENGINE const List<Entity*>& GetEntities();
 
