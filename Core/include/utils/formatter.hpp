@@ -23,7 +23,7 @@ BEGIN_XNOR_CORE
 ///
 /// @tparam T The type to require to be formattable.
 template<typename T>
-concept Formattable = requires (T& v, std::format_context ctx)
+concept Formattable = requires(T& v, std::format_context ctx)
 {
     std::formatter<std::remove_cvref_t<T>>().format(v, ctx);
 };

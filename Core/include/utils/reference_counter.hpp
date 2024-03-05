@@ -6,16 +6,23 @@
 
 #include "core.hpp"
 
+/// @file reference_counter.hpp
+/// @brief Defines the ReferenceCounter class which is only meant to be used by the Pointer class.
+
 BEGIN_XNOR_CORE
 
 template <typename T>
 class Pointer;
 
-/// @brief Reference counter for the <c>Pointer</c> class. This shouldn't be used for anything else.
+/// @brief Reference counter for the Pointer class. This shouldn't be used for anything else.
 template <typename T>
 class ReferenceCounter
 {
 public:
+    /// @brief The type of raw pointer this ReferenceCounter is holding.
+    using Type = T;
+    
+    /// @brief Constructs a ReferenceCounter by forwarding arguments to a newly constructed @p Type.
     template <typename... Args>
     explicit ReferenceCounter(Args&&... args);
 
