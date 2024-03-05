@@ -8,6 +8,9 @@
 #include "core.hpp"
 #include "reference_counter.hpp"
 
+/// @file pointer.hpp
+/// @brief Defines the Pointer class
+
 BEGIN_XNOR_CORE
 
 /// @brief Used to default-construct the value of a Pointer.
@@ -64,6 +67,7 @@ template <typename T>
 class Pointer
 {
 public:
+    /// @brief The type of ReferenceCounter, and therefore of raw pointer this Pointer is holding.
     using Type = T;
     
     /// @brief Creates an empty @ref Pointer without a reference counter and pointing to @c nullptr.
@@ -72,9 +76,11 @@ public:
     /// @brief Creates a copy of another @ref Pointer, specifying whether it is a weak or strong reference.
     Pointer(const Pointer& other, bool strongReference = false);
 
+    /// @brief Creates a Pointer by moving all the values of an existing one.
     Pointer(Pointer&& other) noexcept;
 
     // ReSharper disable once CppNonExplicitConvertingConstructor
+    /// @brief Creates a Pointer from a @c nullptr.
     Pointer(nullptr_t);
 
     /// @brief Creates a @ref Pointer with a default-initialized value.
@@ -90,15 +96,21 @@ public:
     /// @endcode
     explicit Pointer(Construct);
 
+    /// @brief Creates a copy of an existing Pointer of a different Type, specifying whether it is a strong reference.
+    ///
+    /// @tparam U The type of the existing Pointer. This type must be convertible to Type.
     template <typename U>
     explicit Pointer(const Pointer<U>& other, bool strongReference = false);
 
+    /// @brief Creates a copy of an existing Pointer of a different Type, specifying whether it is a strong reference.
     template <typename U>
     explicit Pointer(Pointer<U>& other, bool strongReference = false);
 
+    /// @brief Creates a Pointer by moving the value of another one of a different Type.
     template <typename U>
     explicit Pointer(Pointer<U>&& other) noexcept;
 
+    /// @brief Creates a Pointer, allocating @c sizeof(Type)
     template <typename... Args>
     explicit Pointer(Args&&... args);
 
