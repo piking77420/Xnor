@@ -175,10 +175,13 @@ public:
     template <typename U>
     Pointer& operator=(Pointer<U>&& other) noexcept;
 
-    // TODO: Should have overloads for const Pointers
     /// @brief Converts this Pointer to its underlying raw pointer.
     [[nodiscard]]
-    explicit operator T*() const;
+    explicit operator const T*() const;
+
+    /// @brief Converts this Pointer to its underlying raw pointer.
+    [[nodiscard]]
+    explicit operator T*();
 
     [[nodiscard]]
     explicit operator std::string() const;
@@ -402,7 +405,15 @@ Pointer<T>& Pointer<T>::operator=(Pointer<U>&& other) noexcept
 }
 
 template <typename T>
-Pointer<T>::operator T*() const
+Pointer<T>::operator const T*() const
+{
+    if (m_ReferenceCounter)
+        return m_ReferenceCounter->GetPointer();
+    return nullptr;
+}
+
+template <typename T>
+Pointer<T>::operator T*()
 {
     if (m_ReferenceCounter)
         return m_ReferenceCounter->GetPointer();
@@ -568,7 +579,7 @@ struct std::formatter<XnorCore::Pointer<T>>  // NOLINT(cert-dcl58-cpp)
     {
         std::ostringstream out;
         
-        out << "0x" << reinterpret_cast<void*>(static_cast<T*>(pointer));
+        out << "0x" << static_cast<const T*>(pointer);
         
         return std::ranges::copy(std::move(out).str(), ctx.out()).out;
     }
