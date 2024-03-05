@@ -80,6 +80,7 @@ void Hierarchy::DisplayEntity(XnorCore::Scene& scene, XnorCore::Entity* const en
         else
         {
             ProcessEntitySelection(entity);
+            ProcessEntityDoubleClick();
             
             DisplayEntityContextMenu(scene, entity);
             ProcessEntityDragDrop(entity);
@@ -93,6 +94,7 @@ void Hierarchy::DisplayEntity(XnorCore::Scene& scene, XnorCore::Entity* const en
     else
     {
         ProcessEntitySelection(entity);
+        ProcessEntityDoubleClick();
     }
 
     ImGui::PopID();
@@ -170,11 +172,11 @@ void Hierarchy::ProcessEntitySelection(XnorCore::Entity* const entity)
     }
 }
 
-void Hierarchy::ProcessEntityDoubleClick(XnorCore::Scene&, XnorCore::Entity* const)
+void Hierarchy::ProcessEntityDoubleClick()
 {
     if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
     {
-        // TODO focus object on camera
+        m_Editor->data.gotoObject = true;
     }
 }
 

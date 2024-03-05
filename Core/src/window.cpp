@@ -50,11 +50,6 @@ void Window::MakeContextCurrent()
 	glfwMakeContextCurrent(m_Window);
 }
 
-double_t Window::GetTime()
-{
-	return glfwGetTime();
-}
-
 GLFWwindow* Window::GetHandle()
 {
 	return m_Window;

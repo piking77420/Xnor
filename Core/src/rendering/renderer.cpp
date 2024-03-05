@@ -69,17 +69,17 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	
 	// ForwardPass //
 	ForwardRendering(meshrenderers, &rendererContext);
-	m_SkyboxRenderer.DrawSkymap(m_Cube,World::skybox);
-	if(rendererContext.isEditor)
+	m_SkyboxRenderer.DrawSkymap(m_Cube, World::skybox);
+	if (rendererContext.isEditor)
 	{
-		m_LightCuller.DrawLightGizmo(pointLights,spotLights,directionalLights,*rendererContext.camera);
+		m_LightCuller.DrawLightGizmo(pointLights, spotLights, directionalLights, *rendererContext.camera);
 		
 	}
 	
 	m_RenderBuffer->UnBindFrameBuffer();
 	
 	// DRAW THE FINAL IMAGE TEXTURE
-	m_ToneMapping.ComputeToneMaping(*m_ColorAttachment,m_Quad);
+	m_ToneMapping.ComputeToneMaping(*m_ColorAttachment, m_Quad);
 
 	
 	if (rendererContext.framebuffer != nullptr)
@@ -122,7 +122,7 @@ void Renderer::PrepareRendering(const vec2i windowSize)
 {
 	InitDefferedRenderingAttachment(windowSize);
 	InitForwardRenderingAttachment(windowSize);
-	m_ToneMapping.Initialize(windowSize);
+	m_ToneMapping.Prepare(windowSize);
 }
 
 
@@ -201,7 +201,7 @@ void Renderer::InitDefferedRenderingAttachment(const Vector2i windowSize)
 	const RenderPass renderPass(attachementsType);
 
 	const std::vector<const Texture*> targets = { m_PositionAtttachment, m_NormalAttachement, m_AlbedoAttachment, m_DepthGbufferAtttachment};
-	m_GframeBuffer->Create(renderPass,targets);
+	m_GframeBuffer->Create(renderPass, targets);
 	
 	// Init gbuffer Texture
 	m_GBufferShaderLit->Use();
@@ -254,7 +254,16 @@ void Renderer::DestroyAttachment() const
 	delete m_ColorAttachment;
 }
 
-void Renderer::DefferedRendering(const std::vector<const MeshRenderer*> meshrenderers,const RendererContext*) const
+void Renderer::DrawLightGizmo(
+	const std::vector<const PointLight*>& pointLightComponents,
+	const std::vector<const SpotLight*>& spotLightsComponents,
+	const std::vector<const DirectionalLight*>& directionalComponent,
+	const Camera& camera
+) const
+{
+}
+
+void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshrenderers, const RendererContext*) const
 {
 	// Bind for gbuffer pass // 
 	m_GframeBuffer->BindFrameBuffer();
@@ -371,8 +380,4 @@ void Renderer::RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRende
 		Rhi::UpdateModelUniform(data);
 		Rhi::DrawModel(mesh->model->GetId());
 	}
-}
-
-void Renderer::ShadowPathSpotLight([[maybe_unused]]const std::vector<const SpotLight*>& spotLights)
-{
 }

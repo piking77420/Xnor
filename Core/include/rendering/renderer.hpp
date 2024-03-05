@@ -73,7 +73,7 @@ private:
     ToneMapping m_ToneMapping;
     SkyboxRenderer m_SkyboxRenderer;
 
-    XNOR_ENGINE void DefferedRendering(const std::vector<const MeshRenderer*> meshrenderers,const RendererContext* rendererContext) const;
+    XNOR_ENGINE void DefferedRendering(const std::vector<const MeshRenderer*>& meshrenderers,const RendererContext* rendererContext) const;
 
     XNOR_ENGINE void ForwardRendering(const std::vector<const MeshRenderer*> meshrenderers,const RendererContext* rendererContext) const;
     
@@ -95,7 +95,6 @@ private:
 
     XNOR_ENGINE void RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRenderers);
     
-    XNOR_ENGINE void ShadowPathSpotLight(const std::vector<const SpotLight*>& spotLights);
 };
 
 END_XNOR_CORE

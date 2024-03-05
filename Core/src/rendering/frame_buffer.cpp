@@ -17,7 +17,7 @@ FrameBuffer::~FrameBuffer()
 
 void FrameBuffer::Create(const RenderPass& renderPass, const std::vector<const Texture*>& attachements)
 {
-	Rhi::CreateFrameBuffer(&m_Id,renderPass, attachements);
+	Rhi::CreateFrameBuffer(&m_Id, renderPass, attachements);
 }
 
 Vector2i FrameBuffer::GetSize() const

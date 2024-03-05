@@ -165,7 +165,7 @@ void Rhi::UseShader(const uint32_t shaderId)
 	
 	glDepthFunc(GetOpengDepthEnum(shaderInternal.depthFunction));
 	
-	if(shaderInternal.blendFunction.IsBlending)
+	if(shaderInternal.blendFunction.isBlending)
 	{
 		const uint32_t srcValue =  GetBlendValueOpengl(shaderInternal.blendFunction.sValue);
 		const uint32_t destValue =  GetBlendValueOpengl(shaderInternal.blendFunction.dValue);
@@ -187,7 +187,7 @@ void Rhi::UnuseShader()
 	glUseProgram(0);
 }
 
-void Rhi::SetUniform(const UniformType uniformType, const void* data, const uint32_t shaderId, const char* uniformKey)
+void Rhi::SetUniform(const UniformType uniformType, const void* const data, const uint32_t shaderId, const char_t* const uniformKey)
 {
 	const GLint uniformLocation = GetUniformInMap(shaderId, uniformKey);
 
@@ -198,7 +198,7 @@ void Rhi::SetUniform(const UniformType uniformType, const void* data, const uint
 			break;
 			
 		case UniformType::Bool:
-			glUniform1i(uniformLocation, *static_cast<const bool*>(data));
+			glUniform1i(uniformLocation, *static_cast<const bool_t*>(data));
 			break;
 			
 		case UniformType::Float:

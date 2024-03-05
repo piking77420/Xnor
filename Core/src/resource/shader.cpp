@@ -9,19 +9,23 @@ ShaderType Shader::FileExtensionToType(const std::string& extension)
 {
     if (std::ranges::find(VertexFileExtensions, extension) != VertexFileExtensions.end())
         return ShaderType::Vertex;
+
     if (std::ranges::find(FragmentFileExtensions, extension) != FragmentFileExtensions.end())
         return ShaderType::Fragment;
-    if (std::ranges::find(GeometryFileExtensions, extension) != GeometryFileExtensions.end())
-        return ShaderType::Geometry;
+
     if (std::ranges::find(ComputeFileExtensions, extension) != ComputeFileExtensions.end())
         return ShaderType::Compute;
 
+    if (std::ranges::find(GeometryFileExtensions, extension) != GeometryFileExtensions.end())
+        return ShaderType::Geometry;
+
+    Logger::LogError("Invalid file extension for shader : {}", extension);
     throw std::invalid_argument("Invalid file extension for shader");
 }
 
 bool_t Shader::Load(const Pointer<File>& shader)
 {
-    ShaderType&& type = FileExtensionToType(shader->GetExtension());
+    const ShaderType type = FileExtensionToType(shader->GetExtension());
 
     if (!Load(shader->GetData(), shader->GetSize(), type))
         return false;
@@ -33,12 +37,12 @@ bool_t Shader::Load(const Pointer<File>& shader)
     return true;
 }
 
-bool_t Shader::Load(const uint8_t*, int64_t)
+bool_t Shader::Load(const uint8_t* const, const int64_t)
 {
     throw std::runtime_error("Cannot load shader without shader type information");
 }
 
-bool_t Shader::Load(const char_t* buffer, const int64_t length, const ShaderType type)
+bool_t Shader::Load(const char_t* const buffer, const int64_t length, const ShaderType type)
 {
     ShaderCode& code = m_Code[static_cast<size_t>(type)];
     code.code = buffer;
@@ -71,7 +75,7 @@ void Shader::Recompile()
 {
     DestroyInRhi();
 
-    for (auto&& file : m_Files)
+    for (Pointer<File>& file : m_Files)
     {
         if (file)
             file->Reload();
@@ -86,17 +90,17 @@ void Shader::Unload()
     m_Code.fill({});
 }
 
-void Shader::SetInt(const std::string& keyName, const int value) const
+void Shader::SetInt(const std::string& keyName, const int32_t value) const
 {
     Rhi::SetUniform(UniformType::Int, &value, m_Id, keyName.c_str());
 }
 
-void Shader::SetBool(const std::string& keyName, const bool value) const
+void Shader::SetBool(const std::string& keyName, const bool_t value) const
 {
     Rhi::SetUniform(UniformType::Bool, &value, m_Id, keyName.c_str());
 }
 
-void Shader::SetFloat(const std::string& keyName, const float value) const
+void Shader::SetFloat(const std::string& keyName, const float_t value) const
 {
     Rhi::SetUniform(UniformType::Float, &value, m_Id, keyName.c_str());
 }
@@ -131,22 +135,24 @@ void Shader::Unuse() const
     Rhi::UnuseShader();
 }
 
-void Shader::SetDepthFunction(DepthFunction depthFunction)
+void Shader::SetDepthFunction(const DepthFunction depthFunction)
 {
-    if(m_LoadedInRhi)
+    if (m_LoadedInRhi)
     {
-        Logger::LogError("You are trying do modifies depth function for already initialize shader !\n Shader id = {}",m_Id);
+        Logger::LogError("Can't modify depth function in already loaded shader\n Shader id = {}",m_Id);
         return;
     }
+    
     m_DepthFunction = depthFunction;
 }
 
-void Shader::SetBlendFunction(BlendFunction blendFunction)
+void Shader::SetBlendFunction(const BlendFunction& blendFunction)
 {
-    if(m_LoadedInRhi)
+    if (m_LoadedInRhi)
     {
-        Logger::LogError("You are trying do modifies blend function for already initialize shader !\n Shader id = {}",m_Id);
+        Logger::LogError("Can't modify blend function in already loaded shader\n Shader id = {}",m_Id);
         return;
     }
+    
     m_BlendFunction = blendFunction;
 }

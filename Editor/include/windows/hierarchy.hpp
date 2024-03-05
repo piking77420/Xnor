@@ -23,7 +23,7 @@ private:
 
     void ProcessEntityDragDrop(XnorCore::Entity* entity);
     void ProcessEntitySelection(XnorCore::Entity* entity);
-    void ProcessEntityDoubleClick(XnorCore::Scene& scene, XnorCore::Entity* entity);
+    void ProcessEntityDoubleClick();
     
     void CheckDeleteEntity(XnorCore::Scene& scene);
     void CheckUnselectEntity();
