@@ -14,7 +14,8 @@ struct ColorHsv;
 struct Colorf;
 
 /// @brief The ColorRgb struct represents a color in RGBA color space.
-///        It uses values from 0 to 255 (0xFF). The default alpha value is 255.
+///
+/// It uses values from 0 to 255 (0xFF). The default alpha value is 255.
 struct XNOR_ENGINE ColorRgb
 {
     /// @brief Constant for white
@@ -99,7 +100,8 @@ struct XNOR_ENGINE ColorRgb
 };
 
 /// @brief The Colorf struct represents a color in RGBA color space.
-///        It uses values from 0 to 1. The default alpha value is 1.
+/// 
+/// It uses values from 0 to 1. The default alpha value is 1.
 struct XNOR_ENGINE Colorf
 {
     /// @brief Red component
@@ -133,7 +135,8 @@ struct XNOR_ENGINE Colorf
 };
 
 /// @brief The ColorHsv struct represents a color in HSVA color space.
-///        It uses values from 0 to 255 (0xFF). The default alpha value is 255.
+///
+/// It uses values from 0 to 255 (0xFF). The default alpha value is 255.
 struct XNOR_ENGINE ColorHsv
 {
     /// @brief Hue component

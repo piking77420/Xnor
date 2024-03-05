@@ -8,7 +8,16 @@
 /// @file formatter.hpp
 /// @brief Defines template specializations of @c std::formatter for external types.
 ///
+/// This file also defines the Formattable concept, as it seems it isn't included in the C++23 MSVC STL.
+///
 /// @see <a href="https://en.cppreference.com/w/cpp/utility/format/formatter">std::formatter<a>
+/// @see <a href="https://en.cppreference.com/w/cpp/utility/format/formattable">std::formattable<a>
+
+template<typename T>
+concept Formattable = requires (T& v, std::format_context ctx)
+{
+    std::formatter<std::remove_cvref_t<T>>().format(v, ctx);
+};
 
 // These definitions must be in the global namespace
 

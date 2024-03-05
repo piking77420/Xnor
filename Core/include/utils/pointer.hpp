@@ -10,20 +10,20 @@
 
 BEGIN_XNOR_CORE
 
-/// @brief Used to default-construct the value of a @ref Pointer.
-/// @see @ref Pointer::Pointer(Construct)
+/// @brief Used to default-construct the value of a Pointer.
+/// @see Pointer::Pointer(Construct)
 struct Construct {};
 
 /// @brief Custom XNOR smart pointer.
 ///        Represents both a @c std::shared_ptr and a @c std::weak_ptr.
 ///
-/// @paragraph reason Reason
+/// ### Reason
 /// While using @c std::weak_ptr, we realized that it was not very practical because a @c std::shared_ptr needs to be
-/// constructed from the former for the pointed type to be used. The @ref Pointer type is meant to fix this issue
+/// constructed from the former for the pointed type to be used. The Pointer type is meant to fix this issue
 /// by being both a strong and a weak shared pointer.
 ///
-/// @paragraph usage Usage
-/// The simplest way to create a @ref Pointer to wrap your type is by using @ref Pointer::Pointer<Args...>() "the forwarding variadic template constructor"
+/// ### Usage
+/// The simplest way to create a Pointer to wrap your type is by using the forwarding variadic template constructor
 /// which allows you to do the following:
 /// @code
 /// struct Type { int i; explicit Type(int i) : i(i) {} };
@@ -32,7 +32,7 @@ struct Construct {};
 /// @endcode
 /// ... and 7 will be forwarded as a parameter to the @c Type(int) constructor.
 ///
-/// There are 3 other ways of initializing a @ref Pointer:
+/// There are 3 other ways of initializing a Pointer:
 /// @code
 /// // 1 - Default initialize the Pointer: this wraps a nullptr
 /// Pointer<Type> ptr;
@@ -44,13 +44,15 @@ struct Construct {};
 /// Pointer<Type> ptr = nullptr;
 /// @endcode
 ///
-/// @paragraph references Weak and Strong References
-/// By default, creating a @ref Pointer with constructor arguments from the pointed type allocates this type on the heap.
-/// Copying this instance of @ref Pointer creates a new weak reference by default, meaning that the copy won't keep the raw
+/// ### Weak and Strong References
+/// By default, creating a Pointer with constructor arguments from the pointed type allocates this type on the heap.
+/// Copying this instance of Pointer creates a new weak reference by default, meaning that the copy won't keep the raw
 /// pointer alive. When all the strong references go out of scope or are destroyed, the underlying pointed type is freed.
-/// A strong reference can still be created if needed, by calling either @ref Pointer::CreateStrongReference(),
-/// @ref Pointer::ToStrongReference(), or by creating a copy using @ref Pointer::Pointer(const Pointer&, bool) "the copy constructor"
+/// A strong reference can still be created if needed, by calling either Pointer::CreateStrongReference(),
+/// Pointer::ToStrongReference(), or by creating a copy using @ref Pointer::Pointer(const Pointer&, bool) "the copy constructor"
 /// and giving a @c true value to the second argument.
+///
+/// @todo Reference variadic-template constructor
 ///
 /// @tparam T The type to point to. Most of the time, this shouldn't be a pointer type.
 /// 

@@ -17,7 +17,7 @@
 // ReSharper disable once CppEnforceTypeAliasCodeStyle
 /// @brief Equivalent to <c>char</c>.
 /// 
-/// @paragraph reason Reason
+/// @paragraph core_char_reason Reason
 /// We use a typedef here instead of a type alias for consistency
 /// with how the other integral types are defined in the <c>cstdint</c> header.
 /// Also, we need to manually add this type because it is considered
@@ -52,7 +52,7 @@ namespace XnorCore {}
 
 /// @brief Creates default copy and move operations for a given @p type.
 ///
-/// @paragraph usage Usage
+/// ### Usage
 /// This macro should be used for any type that defines at least one of:
 /// - A non-default destructor (this includes default implementations),
 /// - A non-default copy constructor
@@ -117,6 +117,8 @@ namespace XnorCore {}
 ///     ...
 /// };
 /// @endcode
+///
+/// Also, a static class shouldn't define any other constructors.
 /// 
 /// @param type The type to make static.
 #define STATIC_CLASS(type)              \
