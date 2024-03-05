@@ -1,18 +1,13 @@
 #include "rendering/renderer.hpp"
 
 
+#include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
-#include "rendering\light\directional_light.hpp"
-#include "rendering\light\spot_light.hpp"
+#include "rendering/light/spot_light.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/component/mesh_renderer.hpp"
 
 using namespace XnorCore;
-
-Renderer::Renderer()
-	: clearColor(0.f)
-{
-}
 
 void Renderer::Initialize()
 {
@@ -21,7 +16,7 @@ void Renderer::Initialize()
 	InitResources();
 	m_ToneMapping.InitializeResources();
 	m_SkyboxRenderer.InitializeResources();
-	m_LightCuller.InitResources();
+	m_LightManager.InitResources();
 
 	Rhi::PrepareUniform();
 }
@@ -46,7 +41,7 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	scene.GetAllComponentOfType<DirectionalLight>(&directionalLights);
 
 	// Update Light
-	m_LightCuller.UpdateLight(pointLights,spotLights,directionalLights);
+	m_LightManager.UpdateLight(pointLights,spotLights,directionalLights);
 	
 	// Update Camera
 	CameraUniformData cam;
@@ -63,15 +58,15 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	DefferedRendering(meshrenderers, &rendererContext);
 	// Blit depth of gbuffer to forward Pass
 	Rhi::BlitFrameBuffer(m_GframeBuffer->GetId(), m_RenderBuffer->GetId(),
-		{0, 0},m_GframeBuffer->GetSize(),
-		{0, 0},m_RenderBuffer->GetSize(), Attachment::Depth, TextureFiltering::Nearest);
+		{ 0, 0 }, m_GframeBuffer->GetSize(),
+		{ 0, 0 }, m_RenderBuffer->GetSize(), Attachment::Depth, TextureFiltering::Nearest);
 	
 	// ForwardPass //
 	ForwardRendering(meshrenderers, &rendererContext);
 	m_SkyboxRenderer.DrawSkymap(m_Cube, World::skybox);
 	if (rendererContext.isEditor)
 	{
-		m_LightCuller.DrawLightGizmo(pointLights, spotLights, directionalLights, *rendererContext.camera);
+		m_LightManager.DrawLightGizmo(pointLights, spotLights, directionalLights, *rendererContext.camera);
 		
 	}
 	
@@ -124,7 +119,6 @@ void Renderer::PrepareRendering(const vec2i windowSize)
 	m_ToneMapping.Prepare(windowSize);
 }
 
-
 void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers, const MaterialType materialtype) const
 {
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
@@ -138,6 +132,7 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		ModelUniformData modelData;
 
 		modelData.model = transform.worldMatrix;
+		
 		try
 		{
 			modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
@@ -146,6 +141,7 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		{
 			modelData.normalInvertMatrix = Matrix::Identity();
 		}
+		
 		Rhi::UpdateModelUniform(modelData);
 
 		if (meshRenderer->material.albedo.IsValid())
@@ -161,7 +157,6 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		}
 	}
 }
-
 
 void Renderer::InitDefferedRenderingAttachment(const Vector2i windowSize)
 {
@@ -282,7 +277,7 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshren
 	// END DEFERRED RENDERING
 }
 
-void Renderer::ForwardRendering(const std::vector<const MeshRenderer*> meshrenderers,const RendererContext* rendererContext) const
+void Renderer::ForwardRendering(const std::vector<const MeshRenderer*>& meshrenderers, const RendererContext* rendererContext) const
 {
 	if (rendererContext->isEditor)
 	{
@@ -330,7 +325,6 @@ void Renderer::InitResources()
 	// Primitive
 	m_Cube = ResourceManager::Get<Model>("assets/models/cube.obj");
 	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
-	
 }
 
 void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) const
@@ -364,7 +358,7 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 }
 
-void Renderer::RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRenderers)
+void Renderer::RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRenderers) const
 {
 	ModelUniformData data;
 	

@@ -2,8 +2,12 @@
 
 #include "light.hpp"
 
+/// @file directional_light.hpp
+/// @brief Defines the DirectionalLight class
+
 BEGIN_XNOR_CORE
 
+/// @brief Handles a directional light
 class DirectionalLight : public Light
 {
     REFLECTABLE_IMPL_MINIMAL(DirectionalLight)
@@ -17,5 +21,4 @@ public:
 
 END_XNOR_CORE
 
-REFL_AUTO(type(XnorCore::DirectionalLight, bases<XnorCore::Light>)
-);
+REFL_AUTO(type(XnorCore::DirectionalLight, bases<XnorCore::Light>))

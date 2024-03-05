@@ -2,7 +2,7 @@
 
 using namespace XnorCore;
 
-bool RendererContext::IsValid() const
+bool_t RendererContext::IsValid() const
 {
     return camera != nullptr &&  framebuffer != nullptr;  
 }
