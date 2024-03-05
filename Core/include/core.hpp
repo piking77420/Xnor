@@ -127,3 +127,9 @@ namespace XnorCore {}
     ~type() = delete;                   \
     DELETE_COPY_MOVE_OPERATIONS(type)   \
     private:
+
+// We need this in order to be able to make Doxygen links to std::string conversion operators.
+#ifdef DOXYGEN
+/// @private
+using stdstring = std::string;
+#endif
