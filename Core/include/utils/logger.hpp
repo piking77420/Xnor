@@ -15,27 +15,31 @@ BEGIN_XNOR_CORE
 
 /// @brief Static class used to log messages to the console and/or a file.
 ///
+/// ### Requirements
 /// Thread-safe logger that starts logging even before @c main() gets called because of a static-storage thread. The only necessary thing
 /// is to call Logger::Stop at the end of the program, which is already done in Application::~Application. You can synchronize the calling thread
 /// with the logger one at any time by calling Logger::Synchronize.
 ///
+/// ### Options
 /// By default, the logger doesn't log to a file. This can be changed by either calling Logger::OpenDefaultFile or Logger::OpenFile.
 /// You can also stop logging to the file whenever you want by calling Logger::CloseFile.
+/// 
+/// You can change at any time the minimum LogLevel for either the console or the file by respectively setting Logger::minimumConsoleLevel or Logger::minimumFileLevel
+/// to a different value.
 ///
+/// ### Usage
 /// The most generic way of logging is by using the Logger::Log function, which allows you to pass a LogLevel to describe the severity
-/// of the log. Shortcuts are also available through the Logger::LogDebug, Logger::LogInfo, Logger::LogWarning, Logger::LogError and Logger::LogFatal.
+/// of the log. Shortcuts are also available through the use of Logger::LogDebug, Logger::LogInfo, Logger::LogWarning, Logger::LogError and Logger::LogFatal.
 /// Those functions take a format string and format parameters to follow the usage of <a href="https://en.cppreference.com/w/cpp/utility/format/format">std::format</a>.
 /// This means that any new parameter type that is directly printed must satisfy the requirements of the <a href="https://en.cppreference.com/w/cpp/utility/format/formattable">std::formattable</a>
-/// concept, and therefore needs to implement its own version of the <a href="https://en.cppreference.com/w/cpp/utility/format/formatter">std::formatter</a> struct.
+/// concept (defined a Formattable in the XnorCore namespace), and therefore needs to implement its own version of the <a href="https://en.cppreference.com/w/cpp/utility/format/formatter">std::formatter</a> struct.
 ///
+/// ### Example
 /// All logs are preceded by their timestamp (the exact time at which the Logger::Log function was called), and a string representation of their LogLevel.
 /// A typical log looks like the following:
 /// @code
 /// [11:26:05.751] [INFO] Starting logging to file.
 /// @endcode
-///
-/// You can change at any time the minimum LogLevel for either the console or the file by respectively setting Logger::minimumConsoleLevel or Logger::minimumFileLevel
-/// to a different value.
 class Logger final
 {
     STATIC_CLASS(Logger)
@@ -86,7 +90,7 @@ public:
 
     /// @brief Logs a message using the specified format string, arguments and LogLevel.
     /// 
-    /// @tparam Args The format arguments types. These are generally automatically deducted by the compiler and often don't need to be manually specified.
+    /// @tparam Args The format arguments types. These are generally automatically deducted by the compiler and often don't need to be manually specified. Also, they must satisfy the Formattable concept requirements.
     /// @param level The log severity.
     /// @param format The format string to log.
     /// @param args The arguments to replace the format string with.
