@@ -1,33 +1,53 @@
 #pragma once
 
 #include "core.hpp"
-#include "render_pass.hpp"
 #include "window.hpp"
 #include "resource/texture.hpp"
 
+/// @file frame_buffer.hpp
+/// @brief Defines the FrameBuffer class
+
 BEGIN_XNOR_CORE
 
+/// \brief Encapsulates a framebuffer object
 class FrameBuffer
 {
 public:
 	XNOR_ENGINE FrameBuffer() = default;
-	
+
+	/// @brief Creates a framebuffer with a specified size
+	/// @param size Size
 	XNOR_ENGINE explicit FrameBuffer(Vector2i size);
 
 	XNOR_ENGINE ~FrameBuffer();
-	
+
 	DEFAULT_COPY_MOVE_OPERATIONS(FrameBuffer)
-	
-	XNOR_ENGINE void Create(const RenderPass& renderPass, const std::vector<const Texture*>& attachements);
-	
+
+	/// @brief Creates the framebuffer with a render pass and texture attachments
+	/// @param renderPass Render pass
+	/// @param attachments Texture attachments
+	XNOR_ENGINE void Create(const RenderPass& renderPass, const std::vector<const Texture*>& attachments);
+
+	/// @brief Gets the size of the framebuffer
+	/// @return Size
 	XNOR_ENGINE	Vector2i GetSize() const;
 	
+	/// @brief Binds the framebuffer
 	XNOR_ENGINE void BindFrameBuffer() const;
 
+	/// @brief Unbinds the framebuffer
 	XNOR_ENGINE void UnBindFrameBuffer() const;
 
-	XNOR_ENGINE void ReadPixel(uint32_t attachmentIndex, Vector2i position, TextureFormat textureFormat, TextureInternalFormat textureInternalFormat, void* output) const;
+	/// @brief Fetches a pixel from an attachment of the framebuffer
+	/// @param attachmentIndex Attachment index
+	/// @param position Position
+	/// @param format Format
+	/// @param internalFormat Internal format
+	/// @param output Output
+	XNOR_ENGINE void ReadPixel(uint32_t attachmentIndex, Vector2i position, TextureFormat format, TextureInternalFormat internalFormat, void* output) const;
 
+	/// @brief Gets the id of the framebuffer
+	/// @return Framebuffer id
 	XNOR_ENGINE uint32_t GetId() const;
 	
 private:

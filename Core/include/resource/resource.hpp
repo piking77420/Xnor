@@ -88,10 +88,14 @@ public:
     XNOR_ENGINE const Guid& GetGuid() const;
 
 protected:
+    /// @brief Whether the resource was loaded
     bool_t m_Loaded = false;
+    /// @brief Whether the resource was loaded in the Rhi
     bool_t m_LoadedInRhi = false;
 
+    /// @brief Name of the resource
     std::string m_Name;
+    /// @brief Guid of the resource
     Guid m_Guid;
 };
 

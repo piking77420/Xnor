@@ -6,7 +6,7 @@ using namespace XnorCore;
 
 
 FrameBuffer::FrameBuffer(const vec2i size)
-	: m_FrameBufferSize(size), m_Id(0)
+	: m_FrameBufferSize(size)
 {
 }
 
@@ -15,9 +15,9 @@ FrameBuffer::~FrameBuffer()
 	Rhi::DestroyFrameBuffer(m_Id);
 }
 
-void FrameBuffer::Create(const RenderPass& renderPass, const std::vector<const Texture*>& attachements)
+void FrameBuffer::Create(const RenderPass& renderPass, const std::vector<const Texture*>& attachments)
 {
-	m_Id = Rhi::CreateFrameBuffer(renderPass, attachements);
+	m_Id = Rhi::CreateFrameBuffer(renderPass, attachments);
 }
 
 Vector2i FrameBuffer::GetSize() const
@@ -35,10 +35,11 @@ void FrameBuffer::UnBindFrameBuffer() const
 	Rhi::BindFrameBuffer(0);
 }
 
-void FrameBuffer::ReadPixel(const uint32_t attachmentIndex, const Vector2i position, const TextureFormat textureFormat, const TextureInternalFormat textureInternalFormat, void* const output) const
+void FrameBuffer::ReadPixel(const uint32_t attachmentIndex, const Vector2i position, const TextureFormat format,
+	const TextureInternalFormat internalFormat, void* const output) const
 {
 	BindFrameBuffer();
-	Rhi::GetPixelFromAttachement(attachmentIndex, position, textureFormat, textureInternalFormat, output);
+	Rhi::GetPixelFromAttachement(attachmentIndex, position, format, internalFormat, output);
 	UnBindFrameBuffer();
 }
 
