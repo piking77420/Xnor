@@ -43,6 +43,13 @@ namespace Utils
     [[nodiscard]]
     size_t GetTypeHash();
 
+    /// @brief Gets the hash code of a specified polymorphic pointer type
+    /// @tparam T Type
+    /// @param ptr Polymorphic pointer
+    /// @return Hash
+    template <typename T>
+    size_t GetTypeHash(const T* ptr);
+
     /// @brief Horizontally aligns the cursor of ImGui to be centered around a specific portion of the available space
     /// @param objectWidth Width of the element to align
     /// @param alignment In window alignment, 0.5f by default to center the object
@@ -198,6 +205,12 @@ template <typename T>
 size_t Utils::GetTypeHash()
 {
     return typeid(T).hash_code();
+}
+
+template <typename T>
+size_t Utils::GetTypeHash(const T* const ptr)
+{
+    return typeid(*ptr).hash_code();
 }
 
 template <typename T, typename U>

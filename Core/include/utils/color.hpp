@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <cmath>
+#include <Maths/vector3.hpp>
 
 #include "core.hpp"
 
@@ -179,6 +180,11 @@ struct XNOR_ENGINE Colorf
     [[nodiscard]]
     constexpr Colorf(const float_t r, const float_t g, const float_t b, const float_t a = 1.f)
     : r(r), g(g), b(b), a(a) {}
+
+    /// @brief Gets the RGB component of the color
+    /// @return R, G and B in a Vector3
+    [[nodiscard]]
+    constexpr Vector3 Rgb() const;
 
     /// @brief Converts the Colorf to a ColorRgb
     [[nodiscard]]
@@ -482,6 +488,11 @@ constexpr Colorf operator*(const Colorf& c1, const Colorf& c2)
 constexpr Colorf operator*(const Colorf color, const float_t alphaFactor)
 {
     return Colorf(color.r, color.g, color.b, color.a * alphaFactor);
+}
+
+constexpr Vector3 Colorf::Rgb() const
+{
+    return Vector3(r, g, b);
 }
 
 constexpr Colorf::operator ColorRgb() const { return ColorRgb(static_cast<uint8_t>(r) * 255, static_cast<uint8_t>(g) * 255, static_cast<uint8_t>(b) * 255); }

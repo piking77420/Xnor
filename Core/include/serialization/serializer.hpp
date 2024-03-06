@@ -239,6 +239,10 @@ Serialize<type>(ptr->Cast<type>(), false);          \
     {
         FetchAttribute<std::string>(name, static_cast<std::string>(*ptr));
     }
+    else if constexpr (Meta::IsEnum<MemberT>)
+    {
+        // TODO enum serialization
+    }
     else
     {
         Serialize<MemberT>(ptr, false);
