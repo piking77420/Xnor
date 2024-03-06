@@ -20,8 +20,6 @@ bool TransfromGizmo::Manipulate(XnorCore::Transform& transform)
         m_CurrentGizmoOperation = ImGuizmo::ROTATE;
     if (ImGui::IsKeyPressed(ImGuiKey_Y)) 
         m_CurrentGizmoOperation = ImGuizmo::SCALE;
-
-
     
     if (ImGuizmo::Manipulate(m_View.Raw(), m_Projection.Raw(), m_CurrentGizmoOperation, m_CurrentGizmoMode, transform.worldMatrix.Raw()))
     {
