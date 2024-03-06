@@ -97,6 +97,8 @@ void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name)
 {
     using PtrT = typename MemberT::Type;
 
+    ImGui::PushID(obj);
+    
     ImGui::Text("%s", name);
 
     if constexpr (XnorCore::Meta::IsBaseOf<XnorCore::Resource, PtrT>)
@@ -104,9 +106,9 @@ void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name)
         ImGui::SameLine();
 
         if (*obj != nullptr)
-            ImGui::Selectable(obj->Get()->GetName().c_str());
+            ImGui::Text("%s", obj->Get()->GetName().c_str());
         else
-            ImGui::Selectable("No resource");
+            ImGui::Text("No resource");
 
         if (ImGui::BeginDragDropTarget())
         {
@@ -126,7 +128,26 @@ void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name)
                 
             ImGui::EndDragDropTarget();
         }
+        
+        ImGui::SameLine();
+
+        if (ImGui::Button("+"))
+        {
+            m_ResourceFilterTarget = static_cast<void*>(obj);
+        }
+
+        if (m_ResourceFilterTarget == static_cast<void*>(obj))
+        {
+            XnorCore::Pointer<PtrT> res = FilterResources<PtrT>();
+            if (res)
+            {
+                *obj = res;
+                m_ResourceFilterTarget = nullptr;
+            }
+        }
     }
+
+    ImGui::PopID();
 }
 
 template <typename MemberT>
@@ -370,6 +391,30 @@ void Inspector::DisplayList(MemberT* ptr, const char_t* name)
             ImGui::PopID();
         }
     }
+}
+
+template <XnorCore::ResourceT T>
+XnorCore::Pointer<T> Inspector::FilterResources()
+{
+    ImGui::OpenPopup("Resource");
+    
+    if (!ImGui::BeginPopupModal("Resource"))
+        return nullptr;
+
+    XnorCore::Pointer<T> r = nullptr;
+    std::vector<XnorCore::Pointer<T>> resources = XnorCore::ResourceManager::FindAll<T>();
+
+    for (const XnorCore::Pointer<T>& res : resources)
+    {
+        if (ImGui::Selectable(res.Get()->GetName().c_str()))
+        {
+            r = res;
+            break;
+        }
+    }
+    
+    ImGui::EndPopup();
+    return r;
 }
 
 END_XNOR_EDITOR

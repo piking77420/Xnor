@@ -165,7 +165,7 @@ void Hierarchy::ProcessEntityDragDrop(XnorCore::Entity* const entity)
 
 void Hierarchy::ProcessEntitySelection(XnorCore::Entity* const entity)
 {
-    if (ImGui::IsItemClicked())
+    if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
     {
         m_Editor->data.selectedEntity = entity;
         m_ClickedOnEntity = true;

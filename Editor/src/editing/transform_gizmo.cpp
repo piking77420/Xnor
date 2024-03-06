@@ -3,25 +3,25 @@
 using namespace XnorEditor;
 
 
-void TransfromGizmo::SetRendering(const XnorCore::Camera& camera, Vector2 windowPos, Vector2 windowSize)
+void TransfromGizmo::SetRendering(const XnorCore::Camera& camera, const Vector2 windowPos, const Vector2i windowSize)
 {
     ImGuizmo::SetOrthographic(false);
     ImGuizmo::SetDrawlist();
-    camera.GetProjection({ static_cast<int32_t>(windowSize.x) , static_cast<int32_t>(windowSize.y) }, &m_Projection);
+    camera.GetProjection(windowSize, &m_Projection);
     camera.GetView(&m_View);
-    ImGuizmo::SetRect(windowPos.x, windowPos.y, windowSize.x,windowSize.y);
+    ImGuizmo::SetRect(windowPos.x, windowPos.y, static_cast<float_t>(windowSize.x), static_cast<float_t>(windowSize.y));
 }
 
 bool TransfromGizmo::Manipulate(XnorCore::Transform& transform)
 {
     if (ImGui::IsKeyPressed(ImGuiKey_T))
         m_CurrentGizmoOperation = ImGuizmo::TRANSLATE;
+
     if (ImGui::IsKeyPressed(ImGuiKey_R))
         m_CurrentGizmoOperation = ImGuizmo::ROTATE;
+
     if (ImGui::IsKeyPressed(ImGuiKey_Y)) 
         m_CurrentGizmoOperation = ImGuizmo::SCALE;
-
-
     
     if (ImGuizmo::Manipulate(m_View.Raw(), m_Projection.Raw(), m_CurrentGizmoOperation, m_CurrentGizmoMode, transform.worldMatrix.Raw()))
     {
@@ -35,6 +35,7 @@ bool TransfromGizmo::Manipulate(XnorCore::Transform& transform)
         transform.SetRotationEulerAngle() = eulerRotation * Calc::Deg2Rad;
         transform.SetRotation() = Quaternion::FromEuler(eulerRotation);
         transform.SetScale() = scale;
+
         return true;
     }
 

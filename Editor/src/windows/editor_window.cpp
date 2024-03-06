@@ -13,16 +13,18 @@ EditorWindow::EditorWindow(Editor* editor)
 void EditorWindow::Display()
 {
     RenderWindow::Display();
+
     if (IsFocused())
     {
         m_EditorCamera.UpdateCamera();
     }
+
     m_EditorCamera.OnPressGoToObject();
     EditTransform();
 
 }
 
-void EditorWindow::Initialize(Vector2i size)
+void EditorWindow::Initialize(const Vector2i size)
 {
     RenderWindow::Initialize(size);
     m_RendererContext.camera = &m_Editor->data.editorCam;
@@ -35,6 +37,6 @@ void EditorWindow::EditTransform()
 
     XnorCore::Transform& transform = m_Editor->data.selectedEntity->transform; 
     const XnorCore::Camera& cam = m_Editor->data.editorCam;
-    m_TransfromGizmo.SetRendering(cam,{ static_cast<float_t>(m_Position.x), static_cast<float_t>(m_Position.y) },{ static_cast<float_t>(m_Size.x), static_cast<float_t>(m_Size.y) });
+    m_TransfromGizmo.SetRendering(cam,{ static_cast<float_t>(m_Position.x), static_cast<float_t>(m_Position.y) }, m_Size);
     m_TransfromGizmo.Manipulate(transform);
 }

@@ -50,7 +50,7 @@ const Vector3& Transform::GetScale() const
     return m_Scale;
 }
 
-bool Transform::HasChange() const
+bool_t Transform::HasChanged() const
 {
     return m_Changed;
 }

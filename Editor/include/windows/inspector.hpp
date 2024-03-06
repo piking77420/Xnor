@@ -2,6 +2,7 @@
 
 #include "definitions.hpp"
 #include "ui_window.hpp"
+#include "resource/resource_manager.hpp"
 #include "utils/serializable.hpp"
 
 BEGIN_XNOR_EDITOR
@@ -45,6 +46,12 @@ private:
 
     template <typename MemberT>
     static void DisplayList(MemberT* ptr, const char_t* name);
+
+    // TODO maybe move elsewhere
+    template <XnorCore::ResourceT T>
+    static XnorCore::Pointer<T> FilterResources();
+
+    static inline void* m_ResourceFilterTarget = nullptr;
 };
 
 END_XNOR_EDITOR

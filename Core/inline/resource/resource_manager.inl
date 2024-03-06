@@ -1,8 +1,8 @@
 #pragma once
+#include <ranges>
 
 BEGIN_XNOR_CORE
-
-template <ResourceT T>
+    template <ResourceT T>
 Pointer<T> ResourceManager::Add(std::string name)
 {
     Logger::LogDebug("Adding resource {}", name);
@@ -30,14 +30,16 @@ Pointer<T> ResourceManager::Load(const Pointer<File>& file)
     if (Contains(file->GetPathString()))
     {
         Pointer<T> resource = GetNoCheck<T>(file->GetPathString());
-        const bool loaded = resource->IsLoaded();
+        const bool_t loaded = resource->IsLoaded();
         Logger::LogWarning(
             "This resource has already been {}, consider using ResourceManager::Get instead{}",
             loaded ? "loaded" : "added but isn't loaded",
             loaded ? "" : ". Loading it"
         );
+
         if (!loaded)
             resource->Load(file);
+
         return resource;
     }
 
@@ -90,9 +92,10 @@ void ResourceManager::FindAll(std::vector<Pointer<T>>* result)
 {
     result->clear();
     
-    for (auto&& mapEntry : m_Resources)
+    for (auto& val : m_Resources | std::views::values)
     {
-        Pointer<T> entry = Utils::DynamicPointerCast<T>(mapEntry.second);
+        // ReSharper disable once CppTooWideScope
+        Pointer<T> entry = Utils::DynamicPointerCast<T>(val);
         
         if (entry)
             result->push_back(std::move(entry));
@@ -100,11 +103,11 @@ void ResourceManager::FindAll(std::vector<Pointer<T>>* result)
 }
 
 template <ResourceT T>
-Pointer<T> ResourceManager::Find(std::function<bool(Pointer<T>)>&& predicate)
+Pointer<T> ResourceManager::Find(std::function<bool_t(Pointer<T>)>&& predicate)
 {
-    for (auto&& mapResource : m_Resources)
+    for (const auto& val : m_Resources | std::views::values)
     {
-        Pointer<Resource> resource = mapResource.second;
+        Pointer<Resource> resource = val;
         
         if (Utils::DynamicPointerCast<T>(resource) && predicate(resource))
             return resource;
@@ -114,7 +117,7 @@ Pointer<T> ResourceManager::Find(std::function<bool(Pointer<T>)>&& predicate)
 }
 
 template <ResourceT T>
-std::vector<Pointer<T>> ResourceManager::FindAll(std::function<bool(Pointer<T>)>&& predicate)
+std::vector<Pointer<T>> ResourceManager::FindAll(std::function<bool_t(Pointer<T>)>&& predicate)
 {
     std::vector<Pointer<T>> result;
     FindAll<T>(predicate, &result);
@@ -122,13 +125,13 @@ std::vector<Pointer<T>> ResourceManager::FindAll(std::function<bool(Pointer<T>)>
 }
 
 template <ResourceT T>
-void ResourceManager::FindAll(std::function<bool(Pointer<T>)>&& predicate, std::vector<Pointer<T>>* result)
+void ResourceManager::FindAll(std::function<bool_t(Pointer<T>)>&& predicate, std::vector<Pointer<T>>* result)
 {
     result->clear();
     
-    for (auto&& mapResource : m_Resources)
+    for (const auto& val : m_Resources | std::views::values)
     {
-        Pointer<Resource> resource = mapResource.second;
+        Pointer<Resource> resource = val;
         
         if (Utils::DynamicPointerCast<T>(resource) && predicate(resource))
             result->push_back(resource);
@@ -136,7 +139,7 @@ void ResourceManager::FindAll(std::function<bool(Pointer<T>)>&& predicate, std::
 }
 
 template <ResourceT T>
-bool ResourceManager::IsResourceOfType(const std::string& name)
+bool_t ResourceManager::IsResourceOfType(const std::string& name)
 {
     Pointer<T> resource = Get<T>(name);
 

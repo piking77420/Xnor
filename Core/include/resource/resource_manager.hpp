@@ -49,11 +49,11 @@ public:
 
     /// @brief Checks whether the ResourceManager contains the specified Resource name.
     [[nodiscard]]
-    XNOR_ENGINE static bool Contains(const std::string& name);
+    XNOR_ENGINE static bool_t Contains(const std::string& name);
 
     /// @brief Checks whether the ResourceManager contains the specified Resource file name.
     [[nodiscard]]
-    XNOR_ENGINE static bool Contains(const Pointer<File>& file);
+    XNOR_ENGINE static bool_t Contains(const Pointer<File>& file);
 
     /// @brief Returns the Resource that was either added or loaded using the given @p name.
     template <ResourceT T = Resource>
@@ -96,7 +96,7 @@ public:
     /// returned @c false, instead return a null @ref Pointer.
     template <ResourceT T = Resource>
     [[nodiscard]]
-    static Pointer<T> Find(std::function<bool(Pointer<T>)>&& predicate);
+    static Pointer<T> Find(std::function<bool_t(Pointer<T>)>&& predicate);
     
     /// @brief Finds a list of Resource based on a predicate.
     /// @tparam T The type of Resource to find.
@@ -106,16 +106,16 @@ public:
     /// returned @c false, instead return a null @ref Pointer.
     template <ResourceT T = Resource>
     [[nodiscard]]
-    static std::vector<Pointer<T>> FindAll(std::function<bool(Pointer<T>)>&& predicate);
+    static std::vector<Pointer<T>> FindAll(std::function<bool_t(Pointer<T>)>&& predicate);
 
-    /// @see @ref FileManager::FindAll(std::function<bool(Pointer<T>)>&&)
+    /// @see @ref FileManager::FindAll(std::function<bool_t(Pointer<T>)>&&)
     template <ResourceT T>
-    static void FindAll(std::function<bool(Pointer<T>)>&& predicate, std::vector<Pointer<T>>* result);
+    static void FindAll(std::function<bool_t(Pointer<T>)>&& predicate, std::vector<Pointer<T>>* result);
 
     /// @brief Checks whether the given @p name corresponds to a Resource of type @p T.
     template <ResourceT T>
     [[nodiscard]]
-    static bool IsResourceOfType(const std::string& name);
+    static bool_t IsResourceOfType(const std::string& name);
 
     /// @brief Unloads the Resource with the given @p name.
     XNOR_ENGINE static void Unload(const std::string& name);

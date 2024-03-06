@@ -41,7 +41,7 @@ public:
 
 	const Vector3& GetScale() const;
 
-	bool HasChange() const;
+	bool_t HasChanged() const;
 
 	/// @brief World transformation matrix of the transform
 	Matrix worldMatrix = Matrix::Identity();
