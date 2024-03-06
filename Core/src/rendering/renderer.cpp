@@ -366,7 +366,7 @@ void Renderer::RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRende
 	{
 		const Transform& transform = mesh->entity->transform;
 
-		Matrix&& trs = Matrix::Trs(transform.position, transform.rotation, transform.scale);
+		Matrix&& trs = Matrix::Trs(transform.GetPosition(), transform.GetRotation(), transform.GetScale());
 		data.model = trs;
 		data.normalInvertMatrix = trs.Inverted().Transposed();
 		

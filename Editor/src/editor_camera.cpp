@@ -156,7 +156,7 @@ void EditorCamera::OnPressGoToObject()
     
     const XnorCore::Entity& currentEntiy = *m_EditorRef->data.selectedEntity;
     const XnorCore::MeshRenderer* meshRenderer = currentEntiy.GetComponent<XnorCore::MeshRenderer>();
-    m_ObjectPos = currentEntiy.transform.position;
+    m_ObjectPos = currentEntiy.transform.GetPosition();
     m_EditorRefCamera->LookAt(m_ObjectPos);
     m_ResetDeltaMouse = true;
     
@@ -170,7 +170,7 @@ void EditorCamera::OnPressGoToObject()
         const XnorCore::ModelAabb&& aabb = meshRenderer->model->GetAabb();
         const Vector3 radiusVec = aabb.max - aabb.min;
         Vector4 radiusPreScale = Vector4(radiusVec.x, radiusVec.y, radiusVec.z, 1.0f);
-        radiusPreScale = Matrix::Trs(Vector3(0.f), Quaternion::Identity(), currentEntiy.transform.scale) * radiusPreScale;
+        radiusPreScale = Matrix::Trs(Vector3(0.f), Quaternion::Identity(), currentEntiy.transform.GetScale()) * radiusPreScale;
         const Vector3 correctVec = {radiusPreScale.x, radiusPreScale.y, radiusPreScale.z};
         m_DistanceToStop = correctVec.Length();
     }

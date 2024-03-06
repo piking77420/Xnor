@@ -9,17 +9,21 @@
 BEGIN_XNOR_CORE
 
 /// @brief Provides functions to handle parent/child entity transformation hierarchy
-namespace SceneGraph
+class SceneGraph
 {
-    /// @brief Updates the transformation of a list of entities
-    /// @param entities List of entities
-    XNOR_ENGINE void Update(const List<Entity*>& entities);
-
+    
+public:
     /// @brief Updates an entity when its parent changed
     /// @param entity Entity
-    XNOR_ENGINE void OnAttachToParent(Entity& entity);
+    XNOR_ENGINE static void OnAttachToParent(Entity& entity);
+    
+    /// @brief Updates the transformation of a list of entities
+    /// @param entities List of entities
+    XNOR_ENGINE static void Update(const List<Entity*>& entities);
+    
+    XNOR_ENGINE static void UpdateTransform(Entity& entity);
 
-    XNOR_ENGINE void UpdateTransform(Entity& entity);
-}
+    STATIC_CLASS(SceneGraph)
+};
 
 END_XNOR_CORE

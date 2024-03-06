@@ -1,4 +1,7 @@
 ﻿#include "windows/render_window.hpp"
+
+#include <ImGui/imgui_internal.h>
+
 #include "world/world.hpp"
 
 
@@ -30,7 +33,7 @@ RenderWindow::~RenderWindow()
 
 void RenderWindow::Display()
 {
-    if(!m_RendererContext.IsValid() || m_RendererContext.framebuffer->GetSize() != m_Size)
+    if (!m_RendererContext.IsValid() || m_RendererContext.framebuffer->GetSize() != m_Size)
     {
         ResizeRenderContext(m_Size);
     }

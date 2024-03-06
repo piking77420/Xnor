@@ -7,7 +7,6 @@ void TransfromGizmo::SetRendering(const XnorCore::Camera& camera, Vector2 window
 {
     ImGuizmo::SetOrthographic(false);
     ImGuizmo::SetDrawlist();
-    
     camera.GetProjection({ static_cast<int32_t>(windowSize.x) , static_cast<int32_t>(windowSize.y) }, &m_Projection);
     camera.GetView(&m_View);
     ImGuizmo::SetRect(windowPos.x, windowPos.y, windowSize.x,windowSize.y);
@@ -29,14 +28,13 @@ bool TransfromGizmo::Manipulate(XnorCore::Transform& transform)
         Vector3 position;
         Vector3 eulerRotation;
         Vector3 scale;
-        transform.changed = true;
         
         ImGuizmo::DecomposeMatrixToComponents(transform.worldMatrix.Raw(), position.Raw(), eulerRotation.Raw(), scale.Raw());
-        transform.position = position;
+        transform.SetPosition() = position;
         // Convert Imgui gizmoRot
-        transform.eulerRotation = eulerRotation * Calc::Deg2Rad;
-        transform.rotation = Quaternion::FromEuler(eulerRotation);
-        transform.scale = scale;
+        transform.SetRotationEulerAngle() = eulerRotation * Calc::Deg2Rad;
+        transform.SetRotation() = Quaternion::FromEuler(eulerRotation);
+        transform.SetScale() = scale;
         return true;
     }
 

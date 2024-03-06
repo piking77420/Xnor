@@ -14,44 +14,66 @@
 /// @file transform.hpp
 /// @brief Defines the Transform class.
 
-BEGIN_XNOR_CORE
+namespace XnorCore
+{
+	class SceneGraph;
+}
 
-/// @brief Represents a 3D transformation, containing Position, Rotation and Scaling
+BEGIN_XNOR_CORE
+	/// @brief Represents a 3D transformation, containing Position, Rotation and Scaling
 class XNOR_ENGINE Transform final : public Serializable
 {
 	REFLECTABLE_IMPL_MINIMAL(Transform)
 
 public:
-	/// @brief Gets the world position of the transform
-	/// @return World position
-	[[nodiscard]]
-	Vector3 GetWorldPos() const;
+	Vector3& SetPosition();
 
-	/// @brief Position
-	Vector3 position;
+	Vector3& SetRotationEulerAngle();
 
-	/// @brief Euler rotation
-	Vector3 eulerRotation;
+	Quaternion& SetRotation();
 
-	/// @brief Scaling
-	Vector3 scale = Vector3(1.f);
+	Vector3& SetScale();
+	
+	const Vector3& GetPosition() const;
 
-	/// @brief Quaternion associated with the euler rotation
-	Quaternion rotation = Quaternion::Identity();
+	const Vector3& GetRotationEulerAngle() const;
+
+	const Quaternion& GetRotation() const;
+
+	const Vector3& GetScale() const;
+
+	bool HasChange() const;
 
 	/// @brief World transformation matrix of the transform
 	Matrix worldMatrix = Matrix::Identity();
+	
+private:
+	/// @brief Position
+	Vector3 m_Position;
 
+	/// @brief Euler rotation
+	Vector3 m_EulerRotation;
+
+	/// @brief Scaling
+	Vector3 m_Scale = Vector3(1.f);
+
+	/// @brief Quaternion associated with the euler rotation
+	Quaternion m_Rotation = Quaternion::Identity();
+	
 	/// @brief Whether the transform changed and needs to be updated
-	bool_t changed = true;
+	bool_t m_Changed = true;
+
+	// SceneGraph is friend to be able to update the graph
+	// and not let the user change the m_changed event if the transform has change between 2 frames
+	friend SceneGraph;
 };
 
 END_XNOR_CORE
 
 REFL_AUTO(type(XnorCore::Transform),
-	field(position, XnorCore::NotifyChange(&XnorCore::Transform::changed)),
-	field(eulerRotation, XnorCore::NotifyChange(&XnorCore::Transform::changed)),
-	field(scale, XnorCore::NotifyChange(&XnorCore::Transform::changed))
+	field(m_Position, XnorCore::NotifyChange(&XnorCore::Transform::m_Changed)),
+	field(m_EulerRotation, XnorCore::NotifyChange(&XnorCore::Transform::m_Changed)),
+	field(m_Scale, XnorCore::NotifyChange(&XnorCore::Transform::m_Changed))
 )
 
 /// @brief @c std::formatter template specialization for the XnorCore::Transform type.
@@ -126,9 +148,9 @@ struct std::formatter<XnorCore::Transform>
 		{
 			std::format_args args;
 			if (m_QuaternionRotation)
-				args = std::make_format_args(transform.position, transform.rotation, transform.scale);
+				args = std::make_format_args(transform.m_Position, transform.m_Rotation, transform.m_Scale);
 			else
-				args = std::make_format_args(transform.position, transform.eulerRotation * (m_DegreeRotation ? Calc::Rad2Deg : 1.f), transform.scale);
+				args = std::make_format_args(transform.m_Position, transform.m_EulerRotation * (m_DegreeRotation ? Calc::Rad2Deg : 1.f), transform.m_Scale);
         
 			const char separator = m_Multiline ? '\n' : ';';
 

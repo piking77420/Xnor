@@ -48,7 +48,7 @@ void LightManager::UpdateLight(const std::vector<const PointLight*>& pointLightC
 		{
 			.color = pointLight->color.Rgb(),
 			.intensity = pointLight->intensity,
-			.position = pointLight->entity->transform.GetWorldPos(),
+			.position = static_cast<Vector3>(pointLight->entity->transform.worldMatrix[3]),
 			.radius = 30.f * sqrt(pointLight->intensity),
 		};
 	}
@@ -57,14 +57,14 @@ void LightManager::UpdateLight(const std::vector<const PointLight*>& pointLightC
 	for (size_t i = 0 ; i < nbrOfSpotLight ; i++)
 	{
 		const SpotLight* spotLight = spotLightsComponents[i];
-		const Matrix matrix = Matrix::Trs(Vector3(0.f), spotLight->entity->transform.rotation.Normalized(), Vector3(1.f));
+		const Matrix matrix = Matrix::Trs(Vector3(0.f), spotLight->entity->transform.GetRotation().Normalized(), Vector3(1.f));
 		const Vector4 direction = matrix * (-Vector4::UnitY());
 		
 		gpuLightData.spotLightData[i] =
 		{
 			.color = spotLight->color.Rgb(),
 			.intensity = spotLight->intensity,
-			.position = spotLight->entity->transform.GetWorldPos(),
+			.position = static_cast<Vector3>(spotLight->entity->transform.worldMatrix[3]),
 			.cutOff = std::cos(spotLight->cutOff),
 			.direction = { direction.x, direction.y, direction.z },
 			.outerCutOff = std::cos(spotLight->outerCutOff),
@@ -76,7 +76,7 @@ void LightManager::UpdateLight(const std::vector<const PointLight*>& pointLightC
 	for (size_t i = 0 ; i < nbrOfDirectionalLight ; i++)
 	{
 		constexpr float_t scaleFactor = 0.5f;
-		const Matrix matrix = Matrix::Trs(Vector3(0.f), directionalComponent[i]->entity->transform.rotation, Vector3(scaleFactor));
+		const Matrix matrix = Matrix::Trs(Vector3(0.f), directionalComponent[i]->entity->transform.GetRotation(), Vector3(scaleFactor));
 		const Vector4 direction = matrix * -Vector4::UnitY(); 
 		
 		gpuLightData.directionalData[i] =
@@ -99,33 +99,33 @@ void LightManager::DrawLightGizmo(const std::vector<const PointLight*>& pointLig
 	for (const PointLight* const pointLight : pointLightComponents)
 	{
 		GizmoLight gizmoLight = {
-			.pos = pointLight->entity->transform.position,
+			.pos = pointLight->entity->transform.GetPosition(),
 			.type = RenderingLight::PointLight,
 		};
 		
-		const float_t distance = (camera.position - pointLight->entity->transform.position).SquaredLength();
+		const float_t distance = (camera.position - pointLight->entity->transform.GetPosition()).SquaredLength();
 		sortedLight.emplace(distance, gizmoLight);
 	}
 	
 	for (const SpotLight* const spotLight : spotLightsComponents)
 	{
 		GizmoLight gizmoLight = {
-			.pos = spotLight->entity->transform.position,
+			.pos = spotLight->entity->transform.GetPosition(),
 			.type = RenderingLight::SpothLight
 		};
 		
-		const float_t distance = (camera.position - spotLight->entity->transform.position).SquaredLength();
+		const float_t distance = (camera.position - spotLight->entity->transform.GetPosition()).SquaredLength();
 		sortedLight.emplace(distance, gizmoLight);
 	}
 	
 	for (const DirectionalLight* const dirLight : directionalComponent)
 	{
 		GizmoLight gizmoLight = {
-			.pos = dirLight->entity->transform.position,
+			.pos = dirLight->entity->transform.GetPosition(),
 			.type = RenderingLight::DirLight
 		};
 		
-		const float_t distance = (camera.position - dirLight->entity->transform.position).SquaredLength();
+		const float_t distance = (camera.position - dirLight->entity->transform.GetPosition()).SquaredLength();
 		sortedLight.emplace(distance, gizmoLight);
 	}
 	

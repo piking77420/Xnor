@@ -3,6 +3,7 @@
 #include <ImGui/imgui.h>
 #include <ImGui/imgui_impl_glfw.h>
 #include <ImGui/imgui_impl_opengl3.h>
+#include <ImGui/imgui_internal.h>
 #include <ImguiGizmo/ImGuizmo.h>
 
 #include "file/file_manager.hpp"
@@ -104,6 +105,7 @@ void Editor::BeginDockSpace() const
 
 	// Begin docking layout
 	ImGui::Begin("DockSpace Demo", &dockspaceOpen, windowFlags);
+	
 	if (optFullscreen)
 		ImGui::PopStyleVar(3);
 
@@ -217,7 +219,7 @@ void Editor::CreateTestScene()
 	// init Scene //
 	Entity& ent1 = *World::scene.CreateEntity("VikingRoom");
 	MeshRenderer* meshRenderer = ent1.AddComponent<MeshRenderer>();
-	ent1.transform.position = { 0.f, 3.f, 0.f };
+	ent1.transform.SetPosition() = { 0.f, 3.f, 0.f };
 	
 	meshRenderer->model = ResourceManager::Get<Model>(FileManager::Get("assets/models/viking_room.obj"));
 	Pointer<File>&& vikingRoomTexture = FileManager::Get("assets/textures/viking_room.png");
@@ -236,17 +238,17 @@ void Editor::CreateTestScene()
 	PointLight* pointLight = pointLightentity.AddComponent<PointLight>();
 	pointLight->color = { 7.7f, 0.f, 3.f };
 	pointLightentity.AddComponent<TestComponent>();
-	pointLightentity.transform.position = { 0.f, 2.f, -2.f };
+	pointLightentity.transform.SetPosition() = { 0.f, 2.f, -2.f };
 	
 	Entity& ent3 = *World::scene.CreateEntity("Plane");
 	meshRenderer = ent3.AddComponent<MeshRenderer>();
 	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
 	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/wood.jpg");
-	ent3.transform.scale = { 10.f, 0.1f, 10.f };
-	ent3.transform.position -= { 0.f, -0.2f, 0.f};
+	ent3.transform.SetScale() = { 10.f, 0.1f, 10.f };
+	ent3.transform.SetPosition() -= { 0.f, -0.2f, 0.f};
 	
 	Entity& ent4 = *World::scene.CreateEntity("CubeMinecraft");
-	ent4.transform.position = { 2.f, 0, 2.f};
+	ent4.transform.SetPosition() = { 2.f, 0, 2.f};
 	meshRenderer = ent4.AddComponent<MeshRenderer>();
 	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
 	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/diamond_block.jpg");
