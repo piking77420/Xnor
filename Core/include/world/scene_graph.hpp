@@ -18,6 +18,11 @@ namespace SceneGraph
     /// @brief Updates an entity when its parent changed
     /// @param entity Entity
     XNOR_ENGINE void OnAttachToParent(Entity& entity);
+
+    XNOR_ENGINE void UpdateTransform(Entity& entity);
+
+
+    
 }
 
 END_XNOR_CORE

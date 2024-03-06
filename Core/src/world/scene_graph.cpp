@@ -16,21 +16,30 @@ Matrix GetTrsOfParents(const Entity& parent)
 	return parentMatrix;
 }
 
-void UpdateTransform(Entity& entity)
+void SceneGraph::UpdateTransform(Entity& entity)
 {
 	Transform& t = entity.transform;
 
-	if (t.changed)
-	{
-		t.changed = false;
-
-		t.rotation = Quaternion::FromEuler(t.eulerRotation).Normalized();
-		t.worldMatrix = Matrix::Trs(t.position, t.rotation, t.scale);
-	    
-		if (!entity.HasParent())
-			return;
+	if (!t.changed)
+		return;
+	
+	t.changed = false;
+	t.rotation = Quaternion::FromEuler(t.eulerRotation).Normalized();
+	t.worldMatrix = Matrix::Trs(t.position, t.rotation, t.scale);
 		
+	if (entity.HasParent())
+	{
 		t.worldMatrix = GetTrsOfParents(*entity.GetParent()) *  t.worldMatrix;
+	}
+
+	if (!entity.HasChildren())
+		return;
+		
+	for (size_t i = 0; i < entity.GetChildCount(); i++)
+	{
+		Entity& ent = *entity.GetChild(i);
+		ent.transform.changed = true;
+		UpdateTransform(ent);
 	}
 }
 

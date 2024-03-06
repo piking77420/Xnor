@@ -83,7 +83,6 @@ void EditorCamera::EditorCameraMovement()
     const float_t cameraSpeed = m_CameraSpeed * dt;
 
     Vector3 addVector;
-    XnorCore::Logger::LogInfo("m_EditorRefCamera->front  = {}",m_EditorRefCamera->front);
 
     if (ImGui::IsKeyDown(ImGuiKey_W))
         addVector -= m_EditorRefCamera->front * cameraSpeed;
