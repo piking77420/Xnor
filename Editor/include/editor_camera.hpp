@@ -1,7 +1,7 @@
 #pragma once
 
-#include "definitions.hpp"
 #include "core.hpp"
+#include "definitions.hpp"
 #include "rendering/camera.hpp"
 
 BEGIN_XNOR_EDITOR
