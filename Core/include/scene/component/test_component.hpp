@@ -27,6 +27,8 @@ private:
     Vector3 m_BasePosition;
     
     bool_t m_Rotate = true;
+
+    Entity* m_Test;
 };
 
 END_XNOR_CORE
@@ -36,5 +38,6 @@ REFL_AUTO(
     field(m_Rotate),
     field(m_CurrentAngle),
     field(m_RotationSpeed),
-    field(m_Radius)
+    field(m_Radius),
+    field(m_Test)
 );

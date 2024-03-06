@@ -23,6 +23,8 @@ private:
     template <typename MemberT>
     static void DisplayColorType(MemberT* obj, const char_t* name);
     template <typename MemberT>
+    static void DisplayRawPointer(MemberT* obj, const char_t* name);
+    template <typename MemberT>
     static void DisplayXnorPointer(MemberT* obj, const char_t* name);
     template <typename MemberT>
     static void DisplayPolyPointer(MemberT* obj, const char_t* name);
