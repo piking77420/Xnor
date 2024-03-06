@@ -8,7 +8,7 @@ void TransfromGizmo::SetRendering(const XnorCore::Camera& camera, Vector2 window
     ImGuizmo::SetOrthographic(false);
     ImGuizmo::SetDrawlist();
     
-    camera.GetProjection({ static_cast<int32_t>(windowPos.x) , static_cast<int32_t>(windowPos.y) }, &m_Projection);
+    camera.GetProjection({ static_cast<int32_t>(windowSize.x) , static_cast<int32_t>(windowSize.y) }, &m_Projection);
     camera.GetView(&m_View);
     ImGuizmo::SetRect(windowPos.x, windowPos.y, windowSize.x,windowSize.y);
 }
