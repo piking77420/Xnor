@@ -52,6 +52,22 @@ struct HideInInspector : FieldAttribute
 {
 };
 
+/// @brief Allows a boolean to be set to true when the field is modified
+/// @tparam T Parent type
+template <typename T>
+struct NotifyChange : FieldAttribute
+{
+    /// @brief Shorthand for a class member pointer
+    using PtrType = bool_t T::*;
+
+    /// @brief Pointer to the boolean
+    const PtrType pointer;
+
+    /// @brief Creates a notify change attribute using a pointer to a boolean inside the concerned class
+    /// @param ptr Boolean pointer in the class
+    constexpr explicit NotifyChange(const PtrType ptr) : pointer(ptr) {}
+};
+
 /// @brief Enables serialization for a class
 ///
 /// A class that inherits from this class should implement either:

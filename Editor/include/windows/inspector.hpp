@@ -42,6 +42,9 @@ private:
     template <typename ReflectT>
     static void DisplayObject(ReflectT* obj, XnorCore::TypeDescriptor<ReflectT> desc);
 
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DisplayObjectInternal(ReflectT* obj, DescriptorT member);
+
     template <typename MemberT>
     static void DisplaySimpleType(MemberT* ptr, const char_t* name);
 
@@ -217,27 +220,53 @@ void Inspector::DisplayObject(ReflectT* const obj, const XnorCore::TypeDescripto
 
     refl::util::for_each(desc.members, [&]<typename T>(const T member)
     {
-        constexpr bool_t hidden = XnorCore::Reflection::HasAttribute<XnorCore::HideInInspector>(member); 
+        using MemberT = typename T::value_type;
+        using NotifyChangeT = XnorCore::NotifyChange<ReflectT>;
         
+        constexpr bool_t hidden = XnorCore::Reflection::HasAttribute<XnorCore::HideInInspector>(member);
+        constexpr bool_t notifyChange = XnorCore::Reflection::HasAttribute<NotifyChangeT>(member);
+
         if constexpr (!hidden)
         {
-            using MemberT = typename T::value_type;
-            const constexpr char_t* const name = member.name.c_str();
-            
-            if constexpr (XnorCore::Meta::IsArray<MemberT>)
+            if constexpr (notifyChange)
             {
-                DisplayArray<MemberT>(&member.get(obj), name);
-            }
-            else if constexpr (XnorCore::Meta::IsXnorList<MemberT>)
-            {
-                DisplayList<MemberT>(&member.get(obj), name);
+                MemberT oldValue = member.get(obj);
+
+                DisplayObjectInternal<ReflectT, MemberT, T>(obj, member);
+                
+                MemberT newValue = member.get(obj);
+
+                if (newValue != oldValue)
+                {
+                    const auto notify = XnorCore::Reflection::GetAttribute<NotifyChangeT>(member);
+                    obj->*notify.pointer = true;
+                }
             }
             else
             {
-                DisplaySimpleType<MemberT>(&member.get(obj), name);
+                DisplayObjectInternal<ReflectT, MemberT, T>(obj, member);
             }
         }
     });
+}
+
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void Inspector::DisplayObjectInternal(ReflectT* obj, DescriptorT member)
+{
+    const constexpr char_t* const name = member.name.c_str();
+            
+    if constexpr (XnorCore::Meta::IsArray<MemberT>)
+    {
+        DisplayArray<MemberT>(&member.get(obj), name);
+    }
+    else if constexpr (XnorCore::Meta::IsXnorList<MemberT>)
+    {
+        DisplayList<MemberT>(&member.get(obj), name);
+    }
+    else
+    {
+        DisplaySimpleType<MemberT>(&member.get(obj), name);
+    }
 }
 
 template <typename MemberT>
