@@ -7,7 +7,7 @@ TEST(Pointer, Basics)
     EXPECT_EQ(ptr.GetReferenceCounter()->GetStrong(), 1);
     EXPECT_EQ(ptr.GetReferenceCounter()->GetWeak(), 0);
 
-    EXPECT_NE(static_cast<int*>(ptr), nullptr);
+    EXPECT_NE(ptr.Get(), nullptr);
 }
 
 TEST(Pointer, WeakReferences)
@@ -25,7 +25,7 @@ TEST(Pointer, WeakReferences)
         EXPECT_EQ(ptr.GetReferenceCounter()->GetWeak(), 1);
         EXPECT_EQ(weakRef.GetReferenceCounter()->GetWeak(), 1);
 
-        EXPECT_EQ(static_cast<int*>(weakRef), static_cast<int*>(ptr));
+        EXPECT_EQ(weakRef.Get(), ptr.Get());
 
         {
             const Pointer<int> copy = ptr;
@@ -61,7 +61,7 @@ TEST(Pointer, StrongReferences)
         EXPECT_EQ(ptr.GetReferenceCounter()->GetWeak(), 0);
         EXPECT_EQ(strongRef.GetReferenceCounter()->GetWeak(), 0);
 
-        EXPECT_EQ(static_cast<int*>(strongRef), static_cast<int*>(ptr));
+        EXPECT_EQ(strongRef.Get(), ptr.Get());
 
         EXPECT_TRUE(strongRef.IsValid());
     }

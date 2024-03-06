@@ -16,6 +16,9 @@
 
 BEGIN_XNOR_CORE
 
+/// @brief Logs a @ref Logger::LogLevel::TemporaryDebug "temporary debug message" using the given format message and arguments.
+#define DEBUG_LOG(message, ...) XnorCore::Logger::LogTempDebug(message, __FILE__, __LINE__, __VA_ARGS__)
+
 /// @brief Static class used to log messages to the console and/or a file.
 ///
 /// ### Requirements
@@ -32,7 +35,7 @@ BEGIN_XNOR_CORE
 ///
 /// ### Usage
 /// The most generic way of logging is by using the Logger::Log function, which allows you to pass a LogLevel to describe the severity
-/// of the log. Shortcuts are also available through the use of Logger::LogDebug, Logger::LogInfo, Logger::LogWarning, Logger::LogError and Logger::LogFatal.
+/// of the log. Shortcuts are also available through the use of Logger::LogTempDebug, Logger::LogDebug, Logger::LogInfo, Logger::LogWarning, Logger::LogError and Logger::LogFatal.
 /// Those functions take a format string and format parameters to follow the usage of <a href="https://en.cppreference.com/w/cpp/utility/format/format">std::format</a>.
 /// This means that any new parameter type that is directly printed must satisfy the requirements of the <a href="https://en.cppreference.com/w/cpp/utility/format/formattable">std::formattable</a>
 /// concept (defined a Formattable in the XnorCore namespace), and therefore needs to implement its own version of the <a href="https://en.cppreference.com/w/cpp/utility/format/formatter">std::formatter</a> struct.
@@ -43,6 +46,7 @@ BEGIN_XNOR_CORE
 /// @code
 /// [11:26:05.751] [INFO] Starting logging to file.
 /// @endcode
+/// Also, @ref Logger::LogLevel::TemporaryDebug "temporary debug logs" automatically specify the file and line at which the log was made.
 class Logger final
 {
     STATIC_CLASS(Logger)
@@ -51,10 +55,15 @@ public:
     /// @brief Describes the severity of a log.
     enum class LogLevel : uint8_t
     {
+        /// @brief Log intended for temporary debugging only.
+        ///
+        /// Preceded by '[TEMP DEBUG]' and appears green in the console.
+        /// Temporary debug logs are not printed in the log file by default and they are only printed in the console if in a debug build.
+        TemporaryDebug,
         /// @brief Log intended for debugging only.
         ///
         /// Preceded by '[DEBUG]' and appears gray in the console.
-        /// Debug logs are not printed in the log file by default and even in the console when not in a debug build.
+        /// Debug logs are not printed in the log file by default and they are only printed in the console if in a debug build.
         Debug,
         /// @brief Log intended for general information.
         ///
@@ -81,7 +90,7 @@ public:
     /// Defaults to LogLevel::Debug in a debug build, or LogLevel::Info otherwise.
     XNOR_ENGINE static inline LogLevel minimumConsoleLevel =
 #ifdef _DEBUG
-        LogLevel::Debug;
+        LogLevel::TemporaryDebug;
 #else
         LogLevel::Info;
 #endif
@@ -102,33 +111,42 @@ public:
     template <Formattable... Args>
     static void Log(LogLevel level, const std::string& format, Args&&... args);
 
+    /// @brief Logs a temporary debug message using the current file, line, specified format string and arguments.
+    ///
+    /// This function shouldn't be used directly. To print a temporary debug log message, instead use DEBUG_LOG.
+    ///
+    /// @see Log
+    /// @see LogLevel::TemporaryDebug
+    template <Formattable... Args>
+    static void LogTempDebug(const std::string& format, const char_t* file, int32_t line, Args&&... args);
+
     /// @brief Logs a debug message using the specified format string and arguments.
     ///
-    /// @see Logger::Log
+    /// @see Log
     template <Formattable... Args>
     static void LogDebug(const std::string& format, Args&&... args);
 
     /// @brief Logs a information message using the specified format string and arguments.
     ///
-    /// @see Logger::Log
+    /// @see Log
     template <Formattable... Args>
     static void LogInfo(const std::string& format, Args&&... args);
 
     /// @brief Logs a warning message using the specified format string and arguments.
     ///
-    /// @see Logger::Log
+    /// @see Log
     template <Formattable... Args>
     static void LogWarning(const std::string& format, Args&&... args);
 
     /// @brief Logs an error message using the specified format string and arguments.
     ///
-    /// @see Logger::Log
+    /// @see Log
     template <Formattable... Args>
     static void LogError(const std::string& format, Args&&... args);
 
     /// @brief Logs a fatal error message using the specified format string and arguments.
     ///
-    /// @see Logger::Log
+    /// @see Log
     template <Formattable... Args>
     static void LogFatal(const std::string& format, Args&&... args);
 
@@ -167,9 +185,13 @@ private:
         std::string message;
         LogLevel level;
         std::chrono::system_clock::time_point time;
-        bool printToConsole, printToFile;
+        bool_t printToConsole, printToFile;
+        const char_t* file = nullptr;
+        int32_t line = -1;
 
         XNOR_ENGINE LogEntry(std::string&& message, LogLevel level);
+
+        XNOR_ENGINE LogEntry(std::string&& message, LogLevel level, const char_t* file, int32_t line);
 
         XNOR_ENGINE LogEntry(std::string&& message, LogLevel level, std::chrono::system_clock::time_point timePoint);
 
@@ -194,6 +216,16 @@ void Logger::Log(const LogLevel level, const std::string& format, Args&&... args
         return;
 
     m_Lines.Push(LogEntry(std::vformat(format, std::make_format_args(args...)), level));
+    m_CondVar.notify_one();
+}
+
+template<Formattable ... Args>
+void Logger::LogTempDebug(const std::string& format, const char_t* file, int32_t line, Args&&... args)
+{
+    if (LogLevel::TemporaryDebug < minimumConsoleLevel && LogLevel::TemporaryDebug < minimumFileLevel)
+        return;
+    
+    m_Lines.Push(LogEntry(std::vformat(format, std::make_format_args(args...)), LogLevel::TemporaryDebug, file, line));
     m_CondVar.notify_one();
 }
 

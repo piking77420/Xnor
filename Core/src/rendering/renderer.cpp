@@ -104,7 +104,7 @@ void Renderer::SwapBuffers()
 	Rhi::SwapBuffers();
 }
 
-void Renderer::OnResize(const vec2i windowSize)
+void Renderer::OnResize(const Vector2i windowSize)
 {
 	DestroyAttachment();
 	m_ToneMapping.OnResizeWindow(windowSize);
@@ -112,7 +112,7 @@ void Renderer::OnResize(const vec2i windowSize)
 	InitForwardRenderingAttachment(windowSize);
 }
 
-void Renderer::PrepareRendering(const vec2i windowSize)
+void Renderer::PrepareRendering(const Vector2i windowSize)
 {
 	InitDefferedRenderingAttachment(windowSize);
 	InitForwardRenderingAttachment(windowSize);
