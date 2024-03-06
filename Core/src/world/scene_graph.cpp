@@ -173,13 +173,19 @@ Matrix GetTrsOfParents(const Entity& parent)
 void UpdateTransform(Entity& entity)
 {
 	Transform& t = entity.transform;
-	t.rotation = Quaternion::FromEuler(t.eulerRotation).Normalized();
-	t.worldMatrix = Matrix::Trs(t.position, t.rotation, t.scale);
-    
-	if (!entity.HasParent())
-		return;
-	
-	t.worldMatrix = GetTrsOfParents(*entity.GetParent()) *  t.worldMatrix;
+
+	if (t.changed)
+	{
+		t.changed = false;
+
+		t.rotation = Quaternion::FromEuler(t.eulerRotation).Normalized();
+		t.worldMatrix = Matrix::Trs(t.position, t.rotation, t.scale);
+	    
+		if (!entity.HasParent())
+			return;
+		
+		t.worldMatrix = GetTrsOfParents(*entity.GetParent()) *  t.worldMatrix;
+	}
 }
 
 

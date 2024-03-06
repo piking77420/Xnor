@@ -40,14 +40,17 @@ public:
 
 	/// @brief World transformation matrix of the transform
 	Matrix worldMatrix = Matrix::Identity();
+
+	/// @brief Whether the transform changed and needs to be updated
+	bool_t changed = true;
 };
 
 END_XNOR_CORE
 
 REFL_AUTO(type(XnorCore::Transform),
-	field(position),
-	field(eulerRotation),
-	field(scale)
+	field(position, XnorCore::NotifyChange(&XnorCore::Transform::changed)),
+	field(eulerRotation, XnorCore::NotifyChange(&XnorCore::Transform::changed)),
+	field(scale, XnorCore::NotifyChange(&XnorCore::Transform::changed))
 )
 
 /// @brief @c std::formatter template specialization for the XnorCore::Transform type.
