@@ -129,10 +129,43 @@ void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name)
     }
 }
 
+template <typename MemberT>
+void Inspector::DisplayRawPointer(MemberT* obj, const char_t* name)
+{
+    using TypeT = XnorCore::Meta::RemovePointerSpecifier<MemberT>;
+
+    ImGui::Text("%s", name);
+
+    if constexpr (XnorCore::Meta::IsSame<TypeT, XnorCore::Entity>)
+    {
+        ImGui::SameLine();
+
+        if (*obj != nullptr)
+            ImGui::Selectable((*obj)->name.c_str());
+        else
+            ImGui::Selectable("nullptr");
+
+        if (ImGui::BeginDragDropTarget())
+        {
+            // ReSharper disable once CppTooWideScope
+            const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("HierarchyEntity");
+        
+            if (payload)
+            {
+                XnorCore::Entity* const dragged = *static_cast<XnorCore::Entity**>(payload->Data);
+
+                *obj = dragged;
+            }
+            
+            ImGui::EndDragDropTarget();
+        }
+    }
+}
+
 #define POLY_PTR_IF_INSP(type)\
 if (hash == XnorCore::Utils::GetTypeHash<type>())\
 {\
-    DisplayObject<type>(obj->Cast<type>(), XnorCore::Reflection::GetTypeInfo<type>());\
+DisplayObject<type>(obj->Cast<type>(), XnorCore::Reflection::GetTypeInfo<type>());\
 }\
 
 template <typename MemberT>
@@ -248,6 +281,10 @@ void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name)
     else if constexpr (XnorCore::Meta::IsSame<MemberT, std::string>)
     {
         ImGui::InputText(name, ptr);
+    }
+    else if constexpr (XnorCore::Meta::IsPointer<MemberT>)
+    {
+        DisplayRawPointer<MemberT>(ptr, name);
     }
     else if constexpr (XnorCore::Meta::IsPolyPtr<MemberT>)
     {
