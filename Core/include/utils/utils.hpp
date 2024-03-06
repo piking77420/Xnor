@@ -206,7 +206,7 @@ Pointer<T> Utils::DynamicPointerCast(const Pointer<U>& value)
     if (!value)
         return nullptr;
 
-    if (dynamic_cast<T*>(static_cast<U*>(value)))
+    if (dynamic_cast<T*>(const_cast<U*>(static_cast<const U*>(value))))
         return Pointer<T>(value, value.GetIsStrongReference());
 
     return nullptr;

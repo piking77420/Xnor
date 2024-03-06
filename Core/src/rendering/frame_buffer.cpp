@@ -6,18 +6,18 @@ using namespace XnorCore;
 
 
 FrameBuffer::FrameBuffer(const vec2i size)
-	: m_FrameBufferSize(size), m_Id(0)
+	: m_FrameBufferSize(size)
 {
 }
 
 FrameBuffer::~FrameBuffer()
 {
-	Rhi::DestroyFrameBuffer(&m_Id);
+	Rhi::DestroyFrameBuffer(m_Id);
 }
 
-void FrameBuffer::Create(const RenderPass& renderPass, const std::vector<const Texture*>& attachements)
+void FrameBuffer::Create(const RenderPass& renderPass, const std::vector<const Texture*>& attachments)
 {
-	Rhi::CreateFrameBuffer(&m_Id,renderPass, attachements);
+	m_Id = Rhi::CreateFrameBuffer(renderPass, attachments);
 }
 
 Vector2i FrameBuffer::GetSize() const
@@ -35,19 +35,13 @@ void FrameBuffer::UnBindFrameBuffer() const
 	Rhi::BindFrameBuffer(0);
 }
 
-void FrameBuffer::ReadPixel(
-	uint32_t attachmentIndex,
-	vec2i position,
-	TextureFormat textureFormat,
-	TextureInternalFormat textureInternalFormat,
-	void* output
-) const
+void FrameBuffer::ReadPixel(const uint32_t attachmentIndex, const Vector2i position, const TextureFormat format,
+	const TextureInternalFormat internalFormat, void* const output) const
 {
 	BindFrameBuffer();
-	Rhi::ReadAttachement(attachmentIndex,position.x,position.y,textureFormat,textureInternalFormat,output);
+	Rhi::GetPixelFromAttachement(attachmentIndex, position, format, internalFormat, output);
 	UnBindFrameBuffer();
 }
-
 
 uint32_t FrameBuffer::GetId() const
 {

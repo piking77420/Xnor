@@ -84,7 +84,7 @@ namespace rapidxml
 
         // Fill given output iterator with repetitions of the same character
         template<class OutIt, class Ch>
-        inline OutIt fill_chars(OutIt out, int n, Ch ch)
+        inline OutIt fill_chars(OutIt out, const int n, Ch ch)
         {
             for (int i = 0; i < n; ++i)
                 *out++ = ch;
@@ -234,7 +234,7 @@ namespace rapidxml
 
         // Print data node
         template<class OutIt, class Ch>
-        inline OutIt print_data_node(OutIt out, const xml_node<Ch> *node, int flags, int indent)
+        inline OutIt print_data_node(OutIt out, const xml_node<Ch> *node, const int flags, int indent)
         {
             assert(node->type() == node_type::node_data);
             if (!(flags & print_no_indenting))
@@ -245,7 +245,7 @@ namespace rapidxml
 
         // Print data node
         template<class OutIt, class Ch>
-        inline OutIt print_cdata_node(OutIt out, const xml_node<Ch> *node, int flags, int indent)
+        inline OutIt print_cdata_node(OutIt out, const xml_node<Ch> *node, const int flags, int indent)
         {
             assert(node->type() == node_type::node_cdata);
             if (!(flags & print_no_indenting))
@@ -347,7 +347,7 @@ namespace rapidxml
 
         // Print comment node
         template<class OutIt, class Ch>
-        inline OutIt print_comment_node(OutIt out, const xml_node<Ch> *node, int flags, int indent)
+        inline OutIt print_comment_node(OutIt out, const xml_node<Ch> *node, const int flags, int indent)
         {
             assert(node->type() == node_type::node_comment);
             if (!(flags & print_no_indenting))
@@ -365,7 +365,7 @@ namespace rapidxml
 
         // Print doctype node
         template<class OutIt, class Ch>
-        inline OutIt print_doctype_node(OutIt out, const xml_node<Ch> *node, int flags, int indent)
+        inline OutIt print_doctype_node(OutIt out, const xml_node<Ch> *node, const int flags, int indent)
         {
             assert(node->type() == node_type::node_doctype);
             if (!(flags & print_no_indenting))
@@ -387,7 +387,7 @@ namespace rapidxml
 
         // Print pi node
         template<class OutIt, class Ch>
-        inline OutIt print_pi_node(OutIt out, const xml_node<Ch> *node, int flags, int indent)
+        inline OutIt print_pi_node(OutIt out, const xml_node<Ch> *node, const int flags, int indent)
         {
             assert(node->type() == node_type::node_pi);
             if (!(flags & print_no_indenting))

@@ -7,7 +7,7 @@
 #include "utils/pointer.hpp"
 
 /// @file directory.hpp
-/// @brief Defines the @ref Directory class.
+/// @brief Defines the Directory class.
 
 BEGIN_XNOR_CORE
 
@@ -15,40 +15,56 @@ class File;
 
 /// @brief Defines a directory on the filesystem.
 ///
-/// This is meant to be used with @ref Pointer "Pointers" and with the @ref FileManager.
+/// This is meant to be used with @ref Pointer "Pointers" and with the FileManager.
 class Directory : public Entry
 {
 public:
+    /// @brief Constructs a Directory corresponding to the given @p path.
     [[nodiscard]]
     XNOR_ENGINE explicit Directory(std::filesystem::path&& filepath);
 
+    /// @brief Default Directory destruction.
     XNOR_ENGINE ~Directory() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(Directory)
 
-    /// @brief Loads the contents of this Directory in the FileManager
-    XNOR_ENGINE bool Load() override;
-    
+    /// @brief Loads the contents of this Directory in the FileManager.
+    ///
+    /// This effectively means loading all children of this Directory.
+    /// 
+    /// @returns @c false if an error occured while loading.
+    XNOR_ENGINE bool_t Load() override;
+
+    /// @brief Unloads the contents of this Directory.
     XNOR_ENGINE void Unload() override;
 
+    /// @brief Returns all the child @ref Entry "Entries" of this Directory.
     [[nodiscard]]
     XNOR_ENGINE const std::vector<Pointer<Entry>>& GetChildEntries() const;
 
+    /// @brief Returns all the child @ref Entry "Entries" of this Directory.
     [[nodiscard]]
     XNOR_ENGINE std::vector<Pointer<Entry>>& GetChildEntries();
     
+    /// @brief Returns all the child @ref File "Files" of this Directory.
     [[nodiscard]]
     XNOR_ENGINE const std::vector<Pointer<File>>& GetChildFiles() const;
     
+    /// @brief Returns all the child @ref File "Files" of this Directory.
     [[nodiscard]]
     XNOR_ENGINE std::vector<Pointer<File>>& GetChildFiles();
     
+    /// @brief Returns all the child @ref Directory "Directories" of this Directory.
     [[nodiscard]]
     XNOR_ENGINE const std::vector<Pointer<Directory>>& GetChildDirectories() const;
     
+    /// @brief Returns all the child @ref Directory "Directories" of this Directory.
     [[nodiscard]]
     XNOR_ENGINE std::vector<Pointer<Directory>>& GetChildDirectories();
-    
+
+    /// @brief Sets the name of this Directory.
+    ///
+    /// This effectively means changing the path of all its children accordingly.
     void SetName(const std::string& newName) override;
 
 private:

@@ -191,14 +191,14 @@
     <ClInclude Include="include\rendering\light\light.hpp" />
     <ClInclude Include="include\rendering\light\point_light.hpp" />
     <ClInclude Include="include\rendering\light\spot_light.hpp" />
-    <ClInclude Include="include\rendering\light_culler.hpp" />
+    <ClInclude Include="include\rendering\light_manager.hpp" />
     <ClInclude Include="include\rendering\material.hpp" />
     <ClInclude Include="include\rendering\renderer.hpp" />
     <ClInclude Include="include\rendering\renderer_context.hpp" />
     <ClInclude Include="include\rendering\render_pass.hpp" />
     <ClInclude Include="include\rendering\skybox_renderer.hpp" />
     <ClInclude Include="include\rendering\tone_mapping.hpp" />
-    <ClInclude Include="include\rendering\uniformBuffer.hpp" />
+    <ClInclude Include="include\rendering\uniform_buffer.hpp" />
     <ClInclude Include="include\resource\cubemap.hpp" />
     <ClInclude Include="include\resource\model.hpp" />
     <ClInclude Include="include\resource\resource.hpp" />

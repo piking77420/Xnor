@@ -36,11 +36,8 @@ void EditorWindow::EditTransform()
     if (!m_Editor->data.selectedEntity)
         return;
 
-    XnorCore::Transform& transform = m_Editor->data.selectedEntity->transform; 
-
- 
     
-
+    XnorCore::Transform& transform = m_Editor->data.selectedEntity->transform; 
     XnorCore::Camera& cam = m_Editor->data.editorCam;
 
 
@@ -53,9 +50,20 @@ void EditorWindow::EditTransform()
     if (ImGui::IsKeyPressed(ImGuiKey_Y)) // r Key
         mCurrentGizmoOperation = ImGuizmo::SCALE;
     
+    if(ImGuizmo::IsUsing())
+    {
+        window_flags = ImGuiWindowFlags_NoMove;
+        XnorCore::Logger::LogDebug("No Move");
+    }
+    else
+    {
+        window_flags = ImGuiWindowFlags_None;
+    }
 
+    
     ImGuizmo::SetOrthographic(false);
     ImGuizmo::SetDrawlist();
+    
     
     const Vector2 sizef = {static_cast<float_t>(m_Size.x), static_cast<float_t>(m_Size.y)};
     const Vector2 Posf = {static_cast<float_t>(m_Position.x), static_cast<float_t>(m_Position.y)};
@@ -71,5 +79,4 @@ void EditorWindow::EditTransform()
     {
         
     }
-    
 }

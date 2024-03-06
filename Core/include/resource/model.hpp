@@ -12,7 +12,7 @@
 BEGIN_XNOR_CORE
 
 // ReSharper disable once CppInconsistentNaming
-struct ModelAABB
+struct ModelAabb
 {
     Vector3 min { std::numeric_limits<float_t>::max() };
     Vector3 max { std::numeric_limits<float_t>::min() };
@@ -103,19 +103,23 @@ public:
     
     XNOR_ENGINE void Unload() override;
 
+    /// @brief Gets the id of the model
+    /// @return Model id
     [[nodiscard]]
     XNOR_ENGINE uint32_t GetId() const;
 
-    XNOR_ENGINE ModelAABB GetAabb() const;
+    /// @brief Gets the Aabb bounding box of the model
+    /// @return Aabb bounding box
+    XNOR_ENGINE ModelAabb GetAabb() const;
     
 private:
-    XNOR_ENGINE bool HadToComputeAabb(const aiAABB& assimpAabb);
+    XNOR_ENGINE void ComputeAabb(const aiAABB& assimpAabb);
     
     std::vector<Vertex> m_Vertices;
     std::vector<uint32_t> m_Indices;
     uint32_t m_ModelId = 0;
     
-    ModelAABB m_Aabb;
+    ModelAabb m_Aabb;
 };
 
 END_XNOR_CORE

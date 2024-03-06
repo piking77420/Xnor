@@ -14,10 +14,11 @@ Entry::Entry(std::filesystem::path&& path)
     Entry::UpdateUtilityValues();
 }
 
-bool Entry::Reload()
+bool_t Entry::Reload()
 {
     if (m_Loaded)
         Unload();
+    
     return Load();
 }
 
@@ -48,7 +49,7 @@ void Entry::SetName(const std::string& newName)
     UpdateUtilityValues();
 }
 
-bool Entry::GetLoaded() const
+bool_t Entry::GetLoaded() const
 {
     return m_Loaded;
 }

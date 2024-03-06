@@ -71,11 +71,7 @@ bool_t Model::Load(const aiMesh& loadedData)
         m_Indices[baseIndex + 2] = face.mIndices[2];
     }
 
-    if(!HadToComputeAabb(loadedData.mAABB))
-    {
-        m_Aabb.min = Vector3(&loadedData.mAABB.mMin.x);
-        m_Aabb.max = Vector3(&loadedData.mAABB.mMax.x);
-    }
+    ComputeAabb(loadedData.mAABB);
 
     m_Loaded = true;
 
@@ -112,34 +108,36 @@ uint32_t Model::GetId() const
     return  m_ModelId;
 }
 
-ModelAABB Model::GetAabb() const
+ModelAabb Model::GetAabb() const
 {
     return m_Aabb;
 }
 
-bool Model::HadToComputeAabb(const aiAABB& assimpAabb)
+void Model::ComputeAabb(const aiAABB& assimpAabb)
 {
-    if(assimpAabb.mMax.x == 0.f && assimpAabb.mMax.y == 0.f && assimpAabb.mMax.z == 0.f &&
+    if (assimpAabb.mMax.x == 0.f && assimpAabb.mMax.y == 0.f && assimpAabb.mMax.z == 0.f &&
         assimpAabb.mMin.x == 0.f && assimpAabb.mMin.y == 0.f && assimpAabb.mMin.z == 0.f)
     {
         for (const Vertex& vertex : m_Vertices)
         {
-            if(vertex.position.x < m_Aabb.min.x)
+            if (vertex.position.x < m_Aabb.min.x)
                  m_Aabb.min.x = vertex.position.x;
-            if(vertex.position.y < m_Aabb.min.y)
+            if (vertex.position.y < m_Aabb.min.y)
                 m_Aabb.min.y = vertex.position.y;
-            if(vertex.position.z < m_Aabb.min.z)
+            if (vertex.position.z < m_Aabb.min.z)
                 m_Aabb.min.z = vertex.position.z;
 
-            if(vertex.position.x > m_Aabb.max.x)
+            if (vertex.position.x > m_Aabb.max.x)
                 m_Aabb.max.x = vertex.position.x;
-            if(vertex.position.y > m_Aabb.max.y)
+            if (vertex.position.y > m_Aabb.max.y)
                 m_Aabb.max.y = vertex.position.y;
-            if(vertex.position.z > m_Aabb.max.z)
+            if (vertex.position.z > m_Aabb.max.z)
                 m_Aabb.max.z = vertex.position.z;
         }
-        return true;
     }
-
-    return false;
+    else
+    {
+        m_Aabb.min = Vector3(&assimpAabb.mMin.x);
+        m_Aabb.max = Vector3(&assimpAabb.mMax.x);
+    }
 }

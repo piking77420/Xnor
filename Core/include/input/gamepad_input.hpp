@@ -8,11 +8,11 @@
 /// @file gamepad_input.hpp
 /// @brief Defines gamepad input types and enumerations.
 /// 
-/// Defines the @ref GamepadInput struct and the @ref GamepadAxis and @ref GamepadButton enumerations.
+/// Defines the GamepadInput struct and the GamepadAxis and GamepadButton enumerations.
 
 BEGIN_XNOR_CORE
 
-/// @brief Gamepad axis enumeration.
+/// @brief Gamepad axis enumeration
 enum class GamepadAxis : uint32_t
 {
     LeftStickHorizontalAxis,
@@ -25,6 +25,7 @@ enum class GamepadAxis : uint32_t
     Count
 };
 
+/// @brief Gamepad button enumeration
 enum class GamepadButton
 {
     GamepadButtonA,               
@@ -51,20 +52,26 @@ enum class GamepadButton
     Count = 20
 };
 
+/// @brief Gamepad button
 enum class GamepadButtonStatus : uint8_t
 {
-    Press,
+    /// @brief Pressed
+    Pressed,
+    /// @brief Held down
     Down,
+    /// @brief Released
     Release,
     
     Count
 };
 
-constexpr double_t NullAnalogValue = 1.5259022e-05;
+/// @brief Threshold that dictates that a stick analog value become 0
+constexpr float_t NullAnalogValue = 1.5259022e-05f;
 
+/// @brief Information about a gamepad
 struct GamepadInput
 {
-    bool isConnected = false;
+    bool_t isConnected = false;
     std::array<float_t, static_cast<uint32_t>(GamepadAxis::Count)> axesValue{};
 };
 

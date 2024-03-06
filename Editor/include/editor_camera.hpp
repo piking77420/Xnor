@@ -33,7 +33,7 @@ private:
     Vector2 m_MouseOffSet;
     
     float_t m_MouseSensitivity = 0.1f;
-    float_t m_Yaw = 90.f;
+    float_t m_Yaw = -90.f;
     float_t m_Pitch = 0.f;
     float_t m_CameraSpeed = 2.5f;
 

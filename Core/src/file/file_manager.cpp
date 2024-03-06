@@ -62,7 +62,8 @@ Pointer<File> FileManager::Load(std::filesystem::path path)
         return file;
     }
 
-    file->Load();
+    if (!file->Load())
+        throw std::runtime_error("An error occured while loading file");
 
     m_Entries[file->GetPath()] = file.CreateStrongReference();
 
@@ -134,7 +135,8 @@ Pointer<Directory> FileManager::LoadDirectory(std::filesystem::path path)
         return directory;
     }
 
-    directory->Load();
+    if (!directory->Load())
+        throw std::runtime_error("An error occured while loading directory");
 
     m_Entries[directory->GetPath()] = directory.CreateStrongReference();
 

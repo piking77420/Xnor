@@ -6,8 +6,12 @@
 #include "utils/pointer.hpp"
 #include "world/skybox.hpp"
 
+/// @file skybox_renderer.hpp
+/// @brief Defines the SkyboxRenderer class
+
 BEGIN_XNOR_CORE
 
+/// @brief Renderer specialized for a skybox
 class SkyboxRenderer
 {
 public:
@@ -17,9 +21,13 @@ public:
 
     DEFAULT_COPY_MOVE_OPERATIONS(SkyboxRenderer)
 
+    /// @brief Initializes the shader resources
     XNOR_ENGINE void InitializeResources();
 
-    XNOR_ENGINE void DrawSkymap(const Pointer<Model>& cubeModel,const Skybox& skybox) const;
+    /// @brief Renders a skybox
+    /// @param cubeModel Cube model
+    /// @param skybox Skybox
+    XNOR_ENGINE void DrawSkymap(const Pointer<Model>& cubeModel, const Skybox& skybox) const;
   
 private:
     Pointer<Shader> m_SkyboxDrawerShader;

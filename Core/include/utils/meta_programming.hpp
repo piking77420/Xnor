@@ -57,6 +57,16 @@ namespace Meta
     template <typename T>
     constexpr bool_t IsEnum = std::is_enum_v<T>;
 
+    /// @brief Checks whether @c T is an integral type
+    /// @tparam T Type
+    template <typename T>
+    constexpr bool_t IsIntegral = std::is_integral_v<T>;
+
+    /// @brief Checks whether @c T is a floating type
+    /// @tparam T Type
+    template <typename T>
+    constexpr bool_t IsFloatingPoint = std::is_floating_point_v<T>;
+
     /// @brief Removes the array specification from @c T
     ///
     /// e.g. if @c T was @c int[4], then @c RemoveArraySpecifier<T> will be @c int

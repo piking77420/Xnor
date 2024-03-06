@@ -1,6 +1,7 @@
 ﻿#include "file/directory.hpp"
 
 #include "file/file_manager.hpp"
+#include "utils/formatter.hpp"
 
 using namespace XnorCore;
 
@@ -11,23 +12,31 @@ Directory::Directory(std::filesystem::path&& filepath)
         throw std::invalid_argument("Path does not point to a directory");
 }
 
-bool Directory::Load()
+bool_t Directory::Load()
 {
-    for (const auto& entry : std::filesystem::directory_iterator(m_Path))
+    try
     {
-        const std::filesystem::path& entryPath = entry.path();
-        
-        if (is_directory(entryPath))
+        for (const auto& entry : std::filesystem::directory_iterator(m_Path))
         {
-            Pointer<Directory> directory = FileManager::LoadDirectory(entryPath);
-            m_ChildDirectories.push_back(directory);
-            m_ChildEntries.push_back(static_cast<Pointer<Entry>>(directory));
-            continue;
-        }
+            const std::filesystem::path& entryPath = entry.path();
+            
+            if (is_directory(entryPath))
+            {
+                Pointer<Directory> directory = FileManager::LoadDirectory(entryPath);
+                m_ChildDirectories.push_back(directory);
+                m_ChildEntries.push_back(static_cast<Pointer<Entry>>(directory));
+                continue;
+            }
 
-        Pointer<File> file = FileManager::Load(entryPath);
-        m_ChildFiles.push_back(file);
-        m_ChildEntries.push_back(static_cast<Pointer<Entry>>(file));
+            Pointer<File> file = FileManager::Load(entryPath);
+            m_ChildFiles.push_back(file);
+            m_ChildEntries.push_back(static_cast<Pointer<Entry>>(file));
+        }
+    }
+    catch (const std::runtime_error& e)
+    {
+        Logger::LogError("Uncaught exception while loading directory {}: {}", m_Path, e);
+        return false;
     }
     
     m_Loaded = true;

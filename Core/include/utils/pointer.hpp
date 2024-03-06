@@ -8,22 +8,26 @@
 #include "core.hpp"
 #include "reference_counter.hpp"
 
+/// @file pointer.hpp
+/// @brief Defines the Pointer class
+
 BEGIN_XNOR_CORE
 
-/// @brief Used to default-construct the value of a @ref Pointer.
-/// @see @ref Pointer::Pointer(Construct)
+/// @brief Used to default-construct the value of a Pointer.
+/// 
+/// @see Pointer::Pointer(Construct)
 struct Construct {};
 
 /// @brief Custom XNOR smart pointer.
 ///        Represents both a @c std::shared_ptr and a @c std::weak_ptr.
 ///
-/// @paragraph reason Reason
+/// ### Reason
 /// While using @c std::weak_ptr, we realized that it was not very practical because a @c std::shared_ptr needs to be
-/// constructed from the former for the pointed type to be used. The @ref Pointer type is meant to fix this issue
+/// constructed from the former for the pointed type to be used. The Pointer type is meant to fix this issue
 /// by being both a strong and a weak shared pointer.
 ///
-/// @paragraph usage Usage
-/// The simplest way to create a @ref Pointer to wrap your type is by using @ref Pointer::Pointer<Args...>() "the forwarding variadic template constructor"
+/// ### Usage
+/// The simplest way to create a Pointer to wrap your type is by using the forwarding variadic template constructor
 /// which allows you to do the following:
 /// @code
 /// struct Type { int i; explicit Type(int i) : i(i) {} };
@@ -32,7 +36,7 @@ struct Construct {};
 /// @endcode
 /// ... and 7 will be forwarded as a parameter to the @c Type(int) constructor.
 ///
-/// There are 3 other ways of initializing a @ref Pointer:
+/// There are 3 other ways of initializing a Pointer:
 /// @code
 /// // 1 - Default initialize the Pointer: this wraps a nullptr
 /// Pointer<Type> ptr;
@@ -44,13 +48,15 @@ struct Construct {};
 /// Pointer<Type> ptr = nullptr;
 /// @endcode
 ///
-/// @paragraph references Weak and Strong References
-/// By default, creating a @ref Pointer with constructor arguments from the pointed type allocates this type on the heap.
-/// Copying this instance of @ref Pointer creates a new weak reference by default, meaning that the copy won't keep the raw
+/// ### Weak and Strong References
+/// By default, creating a Pointer with constructor arguments from the pointed type allocates this type on the heap.
+/// Copying this instance of Pointer creates a new weak reference by default, meaning that the copy won't keep the raw
 /// pointer alive. When all the strong references go out of scope or are destroyed, the underlying pointed type is freed.
-/// A strong reference can still be created if needed, by calling either @ref Pointer::CreateStrongReference(),
-/// @ref Pointer::ToStrongReference(), or by creating a copy using @ref Pointer::Pointer(const Pointer&, bool) "the copy constructor"
+/// A strong reference can still be created if needed, by calling either Pointer::CreateStrongReference(),
+/// Pointer::ToStrongReference(), or by creating a copy using @ref Pointer::Pointer(const Pointer&, bool) "the copy constructor"
 /// and giving a @c true value to the second argument.
+///
+/// @todo Reference variadic-template constructor
 ///
 /// @tparam T The type to point to. Most of the time, this shouldn't be a pointer type.
 /// 
@@ -61,6 +67,7 @@ template <typename T>
 class Pointer
 {
 public:
+    /// @brief The type of ReferenceCounter, and therefore of raw pointer this Pointer is holding.
     using Type = T;
     
     /// @brief Creates an empty @ref Pointer without a reference counter and pointing to @c nullptr.
@@ -69,9 +76,11 @@ public:
     /// @brief Creates a copy of another @ref Pointer, specifying whether it is a weak or strong reference.
     Pointer(const Pointer& other, bool strongReference = false);
 
+    /// @brief Creates a Pointer by moving all the values of an existing one.
     Pointer(Pointer&& other) noexcept;
 
     // ReSharper disable once CppNonExplicitConvertingConstructor
+    /// @brief Creates a Pointer from a @c nullptr.
     Pointer(nullptr_t);
 
     /// @brief Creates a @ref Pointer with a default-initialized value.
@@ -87,30 +96,44 @@ public:
     /// @endcode
     explicit Pointer(Construct);
 
+    /// @brief Creates a copy of an existing Pointer of a different Type, specifying whether it is a strong reference.
+    ///
+    /// @tparam U The type of the existing Pointer. This type must be convertible to Type.
     template <typename U>
     explicit Pointer(const Pointer<U>& other, bool strongReference = false);
 
+    /// @brief Creates a copy of an existing Pointer of a different Type, specifying whether it is a strong reference.
     template <typename U>
     explicit Pointer(Pointer<U>& other, bool strongReference = false);
 
+    /// @brief Creates a Pointer by moving the value of another one of a different Type.
     template <typename U>
     explicit Pointer(Pointer<U>&& other) noexcept;
 
+    /// @brief Creates a Pointer, calling @c new with @p T and forwarding all given arguments to its constructor.
     template <typename... Args>
     explicit Pointer(Args&&... args);
 
+    /// @brief Destroys this Pointer, deallocating any memory if this is the last strong reference.
     virtual ~Pointer();
 
-    /// @brief Creates a new strong reference to this pointer
+    /// @brief Creates a new strong reference to this pointer.
     [[nodiscard]]
     Pointer CreateStrongReference() const;
 
+    /// @brief Gets the underlying raw pointer.
+    ///
+    /// This is equivalent to calling Pointer::operator T*() const;
     [[nodiscard]]
     const T* Get() const;
 
+    /// @brief Gets the underlying raw pointer.
+    ///
+    /// This is equivalent to calling Pointer::operator T*();
     [[nodiscard]]
     T* Get();
 
+    /// @brief Returns whether this Pointer is @c nullptr.
     [[nodiscard]]
     bool_t IsValid() const;
 
@@ -120,51 +143,77 @@ public:
     /// @brief Converts this @ref Pointer to a weak reference.
     void ToWeakReference();
 
+    /// @brief Returns the underlying ReferenceCounter.
     [[nodiscard]]
     const ReferenceCounter<T>* GetReferenceCounter() const;
 
+    /// @brief Returns whether this Pointer is holding a strong reference.
     [[nodiscard]]
     bool_t GetIsStrongReference() const;
 
-    /// @brief Resets this @ref Pointer to a @c nullptr.
+    /// @brief Resets this Pointer to a @c nullptr.
     ///
     /// @warning
     /// This function is used internally and is not meant to be used except if you really know what you
     /// are doing. This doesn't free the potentially allocated memory. Use it at your own risks.
     void Reset();
 
+    /// @brief Sets this Pointer to the values of @p other.
     Pointer& operator=(const Pointer& other);
 
+    /// @brief Sets this Pointer to the values of @p other, moving all the data.
     Pointer& operator=(Pointer&& other) noexcept;
 
+    /// @brief Sets this Pointer to @c nullptr.
     Pointer& operator=(nullptr_t);
 
+    /// @brief Sets this Pointer to the values of @p other which is a Pointer of another Type.
     template <typename U>
     Pointer& operator=(const Pointer<U>& other);
 
+    /// @brief Sets this Pointer to the values of @p other which is a Pointer of another Type, moving all the data.
     template <typename U>
     Pointer& operator=(Pointer<U>&& other) noexcept;
 
+    /// @brief Converts this @c const Pointer to its underlying @c const raw pointer.
     [[nodiscard]]
-    explicit operator T*() const;
+    explicit operator const T*() const;
 
+    /// @brief Converts this Pointer to its underlying raw pointer.
     [[nodiscard]]
+    explicit operator T*();
+
+    /// @brief Converts this Pointer to its string representation.
+    ///
+    /// The resulting string will be in the following form:
+    /// @code
+    /// { ptr=<address>, sRefs=<strongReferenceCount>, wRefs=<weakReferenceCount>, isSRef=<isStrongReference> }
+    /// @endcode
+    [[nodiscard]]
+#ifdef DOXYGEN
+    explicit operator stdstring() const;
+#else
     explicit operator std::string() const;
+#endif
 
     // ReSharper disable once CppNonExplicitConversionOperator
     /// @brief Converts this @ref Pointer to a @c bool_t the same way a raw pointer would.
     [[nodiscard]]
     operator bool_t() const;
 
+    /// @brief Dereferences this Pointer, which gives a reference to the underlying Type.
     [[nodiscard]]
     T& operator*();
     
+    /// @brief Dereferences this @c const Pointer, which gives a @c const reference to the underlying Type.
     [[nodiscard]]
     const T& operator*() const;
 
+    /// @brief Dereferences this Pointer, which gives a reference to the underlying Type.
     [[nodiscard]]
     T* operator->();
     
+    /// @brief Dereferences this @c const Pointer, which gives a @c const reference to the underlying Type.
     [[nodiscard]]
     const T* operator->() const;
     
@@ -335,6 +384,7 @@ Pointer<T>& Pointer<T>::operator=(nullptr_t)
     return *this;
 }
 
+#ifndef DOXYGEN
 template <typename T>
 template <typename U>
 Pointer<T>& Pointer<T>::operator=(const Pointer<U>& other)
@@ -368,9 +418,10 @@ Pointer<T>& Pointer<T>::operator=(Pointer<U>&& other) noexcept
     
     return *this;
 }
+#endif
 
 template <typename T>
-Pointer<T>::operator T*() const
+Pointer<T>::operator const T*() const
 {
     if (m_ReferenceCounter)
         return m_ReferenceCounter->GetPointer();
@@ -378,7 +429,19 @@ Pointer<T>::operator T*() const
 }
 
 template <typename T>
+Pointer<T>::operator T*()
+{
+    if (m_ReferenceCounter)
+        return m_ReferenceCounter->GetPointer();
+    return nullptr;
+}
+
+template <typename T>
+#ifdef DOXYGEN
+Pointer<T>::operator stdstring() const
+#else
 Pointer<T>::operator std::string() const
+#endif
 {
     return std::format(
         "{{ ptr={:p}, sRefs={:d}, wRefs={:d}, isSRef={} }}",
@@ -498,54 +561,39 @@ bool operator==(const Pointer<T>& a, const nullptr_t) { return !a.IsValid(); }
 template <typename T>
 bool operator!=(const Pointer<T>& a, const nullptr_t) { return a.IsValid(); }
 
+/// @brief Prints the given Pointer to an output stream according to the @ref XnorCore::Pointer<T>::operator stdstring() const "Pointer to string conversion".
 template <typename T>
-std::ostream& operator<<(std::ostream& stream, const Pointer<T>& ptr)
-{
-    return stream
-        << "Pointer{ ptr=" << static_cast<const T*>(ptr)
-        << ", strRefs=" << ptr.GetReferenceCounter()->GetStrong()
-        << ", wRefs=" << ptr.GetReferenceCounter()->GetWeak()
-        << ", isStrRef=" << std::boolalpha << ptr.GetIsStrongReference()
-        << " }" << std::endl;
-}
+std::ostream& operator<<(std::ostream& stream, const Pointer<T>& ptr) { return stream << static_cast<std::string>(ptr); }
 
 END_XNOR_CORE
 
+/// @brief @c std::formatter template specialization for the XnorCore::Pointer type.
 template <typename T>
 struct std::formatter<XnorCore::Pointer<T>>  // NOLINT(cert-dcl58-cpp)
 {
+    /// @brief Parses the input formatting options.
     template <class ParseContext>
-    constexpr typename ParseContext::iterator parse(ParseContext& ctx);
-
-    template <class FormatContext>
-    typename FormatContext::iterator format(const XnorCore::Pointer<T>& pointer, FormatContext& ctx) const;
-};
-
-template <typename T>
-template <class FormatContext>
-typename FormatContext::iterator std::formatter<XnorCore::Pointer<T>>::format(
-    const XnorCore::Pointer<T>& pointer,
-    FormatContext& ctx
-) const
-{
-    std::ostringstream out;
-        
-    out << "0x" << reinterpret_cast<void*>(static_cast<T*>(pointer));
-        
-    return std::ranges::copy(std::move(out).str(), ctx.out()).out;
-}
-
-// ReSharper disable once CppMemberFunctionMayBeStatic
-template <typename T>
-template <class ParseContext>
-constexpr typename ParseContext::iterator std::formatter<XnorCore::Pointer<T>>::parse(ParseContext& ctx)
-{
-    auto it = ctx.begin();
-    if (it == ctx.end())
+    constexpr typename ParseContext::iterator parse(ParseContext& ctx)
+    {
+        auto it = ctx.begin();
+        if (it == ctx.end())
+            return it;
+ 
+        if (*it != '}')
+            throw std::format_error("Invalid format args for XnorCore::Pointer");
+ 
         return it;
- 
-    if (*it != '}')
-        throw std::format_error("Invalid format args for XnorCore::Pointer");
- 
-    return it;
-}
+    }
+
+    // ReSharper disable once CppMemberFunctionMayBeStatic
+    /// @brief Formats a string using the given instance of XnorCore::Pointer, according to the given options in the parse function.
+    template <class FormatContext>
+    typename FormatContext::iterator format(const XnorCore::Pointer<T>& pointer, FormatContext& ctx) const
+    {
+        std::ostringstream out;
+        
+        out << "0x" << static_cast<const T*>(pointer);
+        
+        return std::ranges::copy(std::move(out).str(), ctx.out()).out;
+    }
+};

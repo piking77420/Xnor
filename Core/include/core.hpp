@@ -7,7 +7,7 @@
 /// @file core.hpp
 /// @brief This file is meant to be included by every single other header file of this project.
 ///
-/// It includes the standard headers @c <cmath> and @c <cstdint> so that types such as
+/// It includes the standard headers @c \<cmath> and @c \<cstdint> so that types such as
 /// @c int8_t or @c float_t are defined. It also defines typedefs for @ref char_t and
 /// @ref bool_t, as they aren't defined by those standard headers.
 ///
@@ -17,7 +17,7 @@
 // ReSharper disable once CppEnforceTypeAliasCodeStyle
 /// @brief Equivalent to <c>char</c>.
 /// 
-/// @paragraph reason Reason
+/// ### Reason
 /// We use a typedef here instead of a type alias for consistency
 /// with how the other integral types are defined in the <c>cstdint</c> header.
 /// Also, we need to manually add this type because it is considered
@@ -52,7 +52,7 @@ namespace XnorCore {}
 
 /// @brief Creates default copy and move operations for a given @p type.
 ///
-/// @paragraph usage Usage
+/// ### Usage
 /// This macro should be used for any type that defines at least one of:
 /// - A non-default destructor (this includes default implementations),
 /// - A non-default copy constructor
@@ -117,6 +117,8 @@ namespace XnorCore {}
 ///     ...
 /// };
 /// @endcode
+///
+/// Also, a static class shouldn't define any other constructors.
 /// 
 /// @param type The type to make static.
 #define STATIC_CLASS(type)              \
@@ -125,3 +127,9 @@ namespace XnorCore {}
     ~type() = delete;                   \
     DELETE_COPY_MOVE_OPERATIONS(type)   \
     private:
+
+// We need this in order to be able to make Doxygen links to std::string conversion operators.
+#ifdef DOXYGEN
+/// @private
+using stdstring = std::string;
+#endif

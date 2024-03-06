@@ -8,20 +8,6 @@
 
 using namespace XnorCore;
 
-bool_t Cubemap::Load(const uint8_t*, int64_t)
-{
-    // TODO handle loading a cubemap via a raw buffer
-    Logger::LogError("Non Implemented function");
-    return false;
-}
-
-bool_t Cubemap::Load(const Pointer<File>&)
-{
-    // Could work with meta data file
-    Logger::LogError("Non Implemented function");
-    return false;
-}
-
 void Cubemap::CreateInRhi()
 {
     const CreateCubeMapInfo createCubeMapInfo
@@ -31,25 +17,24 @@ void Cubemap::CreateInRhi()
         .textureSizeHeight =  static_cast<uint32_t>(m_CubeMapSize.y),
         .textureFiltering = TextureFiltering::Linear,
         .textureWrapping = TextureWrapping::ClampToEdge,
-        .textureFormat = Rhi::GetFormat(m_DataChannels),
+        .textureFormat = Rhi::GetTextureFormatFromChannels(m_DataChannels),
         .textureInternalFormat = TextureInternalFormat::Rgba8,
         .dataType = DataType::UnsignedByte
     };
 
-    Rhi::CreateCubeMap(&m_Id,createCubeMapInfo);
+    m_Id = Rhi::CreateCubeMap(createCubeMapInfo);
     m_LoadedInRhi = true;
 }
 
 void Cubemap::DestroyInRhi()
 {
-    Rhi::DestroyTexture(&m_Id);
+    Rhi::DestroyTexture(m_Id);
     m_LoadedInRhi = false;
 }
 
 void Cubemap::Unload()
 {
-    // NOLINT(modernize-loop-convert)
-    for (size_t i = 0; i < m_Images.size(); i++)
+    for (size_t i = 0; i < m_Images.size(); i++) // NOLINT(modernize-loop-convert)
     {
         stbi_image_free(m_Images[i]);
     }

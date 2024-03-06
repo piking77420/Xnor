@@ -56,6 +56,12 @@ public:
 	/// @return Result position
 	[[nodiscard]]
 	Vector2i ProjectOn(const Vector3& vertex, Vector2i screenSize, const Matrix& model) const;
+
+
+	void CustomLookAt(const Vector3& eye, const Vector3& center, const Vector3& upVector, Matrix* result) const;
+
+	void CustomPerspective(const float_t fov, const float_t aspectRatio, const float_t near, const float_t far, Matrix* result) const;
+
 };
 
 END_XNOR_CORE

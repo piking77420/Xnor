@@ -6,6 +6,9 @@
 #include "core.hpp"
 #include "resource/cubemap.hpp"
 
+/// @file skybox.hpp
+/// @brief Defines the Skybox class.
+
 BEGIN_XNOR_CORE
 
 /// @brief A wrapper for a skybox

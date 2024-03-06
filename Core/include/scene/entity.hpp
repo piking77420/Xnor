@@ -16,11 +16,11 @@
 
 BEGIN_XNOR_CORE
 
-/// @brief Concept that forces a type to be a child of @ref Component
+/// @brief Concept that forces a type to be a child of Component
 template <class T>
 concept ComponentT = Meta::IsBaseOf<Component, T>;
 
-/// @brief Represents an object of the engine, behaviors can be attached to it via a list of @ref Component
+/// @brief Represents an object of the engine, behaviors can be attached to it via a list of Component
 class Entity : public Serializable
 {
     REFLECTABLE_IMPL_H(Entity)
@@ -31,33 +31,33 @@ public:
     /// @brief Name of the entity
     std::string name;
 
-    /// @brief Adds a @ref Component to the entity
+    /// @brief Adds a Component to the entity
     /// @tparam ComponentT Component type
     /// @return Created component
     template <class ComponentT>
     ComponentT* AddComponent();
 
-    /// @brief Gets a specified @ref Component
+    /// @brief Gets a specified Component
     /// @tparam ComponentT Component type
     /// @return Component, @c nullptr if it doesn't exists
     template <class ComponentT>
     [[nodiscard]]
     ComponentT* GetComponent();
 
-    /// @brief Gets a specified @ref Component
+    /// @brief Gets a specified Component
     /// @tparam ComponentT Component type
     /// @return Component, @c nullptr if it doesn't exists
     template <class ComponentT>
     [[nodiscard]]
     const ComponentT* GetComponent() const;
     
-    /// @brief Gets all of the specified @ref Component
+    /// @brief Gets all of the specified Component
     /// @tparam ComponentT Component type
     /// @param components Result components
     template <class ComponentT>
     void GetComponents(std::vector<ComponentT*>* components);
 
-    /// @brief Gets all of the specified @ref Component
+    /// @brief Gets all of the specified Component
     /// @tparam ComponentT Component type
     /// @param components Result components
     template <class ComponentT>
@@ -65,19 +65,19 @@ public:
 
     /// @brief Tries to get a component
     /// @tparam ComponentT Component type
-    /// @param output Found @ref Component
-    /// @return Whether the @ref Component exists
+    /// @param output Found Component
+    /// @return Whether the Component exists
     template <class ComponentT>
     [[nodiscard]]
     bool_t TryGetComponent(ComponentT** output);
 
-    /// @brief Removes a specified @ref Component
+    /// @brief Removes a specified Component
     /// @tparam ComponentT Component type
     template <class ComponentT>
     void RemoveComponent();
 
-    /// @brief Gets the @ref Guid of the entity
-    /// @return @ref Guid
+    /// @brief Gets the Guid of the entity
+    /// @return Guid
     [[nodiscard]]
     XNOR_ENGINE const Guid& GetGuid() const;
 
@@ -131,7 +131,7 @@ public:
     /// @brief Updates the entity
     XNOR_ENGINE void Update();
 
-    /// @brief Compares 2 entities using their @ref Guid
+    /// @brief Compares 2 entities using their Guid
     /// @param entity Other
     /// @return Equals
     XNOR_ENGINE bool_t operator==(const Entity& entity) const;

@@ -5,18 +5,27 @@
 #include "core.hpp"
 #include "rhi_typedef.hpp"
 
+/// @file render_pass.hpp
+/// @brief Defines the RenderPass class
+
 BEGIN_XNOR_CORE
 
+/// @brief Represents a render pass, which is a std::vector of @ref RenderTargetInfo
 class RenderPass
 {
 public:
+    /// @brief Attachments
     std::vector<RenderTargetInfo> renderPassAttachments;
 
     XNOR_ENGINE RenderPass() = default;
+
+    /// @brief Creates a render pass with attachments
+    /// @param attachments Attachments
+    XNOR_ENGINE explicit RenderPass(const std::vector<RenderTargetInfo>& attachments);
     
     XNOR_ENGINE ~RenderPass() = default;
-    
-    XNOR_ENGINE explicit RenderPass(const std::vector<RenderTargetInfo>& attachments);
+
+    DEFAULT_COPY_MOVE_OPERATIONS(RenderPass)
 };
 
 END_XNOR_CORE

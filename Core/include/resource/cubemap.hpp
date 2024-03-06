@@ -7,11 +7,11 @@
 #include "resource.hpp"
 
 /// @file cubemap.hpp
-/// @brief Defines the cubemap class
+/// @brief Defines the Cubemap class
 
 BEGIN_XNOR_CORE
 
-/// @brief Represents an array of 6 textures
+/// @brief Represents an array of 6 @ref Texture "Textures"
 class Cubemap : public Resource
 {
 public:
@@ -19,28 +19,19 @@ public:
     /// @param cubeMapsTextures Texture file names
     XNOR_ENGINE explicit Cubemap(const std::array<std::string, 6>& cubeMapsTextures);
 
-    /// @brief [UNIMPLEMENTED]
-    /// @param buffer Raw data
-    /// @param length Raw data length
-    XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;
-    
-    /// @brief [UNIMPLEMENTED]
-    /// @param file File
-    XNOR_ENGINE bool_t Load(const Pointer<File>& file) override;
-
-    /// @brief Creates the @ref Cubemap in the @ref Rhi
+    /// @brief Creates the Cubemap in the Rhi
     XNOR_ENGINE void CreateInRhi() override;
 
-    /// @brief Destroys the @ref Cubemap in the @ref Rhi
+    /// @brief Destroys the Cubemap in the Rhi
     XNOR_ENGINE void DestroyInRhi() override;
 
-    /// @brief Unloads the @ref Cubemap
+    /// @brief Unloads the Cubemap
     XNOR_ENGINE void Unload() override;
 
-    /// @brief Binds the @ref Cubemap
+    /// @brief Binds the Cubemap
     XNOR_ENGINE void BindTexture(uint32_t unit) const;
 
-    /// @brief Unbinds the @ref Cubemap
+    /// @brief Unbinds the Cubemap
     XNOR_ENGINE void UnBindTexture(uint32_t unit) const;
     
 private:

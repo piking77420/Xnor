@@ -7,24 +7,31 @@
 #include "utils/pointer.hpp"
 #include "utils/serializable.hpp"
 
+/// @file material.hpp
+/// @brief Defines types related to materials
+
 BEGIN_XNOR_CORE
 
+/// @brief Material type
 enum MaterialType
 {
     Opaque,
     Litt
 };
 
+/// @brief Encapsulates a material, which defines how a @ref Model is rendered
 struct Material : Serializable
 {
     REFLECTABLE_IMPL_MINIMAL(Material)
     
 public:
     // Pointer<Shader> shader;
-    int32_t materialType;
+    /// @brief Material type
+    int32_t materialType = Opaque;
+    /// @brief Albedo texture
     Pointer<Texture> albedo;
+    /// @brief Normal map
     Pointer<Texture> normalMap;
-
 };
 
 END_XNOR_CORE

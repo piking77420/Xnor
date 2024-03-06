@@ -3,7 +3,6 @@
 
 using namespace XnorCore;
 
-
 RenderPass::RenderPass(const std::vector<RenderTargetInfo>& attachments)
     : renderPassAttachments(attachments)
 {

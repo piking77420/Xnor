@@ -32,7 +32,7 @@ void RenderWindow::Display()
 {
     m_Editor->renderer.RenderScene(m_RendererContext);
     
-    ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_ColorTexture->GetId()), ImGui::GetContentRegionAvail(), {1, 1},{0, 0});
+    ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_ColorTexture->GetId()), ImGui::GetContentRegionAvail(),  ImVec2(0, 1), ImVec2(1, 0));
 }
 
 void RenderWindow::OnWindowResize(Vector2i newWindowSize)

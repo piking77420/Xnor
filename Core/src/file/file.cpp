@@ -23,7 +23,7 @@ File::~File()
         File::Unload();
 }
 
-bool File::Load()
+bool_t File::Load()
 {
     std::ifstream file(m_Path, std::ios::in | std::ios::ate | std::ios::binary);
 

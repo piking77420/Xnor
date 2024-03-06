@@ -9,14 +9,14 @@ Vector3 ScaleVector(const Vector3& v,const float desiredLength)
 	return v * desiredLength / v.Length();
 }
 
-Vector3 Combine(Vector3 const& a,Vector3 const& b, const float ascl, const float bscl)
+Vector3 Combine(const Vector3& a, const Vector3& b, const float_t ascl, const float_t bscl)
 {
 	return (a * ascl) + (b * bscl);
 }
 
-bool Decompose(Matrix const& modelMatrix, Vector3* translation,
-	Quaternion* orientation, Vector3* scale,
-	Vector3* skew, Vector4* perspective)
+bool_t Decompose(const Matrix& modelMatrix, Vector3* const translation,
+	Quaternion* const orientation, Vector3* const scale,
+	Vector3* const skew, Vector4* const perspective)
 {
 	Matrix localMatrix(modelMatrix);
 
@@ -24,7 +24,7 @@ bool Decompose(Matrix const& modelMatrix, Vector3* translation,
 		return false;
 	
 	// Normalize the matrix.
-	float_t invm33 = 1.f/localMatrix[3][3];
+	float_t invm33 = 1.f / localMatrix[3][3];
 	float_t* matrix = localMatrix.Raw();
 	
 	for (uint32_t i = 0; i < 16; i++)
@@ -38,7 +38,7 @@ bool Decompose(Matrix const& modelMatrix, Vector3* translation,
 	perspectiveMatrix.m32 = 0.f;
 	perspectiveMatrix.m33 = 1.f;
 
-	if(Calc::IsZero(perspectiveMatrix.Determinant(), 0.f))
+	if (Calc::IsZero(perspectiveMatrix.Determinant(), 0.f))
 		return false;
 
 	// First, isolate perspective.  This is the messiest.
@@ -74,9 +74,11 @@ bool Decompose(Matrix const& modelMatrix, Vector3* translation,
 	Vector3 row[3], pdum3;
 
 	// Now get scale and shear.
-	for(int32_t i = 0; i < 3; ++i)
-	for(int32_t j = 0; j < 3; ++j)
-		row[i][j] = localMatrix[static_cast<uint8_t>(i)][j];
+	for (int32_t i = 0; i < 3; ++i)
+	{
+		for (int32_t j = 0; j < 3; ++j)
+			row[i][j] = localMatrix[static_cast<uint8_t>(i)][j];
+	}
 
 	// Compute X scale factor and normalize first row.
 	scale->x = row[0].Length();
@@ -108,7 +110,7 @@ bool Decompose(Matrix const& modelMatrix, Vector3* translation,
 	// Check for a coordinate system flip.  If the determinant
 	// is -1, then negate the matrix and the scaling factors.
 	pdum3 = Vector3::Cross(row[1], row[2]); 
-	if(Vector3::Dot(row[0], pdum3) < 0)
+	if (Vector3::Dot(row[0], pdum3) < 0)
 	{
 		for(uint32_t i = 0; i < 3; i++)
 		{
@@ -132,10 +134,12 @@ bool Decompose(Matrix const& modelMatrix, Vector3* translation,
 	} 
 	else
 	{
-		static int next[3] = {1, 2, 0};
+		static int32_t next[3] = {1, 2, 0};
 		i = 0;
-		if(row[1].y > row[0].x) i = 1;
-		if(row[2].z > row[i][i]) i = 2;
+		if (row[1].y > row[0].x)
+			i = 1;
+		if (row[2].z > row[i][i])
+			i = 2;
 		j = next[i];
 		k = next[j];
 
@@ -154,21 +158,37 @@ bool Decompose(Matrix const& modelMatrix, Vector3* translation,
 }
 
 
+Matrix GetTrsOfParents(const Entity& parent)
+{
+	const Matrix parentMatrix = Matrix::Trs(parent.transform.position, parent.transform.rotation, parent.transform.scale);
+
+	if (parent.HasParent())  
+	{
+		return GetTrsOfParents(*parent.GetParent()) * parentMatrix;
+	}
+	
+	return parentMatrix;
+}
+
+void UpdateTransform(Entity& entity)
+{
+	Transform& t = entity.transform;
+	t.rotation = Quaternion::FromEuler(t.eulerRotation).Normalized();
+	t.worldMatrix = Matrix::Trs(t.position, t.rotation, t.scale);
+    
+	if (!entity.HasParent())
+		return;
+	
+	t.worldMatrix = GetTrsOfParents(*entity.GetParent()) *  t.worldMatrix;
+}
+
 
 void SceneGraph::Update(const List<Entity*>& entities)
 {
-    for (uint32_t i = 0; i < entities.GetSize(); i++)
+    for (size_t i = 0; i < entities.GetSize(); i++)
     {
         UpdateTransform(*entities[i]);
     }
-}
-
-Matrix SceneGraph::GetTrs(const Matrix& trs,const Entity* entity)
-{
-    if(!entity->HasParent())
-        return trs;
-    
-    return GetTrsOfParents(*entity->GetParent()) * trs;
 }
 
 void SceneGraph::OnAttachToParent(Entity& entity)
@@ -176,36 +196,13 @@ void SceneGraph::OnAttachToParent(Entity& entity)
     Transform& transform = entity.transform;
 
     Matrix trs = transform.worldMatrix;
-    Matrix&& parent = GetTrsOfParents(*entity.GetParent());
+    const Matrix parent = GetTrsOfParents(*entity.GetParent());
     
-    trs = parent.Inverted() * trs ;
+    trs = parent.Inverted() * trs;
 	Vector3 skew;
 	Vector4 perspective;
 	
-    Decompose(trs,&transform.position,&transform.rotation,&transform.scale,&skew,&perspective);
+    Decompose(trs, &transform.position, &transform.rotation, &transform.scale, &skew, &perspective);
 	transform.position = static_cast<Vector3>(trs[3]);
 	transform.eulerRotation = Quaternion::ToEuler(transform.rotation);
-}
-
-Matrix SceneGraph::GetTrsOfParents(const Entity& parent)
-{
-    Matrix&& parentMatrix = Matrix::Trs(parent.transform.position,parent.transform.rotation,parent.transform.scale);
-
-    if(parent.HasParent())  
-    {
-        return GetTrsOfParents(*parent.GetParent()) * parentMatrix;
-    }
-    return parentMatrix;
-}
-
-void SceneGraph::UpdateTransform(Entity& entity)
-{
-	
-    entity.transform.rotation = Quaternion::FromEuler(entity.transform.eulerRotation).Normalized();
-    entity.transform.worldMatrix = Matrix::Trs(entity.transform.position,entity.transform.rotation,entity.transform.scale);
-    
-    if(!entity.HasParent())
-        return;
-	
-    entity.transform.worldMatrix = GetTrsOfParents(*entity.GetParent()) *  entity.transform.worldMatrix;
 }

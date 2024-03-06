@@ -2,9 +2,13 @@
 
 // ReSharper disable CppInconsistentNaming
 
+#include <refl/refl.hpp>
+
 #include "core.hpp"
-#include "refl/refl.hpp"
 #include "utils/meta_programming.hpp"
+
+/// @file serializable.hpp
+/// @brief Defines serialization/reflection types and concepts
 
 BEGIN_XNOR_CORE
 
@@ -69,11 +73,11 @@ public:
     virtual void Deserialize() = 0;
 };
 
-/// @brief Concept that forces a type to be a child of @ref Serializable
+/// @brief Concept that forces a type to be a child of Serializable
 template <class T>
 concept SerializableT = Meta::IsBaseOf<Serializable, T>;
 
-/// @brief Implements the reflection in a .cpp file, it provides a body for @ref Serialize and @ref Deserialize
+/// @brief Implements the reflection in a .cpp file, it provides a body for @ref Serializable::Serialize and Serializable::Deserialize
 /// @param type Type name
 #define REFLECTABLE_IMPL_CPP(type)                                                                                                      \
 void type::Serialize() const                                                                                                            \

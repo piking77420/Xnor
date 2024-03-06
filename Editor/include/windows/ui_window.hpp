@@ -16,6 +16,8 @@ public:
     
     DEFAULT_COPY_MOVE_OPERATIONS(UiWindow)
 
+    ImGuiWindowFlags_ window_flags = ImGuiWindowFlags_None;
+
     [[nodiscard]]
     const char* GetName() const;
     
@@ -34,14 +36,13 @@ public:
 
     virtual void OnWindowResize(Vector2i newWindowSize);
 
-    
-
 protected:
     std::string m_WindowTitle = "Untitled";
     
     bool m_IsFocused;
     Vector2i m_Position;
     Vector2i m_Size;
+
 
     Editor* m_Editor;
 };

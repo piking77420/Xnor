@@ -1,17 +1,25 @@
 ﻿#pragma once
 
+#include <Maths/vector3.hpp>
+
 #include "core.hpp"
-#include "Maths/vector3.hpp"
 #include "scene/component.hpp"
+
+/// @file light.hpp
+/// @brief Defines the Light class
 
 BEGIN_XNOR_CORE
 
+/// @brief Base class for lights
 class Light : public Component
 {
     REFLECTABLE_IMPL_MINIMAL(Light)
     
 public:
+    /// @brief Color of the light
     Vector3 color = Vector3(1.f);
+    
+    /// @brief Intensity of the light
     float_t intensity = 1.f;
 
     XNOR_ENGINE Light() = default;
@@ -26,4 +34,4 @@ END_XNOR_CORE
 REFL_AUTO(type(XnorCore::Light, bases<XnorCore::Component>),
     field(color),
     field(intensity)
-);
+)

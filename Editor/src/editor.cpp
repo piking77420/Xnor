@@ -38,6 +38,7 @@ Editor::Editor()
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 	io.Fonts->AddFontDefault();
 
@@ -296,7 +297,7 @@ void Editor::UpdateWindow()
 {
 	for (UiWindow* w : m_UiWindows)
 	{
-		ImGui::Begin(w->GetName());
+		ImGui::Begin(w->GetName(),nullptr,w->window_flags);
 		w->FetchInfo();
 		w->Display();
 		ImGui::End();
@@ -375,7 +376,7 @@ void Editor::EndFrame()
 
 void Editor::WorldBehaviours()
 {
-	XnorCore::World::hierarchy.Update(XnorCore::World::scene.GetEntities());
+	XnorCore::SceneGraph::Update(XnorCore::World::scene.GetEntities());
 	
 	if (XnorCore::World::isPlaying)
 	{

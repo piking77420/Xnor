@@ -97,10 +97,10 @@ void ResourceManager::Unload(const std::string& name)
         return;
     }
     
-    if (resource->second->GetLoadedInRhi())
+    if (resource->second->IsLoadedInRhi())
         resource->second->DestroyInRhi();
 
-    if (resource->second->GetLoaded())
+    if (resource->second->IsLoaded())
         resource->second->Unload();
 
     m_Resources.erase(resource);
@@ -116,10 +116,10 @@ void ResourceManager::UnloadAll()
     {
         Logger::LogDebug("Unloading resource {}", resource.first);
         
-        if (resource.second->GetLoadedInRhi())
+        if (resource.second->IsLoadedInRhi())
             resource.second->DestroyInRhi();
         
-        if (resource.second->GetLoaded())
+        if (resource.second->IsLoaded())
             resource.second->Unload();
     }
     // Smart pointers are deleted automatically, we only need to clear the container

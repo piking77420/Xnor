@@ -1,5 +1,7 @@
 #include "editor_camera.hpp"
 
+#include <assimp/Logger.hpp>
+
 #include "editor.hpp"
 #include "input/time.hpp"
 #include "scene/component/mesh_renderer.hpp"
@@ -69,10 +71,10 @@ void EditorCamera::EditorCameraRotation()
     m_EditorRefCamera->front.x = std::cos(m_Yaw * Calc::Deg2Rad) * std::cos(m_Pitch * Calc::Deg2Rad);
     m_EditorRefCamera->front.y = std::sin(m_Pitch * Calc::Deg2Rad);
     m_EditorRefCamera->front.z = std::sin(m_Yaw * Calc::Deg2Rad) * std::cos(m_Pitch * Calc::Deg2Rad);
-    m_EditorRefCamera->front = -m_EditorRefCamera->front.Normalized();
-
-    m_EditorRefCamera->right = Vector3::Cross(Vector3::UnitY(),m_EditorRefCamera->front).Normalized();
-    m_EditorRefCamera->up = Vector3::Cross(m_EditorRefCamera->front,m_EditorRefCamera->right).Normalized();
+    m_EditorRefCamera->front = m_EditorRefCamera->front.Normalized();
+    
+    m_EditorRefCamera->right = Vector3::Cross(m_EditorRefCamera->front,Vector3::UnitY()).Normalized();
+    m_EditorRefCamera->up = Vector3::Cross(m_EditorRefCamera->right,m_EditorRefCamera->front).Normalized();
 }
 
 void EditorCamera::EditorCameraMovement()
@@ -81,6 +83,7 @@ void EditorCamera::EditorCameraMovement()
     const float_t cameraSpeed = m_CameraSpeed * dt;
 
     Vector3 addVector;
+    XnorCore::Logger::LogInfo("m_EditorRefCamera->front  = {}",m_EditorRefCamera->front);
 
     if (ImGui::IsKeyDown(ImGuiKey_W))
         addVector -= m_EditorRefCamera->front * cameraSpeed;
@@ -131,8 +134,8 @@ void EditorCamera::ComputeDeltaMouse()
         m_FirstMove = true;
     } 
     
-    m_MouseOffSet.x = mousePos.x - m_LastInput.x ;
-    m_MouseOffSet.y =  m_LastInput.y - mousePos.y; 
+    m_MouseOffSet.x = m_LastInput.x - mousePos.x  ;
+    m_MouseOffSet.y =  mousePos.y -  m_LastInput.y; 
     m_LastInput.x = mousePos.x;
     m_LastInput.y = mousePos.y;
 }
@@ -165,7 +168,7 @@ void EditorCamera::OnPressGoToObject()
     }
     else
     {
-        const XnorCore::ModelAABB&& aabb = meshRenderer->model->GetAabb();
+        const XnorCore::ModelAabb&& aabb = meshRenderer->model->GetAabb();
         const Vector3 radiusVec = aabb.max - aabb.min;
         Vector4 radiusPreScale = Vector4(radiusVec.x, radiusVec.y, radiusVec.z, 1.0f);
         radiusPreScale = Matrix::Trs(Vector3(0.f), Quaternion::Identity(), currentEntiy.transform.scale) * radiusPreScale;

@@ -1,18 +1,13 @@
 #include "rendering/renderer.hpp"
 
-
+#include "rendering/rhi.hpp"
+#include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
-#include "rendering\light\directional_light.hpp"
-#include "rendering\light\spot_light.hpp"
+#include "rendering/light/spot_light.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/component/mesh_renderer.hpp"
 
 using namespace XnorCore;
-
-Renderer::Renderer()
-	: clearColor(0.f)
-{
-}
 
 void Renderer::Initialize()
 {
@@ -21,10 +16,9 @@ void Renderer::Initialize()
 	InitResources();
 	m_ToneMapping.InitializeResources();
 	m_SkyboxRenderer.InitializeResources();
-	m_LightCuller.InitResources();
+	m_LightManager.InitResources();
 
 	Rhi::PrepareUniform();
-
 }
 
 void Renderer::Shutdown()
@@ -47,7 +41,7 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	scene.GetAllComponentOfType<DirectionalLight>(&directionalLights);
 
 	// Update Light
-	m_LightCuller.UpdateLight(pointLights,spotLights,directionalLights);
+	m_LightManager.UpdateLight(pointLights,spotLights,directionalLights);
 	
 	// Update Camera
 	CameraUniformData cam;
@@ -64,22 +58,22 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	DefferedRendering(meshrenderers, &rendererContext);
 	// Blit depth of gbuffer to forward Pass
 	Rhi::BlitFrameBuffer(m_GframeBuffer->GetId(), m_RenderBuffer->GetId(),
-		{0, 0},m_GframeBuffer->GetSize(),
-		{0, 0},m_RenderBuffer->GetSize(), Attachment::Depth, TextureFiltering::Nearest);
+		{ 0, 0 }, m_GframeBuffer->GetSize(),
+		{ 0, 0 }, m_RenderBuffer->GetSize(), Attachment::Depth, TextureFiltering::Nearest);
 	
 	// ForwardPass //
 	ForwardRendering(meshrenderers, &rendererContext);
-	m_SkyboxRenderer.DrawSkymap(m_Cube,World::skybox);
-	if(rendererContext.isEditor)
+	m_SkyboxRenderer.DrawSkymap(m_Cube, World::skybox);
+	if (rendererContext.isEditor)
 	{
-		m_LightCuller.DrawLightGizmo(pointLights,spotLights,directionalLights,*rendererContext.camera);
+		m_LightManager.DrawLightGizmo(pointLights, spotLights, directionalLights, *rendererContext.camera);
 		
 	}
 	
 	m_RenderBuffer->UnBindFrameBuffer();
 	
 	// DRAW THE FINAL IMAGE TEXTURE
-	m_ToneMapping.ComputeToneMaping(*m_ColorAttachment,m_Quad);
+	m_ToneMapping.ComputeToneMaping(*m_ColorAttachment, m_Quad);
 
 	
 	if (rendererContext.framebuffer != nullptr)
@@ -122,9 +116,8 @@ void Renderer::PrepareRendering(const vec2i windowSize)
 {
 	InitDefferedRenderingAttachment(windowSize);
 	InitForwardRenderingAttachment(windowSize);
-	m_ToneMapping.Initialize(windowSize);
+	m_ToneMapping.Prepare(windowSize);
 }
-
 
 void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers, const MaterialType materialtype) const
 {
@@ -139,6 +132,7 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		ModelUniformData modelData;
 
 		modelData.model = transform.worldMatrix;
+		
 		try
 		{
 			modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
@@ -147,6 +141,7 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		{
 			modelData.normalInvertMatrix = Matrix::Identity();
 		}
+		
 		Rhi::UpdateModelUniform(modelData);
 
 		if (meshRenderer->material.albedo.IsValid())
@@ -162,7 +157,6 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		}
 	}
 }
-
 
 void Renderer::InitDefferedRenderingAttachment(const Vector2i windowSize)
 {
@@ -201,7 +195,7 @@ void Renderer::InitDefferedRenderingAttachment(const Vector2i windowSize)
 	const RenderPass renderPass(attachementsType);
 
 	const std::vector<const Texture*> targets = { m_PositionAtttachment, m_NormalAttachement, m_AlbedoAttachment, m_DepthGbufferAtttachment};
-	m_GframeBuffer->Create(renderPass,targets);
+	m_GframeBuffer->Create(renderPass, targets);
 	
 	// Init gbuffer Texture
 	m_GBufferShaderLit->Use();
@@ -254,7 +248,16 @@ void Renderer::DestroyAttachment() const
 	delete m_ColorAttachment;
 }
 
-void Renderer::DefferedRendering(const std::vector<const MeshRenderer*> meshrenderers,const RendererContext*) const
+void Renderer::DrawLightGizmo(
+	const std::vector<const PointLight*>&,
+	const std::vector<const SpotLight*>&,
+	const std::vector<const DirectionalLight*>&,
+	const Camera&
+) const
+{
+}
+
+void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshrenderers, const RendererContext*) const
 {
 	// Bind for gbuffer pass // 
 	m_GframeBuffer->BindFrameBuffer();
@@ -274,7 +277,7 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*> meshrend
 	// END DEFERRED RENDERING
 }
 
-void Renderer::ForwardRendering(const std::vector<const MeshRenderer*> meshrenderers,const RendererContext* rendererContext) const
+void Renderer::ForwardRendering(const std::vector<const MeshRenderer*>& meshrenderers, const RendererContext* rendererContext) const
 {
 	if (rendererContext->isEditor)
 	{
@@ -322,7 +325,6 @@ void Renderer::InitResources()
 	// Primitive
 	m_Cube = ResourceManager::Get<Model>("assets/models/cube.obj");
 	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
-	
 }
 
 void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) const
@@ -340,7 +342,7 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 			continue;
 		
 		const Transform& transform =  meshRenderer->entity->transform;
-		const ModelAABB&& modelAabb = meshRenderer->model->GetAabb();
+		const ModelAabb&& modelAabb = meshRenderer->model->GetAabb();
 		
 		const Vector3&& aabbSize = (modelAabb.max - modelAabb.min) * 0.5f;
 		const Vector3&& center  = (modelAabb.max + modelAabb.min) * 0.5f;
@@ -356,7 +358,7 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 }
 
-void Renderer::RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRenderers)
+void Renderer::RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRenderers) const
 {
 	ModelUniformData data;
 	
