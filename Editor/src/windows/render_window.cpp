@@ -13,7 +13,7 @@ RenderWindow::RenderWindow(Editor* editor)
 RenderWindow::RenderWindow(Editor* editor, const std::string& title)
     : UiWindow(editor, title)
 {
-    Initialize(XnorCore::Window::GetSize());
+    
 }
 
 void RenderWindow::ResizeRenderContext(const Vector2i size)
@@ -30,15 +30,18 @@ RenderWindow::~RenderWindow()
 
 void RenderWindow::Display()
 {
-    m_Editor->renderer.RenderScene(m_RendererContext);
+    if(!m_RendererContext.IsValid() || m_RendererContext.framebuffer->GetSize() != m_Size)
+    {
+        ResizeRenderContext(m_Size);
+    }
     
+    m_Editor->renderer.RenderScene(m_RendererContext);
     ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_ColorTexture->GetId()), ImGui::GetContentRegionAvail(),  ImVec2(0, 1), ImVec2(1, 0));
 }
 
 void RenderWindow::OnWindowResize(Vector2i newWindowSize)
 {
     UiWindow::OnWindowResize(newWindowSize);
-    ResizeRenderContext(newWindowSize);
 }
 
 

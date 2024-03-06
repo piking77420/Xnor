@@ -11,12 +11,12 @@ BEGIN_XNOR_CORE
 class RendererContext
 {
 public:
-	const Camera* camera;
-	const FrameBuffer* framebuffer;
+	const Camera* camera = nullptr;
+	const FrameBuffer* framebuffer = nullptr;
 	bool_t isEditor = false;
 
 	[[nodiscard]]
-	bool_t IsValid() const;
+	XNOR_ENGINE bool_t IsValid() const;
 };
 
 END_XNOR_CORE
