@@ -94,9 +94,9 @@ private:
     
     XNOR_ENGINE void InitResources();
     
-    XNOR_ENGINE void InitDefferedRenderingAttachment(vec2i windowSize);
+    XNOR_ENGINE void InitDefferedRenderingAttachment(Vector2i windowSize);
     
-    XNOR_ENGINE void InitForwardRenderingAttachment(vec2i windowSize);
+    XNOR_ENGINE void InitForwardRenderingAttachment(Vector2i windowSize);
     
     XNOR_ENGINE void DestroyAttachment() const;
     

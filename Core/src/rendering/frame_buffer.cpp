@@ -5,7 +5,7 @@
 using namespace XnorCore;
 
 
-FrameBuffer::FrameBuffer(const vec2i size)
+FrameBuffer::FrameBuffer(const Vector2i size)
 	: m_FrameBufferSize(size)
 {
 }

@@ -74,7 +74,7 @@ public:
     Pointer() = default;
     
     /// @brief Creates a copy of another @ref Pointer, specifying whether it is a weak or strong reference.
-    Pointer(const Pointer& other, bool strongReference = false);
+    Pointer(const Pointer& other, bool_t strongReference = false);
 
     /// @brief Creates a Pointer by moving all the values of an existing one.
     Pointer(Pointer&& other) noexcept;
@@ -100,11 +100,11 @@ public:
     ///
     /// @tparam U The type of the existing Pointer. This type must be convertible to Type.
     template <typename U>
-    explicit Pointer(const Pointer<U>& other, bool strongReference = false);
+    explicit Pointer(const Pointer<U>& other, bool_t strongReference = false);
 
     /// @brief Creates a copy of an existing Pointer of a different Type, specifying whether it is a strong reference.
     template <typename U>
-    explicit Pointer(Pointer<U>& other, bool strongReference = false);
+    explicit Pointer(Pointer<U>& other, bool_t strongReference = false);
 
     /// @brief Creates a Pointer by moving the value of another one of a different Type.
     template <typename U>
@@ -220,7 +220,7 @@ public:
 private:
     ReferenceCounter<T>* m_ReferenceCounter = nullptr;
 
-    bool m_IsStrongReference = false;
+    bool_t m_IsStrongReference = false;
 
     void SetReferenceCounter(ReferenceCounter<T>* newReferenceCounter);
 
@@ -228,7 +228,7 @@ private:
 };
 
 template <typename T>
-Pointer<T>::Pointer(const Pointer& other, const bool strongReference)
+Pointer<T>::Pointer(const Pointer& other, const bool_t strongReference)
     : m_ReferenceCounter(other.m_ReferenceCounter)
     , m_IsStrongReference(strongReference)
 {
@@ -272,7 +272,7 @@ Pointer<T>::Pointer(Construct)
 
 template <typename T>
 template <typename U>
-Pointer<T>::Pointer(const Pointer<U>& other, const bool strongReference)
+Pointer<T>::Pointer(const Pointer<U>& other, const bool_t strongReference)
     : m_ReferenceCounter(reinterpret_cast<ReferenceCounter<T>*>(const_cast<ReferenceCounter<U>*>(other.GetReferenceCounter())))
     , m_IsStrongReference(strongReference)
 {
@@ -287,7 +287,7 @@ Pointer<T>::Pointer(const Pointer<U>& other, const bool strongReference)
 
 template <typename T>
 template <typename U>
-Pointer<T>::Pointer(Pointer<U>& other, const bool strongReference)
+Pointer<T>::Pointer(Pointer<U>& other, const bool_t strongReference)
     : Pointer(const_cast<const Pointer<U>&>(other), strongReference)
 {
 }
@@ -539,27 +539,27 @@ void Pointer<T>::CheckReferenceCounterValid()
 
 /// @brief Compares two @ref Pointer "Pointers" by checking if they point to the same address.
 template <typename T>
-bool operator==(const Pointer<T>& a, const Pointer<T>& b) { return static_cast<const T*>(a) == static_cast<const T*>(b); }
+bool_t operator==(const Pointer<T>& a, const Pointer<T>& b) { return static_cast<const T*>(a) == static_cast<const T*>(b); }
 
 /// @brief Compares two @ref Pointer "Pointers" by checking if they point to the same address.
 template <typename T>
-bool operator!=(const Pointer<T>& a, const Pointer<T>& b) { return !(a == b); }
+bool_t operator!=(const Pointer<T>& a, const Pointer<T>& b) { return !(a == b); }
 
 /// @brief Compares two @ref Pointer "Pointers" by checking if they point to the same address.
 template <typename T, typename U>
-bool operator==(const Pointer<T>& a, const Pointer<U>& b) { return static_cast<const T*>(a) == reinterpret_cast<const T*>(static_cast<const U*>(b)); }
+bool_t operator==(const Pointer<T>& a, const Pointer<U>& b) { return static_cast<const T*>(a) == reinterpret_cast<const T*>(static_cast<const U*>(b)); }
 
 /// @brief Compares two @ref Pointer "Pointers" by checking if they point to the same address.
 template <typename T, typename U>
-bool operator!=(const Pointer<T>& a, const Pointer<U>& b) { return !(a == b); }
+bool_t operator!=(const Pointer<T>& a, const Pointer<U>& b) { return !(a == b); }
 
 /// @brief Checks if a @ref Pointer is null.
 template <typename T>
-bool operator==(const Pointer<T>& a, const nullptr_t) { return !a.IsValid(); }
+bool_t operator==(const Pointer<T>& a, const nullptr_t) { return !a.IsValid(); }
 
 /// @brief Checks if a @ref Pointer is not null.
 template <typename T>
-bool operator!=(const Pointer<T>& a, const nullptr_t) { return a.IsValid(); }
+bool_t operator!=(const Pointer<T>& a, const nullptr_t) { return a.IsValid(); }
 
 /// @brief Prints the given Pointer to an output stream according to the @ref XnorCore::Pointer<T>::operator stdstring() const "Pointer to string conversion".
 template <typename T>
