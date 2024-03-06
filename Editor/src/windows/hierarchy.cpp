@@ -34,7 +34,7 @@ void Hierarchy::Display()
         if (ImGui::BeginDragDropTarget())
         {
             // ReSharper disable once CppTooWideScope
-            const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("SG");
+            const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("HierarchyEntity");
             
             if (payload)
             {
@@ -63,8 +63,8 @@ void Hierarchy::DisplayEntity(XnorCore::Scene& scene, XnorCore::Entity* const en
 {
     ImGui::PushID(entity);
     
-    const char* name = entity->name.c_str();
-    const bool isRenaming = IsRenamingEntity(entity);
+    const char_t* name = entity->name.c_str();
+    const bool_t isRenaming = IsRenamingEntity(entity);
     
     const ImGuiTreeNodeFlags flags = GetEntityNodeFlags(entity);
     
@@ -142,14 +142,14 @@ void Hierarchy::ProcessEntityDragDrop(XnorCore::Entity* const entity)
 {
     if (ImGui::BeginDragDropSource())
     {
-        ImGui::SetDragDropPayload("SG", &entity, sizeof(XnorCore::Entity*));
+        ImGui::SetDragDropPayload("HierarchyEntity", &entity, sizeof(XnorCore::Entity*));
         ImGui::EndDragDropSource();
     }
 
     if (ImGui::BeginDragDropTarget())
     {
         // ReSharper disable once CppTooWideScope
-        const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("SG");
+        const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("HierarchyEntity");
                 
         if (payload)
         {
@@ -213,12 +213,12 @@ ImGuiTreeNodeFlags Hierarchy::GetEntityNodeFlags(const XnorCore::Entity* const e
     return flags;
 }
 
-bool Hierarchy::IsRenamingEntity(const XnorCore::Entity* entity) const
+bool_t Hierarchy::IsRenamingEntity(const XnorCore::Entity* entity) const
 {
     return m_EntityToRename == entity;
 }
 
-bool Hierarchy::IsEntitySelected(const XnorCore::Entity* entity) const
+bool_t Hierarchy::IsEntitySelected(const XnorCore::Entity* entity) const
 {
     return m_Editor->data.selectedEntity == entity;
 }

@@ -32,13 +32,13 @@ private:
     ImGuiTreeNodeFlags GetEntityNodeFlags(const XnorCore::Entity* entity) const;
 
     [[nodiscard]]
-    bool IsRenamingEntity(const XnorCore::Entity* entity) const;
+    bool_t IsRenamingEntity(const XnorCore::Entity* entity) const;
     [[nodiscard]]
-    bool IsEntitySelected(const XnorCore::Entity* entity) const;
+    bool_t IsEntitySelected(const XnorCore::Entity* entity) const;
 
     XnorCore::Entity* m_EntityToDelete;
     XnorCore::Entity* m_EntityToRename;
-    bool m_ClickedOnEntity;
+    bool_t m_ClickedOnEntity;
 };
 
 END_XNOR_EDITOR

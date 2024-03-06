@@ -13,7 +13,7 @@
 BEGIN_XNOR_CORE
 
 /// @brief Material type
-enum MaterialType
+enum class MaterialType
 {
     Opaque,
     Litt
@@ -27,7 +27,7 @@ struct Material : Serializable
 public:
     // Pointer<Shader> shader;
     /// @brief Material type
-    int32_t materialType = Opaque;
+    MaterialType materialType = MaterialType::Opaque;
     /// @brief Albedo texture
     Pointer<Texture> albedo;
     /// @brief Normal map

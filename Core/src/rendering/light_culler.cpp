@@ -46,7 +46,7 @@ void LightManager::UpdateLight(const std::vector<const PointLight*>& pointLightC
 		
 		gpuLightData.pointLightData[i] =
 		{
-			.color = pointLight->color,
+			.color = pointLight->color.Rgb(),
 			.intensity = pointLight->intensity,
 			.position = pointLight->entity->transform.GetWorldPos(),
 			.radius = 30.f * sqrt(pointLight->intensity),
@@ -62,7 +62,7 @@ void LightManager::UpdateLight(const std::vector<const PointLight*>& pointLightC
 		
 		gpuLightData.spotLightData[i] =
 		{
-			.color = spotLight->color,
+			.color = spotLight->color.Rgb(),
 			.intensity = spotLight->intensity,
 			.position = spotLight->entity->transform.GetWorldPos(),
 			.cutOff = std::cos(spotLight->cutOff),
@@ -81,8 +81,8 @@ void LightManager::UpdateLight(const std::vector<const PointLight*>& pointLightC
 		
 		gpuLightData.directionalData[i] =
 		{
-			.color = directionalComponent[0]->color,
-			.intensity = directionalComponent[0]->intensity,
+			.color = directionalComponent[i]->color.Rgb(),
+			.intensity = directionalComponent[i]->intensity,
 			.direction = { direction.x, direction.y, direction.z },
 		};
 	}
