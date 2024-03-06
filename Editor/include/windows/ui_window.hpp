@@ -34,6 +34,8 @@ public:
 
     virtual void OnWindowResize(Vector2i newWindowSize);
 
+    
+
 protected:
     std::string m_WindowTitle = "Untitled";
     

@@ -3,6 +3,7 @@
 #include <ImGui/imgui.h>
 #include <ImGui/imgui_impl_glfw.h>
 #include <ImGui/imgui_impl_opengl3.h>
+#include <ImguiGizmo/ImGuizmo.h>
 
 #include "file/file_manager.hpp"
 #include "input/time.hpp"
@@ -307,6 +308,7 @@ void Editor::BeginFrame()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
+	ImGuizmo::BeginFrame();
 	
 	BeginDockSpace();
 	MenuBar();

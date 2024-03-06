@@ -18,7 +18,8 @@ public:
 
 protected:
     void Initialize(Vector2i size) override;
-    
+
+    void EditTransform();
 private:
     EditorCamera m_EditorCamera;
 };

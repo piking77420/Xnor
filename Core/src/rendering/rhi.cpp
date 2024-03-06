@@ -881,6 +881,7 @@ void Rhi::Initialize()
 	glDebugMessageCallback(reinterpret_cast<GLDEBUGPROC>(OpenglDebugCallBack), nullptr);  // NOLINT(clang-diagnostic-cast-function-type-strict)
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 #endif
+
 	
 }
 
