@@ -20,9 +20,6 @@ namespace SceneGraph
     XNOR_ENGINE void OnAttachToParent(Entity& entity);
 
     XNOR_ENGINE void UpdateTransform(Entity& entity);
-
-
-    
 }
 
 END_XNOR_CORE

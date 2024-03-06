@@ -1,4 +1,5 @@
 ﻿#include "rendering/light/light.hpp"
+
 #include "serialization/serializer.hpp"
 
 using namespace XnorCore;

@@ -147,6 +147,4 @@ private:
 	std::array<ShaderCode, static_cast<size_t>(ShaderType::Count)> m_Code;
 };
 
-
-
 END_XNOR_CORE

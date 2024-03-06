@@ -509,9 +509,9 @@ void Rhi::BlitFrameBuffer(
 
 void Rhi::BindFrameBuffer(const uint32_t frameBufferId)
 {
-	if (m_LastFramBufferID != frameBufferId)
+	if (m_LastFrameBufferId != frameBufferId)
 	{
-		m_LastFramBufferID = frameBufferId;
+		m_LastFrameBufferId = frameBufferId;
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
 	}
 }

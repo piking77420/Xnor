@@ -1,11 +1,11 @@
 ﻿#pragma once
 
 #include "core.hpp"
-#include "scene_graph.hpp"
 #include "skybox.hpp"
 #include "scene/scene.hpp"
 
 /// @file world.hpp
+/// @brief Defines the World class.
 
 BEGIN_XNOR_CORE
 

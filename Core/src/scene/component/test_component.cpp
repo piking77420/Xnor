@@ -9,18 +9,16 @@ REFLECTABLE_IMPL_CPP(TestComponent)
 
 void TestComponent::Begin()
 {
-    Component::Begin();
     m_BasePosition = entity->transform.position;
 }
 
 void TestComponent::Update()
 {
-    Component::Update();
-
-    if(!m_Rotate)
+    if (!m_Rotate)
         return;
 
     m_CurrentAngle += m_RotationSpeed * Time::GetDeltaTime();
     entity->transform.position.x = (std::cos(m_CurrentAngle) - std::sin(m_CurrentAngle)) * m_Radius;
     entity->transform.position.z = (std::cos(m_CurrentAngle) + std::sin(m_CurrentAngle)) * m_Radius;
+    entity->transform.changed = true;
 }

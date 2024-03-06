@@ -1,7 +1,8 @@
 ﻿#pragma once
 
+#include <Maths/matrix.hpp>
+
 #include "core.hpp"
-#include "Maths/matrix.hpp"
 #include "utils/color.hpp"
 
 /// @file rhi_typedef.hpp

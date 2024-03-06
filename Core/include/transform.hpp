@@ -12,6 +12,7 @@
 #include "utils/serializable.hpp"
 
 /// @file transform.hpp
+/// @brief Defines the Transform class.
 
 BEGIN_XNOR_CORE
 

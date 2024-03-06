@@ -1,9 +1,9 @@
 #pragma once
 
+#include <array>
 #include <cmath>
 
 #include "core.hpp"
-#include <array>
 
 /// @file gamepad_input.hpp
 /// @brief Defines gamepad input types and enumerations.
@@ -65,12 +65,12 @@ enum class GamepadButtonStatus : uint8_t
     Count
 };
 
-/// @brief Threshold that dictates that a stick analog value become 0
-constexpr float_t NullAnalogValue = 1.5259022e-05f;
-
 /// @brief Information about a gamepad
 struct GamepadInput
 {
+    /// @brief Threshold that dictates that a stick analog value become 0
+    static constexpr float_t NullAnalogValue = 1.5259022e-05f;
+    
     bool_t isConnected = false;
     std::array<float_t, static_cast<uint32_t>(GamepadAxis::Count)> axesValue{};
 };
