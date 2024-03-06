@@ -13,6 +13,8 @@
 ///
 /// This file also defines the Formattable concept, as it seems it isn't included in the C++23 MSVC STL.
 ///
+/// In this file, we don't follow our conventions on some things because it is mostly an extension of the STL.
+///
 /// @see <a href="https://en.cppreference.com/w/cpp/utility/format/formatter">std::formatter</a>
 /// @see <a href="https://en.cppreference.com/w/cpp/utility/format/formattable">std::formattable</a>
 

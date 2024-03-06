@@ -1,7 +1,7 @@
 #include "serialization/serializer.hpp"
-#include "utils/logger.hpp"
 
 #include "Maths/vector2i.hpp"
+#include "utils/logger.hpp"
 
 using namespace XnorCore;
 

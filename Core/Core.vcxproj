@@ -49,8 +49,8 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);include;externals\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);include;externals\include;inline</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ConformanceMode>false</ConformanceMode>
@@ -76,8 +76,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;include;inline</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ConformanceMode>false</ConformanceMode>
@@ -220,7 +220,7 @@
     <ClInclude Include="include\utils\poly_ptr.hpp" />
     <ClInclude Include="include\utils\reference_counter.hpp" />
     <ClInclude Include="include\utils\serializable.hpp" />
-    <ClInclude Include="include\utils\tsqueue.hpp" />
+    <ClInclude Include="include\utils\ts_queue.hpp" />
     <ClInclude Include="include\utils\utils.hpp" />
     <ClInclude Include="include\window.hpp" />
     <ClInclude Include="include\rendering\vertex.hpp" />
@@ -231,6 +231,24 @@
     <ClInclude Include="include\world\scene_graph.hpp" />
     <ClInclude Include="include\world\skybox.hpp" />
     <ClInclude Include="include\world\world.hpp" />
+    <ClInclude Include="inline\file\file.inl" />
+    <ClInclude Include="inline\file\file_manager.inl" />
+    <ClInclude Include="inline\input\input.inl" />
+    <ClInclude Include="inline\input\time.inl" />
+    <ClInclude Include="inline\resource\resource_manager.inl" />
+    <ClInclude Include="inline\resource\texture.inl" />
+    <ClInclude Include="inline\scene\entity.inl" />
+    <ClInclude Include="inline\scene\scene.inl" />
+    <ClInclude Include="inline\serialization\serializer.inl" />
+    <ClInclude Include="inline\utils\color.inl" />
+    <ClInclude Include="inline\utils\list.inl" />
+    <ClInclude Include="inline\utils\logger.inl" />
+    <ClInclude Include="inline\utils\pointer.inl" />
+    <ClInclude Include="inline\utils\poly_ptr.inl" />
+    <ClInclude Include="inline\utils\reference_counter.inl" />
+    <ClInclude Include="inline\utils\serializable.inl" />
+    <ClInclude Include="inline\utils\ts_queue.inl" />
+    <ClInclude Include="inline\utils\utils.inl" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="include\rendering\rhi_typedef.hpp" />

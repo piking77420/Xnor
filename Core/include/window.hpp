@@ -8,6 +8,7 @@
 #include "resource/texture.hpp"
 
 /// @file window.hpp
+/// @brief Defines the Window class.
 
 BEGIN_XNOR_CORE
 

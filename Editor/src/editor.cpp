@@ -20,6 +20,7 @@
 #include "windows/inspector.hpp"
 #include "windows/performance.hpp"
 #include "windows/render_window.hpp"
+#include "world/scene_graph.hpp"
 #include "world/world.hpp"
 
 using namespace XnorEditor;

@@ -125,9 +125,9 @@ Avoid using forward declarations where possible, instead include the headers you
 
 ### Inline Functions
 
-Define functions in their respective source file. However, if the function is very small, such as less than 3 lines of code, you are allowed to define it directly inside of the class declaration.
+Define functions in their respective source file.
 
-This rule also applies to templated or `constexpr` functions, however if these functions are not small enough they need to be defined in the same translation unit as their declaration, e.g. in the same file. This means that they should be defined under the class declaration.
+For implicitly inlined functions, e.g. `constexpr` or templated functions, you should create a corresponding `.inl` file to hold the implementation. This file should then be included at the end of the header file.
 
 ### Names and Order of Includes
 

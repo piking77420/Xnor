@@ -4,6 +4,7 @@
 #include "rendering/renderer.hpp"
 
 /// @file application.hpp
+/// @brief Defines the Application class.
 
 BEGIN_XNOR_CORE
 
