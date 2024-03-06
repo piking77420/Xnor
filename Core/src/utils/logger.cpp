@@ -8,6 +8,7 @@
 #include "utils/formatter.hpp"
 
 #define ANSI_COLOR_GRAY     "\x1b[38;5;242m"
+#define ANSI_COLOR_GREEN    "\x1b[0;32m"
 #define ANSI_COLOR_YELLOW   "\x1b[33m"
 #define ANSI_COLOR_RED      "\x1b[31m"
 
@@ -132,6 +133,18 @@ Logger::LogEntry::LogEntry(std::string&& message, const LogLevel level)
 {
 }
 
+Logger::LogEntry::LogEntry(std::string&& message, const LogLevel level, const char_t* file, const int32_t line)
+    : LogEntry(
+        std::move(message),
+        level,
+        std::chrono::zoned_time(std::chrono::current_zone(), std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now()))
+            .get_local_time().time_since_epoch()
+    )
+{
+    this->file = file;
+    this->line = line;
+}
+
 Logger::LogEntry::LogEntry(
     std::string&& message,
     const LogLevel level,
@@ -199,6 +212,11 @@ void Logger::PrintLog(const LogEntry& log)
     const char* color = ANSI_RESET;
     switch (level)
     {
+        case LogLevel::TemporaryDebug:
+            color = ANSI_COLOR_GREEN;
+            baseMessage = time + "[TEMP DEBUG] " + log.file + "(" + std::to_string(log.line) + "): " + baseMessage;
+            break;
+        
         case LogLevel::Debug:
             color = ANSI_COLOR_GRAY;
             baseMessage = time + "[DEBUG] " + baseMessage;

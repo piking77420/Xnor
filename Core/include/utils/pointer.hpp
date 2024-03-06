@@ -185,7 +185,7 @@ public:
 
     /// @brief Converts this Pointer to its string representation.
     ///
-    /// The resulting string will be in the following form:
+    /// The resulting string will be of the following form:
     /// @code
     /// { ptr=<address>, sRefs=<strongReferenceCount>, wRefs=<weakReferenceCount>, isSRef=<isStrongReference> }
     /// @endcode
