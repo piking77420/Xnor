@@ -14,12 +14,11 @@
 /// @file transform.hpp
 /// @brief Defines the Transform class.
 
-namespace XnorCore
-{
-	class SceneGraph;
-}
 
 BEGIN_XNOR_CORE
+
+class SceneGraph;
+
 	/// @brief Represents a 3D transformation, containing Position, Rotation and Scaling
 class XNOR_ENGINE Transform final : public Serializable
 {
