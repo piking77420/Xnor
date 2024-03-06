@@ -2,10 +2,10 @@
 
 #include "editor_camera.hpp"
 #include "render_window.hpp"
+#include "editing/transform_gizmo.hpp"
 
 BEGIN_XNOR_EDITOR
-
-class EditorWindow : public RenderWindow
+    class EditorWindow : public RenderWindow
 {
 public:
     explicit EditorWindow(Editor* editor);
@@ -22,6 +22,7 @@ protected:
     void EditTransform();
 private:
     EditorCamera m_EditorCamera;
+    TransfromGizmo m_TransfromGizmo;
 };
 
 END_XNOR_EDITOR

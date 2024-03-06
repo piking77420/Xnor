@@ -109,8 +109,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\editing\transform_gizmo.cpp" />
     <ClCompile Include="src\editor.cpp" />
-    <ClCompile Include="src\editor_camera.cpp"/>
+    <ClCompile Include="src\editor_camera.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\windows\content_browser.cpp" />
     <ClCompile Include="src\windows\editor_window.cpp" />
@@ -128,6 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\definitions.hpp" />
+    <ClInclude Include="include\editing\transform_gizmo.hpp" />
     <ClInclude Include="include\editor.hpp" />
     <ClInclude Include="include\editor_camera.hpp" />
     <ClInclude Include="include\editor_data.hpp" />
