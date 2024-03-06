@@ -23,7 +23,7 @@ public:
 
     void SetRendering(const XnorCore::Camera& camera, Vector2 windowPos, Vector2 windowSize);
 
-    bool Manipulate(XnorCore::Transform& transform);
+    void Manipulate(XnorCore::Transform& transform);
     
 private:
     ImGuizmo::OPERATION m_CurrentGizmoOperation = ImGuizmo::TRANSLATE;

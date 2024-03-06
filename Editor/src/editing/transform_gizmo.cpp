@@ -12,7 +12,7 @@ void TransfromGizmo::SetRendering(const XnorCore::Camera& camera, Vector2 window
     ImGuizmo::SetRect(windowPos.x, windowPos.y, windowSize.x,windowSize.y);
 }
 
-bool TransfromGizmo::Manipulate(XnorCore::Transform& transform)
+void TransfromGizmo::Manipulate(XnorCore::Transform& transform)
 {
     if (ImGui::IsKeyPressed(ImGuiKey_T))
         m_CurrentGizmoOperation = ImGuizmo::TRANSLATE;
@@ -21,20 +21,20 @@ bool TransfromGizmo::Manipulate(XnorCore::Transform& transform)
     if (ImGui::IsKeyPressed(ImGuiKey_Y)) 
         m_CurrentGizmoOperation = ImGuizmo::SCALE;
     
-    if (ImGuizmo::Manipulate(m_View.Raw(), m_Projection.Raw(), m_CurrentGizmoOperation, m_CurrentGizmoMode, transform.worldMatrix.Raw()))
-    {
-        Vector3 position;
-        Vector3 eulerRotation;
-        Vector3 scale;
-        
-        ImGuizmo::DecomposeMatrixToComponents(transform.worldMatrix.Raw(), position.Raw(), eulerRotation.Raw(), scale.Raw());
-        transform.SetPosition() = position;
-        // Convert Imgui gizmoRot
-        transform.SetRotationEulerAngle() = eulerRotation * Calc::Deg2Rad;
-        transform.SetRotation() = Quaternion::FromEuler(eulerRotation);
-        transform.SetScale() = scale;
-        return true;
-    }
+    ImGuizmo::Manipulate(m_View.Raw(), m_Projection.Raw(), m_CurrentGizmoOperation, m_CurrentGizmoMode, transform.worldMatrix.Raw());
+    
+    if (!ImGuizmo::IsOver() || !ImGuizmo::IsUsing())
+        return;
+    
+    Vector3 position;
+    Vector3 eulerRotation;
+    Vector3 scale;
+    ImGuizmo::DecomposeMatrixToComponents(transform.worldMatrix.Raw(), position.Raw(), eulerRotation.Raw(), scale.Raw());
 
-    return false;
+    transform.SetPosition() = position;
+    // Convert Imgui gizmoRot
+    transform.SetRotationEulerAngle() = eulerRotation * Calc::Deg2Rad;
+    transform.SetRotation() = Quaternion::FromEuler(eulerRotation);
+    transform.SetScale() = scale;
+        
 }
