@@ -253,11 +253,13 @@ private:
 	);
 
 private:
-	XNOR_ENGINE static inline UniformBuffer* m_CameraUniform;
-	XNOR_ENGINE static inline UniformBuffer* m_LightShadowMappingUniform;
-	XNOR_ENGINE static inline UniformBuffer* m_ModelUniform;
-	XNOR_ENGINE static inline UniformBuffer* m_LightUniform;
-	XNOR_ENGINE static inline UniformBuffer* m_MaterialUniform;
+	XNOR_ENGINE static inline uint32_t m_LastFramBufferID = 0;
+	
+	XNOR_ENGINE static inline UniformBuffer* m_CameraUniform = nullptr;
+	XNOR_ENGINE static inline UniformBuffer* m_LightShadowMappingUniform = nullptr;
+	XNOR_ENGINE static inline UniformBuffer* m_ModelUniform = nullptr;
+	XNOR_ENGINE static inline UniformBuffer* m_LightUniform = nullptr;
+	XNOR_ENGINE static inline UniformBuffer* m_MaterialUniform = nullptr;
 };
 
 END_XNOR_CORE

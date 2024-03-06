@@ -3,6 +3,7 @@
 #include <ImGui/imgui.h>
 #include <ImGui/imgui_impl_glfw.h>
 #include <ImGui/imgui_impl_opengl3.h>
+#include <ImguiGizmo/ImGuizmo.h>
 
 #include "file/file_manager.hpp"
 #include "input/time.hpp"
@@ -37,6 +38,7 @@ Editor::Editor()
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 	io.Fonts->AddFontDefault();
 
@@ -295,7 +297,7 @@ void Editor::UpdateWindow()
 {
 	for (UiWindow* w : m_UiWindows)
 	{
-		ImGui::Begin(w->GetName());
+		ImGui::Begin(w->GetName(),nullptr,w->window_flags);
 		w->FetchInfo();
 		w->Display();
 		ImGui::End();
@@ -307,6 +309,7 @@ void Editor::BeginFrame()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
+	ImGuizmo::BeginFrame();
 	
 	BeginDockSpace();
 	MenuBar();

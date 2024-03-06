@@ -442,8 +442,11 @@ uint32_t Rhi::CreateFrameBuffer(const RenderPass& renderPass, const std::vector<
 		switch (renderTargetInfos[i].attachment)
 		{
 			case Attachment::Color01:
+				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
 			case Attachment::Color02:
+			openglAttachment = GL_COLOR_ATTACHMENT0 + i;
 			case Attachment::Color03:
+			openglAttachment = GL_COLOR_ATTACHMENT0 + i;
 			case Attachment::Color04:
 				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
 				break;
@@ -506,7 +509,11 @@ void Rhi::BlitFrameBuffer(
 
 void Rhi::BindFrameBuffer(const uint32_t frameBufferId)
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
+	if (m_LastFramBufferID != frameBufferId)
+	{
+		m_LastFramBufferID = frameBufferId;
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
+	}
 }
 
 void Rhi::UnbindFrameBuffer()
@@ -848,9 +855,10 @@ void Rhi::Initialize()
 #ifdef _DEBUG
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 
-	glDebugMessageCallback(reinterpret_cast<GLDEBUGPROC>(OpenglDebugCallBack), nullptr);
+	glDebugMessageCallback(reinterpret_cast<GLDEBUGPROC>(OpenglDebugCallBack), nullptr);  // NOLINT(clang-diagnostic-cast-function-type-strict)
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 #endif
+
 }
 
 void Rhi::Shutdown()

@@ -27,9 +27,9 @@ void Camera::GetVp(const Vector2i screenSize, Matrix* matrix) const
 
 void Camera::LookAt(const Vector3& at)
 {
-	front = -(at - position).Normalized();
-	right = Vector3::Cross(Vector3::UnitY(), front).Normalized();
-	up = Vector3::Cross(front, right).Normalized();
+	front = (position - at).Normalized();
+	right = Vector3::Cross(front,Vector3::UnitY()).Normalized();
+	up = Vector3::Cross(right,front).Normalized();
 }
 
 Vector2i Camera::ProjectOn(const Vector3& vertex, const Vector2i screenSize, const Matrix& model) const
@@ -48,3 +48,4 @@ Vector2i Camera::ProjectOn(const Vector3& vertex, const Vector2i screenSize, con
 
 	return Vector2i(static_cast<int32_t>(vec.x), static_cast<int32_t>(vec.y));
 }
+
