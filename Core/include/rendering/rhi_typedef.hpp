@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "Maths/matrix.hpp"
+#include "utils/color.hpp"
 
 /// @file rhi_typedef.hpp
 /// @brief Defines some types and enumerations needed by the Rhi.

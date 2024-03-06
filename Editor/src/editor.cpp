@@ -229,11 +229,11 @@ void Editor::CreateTestScene()
 	Entity& ent2 = *World::scene.CreateEntity("DirectionalLight");
 	DirectionalLight* dirlight = ent2.AddComponent<DirectionalLight>();
 	dirlight->intensity = 0.2f;
-	dirlight->color = { 1.f, 1.f, 1.f };
+	dirlight->color = Colorf(1.f, 1.f, 1.f);
 
 	Entity& pointLightentity = *World::scene.CreateEntity("PointLight");
 	PointLight* pointLight = pointLightentity.AddComponent<PointLight>();
-	pointLight->color = { 7.f, 0.f, 3.f };
+	pointLight->color = { 7.7f, 0.f, 3.f };
 	pointLightentity.AddComponent<TestComponent>();
 	pointLightentity.transform.position = { 0.f, 2.f, -2.f };
 	

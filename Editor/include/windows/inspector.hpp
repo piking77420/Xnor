@@ -1,4 +1,4 @@
-    #pragma once
+#pragma once
 
 #include "definitions.hpp"
 #include "ui_window.hpp"
@@ -12,6 +12,7 @@
 #include "scene/component/test_component.hpp"
 #include "utils/serializable.hpp"
 #include "utils/utils.hpp"
+#include "magic_enum/magic_enum_all.hpp"
 
 BEGIN_XNOR_EDITOR
 
@@ -35,6 +36,8 @@ private:
     static void DisplayXnorPointer(MemberT* obj, const char_t* name);
     template <typename MemberT>
     static void DisplayPolyPointer(MemberT* obj, const char_t* name);
+    template <typename MemberT>
+    static void DisplayEnum(MemberT* obj, const char_t* name);
 
     template <typename ReflectT>
     static void DisplayObject(ReflectT* obj, XnorCore::TypeDescriptor<ReflectT> desc);
@@ -121,6 +124,12 @@ void Inspector::DisplayColorType(MemberT* obj, const char_t* name)
     {
         ImGui::ColorPicker4(name, reinterpret_cast<float_t*>(obj));
     }
+    else if constexpr (XnorCore::Meta::IsSame<MemberT, XnorCore::ColorRgba>)
+    {
+        XnorCore::Colorf tmp = static_cast<XnorCore::Colorf>(*obj);
+        ImGui::ColorPicker4(name, &tmp.r, ImGuiColorEditFlags_DisplayHex);
+        *obj = static_cast<XnorCore::ColorRgba>(tmp);
+    }
 }
 
 template <typename MemberT>
@@ -138,7 +147,7 @@ void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name)
             ImGui::Selectable(obj->Get()->GetName().c_str());
         else
             ImGui::Selectable("No resource");
-    
+
         if (ImGui::BeginDragDropTarget())
         {
             // ReSharper disable once CppTooWideScope
@@ -148,8 +157,8 @@ void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name)
             {
                 XnorCore::Pointer<XnorCore::Resource> dragged = *static_cast<XnorCore::Pointer<XnorCore::Resource>*>(payload->Data);
 
-                XnorCore::Resource* raw = static_cast<XnorCore::Resource*>(dragged);
-                if (typeid(*raw).hash_code() == XnorCore::Utils::GetTypeHash<PtrT>())
+                const XnorCore::Resource* raw = static_cast<XnorCore::Resource*>(dragged);
+                if (XnorCore::Utils::GetTypeHash<XnorCore::Resource>(raw) == XnorCore::Utils::GetTypeHash<PtrT>())
                 {
                     *reinterpret_cast<decltype(dragged)*>(obj) = dragged;
                 }
@@ -183,10 +192,25 @@ void Inspector::DisplayPolyPointer(MemberT* obj, const char_t* name)
     }
 }
 
+template <typename MemberT>
+void Inspector::DisplayEnum(MemberT* obj, const char_t* name)
+{
+    constexpr auto enumNames = magic_enum::enum_names<MemberT>();
+    using NamesArrayT = decltype(enumNames);
+
+    constexpr auto getter = [](void* const userData, const int32_t idx) -> const char_t*
+    {
+        const auto ptr = static_cast<NamesArrayT*>(userData);
+        return ptr->at(idx).data();
+    };
+
+    ImGui::Combo(name, reinterpret_cast<int32_t*>(obj), getter, reinterpret_cast<void*>(const_cast<XnorCore::Meta::RemoveConstSpecifier<NamesArrayT>*>(&enumNames)), static_cast<int32_t>(enumNames.size()));
+}
+
 template <typename ReflectT>
 void Inspector::DisplayObject(ReflectT* const obj, const XnorCore::TypeDescriptor<ReflectT> desc)
 {
-    constexpr const char* const typeName = desc.name.c_str();
+    constexpr const char_t* const typeName = desc.name.c_str();
     const float_t textSize = ImGui::CalcTextSize(typeName).x;
     XnorCore::Utils::AlignImGuiCursor(textSize);
     ImGui::Text("%s", typeName);
@@ -229,7 +253,7 @@ void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name)
     }
     else if constexpr (XnorCore::Meta::IsColorType<MemberT>)
     {
-        DisplayColor<MemberT>(ptr, name);
+        DisplayColorType<MemberT>(ptr, name);
     }
     else if constexpr (XnorCore::Meta::IsSame<MemberT, bool_t>)
     {
@@ -246,6 +270,10 @@ void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name)
     else if constexpr (XnorCore::Meta::IsXnorPointer<MemberT>)
     {
         DisplayXnorPointer<MemberT>(ptr, name);
+    }
+    else if constexpr (XnorCore::Meta::IsEnum<MemberT>)
+    {
+        DisplayEnum<MemberT>(ptr, name);
     }
     else
     {
@@ -313,8 +341,9 @@ void Inspector::DisplayList(MemberT* ptr, const char_t* name)
             }
                 
             ImGui::SameLine();
-                    
+
             DisplaySimpleType<ArrayT>(&(*ptr)[i], std::to_string(i).c_str());
+
             ImGui::PopID();
         }
     }

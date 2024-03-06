@@ -81,6 +81,13 @@ namespace Meta
     template <typename T>
     using RemovePointerSpecifier = std::remove_pointer_t<T>;
 
+    /// @brief Removes the const specification from @c T
+    ///
+    /// e.g. if @c T was @c const int, then @c RemoveConstSpecifier<T> will be @c int
+    ///
+    template <typename T>
+    using RemoveConstSpecifier = std::remove_const_t<T>;
+
     /// @brief Checks whether the type is a @c std::vector
     template <typename>
     constexpr bool_t IsStdVector = false;
@@ -164,10 +171,11 @@ namespace Meta
     /// - Colorf
     /// - ColorRgb
     /// - ColorHsv
+    /// - ColorRgba
     /// 
     /// @tparam T Type
     template <typename T>
-    constexpr bool_t IsColorType = IsAny<T, Colorf, ColorRgb, ColorHsv>;
+    constexpr bool_t IsColorType = IsAny<T, Colorf, ColorRgb, ColorHsv, ColorRgba>;
 }
 
 END_XNOR_CORE;
