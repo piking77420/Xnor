@@ -24,11 +24,11 @@ public:
 
     void SetRendering(const XnorCore::Camera& camera, Vector2 windowPos, Vector2i windowSize);
 
-    bool_t Manipulate(XnorCore::Transform& transform);
-
+    void Manipulate(XnorCore::Transform& transform);
+    
 private:
     ImGuizmo::OPERATION m_CurrentGizmoOperation = ImGuizmo::TRANSLATE;
-    ImGuizmo::MODE m_CurrentGizmoMode = ImGuizmo::WORLD;
+    ImGuizmo::MODE m_CurrentGizmoMode = ImGuizmo::LOCAL;
     
     Matrix m_View;
     Matrix m_Projection;
