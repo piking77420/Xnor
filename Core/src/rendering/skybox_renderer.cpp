@@ -10,7 +10,7 @@ using namespace XnorCore;
 void SkyboxRenderer::InitializeResources()
 {
     m_SkyboxDrawerShader = ResourceManager::Get<Shader>("skymap_shader");
-    m_SkyboxDrawerShader->SetDepthFunction(DepthFunction::Equal);
+    m_SkyboxDrawerShader->SetDepthFunction(DepthFunction::LessEqual);
     m_SkyboxDrawerShader->CreateInRhi();
     
     m_SkyboxDrawerShader->Use();

@@ -20,7 +20,7 @@ void SceneGraph::UpdateTransform(Entity& entity)
 {
 	Transform& t = entity.transform;
 
-	if (!t.m_Changed)
+	if (t.m_Changed == false)
 		return;
 	
 	t.m_Changed = false;

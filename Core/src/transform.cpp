@@ -29,7 +29,6 @@ Vector3& Transform::SetScale()
     return m_Scale;
 }
 
-
 const Vector3& Transform::GetPosition() const
 {
     return m_Position;

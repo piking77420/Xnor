@@ -28,5 +28,6 @@ void main()
 	mat3 viewMat3 = mat3(view);
  
     vec4 pos = projection * mat4(viewMat3) * vec4(aPos, 1.0);
+
     gl_Position = pos.xyww;
 }  

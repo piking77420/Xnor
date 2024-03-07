@@ -23,8 +23,6 @@ void ToneMapping::Prepare(const Vector2i windowSize)
     {
         {
             .attachment = Attachment::Color01,
-            .draw = true,
-            .isClearing = true
         },
     };
     // Set Up renderPass

@@ -66,6 +66,7 @@ private:
     Texture* m_PositionAtttachment = nullptr;
     Texture* m_NormalAttachement = nullptr;
     Texture* m_AlbedoAttachment = nullptr;
+
     
     Texture* m_DepthGbufferAtttachment = nullptr;
     RenderPass m_GbufferPass;
@@ -75,6 +76,8 @@ private:
     Texture* m_ColorAttachment = nullptr;
     Texture* m_DepthAttachment = nullptr;
 
+    Texture* m_Stencsil = nullptr;
+    
     Pointer<Shader> m_GBufferShader;
     Pointer<Shader> m_GBufferShaderLit;
     
@@ -99,10 +102,6 @@ private:
     XNOR_ENGINE void InitForwardRenderingAttachment(Vector2i windowSize);
     
     XNOR_ENGINE void DestroyAttachment() const;
-    
-    XNOR_ENGINE void DrawLightGizmo(const std::vector<const PointLight*>& pointLightComponents,
-        const std::vector<const SpotLight*>& spotLightsComponents,
-        const std::vector<const DirectionalLight*>& directionalComponent, const Camera& camera) const;
 
     XNOR_ENGINE void DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers,MaterialType materialtype) const;
     

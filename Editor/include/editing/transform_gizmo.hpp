@@ -24,14 +24,25 @@ public:
 
     void SetRendering(const XnorCore::Camera& camera, Vector2 windowPos, Vector2i windowSize);
 
-    void Manipulate(XnorCore::Transform& transform);
+    void Manipulate(XnorCore::Entity& entity);
+
+    bool_t useSnap = true;
     
+    Vector3 snap;
+
+    ImGuizmo::OPERATION currentGizmoOperation = ImGuizmo::TRANSLATE;
+    
+    ImGuizmo::MODE currentGizmoMode = ImGuizmo::WORLD;
 private:
-    ImGuizmo::OPERATION m_CurrentGizmoOperation = ImGuizmo::TRANSLATE;
-    ImGuizmo::MODE m_CurrentGizmoMode = ImGuizmo::LOCAL;
-    
     Matrix m_View;
     Matrix m_Projection;
+
+    Vector3 m_SnapTranslation = Vector3(1.f);
+    Vector3 m_SnapRotation = Vector3(1.f);
+    Vector3 m_SnapScale = Vector3(1.f);
+
+    void UserInput();
+    
 };
 
 END_XNOR_EDITOR

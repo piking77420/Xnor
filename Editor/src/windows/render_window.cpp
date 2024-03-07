@@ -53,8 +53,11 @@ void RenderWindow::Initialize(Vector2i size)
     using namespace XnorCore;
     const std::vector<RenderTargetInfo> attachementsType =
     {
-        {Attachment::Color01,true},
+        {
+            Attachment::Color01
+        }
     };
+   
     
     // Init Rendering
     m_FrameBuffer = FrameBuffer(size);

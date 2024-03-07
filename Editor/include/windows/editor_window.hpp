@@ -19,10 +19,15 @@ public:
 protected:
     void Initialize(Vector2i size) override;
 
+    void DrawOnTopOfImage();
+
     void EditTransform();
+    
 private:
     EditorCamera m_EditorCamera;
     TransfromGizmo m_TransfromGizmo;
+
+    
 };
 
 END_XNOR_EDITOR

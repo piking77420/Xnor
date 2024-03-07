@@ -131,7 +131,7 @@ public:
 	/// @param attachmentTarget Target attachment
 	/// @param textureFiltering Interpolation to be applied
 	XNOR_ENGINE static void BlitFrameBuffer(uint32_t readBuffer, uint32_t targetBuffer, Vector2i srcTopLeft, Vector2i srcBottomRight,
-		Vector2i targetTopLeft, Vector2i targetBottomRight, Attachment attachmentTarget, TextureFiltering textureFiltering);
+		Vector2i targetTopLeft, Vector2i targetBottomRight, BufferFlag bufferFlag, TextureFiltering textureFiltering);
 
 	/// @brief Binds a framebuffer
 	/// @param frameBufferId Framebuffer id
@@ -164,15 +164,10 @@ public:
 	/// @param color Clear color
 	XNOR_ENGINE static void SetClearColor(const Vector4& color);
 
-	/// @brief Clears the color and depth buffer
-	XNOR_ENGINE static void ClearColorAndDepth();
-
-	/// @brief Clears the color buffer
-	XNOR_ENGINE static void ClearColor();
-
-	/// @brief Clears the depth buffer
-	XNOR_ENGINE static void ClearDepth();
-
+	/// @brief Clear the corresponding Buffers
+	/// @param bufferFlag BufferFlag
+	XNOR_ENGINE static void ClearBuffer(BufferFlag bufferFlag);
+	
 	/// @brief Updates the model @ref UniformBuffer
 	/// @param modelUniformData Data
 	XNOR_ENGINE static void UpdateModelUniform(const ModelUniformData& modelUniformData);
@@ -241,6 +236,7 @@ private:
 	XNOR_ENGINE static uint32_t GetOpenglTextureWrapper(TextureWrapping textureWrapping);
 	XNOR_ENGINE static uint32_t GetOpenglTextureFilter(TextureFiltering textureFiltering);
 	XNOR_ENGINE static uint32_t GetBlendValueOpengl(BlendValue blendFunction);
+	XNOR_ENGINE static uint32_t GetOpenglBufferBit(BufferFlag flag);
 
 	XNOR_ENGINE static void OpenglDebugCallBack(
 		uint32_t source,

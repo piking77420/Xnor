@@ -297,6 +297,26 @@ uint32_t Rhi::GetBlendValueOpengl(const BlendValue blendFunction)
 	return GL_ONE; 
 }
 
+uint32_t Rhi::GetOpenglBufferBit(BufferFlag flag)
+{
+	uint32_t openglBufferBit = 0;
+
+	if(flag & ColorBit)
+	{
+		openglBufferBit |= GL_COLOR_BUFFER_BIT;
+	}
+	if(flag & DepthBit)
+	{
+		openglBufferBit |= GL_DEPTH_BUFFER_BIT;
+	}
+	if(flag & StencilBit)
+	{
+		openglBufferBit |= GL_STENCIL_BUFFER_BIT;
+	}
+	
+	return openglBufferBit;
+}
+
 uint32_t Rhi::GetOpengDepthEnum(const DepthFunction depthFunction)
 {
 	switch (depthFunction)
@@ -442,13 +462,11 @@ uint32_t Rhi::CreateFrameBuffer(const RenderPass& renderPass, const std::vector<
 		switch (renderTargetInfos[i].attachment)
 		{
 			case Attachment::Color01:
-				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
 			case Attachment::Color02:
-			openglAttachment = GL_COLOR_ATTACHMENT0 + i;
 			case Attachment::Color03:
-			openglAttachment = GL_COLOR_ATTACHMENT0 + i;
 			case Attachment::Color04:
 				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
+				openglAttachmentsdraw.push_back(openglAttachment);
 				break;
 			
 			case Attachment::Depth:
@@ -465,12 +483,6 @@ uint32_t Rhi::CreateFrameBuffer(const RenderPass& renderPass, const std::vector<
 			
 		}
 		glNamedFramebufferTexture(frameBufferId, openglAttachment, attachments.at(i)->GetId(), 0);
-		
-		if (renderTargetInfos[i].draw)
-		{
-			openglAttachmentsdraw.push_back(openglAttachment);
-		}
-		
 	}
 
 	glNamedFramebufferDrawBuffers(frameBufferId, static_cast<int32_t>(openglAttachmentsdraw.size()), openglAttachmentsdraw.data());
@@ -491,7 +503,7 @@ void Rhi::BlitFrameBuffer(
 	const Vector2i srcBottomRight,
 	const Vector2i targetTopLeft,
 	const Vector2i targetBottomRight,
-	[[maybe_unused]] const Attachment attachmentTarget,
+	[[maybe_unused]] const BufferFlag bufferFlag,
 	const TextureFiltering textureFiltering
 )
 {
@@ -503,7 +515,7 @@ void Rhi::BlitFrameBuffer(
 		srcTopLeft.x, srcTopLeft.y,
 		srcBottomRight.x, srcBottomRight.y,
 		targetTopLeft.x, targetTopLeft.y,
-		targetBottomRight.x, targetBottomRight.y, GL_DEPTH_BUFFER_BIT, GetOpenglTextureFilter(textureFiltering)
+		targetBottomRight.x, targetBottomRight.y, GetOpenglBufferBit(bufferFlag), GetOpenglTextureFilter(textureFiltering)
 	);
 }
 
@@ -672,8 +684,12 @@ uint32_t Rhi::GetOpenglInternalFormat(const TextureInternalFormat textureFormat)
 		case TextureInternalFormat::DepthComponent32F:
 			return GL_DEPTH_COMPONENT32F;
 		
-		case TextureInternalFormat::DepthStencil:
+		case TextureInternalFormat::Depth24Stencil8:
 			return GL_DEPTH24_STENCIL8;
+
+		case TextureInternalFormat::DepthComponent32FStencil8:
+			return GL_DEPTH32F_STENCIL8;
+		
 	}
 
 	Logger::LogError("Texture InternalFormat not supported, defaulting to RGB");
@@ -851,6 +867,8 @@ void Rhi::Initialize()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glDepthFunc(GL_LESS);
+	glEnable(GL_STENCIL_TEST);    
+ 
 	
 #ifdef _DEBUG
 	glEnable(GL_DEBUG_OUTPUT);
@@ -904,19 +922,9 @@ void Rhi::SetClearColor(const Vector4& color)
 	glClearColor(color.x, color.y, color.z, color.w);
 }
 
-void Rhi::ClearColorAndDepth()
+void Rhi::ClearBuffer(BufferFlag bufferFlag)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-void Rhi::ClearColor()
-{
-	glClear(GL_COLOR_BUFFER_BIT);
-}
-
-void Rhi::ClearDepth()
-{
-	glClear(GL_DEPTH_BUFFER_BIT);
+	glClear(GetOpenglBufferBit(bufferFlag));
 }
 
 void Rhi::UpdateModelUniform(const ModelUniformData& modelUniformData)

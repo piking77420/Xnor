@@ -141,7 +141,8 @@ enum class TextureInternalFormat
 	DepthComponent24,
 	DepthComponent32,
 	DepthComponent32F,
-	DepthStencil
+	Depth24Stencil8,
+	DepthComponent32FStencil8
 };
 
 /// @brief %Texture data type
@@ -183,8 +184,6 @@ struct RenderTargetInfo
 {
 	/// @brief Attachment
 	Attachment attachment;
-	bool_t draw;
-	bool_t isClearing;
 };
 
 struct ClearValue
@@ -438,6 +437,14 @@ enum Gbuffer : int32_t
 	GbufferPosition = 4,
 	GbufferNormal,
 	GbufferAlbedo
+};
+
+enum BufferFlag : int32_t
+{
+	None = 0,
+	ColorBit = 1 << 0,  
+	DepthBit = 1 << 1,
+	StencilBit = 1 << 2  
 };
 
 END_XNOR_CORE

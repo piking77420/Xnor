@@ -53,13 +53,13 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	Rhi::SetViewport(m_RenderBuffer->GetSize());
 	
 	// Clear MainWindow // 
-	Rhi::ClearColorAndDepth();
+	Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit) );
 	
 	DefferedRendering(meshrenderers, &rendererContext);
 	// Blit depth of gbuffer to forward Pass
 	Rhi::BlitFrameBuffer(m_GframeBuffer->GetId(), m_RenderBuffer->GetId(),
 		{ 0, 0 }, m_GframeBuffer->GetSize(),
-		{ 0, 0 }, m_RenderBuffer->GetSize(), Attachment::Depth, TextureFiltering::Nearest);
+		{ 0, 0 }, m_RenderBuffer->GetSize(), static_cast<BufferFlag>(DepthBit | StencilBit), TextureFiltering::Nearest);
 	
 	// ForwardPass //
 	ForwardRendering(meshrenderers, &rendererContext);
@@ -79,7 +79,7 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	if (rendererContext.framebuffer != nullptr)
 	{
 		rendererContext.framebuffer->BindFrameBuffer();
-		Rhi::ClearColorAndDepth();
+		Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit) );
 		Rhi::SetViewport(rendererContext.framebuffer->GetSize());
 	}
 	
@@ -160,34 +160,26 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 
 void Renderer::InitDefferedRenderingAttachment(const Vector2i windowSize)
 {
+	
 	m_GframeBuffer = new FrameBuffer(windowSize);
-
 	m_PositionAtttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);
 	m_NormalAttachement = new Texture(TextureInternalFormat::Rgb16F, windowSize);
 	m_AlbedoAttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);
-	m_DepthGbufferAtttachment = new Texture(TextureInternalFormat::DepthComponent16, windowSize);
+	m_DepthGbufferAtttachment = new Texture(TextureInternalFormat::DepthComponent32FStencil8, windowSize);
 	
 	const std::vector<RenderTargetInfo> attachementsType =
 	{
 		{
-			.attachment = Attachment::Color01,
-			.draw = true,
-			.isClearing = true
+			.attachment = Attachment::Color01
 		},
 		{
-			.attachment = Attachment::Color02,
-			.draw = true,
-			.isClearing = true
+			.attachment = Attachment::Color02
 		},
 		{
-			.attachment = Attachment::Color03,
-			.draw = true,
-			.isClearing = true
+			.attachment = Attachment::Color03
 		},
 		{
-			.attachment = Attachment::Depth,
-			.draw = false,
-			.isClearing = true
+			.attachment = Attachment::Depth
 		},
 	};
 	
@@ -213,19 +205,15 @@ void Renderer::InitForwardRenderingAttachment(const Vector2i windowSize)
 {
 	m_RenderBuffer = new FrameBuffer(windowSize);
 	m_ColorAttachment = new Texture(TextureInternalFormat::Rgb16F, m_RenderBuffer->GetSize());
-	m_DepthAttachment = new Texture(TextureInternalFormat::DepthComponent16, m_RenderBuffer->GetSize());
+	m_DepthAttachment = new Texture(TextureInternalFormat::DepthComponent32FStencil8, m_RenderBuffer->GetSize());
 
 	const std::vector<RenderTargetInfo> attachementsType =
 	{
 		{
 			.attachment = Attachment::Color01,
-			.draw = true,
-			.isClearing = true
 		},	
 		{
 			.attachment = Attachment::Depth,
-			.draw = false,
-			.isClearing = true
 		}
 	};
 	
@@ -246,22 +234,15 @@ void Renderer::DestroyAttachment() const
 	delete m_RenderBuffer;
 	delete m_DepthAttachment;
 	delete m_ColorAttachment;
+	
 }
 
-void Renderer::DrawLightGizmo(
-	const std::vector<const PointLight*>&,
-	const std::vector<const SpotLight*>&,
-	const std::vector<const DirectionalLight*>&,
-	const Camera&
-) const
-{
-}
 
 void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshrenderers, const RendererContext*) const
 {
 	// Bind for gbuffer pass // 
 	m_GframeBuffer->BindFrameBuffer();
-	Rhi::ClearColorAndDepth();
+	Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit) );
 	m_GBufferShader->Use();
 	DrawMeshRendersByType(meshrenderers, MaterialType::Opaque);
 	m_GBufferShader->Unuse();
@@ -269,8 +250,7 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshren
 	// Shading Gbuffer Value //
 	m_RenderBuffer->BindFrameBuffer();
 	
-	// Clear color only
-	Rhi::ClearColorAndDepth();
+	Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit) );
 	m_GBufferShaderLit->Use();
 	Rhi::DrawQuad(m_Quad->GetId());
 	m_GBufferShaderLit->Unuse();
