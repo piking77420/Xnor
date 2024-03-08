@@ -9,7 +9,7 @@
 #include "rendering/rhi_typedef.hpp"
 
 /// @file texture.hpp
-/// @brief Defines the Texture class
+/// @brief Defines the XnorCore::Texture class
 
 BEGIN_XNOR_CORE
 

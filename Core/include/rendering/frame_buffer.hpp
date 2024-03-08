@@ -5,7 +5,7 @@
 #include "resource/texture.hpp"
 
 /// @file frame_buffer.hpp
-/// @brief Defines the FrameBuffer class
+/// @brief Defines the XnorCore::FrameBuffer class
 
 BEGIN_XNOR_CORE
 

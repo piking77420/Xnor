@@ -10,7 +10,7 @@
 #include "utils/pointer.hpp"
 
 /// @file shader.hpp
-/// @brief Defines the Shader class
+/// @brief Defines the XnorCore::Shader class
 
 BEGIN_XNOR_CORE
 

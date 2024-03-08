@@ -6,9 +6,6 @@
 
 #include "core.hpp"
 
-/// @file reference_counter.hpp
-/// @brief Defines the ReferenceCounter class which is only meant to be used by the Pointer class.
-
 BEGIN_XNOR_CORE
 
 template <typename T>

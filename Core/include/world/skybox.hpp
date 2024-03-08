@@ -7,7 +7,7 @@
 #include "resource/cubemap.hpp"
 
 /// @file skybox.hpp
-/// @brief Defines the Skybox class.
+/// @brief Defines the XnorCore::Skybox class.
 
 BEGIN_XNOR_CORE
 

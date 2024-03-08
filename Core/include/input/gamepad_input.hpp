@@ -8,7 +8,7 @@
 /// @file gamepad_input.hpp
 /// @brief Defines gamepad input types and enumerations.
 /// 
-/// Defines the GamepadInput struct and the GamepadAxis and GamepadButton enumerations.
+/// Defines the XnorCore::GamepadInput struct along with the XnorCore::GamepadAxis and XnorCore::GamepadButton enumerations.
 
 BEGIN_XNOR_CORE
 
@@ -19,41 +19,43 @@ enum class GamepadAxis : uint32_t
     LeftStickVerticalAxis,
     RightStickHorizontalAxis,
     RightStickVerticalAxis,
-    GamepadLtAxis,
-    GamepadRtAxis,
+    LeftTriggerAxis,
+    RightTriggerAxis,
 
     Count
 };
 
 /// @brief Gamepad button enumeration
+///
+/// Defines the gamepad button values according to the Xbox controller button placements.
 enum class GamepadButton
 {
-    GamepadButtonA,               
-    GamepadButtonB,               
-    GamepadButtonX,              
-    GamepadButtonY,               
-    GamepadButtonLeftBumper,     
-    GamepadButtonRightBumper,    
-    GamepadButtonBack,            
-    GamepadButtonStart,           
-    GamepadButtonGuide,          
-    GamepadButtonLeftThumb,      
-    GamepadButtonRightThumb,     
-    GamepadButtonDpadUp,         
-    GamepadButtonDpadRight,     
-    GamepadButtonDpadDown,      
-    GamepadButtonDpadLeft, 
-    GamepadButtonLast       = GamepadButtonDpadLeft,
-    GamepadButtonCross      = GamepadButtonA,
-    GamepadButtonCircle     = GamepadButtonB,
-    GamepadButtonSquare     = GamepadButtonX,
-    GamepadButtonTriangle   = GamepadButtonY,
+    A,               
+    B,               
+    X,              
+    Y,               
+    LeftBumper,     
+    RightBumper,    
+    Back,            
+    Start,           
+    Guide,          
+    LeftThumb,      
+    RightThumb,     
+    DpadUp,         
+    DpadRight,     
+    DpadDown,      
+    DpadLeft, 
+    Last       = DpadLeft,
+    Cross      = A,
+    Circle     = B,
+    Square     = X,
+    Triangle   = Y,
 
     Count = 20
 };
 
 /// @brief Gamepad button
-enum class GamepadButtonStatus : uint8_t
+enum class GamepadButtonStatus
 {
     /// @brief Pressed
     Pressed,
@@ -68,11 +70,13 @@ enum class GamepadButtonStatus : uint8_t
 /// @brief Information about a gamepad
 struct GamepadInput
 {
-    /// @brief Threshold that dictates that a stick analog value become 0
+    /// @brief Threshold that dictates that a stick analog value becomes 0.
     static constexpr float_t NullAnalogValue = 1.5259022e-05f;
-    
+
+    /// @brief Whether the gamepad is connected.
     bool_t isConnected = false;
-    std::array<float_t, static_cast<uint32_t>(GamepadAxis::Count)> axesValue{};
+    /// @brief Array of axis analog values.
+    std::array<float_t, static_cast<uint32_t>(GamepadAxis::Count)> axisValues;
 };
 
 END_XNOR_CORE

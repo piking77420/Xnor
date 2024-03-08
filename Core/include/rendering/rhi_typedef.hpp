@@ -6,7 +6,7 @@
 #include "utils/color.hpp"
 
 /// @file rhi_typedef.hpp
-/// @brief Defines some types and enumerations needed by the Rhi.
+/// @brief Defines various types and enumerations needed by XnorCore::Rhi.
 
 BEGIN_XNOR_CORE
 
@@ -31,7 +31,7 @@ enum class PolygonMode : int32_t
 
 /// @brief Polygon draw mode
 /// @see <a href="https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDrawArrays.xhtml">OpenGL specification</a>
-enum class DrawMode : uint8_t
+enum class DrawMode
 {
 	Point = 0,
 	LineStrip,
@@ -179,13 +179,14 @@ enum class Attachment
 	DepthAndStencil,
 };
 
-/// @brief Render target info for @ref RenderPass
+/// @brief Render target info for RenderPass
 struct RenderTargetInfo
 {
 	/// @brief Attachment
 	Attachment attachment;
 };
 
+/// @brief The RenderPass clear value.
 struct ClearValue
 {
 	Vector3 color;
@@ -247,7 +248,7 @@ struct CreateCubeMapInfo
 	DataType dataType = DataType::UnsignedByte;
 };
 
-/// @brief Camera @ref UniformBuffer data
+/// @brief Camera UniformBuffer data
 struct CameraUniformData
 {
 	/// @brief View matrix
@@ -258,7 +259,7 @@ struct CameraUniformData
 	Vector3 cameraPos;
 };
 
-/// @brief Model @ref UniformBuffer data
+/// @brief Model UniformBuffer data
 struct ModelUniformData
 {
 	/// @brief Model matrix
@@ -267,7 +268,7 @@ struct ModelUniformData
 	Matrix normalInvertMatrix = Matrix::Identity();
 };
 
-/// @brief Uniform type for @ref Shader
+/// @brief Uniform type for Shader
 enum class UniformType
 {
 	/// @brief Int
@@ -276,13 +277,13 @@ enum class UniformType
 	Bool,
 	/// @brief Float
 	Float,
-	/// @brief @ref Vector3
+	/// @brief Vector3
 	Vec3,
-	/// @brief @ref Vector4
+	/// @brief Vector4
 	Vec4,
-	/// @brief [UNIMPLEMENTED]
+	/// @brief Matrix3
 	Mat3,
-	/// @brief @ref Matrix
+	/// @brief Matrix
 	Mat4,
 };
 
@@ -340,7 +341,7 @@ enum class BlendValue
 	OneMinusConstantAlpha,
 };
 
-/// @brief Blend function for @ref Shader
+/// @brief Blend function for Shader
 struct BlendFunction
 {
 	bool_t isBlending = false;
@@ -357,7 +358,7 @@ struct ShaderCreateInfo
 	BlendFunction blendFunction{};
 };
 
-/// @brief Point light @ref UniformBuffer data
+/// @brief Point light UniformBuffer data
 struct PointLightData
 {
 	/// @brief Color
@@ -370,7 +371,7 @@ struct PointLightData
 	float_t radius{};
 };
 
-/// @brief Spot light @ref UniformBuffer data
+/// @brief Spot light UniformBuffer data
 struct SpotLightData
 {
 	/// @brief Color
@@ -387,7 +388,7 @@ struct SpotLightData
 	float_t outerCutOff{};
 };
 
-/// @brief Directional light @ref UniformBuffer data
+/// @brief Directional light UniformBuffer data
 struct DirectionalLightData
 {
 	/// @brief Color
@@ -398,7 +399,7 @@ struct DirectionalLightData
 	Vector3 direction;
 };
 
-/// @brief Light @ref UniformBuffer data
+/// @brief Light UniformBuffer data
 struct GpuLightData
 {
 	/// @brief Number of active point lights
@@ -418,20 +419,21 @@ struct GpuLightData
 	DirectionalLightData directionalData[MaxDirectionalLights];
 };
 
-/// @brief Shadow mapping @ref UniformBuffer data
+/// @brief Shadow mapping UniformBuffer data
 struct ShadowMappingData
 {
 	Matrix lightSpaceMatrix;
 	Matrix model;
 };
 
-/// @brief Material @ref UniformBuffer data
+/// @brief Material UniformBuffer data
 struct MaterialData
 {
 	int32_t hasAlbedoMap = 0;
 	int32_t hasNormalmap = 0;
 };
 
+/// @brief The type of GBuffer.
 enum Gbuffer : int32_t
 {
 	GbufferPosition = 4,
@@ -439,6 +441,7 @@ enum Gbuffer : int32_t
 	GbufferAlbedo
 };
 
+/// @brief Buffer attachment flags.
 enum BufferFlag : int32_t
 {
 	None = 0,

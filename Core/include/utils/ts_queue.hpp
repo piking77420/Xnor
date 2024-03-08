@@ -3,22 +3,28 @@
 #include <mutex>
 #include <queue>
 
+/// @file ts_queue.hpp
+/// @brief Defines the XnorCore::TsQueue class.
+
 BEGIN_XNOR_CORE
 
-/// @file ts_queue.hpp
 /// @brief Thread-Safe Queue
 /// 
 /// @tparam T The type of data to store.
 ///
 /// @see <a href="https://en.cppreference.com/w/cpp/container/queue">std::queue</a>
 template <typename T>
-class TsQueue  // NOLINT(cppcoreguidelines-special-member-functions)
+class TsQueue
 {
 public:
+    /// @brief Default constructs a TsQueue.
     TsQueue() = default;
 
+    /// @brief Default destructs the TsQueue.
+    ~TsQueue() = default;
+
     // Prevent copy construction because of the mutex
-    TsQueue(const TsQueue&) = delete;
+    DELETE_COPY_MOVE_OPERATIONS(TsQueue)
 
     /// @brief Gets a reference to the front item in the queue
     /// @returns Item

@@ -1,5 +1,4 @@
-﻿// ReSharper disable CppClangTidyCppcoreguidelinesMissingStdForward
-#pragma once
+﻿#pragma once
 
 #include <condition_variable>
 #include <filesystem>
@@ -10,11 +9,11 @@
 #include "utils/ts_queue.hpp"
 
 /// @file logger.hpp
-/// @brief Defines the Logger static class
+/// @brief Defines the XnorCore::Logger static class
 
 BEGIN_XNOR_CORE
 
-/// @brief Logs a @ref Logger::LogLevel::TemporaryDebug "temporary debug message" using the given format message and arguments.
+/// @brief Logs a @ref XnorCore::Logger::LogLevel::TemporaryDebug "temporary debug message" using the given format message and arguments.
 #define DEBUG_LOG(message, ...) XnorCore::Logger::LogTempDebug(message, __FILE__, __LINE__, __VA_ARGS__)
 
 /// @brief Static class used to log messages to the console and/or a file.
@@ -51,7 +50,7 @@ class Logger final
     
 public:
     /// @brief Describes the severity of a log.
-    enum class LogLevel : uint8_t
+    enum class LogLevel
     {
         /// @brief Log intended for temporary debugging only.
         ///

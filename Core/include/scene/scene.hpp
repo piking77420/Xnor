@@ -6,7 +6,7 @@
 #include "entity.hpp"
 
 /// @file scene.hpp
-/// @brief Defines the Scene class.
+/// @brief Defines the XnorCore::Scene class.
  
 BEGIN_XNOR_CORE
 

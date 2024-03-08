@@ -6,7 +6,7 @@
 #include "window.hpp"
 
 /// @file screen.hpp
-/// @brief Defines the Screen class.
+/// @brief Defines the XnorCore::Screen class.
 
 BEGIN_XNOR_CORE
 

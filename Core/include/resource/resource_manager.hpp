@@ -3,14 +3,13 @@
 #include <type_traits>
 #include <unordered_map>
 
-#include "resource.hpp"
 #include "file/file.hpp"
-#include "resource/shader.hpp"
+#include "resource/resource.hpp"
 #include "utils/logger.hpp"
 #include "utils/pointer.hpp"
 
 /// @file resource_manager.hpp
-/// @brief Defines the ResourceManager class.
+/// @brief Defines the XnorCore::ResourceManager class.
 
 BEGIN_XNOR_CORE
 
@@ -18,7 +17,7 @@ BEGIN_XNOR_CORE
 template <class T>
 concept ResourceT = std::is_base_of_v<Resource, T>;
 
-/// @brief Static class used to add, load, get, or unload @ref Resource "Resources".
+/// @brief Static class used to add, load, get, or unload @ref XnorCore::Resource "Resources".
 ///
 /// It contains all wrapper instances of the Resource class. These are either added or loaded using the corresponding
 /// function: ResourceManager::Add and ResourceManager::Load.
@@ -124,7 +123,7 @@ public:
     template <ResourceT T>
     static void Unload(const Pointer<T>& resource);
 
-    /// @brief Unloads all stored @ref Resource "Resources".
+    /// @brief Unloads all stored @ref XnorCore::Resource "Resources".
     XNOR_ENGINE static void UnloadAll();
 
 private:

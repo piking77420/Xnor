@@ -5,7 +5,7 @@
 #include "Maths/vector3.hpp"
 
 /// @file vertex.hpp
-/// @brief Defines the Vertex class.
+/// @brief Defines the XnorCore::Vertex class.
 
 BEGIN_XNOR_CORE
 

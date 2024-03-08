@@ -3,7 +3,7 @@
 #include "core.hpp"
 
 /// @file uniform_buffer.hpp
-/// @brief Defines the UniformBuffer class
+/// @brief Defines the XnorCore::UniformBuffer class
 
 BEGIN_XNOR_CORE
 

@@ -6,7 +6,7 @@
 #include "utils/meta_programming.hpp"
 
 /// @file time.hpp
-/// @brief Defines the static class Time
+/// @brief Defines the XnorCore::Time static class.
 
 BEGIN_XNOR_CORE
 

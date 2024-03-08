@@ -6,7 +6,7 @@
 #include "rhi_typedef.hpp"
 
 /// @file render_pass.hpp
-/// @brief Defines the RenderPass class
+/// @brief Defines the XnorCore::RenderPass class
 
 BEGIN_XNOR_CORE
 

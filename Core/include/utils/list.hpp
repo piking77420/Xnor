@@ -5,7 +5,7 @@
 #include "core.hpp"
 
 /// @file list.hpp
-/// @brief Defines the List class.
+/// @brief Defines the XnorCore::List class.
 
 BEGIN_XNOR_CORE
 

@@ -12,36 +12,44 @@
 #include "utils/serializable.hpp"
 
 /// @file transform.hpp
-/// @brief Defines the Transform class.
-
+/// @brief Defines the XnorCore::Transform class.
 
 BEGIN_XNOR_CORE
 
 class SceneGraph;
 
-	/// @brief Represents a 3D transformation, containing Position, Rotation and Scaling
+/// @brief Represents a 3D transformation, containing Position, Rotation and Scaling
 class XNOR_ENGINE Transform final : public Serializable
 {
-	REFLECTABLE_IMPL_MINIMAL(Transform)
+	REFLECTABLE_IMPL_MINIMAL(Transform);
 
 public:
+	/// @brief Returns the position of this Transform.
+	const Vector3& GetPosition() const;
+	
+	/// @brief Sets the position of this Transform.
 	Vector3& SetPosition();
 
-	Vector3& SetRotationEulerAngle();
-
-	Quaternion& SetRotation();
-
-	Vector3& SetScale();
-	
-	const Vector3& GetPosition() const;
-
+	/// @brief Returns the rotation of this Transform in euler angles.
 	const Vector3& GetRotationEulerAngle() const;
 
+	/// @brief Sets the rotation of this Transform in euler angles.
+	Vector3& SetRotationEulerAngle();
+
+	/// @brief Returns the rotation of this Transform.
 	const Quaternion& GetRotation() const;
 
+	/// @brief Sets the rotation of this Transform.
+	Quaternion& SetRotation();
+
+	/// @brief Returns the scale of this Transform.
 	const Vector3& GetScale() const;
 
-	bool_t HasChanged() const;
+	/// @brief Sets the scale of this Transform.
+	Vector3& SetScale();
+
+	/// @brief Returns whether at least one of this Transform's field was changed last frame.
+	bool_t GetChanged() const;
 
 	/// @brief World transformation matrix of the transform
 	Matrix worldMatrix = Matrix::Identity();
@@ -62,18 +70,18 @@ private:
 	/// @brief Whether the transform changed and needs to be updated
 	bool_t m_Changed = true;
 
-	// SceneGraph is friend to be able to update the graph
-	// and not let the user change the m_changed event if the transform has change between 2 frames
-	friend SceneGraph;
+	// SceneGraph is a friend to be able to access the m_Changed private field if the transform changed between 2 frames
+	friend class SceneGraph;
 };
 
 END_XNOR_CORE
 
+/// @private
 REFL_AUTO(type(XnorCore::Transform),
 	field(m_Position, XnorCore::NotifyChange(&XnorCore::Transform::m_Changed)),
 	field(m_EulerRotation, XnorCore::NotifyChange(&XnorCore::Transform::m_Changed)),
 	field(m_Scale, XnorCore::NotifyChange(&XnorCore::Transform::m_Changed))
-)
+);
 
 /// @brief @c std::formatter template specialization for the XnorCore::Transform type.
 template <>
@@ -147,9 +155,9 @@ struct std::formatter<XnorCore::Transform>
 		{
 			std::format_args args;
 			if (m_QuaternionRotation)
-				args = std::make_format_args(transform.m_Position, transform.m_Rotation, transform.m_Scale);
+				args = std::make_format_args(transform.GetPosition(), transform.GetRotation(), transform.GetScale());
 			else
-				args = std::make_format_args(transform.m_Position, transform.m_EulerRotation * (m_DegreeRotation ? Calc::Rad2Deg : 1.f), transform.m_Scale);
+				args = std::make_format_args(transform.GetPosition(), transform.GetRotationEulerAngle() * (m_DegreeRotation ? Calc::Rad2Deg : 1.f), transform.GetScale());
         
 			const char separator = m_Multiline ? '\n' : ';';
 

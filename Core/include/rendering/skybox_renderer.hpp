@@ -7,7 +7,7 @@
 #include "world/skybox.hpp"
 
 /// @file skybox_renderer.hpp
-/// @brief Defines the SkyboxRenderer class
+/// @brief Defines the XnorCore::SkyboxRenderer class
 
 BEGIN_XNOR_CORE
 

@@ -4,7 +4,7 @@
 #include "rendering/renderer.hpp"
 
 /// @file application.hpp
-/// @brief Defines the Application class.
+/// @brief Defines the XnorCore::Application class.
 
 BEGIN_XNOR_CORE
 
@@ -30,6 +30,7 @@ public:
     XNOR_ENGINE virtual void CheckWindowResize() = 0;
     
 protected:
+    /// @brief Current Application instance.
     XNOR_ENGINE static inline Application* m_ApplicationInstance = nullptr;
 };
 

@@ -11,7 +11,7 @@
 #include "resource/model.hpp"
 
 /// @file rhi.hpp
-/// Defines the Rhi static class
+/// Defines the XnorCore::Rhi static class
 
 BEGIN_XNOR_CORE
 
@@ -128,7 +128,7 @@ public:
 	/// @param srcBottomRight Bottom right position of the source region
 	/// @param targetTopLeft Top left position of the target region
 	/// @param targetBottomRight Top left position of the target region
-	/// @param attachmentTarget Target attachment
+	/// @param bufferFlag Target attachment
 	/// @param textureFiltering Interpolation to be applied
 	XNOR_ENGINE static void BlitFrameBuffer(uint32_t readBuffer, uint32_t targetBuffer, Vector2i srcTopLeft, Vector2i srcBottomRight,
 		Vector2i targetTopLeft, Vector2i targetBottomRight, BufferFlag bufferFlag, TextureFiltering textureFiltering);
@@ -201,7 +201,7 @@ private:
 		uint32_t ebo = 0;
 		uint32_t nbrOfVertex = 0;
 		uint32_t nbrOfIndicies = 0;
-		ModelAabb aabb;
+		Model::Aabb aabb;
 	};
 	
 	struct ShaderInternal

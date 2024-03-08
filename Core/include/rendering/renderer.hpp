@@ -12,8 +12,7 @@
 #include "world/world.hpp"
 
 /// @file renderer.hpp
-/// @brief Defines the Light class
-/// 
+/// @brief Defines the XnorCore::Renderer class
 BEGIN_XNOR_CORE
 
 class DirectionalLight;
@@ -28,11 +27,13 @@ public:
     /// @brief Clear color
     Vector4 clearColor = Vector4(0.f);
 
-    DEFAULT_COPY_MOVE_OPERATIONS(Renderer)
-
+    /// @brief Default constructs a Renderer.
     XNOR_ENGINE Renderer() = default;
-    
+
+    /// @brief Default destructs the Renderer.
     XNOR_ENGINE ~Renderer() = default;
+
+    DEFAULT_COPY_MOVE_OPERATIONS(Renderer)
 
     /// @brief Initializes the renderer
     XNOR_ENGINE void Initialize();

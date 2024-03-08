@@ -260,7 +260,7 @@ enum class Key : uint16_t
 };
 
 /// @brief %List of keyboard button states
-enum class KeyStatus : uint8_t
+enum class KeyStatus
 {
     /// @brief Pressed
     Pressed,

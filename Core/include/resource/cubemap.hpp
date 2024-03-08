@@ -7,7 +7,7 @@
 #include "resource.hpp"
 
 /// @file cubemap.hpp
-/// @brief Defines the Cubemap class
+/// @brief Defines the XnorCore::Cubemap class
 
 BEGIN_XNOR_CORE
 

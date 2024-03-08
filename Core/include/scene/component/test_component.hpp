@@ -6,6 +6,7 @@
 
 BEGIN_XNOR_CORE
 
+/// @private
 class TestComponent : public Component
 {
     REFLECTABLE_IMPL_MINIMAL(TestComponent)

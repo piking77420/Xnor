@@ -6,7 +6,7 @@
 #include "resource/shader.hpp"
 
 /// @file tone_mapping.hpp
-/// Defines the ToneMapping class
+/// Defines the XnorCore::ToneMapping class
 
 BEGIN_XNOR_CORE
 

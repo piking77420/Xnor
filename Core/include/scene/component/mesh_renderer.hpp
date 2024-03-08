@@ -6,7 +6,7 @@
 #include "scene/component.hpp"
 
 /// @file mesh_renderer.hpp
-/// @brief Defines the MeshRenderer class.
+/// @brief Defines the XnorCore::MeshRenderer class.
 
 BEGIN_XNOR_CORE
 

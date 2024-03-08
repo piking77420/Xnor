@@ -33,7 +33,7 @@ RenderWindow::~RenderWindow()
 
 void RenderWindow::Display()
 {
-    if (!m_RendererContext.IsValid() || m_RendererContext.framebuffer->GetSize() != m_Size)
+    if (!m_RendererContext.IsValid() || m_RendererContext.frameBuffer->GetSize() != m_Size)
     {
         ResizeRenderContext(m_Size);
     }
@@ -70,7 +70,7 @@ void RenderWindow::Initialize(Vector2i size)
 
     // Init rendererContext
     m_RendererContext.camera = &m_Editor->data.gameCam;
-    m_RendererContext.framebuffer = &m_FrameBuffer;
+    m_RendererContext.frameBuffer = &m_FrameBuffer;
 }
 
 

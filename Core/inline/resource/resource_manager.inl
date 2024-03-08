@@ -1,8 +1,12 @@
 #pragma once
+
 #include <ranges>
 
+#include "resource/shader.hpp"
+
 BEGIN_XNOR_CORE
-    template <ResourceT T>
+
+template <ResourceT T>
 Pointer<T> ResourceManager::Add(std::string name)
 {
     Logger::LogDebug("Adding resource {}", name);

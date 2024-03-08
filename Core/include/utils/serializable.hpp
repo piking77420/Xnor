@@ -93,7 +93,7 @@ public:
 template <class T>
 concept SerializableT = Meta::IsBaseOf<Serializable, T>;
 
-/// @brief Implements the reflection in a .cpp file, it provides a body for @ref Serializable::Serialize and Serializable::Deserialize
+/// @brief Implements the reflection in a .cpp file, it provides a body for Serializable::Serialize and Serializable::Deserialize
 /// @param type Type name
 #define REFLECTABLE_IMPL_CPP(type)                                                                                                      \
 void type::Serialize() const                                                                                                            \
@@ -106,7 +106,7 @@ void type::Deserialize()                                                        
     Serializer::Deserialize<type>(this);                                                                                                \
 }
 
-/// @brief Implements the reflection in a .hpp file, it provides a declaration for @ref Serialize and @ref Deserialize
+/// @brief Implements the reflection in a .hpp file, it provides a declaration for Serializable::Serialize and Serializable::Deserialize
 /// @param type Type name
 #define REFLECTABLE_IMPL_MINIMAL(type)                                                                                                  \
 public:                                                                                                                                 \
@@ -117,7 +117,7 @@ virtual void Deserialize() override;                                            
 private:                                                                                                                                \
 friend struct refl_impl::metadata::type_info__<type>;
 
-/// @brief Implements the reflection in a .hpp file, it provides a body for @ref Serialize and @ref Deserialize
+/// @brief Implements the reflection in a .hpp file, it provides a body for Serializable::Serialize and Serializable::Deserialize
 /// @param type Type name
 #define REFLECTABLE_IMPL_H(type)                                                                                                        \
 public:                                                                                                                                 \

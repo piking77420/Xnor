@@ -8,10 +8,13 @@
 #include "utils/pointer.hpp"
 
 /// @file file.hpp
-/// @brief Defines the File class.
+/// @brief Defines the XnorCore::File class.
 
 BEGIN_XNOR_CORE
 
+/// @brief Defines a file on the filesystem.
+///
+/// This is meant to be used with @ref XnorCore::Pointer "Pointers" and with the FileManager.
 class File : public Entry
 {
 public:
@@ -25,11 +28,11 @@ public:
     DEFAULT_COPY_MOVE_OPERATIONS(File)
 
     /// @brief Loads the contents of this File.
+    /// 
+    /// @returns @c false if an error occured while loading.
     XNOR_ENGINE bool_t Load() override;
 
     /// @brief Unloads the contents of this File.
-    /// 
-    /// @returns @c false if an error occured while loading.
     XNOR_ENGINE void Unload() override;
 
     /// @brief Returns the name of this File without the file extension.

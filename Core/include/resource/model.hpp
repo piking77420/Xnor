@@ -4,23 +4,30 @@
 
 #include <assimp/mesh.h>
 
-#include "file/file.hpp"
 #include "core.hpp"
-#include "resource.hpp"
+#include "file/file.hpp"
 #include "rendering/vertex.hpp"
+#include "resource/resource.hpp"
+
+/// @file model.hpp
+/// @brief Defines the XnorCore::Model class.
 
 BEGIN_XNOR_CORE
 
-// ReSharper disable once CppInconsistentNaming
-struct ModelAabb
-{
-    Vector3 min { std::numeric_limits<float_t>::max() };
-    Vector3 max { std::numeric_limits<float_t>::min() };
-};
-
+/// @brief Holds the necessary information to draw a 3D model.
 class Model : public Resource
 {
 public:
+    /// @brief Struct used to store the minimum and maximum bounds of the AABB of a Model.
+    struct Aabb
+    {
+        /// @brief The minimum bound of this AABB.
+        Vector3 min { std::numeric_limits<float_t>::max() };
+        /// @brief The maximum bound of this AABB.
+        Vector3 max { std::numeric_limits<float_t>::min() };
+    };
+
+    /// @brief Allowed extensions for models.
     XNOR_ENGINE static inline constexpr std::array<const char_t*, 58> FileExtensions
     {
         ".3d",
@@ -91,16 +98,22 @@ public:
 
     DEFAULT_COPY_MOVE_OPERATIONS(Model)
 
+    /// @brief Destroys this Model.
     XNOR_ENGINE ~Model() override;
-    
+
+    /// @copydoc XnorCore::Resource::Load(const uint8_t* buffer, int64_t length)
     XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;
-    
+
+    /// @brief Loads a Model from assimp loaded data.
     XNOR_ENGINE bool_t Load(const aiMesh& loadedData);
 
+    /// @copydoc XnorCore::Resource::CreateInRhi
     XNOR_ENGINE void CreateInRhi() override;
 
+    /// @copydoc XnorCore::Resource::DestroyInRhi
     XNOR_ENGINE void DestroyInRhi() override;
     
+    /// @copydoc XnorCore::Resource::Unload
     XNOR_ENGINE void Unload() override;
 
     /// @brief Gets the id of the model
@@ -110,7 +123,7 @@ public:
 
     /// @brief Gets the Aabb bounding box of the model
     /// @return Aabb bounding box
-    XNOR_ENGINE ModelAabb GetAabb() const;
+    XNOR_ENGINE Aabb GetAabb() const;
     
 private:
     XNOR_ENGINE void ComputeAabb(const aiAABB& assimpAabb);
@@ -119,7 +132,7 @@ private:
     std::vector<uint32_t> m_Indices;
     uint32_t m_ModelId = 0;
     
-    ModelAabb m_Aabb;
+    Aabb m_Aabb;
 };
 
 END_XNOR_CORE

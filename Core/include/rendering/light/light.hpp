@@ -6,7 +6,7 @@
 #include "scene/component.hpp"
 
 /// @file light.hpp
-/// @brief Defines the Light class
+/// @brief Defines the XnorCore::Light class
 
 BEGIN_XNOR_CORE
 

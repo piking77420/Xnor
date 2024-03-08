@@ -2,18 +2,18 @@
 
 #include <vector>
 
-#include "camera.hpp"
 #include "core.hpp"
 #include "light/directional_light.hpp"
 #include "light/point_light.hpp"
 #include "light/spot_light.hpp"
+#include "rendering/camera.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
 #include "resource/texture.hpp"
 
 /// @file light_manager.hpp
-/// @brief Defines the LightManager class
-/// 
+/// @brief Defines the XnorCore::LightManager class.
+
 BEGIN_XNOR_CORE
 
 /// @brief Handles rendering lights and their gizmos

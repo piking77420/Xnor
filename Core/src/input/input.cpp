@@ -119,7 +119,7 @@ void Input::HandleGamepad()
             if (state.axes[k] <= GamepadInput::NullAnalogValue)
                 continue;
 
-            m_Gamepads[i].axesValue[k] = state.axes[k];
+            m_Gamepads[i].axisValues[k] = state.axes[k];
         }
 
         for (uint32_t k = 0; k < static_cast<uint32_t>(GamepadButton::Count) - 1; k++)

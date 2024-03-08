@@ -4,7 +4,7 @@
 #include "light.hpp"
 
 /// @file point_light.hpp
-/// @brief Defines the PointLight class
+/// @brief Defines the XnorCore::PointLight class
 
 BEGIN_XNOR_CORE
 

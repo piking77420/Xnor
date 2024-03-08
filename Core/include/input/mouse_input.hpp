@@ -8,7 +8,7 @@
 BEGIN_XNOR_CORE
 
 /// @brief %List of mouse buttons
-enum class MouseButton : uint8_t
+enum class MouseButton
 {
     /// @brief Left click
     Left,

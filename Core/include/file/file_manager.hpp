@@ -10,7 +10,7 @@
 #include "utils/pointer.hpp"
 
 /// @file file_manager.hpp
-/// @brief Defines the FileManager class.
+/// @brief Defines the XnorCore::FileManager class.
 
 BEGIN_XNOR_CORE
 

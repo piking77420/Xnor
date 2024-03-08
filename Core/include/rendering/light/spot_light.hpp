@@ -3,7 +3,7 @@
 #include "light.hpp"
 
 /// @file spot_light.hpp
-/// @brief Defines the DirectionalLight class
+/// @brief Defines the XnorCore::DirectionalLight class
 
 BEGIN_XNOR_CORE
 

@@ -7,7 +7,7 @@
 #include "utils/pointer.hpp"
 
 /// @file directory.hpp
-/// @brief Defines the Directory class.
+/// @brief Defines the XnorCore::Directory class.
 
 BEGIN_XNOR_CORE
 
@@ -15,7 +15,7 @@ class File;
 
 /// @brief Defines a directory on the filesystem.
 ///
-/// This is meant to be used with @ref Pointer "Pointers" and with the FileManager.
+/// This is meant to be used with @ref XnorCore::Pointer "Pointers" and with the FileManager.
 class Directory : public Entry
 {
 public:

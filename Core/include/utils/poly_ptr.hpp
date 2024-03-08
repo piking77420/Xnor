@@ -3,14 +3,14 @@
 #include "utils/utils.hpp"
 
 /// @file poly_ptr.hpp
-/// @brief Defines the PolyPtr class.
+/// @brief Defines the XnorCore::PolyPtr class.
 
 BEGIN_XNOR_CORE
 
 /// @brief PolyPtr is an abstraction for polymorphic pointers (hence the name), the idea is that it allows the same behavior of typeid(ptr)
 /// even with a class that isn't pure virtual
 /// 
-/// This was needed for reflection, because the @ref Component class isn't pure virtual, but we use a @ref List of @ref Component pointers in @ref Entity.
+/// This was needed for reflection, because the Component class isn't pure virtual, but we use a List of Component pointers in Entity.
 ///
 /// The PolyPtr allows us to get the needed information for reflection without too much overhead 
 /// 

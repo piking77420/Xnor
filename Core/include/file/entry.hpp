@@ -6,7 +6,7 @@
 #include "utils/pointer.hpp"
 
 /// @file entry.hpp
-/// @brief Defines the Entry class.
+/// @brief Defines the XnorCore::Entry class.
 
 BEGIN_XNOR_CORE
 

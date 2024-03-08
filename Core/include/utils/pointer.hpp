@@ -9,7 +9,7 @@
 #include "reference_counter.hpp"
 
 /// @file pointer.hpp
-/// @brief Defines the Pointer class
+/// @brief Defines the XnorCore::Pointer class
 
 BEGIN_XNOR_CORE
 

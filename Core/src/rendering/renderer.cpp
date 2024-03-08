@@ -46,7 +46,7 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	// Update Camera
 	CameraUniformData cam;
 	rendererContext.camera->GetView(&cam.view);
-	rendererContext.camera->GetProjection(rendererContext.framebuffer->GetSize(), &cam.projection);
+	rendererContext.camera->GetProjection(rendererContext.frameBuffer->GetSize(), &cam.projection);
 	cam.cameraPos = rendererContext.camera->position;
 	Rhi::UpdateCameraUniform(cam);
 	
@@ -76,11 +76,11 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	m_ToneMapping.ComputeToneMaping(*m_ColorAttachment, m_Quad);
 
 	
-	if (rendererContext.framebuffer != nullptr)
+	if (rendererContext.frameBuffer != nullptr)
 	{
-		rendererContext.framebuffer->BindFrameBuffer();
+		rendererContext.frameBuffer->BindFrameBuffer();
 		Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit) );
-		Rhi::SetViewport(rendererContext.framebuffer->GetSize());
+		Rhi::SetViewport(rendererContext.frameBuffer->GetSize());
 	}
 	
 	m_DrawTextureToScreenShader->Use();
@@ -88,9 +88,9 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	Rhi::DrawQuad(m_Quad->GetId());
 	m_DrawTextureToScreenShader->Unuse();
 	
-	if (rendererContext.framebuffer != nullptr)
+	if (rendererContext.frameBuffer != nullptr)
 	{
-		rendererContext.framebuffer->UnBindFrameBuffer();
+		rendererContext.frameBuffer->UnBindFrameBuffer();
 	}
 }
 
@@ -322,7 +322,7 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 			continue;
 		
 		const Transform& transform =  meshRenderer->entity->transform;
-		const ModelAabb&& modelAabb = meshRenderer->model->GetAabb();
+		const Model::Aabb&& modelAabb = meshRenderer->model->GetAabb();
 		
 		const Vector3&& aabbSize = (modelAabb.max - modelAabb.min) * 0.5f;
 		const Vector3&& center  = (modelAabb.max + modelAabb.min) * 0.5f;

@@ -7,7 +7,7 @@
 BEGIN_XNOR_CORE
 
 /// @file resource.hpp
-/// @brief Defines the Resource class
+/// @brief Defines the XnorCore::Resource class
 
 class File;
 

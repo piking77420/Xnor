@@ -9,7 +9,7 @@
 #include "core.hpp"
 
 /// @file serializer.hpp
-/// @brief Defines the serializer static class.
+/// @brief Defines the XnorCore::Serializer static class.
 
 BEGIN_XNOR_CORE
 

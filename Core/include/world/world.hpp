@@ -5,7 +5,7 @@
 #include "scene/scene.hpp"
 
 /// @file world.hpp
-/// @brief Defines the World class.
+/// @brief Defines the XnorCore::World class.
 
 BEGIN_XNOR_CORE
 

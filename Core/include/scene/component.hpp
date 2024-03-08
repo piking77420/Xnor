@@ -4,13 +4,13 @@
 #include "utils/serializable.hpp"
 
 /// @file component.hpp
-/// @brief Defines the Component class.
+/// @brief Defines the XnorCore::Component class.
 
 BEGIN_XNOR_CORE
 
 class Entity;
 
-/// @brief Represents a behavior that can be attached to an @ref Entity
+/// @brief Represents a behavior that can be attached to an Entity.
 class XNOR_ENGINE Component : public Serializable
 {
     REFLECTABLE_IMPL_MINIMAL(Component)

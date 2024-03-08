@@ -10,7 +10,7 @@
 #include "utils/meta_programming.hpp"
 
 /// @file input.hpp
-/// @brief Defines the Input static class.
+/// @brief Defines the XnorCore::Input static class.
 
 BEGIN_XNOR_CORE
 

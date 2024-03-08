@@ -15,6 +15,7 @@
 #include "utils/pointer.hpp"
 
 /// @file utils.hpp
+/// @brief Defines general utility functions.
 
 BEGIN_XNOR_CORE
 

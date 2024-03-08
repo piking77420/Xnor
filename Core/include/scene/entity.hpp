@@ -12,7 +12,7 @@
 #include "utils/serializable.hpp"
 
 /// @file entity.hpp
-/// @brief Defines the Entity class.
+/// @brief Defines the XnorCore::Entity class.
 
 BEGIN_XNOR_CORE
 

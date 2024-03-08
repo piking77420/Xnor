@@ -5,7 +5,7 @@
 #include "scene/component.hpp"
 
 /// @file camera_component.hpp
-/// @brief Defines the CameraComponent class.
+/// @brief Defines the XnorCore::CameraComponent class.
 
 BEGIN_XNOR_CORE
 
