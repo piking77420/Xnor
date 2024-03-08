@@ -61,7 +61,7 @@ public:
 
 private:
     LightManager m_LightManager;
-    Texture* m_MeshRendersIndexAttachement = nullptr;
+    
     
     FrameBuffer* m_GframeBuffer = nullptr;
     // Deferred attachment GBuffers

@@ -32,7 +32,6 @@ out VS_OUT {
     vec3 Normal;
     vec2 TexCoords; 
     mat3 TBN;
-    flat uint drawId;
 } vs_out;
 
 
@@ -58,5 +57,4 @@ void main()
        vs_out.TBN =  mat3(T, B, N);
     }
 
-    vs_out.drawId = drawId;
 }
