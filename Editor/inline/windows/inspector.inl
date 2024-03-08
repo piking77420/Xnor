@@ -316,10 +316,10 @@ void Inspector::DisplayEnumFlag(MemberT* obj, const char_t* name, [[maybe_unused
 template <typename ReflectT>
 void Inspector::DisplayObject(ReflectT* const obj, const XnorCore::TypeDescriptor<ReflectT> desc)
 {
-    constexpr const char_t* const typeName = desc.name.c_str();
-    const float_t textSize = ImGui::CalcTextSize(typeName).x;
+    const std::string typeName = XnorCore::Utils::RemoveNamespaces(desc.name.c_str());
+    const float_t textSize = ImGui::CalcTextSize(typeName.c_str()).x;
     XnorCore::Utils::AlignImGuiCursor(textSize);
-    ImGui::Text("%s", typeName);
+    ImGui::Text("%s", typeName.c_str());
 
     refl::util::for_each(desc.members, [&]<typename T>(const T member)
     {

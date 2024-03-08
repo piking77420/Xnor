@@ -47,6 +47,16 @@ constexpr Colorf Utils::FromImCol(const ImVec4& color)
     return Colorf(color.x, color.y, color.z, color.w);
 }
 
+constexpr std::string Utils::RemoveNamespaces(const std::string& str)
+{
+    const size_t pos = str.find_last_of(':');
+
+    if (pos == std::string::npos)
+        return str;
+
+    return str.substr(pos + 1);
+}
+
 template <typename T>
 size_t Utils::GetTypeHash()
 {

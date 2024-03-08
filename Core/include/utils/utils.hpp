@@ -100,6 +100,15 @@ namespace Utils
     [[nodiscard]]
     XNOR_ENGINE std::string HumanizeString(const std::string& str);
 
+    /// @brief Removes the namespaces indicators from the provided string
+    ///
+    /// e.g. XnorCore::MyClass will become MyClass
+    /// 
+    /// @param str String to modify
+    /// @return Result
+    [[nodiscard]]
+    XNOR_ENGINE constexpr std::string RemoveNamespaces(const std::string& str);
+
     /// @brief Normalizes an angle (clamps its value between 0 and 2 * PI)
     /// @param angle Angle to normalize
     /// @return Normalized representation
