@@ -262,9 +262,11 @@ struct std::formatter<XnorCore::Pointer<T>>  // NOLINT(cert-dcl58-cpp)
     }
 };
 
+/// @brief @c std::hash template specialization for the XnorCore::Pointer type.
 template<typename T>
 struct std::hash<XnorCore::Pointer<T>>  // NOLINT(cert-dcl58-cpp)
 {
+    /// @brief Hashes the given XnorCore::Pointer.
     std::size_t operator()(const XnorCore::Pointer<T>& p) const noexcept
     {
         const std::size_t h1 = std::hash<decltype(p.GetReferenceCounter())>{}(const_cast<decltype(p.GetReferenceCounter())>(p.GetReferenceCounter()));

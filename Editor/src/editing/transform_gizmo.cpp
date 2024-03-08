@@ -46,27 +46,32 @@ void TransfromGizmo::Manipulate(XnorCore::Entity& entity)
 
 void TransfromGizmo::UserInput()
 {
-    if (ImGui::IsKeyPressed(ImGuiKey_T))
-        currentGizmoOperation = ImGuizmo::TRANSLATE;
-    if (ImGui::IsKeyPressed(ImGuiKey_R))
-        currentGizmoOperation = ImGuizmo::ROTATE;
-    if (ImGui::IsKeyPressed(ImGuiKey_Y)) 
-        currentGizmoOperation = ImGuizmo::SCALE;
+    if (ImGui::IsWindowFocused())
+    {
+        if (ImGui::IsKeyPressed(ImGuiKey_T))
+            currentGizmoOperation = ImGuizmo::TRANSLATE;
+        if (ImGui::IsKeyPressed(ImGuiKey_R))
+            currentGizmoOperation = ImGuizmo::ROTATE;
+        if (ImGui::IsKeyPressed(ImGuiKey_Y)) 
+            currentGizmoOperation = ImGuizmo::SCALE;
+    }
     
     switch (currentGizmoOperation)  // NOLINT(clang-diagnostic-switch-enum)
     {
         case ImGuizmo::TRANSLATE:
             snap = m_SnapTranslation;
-        break;
+            break;
         
         case ImGuizmo::ROTATE:
             snap = m_SnapRotation;
-        break;
+            break;
         
         case ImGuizmo::SCALE:
             snap = m_SnapScale;
-        break;
-        default: ;
+            break;
+
+        default:
+            break;
     }
 }
 

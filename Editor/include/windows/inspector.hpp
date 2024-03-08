@@ -56,6 +56,7 @@ private:
     static void DisplayList(MemberT* ptr, const char_t* name, size_t flags);
 
     template <typename MemberT, typename DescriptorT>
+    [[nodiscard]]
     static constexpr size_t GetFlags(DescriptorT member);
 
 
@@ -63,8 +64,11 @@ private:
     template <XnorCore::ResourceT T>
     static XnorCore::Pointer<T> FilterResources(ImGuiTextFilter& filter);
 
+    static inline XnorCore::Entity* FilterEntity(ImGuiTextFilter& filter);
+
     static inline void* m_ResourceFilterTarget = nullptr;
-    static inline ImGuiTextFilter m_ResourceFilterName;
+    static inline void* m_EntityFilterTarget = nullptr;
+    static inline ImGuiTextFilter m_TextFilter;
 };
 
 END_XNOR_EDITOR
