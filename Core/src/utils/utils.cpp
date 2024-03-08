@@ -134,14 +134,14 @@ void Utils::OpenInExplorer(const std::filesystem::path& path)
     OpenInExplorer(path, !is_directory(path));
 }
 
-void Utils::OpenInExplorer(const std::filesystem::path& path, const bool isFile)
+void Utils::OpenInExplorer(const std::filesystem::path& path, const bool_t isFile)
 {
     std::string command = "start explorer ";
     
     if (isFile)
         command += "/select,";
     
-    command += absolute(path).string();
+    command += '"' + absolute(path).string() + '"';
     std::system(command.c_str());  // NOLINT(concurrency-mt-unsafe)
 }
 
@@ -153,7 +153,7 @@ void Utils::OpenFile(const File& file)
 void Utils::OpenFile(const std::filesystem::path& filepath)
 {
     std::string command = "start explorer ";
-    command += absolute(filepath).string();
+    command += '"' + absolute(filepath).string() + '"';
     std::system(command.c_str());  // NOLINT(concurrency-mt-unsafe)
 }
 

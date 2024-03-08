@@ -20,6 +20,8 @@ class Input
     STATIC_CLASS(Input)
     
 public:
+    XNOR_ENGINE static inline bool_t mouseLocked = false;
+    
     /// @brief Checks if a specified key is of the specified status
     /// @param key Key to check
     /// @param status Key status
@@ -51,43 +53,47 @@ public:
     /// @brief Initializes the input manager
     XNOR_ENGINE static void Initialize();
 
-    /// @brief Resets the input manager
-    XNOR_ENGINE static void Reset();
+    /// @brief Updates the input manager
+    XNOR_ENGINE static void Update();
 
 private:
     using KeyStatuses = std::array<bool_t, static_cast<uint8_t>(KeyStatus::Count)>;
     using MouseStatuses = std::array<bool_t, static_cast<uint8_t>(MouseButtonStatus::Count)>;
 
-    XNOR_ENGINE static constexpr uint32_t GamepadMax = 15;
+    static constexpr uint32_t GamepadMax = 15;
     
-    XNOR_ENGINE static inline std::array<KeyStatuses, static_cast<uint16_t>(Key::Count) - 1> m_Keyboard;
+    static inline std::array<KeyStatuses, static_cast<uint16_t>(Key::Count) - 1> m_Keyboard;
 
-    XNOR_ENGINE static inline std::array<MouseStatuses, static_cast<uint8_t>(MouseButton::Count) - 1> m_Mouse;
+    static inline std::array<MouseStatuses, static_cast<uint8_t>(MouseButton::Count) - 1> m_Mouse;
     
-    XNOR_ENGINE static inline std::array<GamepadInput, GamepadMax> m_Gamepads;
+    static inline std::array<GamepadInput, GamepadMax> m_Gamepads;
 
     // For each Status
     using GamepadButtonStatuses = std::array<bool_t, static_cast<uint8_t>(GamepadButtonStatus::Count)>;
     // For each Button
     using GamepadButtons = std::array<GamepadButtonStatuses, static_cast<uint32_t>(GamepadButton::Count)>;
     // For each Gamepad
-    XNOR_ENGINE static inline std::array<GamepadButtons, GamepadMax> m_GamepadsButton;
+    static inline std::array<GamepadButtons, GamepadMax> m_GamepadsButton;
 
-    XNOR_ENGINE static void HandleKeyboard(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
+    static void HandleKeyboard(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
     
-    XNOR_ENGINE static void HandleMouseButton(GLFWwindow* window, int32_t mouseButton, int32_t action, int32_t mods);
+    static void HandleMouseButton(GLFWwindow* window, int32_t mouseButton, int32_t action, int32_t mods);
     
-    XNOR_ENGINE static void MouseCursorPos(GLFWwindow* window, double_t xpos, double_t ypos);
+    static void MouseCursorPos(GLFWwindow* window, double_t xpos, double_t ypos);
     
-    XNOR_ENGINE static void HandleJoyStickCallBack(int32_t jid, int32_t event);
+    static void HandleJoyStickCallBack(int32_t jid, int32_t event);
     
-    XNOR_ENGINE static void HandleGamepad();
+    static void HandleGamepad();
 
-    XNOR_ENGINE static void ResetKey();
+    static void ResetKey();
 
-    XNOR_ENGINE static void CheckGamepadAtLaunch();
+    static void CheckGamepadAtLaunch();
     
-    XNOR_ENGINE static inline Vector2 m_MousePos;
+    static inline Vector2 m_LastMousePosition;
+    
+    static inline Vector2 m_MousePosition;
+    
+    static inline Vector2 m_MouseDelta;
 };
 
 END_XNOR_CORE

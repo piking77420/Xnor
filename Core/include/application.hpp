@@ -8,7 +8,7 @@
 
 BEGIN_XNOR_CORE
 
-/// @brief Application interface, handles the lifetime of most of the sub systems needed for an Xnor application to run
+/// @brief Application interface, handles the lifetime of most of the sub systems needed for an XNOR application to run
 class Application
 {
 public:

@@ -37,7 +37,7 @@ public:
 private:
     uint32_t m_Id = 0;
     std::array<void*, 6> m_Images;
-    Vector2i m_CubeMapSize;
+    Vector2i m_CubemapSize;
     int32_t m_DataChannels = 0;
 };
 

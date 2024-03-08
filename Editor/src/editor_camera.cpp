@@ -1,6 +1,7 @@
 #include "editor_camera.hpp"
 
 #include <assimp/Logger.hpp>
+#include <ImGui/imgui_internal.h>
 
 #include "editor.hpp"
 #include "input/time.hpp"
@@ -8,60 +9,47 @@
 
 using namespace XnorEditor;
 
-
-EditorCamera::EditorCamera(Editor& editor, XnorCore::Camera& camera) : m_EditorRef(&editor), m_EditorRefCamera(&camera) 
+EditorCamera::EditorCamera(Editor& editor, XnorCore::Camera& camera)
+    : m_EditorRef(&editor)
+    , m_EditorRefCamera(&camera) 
 {
-    
 }
 
 void EditorCamera::UpdateCamera()
-{   
-  
-    if (m_ComputeDeltaMouse)
-    {
-        ComputeDeltaMouse();
-        m_ComputeDeltaMouse = false;
-        XnorCore::Window::HideCursor(true);
-    }
-    
+{
     OnMiddleButton();
     CameraOnRightClick();
     EditorCameraMovement();
-
-    if (m_ResetDeltaMouse)
-    {
-        ResetDeltatMouse();
-        m_ResetDeltaMouse = false;
-        XnorCore::Window::HideCursor(false);
-    }
-}
-
-void EditorCamera::ResetDeltatMouse()
-{
-    m_FirstMove = false;
-    m_LastInput = Vector2(0.f);
 }
 
 void EditorCamera::CameraOnRightClick()
 {
+    if (!ImGui::IsWindowHovered())
+        return;
+    
+    if (ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+    {
+        XnorCore::Window::SetCursorHidden(true);
+        m_MouseDragStart = XnorCore::Utils::FromImVec(ImGui::GetMousePos());
+    }
+
     if (ImGui::IsMouseDown(ImGuiMouseButton_Right))
     {
-        m_ComputeDeltaMouse = true;
         EditorCameraRotation();
-        XnorCore::Window::HideCursor(true);
     }
-    
+
     if (ImGui::IsMouseReleased(ImGuiMouseButton_Right))
     {
-        m_ResetDeltaMouse = true;
-        XnorCore::Window::HideCursor(false);
+        XnorCore::Window::SetCursorHidden(false);
     }
 }
 
 void EditorCamera::EditorCameraRotation()
 {
-    m_Yaw += m_MouseOffSet.x;
-    m_Pitch += m_MouseOffSet.y; 
+    const ImGuiIO& io = ImGui::GetIO();
+    
+    m_Yaw -= io.MouseDelta.x;
+    m_Pitch += io.MouseDelta.y; 
     
     if (m_Pitch > MaxPitch)
         m_Pitch = MaxPitch;
@@ -73,8 +61,8 @@ void EditorCamera::EditorCameraRotation()
     m_EditorRefCamera->front.z = std::sin(m_Yaw * Calc::Deg2Rad) * std::cos(m_Pitch * Calc::Deg2Rad);
     m_EditorRefCamera->front = m_EditorRefCamera->front.Normalized();
     
-    m_EditorRefCamera->right = Vector3::Cross(m_EditorRefCamera->front,Vector3::UnitY()).Normalized();
-    m_EditorRefCamera->up = Vector3::Cross(m_EditorRefCamera->right,m_EditorRefCamera->front).Normalized();
+    m_EditorRefCamera->right = Vector3::Cross(m_EditorRefCamera->front, Vector3::UnitY()).Normalized();
+    m_EditorRefCamera->up = Vector3::Cross(m_EditorRefCamera->right, m_EditorRefCamera->front).Normalized();
 }
 
 void EditorCamera::EditorCameraMovement()
@@ -107,36 +95,13 @@ void EditorCamera::EditorCameraMovement()
 
 void EditorCamera::OnMiddleButton()
 {
-    using namespace XnorCore;
-    
     if (ImGui::IsMouseDown(ImGuiMouseButton_Middle))
     {
-        m_ComputeDeltaMouse = true;
-        const Vector3 vector = (m_EditorRefCamera->right * -m_MouseOffSet.x) + (m_EditorRefCamera->up * m_MouseOffSet.y);
-        m_EditorRefCamera->position += vector * Time::GetDeltaTime() * m_CameraSpeed;
+        const ImGuiIO& io = ImGui::GetIO();
+        
+        const Vector3 vector = m_EditorRefCamera->right * -io.MouseDelta.x + m_EditorRefCamera->up * -io.MouseDelta.y;
+        m_EditorRefCamera->position += vector * XnorCore::Time::GetDeltaTime() * m_CameraSpeed;
     }
-    
-    if (ImGui::IsMouseReleased(ImGuiMouseButton_Middle))
-    {
-        m_ResetDeltaMouse = true;
-    }
-}
-
-void EditorCamera::ComputeDeltaMouse()
-{
-    const Vector2 mousePos = XnorCore::Utils::FromImVec(ImGui::GetMousePos());
-    
-    if (!m_FirstMove)
-    {
-        m_LastInput.x = mousePos.x;
-        m_LastInput.y = mousePos.y;
-        m_FirstMove = true;
-    } 
-    
-    m_MouseOffSet.x = m_LastInput.x - mousePos.x  ;
-    m_MouseOffSet.y =  mousePos.y -  m_LastInput.y; 
-    m_LastInput.x = mousePos.x;
-    m_LastInput.y = mousePos.y;
 }
 
 void EditorCamera::OnPressGoToObject()
@@ -158,8 +123,6 @@ void EditorCamera::OnPressGoToObject()
     const XnorCore::MeshRenderer* meshRenderer = currentEntiy.GetComponent<XnorCore::MeshRenderer>();
     m_ObjectPos = currentEntiy.transform.GetPosition();
     m_EditorRefCamera->LookAt(m_ObjectPos);
-    m_ResetDeltaMouse = true;
-    
     
     if (meshRenderer == nullptr)
     {
@@ -176,7 +139,6 @@ void EditorCamera::OnPressGoToObject()
     }
     
     m_EditorRef->data.gotoObject = true;
-
 }
 
 void EditorCamera::GoToObject()

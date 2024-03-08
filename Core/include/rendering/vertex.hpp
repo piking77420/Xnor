@@ -9,6 +9,8 @@
 
 BEGIN_XNOR_CORE
 
+/// @brief Vertex containing a position, a normal, texture coordinates, a tangent and a bi-tangent.
+/// 
 /// @see <a href="https://en.wikipedia.org/wiki/Vertex_(computer_graphics)">Vertex Wikipedia page</a>
 struct Vertex
 {

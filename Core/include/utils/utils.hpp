@@ -157,7 +157,7 @@ namespace Utils
     /// @brief Opens the specified path in the file explorer
     /// @param path File system path
     /// @param isFile Whether path is a file or a directory
-    XNOR_ENGINE void OpenInExplorer(const std::filesystem::path& path, bool isFile);
+    XNOR_ENGINE void OpenInExplorer(const std::filesystem::path& path, bool_t isFile);
 
     /// @brief Opens the specified file on the user's computer
     /// @param file File

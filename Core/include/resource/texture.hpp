@@ -20,7 +20,7 @@ public:
     /// @brief Options for loading the data of a Texture.
     ///
     /// @see Texture::loadData
-    struct LoadData
+    struct LoadOptions
     {
         int32_t desiredChannels = 0;
         bool_t flipVertically = false;
@@ -45,7 +45,7 @@ public:
     /// @brief Options to use when loading this Texture.
     ///
     /// This doesn't affect an already-loaded Texture. If necessary, change these settings and then call Texture::Reload for the changes to take effect.
-    LoadData loadData;
+    LoadOptions loadData;
     
     // Same constructor from base class
     using Resource::Resource;

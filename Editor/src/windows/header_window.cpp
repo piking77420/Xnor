@@ -17,7 +17,7 @@ HeaderWindow::HeaderWindow(Editor* editor)
     m_PauseButton =  ResourceManager::Get<Texture>("assets_internal/editor/pause_button.png");
     m_PlayButton = ResourceManager::Get<Texture>("assets_internal/editor/play_button.png");
     m_StopButton = ResourceManager::Get<Texture>("assets_internal/editor/stop_button.png");
-    window_flags = ImGuiWindowFlags_NoScrollbar;
+    windowFlags = ImGuiWindowFlags_NoScrollbar;
 }
 
 void HeaderWindow::Display()

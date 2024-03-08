@@ -148,7 +148,7 @@ public:
 	/// @param textureFormat Texture format
 	/// @param textureInternalFormat Texture internal format
 	/// @param output Output pointer
-	XNOR_ENGINE static void GetPixelFromAttachement(uint32_t attachmentIndex, Vector2i position, TextureFormat textureFormat, TextureInternalFormat textureInternalFormat, void* output);
+	XNOR_ENGINE static void GetPixelFromAttachement(uint32_t attachmentIndex, Vector2i position, TextureFormat textureFormat, DataType dataType, void* output);
 
 	/// @brief Swaps the front and back buffer
 	XNOR_ENGINE static void SwapBuffers();
@@ -245,7 +245,7 @@ private:
 		uint32_t type,
 		uint32_t id,
 		uint32_t severity,
-		size_t length,
+		int32_t length,
 		const char_t* message,
 		const void* userParam
 	);

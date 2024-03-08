@@ -13,23 +13,29 @@ void LightManager::InitResources()
 	m_DirLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/dirlight_icon.png");
 	m_PointLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/point_light.png");
 	m_SpotLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/spot_light.png");
-	m_EditorUi = ResourceManager::Get<Shader>("editorui_shader");
-	m_EditorUi->SetBlendFunction({true,BlendValue::SrcAlpha,BlendValue::OneMinusSrcAlpha});
+	m_EditorUi = ResourceManager::Get<Shader>("editor_ui_shader");
+
+	constexpr BlendFunction blendFunction = {
+		.isBlending = true,
+		.sValue = BlendValue::SrcAlpha,
+		.dValue = BlendValue::OneMinusSrcAlpha
+	};
+	
+	m_EditorUi->SetBlendFunction(blendFunction);
 	m_EditorUi->CreateInRhi();
 	m_EditorUi->SetInt("uiTexture",0);
 	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
-	
 }
 
-void LightManager::UpdateLight(const std::vector<const PointLight*>& pointLightComponents,
-                              const std::vector<const SpotLight*>& spotLightsComponents,
-                              const std::vector<const DirectionalLight*>& directionalComponent) const
+void LightManager::UpdateLight(
+	const std::vector<const PointLight*>& pointLightComponents,
+	const std::vector<const SpotLight*>& spotLightsComponents,
+	const std::vector<const DirectionalLight*>& directionalComponent
+) const
 {
     if (directionalComponent.size() > MaxDirectionalLights)
-	{
 		Logger::LogWarning("You cannot have more than 1 directional light in the scene");
-	}
-	
+
 	GpuLightData gpuLightData
 	{
 		.nbrOfPointLight = static_cast<uint32_t>(pointLightComponents.size()),
@@ -58,7 +64,7 @@ void LightManager::UpdateLight(const std::vector<const PointLight*>& pointLightC
 	{
 		const SpotLight* spotLight = spotLightsComponents[i];
 		const Matrix matrix = Matrix::Trs(Vector3(0.f), spotLight->entity->transform.GetRotation().Normalized(), Vector3(1.f));
-		const Vector4 direction = matrix * (-Vector4::UnitY());
+		const Vector4 direction = matrix * -Vector4::UnitY();
 		
 		gpuLightData.spotLightData[i] =
 		{
@@ -90,9 +96,12 @@ void LightManager::UpdateLight(const std::vector<const PointLight*>& pointLightC
 	Rhi::UpdateLight(gpuLightData);
 }
 
-void LightManager::DrawLightGizmo(const std::vector<const PointLight*>& pointLightComponents,
+void LightManager::DrawLightGizmo(
+	const std::vector<const PointLight*>& pointLightComponents,
 	const std::vector<const SpotLight*>& spotLightsComponents,
-	const std::vector<const DirectionalLight*>& directionalComponent, const Camera& camera) const
+	const std::vector<const DirectionalLight*>& directionalComponent,
+	const Camera& camera
+) const
 {
 	std::map<float_t, GizmoLight> sortedLight;
 	
@@ -130,21 +139,18 @@ void LightManager::DrawLightGizmo(const std::vector<const PointLight*>& pointLig
 	}
 	
 	m_EditorUi->Use();
-	// ReSharper disable once CppDiscardedPostfixOperatorResult
-	for (std::map<float_t,GizmoLight>::reverse_iterator it = sortedLight.rbegin(); it != sortedLight.rend(); it++)
+	for (decltype(sortedLight)::reverse_iterator it = sortedLight.rbegin(); it != sortedLight.rend(); it++)
 	{
 		ModelUniformData modelData;
 		float_t scaleScalar = m_ScaleFactor;
-		
+
 		float_t distance = (it->second.pos - camera.position).SquaredLength();
-		if(distance < m_MinDistance * m_MinDistance)
-		{
-			scaleScalar = scaleScalar * (1.f/distance) * (1.f/distance);
-		}
-		
-		scaleScalar = std::clamp(scaleScalar,m_MaxScalarFactor,m_MinScalarFactor);
+		if (distance < m_MinDistance * m_MinDistance)
+			scaleScalar = scaleScalar * (1.f / distance) * (1.f / distance);
+
+		scaleScalar = std::clamp(scaleScalar, m_MaxScalarFactor, m_MinScalarFactor);
 		Matrix scale = Matrix::Scaling(Vector3(scaleScalar));
-		modelData.model = (scale * Matrix::LookAt(it->second.pos,camera.position,Vector3::UnitY())).Inverted();
+		modelData.model = (scale * Matrix::LookAt(it->second.pos, camera.position, Vector3::UnitY())).Inverted();
 		modelData.normalInvertMatrix = Matrix::Identity();
 
 		switch (it->second.type)
@@ -164,7 +170,7 @@ void LightManager::DrawLightGizmo(const std::vector<const PointLight*>& pointLig
 		
 		Rhi::UpdateModelUniform(modelData);
 		Rhi::DrawModel(m_Quad->GetId());
-
 	}
+
 	m_EditorUi->Unuse();
 }

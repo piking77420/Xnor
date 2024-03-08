@@ -13,6 +13,7 @@
 
 /// @file renderer.hpp
 /// @brief Defines the XnorCore::Renderer class
+
 BEGIN_XNOR_CORE
 
 class DirectionalLight;
@@ -39,7 +40,7 @@ public:
     XNOR_ENGINE void Initialize();
 
     /// @brief Shutdowns the renderer
-    XNOR_ENGINE void Shutdown();
+    XNOR_ENGINE void Shutdown() const;
 
     /// @brief Renders the current scene
     /// @param rendererContext Renderer context
@@ -61,14 +62,12 @@ public:
 
 private:
     LightManager m_LightManager;
-    Texture* m_MeshRendersIndexAttachement = nullptr;
     
     FrameBuffer* m_GframeBuffer = nullptr;
     // Deferred attachment GBuffers
     Texture* m_PositionAtttachment = nullptr;
     Texture* m_NormalAttachement = nullptr;
     Texture* m_AlbedoAttachment = nullptr;
-
     
     Texture* m_DepthGbufferAtttachment = nullptr;
     RenderPass m_GbufferPass;
@@ -93,9 +92,9 @@ private:
     ToneMapping m_ToneMapping;
     SkyboxRenderer m_SkyboxRenderer;
 
-    XNOR_ENGINE void DefferedRendering(const std::vector<const MeshRenderer*>& meshrenderers,const RendererContext* rendererContext) const;
+    XNOR_ENGINE void DefferedRendering(const std::vector<const MeshRenderer*>& meshrenderers, const RendererContext* rendererContext) const;
 
-    XNOR_ENGINE void ForwardRendering(const std::vector<const MeshRenderer*>& meshrenderers,const RendererContext* rendererContext) const;
+    XNOR_ENGINE void ForwardRendering(const std::vector<const MeshRenderer*>& meshrenderers, const RendererContext* rendererContext) const;
     
     XNOR_ENGINE void InitResources();
     
@@ -105,7 +104,7 @@ private:
     
     XNOR_ENGINE void DestroyAttachment() const;
 
-    XNOR_ENGINE void DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers,MaterialType materialtype) const;
+    XNOR_ENGINE void DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers, MaterialType materialtype) const;
     
     XNOR_ENGINE void DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) const;
 
@@ -114,7 +113,6 @@ private:
     XNOR_ENGINE uint32_t FetchDrawIndexToGpu(uint32_t meshRenderIndex) const;
 
     //XNOR_ENGINE uint32_t GetMeshRenderIndexFromGpu(uint32_t meshRenderIndex) const;
-    
 };
 
 END_XNOR_CORE

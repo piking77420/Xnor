@@ -83,7 +83,7 @@ void Input::HandleMouseButton(GLFWwindow*, const int32_t mouseButton, const int3
 
 void Input::MouseCursorPos(GLFWwindow*, const double_t xpos, const double_t ypos)
 {
-    m_MousePos = Vector2(static_cast<float_t>(xpos), static_cast<float_t>(ypos));
+    m_MousePosition = Vector2(static_cast<float_t>(xpos), static_cast<float_t>(ypos));
 }
 
 void Input::HandleJoyStickCallBack(const int32_t jid, const int32_t event)
@@ -179,7 +179,7 @@ void Input::CheckGamepadAtLaunch()
     }
 }
 
-void Input::Reset()
+void Input::Update()
 {
     for (auto& button : m_Mouse)
     {
@@ -202,9 +202,12 @@ void Input::Reset()
             button.at(static_cast<uint8_t>(GamepadButtonStatus::Release)) = false;
         }
     }
+
+    m_MouseDelta = m_MousePosition - m_LastMousePosition;
+
+    if (mouseLocked)
+        m_MousePosition -= m_MouseDelta;
 }
-
-
 
 void Input::Initialize()
 {
@@ -225,4 +228,3 @@ void Input::Initialize()
 
     CheckGamepadAtLaunch();
 }
-
