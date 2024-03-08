@@ -150,12 +150,12 @@ void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name, [[maybe_unu
         if (ImGui::Button("+"))
         {
             m_ResourceFilterTarget = static_cast<void*>(obj);
-            m_ResourceFilterName.Clear();
+            m_TextFilter.Clear();
         }
 
         if (m_ResourceFilterTarget == static_cast<void*>(obj))
         {
-            XnorCore::Pointer<PtrT> res = FilterResources<PtrT>(m_ResourceFilterName);
+            XnorCore::Pointer<PtrT> res = FilterResources<PtrT>(m_TextFilter);
             if (res)
             {
                 *obj = res;
@@ -179,9 +179,9 @@ void Inspector::DisplayRawPointer(MemberT* obj, const char_t* name, [[maybe_unus
         ImGui::SameLine();
 
         if (*obj != nullptr)
-            ImGui::Selectable((*obj)->name.c_str());
+            ImGui::Text("%s", (*obj)->name.c_str());
         else
-            ImGui::Selectable("nullptr");
+            ImGui::Text("nullptr");
 
         if (ImGui::BeginDragDropTarget())
         {
@@ -196,6 +196,24 @@ void Inspector::DisplayRawPointer(MemberT* obj, const char_t* name, [[maybe_unus
             }
             
             ImGui::EndDragDropTarget();
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("+"))
+        {
+            m_EntityFilterTarget = static_cast<void*>(obj);
+            m_TextFilter.Clear();
+        }
+
+        if (m_EntityFilterTarget == static_cast<void*>(obj))
+        {
+            XnorCore::Entity* e = FilterEntity(m_TextFilter);
+            if (e)
+            {
+                *obj = e;
+                m_EntityFilterTarget = nullptr;
+            }
         }
     }
 }
@@ -517,6 +535,31 @@ XnorCore::Pointer<T> Inspector::FilterResources(ImGuiTextFilter& filter)
     
     ImGui::EndPopup();
     return r;
+}
+
+inline XnorCore::Entity* Inspector::FilterEntity(ImGuiTextFilter& filter)
+{
+    ImGui::OpenPopup("Entity");
+
+    if (!ImGui::BeginPopupModal("Entity"))
+        return nullptr;
+
+    filter.Draw();
+    const XnorCore::List<XnorCore::Entity*>& entities = XnorCore::World::scene.GetEntities();
+
+    XnorCore::Entity* e = nullptr;
+    for (size_t i = 0; i < entities.GetSize(); i++)
+    {
+        const char_t* const name = entities[i]->name.c_str();
+        if (filter.PassFilter(name) && ImGui::Selectable(name))
+        {
+            e = entities[i];
+            break;
+        }
+    }
+    
+    ImGui::EndPopup();
+    return e;
 }
 
 END_XNOR_EDITOR
