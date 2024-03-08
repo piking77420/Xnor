@@ -157,6 +157,19 @@ namespace Utils
     /// @brief Opens the specified file on the user's computer
     /// @param filepath File system path
     XNOR_ENGINE void OpenFile(const std::filesystem::path& filepath);
+
+    /// @brief Returns whether an array contains an element
+    template <std::ranges::input_range Container, typename T>
+    [[nodiscard]]
+    bool_t ArrayContains(Container container, T element);
+
+    /// @brief Returns whether a string array contains an element using Utils::StringEqualsIgnoreCase.
+    template <std::ranges::input_range Container>
+    [[nodiscard]]
+    bool_t StringArrayContains(Container container, const std::string& element);
+
+    /// @brief Checks if two strings are equal, case-insensitive.
+    XNOR_ENGINE bool_t StringEqualsIgnoreCase(const std::string& a, const std::string& b);
 }
 
 END_XNOR_CORE

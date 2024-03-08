@@ -156,3 +156,14 @@ void Utils::OpenFile(const std::filesystem::path& filepath)
     command += absolute(filepath).string();
     std::system(command.c_str());  // NOLINT(concurrency-mt-unsafe)
 }
+
+bool_t Utils::StringEqualsIgnoreCase(const std::string& a, const std::string& b)
+{
+    return std::ranges::equal(
+        a, b,
+        [] (const char_t& aa, const char_t& bb)
+        {
+            return std::tolower(aa) == std::tolower(bb);
+        }
+    );
+}

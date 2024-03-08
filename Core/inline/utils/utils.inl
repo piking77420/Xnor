@@ -54,7 +54,7 @@ size_t Utils::GetTypeHash()
 }
 
 template <typename T>
-size_t Utils::GetTypeHash(const T* const ptr)
+size_t Utils::GetTypeHash([[maybe_unused]] const T* const ptr)
 {
     return typeid(*ptr).hash_code();
 }
@@ -69,6 +69,24 @@ Pointer<T> Utils::DynamicPointerCast(const Pointer<U>& value)
         return Pointer<T>(value, value.GetIsStrongReference());
 
     return nullptr;
+}
+
+template <std::ranges::input_range Container, typename T>
+bool_t Utils::ArrayContains(Container container, T element)
+{
+    return std::ranges::find(container, element) != container.end();
+}
+
+template <std::ranges::input_range Container>
+bool_t Utils::StringArrayContains(Container container, const std::string& element)
+{
+    for (const std::string& elem : container)
+    {
+        if (StringEqualsIgnoreCase(elem, element))
+            return true;
+    }
+
+    return false;
 }
 
 END_XNOR_CORE

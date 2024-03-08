@@ -1,8 +1,13 @@
 #include "file/file.hpp"
 
 #include <fstream>
+#include <ranges>
 
+#include "resource/font.hpp"
+#include "resource/model.hpp"
 #include "resource/resource.hpp"
+#include "resource/shader.hpp"
+#include "resource/texture.hpp"
 #include "utils/formatter.hpp"
 #include "utils/logger.hpp"
 
@@ -52,6 +57,11 @@ void File::Unload()
     m_Loaded = false;
 }
 
+File::Type File::GetType() const
+{
+    return m_Type;
+}
+
 std::string File::GetNameNoExtension() const
 {
     return m_NameNoExtension;
@@ -85,4 +95,22 @@ void File::UpdateUtilityValues()
     
     m_NameNoExtension = m_Path.stem().generic_string();
     m_Extension = m_Path.extension().string();
+
+    // Update file type from extension
+    if (Utils::StringArrayContains(Texture::FileExtensions, m_Extension))
+        m_Type = Type::Texture;
+    if (Utils::StringArrayContains(Model::FileExtensions, m_Extension))
+        m_Type = Type::Model;
+    if (Utils::StringArrayContains(Font::FileExtensions, m_Extension))
+        m_Type = Type::Font;
+    if (Utils::StringEqualsIgnoreCase(m_Extension, ".xml"))
+        m_Type = Type::Xml;
+    if (Utils::StringArrayContains(Shader::VertexFileExtensions, m_Extension))
+        m_Type = Type::VertexShader;
+    if (Utils::StringArrayContains(Shader::FragmentFileExtensions, m_Extension))
+        m_Type = Type::FragmentShader;
+    if (Utils::StringArrayContains(Shader::GeometryFileExtensions, m_Extension))
+        m_Type = Type::GeometryShader;
+    if (Utils::StringArrayContains(Shader::ComputeFileExtensions, m_Extension))
+        m_Type = Type::ComputeShader;
 }

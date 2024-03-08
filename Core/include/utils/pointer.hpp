@@ -261,3 +261,14 @@ struct std::formatter<XnorCore::Pointer<T>>  // NOLINT(cert-dcl58-cpp)
         return std::ranges::copy(std::move(out).str(), ctx.out()).out;
     }
 };
+
+template<typename T>
+struct std::hash<XnorCore::Pointer<T>>  // NOLINT(cert-dcl58-cpp)
+{
+    std::size_t operator()(const XnorCore::Pointer<T>& p) const noexcept
+    {
+        const std::size_t h1 = std::hash<decltype(p.GetReferenceCounter())>{}(const_cast<decltype(p.GetReferenceCounter())>(p.GetReferenceCounter()));
+        const std::size_t h2 = std::hash<bool_t>{}(p.GetIsStrongReference());
+        return h1 ^ (h2 << 1);
+    }
+};

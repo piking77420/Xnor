@@ -39,10 +39,14 @@ private:
 
     XnorCore::Pointer<XnorCore::Texture> m_DirectoryTexture;
     // Texture used to display unknown file types
-    XnorCore::Pointer<XnorCore::Texture> m_FileTexture;
+    XnorCore::Pointer<XnorCore::Texture> m_UnknownFileTexture;
+    XnorCore::Pointer<XnorCore::Texture> m_TextureFileTexture;
+    XnorCore::Pointer<XnorCore::Texture> m_ModelFileTexture;
+    XnorCore::Pointer<XnorCore::Texture> m_FontFileTexture;
+    XnorCore::Pointer<XnorCore::Texture> m_XmlFileTexture;
 
     // ResourceManager textures stored here for faster lookup
-    //std::unordered_map<XnorCore::Pointer<XnorCore::File>, XnorCore::Pointer<XnorCore::Texture>> m_TextureFileCache;
+    std::unordered_map<XnorCore::Pointer<XnorCore::File>, XnorCore::Pointer<XnorCore::Texture>> m_FileTextureCache;
 
     void DisplayDirectoryHierarchy(const XnorCore::Pointer<XnorCore::Entry>& entry);
 

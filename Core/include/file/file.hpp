@@ -18,6 +18,20 @@ BEGIN_XNOR_CORE
 class File : public Entry
 {
 public:
+    /// @brief Type of file according to file extension.
+    enum class Type
+    {
+        Unknown,
+        Texture,
+        Model,
+        Font,
+        Xml,
+        VertexShader,
+        FragmentShader,
+        GeometryShader,
+        ComputeShader
+    };
+    
     /// @brief Constructs a File corresponding to the given @p path.
     [[nodiscard]]
     XNOR_ENGINE explicit File(std::filesystem::path&& filepath);
@@ -34,6 +48,9 @@ public:
 
     /// @brief Unloads the contents of this File.
     XNOR_ENGINE void Unload() override;
+
+    /// @brief Returns the Type of this File.
+    XNOR_ENGINE Type GetType() const;
 
     /// @brief Returns the name of this File without the file extension.
     [[nodiscard]]
@@ -73,6 +90,7 @@ protected:
 private:
     std::string m_NameNoExtension;
     std::string m_Extension;
+    Type m_Type = Type::Unknown;
     
     int8_t* m_Data = nullptr;
     int64_t m_Size = 0;

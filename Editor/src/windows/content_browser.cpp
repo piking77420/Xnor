@@ -25,8 +25,12 @@ ContentBrowser::ContentBrowser(Editor* editor, XnorCore::Pointer<XnorCore::Direc
     , m_RootDirectory(std::move(rootDirectory))
     , m_CurrentDirectory(m_RootDirectory)
 {
-    m_FileTexture = XnorCore::ResourceManager::Get<XnorCore::Texture>(ASSETS_PATH "file.png");
+    m_UnknownFileTexture = XnorCore::ResourceManager::Get<XnorCore::Texture>(ASSETS_PATH "file.png");
     m_DirectoryTexture = XnorCore::ResourceManager::Get<XnorCore::Texture>(ASSETS_PATH "directory.png");
+    m_TextureFileTexture = XnorCore::ResourceManager::Get<XnorCore::Texture>(ASSETS_PATH "texture_file.png");
+    m_ModelFileTexture = XnorCore::ResourceManager::Get<XnorCore::Texture>(ASSETS_PATH "model_file.png");
+    m_FontFileTexture = XnorCore::ResourceManager::Get<XnorCore::Texture>(ASSETS_PATH "font_file.png");
+    m_XmlFileTexture = XnorCore::ResourceManager::Get<XnorCore::Texture>(ASSETS_PATH "xml_file.png");
 }
 
 void ContentBrowser::Display()
@@ -60,11 +64,46 @@ void ContentBrowser::Display()
 
     for (const XnorCore::Pointer<XnorCore::File>& file : m_CurrentDirectory->GetChildFiles())
     {
-        XnorCore::Pointer<XnorCore::Resource>&& correspondingResource = XnorCore::ResourceManager::Contains(file) ? file->GetResource() : nullptr;
-        XnorCore::Pointer<XnorCore::Texture>&& correspondingTexture = XnorCore::Utils::DynamicPointerCast<XnorCore::Texture>(correspondingResource);
+        XnorCore::Pointer<XnorCore::Texture> correspondingTexture;
+        if (m_FileTextureCache.contains(file))
+        {
+            correspondingTexture = m_FileTextureCache.at(file);
+        }
+        else
+        {
+            switch (file->GetType())  // NOLINT(clang-diagnostic-switch-enum)
+            {
+                case XnorCore::File::Type::Texture:
+                    {
+                        XnorCore::Pointer<XnorCore::Resource>&& correspondingResource = XnorCore::ResourceManager::Contains(file) ? file->GetResource() : nullptr;
+                    
+                        if (correspondingResource)
+                            correspondingTexture = XnorCore::Utils::DynamicPointerCast<XnorCore::Texture>(correspondingResource);
+                    }
+                    break;
+                
+                case XnorCore::File::Type::Model:
+                    correspondingTexture = m_ModelFileTexture;
+                    break;
+                
+                case XnorCore::File::Type::Font:
+                    correspondingTexture = m_FontFileTexture;
+                    break;
+                
+                case XnorCore::File::Type::Xml:
+                    correspondingTexture = m_XmlFileTexture;
+                    break;
+                
+                default:
+                    break;
+            }
+
+            if (correspondingTexture)
+                m_FileTextureCache.emplace(file, correspondingTexture);
+        }
 
         if (!correspondingTexture)
-            correspondingTexture = m_FileTexture;
+            correspondingTexture = m_UnknownFileTexture;
         
         bool_t hovered = false, clicked = false;
         DisplayEntry(static_cast<XnorCore::Pointer<XnorCore::Entry>>(file), correspondingTexture, &hovered, &clicked);
