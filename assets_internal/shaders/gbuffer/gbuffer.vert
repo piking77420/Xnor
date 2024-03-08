@@ -1,13 +1,11 @@
 #version 460 core
-#extension GL_ARB_shading_language_include : require
 
 
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
 layout (location = 3) in vec3 aTangent;
-layout (location = 4) in vec3 aBitangent;  
-
+layout (location = 4) in vec3 aBitangent;
 
 layout (std140, binding = 0) uniform CameraUniform
 {
@@ -19,6 +17,7 @@ layout (std140, binding = 1) uniform ModelUniform
 {
     mat4 model;
     mat4 normalInvertMatrix;
+    uint drawId;
 };
 
 layout (std140 , binding = 4) uniform MaterialDataUniform
@@ -33,6 +32,7 @@ out VS_OUT {
     vec3 Normal;
     vec2 TexCoords; 
     mat3 TBN;
+    flat uint drawId;
 } vs_out;
 
 
@@ -57,4 +57,6 @@ void main()
        vec3 N = normalize(vec3(model * vec4(aNormal,    0.0f)));
        vs_out.TBN =  mat3(T, B, N);
     }
+
+    vs_out.drawId = drawId;
 }

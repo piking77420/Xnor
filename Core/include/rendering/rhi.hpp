@@ -13,6 +13,8 @@
 /// @file rhi.hpp
 /// Defines the XnorCore::Rhi static class
 
+
+
 BEGIN_XNOR_CORE
 
 /// @brief Stands for Render Hardware Interface, provides a set of functions that interface between the application and the rendering API

@@ -4,6 +4,8 @@
 layout (location = 0) out vec3 gPosition;
 layout (location = 1) out vec3 gNormal;
 layout (location = 2) out vec4 gAlbedoSpec;
+layout (location = 3) out float gMeshRenderIndex;
+
 
 struct Material
 {
@@ -23,6 +25,7 @@ in VS_OUT {
     vec3 Normal;
     vec2 TexCoords;
     mat3 TBN;
+    flat uint drawId;
 } fs_in;    
 
 
@@ -46,4 +49,5 @@ void main()
     }   
 
     gAlbedoSpec.rgb = texture(material.albedo, fs_in.TexCoords).rgb;
+    gMeshRenderIndex = float(fs_in.drawId);
 }

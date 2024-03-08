@@ -107,6 +107,7 @@ void Renderer::SwapBuffers()
 void Renderer::OnResize(const Vector2i windowSize)
 {
 	DestroyAttachment();
+	m_MeshRendersIndexAttachement = new Texture(TextureInternalFormat::R32F,windowSize);
 	m_ToneMapping.OnResizeWindow(windowSize);
 	InitDefferedRenderingAttachment(windowSize);
 	InitForwardRenderingAttachment(windowSize);
@@ -114,6 +115,7 @@ void Renderer::OnResize(const Vector2i windowSize)
 
 void Renderer::PrepareRendering(const Vector2i windowSize)
 {
+	m_MeshRendersIndexAttachement = new Texture(TextureInternalFormat::R32F,windowSize);
 	InitDefferedRenderingAttachment(windowSize);
 	InitForwardRenderingAttachment(windowSize);
 	m_ToneMapping.Prepare(windowSize);
@@ -123,15 +125,18 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 {
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 
-	for (const MeshRenderer* meshRenderer : meshRenderers)
+	
+	for (uint32_t i = 0; i < meshRenderers.size(); i++)
 	{
+		const MeshRenderer* meshRenderer =  meshRenderers[i];
+		
 		if (meshRenderer->material.materialType != materialtype)
 			continue;
 		
 		Transform& transform = meshRenderer->entity->transform;
 		ModelUniformData modelData;
-
 		modelData.model = transform.worldMatrix;
+		modelData.meshRenderIndex = FetchDrawIndexToGpu(i);
 		
 		try
 		{
@@ -170,6 +175,9 @@ void Renderer::InitDefferedRenderingAttachment(const Vector2i windowSize)
 	const std::vector<RenderTargetInfo> attachementsType =
 	{
 		{
+			.attachment = Attachment::Color00
+		},
+		{
 			.attachment = Attachment::Color01
 		},
 		{
@@ -186,7 +194,7 @@ void Renderer::InitDefferedRenderingAttachment(const Vector2i windowSize)
 	// Set Up renderPass
 	const RenderPass renderPass(attachementsType);
 
-	const std::vector<const Texture*> targets = { m_PositionAtttachment, m_NormalAttachement, m_AlbedoAttachment, m_DepthGbufferAtttachment};
+	const std::vector<const Texture*> targets = { m_PositionAtttachment, m_NormalAttachement, m_AlbedoAttachment,m_MeshRendersIndexAttachement, m_DepthGbufferAtttachment};
 	m_GframeBuffer->Create(renderPass, targets);
 	
 	// Init gbuffer Texture
@@ -210,8 +218,8 @@ void Renderer::InitForwardRenderingAttachment(const Vector2i windowSize)
 	const std::vector<RenderTargetInfo> attachementsType =
 	{
 		{
-			.attachment = Attachment::Color01,
-		},	
+			.attachment = Attachment::Color00,
+		},
 		{
 			.attachment = Attachment::Depth,
 		}
@@ -229,7 +237,8 @@ void Renderer::DestroyAttachment() const
 	delete m_PositionAtttachment;
 	delete m_AlbedoAttachment;
 	delete m_NormalAttachement;
-	delete m_DepthGbufferAtttachment; 
+	delete m_DepthGbufferAtttachment;
+	delete m_MeshRendersIndexAttachement;
 	
 	delete m_RenderBuffer;
 	delete m_DepthAttachment;
@@ -313,8 +322,11 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Line);
 	ModelUniformData modelData;
 
-	for (const MeshRenderer* meshRenderer : meshRenderers)
+	for (uint32_t i = 0; i < meshRenderers.size(); i++)
 	{
+		const MeshRenderer* meshRenderer = meshRenderers[i];
+		modelData.meshRenderIndex = FetchDrawIndexToGpu(i);
+		
 		if (!meshRenderer->model.IsValid())
 			continue;
 
@@ -353,4 +365,11 @@ void Renderer::RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRende
 		Rhi::UpdateModelUniform(data);
 		Rhi::DrawModel(mesh->model->GetId());
 	}
+}
+
+// We just adding one to avoid that the base color of the attachement is a valid id
+// black is zero
+uint32_t Renderer::FetchDrawIndexToGpu(uint32_t meshRenderIndex) const
+{
+	return meshRenderIndex + 1;
 }

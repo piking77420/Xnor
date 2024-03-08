@@ -1,5 +1,5 @@
 #include "rendering/rhi.hpp"
-
+#include<GLFW/glfw3native.h>
 #include <glad/glad.h>
 
 #include "window.hpp"
@@ -8,6 +8,8 @@
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
+
+
 
 void Rhi::SetPolygonMode(const PolygonFace face, const PolygonMode mode)
 {
@@ -461,10 +463,26 @@ uint32_t Rhi::CreateFrameBuffer(const RenderPass& renderPass, const std::vector<
 		GLenum openglAttachment = 0 ;
 		switch (renderTargetInfos[i].attachment)
 		{
+			case Attachment::Color00:
 			case Attachment::Color01:
 			case Attachment::Color02:
 			case Attachment::Color03:
 			case Attachment::Color04:
+			case Attachment::Color05:
+			case Attachment::Color06:
+			case Attachment::Color07:
+			case Attachment::Color08:
+			case Attachment::Color09:
+			case Attachment::Color10:
+			case Attachment::Color11:
+			case Attachment::Color12:
+			case Attachment::Color13:
+			case Attachment::Color14:
+			case Attachment::Color15:
+			case Attachment::Color16:
+			case Attachment::Color17:
+			case Attachment::Color18:
+			case Attachment::Color19:
 				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
 				openglAttachmentsdraw.push_back(openglAttachment);
 				break;
@@ -672,6 +690,12 @@ uint32_t Rhi::GetOpenglInternalFormat(const TextureInternalFormat textureFormat)
 		case TextureInternalFormat::Rgba16F:
 			return GL_RGBA16F;
 
+		case TextureInternalFormat::R32F:
+			return GL_R32F;
+		
+		case TextureInternalFormat::R32UI:
+			return GL_R32UI;
+
 		case TextureInternalFormat::DepthComponent16:
 			return GL_DEPTH_COMPONENT16;
 		
@@ -863,13 +887,15 @@ void Rhi::OpenglDebugCallBack(const uint32_t source, const uint32_t type, const 
 
 void Rhi::Initialize()
 {
+
+	
 	gladLoadGL();
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glDepthFunc(GL_LESS);
-	glEnable(GL_STENCIL_TEST);    
- 
-	
+	glEnable(GL_STENCIL_TEST);
+
+
 #ifdef _DEBUG
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 

@@ -137,6 +137,8 @@ enum class TextureInternalFormat
 	Rg16F,
 	Rgb16F,
 	Rgba16F,
+	R32F,
+	R32UI,
 	DepthComponent16,
 	DepthComponent24,
 	DepthComponent32,
@@ -163,6 +165,8 @@ enum class TextureFormat
 /// @brief %Framebuffer %attachment
 enum class Attachment
 {
+	/// @brief Color attachment 0
+	Color00,
 	/// @brief Color attachment 1
 	Color01,
 	/// @brief Color attachment 2
@@ -171,6 +175,36 @@ enum class Attachment
 	Color03,
 	/// @brief Color attachment 4
 	Color04,
+	/// @brief Color attachment 5
+	Color05,
+	/// @brief Color attachment 6
+	Color06,
+	/// @brief Color attachment 7
+	Color07,
+	/// @brief Color attachment 8
+	Color08,
+	/// @brief Color attachment 9
+	Color09,
+	/// @brief Color attachment 10
+	Color10,
+	/// @brief Color attachment 11
+	Color11,
+	/// @brief Color attachment 12
+	Color12,
+	/// @brief Color attachment 13
+	Color13,
+	/// @brief Color attachment 14
+	Color14,
+	/// @brief Color attachment 15
+	Color15,
+	/// @brief Color attachment 16
+	Color16,
+	/// @brief Color attachment 17
+	Color17,
+	/// @brief Color attachment 18
+	Color18,
+	/// @brief Color attachment 19
+	Color19,
 	/// @brief Depth attachment
 	Depth,
 	/// @brief Stencil attachment
@@ -266,6 +300,8 @@ struct ModelUniformData
 	Matrix model = Matrix::Identity();
 	/// @brief Model matrix (inverted and transposed)
 	Matrix normalInvertMatrix = Matrix::Identity();
+
+	uint32_t meshRenderIndex = 0;
 };
 
 /// @brief Uniform type for Shader

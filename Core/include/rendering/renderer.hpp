@@ -61,6 +61,7 @@ public:
 
 private:
     LightManager m_LightManager;
+    Texture* m_MeshRendersIndexAttachement = nullptr;
     
     FrameBuffer* m_GframeBuffer = nullptr;
     // Deferred attachment GBuffers
@@ -109,6 +110,10 @@ private:
     XNOR_ENGINE void DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) const;
 
     XNOR_ENGINE void RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRenderers) const;
+
+    XNOR_ENGINE uint32_t FetchDrawIndexToGpu(uint32_t meshRenderIndex) const;
+
+    //XNOR_ENGINE uint32_t GetMeshRenderIndexFromGpu(uint32_t meshRenderIndex) const;
     
 };
 

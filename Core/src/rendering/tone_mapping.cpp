@@ -22,7 +22,7 @@ void ToneMapping::Prepare(const Vector2i windowSize)
     const std::vector<RenderTargetInfo> attachementsType =
     {
         {
-            .attachment = Attachment::Color01,
+            .attachment = Attachment::Color00,
         },
     };
     // Set Up renderPass

@@ -54,7 +54,7 @@ void RenderWindow::Initialize(Vector2i size)
     const std::vector<RenderTargetInfo> attachementsType =
     {
         {
-            Attachment::Color01
+            Attachment::Color00
         }
     };
    
