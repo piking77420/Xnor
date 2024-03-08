@@ -13,7 +13,7 @@
 BEGIN_XNOR_CORE
 
 /// @brief Material type
-enum class MaterialType
+enum class MaterialType : uint8_t
 {
     Opaque,
     Litt

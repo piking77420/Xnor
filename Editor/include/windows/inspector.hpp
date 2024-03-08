@@ -17,20 +17,28 @@ public:
     void Display() override;
 
 private:
+    enum InspectorFlags : size_t
+    {
+        None = 0 << 0,
+        EnumFlag = 1 << 0,
+    };
+    
     template <typename MemberT>
-    static void DisplayScalar(MemberT* obj, const char_t* name);
+    static void DisplayScalar(MemberT* obj, const char_t* name, size_t flags);
     template <typename MemberT>
-    static void DisplayMathType(MemberT* obj, const char_t* name);
+    static void DisplayMathType(MemberT* obj, const char_t* name, size_t flags);
     template <typename MemberT>
-    static void DisplayColorType(MemberT* obj, const char_t* name);
+    static void DisplayColorType(MemberT* obj, const char_t* name, size_t flags);
     template <typename MemberT>
-    static void DisplayRawPointer(MemberT* obj, const char_t* name);
+    static void DisplayRawPointer(MemberT* obj, const char_t* name, size_t flags);
     template <typename MemberT>
-    static void DisplayXnorPointer(MemberT* obj, const char_t* name);
+    static void DisplayXnorPointer(MemberT* obj, const char_t* name, size_t flags);
     template <typename MemberT>
-    static void DisplayPolyPointer(MemberT* obj, const char_t* name);
+    static void DisplayPolyPointer(MemberT* obj, const char_t* name, size_t flags);
     template <typename MemberT>
-    static void DisplayEnum(MemberT* obj, const char_t* name);
+    static void DisplayEnum(MemberT* obj, const char_t* name, size_t flags);
+    template <typename MemberT>
+    static void DisplayEnumFlag(MemberT* obj, const char_t* name, size_t flags);
 
     template <typename ReflectT>
     static void DisplayObject(ReflectT* obj, XnorCore::TypeDescriptor<ReflectT> desc);
@@ -39,19 +47,24 @@ private:
     static void DisplayObjectInternal(ReflectT* obj, DescriptorT member);
 
     template <typename MemberT>
-    static void DisplaySimpleType(MemberT* ptr, const char_t* name);
+    static void DisplaySimpleType(MemberT* ptr, const char_t* name, size_t flags);
 
     template <typename MemberT>
-    static void DisplayArray(MemberT* ptr, const char_t* name);
+    static void DisplayArray(MemberT* ptr, const char_t* name, size_t flags);
 
     template <typename MemberT>
-    static void DisplayList(MemberT* ptr, const char_t* name);
+    static void DisplayList(MemberT* ptr, const char_t* name, size_t flags);
+
+    template <typename MemberT, typename DescriptorT>
+    static constexpr size_t GetFlags(DescriptorT member);
+
 
     // TODO maybe move elsewhere
     template <XnorCore::ResourceT T>
-    static XnorCore::Pointer<T> FilterResources();
+    static XnorCore::Pointer<T> FilterResources(ImGuiTextFilter& filter);
 
     static inline void* m_ResourceFilterTarget = nullptr;
+    static inline ImGuiTextFilter m_ResourceFilterName;
 };
 
 END_XNOR_EDITOR

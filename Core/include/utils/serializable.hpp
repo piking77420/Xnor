@@ -68,6 +68,11 @@ struct NotifyChange : FieldAttribute
     constexpr explicit NotifyChange(const PtrType ptr) : pointer(ptr) {}
 };
 
+/// @brief Allows an enum to be treated as a list of binary flags
+struct EnumFlags : FieldAttribute
+{
+};
+
 /// @brief Enables serialization for a class
 ///
 /// A class that inherits from this class should implement either:

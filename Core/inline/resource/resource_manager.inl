@@ -124,7 +124,7 @@ template <ResourceT T>
 std::vector<Pointer<T>> ResourceManager::FindAll(std::function<bool_t(Pointer<T>)>&& predicate)
 {
     std::vector<Pointer<T>> result;
-    FindAll<T>(predicate, &result);
+    FindAll<T>(std::forward<decltype(predicate)>(predicate), &result);
     return result;
 }
 
@@ -132,16 +132,15 @@ template <ResourceT T>
 void ResourceManager::FindAll(std::function<bool_t(Pointer<T>)>&& predicate, std::vector<Pointer<T>>* result)
 {
     result->clear();
-    
-    for (const auto& val : m_Resources | std::views::values)
+
+    for (const Pointer<Resource>& val : m_Resources | std::views::values)
     {
-        Pointer<Resource> resource = val;
-        
-        if (Utils::DynamicPointerCast<T>(resource) && predicate(resource))
-            result->push_back(resource);
+        Pointer<T> r = Utils::DynamicPointerCast<T>(val);
+        if (r && predicate(r))
+            result->push_back(r);
     }
 }
-
+ 
 template <ResourceT T>
 bool_t ResourceManager::IsResourceOfType(const std::string& name)
 {

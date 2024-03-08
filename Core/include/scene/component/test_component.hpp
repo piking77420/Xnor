@@ -19,6 +19,16 @@ public:
     XNOR_ENGINE void Update() override;
     
 private:
+    enum TestEnum : size_t
+    {
+        None = 0 << 0,
+        One = 1 << 0,
+        Two = 1 << 1,
+        Four = 1 << 2,
+        Eight = 1 << 3,
+        Sixteen = 1 << 4,
+    };
+    
     float_t m_RotationSpeed = 1.0f;
     
     float_t m_Radius = 1.0f;
@@ -29,7 +39,9 @@ private:
     
     bool_t m_Rotate = true;
 
-    Entity* m_Test;
+    Entity* m_Test = nullptr;
+
+    TestEnum m_TestEnum = static_cast<TestEnum>(TestEnum::Four | TestEnum::Sixteen);
 };
 
 END_XNOR_CORE
@@ -40,5 +52,6 @@ REFL_AUTO(
     field(m_CurrentAngle),
     field(m_RotationSpeed),
     field(m_Radius),
-    field(m_Test)
+    field(m_Test),
+    field(m_TestEnum, XnorCore::EnumFlags())
 );

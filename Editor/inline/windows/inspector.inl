@@ -13,7 +13,7 @@
 BEGIN_XNOR_EDITOR
 
 template <typename MemberT>
-void Inspector::DisplayScalar(MemberT* const obj, const char_t* name)
+void Inspector::DisplayScalar(MemberT* const obj, const char_t* name, [[maybe_unused]] const size_t flags)
 {
     uint32_t type;
 
@@ -38,7 +38,7 @@ void Inspector::DisplayScalar(MemberT* const obj, const char_t* name)
 }
 
 template <typename MemberT>
-void Inspector::DisplayMathType(MemberT* const obj, const char_t* name)
+void Inspector::DisplayMathType(MemberT* const obj, const char_t* name, [[maybe_unused]] const size_t flags)
 {
     if constexpr (XnorCore::Meta::IsSame<MemberT, Vector2i>)
     {
@@ -66,7 +66,7 @@ void Inspector::DisplayMathType(MemberT* const obj, const char_t* name)
 }
 
 template <typename MemberT>
-void Inspector::DisplayColorType(MemberT* obj, const char_t* name)
+void Inspector::DisplayColorType(MemberT* obj, const char_t* name, [[maybe_unused]] const size_t flags)
 {
     if constexpr (XnorCore::Meta::IsSame<MemberT, XnorCore::ColorRgb>)
     {
@@ -93,7 +93,7 @@ void Inspector::DisplayColorType(MemberT* obj, const char_t* name)
 }
 
 template <typename MemberT>
-void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name)
+void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name, [[maybe_unused]] const size_t flags)
 {
     using PtrT = typename MemberT::Type;
 
@@ -106,9 +106,25 @@ void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name)
         ImGui::SameLine();
 
         if (*obj != nullptr)
-            ImGui::Text("%s", obj->Get()->GetName().c_str());
+        {
+            const std::string resName = obj->Get()->GetName();
+            // TODO clamp resource name
+            const float_t textSize = std::clamp<float_t>(ImGui::CalcTextSize(resName.c_str()).x, 0.f, 5.f);
+            ImGui::SetNextItemWidth(textSize);
+            ImGui::Text("%s", resName.c_str());
+        }
         else
+        {
             ImGui::Text("No resource");
+        }
+
+        if (ImGui::BeginPopupContextItem("RemoveResPopUp"))
+        {
+            if (ImGui::Selectable("Remove"))
+                *obj = nullptr;
+
+            ImGui::EndPopup();
+        }
 
         if (ImGui::BeginDragDropTarget())
         {
@@ -134,11 +150,12 @@ void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name)
         if (ImGui::Button("+"))
         {
             m_ResourceFilterTarget = static_cast<void*>(obj);
+            m_ResourceFilterName.Clear();
         }
 
         if (m_ResourceFilterTarget == static_cast<void*>(obj))
         {
-            XnorCore::Pointer<PtrT> res = FilterResources<PtrT>();
+            XnorCore::Pointer<PtrT> res = FilterResources<PtrT>(m_ResourceFilterName);
             if (res)
             {
                 *obj = res;
@@ -151,7 +168,7 @@ void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name)
 }
 
 template <typename MemberT>
-void Inspector::DisplayRawPointer(MemberT* obj, const char_t* name)
+void Inspector::DisplayRawPointer(MemberT* obj, const char_t* name, [[maybe_unused]] const size_t flags)
 {
     using TypeT = XnorCore::Meta::RemovePointerSpecifier<MemberT>;
 
@@ -190,7 +207,7 @@ DisplayObject<type>(obj->Cast<type>(), XnorCore::Reflection::GetTypeInfo<type>()
 }\
 
 template <typename MemberT>
-void Inspector::DisplayPolyPointer(MemberT* obj, const char_t* name)
+void Inspector::DisplayPolyPointer(MemberT* obj, const char_t* name, [[maybe_unused]] const size_t flags)
 {
     const size_t hash = obj->GetHash();
 
@@ -207,7 +224,7 @@ void Inspector::DisplayPolyPointer(MemberT* obj, const char_t* name)
 }
 
 template <typename MemberT>
-void Inspector::DisplayEnum(MemberT* obj, const char_t* name)
+void Inspector::DisplayEnum(MemberT* obj, const char_t* name, [[maybe_unused]] const size_t flags)
 {
     constexpr auto enumNames = magic_enum::enum_names<MemberT>();
     using NamesArrayT = decltype(enumNames);
@@ -219,6 +236,63 @@ void Inspector::DisplayEnum(MemberT* obj, const char_t* name)
     };
 
     ImGui::Combo(name, reinterpret_cast<int32_t*>(obj), getter, reinterpret_cast<void*>(const_cast<XnorCore::Meta::RemoveConstSpecifier<NamesArrayT>*>(&enumNames)), static_cast<int32_t>(enumNames.size()));
+}
+
+template <typename MemberT>
+void Inspector::DisplayEnumFlag(MemberT* obj, const char_t* name, [[maybe_unused]] size_t flags)
+{
+    constexpr auto enumNames = magic_enum::enum_names<MemberT>();
+    constexpr size_t size = enumNames.size();
+
+    std::string previewValue;
+    for (size_t i = 0; i < size; i++)
+    {
+        const size_t value = static_cast<size_t>(*obj);
+        const MemberT enumValue = magic_enum::enum_value<MemberT>(i);
+
+        if (value & static_cast<size_t>(enumValue))
+        {
+            if (previewValue.empty())
+            {
+                previewValue = magic_enum::enum_name<MemberT>(enumValue).data();
+            }
+            else
+            {
+                previewValue += ", ";
+                previewValue += magic_enum::enum_name<MemberT>(enumValue).data();
+            }
+        }
+    }
+
+    if (ImGui::BeginCombo(name, previewValue.c_str()))
+    {
+        for (size_t i = 0; i < size; i++)
+        {
+            const size_t enumValue = static_cast<size_t>(magic_enum::enum_value<MemberT>(i));
+            size_t value = static_cast<size_t>(*obj);
+            const bool_t isSelected = (value & enumValue) != 0;
+            bool_t tmpSelected = isSelected;
+
+            if (ImGui::MenuItem(enumNames.at(i).data(), nullptr, &tmpSelected))
+            {
+                if (enumValue == 0)
+                {
+                    value = 0;
+                }
+                else
+                {
+                    if (isSelected)
+                        value &= ~enumValue;
+                    else
+                        value |= enumValue;
+                }
+
+                *obj = static_cast<MemberT>(value);
+            }
+        }
+        
+        ImGui::EndCombo();
+    }
 }
 
 template <typename ReflectT>
@@ -265,35 +339,37 @@ template <typename ReflectT, typename MemberT, typename DescriptorT>
 void Inspector::DisplayObjectInternal(ReflectT* obj, DescriptorT member)
 {
     const constexpr char_t* const name = member.name.c_str();
+    constexpr size_t flags = GetFlags<MemberT, DescriptorT>(member);
+    MemberT* const ptr = &member.get(obj);
             
     if constexpr (XnorCore::Meta::IsArray<MemberT>)
     {
-        DisplayArray<MemberT>(&member.get(obj), name);
+        DisplayArray<MemberT>(ptr, name, flags);
     }
     else if constexpr (XnorCore::Meta::IsXnorList<MemberT>)
     {
-        DisplayList<MemberT>(&member.get(obj), name);
+        DisplayList<MemberT>(ptr, name, flags);
     }
     else
     {
-        DisplaySimpleType<MemberT>(&member.get(obj), name);
+        DisplaySimpleType<MemberT>(ptr, name, flags);
     }
 }
 
 template <typename MemberT>
-void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name)
+void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name, [[maybe_unused]] const size_t flags)
 {
     if constexpr (XnorCore::Meta::IsIntegralOrFloating<MemberT>)
     {
-        DisplayScalar<MemberT>(ptr, name);
+        DisplayScalar<MemberT>(ptr, name, flags);
     }
     else if constexpr (XnorCore::Meta::IsMathType<MemberT>)
     {
-        DisplayMathType<MemberT>(ptr, name);
+        DisplayMathType<MemberT>(ptr, name, flags);
     }
     else if constexpr (XnorCore::Meta::IsColorType<MemberT>)
     {
-        DisplayColorType<MemberT>(ptr, name);
+        DisplayColorType<MemberT>(ptr, name, flags);
     }
     else if constexpr (XnorCore::Meta::IsSame<MemberT, bool_t>)
     {
@@ -305,19 +381,22 @@ void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name)
     }
     else if constexpr (XnorCore::Meta::IsPointer<MemberT>)
     {
-        DisplayRawPointer<MemberT>(ptr, name);
+        DisplayRawPointer<MemberT>(ptr, name, flags);
     }
     else if constexpr (XnorCore::Meta::IsPolyPtr<MemberT>)
     {
-        DisplayPolyPointer<MemberT>(ptr, name);
+        DisplayPolyPointer<MemberT>(ptr, name, flags);
     }
     else if constexpr (XnorCore::Meta::IsXnorPointer<MemberT>)
     {
-        DisplayXnorPointer<MemberT>(ptr, name);
+        DisplayXnorPointer<MemberT>(ptr, name, flags);
     }
     else if constexpr (XnorCore::Meta::IsEnum<MemberT>)
     {
-        DisplayEnum<MemberT>(ptr, name);
+        if (flags & InspectorFlags::EnumFlag)
+            DisplayEnumFlag<MemberT>(ptr, name, flags);
+        else
+            DisplayEnum<MemberT>(ptr, name, flags);
     }
     else
     {
@@ -327,7 +406,7 @@ void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name)
 }
 
 template <typename MemberT>
-void Inspector::DisplayArray(MemberT* ptr, const char_t* name)
+void Inspector::DisplayArray(MemberT* ptr, const char_t* name, [[maybe_unused]] const size_t flags)
 {
     using ArrayT = XnorCore::Meta::RemoveArraySpecifier<MemberT>;
     constexpr size_t arraySize = sizeof(MemberT) / sizeof(ArrayT);
@@ -336,13 +415,13 @@ void Inspector::DisplayArray(MemberT* ptr, const char_t* name)
     {
         for (size_t i = 0; i < arraySize; i++)
         {
-            DisplaySimpleType<ArrayT>(&(*ptr)[i], std::to_string(i).c_str());
+            DisplaySimpleType<ArrayT>(&(*ptr)[i], std::to_string(i).c_str(), flags);
         }
     }
 }
 
 template <typename MemberT>
-void Inspector::DisplayList(MemberT* ptr, const char_t* name)
+void Inspector::DisplayList(MemberT* ptr, const char_t* name, [[maybe_unused]] const size_t flags)
 {
     using ArrayT = typename MemberT::Type;
 
@@ -386,27 +465,50 @@ void Inspector::DisplayList(MemberT* ptr, const char_t* name)
                 
             ImGui::SameLine();
 
-            DisplaySimpleType<ArrayT>(&(*ptr)[i], std::to_string(i).c_str());
+            DisplaySimpleType<ArrayT>(&(*ptr)[i], std::to_string(i).c_str(), flags);
 
             ImGui::PopID();
         }
     }
 }
 
+template <typename MemberT, typename DescriptorT>
+constexpr size_t Inspector::GetFlags(DescriptorT member)
+{
+    size_t flags = InspectorFlags::None;
+
+    if constexpr (XnorCore::Meta::IsEnum<MemberT> && XnorCore::Reflection::HasAttribute<XnorCore::EnumFlags>(member))
+        flags |= InspectorFlags::EnumFlag;
+
+    return flags;
+}
+
+
 template <XnorCore::ResourceT T>
-XnorCore::Pointer<T> Inspector::FilterResources()
+XnorCore::Pointer<T> Inspector::FilterResources(ImGuiTextFilter& filter)
 {
     ImGui::OpenPopup("Resource");
-    
+
     if (!ImGui::BeginPopupModal("Resource"))
         return nullptr;
 
-    XnorCore::Pointer<T> r = nullptr;
-    std::vector<XnorCore::Pointer<T>> resources = XnorCore::ResourceManager::FindAll<T>();
+    filter.Draw();
+    std::vector<XnorCore::Pointer<T>> resources = XnorCore::ResourceManager::FindAll<T>(
+        [&](XnorCore::Pointer<T> r) -> bool_t
+        {
+            const std::string& name = r->GetName();
 
+            if (name.starts_with("assets_internal"))
+                return false;
+
+            return filter.PassFilter(name.c_str());
+        }
+    );
+
+    XnorCore::Pointer<T> r = nullptr;
     for (const XnorCore::Pointer<T>& res : resources)
     {
-        if (ImGui::Selectable(res.Get()->GetName().c_str()))
+        if (ImGui::Selectable(res->GetName().c_str()))
         {
             r = res;
             break;
