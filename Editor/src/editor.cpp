@@ -300,7 +300,7 @@ void Editor::UpdateWindow()
 {
 	for (UiWindow* w : m_UiWindows)
 	{
-		ImGui::Begin(w->GetName(),nullptr,w->window_flags);
+		ImGui::Begin(w->GetName(),nullptr,w->windowFlags);
 		w->FetchInfo();
 		w->Display();
 		ImGui::End();

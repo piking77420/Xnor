@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include <vector>
-
 #include "core.hpp"
 #include "light/directional_light.hpp"
 #include "light/point_light.hpp"
