@@ -18,9 +18,9 @@ void EditorWindow::Display()
     {
         m_EditorCamera.UpdateCamera();
     }
+
     m_EditorCamera.OnPressGoToObject();
     EditTransform();
-
 }
 
 void EditorWindow::Initialize(const Vector2i size)
