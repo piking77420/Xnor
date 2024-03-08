@@ -62,7 +62,6 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 		{ 0, 0 }, m_GframeBuffer->GetSize(),
 		{ 0, 0 }, m_RenderBuffer->GetSize(), static_cast<BufferFlag>(DepthBit | StencilBit), TextureFiltering::Nearest);
 	
-	
 	// ForwardPass //
 	ForwardRendering(meshrenderers, &rendererContext);
 	m_SkyboxRenderer.DrawSkymap(m_Cube, World::skybox);
@@ -77,7 +76,6 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	// DRAW THE FINAL IMAGE TEXTURE
 	m_ToneMapping.ComputeToneMaping(*m_ColorAttachment, m_Quad);
 
-	
 	if (rendererContext.frameBuffer != nullptr)
 	{
 		rendererContext.frameBuffer->BindFrameBuffer();
@@ -125,7 +123,6 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 {
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 
-	
 	for (uint32_t i = 0; i < meshRenderers.size(); i++)
 	{
 		const MeshRenderer* meshRenderer =  meshRenderers[i];
@@ -225,7 +222,7 @@ void Renderer::InitForwardRenderingAttachment(const Vector2i windowSize)
 	// Set Up renderPass
 	const RenderPass renderPass(attachementsType);
 	const std::vector<const Texture*> targets = { m_ColorAttachment, m_DepthAttachment };
-	m_RenderBuffer->Create(renderPass,targets);
+	m_RenderBuffer->Create(renderPass, targets);
 }
 
 void Renderer::DestroyAttachment() const
@@ -239,9 +236,7 @@ void Renderer::DestroyAttachment() const
 	delete m_RenderBuffer;
 	delete m_DepthAttachment;
 	delete m_ColorAttachment;
-	
 }
-
 
 void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshrenderers, const RendererContext*) const
 {
@@ -274,7 +269,6 @@ void Renderer::ForwardRendering(const std::vector<const MeshRenderer*>& meshrend
 	}
 }
 
-
 void Renderer::InitResources()
 {
 	// Deferred 
@@ -306,7 +300,7 @@ void Renderer::InitResources()
 	m_GizmoShader->CreateInRhi();
 
 	m_DrawTextureToScreenShader->Use();
-	m_DrawTextureToScreenShader->SetInt("BufferTextureId", 0);
+	m_DrawTextureToScreenShader->SetInt("bufferTextureId", 0);
 	m_DrawTextureToScreenShader->Unuse();
 	// EndForward
 

@@ -20,16 +20,16 @@ layout (std140, binding = 1) uniform ModelUniform
 
 out VS_OUT
 {
-    vec3 FragPos;
-    vec3 Normal;
-    vec2 TexCoords;
+    vec3 fragPos;
+    vec3 normal;
+    vec2 texCoords;
 } vs_out;
 
 void main()
 {
     gl_Position = projection * view * model * vec4(aPos, 1.0);
 
-    vs_out.FragPos = vec3(model * vec4(aPos, 1.0));
-    vs_out.Normal = mat3(normalInvertMatrix) * aNormal;
-    vs_out.TexCoords = aTexCoords;
+    vs_out.fragPos = vec3(model * vec4(aPos, 1.0));
+    vs_out.normal = mat3(normalInvertMatrix) * aNormal;
+    vs_out.texCoords = aTexCoords;
 }
