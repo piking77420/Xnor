@@ -8,9 +8,9 @@ using namespace XnorCore;
 
 Texture::Texture(const TextureCreateInfo& createInfo)
     : m_Data(static_cast<uint8_t*>(createInfo.data))
-    , m_Size(static_cast<int>(createInfo.textureSizeWidth), static_cast<int>(createInfo.textureSizeHeight))
-    , m_TextureFiltering(createInfo.textureFiltering), m_TextureWrapping(createInfo.textureWrapping)
-    , m_TextureInternalFormat(createInfo.textureInternalFormat)
+    , m_Size(createInfo.size)
+    , m_TextureFiltering(createInfo.filtering), m_TextureWrapping(createInfo.wrapping)
+    , m_TextureInternalFormat(createInfo.internalFormat)
 {
     m_Id = Rhi::CreateTexture2D(createInfo);
     m_LoadedInRhi = true;
@@ -21,15 +21,14 @@ Texture::Texture(const TextureInternalFormat textureFormat, const Vector2i size)
 {
     const TextureCreateInfo createInfo
     {
-        nullptr,
-        static_cast<uint32_t>(size.x),
-        static_cast<uint32_t>(size.y),
-        m_TextureFiltering,
-        m_TextureWrapping,
-        m_TextureFormat,
-        m_TextureInternalFormat
+        .data = nullptr,
+        .size = size,
+        .filtering = m_TextureFiltering,
+        .wrapping = m_TextureWrapping,
+        .format = m_TextureFormat,
+        .internalFormat = m_TextureInternalFormat
     };
-    
+
     m_Id = Rhi::CreateTexture2D(createInfo);
     m_LoadedInRhi = true;
 }
@@ -54,19 +53,18 @@ bool Texture::Load(const uint8_t* buffer, const int64_t length)
 
 void Texture::CreateInRhi()
 {
-    const TextureCreateInfo textureCreateInfo
+    const TextureCreateInfo createInfo
     {
-        m_Data,
-        static_cast<uint32_t>(m_Size.x),
-        static_cast<uint32_t>(m_Size.y),
-        m_TextureFiltering,
-        m_TextureWrapping,
-        m_TextureFormat,
-        m_TextureInternalFormat,
-        DataType::UnsignedByte
+        .data = m_Data,
+        .size = m_Size,
+        .filtering = m_TextureFiltering,
+        .wrapping = m_TextureWrapping,
+        .format = m_TextureFormat,
+        .internalFormat = m_TextureInternalFormat,
+        .dataType = DataType::UnsignedByte
     };
     
-    m_Id = Rhi::CreateTexture2D(textureCreateInfo);
+    m_Id = Rhi::CreateTexture2D(createInfo);
     
     m_LoadedInRhi = true;
 }

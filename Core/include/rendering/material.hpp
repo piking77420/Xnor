@@ -16,7 +16,7 @@ BEGIN_XNOR_CORE
 enum class MaterialType : uint8_t
 {
     Opaque,
-    Litt
+    Lit
 };
 
 /// @brief Encapsulates a material, which defines how a @ref Model is rendered
@@ -26,6 +26,7 @@ struct Material : Serializable
     
 public:
     // Pointer<Shader> shader;
+
     /// @brief Material type
     MaterialType materialType = MaterialType::Opaque;
     /// @brief Albedo texture

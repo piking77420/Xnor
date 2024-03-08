@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <Maths/matrix.hpp>
+#include <Maths/vector2i.hpp>
 
 #include "core.hpp"
 #include "utils/color.hpp"
@@ -138,7 +139,7 @@ enum class TextureInternalFormat
 	Rgb16F,
 	Rgba16F,
 	R32F,
-	R32UI,
+	R32Uint,
 	DepthComponent16,
 	DepthComponent24,
 	DepthComponent32,
@@ -245,18 +246,16 @@ struct TextureCreateInfo
 {
 	/// @brief Data
 	void* data = nullptr;
-	/// @brief Width
-	uint32_t textureSizeWidth{};
-	/// @brief Height
-	uint32_t textureSizeHeight{};
+	/// @brief Size
+	Vector2i size = Vector2i::Zero();
 	/// @brief Filtering
-	TextureFiltering textureFiltering{};
+	TextureFiltering filtering{};
 	/// @brief Wrapping
-	TextureWrapping textureWrapping{};
+	TextureWrapping wrapping{};
 	/// @brief Format
-	TextureFormat textureFormat{};
+	TextureFormat format{};
 	/// @brief Internal format
-	TextureInternalFormat textureInternalFormat{};
+	TextureInternalFormat internalFormat{};
 	/// @brief Data type
 	DataType dataType = DataType::UnsignedByte;
 };
@@ -266,18 +265,16 @@ struct CreateCubeMapInfo
 {
 	/// @brief Data
 	const std::array<void*, 6>* datas = nullptr;
-	/// @brief Width
-	uint32_t textureSizeWidth{};
-	/// @brief Height
-	uint32_t textureSizeHeight{};
+	/// @brief Size
+	Vector2i size = Vector2i::Zero();
 	/// @brief Filtering
-	TextureFiltering textureFiltering{};
+	TextureFiltering filtering{};
 	/// @brief Wrapping
-	TextureWrapping textureWrapping{};
+	TextureWrapping wrapping{};
 	/// @brief Format
-	TextureFormat textureFormat{};
+	TextureFormat format{};
 	/// @brief Internal format
-	TextureInternalFormat textureInternalFormat{};
+	TextureInternalFormat internalFormat{};
 	/// @brief Data type
 	DataType dataType = DataType::UnsignedByte;
 };
@@ -480,10 +477,10 @@ enum Gbuffer : int32_t
 /// @brief Buffer attachment flags.
 enum BufferFlag : int32_t
 {
-	None = 0,
-	ColorBit = 1 << 0,  
-	DepthBit = 1 << 1,
-	StencilBit = 1 << 2  
+	BufferFlagNone = 0,
+	BufferFlagColorBit = 1 << 0,  
+	BufferFlagDepthBit = 1 << 1,
+	BufferFlagStencilBit = 1 << 2  
 };
 
 END_XNOR_CORE

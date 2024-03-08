@@ -343,7 +343,7 @@ void Editor::Update()
 		UpdateWindow();
 		WorldBehaviours();
 	
-		Input::Reset();
+		Input::Update();
 		EndFrame();
 		renderer.SwapBuffers();
 	}

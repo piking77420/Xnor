@@ -21,7 +21,7 @@ void Renderer::Initialize()
 	Rhi::PrepareUniform();
 }
 
-void Renderer::Shutdown()
+void Renderer::Shutdown() const
 {
 	DestroyAttachment();
 }
@@ -53,23 +53,21 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	Rhi::SetViewport(m_RenderBuffer->GetSize());
 	
 	// Clear MainWindow // 
-	Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit) );
+	Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit) );
 	
 	DefferedRendering(meshrenderers, &rendererContext);
 
 	// Blit depth of gbuffer to forward Pass
 	Rhi::BlitFrameBuffer(m_GframeBuffer->GetId(), m_RenderBuffer->GetId(),
 		{ 0, 0 }, m_GframeBuffer->GetSize(),
-		{ 0, 0 }, m_RenderBuffer->GetSize(), static_cast<BufferFlag>(DepthBit | StencilBit), TextureFiltering::Nearest);
+		{ 0, 0 }, m_RenderBuffer->GetSize(), static_cast<BufferFlag>(BufferFlagDepthBit | BufferFlagStencilBit), TextureFiltering::Nearest);
 	
 	// ForwardPass //
 	ForwardRendering(meshrenderers, &rendererContext);
 	m_SkyboxRenderer.DrawSkymap(m_Cube, World::skybox);
 
 	if (rendererContext.isEditor)
-	{
 		m_LightManager.DrawLightGizmo(pointLights, spotLights, directionalLights, *rendererContext.camera);
-	}
 
 	m_RenderBuffer->UnBindFrameBuffer();
 	
@@ -79,7 +77,7 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	if (rendererContext.frameBuffer != nullptr)
 	{
 		rendererContext.frameBuffer->BindFrameBuffer();
-		Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit) );
+		Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit) );
 		Rhi::SetViewport(rendererContext.frameBuffer->GetSize());
 	}
 	
@@ -89,9 +87,7 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	m_DrawTextureToScreenShader->Unuse();
 	
 	if (rendererContext.frameBuffer != nullptr)
-	{
 		rendererContext.frameBuffer->UnBindFrameBuffer();
-	}
 }
 
 void Renderer::CompileShader()
@@ -162,7 +158,6 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 
 void Renderer::InitDefferedRenderingAttachment(const Vector2i windowSize)
 {
-	
 	m_GframeBuffer = new FrameBuffer(windowSize);
 	m_PositionAtttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);
 	m_NormalAttachement = new Texture(TextureInternalFormat::Rgb16F, windowSize);
@@ -242,7 +237,7 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshren
 {
 	// Bind for gbuffer pass // 
 	m_GframeBuffer->BindFrameBuffer();
-	Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit) );
+	Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit));
 	m_GBufferShader->Use();
 	DrawMeshRendersByType(meshrenderers, MaterialType::Opaque);
 	m_GBufferShader->Unuse();
@@ -250,7 +245,7 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshren
 	// Shading Gbuffer Value //
 	m_RenderBuffer->BindFrameBuffer();
 	
-	Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit) );
+	Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit));
 	m_GBufferShaderLit->Use();
 	Rhi::DrawQuad(m_Quad->GetId());
 	m_GBufferShaderLit->Unuse();
@@ -260,13 +255,11 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshren
 void Renderer::ForwardRendering(const std::vector<const MeshRenderer*>& meshrenderers, const RendererContext* rendererContext) const
 {
 	m_Forward->Use();
-	DrawMeshRendersByType(meshrenderers,MaterialType::Litt);
+	DrawMeshRendersByType(meshrenderers, MaterialType::Lit);
 	m_Forward->Unuse();
 	
 	if (rendererContext->isEditor)
-	{
 		DrawAabb(meshrenderers);
-	}
 }
 
 void Renderer::InitResources()
@@ -287,7 +280,7 @@ void Renderer::InitResources()
 	m_GBufferShader->SetInt("material.albedo", 0);
 	m_GBufferShader->SetInt("material.normalMap", 1);
 	m_GBufferShader->Unuse();
-	// EndDeferred
+	// End deferred
 
 	// Forward
 	m_Forward = ResourceManager::Get<Shader>("basic_shader");
@@ -302,7 +295,7 @@ void Renderer::InitResources()
 	m_DrawTextureToScreenShader->Use();
 	m_DrawTextureToScreenShader->SetInt("bufferTextureId", 0);
 	m_DrawTextureToScreenShader->Unuse();
-	// EndForward
+	// End forward
 
 	// Primitive
 	m_Cube = ResourceManager::Get<Model>("assets/models/cube.obj");
@@ -319,23 +312,23 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 	{
 		const MeshRenderer* meshRenderer = meshRenderers[i];
 		modelData.meshRenderIndex = FetchDrawIndexToGpu(i);
-		
+
 		if (!meshRenderer->model.IsValid())
 			continue;
 
 		if (!meshRenderer->drawModelAabb)
 			continue;
-		
+
 		const Transform& transform =  meshRenderer->entity->transform;
 		const Model::Aabb&& modelAabb = meshRenderer->model->GetAabb();
-		
+
 		const Vector3&& aabbSize = (modelAabb.max - modelAabb.min) * 0.5f;
 		const Vector3&& center  = (modelAabb.max + modelAabb.min) * 0.5f;
-		
-		const Matrix&& trsAabb = Matrix::Trs(center,Quaternion::Identity(),aabbSize);
-		modelData.model =  transform.worldMatrix * trsAabb;
+
+		const Matrix&& trsAabb = Matrix::Trs(center, Quaternion::Identity(), aabbSize);
+		modelData.model = transform.worldMatrix * trsAabb;
 		Rhi::UpdateModelUniform(modelData);
-		
+
 		Rhi::DrawModel(m_Cube->GetId());
 	}
 	
@@ -346,7 +339,7 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 void Renderer::RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRenderers) const
 {
 	ModelUniformData data;
-	
+
 	for (const MeshRenderer* mesh : meshRenderers)
 	{
 		const Transform& transform = mesh->entity->transform;
@@ -354,15 +347,15 @@ void Renderer::RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRende
 		Matrix&& trs = Matrix::Trs(transform.GetPosition(), transform.GetRotation(), transform.GetScale());
 		data.model = trs;
 		data.normalInvertMatrix = trs.Inverted().Transposed();
-		
+
 		Rhi::UpdateModelUniform(data);
 		Rhi::DrawModel(mesh->model->GetId());
 	}
 }
 
-// We just adding one to avoid that the base color of the attachement is a valid id
+// We just adding one to avoid that the base color of the attachment is a valid id
 // black is zero
-uint32_t Renderer::FetchDrawIndexToGpu(uint32_t meshRenderIndex) const
+uint32_t Renderer::FetchDrawIndexToGpu(const uint32_t meshRenderIndex) const
 {
 	return meshRenderIndex + 1;
 }

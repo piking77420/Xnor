@@ -4,7 +4,6 @@
 
 using namespace XnorCore;
 
-
 FrameBuffer::FrameBuffer(const Vector2i size)
 	: m_FrameBufferSize(size)
 {
@@ -39,7 +38,3 @@ uint32_t FrameBuffer::GetId() const
 {
 	return m_Id;
 }
-
-
-
-

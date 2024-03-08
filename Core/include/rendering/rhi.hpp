@@ -245,7 +245,7 @@ private:
 		uint32_t type,
 		uint32_t id,
 		uint32_t severity,
-		size_t length,
+		int32_t length,
 		const char_t* message,
 		const void* userParam
 	);

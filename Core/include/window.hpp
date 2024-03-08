@@ -57,7 +57,10 @@ public:
 
 	/// @brief Handles hiding or displaying the cursor
 	/// @param value @c true hides, @c false displays
-	static void HideCursor(bool_t value);
+	static void SetCursorHidden(bool_t value);
+
+	/// @brief Sets the mouse cursor position.
+	static void SetCursorPosition(Vector2 newPosition);
 
 private:
 	/// @brief Callback when the window is resized

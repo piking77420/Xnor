@@ -1,15 +1,14 @@
 #include "rendering/rhi.hpp"
-#include<GLFW/glfw3native.h>
+
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 #include "window.hpp"
-#include "GLFW/glfw3.h"
 #include "rendering/render_pass.hpp"
+#include "resource/shader.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
-
-
 
 void Rhi::SetPolygonMode(const PolygonFace face, const PolygonMode mode)
 {
@@ -112,7 +111,7 @@ void Rhi::CheckCompilationError(const uint32_t shaderId, const std::string& type
 		if (!success)
 		{
 			glGetShaderInfoLog(shaderId, 1024, nullptr, infoLog.data());
-			Logger::LogError("Error while compiling shader of type {}: {}", type.c_str(), infoLog);
+			Logger::LogError("Error while compiling shader of type {}: {}", type, infoLog);
 		}
 	}
 	else
@@ -121,7 +120,7 @@ void Rhi::CheckCompilationError(const uint32_t shaderId, const std::string& type
 		if (!success)
 		{
 			glGetProgramInfoLog(shaderId, 1024, nullptr, infoLog.data());
-			Logger::LogError("Error while linking shader program of type {}: {}", type.c_str(), infoLog);
+			Logger::LogError("Error while linking shader program of type {}: {}", type, infoLog);
 		}
 	}
 }
@@ -153,7 +152,7 @@ uint32_t Rhi::CreateShaders(const std::vector<ShaderCode>& shaderCodes, const Sh
 	shaderInternal.depthFunction = shaderCreateInfo.depthFunction;
 	shaderInternal.blendFunction = shaderCreateInfo.blendFunction;
 	
-	m_ShaderMap.emplace(programId,shaderInternal);
+	m_ShaderMap.emplace(programId, shaderInternal);
 	
 	return programId;
 }
@@ -299,23 +298,19 @@ uint32_t Rhi::GetBlendValueOpengl(const BlendValue blendFunction)
 	return GL_ONE; 
 }
 
-uint32_t Rhi::GetOpenglBufferBit(BufferFlag flag)
+uint32_t Rhi::GetOpenglBufferBit(const BufferFlag flag)
 {
 	uint32_t openglBufferBit = 0;
 
-	if(flag & ColorBit)
-	{
+	if (flag & BufferFlagColorBit)
 		openglBufferBit |= GL_COLOR_BUFFER_BIT;
-	}
-	if(flag & DepthBit)
-	{
+
+	if (flag & BufferFlagDepthBit)
 		openglBufferBit |= GL_DEPTH_BUFFER_BIT;
-	}
-	if(flag & StencilBit)
-	{
+
+	if (flag & BufferFlagStencilBit)
 		openglBufferBit |= GL_STENCIL_BUFFER_BIT;
-	}
-	
+
 	return openglBufferBit;
 }
 
@@ -377,9 +372,9 @@ uint32_t Rhi::GetOpenglTextureWrapper(const TextureWrapping textureWrapping)
 void Rhi::AllocTexture2D(const uint32_t textureId, const TextureCreateInfo& textureCreateInfo)
 {
 	glTextureStorage2D(textureId, 1,
-		GetOpenglInternalFormat(textureCreateInfo.textureInternalFormat),
-		static_cast<GLsizei>(textureCreateInfo.textureSizeWidth),
-		static_cast<GLsizei>(textureCreateInfo.textureSizeHeight)
+		GetOpenglInternalFormat(textureCreateInfo.internalFormat),
+		static_cast<GLsizei>(textureCreateInfo.size.x),
+		static_cast<GLsizei>(textureCreateInfo.size.y)
 	);
 }
 
@@ -387,10 +382,10 @@ uint32_t Rhi::CreateTexture2D(const TextureCreateInfo& textureCreateInfo)
 {
 	const uint32_t textureId = CreateTexture(TextureType::Texture2D);
 
-	const GLint openglTextureFilter =  static_cast<GLint>(GetOpenglTextureFilter(textureCreateInfo.textureFiltering));
-	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(textureCreateInfo.textureWrapping));
-	
-	glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER,openglTextureFilter);
+	const GLint openglTextureFilter = static_cast<GLint>(GetOpenglTextureFilter(textureCreateInfo.filtering));
+	const GLint openglTextureWrapper = static_cast<GLint>(GetOpenglTextureWrapper(textureCreateInfo.wrapping));
+
+	glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
 	glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
 	glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
 	glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
@@ -399,8 +394,8 @@ uint32_t Rhi::CreateTexture2D(const TextureCreateInfo& textureCreateInfo)
 
 	if (textureCreateInfo.data != nullptr)
 	{
-		glTextureSubImage2D(textureId, 0, 0, 0, static_cast<GLsizei>(textureCreateInfo.textureSizeWidth), static_cast<GLsizei>(textureCreateInfo.textureSizeHeight),
-			GetOpenGlTextureFormat(textureCreateInfo.textureFormat), GetOpenglDataType(textureCreateInfo.dataType), textureCreateInfo.data);
+		glTextureSubImage2D(textureId, 0, 0, 0, static_cast<GLsizei>(textureCreateInfo.size.x), static_cast<GLsizei>(textureCreateInfo.size.y),
+			GetOpenGlTextureFormat(textureCreateInfo.format), GetOpenglDataType(textureCreateInfo.dataType), textureCreateInfo.data);
 	}
 	
 	glGenerateTextureMipmap(textureId);
@@ -421,8 +416,8 @@ void Rhi::BindTexture(const uint32_t unit, const uint32_t textureId)
 uint32_t Rhi::CreateCubeMap(const CreateCubeMapInfo& createCubeMapInfo)
 {
 	const uint32_t textureId = CreateTexture(TextureType::TextureCubeMap);
-	const GLint openglTextureFilter =  static_cast<GLint>(GetOpenglTextureFilter(createCubeMapInfo.textureFiltering));
-	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(createCubeMapInfo.textureWrapping));
+	const GLint openglTextureFilter =  static_cast<GLint>(GetOpenglTextureFilter(createCubeMapInfo.filtering));
+	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(createCubeMapInfo.wrapping));
 	glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
 	glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
 	glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
@@ -436,13 +431,13 @@ uint32_t Rhi::CreateCubeMap(const CreateCubeMapInfo& createCubeMapInfo)
 		Logger::LogError("CubeMapCreateInfo is Invalid");
 	}
 	
-	const GLsizei width = static_cast<GLsizei>(createCubeMapInfo.textureSizeWidth);
-	const GLsizei height = static_cast<GLsizei>(createCubeMapInfo.textureSizeHeight);
+	const GLsizei width = createCubeMapInfo.size.x;
+	const GLsizei height = createCubeMapInfo.size.y;
 
 	for (size_t i = 0; i < createCubeMapInfo.datas->size(); i++)
 	{
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), 0, static_cast<GLint>(GetOpenglInternalFormat(createCubeMapInfo.textureInternalFormat)),
-			width, height, 0, GetOpenGlTextureFormat(createCubeMapInfo.textureFormat), GetOpenglDataType(createCubeMapInfo.dataType), createCubeMapInfo.datas->at(i));
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), 0, static_cast<GLint>(GetOpenglInternalFormat(createCubeMapInfo.internalFormat)),
+			width, height, 0, GetOpenGlTextureFormat(createCubeMapInfo.format), GetOpenglDataType(createCubeMapInfo.dataType), createCubeMapInfo.datas->at(i));
 	}
 
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
@@ -521,14 +516,13 @@ void Rhi::BlitFrameBuffer(
 	const Vector2i srcBottomRight,
 	const Vector2i targetTopLeft,
 	const Vector2i targetBottomRight,
-	[[maybe_unused]] const BufferFlag bufferFlag,
+	const BufferFlag bufferFlag,
 	const TextureFiltering textureFiltering
 )
 {
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, readBuffer);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, targetBuffer);
 
-	// TODO Handle attachmentTarget parameter
 	glBlitFramebuffer(
 		srcTopLeft.x, srcTopLeft.y,
 		srcBottomRight.x, srcBottomRight.y,
@@ -551,7 +545,7 @@ void Rhi::UnbindFrameBuffer()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Rhi::GetPixelFromAttachement(const uint32_t attachmentIndex, const Vector2i position, const TextureFormat textureFormat,const DataType dataType,void* const output)
+void Rhi::GetPixelFromAttachement(const uint32_t attachmentIndex, const Vector2i position, const TextureFormat textureFormat, const DataType dataType, void* const output)
 {
 	const GLenum format = GetOpenGlTextureFormat(textureFormat);
 	const GLenum dataTypeOpengl = GetOpenglDataType(dataType);
@@ -567,7 +561,7 @@ void Rhi::SwapBuffers()
 
 uint32_t Rhi::GetOpenglShaderType(const ShaderType shaderType)
 {
-	switch (shaderType)
+	switch (shaderType)  // NOLINT(clang-diagnostic-switch-enum)
 	{
 		case ShaderType::Vertex:
 			return GL_VERTEX_SHADER;
@@ -581,7 +575,6 @@ uint32_t Rhi::GetOpenglShaderType(const ShaderType shaderType)
 		case ShaderType::Compute:
 			return GL_COMPUTE_SHADER;
 
-		case ShaderType::Count:
 		default:
 			throw std::invalid_argument("Invalid shader type");
 	}
@@ -694,7 +687,7 @@ uint32_t Rhi::GetOpenglInternalFormat(const TextureInternalFormat textureFormat)
 		case TextureInternalFormat::R32F:
 			return GL_R32F;
 		
-		case TextureInternalFormat::R32UI:
+		case TextureInternalFormat::R32Uint:
 			return GL_R32UI;
 
 		case TextureInternalFormat::DepthComponent16:
@@ -714,7 +707,6 @@ uint32_t Rhi::GetOpenglInternalFormat(const TextureInternalFormat textureFormat)
 
 		case TextureInternalFormat::DepthComponent32FStencil8:
 			return GL_DEPTH32F_STENCIL8;
-		
 	}
 
 	Logger::LogError("Texture InternalFormat not supported, defaulting to RGB");
@@ -782,7 +774,7 @@ uint32_t Rhi::GetOpenglDataType(const DataType dataType)
 	return GL_UNSIGNED_BYTE;
 }
 
-void Rhi::OpenglDebugCallBack(const uint32_t source, const uint32_t type, const uint32_t id, const uint32_t severity, const size_t, const char_t* const message, const void* const)
+void Rhi::OpenglDebugCallBack(const uint32_t source, const uint32_t type, const uint32_t id, const uint32_t severity, const int32_t, const char_t* const message, const void* const)
 {
 	// ignore non-significant error/warning codes
 	if (id == 131169 || id == 131185 || id == 131218 || id == 131204)
@@ -888,22 +880,18 @@ void Rhi::OpenglDebugCallBack(const uint32_t source, const uint32_t type, const 
 
 void Rhi::Initialize()
 {
-
-	
 	gladLoadGL();
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_STENCIL_TEST);
 
-
 #ifdef _DEBUG
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 
-	glDebugMessageCallback(reinterpret_cast<GLDEBUGPROC>(OpenglDebugCallBack), nullptr);  // NOLINT(clang-diagnostic-cast-function-type-strict)
+	glDebugMessageCallback(reinterpret_cast<GLDEBUGPROC>(OpenglDebugCallBack), nullptr);
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 #endif
-
 }
 
 void Rhi::Shutdown()
@@ -949,7 +937,7 @@ void Rhi::SetClearColor(const Vector4& color)
 	glClearColor(color.x, color.y, color.z, color.w);
 }
 
-void Rhi::ClearBuffer(BufferFlag bufferFlag)
+void Rhi::ClearBuffer(const BufferFlag bufferFlag)
 {
 	glClear(GetOpenglBufferBit(bufferFlag));
 }
