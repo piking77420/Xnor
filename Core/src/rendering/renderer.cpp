@@ -56,20 +56,22 @@ void Renderer::RenderScene(const RendererContext& rendererContext) const
 	Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit) );
 	
 	DefferedRendering(meshrenderers, &rendererContext);
+
 	// Blit depth of gbuffer to forward Pass
 	Rhi::BlitFrameBuffer(m_GframeBuffer->GetId(), m_RenderBuffer->GetId(),
 		{ 0, 0 }, m_GframeBuffer->GetSize(),
 		{ 0, 0 }, m_RenderBuffer->GetSize(), static_cast<BufferFlag>(DepthBit | StencilBit), TextureFiltering::Nearest);
 	
+	
 	// ForwardPass //
 	ForwardRendering(meshrenderers, &rendererContext);
 	m_SkyboxRenderer.DrawSkymap(m_Cube, World::skybox);
+
 	if (rendererContext.isEditor)
 	{
 		m_LightManager.DrawLightGizmo(pointLights, spotLights, directionalLights, *rendererContext.camera);
-		
 	}
-	
+
 	m_RenderBuffer->UnBindFrameBuffer();
 	
 	// DRAW THE FINAL IMAGE TEXTURE
@@ -107,7 +109,6 @@ void Renderer::SwapBuffers()
 void Renderer::OnResize(const Vector2i windowSize)
 {
 	DestroyAttachment();
-	m_MeshRendersIndexAttachement = new Texture(TextureInternalFormat::R32F,windowSize);
 	m_ToneMapping.OnResizeWindow(windowSize);
 	InitDefferedRenderingAttachment(windowSize);
 	InitForwardRenderingAttachment(windowSize);
@@ -115,7 +116,6 @@ void Renderer::OnResize(const Vector2i windowSize)
 
 void Renderer::PrepareRendering(const Vector2i windowSize)
 {
-	m_MeshRendersIndexAttachement = new Texture(TextureInternalFormat::R32F,windowSize);
 	InitDefferedRenderingAttachment(windowSize);
 	InitForwardRenderingAttachment(windowSize);
 	m_ToneMapping.Prepare(windowSize);
@@ -184,9 +184,6 @@ void Renderer::InitDefferedRenderingAttachment(const Vector2i windowSize)
 			.attachment = Attachment::Color02
 		},
 		{
-			.attachment = Attachment::Color03
-		},
-		{
 			.attachment = Attachment::Depth
 		},
 	};
@@ -194,7 +191,7 @@ void Renderer::InitDefferedRenderingAttachment(const Vector2i windowSize)
 	// Set Up renderPass
 	const RenderPass renderPass(attachementsType);
 
-	const std::vector<const Texture*> targets = { m_PositionAtttachment, m_NormalAttachement, m_AlbedoAttachment,m_MeshRendersIndexAttachement, m_DepthGbufferAtttachment};
+	const std::vector<const Texture*> targets = { m_PositionAtttachment, m_NormalAttachement, m_AlbedoAttachment, m_DepthGbufferAtttachment};
 	m_GframeBuffer->Create(renderPass, targets);
 	
 	// Init gbuffer Texture
@@ -238,7 +235,6 @@ void Renderer::DestroyAttachment() const
 	delete m_AlbedoAttachment;
 	delete m_NormalAttachement;
 	delete m_DepthGbufferAtttachment;
-	delete m_MeshRendersIndexAttachement;
 	
 	delete m_RenderBuffer;
 	delete m_DepthAttachment;
@@ -255,7 +251,7 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshren
 	m_GBufferShader->Use();
 	DrawMeshRendersByType(meshrenderers, MaterialType::Opaque);
 	m_GBufferShader->Unuse();
-
+	
 	// Shading Gbuffer Value //
 	m_RenderBuffer->BindFrameBuffer();
 	
@@ -268,11 +264,14 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshren
 
 void Renderer::ForwardRendering(const std::vector<const MeshRenderer*>& meshrenderers, const RendererContext* rendererContext) const
 {
+	m_Forward->Use();
+	DrawMeshRendersByType(meshrenderers,MaterialType::Litt);
+	m_Forward->Unuse();
+	
 	if (rendererContext->isEditor)
 	{
 		DrawAabb(meshrenderers);
 	}
-	// TODO draw translucentObject
 }
 
 

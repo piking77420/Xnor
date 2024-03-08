@@ -37,15 +37,7 @@ public:
 
 	/// @brief Unbinds the framebuffer
 	XNOR_ENGINE void UnBindFrameBuffer() const;
-
-	/// @brief Fetches a pixel from an attachment of the framebuffer
-	/// @param attachmentIndex Attachment index
-	/// @param position Position
-	/// @param format Format
-	/// @param internalFormat Internal format
-	/// @param output Output
-	XNOR_ENGINE void ReadPixel(uint32_t attachmentIndex, Vector2i position, TextureFormat format, TextureInternalFormat internalFormat, void* output) const;
-
+	
 	/// @brief Gets the id of the framebuffer
 	/// @return Framebuffer id
 	XNOR_ENGINE uint32_t GetId() const;

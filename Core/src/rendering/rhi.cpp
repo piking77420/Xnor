@@ -551,12 +551,13 @@ void Rhi::UnbindFrameBuffer()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Rhi::GetPixelFromAttachement(const uint32_t attachmentIndex, const Vector2i position, const TextureFormat textureFormat, const TextureInternalFormat,	void* const output)
+void Rhi::GetPixelFromAttachement(const uint32_t attachmentIndex, const Vector2i position, const TextureFormat textureFormat,const DataType dataType,void* const output)
 {
 	const GLenum format = GetOpenGlTextureFormat(textureFormat);
-	
+	const GLenum dataTypeOpengl = GetOpenglDataType(dataType);
+
 	glReadBuffer(GL_COLOR_ATTACHMENT0 + static_cast<GLint>(attachmentIndex)); 
-	glReadPixels(position.x, position.y, 1, 1, format, GL_UNSIGNED_BYTE, output);
+	glReadPixels(position.x, position.y, 1, 1, format, dataTypeOpengl, output);
 }
 
 void Rhi::SwapBuffers()

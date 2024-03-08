@@ -29,8 +29,5 @@ out VS_OUT
 void main()
 {
    vs_out.TexCoords = aTexCoords;
-
- 
    gl_Position = projection * view * model * vec4(aPos.x,aPos.y,0.0, 1.0);
-
 }

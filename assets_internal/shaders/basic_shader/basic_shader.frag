@@ -1,5 +1,8 @@
 #version 460 core
 
+layout (location = 1) out float gMeshRenderIndex;
+
+
 const int MaxSpothLight = 100;
 const int MaxPointLight = 100;
 
@@ -158,7 +161,6 @@ void main()
     {
         finalColor += CalcSpotLight(spothLightData[i],viewDir,fs_in.FragPos,Normal,Albedo);
     }
-    
     
     FragColor = vec4(finalColor,1);
 }
