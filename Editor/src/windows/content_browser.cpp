@@ -79,6 +79,8 @@ void ContentBrowser::Display()
                     
                         if (correspondingResource)
                             correspondingTexture = XnorCore::Utils::DynamicPointerCast<XnorCore::Texture>(correspondingResource);
+                        else
+                            correspondingTexture = m_TextureFileTexture;
                     }
                     break;
                 
@@ -248,7 +250,7 @@ void ContentBrowser::DisplayEntry(
         m_SelectedEntry = entry;
         *clicked = true;
 
-        if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+        if (*hovered && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
         {
             if (file)
             {
