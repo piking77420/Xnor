@@ -16,8 +16,6 @@ int main(int, char**)
 	
 	Logger::OpenDefaultFile();
 
-	using namespace std::string_literals;
-
 	FileManager::LoadDirectory("assets_internal");
 	FileManager::LoadDirectory("assets");
 

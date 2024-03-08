@@ -67,11 +67,11 @@ private:
     XNOR_ENGINE static inline std::array<GamepadInput, GamepadMax> m_Gamepads;
 
     // For each Status
-    using GameButtonStatuses = std::array<bool_t, static_cast<uint8_t>(GamepadButtonStatus::Count)>;
+    using GamepadButtonStatuses = std::array<bool_t, static_cast<uint8_t>(GamepadButtonStatus::Count)>;
     // For each Button
-    using GamePadsButton = std::array<GameButtonStatuses, static_cast<uint32_t>(GamepadButton::Count)>;
+    using GamepadButtons = std::array<GamepadButtonStatuses, static_cast<uint32_t>(GamepadButton::Count)>;
     // For each Gamepad
-    XNOR_ENGINE static inline std::array<GamePadsButton, GamepadMax> m_GamepadsButton;
+    XNOR_ENGINE static inline std::array<GamepadButtons, GamepadMax> m_GamepadsButton;
 
     XNOR_ENGINE static void HandleKeyboard(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
     

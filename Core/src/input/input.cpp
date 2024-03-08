@@ -1,4 +1,4 @@
-﻿#include "input\input.hpp"
+﻿#include "input/input.hpp"
 
 #include "assimp/Logger.hpp"
 #include "utils/logger.hpp"
@@ -33,7 +33,7 @@ void Input::HandleEvent()
 
 void Input::HandleKeyboard(GLFWwindow*, const int32_t key, const int32_t, const int32_t action, const int32_t)
 {
-    if (key > m_Keyboard.size())
+    if (static_cast<size_t>(key) > m_Keyboard.size())
         return;
     
     KeyStatuses& keyStatuses = m_Keyboard.at(key);
@@ -124,7 +124,7 @@ void Input::HandleGamepad()
 
         for (uint32_t k = 0; k < static_cast<uint32_t>(GamepadButton::Count) - 1; k++)
         {
-            GameButtonStatuses& statuses = m_GamepadsButton[i].at(k);
+            GamepadButtonStatuses& statuses = m_GamepadsButton[i].at(k);
             const bool_t isDown = statuses.at(static_cast<uint8_t>(GamepadButtonStatus::Down));
             const bool_t isPress = statuses.at(static_cast<uint8_t>(GamepadButtonStatus::Pressed));
             
@@ -181,30 +181,25 @@ void Input::CheckGamepadAtLaunch()
 
 void Input::Reset()
 {
-    for (uint8_t i = 0; i < static_cast<uint8_t>(MouseButton::Count) - 1; i++)
+    for (auto& button : m_Mouse)
     {
-        MouseStatuses& statuses = m_Mouse.at(i);
-        statuses.at(static_cast<uint8_t>(MouseButtonStatus::Pressed)) = false;
-        statuses.at(static_cast<uint8_t>(MouseButtonStatus::Release)) = false;
+        button.at(static_cast<uint8_t>(MouseButtonStatus::Pressed)) = false;
+        button.at(static_cast<uint8_t>(MouseButtonStatus::Release)) = false;
     }
 
-    for (uint16_t i = 0; i < static_cast<uint16_t>(Key::Count) - 1; i++)
+    for (auto& key : m_Keyboard)
     {
-        KeyStatuses& statuses = m_Keyboard.at(i);
-        statuses.at(static_cast<uint16_t>(KeyStatus::Pressed)) = false;
-        statuses.at(static_cast<uint16_t>(KeyStatus::Release)) = false;
-        statuses.at(static_cast<uint8_t>(KeyStatus::Repeat)) = false;
+        key.at(static_cast<uint16_t>(KeyStatus::Pressed)) = false;
+        key.at(static_cast<uint16_t>(KeyStatus::Release)) = false;
+        key.at(static_cast<uint8_t>(KeyStatus::Repeat)) = false;
     }
 
-    for (auto& i : m_GamepadsButton)
+    for (auto& gamepad : m_GamepadsButton)
     {
-        for (uint32_t k = 0; k < i.size(); k++)
+        for (auto& button : gamepad)
         {
-            for (uint32_t j = 0; j < i.at(k).size(); j++)
-            {
-                i.at(k).at(static_cast<uint8_t>(GamepadButtonStatus::Pressed)) = false;
-                i.at(k).at(static_cast<uint8_t>(GamepadButtonStatus::Release)) = false;
-            }
+            button.at(static_cast<uint8_t>(GamepadButtonStatus::Pressed)) = false;
+            button.at(static_cast<uint8_t>(GamepadButtonStatus::Release)) = false;
         }
     }
 }
