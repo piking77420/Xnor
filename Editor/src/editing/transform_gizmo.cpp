@@ -14,7 +14,7 @@ void TransfromGizmo::SetRendering(const XnorCore::Camera& camera, const Vector2 
     ImGuizmo::SetRect(windowPos.x, windowPos.y, static_cast<float_t>(windowSize.x), static_cast<float_t>(windowSize.y));
 }
 
-void TransfromGizmo::Manipulate(XnorCore::Entity& entity)
+bool TransfromGizmo::Manipulate(XnorCore::Entity& entity)
 {
     UserInput();
     XnorCore::Transform& transform = entity.transform;
@@ -23,7 +23,7 @@ void TransfromGizmo::Manipulate(XnorCore::Entity& entity)
         nullptr,useSnap ? snap.Raw() : nullptr);
     
     if (!ImGuizmo::IsOver() || !ImGuizmo::IsUsing())
-        return;
+        return false;
     
     Vector3 position;
     Vector3 eulerRotation;
@@ -42,6 +42,9 @@ void TransfromGizmo::Manipulate(XnorCore::Entity& entity)
     transform.SetRotationEulerAngle() = eulerRotation * Calc::Deg2Rad;
     transform.SetRotation() = Quaternion::FromEuler(eulerRotation);
     transform.SetScale() = scale;
+    
+    return true;
+    
 }
 
 void TransfromGizmo::UserInput()

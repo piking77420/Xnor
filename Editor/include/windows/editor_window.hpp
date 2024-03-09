@@ -21,7 +21,9 @@ public:
 protected:
     void DrawOnTopOfImage();
 
-    void EditTransform();
+    bool EditTransform();
+
+    void SelectEntityOnScreen();
     
 private:
     EditorCamera m_EditorCamera;

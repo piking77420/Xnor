@@ -13,37 +13,16 @@ void EditorWindow::Display()
 {
     RenderWindow::Display();
     DrawOnTopOfImage();
+     
+    if (EditTransform())
+        return;
+
     if (IsFocused())
     {
         m_EditorCamera.UpdateCamera();
+        SelectEntityOnScreen();
     }
-
     m_EditorCamera.OnPressGoToObject();
-    EditTransform();
-
-    if (ImGui::IsMouseClicked(0))
-    {
-        const Vector2 mousepos = XnorCore::Utils::FromImVec(ImGui::GetMousePos());
-        Vector2i mouseposI = { static_cast<int32_t>(mousepos.x) , static_cast<int32_t>(mousepos.y) };
-        mouseposI -= m_Position;
-        // Flip the y axis 
-        mouseposI.y = m_Size.y - mouseposI.y;
-        
-        if (mouseposI.x >= m_Size.x || mouseposI.y >= m_Size.y || mouseposI.x < 0 || mouseposI.y < 0)
-        {
-            XnorCore::Logger::LogInfo("OffScree",mouseposI);
-            return;
-        }
-        XnorCore::Logger::LogInfo("Mouse pos {}",mouseposI);
-
-        XnorCore::Entity* ptr = nullptr;
-
-        if(m_Viewport->GetEntityFromScreen(mouseposI,&ptr))
-        {
-            XnorCore::Logger::LogInfo("Entity name is {}",ptr->name);
-            m_Editor->data.selectedEntity = ptr;
-        }
-    }
 }
 
 void EditorWindow::DrawOnTopOfImage()
@@ -77,12 +56,44 @@ void EditorWindow::DrawOnTopOfImage()
     ImGui::PopStyleVar();
 }
 
-void EditorWindow::EditTransform()
+bool EditorWindow::EditTransform()
 {
     if (!m_Editor->data.selectedEntity)
-        return;
+        return false;
 
     const XnorCore::Camera& cam = m_Editor->data.editorCam;
     m_TransfromGizmo.SetRendering(cam,{ static_cast<float_t>(m_Position.x), static_cast<float_t>(m_Position.y) }, m_Size);
-    m_TransfromGizmo.Manipulate(*m_Editor->data.selectedEntity);
+    
+    return m_TransfromGizmo.Manipulate(*m_Editor->data.selectedEntity);
+}
+
+void EditorWindow::SelectEntityOnScreen()
+{
+        
+      if (ImGui::IsMouseClicked(0))
+      {
+            const Vector2 mousepos = XnorCore::Utils::FromImVec(ImGui::GetMousePos());
+            Vector2i mouseposI = { static_cast<int32_t>(mousepos.x) , static_cast<int32_t>(mousepos.y) };
+            mouseposI -= m_Position;
+            // Flip the y axis 
+            mouseposI.y = m_Size.y - mouseposI.y;
+            
+            if (mouseposI.x >= m_Size.x || mouseposI.y >= m_Size.y || mouseposI.x < 0 || mouseposI.y < 0)
+            {
+                XnorCore::Logger::LogInfo("OffScree",mouseposI);
+                return;
+            }
+            XnorCore::Logger::LogInfo("Mouse pos {}",mouseposI);
+    
+            XnorCore::Entity* ptr = nullptr;
+    
+            if (m_Viewport->GetEntityFromScreen(mouseposI,&ptr))
+            {
+                XnorCore::Logger::LogInfo("Entity name is {}",ptr->name);
+                m_Editor->data.selectedEntity = ptr;
+                return;
+            }
+
+          m_Editor->data.selectedEntity = nullptr;
+      }
 }
