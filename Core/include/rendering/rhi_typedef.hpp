@@ -203,6 +203,8 @@ enum class Attachment
 	Color18,
 	/// @brief Color attachment 19
 	Color19,
+	/// @brief Color attachment 20
+	Color20,
 	/// @brief Depth attachment
 	Depth,
 	/// @brief Stencil attachment

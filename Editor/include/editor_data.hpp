@@ -15,6 +15,9 @@ struct EditorData
     XnorCore::Camera gameCam;
     XnorCore::Camera editorCam;
     XnorCore::Pointer<XnorCore::File> currentScene;
+    
+    XnorCore::Viewport gameViewPort;
+    XnorCore::Viewport editorViewPort;
 };
 
 END_XNOR_EDITOR

@@ -8,13 +8,15 @@ BEGIN_XNOR_EDITOR
 class EditorWindow : public RenderWindow
 {
 public:
-    explicit EditorWindow(Editor* editor);
+    explicit EditorWindow(Editor* editor, XnorCore::Viewport& viewport);
 
     ~EditorWindow() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(EditorWindow)
 
     void Display() override;
+
+    void GetEntitiesFromPixel(Vector2i pixel,XnorCore::Entity** ptr);
 
 protected:
     void DrawOnTopOfImage();

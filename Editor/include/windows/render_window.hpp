@@ -10,9 +10,9 @@ BEGIN_XNOR_EDITOR
 class RenderWindow : public UiWindow
 {
 public:
-    explicit RenderWindow(Editor* editor);
+    explicit RenderWindow(Editor* editor, XnorCore::Viewport& viewport);
     
-    RenderWindow(Editor* editor, const std::string& title);
+    explicit RenderWindow(Editor* editor, const std::string& title, XnorCore::Viewport& viewport);
 
     ~RenderWindow() override = default;
     
@@ -23,7 +23,7 @@ public:
     void OnApplicationRendering() override;
 
 protected:
-    XnorCore::Viewport m_Vieport;
+    XnorCore::Viewport* m_Viewport;
 };
 
 END_XNOR_EDITOR

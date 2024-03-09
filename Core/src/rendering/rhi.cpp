@@ -492,6 +492,7 @@ uint32_t Rhi::CreateFrameBuffer(const RenderPass& renderPass, const std::vector<
 			case Attachment::Color17:
 			case Attachment::Color18:
 			case Attachment::Color19:
+			case Attachment::Color20:
 				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
 				if(renderTargetInfos[i].isDrawingOn)
 				openglAttachmentsdraw.push_back(openglAttachment);

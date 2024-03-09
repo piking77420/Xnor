@@ -3,11 +3,10 @@
 
 using namespace XnorEditor; 
 
-EditorWindow::EditorWindow(Editor* editor)
-    : RenderWindow(editor, "Editor") , m_EditorCamera(*m_Editor, m_Editor->data.editorCam)
+EditorWindow::EditorWindow(Editor* editor, XnorCore::Viewport& viewport)
+    : RenderWindow(editor, "Editor",viewport) , m_EditorCamera(*m_Editor, m_Editor->data.editorCam)
 {
-    m_Vieport.isEditor = true;
-    m_Vieport.camera = &editor->data.editorCam;
+   
 }
 
 void EditorWindow::Display()
@@ -21,6 +20,30 @@ void EditorWindow::Display()
 
     m_EditorCamera.OnPressGoToObject();
     EditTransform();
+
+    if (ImGui::IsMouseClicked(0))
+    {
+        const Vector2 mousepos = XnorCore::Utils::FromImVec(ImGui::GetMousePos());
+        Vector2i mouseposI = { static_cast<int32_t>(mousepos.x) , static_cast<int32_t>(mousepos.y) };
+        mouseposI -= m_Position;
+        // Flip the y axis 
+        mouseposI.y = m_Size.y - mouseposI.y;
+        
+        if (mouseposI.x >= m_Size.x || mouseposI.y >= m_Size.y || mouseposI.x < 0 || mouseposI.y < 0)
+        {
+            XnorCore::Logger::LogInfo("OffScree",mouseposI);
+            return;
+        }
+        XnorCore::Logger::LogInfo("Mouse pos {}",mouseposI);
+
+        XnorCore::Entity* ptr = nullptr;
+
+        if(m_Viewport->GetEntityFromScreen(mouseposI,&ptr))
+        {
+            XnorCore::Logger::LogInfo("Entity name is {}",ptr->name);
+            m_Editor->data.selectedEntity = ptr;
+        }
+    }
 }
 
 void EditorWindow::DrawOnTopOfImage()

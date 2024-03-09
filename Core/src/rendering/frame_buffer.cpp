@@ -19,6 +19,20 @@ void FrameBuffer::Create(const RenderPass& renderPass, const std::vector<const T
 	m_Id = Rhi::CreateFrameBuffer(renderPass, attachments);
 }
 
+void FrameBuffer::GetPixelFromAttachment(
+	uint32_t attachmentIndex,
+	Vector2i position,
+	TextureFormat textureFormat,
+	DataType dataType,
+	void* output
+) const
+{
+	Rhi::BindFrameBuffer(m_Id);
+	Rhi::GetPixelFromAttachement(attachmentIndex,position,textureFormat,dataType,output);
+	Rhi::UnbindFrameBuffer();
+
+}
+
 Vector2i FrameBuffer::GetSize() const
 {
 	return m_FrameBufferSize;

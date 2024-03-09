@@ -16,7 +16,7 @@ class Editor : public XnorCore::Application
 {
 public:
 	void CheckWindowResize() override;
-
+	
 	EditorData data;
 
 	explicit Editor();
@@ -30,9 +30,6 @@ public:
 private:
 	static constexpr const char_t* SerializedScenePath = "assets/scenes/basic_scene.scene.xml";
 	
-	XnorCore::Viewport m_GameRenderContext;
-	XnorCore::Viewport m_EditorRenderContext;
-
 	std::vector<UiWindow*> m_UiWindows;
 
 	void UpdateWindow();

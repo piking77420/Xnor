@@ -32,6 +32,7 @@ out VS_OUT
     vec3 normal;
     vec2 texCoords; 
     mat3 Tbn;
+    flat uint meshDrawId;
 } vs_out;
 
 void main()
@@ -53,4 +54,6 @@ void main()
        vec3 N = normalize(vec3(model * vec4(aNormal, 0.0)));
        vs_out.Tbn = mat3(T, B, N);
     }
+
+    vs_out.meshDrawId = drawId;
 }

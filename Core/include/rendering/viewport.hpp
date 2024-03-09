@@ -3,6 +3,7 @@
 #include "frame_buffer.hpp"
 #include "viewport_data.hpp"
 #include "rendering/camera.hpp"
+#include "scene/entity.hpp"
 
 /// @file renderer_context.hpp
 /// @brief Defines the XnorCore::RendererContext class.
@@ -15,6 +16,7 @@ BEGIN_XNOR_CORE
 class Viewport
 {
 public:
+	
 	/// @brief The Camera used to render a frame.
 	const Camera* camera = nullptr;
 
@@ -30,7 +32,11 @@ public:
 	bool_t isEditor = false;
 	
 	ViewportData viewportData;
+
+	// Returne true if there is a entities at this pixel
+	XNOR_ENGINE bool GetEntityFromScreen(Vector2i pixelPos, XnorCore::Entity** entity) const;
 	
+
 	XNOR_ENGINE void Init(Vector2i newSize);
 
 	XNOR_ENGINE void Destroy();

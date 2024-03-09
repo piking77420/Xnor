@@ -184,6 +184,8 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		Transform& transform = meshRenderer->entity->transform;
 		ModelUniformData modelData;
 		modelData.model = transform.worldMatrix;
+		modelData.meshRenderIndex = i + 1;
+
 		
 		try
 		{
