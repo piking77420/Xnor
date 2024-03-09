@@ -22,9 +22,6 @@ public:
 private:
     Editor* m_EditorRef = nullptr;
     XnorCore::Camera* m_EditorRefCamera = nullptr;
-
-    // Go to object variable
-    Vector3 m_ObjectPos;
     float_t m_DistanceToStop = 0.f;
 
     Vector2 m_MouseDragStart;
@@ -36,6 +33,8 @@ private:
 
     bool_t m_IsMoving = false;
     bool_t m_FirstMove = false;
+
+    float_t m_MouseWheelZoom = 50.f;
     
     void CameraOnRightClick();
     

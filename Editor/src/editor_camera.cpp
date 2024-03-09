@@ -1,7 +1,7 @@
 #include "editor_camera.hpp"
 
-#include <assimp/Logger.hpp>
 #include <ImGui/imgui_internal.h>
+#include <Maths/easing.hpp>
 
 #include "editor.hpp"
 #include "input/time.hpp"
@@ -42,6 +42,7 @@ void EditorCamera::CameraOnRightClick()
     {
         XnorCore::Window::SetCursorHidden(false);
     }
+
 }
 
 void EditorCamera::EditorCameraRotation()
@@ -67,8 +68,8 @@ void EditorCamera::EditorCameraRotation()
 
 void EditorCamera::EditorCameraMovement()
 {
-    const float_t dt = XnorCore::Time::GetDeltaTime();
-    const float_t cameraSpeed = m_CameraSpeed * dt;
+    
+    const float_t cameraSpeed = m_CameraSpeed;
 
     Vector3 addVector;
 
@@ -95,13 +96,20 @@ void EditorCamera::EditorCameraMovement()
 
 void EditorCamera::OnMiddleButton()
 {
+    const ImGuiIO& io = ImGui::GetIO();
+
     if (ImGui::IsMouseDown(ImGuiMouseButton_Middle))
     {
-        const ImGuiIO& io = ImGui::GetIO();
         
-        const Vector3 vector = m_EditorRefCamera->right * -io.MouseDelta.x + m_EditorRefCamera->up * -io.MouseDelta.y;
-        m_EditorRefCamera->position += vector * XnorCore::Time::GetDeltaTime() * m_CameraSpeed;
+        const Vector3 vector = m_EditorRefCamera->right * io.MouseDelta.x + m_EditorRefCamera->up * io.MouseDelta.y;
+        AddMovement(vector * m_CameraSpeed);
     }
+
+    if (io.MouseWheel == 0.f)
+        return;
+    
+    const Vector3 vector = -m_EditorRefCamera->front * io.MouseWheel;
+    AddMovement(vector * m_MouseWheelZoom);
 }
 
 void EditorCamera::OnPressGoToObject()
@@ -121,8 +129,6 @@ void EditorCamera::OnPressGoToObject()
     
     const XnorCore::Entity& currentEntiy = *m_EditorRef->data.selectedEntity;
     const XnorCore::MeshRenderer* meshRenderer = currentEntiy.GetComponent<XnorCore::MeshRenderer>();
-    m_ObjectPos = currentEntiy.transform.GetPosition();
-    m_EditorRefCamera->LookAt(m_ObjectPos);
     
     if (meshRenderer == nullptr)
     {
@@ -145,8 +151,11 @@ void EditorCamera::GoToObject()
 {
     if (!m_EditorRef->data.gotoObject)
         return;
-    
-    Vector3 forwardVec = (m_ObjectPos - m_EditorRefCamera->position);
+    const XnorCore::Entity& currentEntiy = *m_EditorRef->data.selectedEntity;
+    const Vector3 pos = static_cast<Vector3>(currentEntiy.transform.worldMatrix[3]);
+    m_EditorRefCamera->LookAt(static_cast<Vector3>(currentEntiy.transform.worldMatrix[3]));
+
+    Vector3 forwardVec = (pos - m_EditorRefCamera->position);
     const float_t distance = forwardVec.Length();
         
     if (distance <= m_DistanceToStop)
@@ -163,7 +172,10 @@ void EditorCamera::AddMovement(const Vector3& movement)
 {
     if (movement == Vector3::Zero())
         return;
+
+    Vector3 currentPos =  m_EditorRefCamera->position;
+    Vector3 nextPos = m_EditorRefCamera->position + movement;
     
-    m_EditorRefCamera->position += movement;
+    m_EditorRefCamera->position = Vector3::Lerp(m_EditorRefCamera->position,m_EditorRefCamera->position + movement,XnorCore::Time::GetDeltaTime() * m_CameraSpeed);
     m_EditorRef->data.gotoObject = false;
 }

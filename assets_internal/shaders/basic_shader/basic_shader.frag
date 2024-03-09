@@ -62,9 +62,9 @@ uniform sampler2D diffuseTexture;
 
 vec3 CalcPointLight(PointLightData light, vec3 viewDir, vec3 fragPos, vec3 normal, vec3 albedo)
 {
-    float distanceCamLight = distance(cameraPos, fragPos);
+    float distanceLightToFragment = distance(light.position, fragPos);
 
-    if (distanceCamLight < light.radius)
+    if (distanceLightToFragment < light.radius)
         return vec3(0);
 
     vec3 lightDir = normalize(light.position - fragPos);

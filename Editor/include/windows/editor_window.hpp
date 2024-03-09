@@ -15,11 +15,9 @@ public:
     DEFAULT_COPY_MOVE_OPERATIONS(EditorWindow)
 
     void Display() override;
-
-    void GetEntitiesFromPixel(Vector2i pixel,XnorCore::Entity** ptr);
-
+    
 protected:
-    void DrawOnTopOfImage();
+    bool DrawOnTopOfImage();
 
     bool EditTransform();
 
@@ -29,7 +27,6 @@ private:
     EditorCamera m_EditorCamera;
     TransfromGizmo m_TransfromGizmo;
 
-    
 };
 
 END_XNOR_EDITOR
