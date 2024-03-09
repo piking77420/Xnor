@@ -64,7 +64,7 @@ vec3 CalcPointLight(PointLightData light, vec3 viewDir, vec3 fragPos, vec3 norma
 {
     float distanceLightToFragment = distance(light.position, fragPos);
 
-    if (distanceLightToFragment < light.radius)
+    if (distanceLightToFragment > light.radius)
         return vec3(0);
 
     vec3 lightDir = normalize(light.position - fragPos);
