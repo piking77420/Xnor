@@ -21,18 +21,13 @@ void Renderer::Initialize()
 	Rhi::PrepareUniform();
 }
 
-void Renderer::Shutdown() const
-{
-	m_ToneMapping.Destroy();
-}
-
-void Renderer::BeginFrame(Scene& scene)
+void Renderer::BeginFrame(const Scene& scene)
 {
 	m_LightManager.BeginFrame(scene);
 	Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit));
 }
 
-void Renderer::EndFrame(Scene& scene)
+void Renderer::EndFrame(const Scene& scene)
 {
 	m_LightManager.EndFrame(scene);
 }
@@ -60,14 +55,8 @@ void Renderer::RenderViewport(const Viewport& viewport,
 	};
 
 	viewport.colorPass.BeginRenderPass(renderPassBeginInfo);
-	
-	m_DrawTextureToScreenShader->Use();
-	viewport.viewportData.colorAttachment->BindTexture(0);
-	Rhi::DrawQuad(m_Quad->GetId());
-	m_DrawTextureToScreenShader->Unuse();
-	
+	m_ToneMapping.ComputeToneMaping(*viewport.viewportData.colorAttachment,m_Quad);
 	viewport.colorPass.EndRenderPass();
-
 }
 
 void Renderer::SwapBuffers()
@@ -95,14 +84,13 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	const RenderPassBeginInfo renderPassBeginInfoLit =
 	{
 		.frameBuffer = viewportData.renderBuffer,
-		.renderAreaOffset = { 0, 0,},
+		.renderAreaOffset = { 0, 0 },
 		.renderAreaExtent = viewportSize,
 		.clearBufferFlags = static_cast<BufferFlag>(BufferFlagColorBit),
 		.clearColor = clearColor
 	};
 
-	glDisable(GL_DEPTH_TEST);
-
+	Rhi::DepthTest(false);
 	viewportData.colorPass.BeginRenderPass(renderPassBeginInfoLit);
 	m_GBufferShaderLit->Use();
 	// Set Shader Info
@@ -111,7 +99,7 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	viewportData.albedoAttachment->BindTexture(GbufferAlbedo);
 	Rhi::DrawQuad(m_Quad->GetId());
 	m_GBufferShaderLit->Unuse();
-	glEnable(GL_DEPTH_TEST);
+	Rhi::DepthTest(true);
 
 }
 

@@ -892,7 +892,7 @@ void Rhi::OpenglDebugCallBack(const uint32_t source, const uint32_t type, const 
 void Rhi::Initialize()
 {
 	gladLoadGL();
-	glEnable(GL_DEPTH_TEST);
+	DepthTest(true);
 	glEnable(GL_BLEND);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_STENCIL_TEST);
@@ -999,4 +999,9 @@ TextureFormat Rhi::GetTextureFormatFromChannels(const uint32_t channels)
 		default:
 			return TextureFormat::Rgb;
 	}
+}
+
+void Rhi::DepthTest(bool value)
+{
+	value ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST); 
 }

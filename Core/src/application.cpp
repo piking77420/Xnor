@@ -24,7 +24,6 @@ Application::Application()
 
 Application::~Application()
 {
-	renderer.Shutdown();
     ResourceManager::UnloadAll();
 	Rhi::Shutdown();
 

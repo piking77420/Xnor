@@ -196,6 +196,7 @@ public:
 	/// @return Texture format
 	XNOR_ENGINE static TextureFormat GetTextureFormatFromChannels(uint32_t channels);
 
+	XNOR_ENGINE static void DepthTest(bool value);
 private:
 	struct ModelInternal
 	{

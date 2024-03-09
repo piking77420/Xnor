@@ -38,17 +38,14 @@ public:
 
     /// @brief Initializes the renderer
     XNOR_ENGINE void Initialize();
-
-    /// @brief Shutdowns the renderer
-    XNOR_ENGINE void Shutdown() const;
-
+    
     /// @brief Update All the infos of the current frame lights, animation, etc...
     /// @param scene The current world's scene of the app
-    XNOR_ENGINE void BeginFrame(Scene& scene);
+    XNOR_ENGINE void BeginFrame(const Scene& scene);
 
     /// @brief stuff made at the end of the frame
     /// @param world The current world's scene of the app
-    XNOR_ENGINE void EndFrame(Scene& scene);
+    XNOR_ENGINE void EndFrame(const Scene& scene);
 
     /// @brief Renders the current scene
     /// @param rendererContext Renderer context
