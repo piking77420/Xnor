@@ -1,6 +1,4 @@
-#include "rendering\skybox_renderer.hpp"
-
-#include <glad/glad.h>
+#include "rendering/render_systems/skybox_renderer.hpp"
 
 #include "rendering/rhi.hpp"
 #include "resource/resource_manager.hpp"

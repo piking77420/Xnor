@@ -1,13 +1,14 @@
 ﻿#pragma once
 
 #include "core.hpp"
-#include "light/directional_light.hpp"
-#include "light/point_light.hpp"
-#include "light/spot_light.hpp"
+#include "rendering/light/directional_light.hpp"
+#include "rendering/light/point_light.hpp"
+#include "rendering/light/spot_light.hpp"
 #include "rendering/camera.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
 #include "resource/texture.hpp"
+#include "scene/scene.hpp"
 
 /// @file light_manager.hpp
 /// @brief Defines the XnorCore::LightManager class.
@@ -28,14 +29,13 @@ public:
     XNOR_ENGINE void InitResources();
 
     /// @brief Computes the internal lights to send to the GPU
-    XNOR_ENGINE void UpdateLight(const std::vector<const PointLight*>& pointLightComponents,
-        const std::vector<const SpotLight*>& spotLightsComponents,
-        const std::vector<const DirectionalLight*>& directionalComponent) const;
+    XNOR_ENGINE void BeginFrame(const Scene& scene);
+    
+    /// @brief End frame
+    XNOR_ENGINE void EndFrame(const Scene& scene);
 
     /// @brief Draws the light gizmos
-    XNOR_ENGINE void DrawLightGizmo(const std::vector<const PointLight*>& pointLightComponents,
-        const std::vector<const SpotLight*>& spotLightsComponents,
-        const std::vector<const DirectionalLight*>& directionalComponent, const Camera& camera) const;
+    XNOR_ENGINE void DrawLightGizmo(const Camera& camera) const;
     
 private:
     enum class RenderingLight
@@ -50,6 +50,10 @@ private:
         Vector3 pos;
         RenderingLight type;
     };
+
+    std::vector<const PointLight*> pointLights;
+    std::vector<const SpotLight*> spotLights;
+    std::vector<const DirectionalLight*> directionalLights;
 
     Pointer<Texture> m_PointLightTexture;
     Pointer<Texture> m_DirLightTexture;

@@ -1,7 +1,8 @@
 #pragma once
 
 #include "core.hpp"
-#include "frame_buffer.hpp"
+#include "rendering/frame_buffer.hpp"
+#include "rendering/render_pass.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
 
@@ -25,7 +26,7 @@ public:
     
     /// @brief Prepares the tone mapping
     /// @param windowSize Window size
-    XNOR_ENGINE void Prepare(Vector2i windowSize);
+    XNOR_ENGINE void OnResize(Vector2i windowSize);
 
     /// @brief Destroys the tone mapping resources
     XNOR_ENGINE void Destroy() const;
@@ -49,6 +50,8 @@ public:
 private:
     Pointer<Shader> m_Aces = nullptr;
 
+    RenderPass m_ToneMappingRenderPass;
+    
     FrameBuffer* m_FrameBuffer = nullptr;
     Texture* m_ColorAttachment = nullptr;
 };

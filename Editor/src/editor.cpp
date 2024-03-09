@@ -26,6 +26,11 @@
 
 using namespace XnorEditor;
 
+void Editor::CheckWindowResize()
+{
+	
+}
+
 Editor::Editor()
 {
 	const XnorCore::Pointer<XnorCore::File> logoFile = XnorCore::FileManager::Get("assets_internal/editor/logo.png");
@@ -305,6 +310,15 @@ void Editor::UpdateWindow()
 		w->Display();
 		ImGui::End();
 	}
+	
+}
+
+void Editor::OnRenderingWindow()
+{
+	for (UiWindow* w : m_UiWindows)
+	{
+		w->OnApplicationRendering();
+	}
 }
 
 void Editor::BeginFrame()
@@ -322,9 +336,7 @@ void Editor::Update()
 {
 	using namespace XnorCore;
 
-	renderer.PrepareRendering(Window::GetSize());
 	CreateTestScene();
-
 	Window::Show();
 	
 	while (!Window::ShouldClose())
@@ -334,36 +346,17 @@ void Editor::Update()
 		Input::HandleEvent();
 		BeginFrame();
 		CheckWindowResize();
-
-		ImGui::Begin("Renderer Settings");
-		if (ImGui::Button("Recompile Shader"))
-			renderer.CompileShader();
-		ImGui::End();
-
+		
+		renderer.BeginFrame(World::scene);
 		UpdateWindow();
 		WorldBehaviours();
-	
+		OnRenderingWindow();
+		renderer.EndFrame(World::scene);
+
 		Input::Update();
 		EndFrame();
 		renderer.SwapBuffers();
 	}
-}
-
-void Editor::CheckWindowResize()
-{
-	if (!XnorCore::Window::resizeFrameBuffer)
-		return;
-
-	const Vector2i newWindowSize = XnorCore::Window::GetSize();
-
-	renderer.OnResize(newWindowSize);
-	
-	for (UiWindow* w : m_UiWindows)
-	{
-		w->OnWindowResize(newWindowSize);
-	}
-	
-	XnorCore::Window::resizeFrameBuffer = false;
 }
 
 void Editor::EndFrame()

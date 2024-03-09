@@ -1,4 +1,4 @@
-﻿#include "..\..\include\rendering\light_manager.hpp"
+﻿#include "rendering/render_systems/light_manager.hpp"
 
 #include "rendering/rhi.hpp"
 #include "rendering/rhi_typedef.hpp"
@@ -27,28 +27,28 @@ void LightManager::InitResources()
 	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
 }
 
-void LightManager::UpdateLight(
-	const std::vector<const PointLight*>& pointLightComponents,
-	const std::vector<const SpotLight*>& spotLightsComponents,
-	const std::vector<const DirectionalLight*>& directionalComponent
-) const
+void LightManager::BeginFrame(const Scene& scene)
 {
-    if (directionalComponent.size() > MaxDirectionalLights)
+	scene.GetAllComponentOfType<PointLight>(&pointLights);
+	scene.GetAllComponentOfType<SpotLight>(&spotLights);
+	scene.GetAllComponentOfType<DirectionalLight>(&directionalLights);
+	
+    if (directionalLights.size() > MaxDirectionalLights)
 		Logger::LogWarning("You cannot have more than 1 directional light in the scene");
 
 	GpuLightData gpuLightData
 	{
-		.nbrOfPointLight = static_cast<uint32_t>(pointLightComponents.size()),
-		.nbrOfSpotLight = static_cast<uint32_t>(spotLightsComponents.size())
+		.nbrOfPointLight = static_cast<uint32_t>(pointLights.size()),
+		.nbrOfSpotLight = static_cast<uint32_t>(spotLights.size())
 	};
 
-	const size_t nbrOfpointLight = std::clamp<size_t>(pointLightComponents.size(), 0, MaxPointLights);
-	const size_t nbrOfSpotLight = std::clamp<size_t>(spotLightsComponents.size(), 0, MaxSpotLights);
-	const size_t nbrOfDirectionalLight = std::clamp<size_t>(directionalComponent.size(), 0, MaxSpotLights);
+	const size_t nbrOfpointLight = std::clamp<size_t>(pointLights.size(), 0, MaxPointLights);
+	const size_t nbrOfSpotLight = std::clamp<size_t>(spotLights.size(), 0, MaxSpotLights);
+	const size_t nbrOfDirectionalLight = std::clamp<size_t>(directionalLights.size(), 0, MaxSpotLights);
 
 	for (size_t i = 0; i < nbrOfpointLight; i++)
 	{
-		const PointLight* pointLight = pointLightComponents[i];
+		const PointLight* pointLight = pointLights[i];
 		
 		gpuLightData.pointLightData[i] =
 		{
@@ -62,7 +62,7 @@ void LightManager::UpdateLight(
 
 	for (size_t i = 0 ; i < nbrOfSpotLight ; i++)
 	{
-		const SpotLight* spotLight = spotLightsComponents[i];
+		const SpotLight* spotLight = spotLights[i];
 		const Matrix matrix = Matrix::Trs(Vector3(0.f), spotLight->entity->transform.GetRotation().Normalized(), Vector3(1.f));
 		const Vector4 direction = matrix * -Vector4::UnitY();
 		
@@ -82,13 +82,13 @@ void LightManager::UpdateLight(
 	for (size_t i = 0 ; i < nbrOfDirectionalLight ; i++)
 	{
 		constexpr float_t scaleFactor = 0.5f;
-		const Matrix matrix = Matrix::Trs(Vector3(0.f), directionalComponent[i]->entity->transform.GetRotation(), Vector3(scaleFactor));
+		const Matrix matrix = Matrix::Trs(Vector3(0.f), directionalLights[i]->entity->transform.GetRotation(), Vector3(scaleFactor));
 		const Vector4 direction = matrix * -Vector4::UnitY(); 
 		
 		gpuLightData.directionalData[i] =
 		{
-			.color = directionalComponent[i]->color.Rgb(),
-			.intensity = directionalComponent[i]->intensity,
+			.color = directionalLights[i]->color.Rgb(),
+			.intensity = directionalLights[i]->intensity,
 			.direction = { direction.x, direction.y, direction.z },
 		};
 	}
@@ -96,16 +96,18 @@ void LightManager::UpdateLight(
 	Rhi::UpdateLight(gpuLightData);
 }
 
-void LightManager::DrawLightGizmo(
-	const std::vector<const PointLight*>& pointLightComponents,
-	const std::vector<const SpotLight*>& spotLightsComponents,
-	const std::vector<const DirectionalLight*>& directionalComponent,
-	const Camera& camera
-) const
+void LightManager::EndFrame(const Scene&)
+{
+	pointLights.clear();
+	spotLights.clear();
+	directionalLights.clear();
+}
+
+void LightManager::DrawLightGizmo(const Camera& camera) const
 {
 	std::map<float_t, GizmoLight> sortedLight;
 	
-	for (const PointLight* const pointLight : pointLightComponents)
+	for (const PointLight* const pointLight : pointLights)
 	{
 		GizmoLight gizmoLight = {
 			.pos = pointLight->entity->transform.GetPosition(),
@@ -116,7 +118,7 @@ void LightManager::DrawLightGizmo(
 		sortedLight.emplace(distance, gizmoLight);
 	}
 	
-	for (const SpotLight* const spotLight : spotLightsComponents)
+	for (const SpotLight* const spotLight : spotLights)
 	{
 		GizmoLight gizmoLight = {
 			.pos = spotLight->entity->transform.GetPosition(),
@@ -127,7 +129,7 @@ void LightManager::DrawLightGizmo(
 		sortedLight.emplace(distance, gizmoLight);
 	}
 	
-	for (const DirectionalLight* const dirLight : directionalComponent)
+	for (const DirectionalLight* const dirLight : directionalLights)
 	{
 		GizmoLight gizmoLight = {
 			.pos = dirLight->entity->transform.GetPosition(),

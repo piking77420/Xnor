@@ -1,5 +1,5 @@
 #include "rendering/frame_buffer.hpp"
-
+#include "rendering/render_pass.hpp"
 #include "rendering/rhi.hpp"
 
 using namespace XnorCore;
@@ -22,16 +22,6 @@ void FrameBuffer::Create(const RenderPass& renderPass, const std::vector<const T
 Vector2i FrameBuffer::GetSize() const
 {
 	return m_FrameBufferSize;
-}
-
-void FrameBuffer::BindFrameBuffer() const 
-{
-	Rhi::BindFrameBuffer(m_Id);
-}
-
-void FrameBuffer::UnBindFrameBuffer() const 
-{
-	Rhi::BindFrameBuffer(0);
 }
 
 uint32_t FrameBuffer::GetId() const

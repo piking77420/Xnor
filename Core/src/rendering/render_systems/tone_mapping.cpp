@@ -1,5 +1,6 @@
-#include "rendering/tone_mapping.hpp"
+#include "rendering/render_systems/tone_mapping.hpp"
 
+#include "rendering/frame_buffer.hpp"
 #include "rendering/render_pass.hpp"
 #include "rendering/rhi.hpp"
 #include "resource/resource_manager.hpp"
@@ -13,34 +14,46 @@ void ToneMapping::InitializeResources()
     m_Aces->Use();
     m_Aces->SetInt("beforeToneMappedImage", 10);
     m_Aces->Unuse();
-}
-
-void ToneMapping::Prepare(const Vector2i windowSize)
-{
-    m_FrameBuffer = new FrameBuffer(windowSize);
-    m_ColorAttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);
+    
     const std::vector<RenderTargetInfo> attachementsType =
-    {
+   {
         {
-            .attachment = Attachment::Color00,
+            .attachment = Attachment::Color00,.isDrawingOn = false
         },
     };
     // Set Up renderPass
-    const RenderPass renderPass(attachementsType);
+    m_ToneMappingRenderPass = RenderPass(attachementsType);
+}
+
+void ToneMapping::OnResize(const Vector2i windowSize)
+{
+    m_FrameBuffer = new FrameBuffer(windowSize);
+    m_ColorAttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);
+   
     const std::vector<const Texture*> targets = { m_ColorAttachment };
 
-    m_FrameBuffer->Create(renderPass, targets);
+    m_FrameBuffer->Create(m_ToneMappingRenderPass, targets);
 }
 
 void ToneMapping::ComputeToneMaping(const Texture& imageWithoutToneMapping, const Pointer<Model>& quadModel) const
 {
-    m_FrameBuffer->BindFrameBuffer();
+    
+    RenderPassBeginInfo renderPassBeginInfo =
+    {
+        .frameBuffer = m_FrameBuffer,
+        .renderAreaOffset = { 0, 0},
+        .renderAreaExtent = m_FrameBuffer->GetSize(),
+        .clearBufferFlags = static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit),
+        .clearColor = { 0, 0, 0, 0 }
+    };
+    
+    m_ToneMappingRenderPass.BeginRenderPass(renderPassBeginInfo);
 
     m_Aces->Use();
     imageWithoutToneMapping.BindTexture(10);
     Rhi::DrawQuad(quadModel->GetId());
     m_Aces->Unuse();
-    m_FrameBuffer->UnBindFrameBuffer();
+    m_ToneMappingRenderPass.EndRenderPass();  
 }
 
 const Texture& ToneMapping::GetToneMapedImage() const
@@ -51,7 +64,7 @@ const Texture& ToneMapping::GetToneMapedImage() const
 void ToneMapping::OnResizeWindow(const Vector2i windowSize)
 {
     Destroy();
-    Prepare(windowSize);
+    OnResize(windowSize);
 }
 
 void ToneMapping::Destroy() const

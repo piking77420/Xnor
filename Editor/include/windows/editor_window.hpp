@@ -5,7 +5,7 @@
 #include "editing/transform_gizmo.hpp"
 
 BEGIN_XNOR_EDITOR
-    class EditorWindow : public RenderWindow
+class EditorWindow : public RenderWindow
 {
 public:
     explicit EditorWindow(Editor* editor);
@@ -17,8 +17,6 @@ public:
     void Display() override;
 
 protected:
-    void Initialize(Vector2i size) override;
-
     void DrawOnTopOfImage();
 
     void EditTransform();

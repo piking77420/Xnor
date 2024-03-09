@@ -14,26 +14,16 @@ public:
     
     RenderWindow(Editor* editor, const std::string& title);
 
-    ~RenderWindow() override;
+    ~RenderWindow() override = default;
     
     DEFAULT_COPY_MOVE_OPERATIONS(RenderWindow);
     
     void Display() override;
 
-    void OnWindowResize(Vector2i newWindowSize) override;
+    void OnApplicationRendering() override;
 
 protected:
-    XnorCore::RendererContext m_RendererContext;
-    
-    XnorCore::FrameBuffer m_FrameBuffer;
-    
-    XnorCore::RenderPass m_RenderPass;
-    
-    XnorCore::Texture* m_ColorTexture = nullptr;
-
-    void ResizeRenderContext(Vector2i size);
-    
-    virtual void Initialize(Vector2i size);
+    XnorCore::Viewport m_Vieport;
 };
 
 END_XNOR_EDITOR

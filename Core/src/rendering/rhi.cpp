@@ -5,6 +5,7 @@
 
 #include "window.hpp"
 #include "rendering/render_pass.hpp"
+#include "rendering/frame_buffer.hpp"
 #include "resource/shader.hpp"
 #include "utils/logger.hpp"
 
@@ -15,9 +16,9 @@ void Rhi::SetPolygonMode(const PolygonFace face, const PolygonMode mode)
 	glPolygonMode(static_cast<GLenum>(face), GL_POINT + static_cast<GLenum>(mode));
 }
 
-void Rhi::SetViewport(const Vector2i screenSize)
+void Rhi::SetViewport(const Vector2i screenOffset, const Vector2i screenSize)
 {
-	glViewport(0, 0, screenSize.x, screenSize.y);
+	glViewport(screenOffset.x, screenOffset.y, screenSize.x, screenSize.y);
 }
 
 void Rhi::DrawQuad(const uint32_t quadId)
@@ -25,6 +26,19 @@ void Rhi::DrawQuad(const uint32_t quadId)
 	const ModelInternal model = m_ModelMap.at(quadId);
 	glBindVertexArray(model.vao);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}
+
+void Rhi::BeginRenderPassInternal(const RenderPassBeginInfo& beginInfo)
+{
+	Rhi::BindFrameBuffer(beginInfo.frameBuffer->GetId());
+	Rhi::SetClearColor(beginInfo.clearColor);
+	Rhi::ClearBuffer(beginInfo.clearBufferFlags);
+	Rhi::SetViewport(beginInfo.renderAreaOffset,beginInfo.renderAreaExtent);
+}
+
+void Rhi::EndRenderPass()
+{
+	Rhi::UnbindFrameBuffer();
 }
 
 uint32_t Rhi::CreateModel(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices)
@@ -479,6 +493,7 @@ uint32_t Rhi::CreateFrameBuffer(const RenderPass& renderPass, const std::vector<
 			case Attachment::Color18:
 			case Attachment::Color19:
 				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
+				if(renderTargetInfos[i].isDrawingOn)
 				openglAttachmentsdraw.push_back(openglAttachment);
 				break;
 			
@@ -533,11 +548,7 @@ void Rhi::BlitFrameBuffer(
 
 void Rhi::BindFrameBuffer(const uint32_t frameBufferId)
 {
-	if (m_LastFrameBufferId != frameBufferId)
-	{
-		m_LastFrameBufferId = frameBufferId;
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
-	}
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
 }
 
 void Rhi::UnbindFrameBuffer()

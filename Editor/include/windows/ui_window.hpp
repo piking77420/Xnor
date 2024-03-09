@@ -34,7 +34,8 @@ public:
     
     void FetchInfo();
 
-    virtual void OnWindowResize(Vector2i newWindowSize);
+    // Whenever the window need to render after the update of the world
+    virtual void OnApplicationRendering();
 
 protected:
     std::string m_WindowTitle = "Untitled";

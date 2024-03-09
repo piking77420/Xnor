@@ -8,8 +8,9 @@
 /// @brief Defines the XnorCore::FrameBuffer class
 
 BEGIN_XNOR_CORE
+class RenderPass;
 
-/// \brief Encapsulates a framebuffer object
+	/// \brief Encapsulates a framebuffer object
 class FrameBuffer
 {
 public:
@@ -31,12 +32,6 @@ public:
 	/// @brief Gets the size of the framebuffer
 	/// @return Size
 	XNOR_ENGINE	Vector2i GetSize() const;
-	
-	/// @brief Binds the framebuffer
-	XNOR_ENGINE void BindFrameBuffer() const;
-
-	/// @brief Unbinds the framebuffer
-	XNOR_ENGINE void UnBindFrameBuffer() const;
 	
 	/// @brief Gets the id of the framebuffer
 	/// @return Framebuffer id

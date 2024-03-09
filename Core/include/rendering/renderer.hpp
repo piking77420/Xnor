@@ -3,10 +3,10 @@
 #include <Maths/vector4.hpp>
 
 #include "core.hpp"
-#include "light_manager.hpp"
-#include "renderer_context.hpp"
-#include "skybox_renderer.hpp"
-#include "tone_mapping.hpp"
+#include "render_systems/light_manager.hpp"
+#include "viewport.hpp"
+#include "render_systems/skybox_renderer.hpp"
+#include "render_systems/tone_mapping.hpp"
 #include "rendering/render_pass.hpp"
 #include "resource/model.hpp"
 #include "world/world.hpp"
@@ -42,42 +42,24 @@ public:
     /// @brief Shutdowns the renderer
     XNOR_ENGINE void Shutdown() const;
 
+    /// @brief Update All the infos of the current frame lights, animation, etc...
+    /// @param scene The current world's scene of the app
+    XNOR_ENGINE void BeginFrame(Scene& scene);
+
+    /// @brief stuff made at the end of the frame
+    /// @param world The current world's scene of the app
+    XNOR_ENGINE void EndFrame(Scene& scene);
+
     /// @brief Renders the current scene
     /// @param rendererContext Renderer context
-    XNOR_ENGINE void RenderScene(const RendererContext& rendererContext) const;
-
-    /// @brief Re-compiles the internal shaders
-    XNOR_ENGINE void CompileShader(); 
-
+    XNOR_ENGINE void RenderViewport(const Viewport& viewport, Scene& scene, Skybox& skybox) const;
+    
     /// @brief Swaps the front and back buffer
     XNOR_ENGINE void SwapBuffers();
-
-    /// @brief Handles a window resize event
-    /// @param windowSize Window size
-    XNOR_ENGINE void OnResize(Vector2i windowSize);
-
-    /// @brief Prepares rendering
-    /// @param windowSize Window size
-    XNOR_ENGINE void PrepareRendering(Vector2i windowSize);
-
 private:
     LightManager m_LightManager;
-    
-    FrameBuffer* m_GframeBuffer = nullptr;
-    // Deferred attachment GBuffers
-    Texture* m_PositionAtttachment = nullptr;
-    Texture* m_NormalAttachement = nullptr;
-    Texture* m_AlbedoAttachment = nullptr;
-    
-    Texture* m_DepthGbufferAtttachment = nullptr;
-    RenderPass m_GbufferPass;
-    
-    FrameBuffer* m_RenderBuffer = nullptr;
-    // Forward Attachment
-    Texture* m_ColorAttachment = nullptr;
-    Texture* m_DepthAttachment = nullptr;
-
-    Texture* m_Stencsil = nullptr;
+    ToneMapping m_ToneMapping;
+    SkyboxRenderer m_SkyboxRenderer;
     
     Pointer<Shader> m_GBufferShader;
     Pointer<Shader> m_GBufferShaderLit;
@@ -88,31 +70,19 @@ private:
     
     Pointer<Model> m_Quad;
     Pointer<Model> m_Cube;
-
-    ToneMapping m_ToneMapping;
-    SkyboxRenderer m_SkyboxRenderer;
-
-    XNOR_ENGINE void DefferedRendering(const std::vector<const MeshRenderer*>& meshrenderers, const RendererContext* rendererContext) const;
-
-    XNOR_ENGINE void ForwardRendering(const std::vector<const MeshRenderer*>& meshrenderers, const RendererContext* rendererContext) const;
+    
+    XNOR_ENGINE void BindCamera(const Camera& camera,const Vector2i screenSize) const;
     
     XNOR_ENGINE void InitResources();
     
-    XNOR_ENGINE void InitDefferedRenderingAttachment(Vector2i windowSize);
-    
-    XNOR_ENGINE void InitForwardRenderingAttachment(Vector2i windowSize);
-    
-    XNOR_ENGINE void DestroyAttachment() const;
-
     XNOR_ENGINE void DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers, MaterialType materialtype) const;
+
+    XNOR_ENGINE void DefferedRendering(const std::vector<const MeshRenderer*>& meshRenderers, const ViewportData& viewportData, Vector2i viewportSize) const;
+    
+    XNOR_ENGINE void ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers,Skybox& skybox,
+        const Viewport& Viewport, Vector2i viewportSize, bool isEditor) const;
     
     XNOR_ENGINE void DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) const;
-
-    XNOR_ENGINE void RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRenderers) const;
-
-    XNOR_ENGINE uint32_t FetchDrawIndexToGpu(uint32_t meshRenderIndex) const;
-
-    //XNOR_ENGINE uint32_t GetMeshRenderIndexFromGpu(uint32_t meshRenderIndex) const;
 };
 
 END_XNOR_CORE

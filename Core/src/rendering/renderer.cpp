@@ -23,76 +23,51 @@ void Renderer::Initialize()
 
 void Renderer::Shutdown() const
 {
-	DestroyAttachment();
+	m_ToneMapping.Destroy();
 }
 
-void Renderer::RenderScene(const RendererContext& rendererContext) const
+void Renderer::BeginFrame(Scene& scene)
 {
-	const Scene& scene = World::scene;
-	
+	m_LightManager.BeginFrame(scene);
+	Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit));
+}
+
+void Renderer::EndFrame(Scene& scene)
+{
+	m_LightManager.EndFrame(scene);
+}
+
+void Renderer::RenderViewport(const Viewport& viewport,
+	Scene& scene, Skybox& skybox) const
+{
+	BindCamera(*viewport.camera,viewport.viewPortSize);
+
 	std::vector<const MeshRenderer*> meshrenderers;
 	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderers);
-	
-	std::vector<const PointLight*> pointLights;
-	std::vector<const SpotLight*> spotLights;
-	std::vector<const DirectionalLight*> directionalLights;
-	scene.GetAllComponentOfType<PointLight>(&pointLights);
-	scene.GetAllComponentOfType<SpotLight>(&spotLights);
-	scene.GetAllComponentOfType<DirectionalLight>(&directionalLights);
 
-	// Update Light
-	m_LightManager.UpdateLight(pointLights,spotLights,directionalLights);
-	
-	// Update Camera
-	CameraUniformData cam;
-	rendererContext.camera->GetView(&cam.view);
-	rendererContext.camera->GetProjection(rendererContext.frameBuffer->GetSize(), &cam.projection);
-	cam.cameraPos = rendererContext.camera->position;
-	Rhi::UpdateCameraUniform(cam);
-	
-	Rhi::SetViewport(m_RenderBuffer->GetSize());
-	
-	// Clear MainWindow // 
-	Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit) );
-	
-	DefferedRendering(meshrenderers, &rendererContext);
+	const ViewportData& viewportData = viewport.viewportData;
 
-	// Blit depth of gbuffer to forward Pass
-	Rhi::BlitFrameBuffer(m_GframeBuffer->GetId(), m_RenderBuffer->GetId(),
-		{ 0, 0 }, m_GframeBuffer->GetSize(),
-		{ 0, 0 }, m_RenderBuffer->GetSize(), static_cast<BufferFlag>(BufferFlagDepthBit | BufferFlagStencilBit), TextureFiltering::Nearest);
+	DefferedRendering(meshrenderers,viewportData,viewport.viewPortSize);
+	ForwardPass(meshrenderers, skybox, viewport, viewport.viewPortSize, viewport.isEditor);
 	
-	// ForwardPass //
-	ForwardRendering(meshrenderers, &rendererContext);
-	m_SkyboxRenderer.DrawSkymap(m_Cube, World::skybox);
-
-	if (rendererContext.isEditor)
-		m_LightManager.DrawLightGizmo(pointLights, spotLights, directionalLights, *rendererContext.camera);
-
-	m_RenderBuffer->UnBindFrameBuffer();
-	
-	// DRAW THE FINAL IMAGE TEXTURE
-	m_ToneMapping.ComputeToneMaping(*m_ColorAttachment, m_Quad);
-
-	if (rendererContext.frameBuffer != nullptr)
+	const RenderPassBeginInfo renderPassBeginInfo =
 	{
-		rendererContext.frameBuffer->BindFrameBuffer();
-		Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit) );
-		Rhi::SetViewport(rendererContext.frameBuffer->GetSize());
-	}
+		.frameBuffer = viewport.frameBuffer,
+		.renderAreaOffset = { 0, 0,},
+		.renderAreaExtent = viewport.viewPortSize,
+		.clearBufferFlags = static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit),
+		.clearColor = clearColor
+	};
+
+	viewport.colorPass.BeginRenderPass(renderPassBeginInfo);
 	
 	m_DrawTextureToScreenShader->Use();
-	m_ToneMapping.GetToneMapedImage().BindTexture(0);
+	viewport.viewportData.colorAttachment->BindTexture(0);
 	Rhi::DrawQuad(m_Quad->GetId());
 	m_DrawTextureToScreenShader->Unuse();
 	
-	if (rendererContext.frameBuffer != nullptr)
-		rendererContext.frameBuffer->UnBindFrameBuffer();
-}
+	viewport.colorPass.EndRenderPass();
 
-void Renderer::CompileShader()
-{
-	m_ToneMapping.RecompileShader();
 }
 
 void Renderer::SwapBuffers()
@@ -100,22 +75,114 @@ void Renderer::SwapBuffers()
 	Rhi::SwapBuffers();
 }
 
-void Renderer::OnResize(const Vector2i windowSize)
+void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRenderers,const ViewportData& viewportData,const Vector2i viewportSize) const 
 {
-	DestroyAttachment();
-	m_ToneMapping.OnResizeWindow(windowSize);
-	InitDefferedRenderingAttachment(windowSize);
-	InitForwardRenderingAttachment(windowSize);
+	const RenderPassBeginInfo renderPassBeginInfo =
+	{
+		.frameBuffer = viewportData.gframeBuffer,
+		.renderAreaOffset = { 0, 0,},
+		.renderAreaExtent = viewportSize,
+		.clearBufferFlags = static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit),
+		.clearColor = clearColor
+	};
+	
+	viewportData.gbufferPass.BeginRenderPass(renderPassBeginInfo);
+	m_GBufferShader->Use();
+	DrawMeshRendersByType(meshRenderers, MaterialType::Opaque);
+	m_GBufferShader->Unuse();
+	viewportData.gbufferPass.EndRenderPass();
+
+	const RenderPassBeginInfo renderPassBeginInfoLit =
+	{
+		.frameBuffer = viewportData.renderBuffer,
+		.renderAreaOffset = { 0, 0,},
+		.renderAreaExtent = viewportSize,
+		.clearBufferFlags = static_cast<BufferFlag>(BufferFlagColorBit),
+		.clearColor = clearColor
+	};
+
+	glDisable(GL_DEPTH_TEST);
+
+	viewportData.colorPass.BeginRenderPass(renderPassBeginInfoLit);
+	m_GBufferShaderLit->Use();
+	// Set Shader Info
+	viewportData.positionAtttachment->BindTexture(GbufferPosition);
+	viewportData.normalAttachement->BindTexture(GbufferNormal);
+	viewportData.albedoAttachment->BindTexture(GbufferAlbedo);
+	Rhi::DrawQuad(m_Quad->GetId());
+	m_GBufferShaderLit->Unuse();
+	glEnable(GL_DEPTH_TEST);
+
 }
 
-void Renderer::PrepareRendering(const Vector2i windowSize)
+void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers,Skybox& skybox, const Viewport& Viewport,
+	Vector2i viewportSize, bool isEditor) const
 {
-	InitDefferedRenderingAttachment(windowSize);
-	InitForwardRenderingAttachment(windowSize);
-	m_ToneMapping.Prepare(windowSize);
+
+	const ViewportData& viewportData = Viewport.viewportData;
+	
+	const RenderPassBeginInfo renderPassBeginInfoLit =
+	{
+		.frameBuffer = viewportData.renderBuffer,
+		.renderAreaOffset = { 0, 0,},
+		.renderAreaExtent = viewportSize,
+		.clearBufferFlags = static_cast<BufferFlag>(BufferFlagNone),
+		.clearColor = clearColor
+	};
+
+	viewportData.colorPass.BeginRenderPass(renderPassBeginInfoLit);
+	
+	m_Forward->Use();
+	DrawMeshRendersByType(meshRenderers, MaterialType::Lit);
+	m_Forward->Unuse();
+
+	if (isEditor)
+	{
+		DrawAabb(meshRenderers);
+	}
+	m_SkyboxRenderer.DrawSkymap(m_Cube,skybox);
+
+	if (isEditor)
+	{
+		m_LightManager.DrawLightGizmo(*Viewport.camera);
+	}
+	viewportData.colorPass.EndRenderPass();
 }
 
-void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers, const MaterialType materialtype) const
+void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) const
+{
+	m_GizmoShader->Use();
+	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Line);
+	ModelUniformData modelData;
+
+	for (uint32_t i = 0; i < meshRenderers.size(); i++)
+	{
+		const MeshRenderer* meshRenderer = meshRenderers[i];
+
+		if (!meshRenderer->model.IsValid())
+			continue;
+
+		if (!meshRenderer->drawModelAabb)
+			continue;
+
+		const Transform& transform =  meshRenderer->entity->transform;
+		const Model::Aabb&& modelAabb = meshRenderer->model->GetAabb();
+
+		const Vector3&& aabbSize = (modelAabb.max - modelAabb.min) * 0.5f;
+		const Vector3&& center  = (modelAabb.max + modelAabb.min) * 0.5f;
+
+		const Matrix&& trsAabb = Matrix::Trs(center, Quaternion::Identity(), aabbSize);
+		modelData.model = transform.worldMatrix * trsAabb;
+		Rhi::UpdateModelUniform(modelData);
+
+		Rhi::DrawModel(m_Cube->GetId());
+	}
+	
+	m_GizmoShader->Unuse();
+	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
+}
+
+void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers, const MaterialType materialType) const
 {
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 
@@ -123,13 +190,12 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 	{
 		const MeshRenderer* meshRenderer =  meshRenderers[i];
 		
-		if (meshRenderer->material.materialType != materialtype)
+		if (meshRenderer->material.materialType != materialType)
 			continue;
 		
 		Transform& transform = meshRenderer->entity->transform;
 		ModelUniformData modelData;
 		modelData.model = transform.worldMatrix;
-		modelData.meshRenderIndex = FetchDrawIndexToGpu(i);
 		
 		try
 		{
@@ -154,112 +220,16 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 			Rhi::DrawModel(meshRenderer->model->GetId());
 		}
 	}
+
 }
 
-void Renderer::InitDefferedRenderingAttachment(const Vector2i windowSize)
+void Renderer::BindCamera(const Camera& camera,const Vector2i screenSize) const
 {
-	m_GframeBuffer = new FrameBuffer(windowSize);
-	m_PositionAtttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);
-	m_NormalAttachement = new Texture(TextureInternalFormat::Rgb16F, windowSize);
-	m_AlbedoAttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);
-	m_DepthGbufferAtttachment = new Texture(TextureInternalFormat::DepthComponent32FStencil8, windowSize);
-	
-	const std::vector<RenderTargetInfo> attachementsType =
-	{
-		{
-			.attachment = Attachment::Color00
-		},
-		{
-			.attachment = Attachment::Color01
-		},
-		{
-			.attachment = Attachment::Color02
-		},
-		{
-			.attachment = Attachment::Depth
-		},
-	};
-	
-	// Set Up renderPass
-	const RenderPass renderPass(attachementsType);
-
-	const std::vector<const Texture*> targets = { m_PositionAtttachment, m_NormalAttachement, m_AlbedoAttachment, m_DepthGbufferAtttachment};
-	m_GframeBuffer->Create(renderPass, targets);
-	
-	// Init gbuffer Texture
-	m_GBufferShaderLit->Use();
-
-	m_PositionAtttachment->BindTexture(GbufferPosition);
-	
-	m_NormalAttachement->BindTexture(GbufferNormal);
-	
-	m_AlbedoAttachment->BindTexture(GbufferAlbedo);
-	
-	m_GBufferShaderLit->Unuse();
-}
-
-void Renderer::InitForwardRenderingAttachment(const Vector2i windowSize)
-{
-	m_RenderBuffer = new FrameBuffer(windowSize);
-	m_ColorAttachment = new Texture(TextureInternalFormat::Rgb16F, m_RenderBuffer->GetSize());
-	m_DepthAttachment = new Texture(TextureInternalFormat::DepthComponent32FStencil8, m_RenderBuffer->GetSize());
-
-	const std::vector<RenderTargetInfo> attachementsType =
-	{
-		{
-			.attachment = Attachment::Color00,
-		},
-		{
-			.attachment = Attachment::Depth,
-		}
-	};
-	
-	// Set Up renderPass
-	const RenderPass renderPass(attachementsType);
-	const std::vector<const Texture*> targets = { m_ColorAttachment, m_DepthAttachment };
-	m_RenderBuffer->Create(renderPass, targets);
-}
-
-void Renderer::DestroyAttachment() const
-{
-	delete m_GframeBuffer;
-	delete m_PositionAtttachment;
-	delete m_AlbedoAttachment;
-	delete m_NormalAttachement;
-	delete m_DepthGbufferAtttachment;
-	
-	delete m_RenderBuffer;
-	delete m_DepthAttachment;
-	delete m_ColorAttachment;
-}
-
-void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshrenderers, const RendererContext*) const
-{
-	// Bind for gbuffer pass // 
-	m_GframeBuffer->BindFrameBuffer();
-	Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit));
-	m_GBufferShader->Use();
-	DrawMeshRendersByType(meshrenderers, MaterialType::Opaque);
-	m_GBufferShader->Unuse();
-	
-	// Shading Gbuffer Value //
-	m_RenderBuffer->BindFrameBuffer();
-	
-	Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit));
-	m_GBufferShaderLit->Use();
-	Rhi::DrawQuad(m_Quad->GetId());
-	m_GBufferShaderLit->Unuse();
-	// END DEFERRED RENDERING
-}
-
-void Renderer::ForwardRendering(const std::vector<const MeshRenderer*>& meshrenderers, const RendererContext* rendererContext) const
-{
-	m_Forward->Use();
-	DrawMeshRendersByType(meshrenderers, MaterialType::Lit);
-	m_Forward->Unuse();
-	
-	if (rendererContext->isEditor)
-		DrawAabb(meshrenderers);
+	CameraUniformData cam;
+	camera.GetView(&cam.view);
+	camera.GetProjection(screenSize, &cam.projection);
+	cam.cameraPos = camera.position;
+	Rhi::UpdateCameraUniform(cam);
 }
 
 void Renderer::InitResources()
@@ -302,60 +272,3 @@ void Renderer::InitResources()
 	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
 }
 
-void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) const
-{
-	m_GizmoShader->Use();
-	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Line);
-	ModelUniformData modelData;
-
-	for (uint32_t i = 0; i < meshRenderers.size(); i++)
-	{
-		const MeshRenderer* meshRenderer = meshRenderers[i];
-		modelData.meshRenderIndex = FetchDrawIndexToGpu(i);
-
-		if (!meshRenderer->model.IsValid())
-			continue;
-
-		if (!meshRenderer->drawModelAabb)
-			continue;
-
-		const Transform& transform =  meshRenderer->entity->transform;
-		const Model::Aabb&& modelAabb = meshRenderer->model->GetAabb();
-
-		const Vector3&& aabbSize = (modelAabb.max - modelAabb.min) * 0.5f;
-		const Vector3&& center  = (modelAabb.max + modelAabb.min) * 0.5f;
-
-		const Matrix&& trsAabb = Matrix::Trs(center, Quaternion::Identity(), aabbSize);
-		modelData.model = transform.worldMatrix * trsAabb;
-		Rhi::UpdateModelUniform(modelData);
-
-		Rhi::DrawModel(m_Cube->GetId());
-	}
-	
-	m_GizmoShader->Unuse();
-	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
-}
-
-void Renderer::RenderAllMeshes(const std::vector<const MeshRenderer*>& meshRenderers) const
-{
-	ModelUniformData data;
-
-	for (const MeshRenderer* mesh : meshRenderers)
-	{
-		const Transform& transform = mesh->entity->transform;
-
-		Matrix&& trs = Matrix::Trs(transform.GetPosition(), transform.GetRotation(), transform.GetScale());
-		data.model = trs;
-		data.normalInvertMatrix = trs.Inverted().Transposed();
-
-		Rhi::UpdateModelUniform(data);
-		Rhi::DrawModel(mesh->model->GetId());
-	}
-}
-
-// We just adding one to avoid that the base color of the attachment is a valid id
-// black is zero
-uint32_t Renderer::FetchDrawIndexToGpu(const uint32_t meshRenderIndex) const
-{
-	return meshRenderIndex + 1;
-}

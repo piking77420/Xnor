@@ -10,11 +10,8 @@
 /// @brief Defines various types and enumerations needed by XnorCore::Rhi.
 
 BEGIN_XNOR_CORE
-
-class Texture;
-class RenderPass;
-
-/// @brief Maximum amount of spot lights that can exists in a same scene
+	class FrameBuffer;
+	/// @brief Maximum amount of spot lights that can exists in a same scene
 static constexpr uint32_t MaxSpotLights = 100;
 /// @brief Maximum amount of point lights that can exists in a same scene
 static constexpr uint32_t MaxPointLights = 100;
@@ -219,27 +216,10 @@ struct RenderTargetInfo
 {
 	/// @brief Attachment
 	Attachment attachment;
+
+	bool isDrawingOn = true;
 };
 
-/// @brief The RenderPass clear value.
-struct ClearValue
-{
-	Vector3 color;
-	Vector2 depth;
-};
-
-/// @brief Render pass begin info
-struct RenderPassBeginInfo
-{
-	/// @brief Render pass attached
-	RenderPass* renderPass = nullptr;
-	/// @brief Render area position
-	Vector2 renderAreaOffset{};
-	/// @brief Render area size
-	Vector2 renderAreaExtent{};
-	size_t clearValueSize{};
-	ClearValue* clearValues = nullptr;
-};
 
 /// @brief Texture creation info
 struct TextureCreateInfo
@@ -475,12 +455,29 @@ enum Gbuffer : int32_t
 };
 
 /// @brief Buffer attachment flags.
-enum BufferFlag : int32_t
+enum BufferFlag 
 {
 	BufferFlagNone = 0,
 	BufferFlagColorBit = 1 << 0,  
 	BufferFlagDepthBit = 1 << 1,
 	BufferFlagStencilBit = 1 << 2  
 };
+
+
+/// @brief Render pass begin info
+struct RenderPassBeginInfo
+{
+	/// @brief Render pass attached
+	FrameBuffer* frameBuffer = nullptr;
+	/// @brief Render area position
+	Vector2i renderAreaOffset{};
+	/// @brief Render area size
+	Vector2i renderAreaExtent{};
+
+	BufferFlag clearBufferFlags;
+
+	Vector4 clearColor;
+};
+
 
 END_XNOR_CORE

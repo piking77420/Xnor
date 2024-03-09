@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "material.hpp"
+#include "render_pass.hpp"
 #include "rhi_typedef.hpp"
 #include "uniform_buffer.hpp"
 #include "vertex.hpp"
@@ -23,7 +24,6 @@ class Rhi
 	STATIC_CLASS(Rhi)
 	
 public:
-	// Utils
 
 	/// @brief Sets the polygon mode
 	/// @param face Polygon face
@@ -32,13 +32,16 @@ public:
 	
 	/// @brief Sets the viewport mode
 	/// @param screenSize Screen size
-	XNOR_ENGINE static void SetViewport(Vector2i screenSize);
+	/// @param screenOffset Screen Offset
+	XNOR_ENGINE static void SetViewport(Vector2i screenOffset, Vector2i screenSize);
 
 	/// @brief Draws a quad
 	/// @param quadId Quad id
 	XNOR_ENGINE static void DrawQuad(uint32_t quadId);
 
-	// Model
+	XNOR_ENGINE static void BeginRenderPassInternal(const RenderPassBeginInfo& beginInfo);
+	
+	XNOR_ENGINE static void EndRenderPass();
 
 	/// @brief Creates a model
 	/// @param vertices Model vertices
@@ -56,8 +59,6 @@ public:
 	/// @param modelId Model id
 	XNOR_ENGINE static void DrawModel(uint32_t modelId); 
 	
-	// Shader
-
 	/// @brief Destroy a shader program
 	/// @param shaderId Shader id
 	XNOR_ENGINE static void DestroyProgram(uint32_t shaderId);
@@ -249,9 +250,7 @@ private:
 		const char_t* message,
 		const void* userParam
 	);
-
-	XNOR_ENGINE static inline uint32_t m_LastFrameBufferId = 0;
-
+	
 	XNOR_ENGINE static inline UniformBuffer* m_CameraUniform;
 	XNOR_ENGINE static inline UniformBuffer* m_LightShadowMappingUniform;
 	XNOR_ENGINE static inline UniformBuffer* m_ModelUniform;

@@ -15,6 +15,8 @@ class UserInput;
 class Editor : public XnorCore::Application
 {
 public:
+	void CheckWindowResize() override;
+
 	EditorData data;
 
 	explicit Editor();
@@ -25,17 +27,17 @@ public:
 	
 	void Update() override;
 
-	void CheckWindowResize() override;
-	
 private:
 	static constexpr const char_t* SerializedScenePath = "assets/scenes/basic_scene.scene.xml";
 	
-	XnorCore::RendererContext m_GameRenderContext;
-	XnorCore::RendererContext m_EditorRenderContext;
+	XnorCore::Viewport m_GameRenderContext;
+	XnorCore::Viewport m_EditorRenderContext;
 
 	std::vector<UiWindow*> m_UiWindows;
 
 	void UpdateWindow();
+
+	void OnRenderingWindow();
 	
 	void BeginFrame();
 

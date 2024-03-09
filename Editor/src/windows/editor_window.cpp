@@ -6,8 +6,8 @@ using namespace XnorEditor;
 EditorWindow::EditorWindow(Editor* editor)
     : RenderWindow(editor, "Editor") , m_EditorCamera(*m_Editor, m_Editor->data.editorCam)
 {
-    m_RendererContext.isEditor = true;
-    m_RendererContext.camera = &editor->data.editorCam;
+    m_Vieport.isEditor = true;
+    m_Vieport.camera = &editor->data.editorCam;
 }
 
 void EditorWindow::Display()
@@ -21,12 +21,6 @@ void EditorWindow::Display()
 
     m_EditorCamera.OnPressGoToObject();
     EditTransform();
-}
-
-void EditorWindow::Initialize(const Vector2i size)
-{
-    RenderWindow::Initialize(size);
-    m_RendererContext.camera = &m_Editor->data.editorCam;
 }
 
 void EditorWindow::DrawOnTopOfImage()

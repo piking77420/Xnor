@@ -22,6 +22,10 @@ public:
     /// @brief Creates a render pass with attachments
     /// @param attachments Attachments
     XNOR_ENGINE explicit RenderPass(const std::vector<RenderTargetInfo>& attachments);
+
+    XNOR_ENGINE void BeginRenderPass(const RenderPassBeginInfo& beginInfo) const;
+
+    XNOR_ENGINE void EndRenderPass() const;
     
     XNOR_ENGINE ~RenderPass() = default;
 
