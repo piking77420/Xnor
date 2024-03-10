@@ -71,7 +71,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>externals\libs\lib\$(Configuration);externals\libs\lib\Common;$(OutDir);..\Core\externals\libs\lib\Common;..\Core\externals\libs\lib\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Core.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -100,7 +100,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>externals\libs\lib\$(Configuration);externals\libs\lib\Common;$(OutDir);..\Core\externals\libs\lib\Common;..\Core\externals\libs\lib\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Core.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
