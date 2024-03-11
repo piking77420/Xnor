@@ -14,8 +14,9 @@ struct Material
 
 layout (std140, binding = 4) uniform MaterialDataUniform
 {
-	int hasAlbedoMap;
-    int hasNormalmap;
+    vec3 AlbedoColor;
+    bool hasAlbedoMap;
+    bool hasNormalmap;
 };
 
 in VS_OUT {
@@ -31,7 +32,7 @@ void main()
 {
     gPosition = fs_in.fragPos;
 
-    if (hasNormalmap == 0)
+    if (hasNormalmap == false)
     {
         gNormal = normalize(fs_in.normal);
     }
@@ -43,6 +44,14 @@ void main()
         gNormal.rgb = normalize(fs_in.Tbn * normal); 
     }
 
-    gAlbedoSpec.rgb = texture(material.albedo, fs_in.texCoords).rgb;
+    if (hasAlbedoMap == false)
+    {
+        gAlbedoSpec.rgb = AlbedoColor;
+    }   
+    else
+    {
+        gAlbedoSpec.rgb = AlbedoColor;
+        gAlbedoSpec.rgb = texture(material.albedo, fs_in.texCoords).rgb;
+    }
     
 }

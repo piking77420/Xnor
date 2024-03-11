@@ -227,42 +227,14 @@ void Editor::CreateTestScene()
 	using namespace XnorCore;
 	
 	// init Scene //
-	Entity& ent1 = *World::scene.CreateEntity("VikingRoom");
+	Entity& ent1 = *World::scene.CreateEntity("Sphere");
 	MeshRenderer* meshRenderer = ent1.AddComponent<MeshRenderer>();
 	ent1.transform.SetPosition() = { 0.f, 3.f, 0.f };
+	meshRenderer->model = ResourceManager::Get<Model>(FileManager::Get("assets/models/sphere.obj"));
+	meshRenderer->material.albedoColor = { 0.f, 1.f, 1.f }; 
+	Entity& ent2 = *World::scene.CreateEntity("Directional");
+	ent2.AddComponent<DirectionalLight>();
 	
-	meshRenderer->model = ResourceManager::Get<Model>(FileManager::Get("assets/models/viking_room.obj"));
-	Pointer<File>&& vikingRoomTexture = FileManager::Get("assets/textures/viking_room.png");
-	meshRenderer->material.albedo = ResourceManager::Get<Texture>(vikingRoomTexture);
-	meshRenderer->material.albedo->loadData.flipVertically = true;
-	meshRenderer->material.albedo->Unload();
-	meshRenderer->material.albedo->Load(vikingRoomTexture);
-	meshRenderer->material.albedo->CreateInRhi();
-
-	Entity& ent2 = *World::scene.CreateEntity("DirectionalLight");
-	DirectionalLight* dirlight = ent2.AddComponent<DirectionalLight>();
-	dirlight->intensity = 0.2f;
-	dirlight->color = Colorf(1.f, 1.f, 1.f);
-
-	Entity& pointLightentity = *World::scene.CreateEntity("PointLight");
-	PointLight* pointLight = pointLightentity.AddComponent<PointLight>();
-	pointLight->color = { 7.7f, 0.f, 3.f };
-	pointLightentity.AddComponent<TestComponent>();
-	pointLightentity.transform.SetPosition() = { 0.f, 2.f, -2.f };
-	
-	Entity& ent3 = *World::scene.CreateEntity("Plane");
-	meshRenderer = ent3.AddComponent<MeshRenderer>();
-	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
-	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/wood.jpg");
-	ent3.transform.SetScale() = { 10.f, 0.1f, 10.f };
-	ent3.transform.SetPosition() -= { 0.f, -0.2f, 0.f};
-	
-	Entity& ent4 = *World::scene.CreateEntity("CubeMinecraft");
-	ent4.transform.SetPosition() = { 2.f, 0, 2.f};
-	meshRenderer = ent4.AddComponent<MeshRenderer>();
-	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
-	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/diamond_block.jpg");
-
 	const std::array<std::string, 6> testCubeMap
 	{
 		"assets/skybox/right.jpg",

@@ -33,6 +33,9 @@ public:
     Pointer<Texture> albedo;
     /// @brief Normal map
     Pointer<Texture> normalMap;
+
+
+    Colorf albedoColor;
 };
 
 END_XNOR_CORE
@@ -42,5 +45,6 @@ REFL_AUTO(
     type(XnorCore::Material),
     field(materialType),
     field(albedo),
-    field(normalMap)
+    field(normalMap),
+    field(albedoColor)
 );

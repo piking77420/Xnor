@@ -23,8 +23,9 @@ layout (std140, binding = 1) uniform ModelUniform
 
 layout (std140, binding = 4) uniform MaterialDataUniform
 {
-	int hasAlbedoMap;
-    int hasNormalmap;
+    vec3 AlbedoColor;
+	bool hasAlbedoMap;
+    bool hasNormalmap;
 };
 
 out VS_OUT
@@ -43,7 +44,7 @@ void main()
     gl_Position =  projection * view * model * vec4(aPos, 1.0);
 
     // Compute Normal
-    if (hasNormalmap == 0)
+    if (hasNormalmap == false)
     {
         vs_out.normal = mat3(normalInvertMatrix) * aNormal;
     }

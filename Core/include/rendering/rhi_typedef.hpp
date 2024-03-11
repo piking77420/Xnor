@@ -10,7 +10,7 @@
 /// @brief Defines various types and enumerations needed by XnorCore::Rhi.
 
 BEGIN_XNOR_CORE
-	class FrameBuffer;
+class FrameBuffer;
 	/// @brief Maximum amount of spot lights that can exists in a same scene
 static constexpr uint32_t MaxSpotLights = 100;
 /// @brief Maximum amount of point lights that can exists in a same scene
@@ -445,8 +445,9 @@ struct ShadowMappingData
 /// @brief Material UniformBuffer data
 struct MaterialData
 {
-	int32_t hasAlbedoMap = 0;
-	int32_t hasNormalmap = 0;
+	Vector3 albedoColor;
+	int hasAlbedoMap;
+	int hasNormalmap;
 };
 
 /// @brief The type of GBuffer.
