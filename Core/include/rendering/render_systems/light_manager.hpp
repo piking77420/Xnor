@@ -35,7 +35,10 @@ public:
     XNOR_ENGINE void EndFrame(const Scene& scene);
 
     /// @brief Draws the light gizmos
-    XNOR_ENGINE void DrawLightGizmo(const Camera& camera) const;
+    XNOR_ENGINE void DrawLightGizmo(const Camera& camera, const Scene& scene) const;
+
+    XNOR_ENGINE void DrawLightGizmoWithShader(const Camera& camera, const Scene& scene,const Pointer<Shader>& shader) const;
+
     
 private:
     enum class RenderingLight
@@ -48,6 +51,7 @@ private:
     struct GizmoLight
     {
         Vector3 pos;
+        const Light* light = nullptr;
         RenderingLight type;
     };
 

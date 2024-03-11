@@ -5,9 +5,9 @@
 #include "application.hpp"
 #include "definitions.hpp"
 #include "editor_data.hpp"
+#include "editing/picking_strategy.hpp"
 
 BEGIN_XNOR_EDITOR
-
 class UiWindow;
 class RenderWindow;
 class UserInput;
@@ -18,7 +18,7 @@ public:
 	void CheckWindowResize() override;
 	
 	EditorData data;
-
+	
 	explicit Editor();
 
 	~Editor() override;

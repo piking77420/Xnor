@@ -493,7 +493,7 @@ uint32_t Rhi::CreateFrameBuffer(const RenderPass& renderPass, const std::vector<
 			case Attachment::Color18:
 			case Attachment::Color19:
 			case Attachment::Color20:
-				openglAttachment = GL_COLOR_ATTACHMENT0 + i;
+				openglAttachment = GL_COLOR_ATTACHMENT0 + static_cast<uint32_t>(renderTargetInfos[i].attachment);
 				if(renderTargetInfos[i].isDrawingOn)
 				openglAttachmentsdraw.push_back(openglAttachment);
 				break;
@@ -781,6 +781,10 @@ uint32_t Rhi::GetOpenglDataType(const DataType dataType)
 
 		case DataType::UnsignedByte:
 			return GL_UNSIGNED_BYTE;
+		
+		case DataType::UnsignedByte64:
+			return GL_UNSIGNED_INT_8_8_8_8;
+			break;
 	}
 
 	return GL_UNSIGNED_BYTE;

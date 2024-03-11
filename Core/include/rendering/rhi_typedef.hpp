@@ -150,6 +150,7 @@ enum class DataType : int32_t
 {
 	Float = 0,
 	UnsignedByte,
+	UnsignedByte64,
 };
 
 /// @brief %Texture format
@@ -280,7 +281,7 @@ struct ModelUniformData
 	/// @brief Model matrix (inverted and transposed)
 	Matrix normalInvertMatrix = Matrix::Identity();
 
-	uint32_t meshRenderIndex = 0;
+	uint64_t meshRenderIndex = 0;
 };
 
 /// @brief Uniform type for Shader

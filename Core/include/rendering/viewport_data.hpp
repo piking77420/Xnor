@@ -20,7 +20,6 @@ public:
     FrameBuffer* renderBuffer = nullptr;
     Texture* colorAttachment = nullptr;
     Texture* depthAtttachment = nullptr;
-    Texture* meshDrawIdDrawCall = nullptr;
     
     ViewportData() = default;
 

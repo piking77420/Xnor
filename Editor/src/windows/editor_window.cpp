@@ -4,7 +4,7 @@
 using namespace XnorEditor;
 
 EditorWindow::EditorWindow(Editor* editor, XnorCore::Viewport& viewport)
-    : RenderWindow(editor, "Editor", viewport)
+    : RenderWindow(editor, "Editor", viewport) , m_PickingStrategy(m_Editor)
   , m_EditorCamera(*m_Editor, m_Editor->data.editorCam)
 {
 }
@@ -12,6 +12,9 @@ EditorWindow::EditorWindow(Editor* editor, XnorCore::Viewport& viewport)
 void EditorWindow::Display()
 {
     RenderWindow::Display();
+    
+    m_PickingStrategy.ResizeHandle(m_Size);
+    
     m_TransfromGizmo.SetRendering(
         m_Editor->data.editorCam,
         {static_cast<float_t>(m_Position.x), static_cast<float_t>(m_Position.y)},
@@ -21,14 +24,13 @@ void EditorWindow::Display()
     if (DrawOnTopOfImage())
         return;
 
-
-    if (EditTransform())
-        return;
-
+    const bool isEditingTranform = EditTransform(); 
+    
     if (IsFocused())
     {
         m_EditorCamera.UpdateCamera();
 
+        if (!isEditingTranform)
         SelectEntityOnScreen();
     }
     m_EditorCamera.OnPressGoToObject();
@@ -84,6 +86,7 @@ void EditorWindow::SelectEntityOnScreen()
 {
     if (ImGui::IsMouseClicked(0))
     {
+        
         const Vector2 mousepos = XnorCore::Utils::FromImVec(ImGui::GetMousePos());
         Vector2i mouseposI = {static_cast<int32_t>(mousepos.x), static_cast<int32_t>(mousepos.y)};
         mouseposI -= m_Position;
@@ -95,9 +98,8 @@ void EditorWindow::SelectEntityOnScreen()
         }
 
         XnorCore::Entity* ptr = nullptr;
-        if (m_Viewport->GetEntityFromScreen(mouseposI, &ptr))
+        if (m_PickingStrategy.GetEntityFromScreen(mouseposI, XnorCore::World::scene, m_Editor->data.editorCam, &ptr))
         {
-            XnorCore::Logger::LogInfo("Entity name is {}", ptr->name);
             m_Editor->data.selectedEntity = ptr;
             return;
         }

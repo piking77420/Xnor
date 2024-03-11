@@ -33,10 +33,6 @@ public:
 	
 	ViewportData viewportData;
 
-	// Returne true if there is a entities at this pixel
-	XNOR_ENGINE bool GetEntityFromScreen(Vector2i pixelPos, XnorCore::Entity** entity) const;
-	
-
 	XNOR_ENGINE void Init(Vector2i newSize);
 
 	XNOR_ENGINE void Destroy();

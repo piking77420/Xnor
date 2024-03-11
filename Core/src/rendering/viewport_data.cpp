@@ -5,7 +5,6 @@ using namespace XnorCore;
 void ViewportData::Init(Vector2i windowSize)
 {
     depthAtttachment = new Texture(TextureInternalFormat::DepthComponent32FStencil8, windowSize);
-    meshDrawIdDrawCall = new Texture(TextureInternalFormat::R32F,windowSize);
     InitForward(windowSize);
     InitDeffered(windowSize);
 }
@@ -65,9 +64,6 @@ void ViewportData::InitDeffered(Vector2i windowSize)
             
         },
         {
-            .attachment = Attachment::Color03,
-        },
-        {
             .attachment = Attachment::Depth
         },
     };
@@ -75,6 +71,6 @@ void ViewportData::InitDeffered(Vector2i windowSize)
     // Set Up renderPass
     gbufferPass = RenderPass(attachementsType);
 
-    const std::vector<const Texture*> targets = { positionAtttachment, normalAttachement, albedoAttachment, meshDrawIdDrawCall,depthAtttachment};
+    const std::vector<const Texture*> targets = { positionAtttachment, normalAttachement, albedoAttachment, depthAtttachment};
     gframeBuffer->Create(gbufferPass, targets);
 }

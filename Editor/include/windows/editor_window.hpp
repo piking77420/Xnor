@@ -22,7 +22,8 @@ protected:
     bool EditTransform();
 
     void SelectEntityOnScreen();
-    
+
+    PickingStrategy m_PickingStrategy;
 private:
     EditorCamera m_EditorCamera;
     TransfromGizmo m_TransfromGizmo;
