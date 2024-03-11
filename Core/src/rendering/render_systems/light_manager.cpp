@@ -103,14 +103,22 @@ void LightManager::EndFrame(const Scene&)
 	directionalLights.clear();
 }
 
-void LightManager::DrawLightGizmo(const Camera& camera) const
+void LightManager::DrawLightGizmo(const Camera& camera, const Scene& scene) const
 {
+	DrawLightGizmoWithShader(camera,scene,m_EditorUi);
+}
+
+void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& scene,const Pointer<Shader>& shader) const
+{
+	shader->Use();
+	
 	std::map<float_t, GizmoLight> sortedLight;
 	
 	for (const PointLight* const pointLight : pointLights)
 	{
 		GizmoLight gizmoLight = {
 			.pos = pointLight->entity->transform.GetPosition(),
+			.light = pointLight,
 			.type = RenderingLight::PointLight,
 		};
 		
@@ -122,6 +130,7 @@ void LightManager::DrawLightGizmo(const Camera& camera) const
 	{
 		GizmoLight gizmoLight = {
 			.pos = spotLight->entity->transform.GetPosition(),
+			.light = spotLight,
 			.type = RenderingLight::SpothLight
 		};
 		
@@ -133,6 +142,7 @@ void LightManager::DrawLightGizmo(const Camera& camera) const
 	{
 		GizmoLight gizmoLight = {
 			.pos = dirLight->entity->transform.GetPosition(),
+			.light = dirLight,
 			.type = RenderingLight::DirLight
 		};
 		
@@ -140,7 +150,7 @@ void LightManager::DrawLightGizmo(const Camera& camera) const
 		sortedLight.emplace(distance, gizmoLight);
 	}
 	
-	m_EditorUi->Use();
+	
 	for (decltype(sortedLight)::reverse_iterator it = sortedLight.rbegin(); it != sortedLight.rend(); it++)
 	{
 		ModelUniformData modelData;
@@ -154,7 +164,9 @@ void LightManager::DrawLightGizmo(const Camera& camera) const
 		Matrix scale = Matrix::Scaling(Vector3(scaleScalar));
 		modelData.model = (scale * Matrix::LookAt(it->second.pos, camera.position, Vector3::UnitY())).Inverted();
 		modelData.normalInvertMatrix = Matrix::Identity();
-
+		// +1 to avoid the black color of the attachement be a valid index  
+		modelData.meshRenderIndex = scene.GetEntityIndex(it->second.light->entity) + 1;
+		
 		switch (it->second.type)
 		{
 			case RenderingLight::PointLight:
@@ -174,5 +186,5 @@ void LightManager::DrawLightGizmo(const Camera& camera) const
 		Rhi::DrawModel(m_Quad->GetId());
 	}
 
-	m_EditorUi->Unuse();
+	shader->Unuse();
 }

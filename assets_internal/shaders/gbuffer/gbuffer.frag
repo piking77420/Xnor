@@ -1,9 +1,10 @@
 #version 460 core
+#extension GL_NV_gpu_shader5 : require
 
 layout (location = 0) out vec3 gPosition;
 layout (location = 1) out vec3 gNormal;
 layout (location = 2) out vec4 gAlbedoSpec;
-layout (location = 3) out float meshDrawIdAttachement;
+layout (location = 3) out uint64_t meshDrawIdAttachement;
 
 struct Material
 {
@@ -22,7 +23,6 @@ in VS_OUT {
     vec3 normal;
     vec2 texCoords;
     mat3 Tbn;
-    flat uint meshDrawId;
 } fs_in;
 
 uniform Material material;
@@ -45,5 +45,4 @@ void main()
 
     gAlbedoSpec.rgb = texture(material.albedo, fs_in.texCoords).rgb;
     
-    meshDrawIdAttachement = float(fs_in.meshDrawId);
 }

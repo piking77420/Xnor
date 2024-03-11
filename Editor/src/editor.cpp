@@ -24,6 +24,7 @@
 #include "world/scene_graph.hpp"
 #include "world/world.hpp"
 
+
 using namespace XnorEditor;
 
 void Editor::CheckWindowResize()
@@ -271,7 +272,7 @@ void Editor::CreateTestScene()
 		"assets/skybox/front.jpg",
 		"assets/skybox/back.jpg"
 	};
-	World::skybox.LoadCubeMap(testCubeMap);
+	World::scene.skybox.LoadCubeMap(testCubeMap);
 }
 
 void Editor::MenuBar() const

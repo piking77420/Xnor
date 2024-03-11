@@ -4,6 +4,7 @@
 
 #include "core.hpp"
 #include "entity.hpp"
+#include "world/skybox.hpp"
 
 /// @file scene.hpp
 /// @brief Defines the XnorCore::Scene class.
@@ -16,6 +17,10 @@ class Scene : public Serializable
     REFLECTABLE_IMPL_H(Scene)
     
 public:
+
+    /// @brief Skybox handler
+    XNOR_ENGINE static inline Skybox skybox;
+    
     XNOR_ENGINE Scene() = default;
 
     XNOR_ENGINE ~Scene() override;
@@ -66,6 +71,9 @@ public:
     /// @return List of Entity
     [[nodiscard]]
     XNOR_ENGINE const List<Entity*>& GetEntities();
+
+    [[nodiscard]]
+    uint32_t GetEntityIndex(const Entity* entity) const;
 
 private:
     List<Entity*> m_Entities;

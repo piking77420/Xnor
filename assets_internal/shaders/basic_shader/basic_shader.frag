@@ -1,6 +1,5 @@
 #version 460 core
 
-layout (location = 1) out float gMeshRenderIndex;
 
 const int MaxSpotLight = 100;
 const int MaxPointLight = 100;
