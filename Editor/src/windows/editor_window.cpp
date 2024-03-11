@@ -100,7 +100,6 @@ void EditorWindow::SelectEntityOnScreen()
         XnorCore::Entity* ptr = nullptr;
         if (m_PickingStrategy.GetEntityFromScreen(mouseposI, XnorCore::World::scene, m_Editor->data.editorCam, &ptr))
         {
-            XnorCore::Logger::LogInfo("Entity name is {}", ptr->name);
             m_Editor->data.selectedEntity = ptr;
             return;
         }
