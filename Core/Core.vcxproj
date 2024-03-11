@@ -220,6 +220,7 @@
     <ClCompile Include="src\scene\component.cpp" />
     <ClCompile Include="src\scene\component\camera_component.cpp" />
     <ClCompile Include="src\scene\component\mesh_renderer.cpp" />
+    <ClCompile Include="src\scene\component\script_component.cpp" />
     <ClCompile Include="src\scene\component\test_component.cpp" />
     <ClCompile Include="src\scene\entity.cpp" />
     <ClCompile Include="src\scene\scene.cpp" />
@@ -412,6 +413,7 @@
     <ClInclude Include="include\scene\component.hpp" />
     <ClInclude Include="include\scene\component\camera_component.hpp" />
     <ClInclude Include="include\scene\component\mesh_renderer.hpp" />
+    <ClInclude Include="include\scene\component\script_component.hpp" />
     <ClInclude Include="include\scene\component\test_component.hpp" />
     <ClInclude Include="include\scene\entity.hpp" />
     <ClInclude Include="include\scene\scene.hpp" />
