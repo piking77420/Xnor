@@ -15,10 +15,18 @@ PickingStrategy::PickingStrategy(Editor* editor) : m_Editor(editor)
     
 }
 
-void PickingStrategy::Resize(Vector2i newSize)
+PickingStrategy::~PickingStrategy()
 {
     DestroyRendering();
-    InitRendering(newSize);
+}
+
+void PickingStrategy::ResizeHandle(Vector2i newSize)
+{
+    if(frameBuffer->GetSize() != newSize)
+    {
+        DestroyRendering();
+        InitRendering(newSize);
+    }
 }
 
 bool PickingStrategy::GetEntityFromScreen(
@@ -76,14 +84,14 @@ bool PickingStrategy::GetEntityFromScreen(
 void PickingStrategy::DestroyRendering() const
 {
     delete frameBuffer;
-    delete colorAttachment;
+    delete m_ColorAttachment;
     delete m_DepthAttachement;
 }
 
 void PickingStrategy::InitRendering(const Vector2i size)
 {
     frameBuffer = new XnorCore::FrameBuffer(size);
-    colorAttachment = new XnorCore::Texture(XnorCore::TextureInternalFormat::R32F,size);
+    m_ColorAttachment = new XnorCore::Texture(XnorCore::TextureInternalFormat::R32F,size);
     m_DepthAttachement = new XnorCore::Texture(XnorCore::TextureInternalFormat::DepthComponent16,size);
 
     const std::vector<XnorCore::RenderTargetInfo> attachementsType =
@@ -97,7 +105,7 @@ void PickingStrategy::InitRendering(const Vector2i size)
     };
 
     m_ColorPass = XnorCore::RenderPass(attachementsType);
-    const std::vector<const XnorCore::Texture*> targets = { colorAttachment, m_DepthAttachement };
+    const std::vector<const XnorCore::Texture*> targets = { m_ColorAttachment, m_DepthAttachement };
     frameBuffer->Create(m_ColorPass,targets);
 
 }

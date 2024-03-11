@@ -15,12 +15,13 @@ class Shader;
 class PickingStrategy
 {
 public:
-    XnorCore::FrameBuffer* frameBuffer = nullptr;
     
     explicit PickingStrategy(Editor* editor);
+
+    ~PickingStrategy();
     
     // Should be call on the Imgui editor window only
-    void Resize(Vector2i newSize);
+    void ResizeHandle(Vector2i newSize);
 
     // Pixel pos in image current Window
     bool GetEntityFromScreen(Vector2i pixelPos, XnorCore::Scene& scene,const XnorCore::Camera& pointOfView,
@@ -28,15 +29,16 @@ public:
 private:
     Editor* m_Editor = nullptr;
     XnorCore::Pointer<XnorCore::Shader> m_PickingShader;
+    
+    XnorCore::RenderPass m_ColorPass;
+    XnorCore::FrameBuffer* frameBuffer = nullptr;
 
-
+    XnorCore::Texture* m_ColorAttachment = nullptr;
+    XnorCore::Texture* m_DepthAttachement = nullptr;
+    
     void DestroyRendering() const;
 
     void InitRendering(Vector2i size);
-    
-    XnorCore::RenderPass m_ColorPass;
-    XnorCore::Texture* colorAttachment = nullptr;
-    XnorCore::Texture* m_DepthAttachement = nullptr;
 };
 
 END_XNOR_EDITOR

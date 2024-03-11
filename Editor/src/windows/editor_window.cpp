@@ -12,11 +12,8 @@ EditorWindow::EditorWindow(Editor* editor, XnorCore::Viewport& viewport)
 void EditorWindow::Display()
 {
     RenderWindow::Display();
-
-    if(m_PickingStrategy.frameBuffer->GetSize() != m_Size)
-    {
-        m_PickingStrategy.Resize(m_Size);
-    }
+    
+    m_PickingStrategy.ResizeHandle(m_Size);
     
     m_TransfromGizmo.SetRendering(
         m_Editor->data.editorCam,
@@ -33,7 +30,7 @@ void EditorWindow::Display()
     {
         m_EditorCamera.UpdateCamera();
 
-        if(!isEditingTranform)
+        if (!isEditingTranform)
         SelectEntityOnScreen();
     }
     m_EditorCamera.OnPressGoToObject();
