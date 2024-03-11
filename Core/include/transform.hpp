@@ -78,9 +78,9 @@ END_XNOR_CORE
 
 /// @private
 REFL_AUTO(type(XnorCore::Transform),
-	field(m_Position, XnorCore::NotifyChange(&XnorCore::Transform::m_Changed)),
-	field(m_EulerRotation, XnorCore::NotifyChange(&XnorCore::Transform::m_Changed)),
-	field(m_Scale, XnorCore::NotifyChange(&XnorCore::Transform::m_Changed))
+	field(m_Position, XnorCore::Reflection::NotifyChange(&XnorCore::Transform::m_Changed)),
+	field(m_EulerRotation, XnorCore::Reflection::NotifyChange(&XnorCore::Transform::m_Changed)),
+	field(m_Scale, XnorCore::Reflection::NotifyChange(&XnorCore::Transform::m_Changed))
 );
 
 /// @brief @c std::formatter template specialization for the XnorCore::Transform type.

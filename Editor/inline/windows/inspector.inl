@@ -13,7 +13,7 @@
 BEGIN_XNOR_EDITOR
 
 template <typename MemberT>
-void Inspector::DisplayScalar(MemberT* const obj, const char_t* name, [[maybe_unused]] const size_t flags)
+void Inspector::DisplayScalar(MemberT* const obj, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
 {
     uint32_t type;
 
@@ -35,10 +35,13 @@ void Inspector::DisplayScalar(MemberT* const obj, const char_t* name, [[maybe_un
         type = ImGuiDataType_Double;
 
     ImGui::InputScalar(name, type, obj);
+
+    if (metadata.HasRange())
+        *obj = std::clamp<MemberT>(*obj, metadata.range->minimum, metadata.range->maximum);
 }
 
 template <typename MemberT>
-void Inspector::DisplayMathType(MemberT* const obj, const char_t* name, [[maybe_unused]] const size_t flags)
+void Inspector::DisplayMathType(MemberT* const obj, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
 {
     if constexpr (XnorCore::Meta::IsSame<MemberT, Vector2i>)
     {
@@ -66,7 +69,7 @@ void Inspector::DisplayMathType(MemberT* const obj, const char_t* name, [[maybe_
 }
 
 template <typename MemberT>
-void Inspector::DisplayColorType(MemberT* obj, const char_t* name, [[maybe_unused]] const size_t flags)
+void Inspector::DisplayColorType(MemberT* obj, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
 {
     if constexpr (XnorCore::Meta::IsSame<MemberT, XnorCore::ColorRgb>)
     {
@@ -93,7 +96,7 @@ void Inspector::DisplayColorType(MemberT* obj, const char_t* name, [[maybe_unuse
 }
 
 template <typename MemberT>
-void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name, [[maybe_unused]] const size_t flags)
+void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
 {
     using PtrT = typename MemberT::Type;
 
@@ -168,7 +171,7 @@ void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name, [[maybe_unu
 }
 
 template <typename MemberT>
-void Inspector::DisplayRawPointer(MemberT* obj, const char_t* name, [[maybe_unused]] const size_t flags)
+void Inspector::DisplayRawPointer(MemberT* obj, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
 {
     using TypeT = XnorCore::Meta::RemovePointerSpecifier<MemberT>;
 
@@ -225,7 +228,7 @@ DisplayObject<type>(obj->Cast<type>(), XnorCore::Reflection::GetTypeInfo<type>()
 }\
 
 template <typename MemberT>
-void Inspector::DisplayPolyPointer(MemberT* obj, const char_t* name, [[maybe_unused]] const size_t flags)
+void Inspector::DisplayPolyPointer(MemberT* obj, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
 {
     const size_t hash = obj->GetHash();
 
@@ -242,7 +245,7 @@ void Inspector::DisplayPolyPointer(MemberT* obj, const char_t* name, [[maybe_unu
 }
 
 template <typename MemberT>
-void Inspector::DisplayEnum(MemberT* obj, const char_t* name, [[maybe_unused]] const size_t flags)
+void Inspector::DisplayEnum(MemberT* obj, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
 {
     constexpr auto enumNames = magic_enum::enum_names<MemberT>();
     using NamesArrayT = decltype(enumNames);
@@ -257,7 +260,7 @@ void Inspector::DisplayEnum(MemberT* obj, const char_t* name, [[maybe_unused]] c
 }
 
 template <typename MemberT>
-void Inspector::DisplayEnumFlag(MemberT* obj, const char_t* name, [[maybe_unused]] size_t flags)
+void Inspector::DisplayEnumFlag(MemberT* obj, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
 {
     constexpr auto enumNames = magic_enum::enum_names<MemberT>();
     constexpr size_t size = enumNames.size();
@@ -324,9 +327,9 @@ void Inspector::DisplayObject(ReflectT* const obj, const XnorCore::TypeDescripto
     refl::util::for_each(desc.members, [&]<typename T>(const T member)
     {
         using MemberT = typename T::value_type;
-        using NotifyChangeT = XnorCore::NotifyChange<ReflectT>;
+        using NotifyChangeT = XnorCore::Reflection::NotifyChange<ReflectT>;
         
-        constexpr bool_t hidden = XnorCore::Reflection::HasAttribute<XnorCore::HideInInspector>(member);
+        constexpr bool_t hidden = XnorCore::Reflection::HasAttribute<XnorCore::Reflection::HideInInspector>(member);
         constexpr bool_t notifyChange = XnorCore::Reflection::HasAttribute<NotifyChangeT>(member);
 
         if constexpr (!hidden)
@@ -357,37 +360,42 @@ template <typename ReflectT, typename MemberT, typename DescriptorT>
 void Inspector::DisplayObjectInternal(ReflectT* obj, DescriptorT member)
 {
     const constexpr char_t* const name = member.name.c_str();
-    constexpr size_t flags = GetFlags<MemberT, DescriptorT>(member);
+
+    constexpr Metadata<MemberT> metadata = {
+        .flags = GetFlags<MemberT, DescriptorT>(member),
+        .range = GetRange<MemberT, DescriptorT>(member)
+    };
+
     MemberT* const ptr = &member.get(obj);
             
     if constexpr (XnorCore::Meta::IsArray<MemberT>)
     {
-        DisplayArray<MemberT>(ptr, name, flags);
+        DisplayArray<MemberT>(ptr, name, metadata);
     }
     else if constexpr (XnorCore::Meta::IsXnorList<MemberT>)
     {
-        DisplayList<MemberT>(ptr, name, flags);
+        DisplayList<MemberT>(ptr, name, metadata);
     }
     else
     {
-        DisplaySimpleType<MemberT>(ptr, name, flags);
+        DisplaySimpleType<MemberT>(ptr, name, metadata);
     }
 }
 
 template <typename MemberT>
-void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name, [[maybe_unused]] const size_t flags)
+void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
 {
     if constexpr (XnorCore::Meta::IsIntegralOrFloating<MemberT>)
     {
-        DisplayScalar<MemberT>(ptr, name, flags);
+        DisplayScalar<MemberT>(ptr, name, metadata);
     }
     else if constexpr (XnorCore::Meta::IsMathType<MemberT>)
     {
-        DisplayMathType<MemberT>(ptr, name, flags);
+        DisplayMathType<MemberT>(ptr, name, metadata);
     }
     else if constexpr (XnorCore::Meta::IsColorType<MemberT>)
     {
-        DisplayColorType<MemberT>(ptr, name, flags);
+        DisplayColorType<MemberT>(ptr, name, metadata);
     }
     else if constexpr (XnorCore::Meta::IsSame<MemberT, bool_t>)
     {
@@ -399,22 +407,22 @@ void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name, [[maybe_unus
     }
     else if constexpr (XnorCore::Meta::IsPointer<MemberT>)
     {
-        DisplayRawPointer<MemberT>(ptr, name, flags);
+        DisplayRawPointer<MemberT>(ptr, name, metadata);
     }
     else if constexpr (XnorCore::Meta::IsPolyPtr<MemberT>)
     {
-        DisplayPolyPointer<MemberT>(ptr, name, flags);
+        DisplayPolyPointer<MemberT>(ptr, name, metadata);
     }
     else if constexpr (XnorCore::Meta::IsXnorPointer<MemberT>)
     {
-        DisplayXnorPointer<MemberT>(ptr, name, flags);
+        DisplayXnorPointer<MemberT>(ptr, name, metadata);
     }
     else if constexpr (XnorCore::Meta::IsEnum<MemberT>)
     {
-        if (flags & InspectorFlags::EnumFlag)
-            DisplayEnumFlag<MemberT>(ptr, name, flags);
+        if (metadata.flags & InspectorFlags::EnumFlag)
+            DisplayEnumFlag<MemberT>(ptr, name, metadata);
         else
-            DisplayEnum<MemberT>(ptr, name, flags);
+            DisplayEnum<MemberT>(ptr, name, metadata);
     }
     else
     {
@@ -424,7 +432,7 @@ void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name, [[maybe_unus
 }
 
 template <typename MemberT>
-void Inspector::DisplayArray(MemberT* ptr, const char_t* name, [[maybe_unused]] const size_t flags)
+void Inspector::DisplayArray(MemberT* ptr, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
 {
     using ArrayT = XnorCore::Meta::RemoveArraySpecifier<MemberT>;
     constexpr size_t arraySize = sizeof(MemberT) / sizeof(ArrayT);
@@ -433,13 +441,13 @@ void Inspector::DisplayArray(MemberT* ptr, const char_t* name, [[maybe_unused]] 
     {
         for (size_t i = 0; i < arraySize; i++)
         {
-            DisplaySimpleType<ArrayT>(&(*ptr)[i], std::to_string(i).c_str(), flags);
+            DisplaySimpleType<ArrayT>(&(*ptr)[i], std::to_string(i).c_str(), metadata);
         }
     }
 }
 
 template <typename MemberT>
-void Inspector::DisplayList(MemberT* ptr, const char_t* name, [[maybe_unused]] const size_t flags)
+void Inspector::DisplayList(MemberT* ptr, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
 {
     using ArrayT = typename MemberT::Type;
 
@@ -452,7 +460,12 @@ void Inspector::DisplayList(MemberT* ptr, const char_t* name, [[maybe_unused]] c
                 ptr->Add();
             }
         }
-            
+
+        const Metadata<ArrayT> metadataArray = {
+            .flags = metadata.flags,
+            .range = nullptr // TODO find a solution
+        };
+
         size_t listSize = ptr->GetSize();
                 
         for (size_t i = 0; i < listSize; i++)
@@ -483,7 +496,7 @@ void Inspector::DisplayList(MemberT* ptr, const char_t* name, [[maybe_unused]] c
                 
             ImGui::SameLine();
 
-            DisplaySimpleType<ArrayT>(&(*ptr)[i], std::to_string(i).c_str(), flags);
+            DisplaySimpleType<ArrayT>(&(*ptr)[i], std::to_string(i).c_str(), metadataArray);
 
             ImGui::PopID();
         }
@@ -495,12 +508,22 @@ constexpr size_t Inspector::GetFlags(DescriptorT member)
 {
     size_t flags = InspectorFlags::None;
 
-    if constexpr (XnorCore::Meta::IsEnum<MemberT> && XnorCore::Reflection::HasAttribute<XnorCore::EnumFlags>(member))
+    if constexpr (XnorCore::Meta::IsEnum<MemberT> && XnorCore::Reflection::HasAttribute<XnorCore::Reflection::EnumFlags>(member))
         flags |= InspectorFlags::EnumFlag;
 
     return flags;
 }
 
+template <typename MemberT, typename DescriptorT>
+constexpr const XnorCore::Reflection::Range<MemberT>* Inspector::GetRange(DescriptorT member)
+{
+    using RangeT = XnorCore::Reflection::Range<MemberT>;
+    
+    if constexpr (XnorCore::Reflection::HasAttribute<RangeT>(member))
+        return &XnorCore::Reflection::GetAttribute<RangeT>(member);
+    else
+        return nullptr;
+}
 
 template <XnorCore::ResourceT T>
 XnorCore::Pointer<T> Inspector::FilterResources(ImGuiTextFilter& filter)

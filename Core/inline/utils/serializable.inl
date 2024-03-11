@@ -15,7 +15,7 @@ constexpr bool_t Reflection::HasAttribute(const DescriptorT descriptor)
 }
 
 template <typename AttributeT, typename DescriptorT>
-constexpr AttributeT Reflection::GetAttribute(const DescriptorT descriptor)
+constexpr const AttributeT& Reflection::GetAttribute(const DescriptorT descriptor)
 {
     return refl::descriptor::get_attribute<AttributeT>(descriptor);
 }

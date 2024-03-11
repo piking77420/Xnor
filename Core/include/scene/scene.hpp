@@ -79,5 +79,5 @@ END_XNOR_CORE
 
 /// @private
 REFL_AUTO(type(XnorCore::Scene),
-    field(m_Entities, XnorCore::ExpandPointer(), XnorCore::HideInInspector())
+    field(m_Entities, XnorCore::Reflection::ExpandPointer(), XnorCore::Reflection::HideInInspector())
 );
