@@ -69,6 +69,11 @@
     <PostBuildEvent>
       <Message>Copy dll to running directory</Message>
     </PostBuildEvent>
+    <CustomBuild>
+      <Command>swig -c++ -csharp -outdir $(ProjectDir)swig\build\ -o $(ProjectDir)swig\wraps\%(Filename)_wrap.cxx %(Identity)</Command>
+      <Message>Building SWIG Interfaces</Message>
+      <Outputs>$(ProjectDir)swig\wraps\%(Filename)_wrap.cxx;$(ProjectDir)swig\build\%(Filename).cs</Outputs>
+    </CustomBuild>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -98,6 +103,11 @@
     <PostBuildEvent>
       <Message>Copy dll to running directory</Message>
     </PostBuildEvent>
+    <CustomBuild>
+      <Command>swig -c++ -csharp -outdir $(ProjectDir)swig\build\ -o $(ProjectDir)swig\wraps\%(Filename)_wrap.cxx %(Identity)</Command>
+      <Message>Building SWIG Interfaces</Message>
+      <Outputs>$(ProjectDir)swig\wraps\%(Filename)_wrap.cxx;$(ProjectDir)swig\build\%(Filename).cs</Outputs>
+    </CustomBuild>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="externals\src\glad.c" />
@@ -462,6 +472,24 @@
     <Content Include="externals\include\assimp\config.h.in" />
     <Content Include="include\rendering\rhi_typedef.hpp" />
     <Content Include="include\utils\meta_programming.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="swig\" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="include\core.swg">
+      <Message>Building SWIG Interfaces</Message>
+      <LinkObjects>true</LinkObjects>
+      <TreatOutputAsContent>false</TreatOutputAsContent>
+      <TrackerLogDirectory>x64\Debug\Core.tlog\</TrackerLogDirectory>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <BuildInParallel>false</BuildInParallel>
+      <MaxProcesses>0</MaxProcesses>
+      <MaxItemsInBatch>0</MaxItemsInBatch>
+      <VerifyInputsAndOutputsExist>true</VerifyInputsAndOutputsExist>
+      <Command>swig -c++ -csharp -outdir C:\Users\maxim\git\XNOR\Core\swig\build\ -o C:\Users\maxim\git\XNOR\Core\swig\wraps\%(Filename)_wrap.cxx %(Identity)</Command>
+      <Outputs>C:\Users\maxim\git\XNOR\Core\swig\wraps\%(Filename)_wrap.cxx;C:\Users\maxim\git\XNOR\Core\swig\build\%(Filename).cs</Outputs>
+    </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
