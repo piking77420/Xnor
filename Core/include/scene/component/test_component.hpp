@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "Maths/vector3.hpp"
+#include "rendering/light/light.hpp"
 #include "scene/component.hpp"
 
 BEGIN_XNOR_CORE
@@ -44,6 +45,10 @@ private:
     TestEnum m_TestEnum = static_cast<TestEnum>(TestEnum::Four | TestEnum::Sixteen);
     
     float_t m_TestRange;
+
+    Light* light = nullptr;
+
+    ColorHsv color;
 };
 
 END_XNOR_CORE
