@@ -69,6 +69,19 @@ const List<Entity*>& Scene::GetEntities()
     return m_Entities;
 }
 
+uint32_t Scene::GetEntityIndex(const Entity* entity) const
+{
+    for (size_t i = 0; i < m_Entities.GetSize(); i++)
+    {
+        if(entity->GetGuid() == m_Entities[i]->GetGuid())
+        {
+            return static_cast<uint32_t>(i);
+        }
+    }
+
+    return std::numeric_limits<uint32_t>::max();
+}
+
 void Scene::DestroyEntityChildren(Entity* const entity)
 {
     // Remove from array

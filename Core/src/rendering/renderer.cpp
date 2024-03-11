@@ -33,7 +33,7 @@ void Renderer::EndFrame(const Scene& scene)
 }
 
 void Renderer::RenderViewport(const Viewport& viewport,
-	Scene& scene, Skybox& skybox) const
+	Scene& scene) const
 {
 	BindCamera(*viewport.camera,viewport.viewPortSize);
 
@@ -43,7 +43,7 @@ void Renderer::RenderViewport(const Viewport& viewport,
 	const ViewportData& viewportData = viewport.viewportData;
 
 	DefferedRendering(meshrenderers,viewportData,viewport.viewPortSize);
-	ForwardPass(meshrenderers, skybox, viewport, viewport.viewPortSize, viewport.isEditor);
+	ForwardPass(meshrenderers, scene.skybox, viewport, viewport.viewPortSize, viewport.isEditor);
 	
 	const RenderPassBeginInfo renderPassBeginInfo =
 	{
@@ -57,6 +57,25 @@ void Renderer::RenderViewport(const Viewport& viewport,
 	viewport.colorPass.BeginRenderPass(renderPassBeginInfo);
 	m_ToneMapping.ComputeToneMaping(*viewport.viewportData.colorAttachment,m_Quad);
 	viewport.colorPass.EndRenderPass();
+}
+
+void Renderer::RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass,
+	const Pointer<Shader>& shadertoUse
+	,const Scene& scene,bool_t drawEditorUi
+) const
+{
+	std::vector<const MeshRenderer*> meshrenderers;
+	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderers);
+	
+	renderPass.BeginRenderPass(renderPassBeginInfo);
+	shadertoUse->Use();
+	DrawAllMeshRenders(meshrenderers, scene);
+	if (drawEditorUi)
+	{
+		m_LightManager.DrawLightGizmoWithShader(camera, scene, shadertoUse);
+	}
+	shadertoUse->Unuse();
+	renderPass.EndRenderPass();
 }
 
 void Renderer::SwapBuffers()
@@ -132,7 +151,7 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
 
 	if (isEditor)
 	{
-		m_LightManager.DrawLightGizmo(*Viewport.camera);
+		m_LightManager.DrawLightGizmo(*Viewport.camera,World::scene);
 	}
 	viewportData.colorPass.EndRenderPass();
 }
@@ -184,8 +203,7 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		Transform& transform = meshRenderer->entity->transform;
 		ModelUniformData modelData;
 		modelData.model = transform.worldMatrix;
-		modelData.meshRenderIndex = i + 1;
-
+		modelData.meshRenderIndex = reinterpret_cast<uint64_t>(meshRenderers[i]->entity);
 		
 		try
 		{
@@ -211,6 +229,46 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		}
 	}
 
+}
+
+void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRenderers,const Scene& scene) const
+{
+	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
+
+	for (uint32_t i = 0; i < meshRenderers.size(); i++)
+	{
+		const MeshRenderer* meshRenderer =  meshRenderers[i];
+		
+		Transform& transform = meshRenderer->entity->transform;
+		ModelUniformData modelData;
+		modelData.model = transform.worldMatrix;
+		// +1 to avoid the black color of the attachement be a valid index  
+		modelData.meshRenderIndex = scene.GetEntityIndex(meshRenderer->entity) + 1;
+
+		
+		try
+		{
+			modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
+		}
+		catch (const std::invalid_argument&)
+		{
+			modelData.normalInvertMatrix = Matrix::Identity();
+		}
+		
+		Rhi::UpdateModelUniform(modelData);
+
+		if (meshRenderer->material.albedo.IsValid())
+			meshRenderer->material.albedo->BindTexture(0);
+
+		if (meshRenderer->material.normalMap.IsValid())
+			meshRenderer->material.normalMap->BindTexture(1);
+
+		if (meshRenderer->model.IsValid())
+		{
+			Rhi::BindMaterial(meshRenderer->material);
+			Rhi::DrawModel(meshRenderer->model->GetId());
+		}
+	}
 }
 
 void Renderer::BindCamera(const Camera& camera,const Vector2i screenSize) const

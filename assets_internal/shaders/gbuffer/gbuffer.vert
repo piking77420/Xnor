@@ -1,4 +1,5 @@
 #version 460 core
+#extension GL_NV_gpu_shader5 : require
 
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
@@ -32,7 +33,6 @@ out VS_OUT
     vec3 normal;
     vec2 texCoords; 
     mat3 Tbn;
-    flat uint meshDrawId;
 } vs_out;
 
 void main()
@@ -55,5 +55,4 @@ void main()
        vs_out.Tbn = mat3(T, B, N);
     }
 
-    vs_out.meshDrawId = drawId;
 }

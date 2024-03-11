@@ -29,9 +29,7 @@ public:
 
     /// @brief The currently loaded scene in the world
     XNOR_ENGINE static inline Scene scene;
-
-    /// @brief Skybox handler
-    XNOR_ENGINE static inline Skybox skybox;
+    
 };
 
 END_XNOR_CORE
