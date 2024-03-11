@@ -1,6 +1,7 @@
 #include "file/file_manager.hpp"
 #include "utils/logger.hpp"
 #include "editor.hpp"
+#include "physics/physics_world.hpp"
 
 // https://www.reddit.com/r/opengl/comments/unc3fy/how_to_programatically_set_the_gpu_to_my_opengl/?onetap_auto=true&one_tap=true 
 extern "C"
@@ -13,9 +14,11 @@ int main(int, char**)
 {
 	using namespace XnorCore;
 	using namespace XnorEditor;
-	
+
 	Logger::OpenDefaultFile();
 
+	PhysicsWorld::Initialize();
+	
 	FileManager::LoadDirectory("assets_internal");
 	FileManager::LoadDirectory("assets");
 

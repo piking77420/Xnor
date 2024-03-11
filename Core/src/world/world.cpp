@@ -1,5 +1,8 @@
 ﻿#include "world/world.hpp"
 
+#include "input/time.hpp"
+#include "physics/physics_world.hpp"
+
 using namespace XnorCore;
 
 void World::Begin()
@@ -9,5 +12,6 @@ void World::Begin()
 
 void World::Update()
 {
+    PhysicsWorld::Update(Time::GetDeltaTime());
     scene.Update();
 }
