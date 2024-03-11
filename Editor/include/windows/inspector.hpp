@@ -22,23 +22,39 @@ private:
         None = 0 << 0,
         EnumFlag = 1 << 0,
     };
-    
+
     template <typename MemberT>
-    static void DisplayScalar(MemberT* obj, const char_t* name, size_t flags);
+    struct Metadata
+    {
+        size_t flags;
+
+        const XnorCore::Reflection::Range<MemberT>* range;
+
+        [[nodiscard]]
+        constexpr bool_t HasRange() const
+        {
+            const XnorCore::Reflection::Range<MemberT>* const r = range;
+            return r != nullptr;
+        }
+    };
+
+
     template <typename MemberT>
-    static void DisplayMathType(MemberT* obj, const char_t* name, size_t flags);
+    static void DisplayScalar(MemberT* obj, const char_t* name, const Metadata<MemberT>& metadata);
     template <typename MemberT>
-    static void DisplayColorType(MemberT* obj, const char_t* name, size_t flags);
+    static void DisplayMathType(MemberT* obj, const char_t* name, const Metadata<MemberT>& metadata);
     template <typename MemberT>
-    static void DisplayRawPointer(MemberT* obj, const char_t* name, size_t flags);
+    static void DisplayColorType(MemberT* obj, const char_t* name, const Metadata<MemberT>& metadata);
     template <typename MemberT>
-    static void DisplayXnorPointer(MemberT* obj, const char_t* name, size_t flags);
+    static void DisplayRawPointer(MemberT* obj, const char_t* name, const Metadata<MemberT>& metadata);
     template <typename MemberT>
-    static void DisplayPolyPointer(MemberT* obj, const char_t* name, size_t flags);
+    static void DisplayXnorPointer(MemberT* obj, const char_t* name, const Metadata<MemberT>& metadata);
     template <typename MemberT>
-    static void DisplayEnum(MemberT* obj, const char_t* name, size_t flags);
+    static void DisplayPolyPointer(MemberT* obj, const char_t* name, const Metadata<MemberT>& metadata);
     template <typename MemberT>
-    static void DisplayEnumFlag(MemberT* obj, const char_t* name, size_t flags);
+    static void DisplayEnum(MemberT* obj, const char_t* name, const Metadata<MemberT>& metadata);
+    template <typename MemberT>
+    static void DisplayEnumFlag(MemberT* obj, const char_t* name, const Metadata<MemberT>& metadata);
 
     template <typename ReflectT>
     static void DisplayObject(ReflectT* obj, XnorCore::TypeDescriptor<ReflectT> desc);
@@ -47,17 +63,20 @@ private:
     static void DisplayObjectInternal(ReflectT* obj, DescriptorT member);
 
     template <typename MemberT>
-    static void DisplaySimpleType(MemberT* ptr, const char_t* name, size_t flags);
+    static void DisplaySimpleType(MemberT* ptr, const char_t* name, const Metadata<MemberT>& metadata);
 
     template <typename MemberT>
-    static void DisplayArray(MemberT* ptr, const char_t* name, size_t flags);
+    static void DisplayArray(MemberT* ptr, const char_t* name, const Metadata<MemberT>& metadata);
 
     template <typename MemberT>
-    static void DisplayList(MemberT* ptr, const char_t* name, size_t flags);
+    static void DisplayList(MemberT* ptr, const char_t* name, const Metadata<MemberT>& metadata);
 
     template <typename MemberT, typename DescriptorT>
     [[nodiscard]]
     static constexpr size_t GetFlags(DescriptorT member);
+    template <typename MemberT, typename DescriptorT>
+    [[nodiscard]]
+    static constexpr const XnorCore::Reflection::Range<MemberT>* GetRange(DescriptorT member);
 
 
     // TODO maybe move elsewhere

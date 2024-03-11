@@ -44,7 +44,7 @@ void Serializer::Serialize(const ReflectT* const obj, const bool_t isRoot)
     {
         constexpr bool_t isFunction = refl::descriptor::is_function(member);
         
-        constexpr bool_t dontSerialize = Reflection::HasAttribute<NotSerializable>(member);
+        constexpr bool_t dontSerialize = Reflection::HasAttribute<Reflection::NotSerializable>(member);
         constexpr size_t flags = GetFlags<T>(member);
             
         if constexpr (!isFunction)
@@ -182,7 +182,7 @@ constexpr size_t Serializer::GetFlags(const T member)
 {
     size_t flags = NONE; 
 
-    if constexpr (Reflection::HasAttribute<ExpandPointer>(member))
+    if constexpr (Reflection::HasAttribute<Reflection::ExpandPointer>(member))
         flags |= EXPAND_POINTER;
 
     return flags;

@@ -37,41 +37,7 @@ using FunctionAttribute = refl::attr::usage::function;
 /// Specifies that an attribute can only be used on a member (field and function)
 using MemberAttribute = refl::attr::usage::member;
 
-/// @brief Specifies that the field shouldn't be serialized
-struct NotSerializable : FieldAttribute
-{
-};
 
-/// @brief Specifies that the field shouldn't be serialized as a Guid, but that the values behind the pointer should be serialized instead
-struct ExpandPointer : FieldAttribute
-{
-};
-
-/// @brief Specifies that the field shouldn't be displayed in the inspector
-struct HideInInspector : FieldAttribute
-{
-};
-
-/// @brief Allows a boolean to be set to true when the field is modified
-/// @tparam T Parent type
-template <typename T>
-struct NotifyChange : FieldAttribute
-{
-    /// @brief Shorthand for a class member pointer
-    using PtrType = bool_t T::*;
-
-    /// @brief Pointer to the boolean
-    const PtrType pointer;
-
-    /// @brief Creates a notify change attribute using a pointer to a boolean inside the concerned class
-    /// @param ptr Boolean pointer in the class
-    constexpr explicit NotifyChange(const PtrType ptr) : pointer(ptr) {}
-};
-
-/// @brief Allows an enum to be treated as a list of binary flags
-struct EnumFlags : FieldAttribute
-{
-};
 
 /// @brief Enables serialization for a class
 ///
@@ -145,9 +111,55 @@ There might be another solution to this, but it's the easiest one found so far, 
 private:                                                                                                                                \
 friend struct refl_impl::metadata::type_info__<type>;
 
+
 /// @brief Provides utility functions for reflection
 namespace Reflection
 {
+    /// @brief Specifies that the field shouldn't be serialized
+    struct NotSerializable : FieldAttribute
+    {
+    };
+
+    /// @brief Specifies that the field shouldn't be serialized as a Guid, but that the values behind the pointer should be serialized instead
+    struct ExpandPointer : FieldAttribute
+    {
+    };
+
+    /// @brief Specifies that the field shouldn't be displayed in the inspector
+    struct HideInInspector : FieldAttribute
+    {
+    };
+
+    /// @brief Allows a boolean to be set to true when the field is modified
+    /// @tparam T Parent type
+    template <typename T>
+    struct NotifyChange : FieldAttribute
+    {
+        /// @brief Shorthand for a class member pointer
+        using PtrType = bool_t T::*;
+
+        /// @brief Pointer to the boolean
+        const PtrType pointer;
+
+        /// @brief Creates a notify change attribute using a pointer to a boolean inside the concerned class
+        /// @param ptr Boolean pointer in the class
+        constexpr explicit NotifyChange(const PtrType ptr) : pointer(ptr) {}
+    };
+
+    /// @brief Allows an enum to be treated as a list of binary flags
+    struct EnumFlags : FieldAttribute
+    {
+    };
+
+    template <typename T>
+    struct Range : FieldAttribute
+    {
+        const T minimum;
+        const T maximum;
+
+        constexpr explicit Range(const T& min, const T& max) : minimum(min), maximum(max) {}
+    };
+    
     /// @brief Gets the type info of a class
     /// @tparam ReflectT Type
     /// @return Type info
@@ -168,7 +180,7 @@ namespace Reflection
     /// @param descriptor Type descriptor
     /// @return Attribute
     template <typename AttributeT, typename DescriptorT>
-    static constexpr AttributeT GetAttribute(DescriptorT descriptor);
+    static constexpr const AttributeT& GetAttribute(DescriptorT descriptor);
 }
 
 END_XNOR_CORE

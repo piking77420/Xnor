@@ -42,6 +42,8 @@ private:
     Entity* m_Test = nullptr;
 
     TestEnum m_TestEnum = static_cast<TestEnum>(TestEnum::Four | TestEnum::Sixteen);
+    
+    float_t m_TestRange;
 };
 
 END_XNOR_CORE
@@ -53,5 +55,6 @@ REFL_AUTO(
     field(m_RotationSpeed),
     field(m_Radius),
     field(m_Test),
-    field(m_TestEnum, XnorCore::EnumFlags())
+    field(m_TestEnum, XnorCore::Reflection::EnumFlags()),
+    field(m_TestRange, XnorCore::Reflection::Range<float_t>(0.f, 5.f))
 );
