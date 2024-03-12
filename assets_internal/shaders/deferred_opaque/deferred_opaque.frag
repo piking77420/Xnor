@@ -192,7 +192,7 @@ void main()
     
     float roughness = perceptualRoughness * perceptualRoughness;
     
-    vec3 f0 = 0.16 * reflectance * reflectance * (1.0 - metallic) + albedo * metallic;
+    vec3 f0 = 0.16 * reflectance * reflectance * (1.0 - metallic) + (albedo * metallic);
     
     
     // view unit vector
@@ -205,7 +205,7 @@ void main()
     vec3 h = normalize(v + l);
 
 
-    float NoV = abs(dot(n, v)) + 1e-5;
+    float NoV = abs(dot(n, v));
     float NoL = clamp(dot(n, l), 0.0, 1.0);
     float NoH = clamp(dot(n, h), 0.0, 1.0);
     float LoH = clamp(dot(l, h), 0.0, 1.0);
@@ -227,7 +227,7 @@ void main()
 
     vec3 diffuseColor = (1.0 - metallic) * albedo.rgb;
     // diffuse BRDF
-    vec3 Fd = diffuseColor * Fd_Lambert();
+    vec3 Fd = diffuseColor * Fd_Burley(NoV, NoL, LoH, roughness);
 
     FragColor = vec4(Fr + Fd, 1);
 }

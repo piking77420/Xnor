@@ -81,14 +81,13 @@ void LightManager::BeginFrame(const Scene& scene)
 
 	for (size_t i = 0 ; i < nbrOfDirectionalLight ; i++)
 	{
-		constexpr float_t scaleFactor = 0.5f;
-		const Matrix matrix = Matrix::Trs(Vector3(0.f), directionalLights[i]->entity->transform.GetRotation(), Vector3(scaleFactor));
-		const Vector4 direction = matrix * -Vector4::UnitY(); 
+		const Matrix matrix = Matrix::Trs(Vector3(0.f), directionalLights[i]->entity->transform.GetRotation(), Vector3(1.f));
+		const Vector4 direction = matrix * Vector4::UnitY(); 
 		
 		gpuLightData.directionalData[i] =
 		{
 			.color = directionalLights[i]->color.Rgb(),
-			.intensity = directionalLights[i]->intensity,
+			.intensity = directionalLights[i]->intensity,	
 			.direction = { direction.x, direction.y, direction.z },
 		};
 	}
