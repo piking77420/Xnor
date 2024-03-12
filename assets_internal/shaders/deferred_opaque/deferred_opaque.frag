@@ -194,11 +194,14 @@ void main()
     float metallic = texture(gMetallicRoughessReflectance,texCoords).r;
     float roughness = texture(gMetallicRoughessReflectance,texCoords).g;
     float reflectance = texture(gMetallicRoughessReflectance,texCoords).b;
-    
+
+    float emissive = texture(gEmissiveAmbiantOcclusion,texCoords).r;
+    float ambientOcclusion = texture(gEmissiveAmbiantOcclusion,texCoords).g;
+
+
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
     vec3 Lo = vec3(0.0);
-    
     
     // view unit vector
     vec3 v = normalize(cameraPos - fragPos);
@@ -209,18 +212,12 @@ void main()
     // half unit vector
     vec3 h = normalize(v + l);
     
-
-    float NoV = abs(dot(n, v)) + 1e-5;
-    float NoL = clamp(dot(n, l), 0.0, 1.0);
-    float NoH = clamp(dot(n, h), 0.0, 1.0);
-    float LoH = clamp(dot(l, h), 0.0, 1.0);
-    
     vec3 radiance = vec3(1);
     
     // Cook-Torrance BRDF
     float NDF = DistributionGGX(n, h, roughness);
     float G   = GeometrySmith(n, v, l, roughness);
-    vec3 F    = fresnelSchlick(clamp(dot(h, v), 0.0, 1.0), F0);
+    vec3 F  = fresnelSchlick(clamp(dot(h, v), 0.0, 1.0), F0);
     vec3 numerator    = NDF * G * F;
     float denominator = 4.0 * max(dot(n, v), 0.0) * max(dot(n, l), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
     vec3 specular = numerator / denominator;
@@ -231,14 +228,16 @@ void main()
     vec3 skyBoxReflectedColor = texture(SkyBox, r).rgb;
     
     // kS is equal to Fresnel
-    vec3 kS = F * skyBoxReflectedColor;;
+    vec3 kS = F;
     vec3 kD = vec3(1.0) - kS;
     kD *= (1.0 - metallic);
 
     float NdotL = max(dot(n, l), 0.0);
-    Lo += (kD * albedo / PI + specular) * radiance * NdotL;
+    Lo += (kD * albedo / PI + specular) * NdotL;
     
+    vec3 ambient = vec3(0.03) * albedo * ambientOcclusion;
 
-    
-    FragColor = vec4(Lo, 1);
+    vec3 color = ambient + Lo;
+
+    FragColor = vec4(color, 1);
 }

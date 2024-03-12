@@ -36,4 +36,6 @@ void main()
     vec3 hdrColor = texture(beforeToneMappedImage, texCoords).rgb;
 
     fragColor = vec4(ChangeExposure(Aces(hdrColor), 1.0), 1.0);
+    // fragColor = vec4(hdrColor, 1.0);
+
 }
