@@ -1,10 +1,12 @@
 #version 460 core
-#extension GL_NV_gpu_shader5 : require
 
 layout (location = 0) out vec3 gPosition;
 layout (location = 1) out vec3 gNormal;
 layout (location = 2) out vec4 gAlbedoSpec;
-layout (location = 3) out uint64_t meshDrawIdAttachement;
+layout (location = 3) out vec3 gMetallicRoughessReflectance;
+layout (location = 4) out vec2 gEmissiveAmbiantOcclusion;
+
+
 
 struct Material
 {
@@ -17,12 +19,25 @@ layout (std140, binding = 4) uniform MaterialDataUniform
     vec3 AlbedoColor;
     bool hasAlbedoMap;
     bool hasNormalmap;
+    
+    float metallic;
+    float roughness;
+    float reflectance;
+    float emissive;
+    float ambiantOccusion;
 };
 
 in VS_OUT {
     vec3 fragPos;
     vec3 normal;
     vec2 texCoords;
+
+    float metallic;
+    float roughness;
+    float reflectance;
+    float emissive;
+    float ambiantOccusion;
+    
     mat3 Tbn;
 } fs_in;
 
@@ -53,5 +68,8 @@ void main()
         gAlbedoSpec.rgb = AlbedoColor;
         gAlbedoSpec.rgb = texture(material.albedo, fs_in.texCoords).rgb;
     }
-    
+
+    gMetallicRoughessReflectance = vec3(metallic,roughness,reflectance);
+    gEmissiveAmbiantOcclusion = vec2(emissive,ambiantOccusion);
+
 }

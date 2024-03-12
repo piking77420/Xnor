@@ -229,7 +229,7 @@ void Editor::CreateTestScene()
 	// init Scene //
 	Entity& ent1 = *World::scene.CreateEntity("Sphere");
 	MeshRenderer* meshRenderer = ent1.AddComponent<MeshRenderer>();
-	ent1.transform.SetPosition() = { 0.f, 3.f, 0.f };
+	ent1.transform.SetPosition() = { 0.f, 0.f, 0.f };
 	meshRenderer->model = ResourceManager::Get<Model>(FileManager::Get("assets/models/sphere.obj"));
 	meshRenderer->material.albedoColor = { 0.f, 1.f, 1.f }; 
 	Entity& ent2 = *World::scene.CreateEntity("Directional");

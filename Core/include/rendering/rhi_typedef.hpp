@@ -448,6 +448,12 @@ struct MaterialData
 	Vector3 albedoColor;
 	int hasAlbedoMap;
 	int hasNormalmap;
+	
+	float_t metallic = 0.f;
+	float_t roughness = 0.f;
+	float_t reflectance = 0.f;
+	float_t emissive = 0.f;
+	float_t ambiantOccusion = 0.f;
 };
 
 /// @brief The type of GBuffer.
@@ -455,7 +461,9 @@ enum Gbuffer : int32_t
 {
 	GbufferPosition = 4,
 	GbufferNormal,
-	GbufferAlbedo
+	GbufferAlbedo,
+	GmetallicRoughessReflectance,
+	GemissiveAmbiantOcclusion,
 };
 
 /// @brief Buffer attachment flags.

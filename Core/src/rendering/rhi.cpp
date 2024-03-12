@@ -980,6 +980,12 @@ void Rhi::BindMaterial(const Material& material)
 	materialData.hasAlbedoMap = static_cast<int32_t>(material.albedo.IsValid());
 	materialData.hasNormalmap =  static_cast<int32_t>(material.normalMap.IsValid());
 	materialData.albedoColor = material.albedoColor.Rgb();
+	materialData.metallic = material.metallic;
+	materialData.roughness = material.roughness;
+	materialData.reflectance = material.reflectance;
+	materialData.emissive = material.emissive;
+	materialData.ambiantOccusion = material.ambientOcclusion;
+	
 	constexpr size_t size = sizeof(MaterialData);
 	m_MaterialUniform->Update(size, 0, &materialData);
 }

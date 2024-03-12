@@ -112,10 +112,13 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	Rhi::DepthTest(false);
 	viewportData.colorPass.BeginRenderPass(renderPassBeginInfoLit);
 	m_GBufferShaderLit->Use();
-	// Set Shader Info
+	// Set G buffer Shader Info
 	viewportData.positionAtttachment->BindTexture(GbufferPosition);
 	viewportData.normalAttachement->BindTexture(GbufferNormal);
 	viewportData.albedoAttachment->BindTexture(GbufferAlbedo);
+	viewportData.metallicRougnessReflectance->BindTexture(GmetallicRoughessReflectance);
+	viewportData.emissiveAmbiantOcclusion->BindTexture(GemissiveAmbiantOcclusion);
+
 	Rhi::DrawQuad(m_Quad->GetId());
 	m_GBufferShaderLit->Unuse();
 	Rhi::DepthTest(true);
@@ -286,9 +289,13 @@ void Renderer::InitResources()
 	m_GBufferShaderLit = ResourceManager::Get<Shader>("deferred_opaque");
 	m_GBufferShaderLit->CreateInRhi();
 	m_GBufferShaderLit->Use();
+	
 	m_GBufferShaderLit->SetInt("gPosition", GbufferPosition);
 	m_GBufferShaderLit->SetInt("gNormal", GbufferNormal);
 	m_GBufferShaderLit->SetInt("gAlbedoSpec", GbufferAlbedo);
+	m_GBufferShaderLit->SetInt("gMetallicRoughessReflectance", GmetallicRoughessReflectance);
+	m_GBufferShaderLit->SetInt("gEmissiveAmbiantOcclusion", GemissiveAmbiantOcclusion);
+
 	m_GBufferShaderLit->Unuse();
 	
 	m_GBufferShader = ResourceManager::Get<Shader>("gbuffer");
