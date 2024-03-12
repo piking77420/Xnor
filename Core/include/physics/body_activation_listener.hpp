@@ -6,7 +6,7 @@
 
 BEGIN_XNOR_CORE
 
-class BodyActivationListenerImpl : public JPH::BodyActivationListener
+class XNOR_ENGINE BodyActivationListenerImpl : public JPH::BodyActivationListener
 {
 public:
     void OnBodyActivated(const JPH::BodyID& inBodyId, JPH::uint64 inBodyUserData) override;

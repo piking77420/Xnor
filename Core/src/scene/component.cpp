@@ -4,3 +4,5 @@
 using namespace XnorCore;
 
 REFLECTABLE_IMPL_CPP(Component)
+
+Component::~Component() = default;

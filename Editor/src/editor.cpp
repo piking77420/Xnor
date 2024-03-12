@@ -8,6 +8,8 @@
 
 #include "file/file_manager.hpp"
 #include "input/time.hpp"
+#include "physics/components/box_collider.hpp"
+#include "physics/components/sphere_collider.hpp"
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
 #include "resource/resource_manager.hpp"
@@ -23,7 +25,6 @@
 #include "windows/render_window.hpp"
 #include "world/scene_graph.hpp"
 #include "world/world.hpp"
-
 
 using namespace XnorEditor;
 
@@ -257,11 +258,26 @@ void Editor::CreateTestScene()
 	ent3.transform.SetScale() = { 10.f, 0.1f, 10.f };
 	ent3.transform.SetPosition() -= { 0.f, -0.2f, 0.f};
 	
-	Entity& ent4 = *World::scene.CreateEntity("CubeMinecraft");
-	ent4.transform.SetPosition() = { 2.f, 0, 2.f};
+	Entity& ent4 = *World::scene.CreateEntity("Cube");
+	ent4.transform.SetPosition() = { 0.f, 5.f, 0.f };
 	meshRenderer = ent4.AddComponent<MeshRenderer>();
 	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
 	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/diamond_block.jpg");
+	ent4.AddComponent<BoxCollider>();
+	
+	Entity& ent5 = *World::scene.CreateEntity("Sphere");
+	ent5.transform.SetPosition() = { 1.5f, 2.f, 0.f };
+	meshRenderer = ent5.AddComponent<MeshRenderer>();
+	meshRenderer->model = ResourceManager::Get<Model>("assets/models/sphere.obj");
+	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/diamond_block.jpg");
+	ent5.AddComponent<SphereCollider>();
+	
+	Entity& ent6 = *World::scene.CreateEntity("Sphere1");
+	ent6.transform.SetPosition() = { -1.5f, 2.f, 0.f };
+	meshRenderer = ent6.AddComponent<MeshRenderer>();
+	meshRenderer->model = ResourceManager::Get<Model>("assets/models/sphere.obj");
+	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/diamond_block.jpg");
+	ent6.AddComponent<SphereCollider>();
 
 	const std::array<std::string, 6> testCubeMap
 	{

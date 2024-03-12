@@ -40,7 +40,7 @@ const char_t* GetBroadPhaseLayerName(const JPH::BroadPhaseLayer inLayer) const
 
         default:
             JPH_ASSERT(false);
-        return "INVALID";
+            return "INVALID";
     }
 }
 #endif // JPH_EXTERNAL_PROFILE || JPH_PROFILE_ENABLED

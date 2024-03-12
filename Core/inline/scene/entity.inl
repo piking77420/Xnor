@@ -9,7 +9,7 @@ ComponentT* Entity::AddComponent()
     
     ComponentT* newT = new ComponentT;
     newT->entity = this;
-    m_Components[m_Components.GetSize() - 1].Create(newT);
+    m_Components[m_Components.GetSize() - 1] = newT;
 
     return newT;
 }
@@ -19,8 +19,8 @@ const ComponentT* Entity::GetComponent() const
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        if (m_Components[i].IsOfType<ComponentT>())
-            return m_Components[i].Cast<ComponentT>();
+        if (dynamic_cast<ComponentT*>(m_Components[i]))
+            return reinterpret_cast<ComponentT*>(m_Components[i]);
     }
 
     return nullptr;
@@ -31,8 +31,8 @@ void Entity::GetComponents(std::vector<ComponentT*>* components)
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        if (m_Components[i].IsOfType<ComponentT>())
-            components->push_back(m_Components[i].Cast<ComponentT>());
+        if (dynamic_cast<ComponentT*>(m_Components[i]))
+            components->push_back(reinterpret_cast<ComponentT*>(m_Components[i]));
     }
 }
 
@@ -41,7 +41,7 @@ void Entity::GetComponents(std::vector<const ComponentT*>* components) const
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        if (m_Components[i].IsOfType<ComponentT>())
+        if (dynamic_cast<ComponentT*>(m_Components[i]))
             components->push_back(reinterpret_cast<const ComponentT*>(m_Components[i]));
     }
 }
@@ -51,8 +51,8 @@ ComponentT* Entity::GetComponent()
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        if (m_Components[i].IsOfType<ComponentT>())
-            return m_Components[i].Cast<ComponentT>();
+        if (dynamic_cast<ComponentT*>(m_Components[i]))
+            return reinterpret_cast<ComponentT*>(m_Components[i]);
     }
     
     return nullptr;
@@ -63,7 +63,7 @@ void Entity::RemoveComponent()
 {
     for (int i = 0; i < m_Components.GetSize(); i++)
     {
-        if (m_Components[i].IsOfType<ComponentT>())
+        if (dynamic_cast<ComponentT*>(m_Components[i]))
         {
             m_Components.RemoveAt(i);
             break;
@@ -76,9 +76,9 @@ bool_t Entity::TryGetComponent(ComponentT** output)
 {
     for (int i = 0; i < m_Components.GetSize(); i++)
     {
-        if (m_Components[i].IsOfType<ComponentT>())
+        if (dynamic_cast<ComponentT*>(m_Components[i]))
         {
-            *output = m_Components[i].Cast<ComponentT>();
+            *output = reinterpret_cast<ComponentT*>(m_Components[i]);
             return true;
         }
     }

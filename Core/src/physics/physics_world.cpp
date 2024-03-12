@@ -3,6 +3,7 @@
 #include <cstdarg>
 #include <Jolt/Jolt.h>
 
+#include "input/time.hpp"
 #include "Jolt/RegisterTypes.h"
 #include "Jolt/Core/Factory.h"
 #include "Jolt/Core/TempAllocator.h"
@@ -10,9 +11,6 @@
 #include "utils/logger.hpp"
 #include "Jolt/Physics/Collision/Shape/SphereShape.h"
 #include "jolt/Physics/Body/BodyCreationSettings.h"
-#include "physics/body_activation_listener.hpp"
-#include "physics/broad_phase_layer_interface.hpp"
-#include "physics/contact_listener.hpp"
 
 using namespace XnorCore;
 
@@ -44,13 +42,13 @@ void PhysicsWorld::Initialize()
     // B.t.w. 10 MB is way too much for this example but it is a typical value you can use.
     // If you don't want to pre-allocate you can also use TempAllocatorMalloc to fall back to
     // malloc / free.
-    // TODO m_Allocator = JPH::TempAllocatorImpl(10 * 1024 * 1024);;
+    m_Allocator = new JPH::TempAllocatorImpl(10 * 1024 * 1024);
     
     // We need a job system that will execute physics jobs on multiple threads. Typically
     // you would implement the JobSystem interface yourself and let Jolt Physics run on top
     // of your own job scheduler. JobSystemThreadPool is an example implementation.
-    // TODO m_JobSystem = JPH::JobSystemThreadPool(JPH::cMaxPhysicsJobs, JPH::cMaxPhysicsBarriers, static_cast<int32_t>(std::thread::hardware_concurrency()) - 1);
-
+    m_JobSystem = new JPH::JobSystemThreadPool(JPH::cMaxPhysicsJobs, JPH::cMaxPhysicsBarriers, static_cast<int32_t>(std::thread::hardware_concurrency()) - 1);
+    
     // This is the max amount of rigid bodies that you can add to the physics system. If you try to add more you'll get an error.
     // Note: This value is low because this is a simple test. For a real project use something in the order of 65536.
     constexpr JPH::uint maxBodies = 1024;
@@ -69,36 +67,25 @@ void PhysicsWorld::Initialize()
     // Note: This value is low because this is a simple test. For a real project use something in the order of 10240.
     constexpr JPH::uint maxContactConstraints = 1024;
 
-    // Create mapping table from object layer to broadphase layer
-    // Note: As this is an interface, PhysicsSystem will take a reference to this so this instance needs to stay alive!
-    BroadPhaseLayerInterfaceImpl broadPhaseLayerInterface;
-
-    // Create class that filters object vs broadphase layers
-    // Note: As this is an interface, PhysicsSystem will take a reference to this so this instance needs to stay alive!
-    JPH::ObjectVsBroadPhaseLayerFilter objectVsBroadphaseLayerFilter;
-
-    // Create class that filters object vs object layers
-    // Note: As this is an interface, PhysicsSystem will take a reference to this so this instance needs to stay alive!
-    JPH::ObjectLayerPairFilter objectVsObjectLayerFilter;
-
     // Now we can create the actual physics system.
-    m_PhysicsSystem.Init(maxBodies, numBodyMutexes, maxBodyPairs, maxContactConstraints, broadPhaseLayerInterface, objectVsBroadphaseLayerFilter, objectVsObjectLayerFilter);
+    m_PhysicsSystem = new JPH::PhysicsSystem();
+    m_PhysicsSystem->Init(maxBodies, numBodyMutexes, maxBodyPairs, maxContactConstraints, m_BroadPhaseLayerInterface, m_ObjectVsBroadphaseLayerFilter, m_ObjectVsObjectLayerFilter);
 
     // A body activation listener gets notified when bodies activate and go to sleep
     // Note that this is called from a job so whatever you do here needs to be thread safe.
     // Registering one is entirely optional.
-    BodyActivationListenerImpl bodyActivationListener;
-    m_PhysicsSystem.SetBodyActivationListener(&bodyActivationListener);
+    m_PhysicsSystem->SetBodyActivationListener(&m_BodyActivationListener);
 
     // A contact listener gets notified when bodies (are about to) collide, and when they separate again.
     // Note that this is called from a job so whatever you do here needs to be thread safe.
     // Registering one is entirely optional.
-    ContactListenerImpl contactListener;
-    m_PhysicsSystem.SetContactListener(&contactListener);
+    m_PhysicsSystem->SetContactListener(&m_ContactListener);
 
     // The main way to interact with the bodies in the physics system is through the body interface. There is a locking and a non-locking
     // variant of this. We're going to use the locking version (even though we're not planning to access bodies from multiple threads)
-    JPH::BodyInterface& bodyInterface = m_PhysicsSystem.GetBodyInterface();
+    m_BodyInterface = &m_PhysicsSystem->GetBodyInterface();
+
+    SetGravity(Vector3(0.f, -9.81f, 0.f));
 
     // Next we can create a rigid body to serve as the floor, we make a large box
     // Create the settings for the collision volume (the shape).
@@ -110,32 +97,105 @@ void PhysicsWorld::Initialize()
     JPH::ShapeRefC floorShape = floorShapeResult.Get(); // We don't expect an error here, but you can check floor_shape_result for HasError() / GetError()
 
     // Create the settings for the body itself. Note that here you can also set other properties like the restitution / friction.
-    JPH::BodyCreationSettings floorSettings(floorShape, JPH::RVec3(0.0_r, -1.0_r, 0.0_r), JPH::Quat::sIdentity(), JPH::EMotionType::Static, Layers::NON_MOVING);
+    JPH::BodyCreationSettings floorSettings(floorShape, JPH::RVec3(0.0_r, -1.0_r, 0.0_r), JPH::Quat::sEulerAngles(JPH::Vec3Arg(0.f, 0.f, 0.f)), JPH::EMotionType::Static, Layers::NON_MOVING);
 
     // Create the actual rigid body
-    JPH::Body* floor = bodyInterface.CreateBody(floorSettings); // Note that if we run out of bodies this can return nullptr
+    JPH::Body* floor = m_BodyInterface->CreateBody(floorSettings); // Note that if we run out of bodies this can return nullptr
 
     // Add it to the world
-    bodyInterface.AddBody(floor->GetID(), JPH::EActivation::DontActivate);
+    m_BodyInterface->AddBody(floor->GetID(), JPH::EActivation::DontActivate);
+}
 
-    // Now create a dynamic body to bounce on the floor
-    // Note that this uses the shorthand version of creating and adding a body to the world
-    JPH::BodyCreationSettings sphereSettings(new JPH::SphereShape(0.5f), JPH::RVec3(0.0_r, 2.0_r, 0.0_r), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, Layers::MOVING);
-    JPH::BodyID sphereId = bodyInterface.CreateAndAddBody(sphereSettings, JPH::EActivation::Activate);
+void PhysicsWorld::Destroy()
+{
+    delete m_Allocator;
+    delete m_JobSystem;
+    delete m_PhysicsSystem;
+    
+    // Unregisters all types with the factory and cleans up the default material
+    JPH::UnregisterTypes();
 
-    // Now you can interact with the dynamic body, in this case we're going to give it a velocity.
-    // (note that if we had used CreateBody then we could have set the velocity straight on the body before adding it to the physics system)
-    bodyInterface.SetLinearVelocity(sphereId, JPH::Vec3(0.0f, -5.0f, 0.0f));
-
-    // Optional step: Before starting the physics simulation you can optimize the broad phase. This improves collision detection performance (it's pointless here because we only have 2 bodies).
-    // You should definitely not call this every frame or when e.g. streaming in a new level section as it is an expensive operation.
-    // Instead insert all new objects in batches instead of 1 at a time to keep the broad phase efficient.
-    m_PhysicsSystem.OptimizeBroadPhase();
+    // Destroy the factory
+    delete JPH::Factory::sInstance;
+    JPH::Factory::sInstance = nullptr;
 }
 
 void PhysicsWorld::Update(const float_t deltaTime)
 {
-    m_PhysicsSystem.Update(deltaTime, 1, &m_Allocator, &m_JobSystem);
+    m_PhysicsSystem->Update(deltaTime, 1, m_Allocator, m_JobSystem);
+}
+
+void PhysicsWorld::SetGravity(const Vector3& gravity)
+{
+    m_PhysicsSystem->SetGravity(JPH::Vec3Arg(gravity.x, gravity.y, gravity.z));
+}
+
+uint32_t PhysicsWorld::CreateSphere(const Vector3& position, const float_t radius)
+{
+    const JPH::BodyCreationSettings settings(new JPH::SphereShape(radius), JPH::RVec3Arg(position.x, position.y, position.z), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, Layers::MOVING);
+    const JPH::BodyID bodyId = m_BodyInterface->CreateAndAddBody(settings, JPH::EActivation::Activate);
+
+    return bodyId.GetIndexAndSequenceNumber();
+}
+
+uint32_t PhysicsWorld::CreateBox(const Vector3& position, const Quaternion& rotation, const Vector3& scale)
+{
+    const JPH::BodyCreationSettings settings(new JPH::BoxShape(JPH::Vec3Arg(scale.x, scale.y, scale.z)), JPH::RVec3Arg(position.x, position.y, position.z),
+        JPH::Quat(rotation.X(), rotation.Y(), rotation.Z(), rotation.W()), JPH::EMotionType::Dynamic, Layers::MOVING);
+
+    const JPH::BodyID bodyId = m_BodyInterface->CreateAndAddBody(settings, JPH::EActivation::Activate);
+
+    return bodyId.GetIndexAndSequenceNumber();
+}
+
+void PhysicsWorld::DestroyBody(const uint32_t bodyId)
+{
+    m_BodyInterface->DestroyBody(JPH::BodyID(bodyId));
+}
+
+Vector3 PhysicsWorld::GetBodyPosition(const uint32_t bodyId)
+{
+    const JPH::BodyID id = JPH::BodyID(bodyId);
+
+    if (!IsBodyActive(bodyId))
+    {
+        Logger::LogWarning("Physics - Trying to get the position of an inactive body : {}", bodyId);
+        return Vector3::Zero();
+    }
+
+    const JPH::RVec3 position = m_BodyInterface->GetCenterOfMassPosition(id);
+
+    return Vector3(position.GetX(), position.GetY(), position.GetZ());
+}
+
+Quaternion PhysicsWorld::GetBodyRotation(uint32_t bodyId)
+{
+    const JPH::BodyID id = JPH::BodyID(bodyId);
+
+    if (!IsBodyActive(bodyId))
+    {
+        Logger::LogWarning("Physics - Trying to get the rotation of an inactive body : {}", bodyId);
+        return Quaternion::Identity();
+    }
+
+    const JPH::Quat rotation = m_BodyInterface->GetRotation(id);
+
+    return Quaternion(rotation.GetX(), rotation.GetY(), rotation.GetZ(), rotation.GetW());
+}
+
+void PhysicsWorld::SetPosition(const uint32_t bodyId, const Vector3& position)
+{
+    m_BodyInterface->SetPosition(JPH::BodyID(bodyId), JPH::RVec3Arg(position.x, position.y, position.z), JPH::EActivation::DontActivate);
+}
+
+void PhysicsWorld::SetRotation(const uint32_t bodyId, const Quaternion& rotation)
+{
+    m_BodyInterface->SetRotation(JPH::BodyID(bodyId), JPH::QuatArg(rotation.X(), rotation.Y(), rotation.Z(), rotation.W()), JPH::EActivation::DontActivate);
+}
+
+bool_t PhysicsWorld::IsBodyActive(const uint32_t bodyId)
+{
+    return m_BodyInterface->IsActive(JPH::BodyID(bodyId));
 }
 
 void PhysicsWorld::TraceImpl(const char_t* format, ...)

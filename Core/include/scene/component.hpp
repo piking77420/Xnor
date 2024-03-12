@@ -20,8 +20,10 @@ public:
     Entity* entity = nullptr;
 
     Component() = default;
-    
-    ~Component() override = default;
+
+    ~Component() override = 0;
+
+    DEFAULT_COPY_MOVE_OPERATIONS(Component)
 
     /// @brief Begins the component
     virtual void Begin() {}

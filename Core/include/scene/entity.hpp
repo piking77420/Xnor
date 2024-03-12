@@ -148,7 +148,7 @@ private:
     
     Guid m_EntityId;
 
-    List<PolyPtr<Component>> m_Components;
+    List<Component*> m_Components;
 
     friend class Scene;
 };

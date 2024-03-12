@@ -257,6 +257,8 @@
     <ClCompile Include="src\input\time.cpp" />
     <ClCompile Include="src\physics\body_activation_listener.cpp" />
     <ClCompile Include="src\physics\broad_phase_layer_interface.cpp" />
+    <ClCompile Include="src\physics\components\collider.cpp" />
+    <ClCompile Include="src\physics\components\sphere_collider.cpp" />
     <ClCompile Include="src\physics\contact_listener.cpp" />
     <ClCompile Include="src\physics\physics_world.cpp" />
     <ClCompile Include="src\rendering\light\directional_light.cpp" />
@@ -798,6 +800,15 @@
     <ClInclude Include="externals\include\refl\refl.hpp" />
     <ClInclude Include="externals\include\stb\stb_image.h" />
     <ClInclude Include="externals\include\ttf\ttfParser.h" />
+    <ClInclude Include="externals\inline\jolt\Math\DMat44.inl" />
+    <ClInclude Include="externals\inline\jolt\Math\DVec3.inl" />
+    <ClInclude Include="externals\inline\jolt\Math\Mat44.inl" />
+    <ClInclude Include="externals\inline\jolt\Math\Quat.inl" />
+    <ClInclude Include="externals\inline\jolt\Math\UVec4.inl" />
+    <ClInclude Include="externals\inline\jolt\Math\UVec8.inl" />
+    <ClInclude Include="externals\inline\jolt\Math\Vec3.inl" />
+    <ClInclude Include="externals\inline\jolt\Math\Vec4.inl" />
+    <ClInclude Include="externals\inline\jolt\Math\Vec8.inl" />
     <ClInclude Include="externals\src\jolt\Math\DMat44.inl" />
     <ClInclude Include="externals\src\jolt\Math\DVec3.inl" />
     <ClInclude Include="externals\src\jolt\Math\Mat44.inl" />
@@ -820,6 +831,9 @@
     <ClInclude Include="include\input\time.hpp" />
     <ClInclude Include="include\physics\body_activation_listener.hpp" />
     <ClInclude Include="include\physics\broad_phase_layer_interface.hpp" />
+    <ClInclude Include="include\physics\components\box_collider.hpp" />
+    <ClInclude Include="include\physics\components\collider.hpp" />
+    <ClInclude Include="include\physics\components\sphere_collider.hpp" />
     <ClInclude Include="include\physics\contact_listener.hpp" />
     <ClInclude Include="include\physics\layers.hpp" />
     <ClInclude Include="include\physics\physics_world.hpp" />
@@ -889,6 +903,7 @@
     <ClInclude Include="inline\utils\serializable.inl" />
     <ClInclude Include="inline\utils\ts_queue.inl" />
     <ClInclude Include="inline\utils\utils.inl" />
+    <ClCompile Include="src\physics\components\box_collider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="externals\include\assimp\.editorconfig" />

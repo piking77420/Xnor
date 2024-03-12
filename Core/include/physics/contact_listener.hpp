@@ -6,7 +6,7 @@
 
 BEGIN_XNOR_CORE
 
-class ContactListenerImpl : public JPH::ContactListener
+class XNOR_ENGINE ContactListenerImpl : public JPH::ContactListener
 {
     JPH::ValidateResult OnContactValidate(const JPH::Body& inBody1, const JPH::Body& inBody2, JPH::RVec3Arg inBaseOffset, const JPH::CollideShapeResult& inCollisionResult) override;
     void OnContactAdded(const JPH::Body& inBody1, const JPH::Body& inBody2, const JPH::ContactManifold& inManifold, JPH::ContactSettings& ioSettings) override;

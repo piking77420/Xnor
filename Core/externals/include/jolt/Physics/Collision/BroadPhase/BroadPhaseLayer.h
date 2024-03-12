@@ -14,7 +14,7 @@ JPH_NAMESPACE_BEGIN
 /// in different broad phase layers, but there could be exceptions if objects layers only contain a minor amount of objects so it is not beneficial to give each layer its
 /// own sub structure in the broadphase.
 /// Note: This class requires explicit casting from and to Type to avoid confusion with ObjectLayer
-class BroadPhaseLayer
+class JPH_EXPORT BroadPhaseLayer
 {
 public:
 	using Type = uint8;
@@ -52,7 +52,7 @@ private:
 static constexpr BroadPhaseLayer cBroadPhaseLayerInvalid(0xff);
 
 /// Interface that the application should implement to allow mapping object layers to broadphase layers
-class BroadPhaseLayerInterface : public NonCopyable
+class JPH_EXPORT BroadPhaseLayerInterface : public NonCopyable
 {
 public:
 	/// Destructor
@@ -71,7 +71,7 @@ public:
 };
 
 /// Class to test if an object can collide with a broadphase layer. Used while finding collision pairs.
-class ObjectVsBroadPhaseLayerFilter : public NonCopyable
+class JPH_EXPORT ObjectVsBroadPhaseLayerFilter : public NonCopyable
 {
 public:
 	/// Destructor

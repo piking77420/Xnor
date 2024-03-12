@@ -3,6 +3,8 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_stdlib.h"
 #include "magic_enum/magic_enum_all.hpp"
+#include "physics/components/box_collider.hpp"
+#include "physics/components/sphere_collider.hpp"
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
 #include "rendering/light/spot_light.hpp"
@@ -175,10 +177,9 @@ void Inspector::DisplayRawPointer(MemberT* obj, const char_t* name, [[maybe_unus
 {
     using TypeT = XnorCore::Meta::RemovePointerSpecifier<MemberT>;
 
-    ImGui::Text("%s", name);
-
     if constexpr (XnorCore::Meta::IsSame<TypeT, XnorCore::Entity>)
     {
+        ImGui::Text("%s", name);
         ImGui::SameLine();
 
         if (*obj != nullptr)
@@ -219,19 +220,35 @@ void Inspector::DisplayRawPointer(MemberT* obj, const char_t* name, [[maybe_unus
             }
         }
     }
-}
-
+    else if constexpr (XnorCore::Meta::IsSame<TypeT, XnorCore::Component>)
+    {
+        const size_t hash = XnorCore::Utils::GetTypeHash<XnorCore::Component>(*obj);
+        
 #define POLY_PTR_IF_INSP(type)\
 if (hash == XnorCore::Utils::GetTypeHash<type>())\
 {\
-DisplayObject<type>(obj->Cast<type>(), XnorCore::Reflection::GetTypeInfo<type>());\
+DisplayObject<type>(reinterpret_cast<type*>(*obj), XnorCore::Reflection::GetTypeInfo<type>());\
 }\
+
+        if (ImGui::CollapsingHeader(name))
+        {
+            // TODO find a less ugly solution to that
+
+            POLY_PTR_IF_INSP(XnorCore::MeshRenderer)
+            POLY_PTR_IF_INSP(XnorCore::DirectionalLight)
+            POLY_PTR_IF_INSP(XnorCore::TestComponent)
+            POLY_PTR_IF_INSP(XnorCore::PointLight)
+            POLY_PTR_IF_INSP(XnorCore::SpotLight)
+            POLY_PTR_IF_INSP(XnorCore::SphereCollider)
+            POLY_PTR_IF_INSP(XnorCore::BoxCollider)
+        }
+    }
+}
 
 template <typename MemberT>
 void Inspector::DisplayPolyPointer(MemberT* obj, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
 {
-    const size_t hash = obj->GetHash();
-
+    /*
     if (ImGui::CollapsingHeader(name))
     {
         // TODO find a less ugly solution to that
@@ -242,6 +259,7 @@ void Inspector::DisplayPolyPointer(MemberT* obj, const char_t* name, [[maybe_unu
         POLY_PTR_IF_INSP(XnorCore::PointLight)
         POLY_PTR_IF_INSP(XnorCore::SpotLight)
     }
+    */
 }
 
 template <typename MemberT>
@@ -453,7 +471,7 @@ void Inspector::DisplayList(MemberT* ptr, const char_t* name, [[maybe_unused]] c
 
     if (ImGui::CollapsingHeader(name))
     {
-        if constexpr (!XnorCore::Meta::IsPolyPtr<ArrayT>)
+        if constexpr (!XnorCore::Meta::IsPolyPtr<ArrayT> && !XnorCore::Meta::IsPointer<ArrayT>)
         {
             if (ImGui::Selectable("Add"))
             {
@@ -484,8 +502,8 @@ void Inspector::DisplayList(MemberT* ptr, const char_t* name, [[maybe_unused]] c
             }
                 
             ImGui::SameLine();
-                    
-            if constexpr (!XnorCore::Meta::IsPolyPtr<ArrayT>)
+
+            if constexpr (!XnorCore::Meta::IsPolyPtr<ArrayT> && !XnorCore::Meta::IsPointer<ArrayT>)
             {
                 if (ImGui::Button("+"))
                 {

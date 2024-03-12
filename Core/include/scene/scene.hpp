@@ -17,7 +17,6 @@ class Scene : public Serializable
     REFLECTABLE_IMPL_H(Scene)
     
 public:
-
     /// @brief Skybox handler
     XNOR_ENGINE static inline Skybox skybox;
     

@@ -99,6 +99,8 @@ void Serializer::SerializeSimpleType(const MemberT* ptr, const char_t* name, con
     }
     else if constexpr (Meta::IsPointer<MemberT>)
     {
+        // TODO fix serialization
+        /*
         if (flags & EXPAND_POINTER)
         {
             Serialize<Meta::RemovePointerSpecifier<MemberT>>(*ptr, false);
@@ -110,6 +112,7 @@ void Serializer::SerializeSimpleType(const MemberT* ptr, const char_t* name, con
             else
                 FetchAttribute(name, static_cast<std::string>((*ptr)->GetGuid()));
         }
+        */
     }
     else if constexpr (Meta::IsPolyPtr<MemberT>)
     {
