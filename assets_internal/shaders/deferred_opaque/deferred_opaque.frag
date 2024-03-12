@@ -133,43 +133,45 @@ vec3 CalcDirLight(DirectionalData light, vec3 viewDir, vec3 fragPos, vec3 normal
 // fr(v,l)=D(h,α)G(v,l,α)F(v,h,f0)4(n⋅v)(n⋅l)
 
 // NDF // D
-float D_GGX(float NoH, float roughness) {
-    float a = NoH * roughness;
-    float k = roughness / (1.0 - NoH * NoH + a * a);
-    return k * k * (1.0 / PI);
-}
-
-//  Geometric shadowing // G
-float V_SmithGGXCorrelated(float NoV, float NoL, float roughness) {
-    float a2 = roughness * roughness;
-    float GGXV = NoL * sqrt(NoV * NoV * (1.0 - a2) + a2);
-    float GGXL = NoV * sqrt(NoL * NoL * (1.0 - a2) + a2);
-    return 0.5 / (GGXV + GGXL);
-}
-// Fresnel term // F
-// defines how light reflects and refracts at the interface between 
-vec3 F_Schlick(float u, vec3 f0) {
-    float f = pow(1.0 - u, 5.0);
-    return f + f0 * (1.0 - f);
-}
-// Diffuse Component // 
-// diffuse Lambertian // 
-float Fd_Lambert() {
-    return 1.0 / PI;
-}
-// diffuse Lambertian Disney // 
-float F_Schlick(float u, float f0, float f90) {
-    return f0 + (f90 - f0) * pow(1.0 - u, 5.0);
-}
-
-float Fd_Burley(float NoV, float NoL, float LoH, float roughness)
+float DistributionGGX(vec3 N, vec3 H, float roughness)
 {
-    float f90 = 0.5 + 2.0 * roughness * LoH * LoH;
-    float lightScatter = F_Schlick(NoL, 1.0, f90);
-    float viewScatter = F_Schlick(NoV, 1.0, f90);
-    return lightScatter * viewScatter * (1.0 / PI);
-}
+    float a = roughness*roughness;
+    float a2 = a*a;
+    float NdotH = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH*NdotH;
 
+    float nom   = a2;
+    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    denom = PI * denom * denom;
+
+    return nom / denom;
+}
+// ----------------------------------------------------------------------------
+float GeometrySchlickGGX(float NdotV, float roughness)
+{
+    float r = (roughness + 1.0);
+    float k = (r*r) / 8.0;
+
+    float nom   = NdotV;
+    float denom = NdotV * (1.0 - k) + k;
+
+    return nom / denom;
+}
+// ----------------------------------------------------------------------------
+float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
+{
+    float NdotV = max(dot(N, V), 0.0);
+    float NdotL = max(dot(N, L), 0.0);
+    float ggx2 = GeometrySchlickGGX(NdotV, roughness);
+    float ggx1 = GeometrySchlickGGX(NdotL, roughness);
+
+    return ggx1 * ggx2;
+}
+// ----------------------------------------------------------------------------
+vec3 fresnelSchlick(float cosTheta, vec3 F0)
+{
+    return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
+}
 
 
 uniform sampler2D gPosition;
@@ -177,6 +179,9 @@ uniform sampler2D gNormal;
 uniform sampler2D gAlbedoSpec;
 uniform sampler2D gMetallicRoughessReflectance;
 uniform sampler2D gEmissiveAmbiantOcclusion;
+
+
+uniform samplerCube SkyBox;
 
 in vec2 texCoords;
 
@@ -187,12 +192,12 @@ void main()
     vec3 albedo = texture(gAlbedoSpec, texCoords).rgb;
     
     float metallic = texture(gMetallicRoughessReflectance,texCoords).r;
-    float perceptualRoughness = texture(gMetallicRoughessReflectance,texCoords).g;
+    float roughness = texture(gMetallicRoughessReflectance,texCoords).g;
     float reflectance = texture(gMetallicRoughessReflectance,texCoords).b;
     
-    float roughness = perceptualRoughness * perceptualRoughness;
-    
-    vec3 f0 = 0.16 * reflectance * reflectance * (1.0 - metallic) + (albedo * metallic);
+    vec3 F0 = vec3(0.04);
+    F0 = mix(F0, albedo, metallic);
+    vec3 Lo = vec3(0.0);
     
     
     // view unit vector
@@ -203,31 +208,37 @@ void main()
     vec3 n = normalize(normal);
     // half unit vector
     vec3 h = normalize(v + l);
+    
 
-
-    float NoV = abs(dot(n, v));
+    float NoV = abs(dot(n, v)) + 1e-5;
     float NoL = clamp(dot(n, l), 0.0, 1.0);
     float NoH = clamp(dot(n, h), 0.0, 1.0);
     float LoH = clamp(dot(l, h), 0.0, 1.0);
-
-
-    float D = D_GGX(NoH, roughness);
-    vec3  F = F_Schlick(LoH, f0);
-    float V = V_SmithGGXCorrelated(NoV, NoL, roughness);
-
-    // specular BRDF
-    vec3 Fr = (D * V) * F;
     
-    /*
-    // Single MultiScatering 
-    vec3 energyCompensation = 1.0 + f0 * (1.0 / dfg.y - 1.0);
-    // Scale the specular lobe to account for multiscattering
-    Fr *= pixel.energyCompensation;
-*/
+    vec3 radiance = vec3(1);
+    
+    // Cook-Torrance BRDF
+    float NDF = DistributionGGX(n, h, roughness);
+    float G   = GeometrySmith(n, v, l, roughness);
+    vec3 F    = fresnelSchlick(clamp(dot(h, v), 0.0, 1.0), F0);
+    vec3 numerator    = NDF * G * F;
+    float denominator = 4.0 * max(dot(n, v), 0.0) * max(dot(n, l), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
+    vec3 specular = numerator / denominator;
 
-    vec3 diffuseColor = (1.0 - metallic) * albedo.rgb;
-    // diffuse BRDF
-    vec3 Fd = diffuseColor * Fd_Burley(NoV, NoL, LoH, roughness);
 
-    FragColor = vec4(Fr + Fd, 1);
+    vec3 i = -v;
+    vec3 r = reflect(i, normalize(n));
+    vec3 skyBoxReflectedColor = texture(SkyBox, r).rgb;
+    
+    // kS is equal to Fresnel
+    vec3 kS = F * skyBoxReflectedColor;;
+    vec3 kD = vec3(1.0) - kS;
+    kD *= (1.0 - metallic);
+
+    float NdotL = max(dot(n, l), 0.0);
+    Lo += (kD * albedo / PI + specular) * radiance * NdotL;
+    
+
+    
+    FragColor = vec4(Lo, 1);
 }

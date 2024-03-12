@@ -42,7 +42,7 @@ void Renderer::RenderViewport(const Viewport& viewport,
 
 	const ViewportData& viewportData = viewport.viewportData;
 
-	DefferedRendering(meshrenderers,viewportData,viewport.viewPortSize);
+	DefferedRendering(meshrenderers,scene.skybox,viewportData,viewport.viewPortSize);
 	ForwardPass(meshrenderers, scene.skybox, viewport, viewport.viewPortSize, viewport.isEditor);
 	
 	const RenderPassBeginInfo renderPassBeginInfo =
@@ -83,7 +83,8 @@ void Renderer::SwapBuffers()
 	Rhi::SwapBuffers();
 }
 
-void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRenderers,const ViewportData& viewportData,const Vector2i viewportSize) const 
+void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRenderers,
+	const Skybox& skybox,const ViewportData& viewportData,const Vector2i viewportSize) const 
 {
 	const RenderPassBeginInfo renderPassBeginInfo =
 	{
@@ -118,7 +119,9 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	viewportData.albedoAttachment->BindTexture(GbufferAlbedo);
 	viewportData.metallicRougnessReflectance->BindTexture(GmetallicRoughessReflectance);
 	viewportData.emissiveAmbiantOcclusion->BindTexture(GemissiveAmbiantOcclusion);
-
+	
+	skybox.GetCubeMap()->BindTexture(10);
+	
 	Rhi::DrawQuad(m_Quad->GetId());
 	m_GBufferShaderLit->Unuse();
 	Rhi::DepthTest(true);
@@ -295,6 +298,7 @@ void Renderer::InitResources()
 	m_GBufferShaderLit->SetInt("gAlbedoSpec", GbufferAlbedo);
 	m_GBufferShaderLit->SetInt("gMetallicRoughessReflectance", GmetallicRoughessReflectance);
 	m_GBufferShaderLit->SetInt("gEmissiveAmbiantOcclusion", GemissiveAmbiantOcclusion);
+	m_GBufferShaderLit->SetInt("SkyBox", 10);
 
 	m_GBufferShaderLit->Unuse();
 	
