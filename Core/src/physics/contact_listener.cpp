@@ -1,39 +1,59 @@
 #include "physics/contact_listener.hpp"
 
+#include "Jolt/Physics/Body/Body.h"
+#include "physics/physics_world.hpp"
+#include "utils/logger.hpp"
+
 using namespace XnorCore;
 
 
 JPH::ValidateResult ContactListenerImpl::OnContactValidate(
-    const JPH::Body& inBody1,
-    const JPH::Body& inBody2,
-    const JPH::RVec3Arg inBaseOffset,
-    const JPH::CollideShapeResult& inCollisionResult
+    [[maybe_unused]] const JPH::Body& inBody1,
+    [[maybe_unused]] const JPH::Body& inBody2,
+    [[maybe_unused]] const JPH::RVec3Arg inBaseOffset,
+    [[maybe_unused]] const JPH::CollideShapeResult& inCollisionResult
 )
 {
-    return ContactListener::OnContactValidate(inBody1, inBody2, inBaseOffset, inCollisionResult);
+    // Logger::LogInfo("Contact between {} and {}", inBody1.GetID().GetIndexAndSequenceNumber(), inBody2.GetID().GetIndexAndSequenceNumber());
+
+    return JPH::ValidateResult::AcceptAllContactsForThisBodyPair;
 }
 
 void ContactListenerImpl::OnContactAdded(
-    const JPH::Body& inBody1,
-    const JPH::Body& inBody2,
-    const JPH::ContactManifold& inManifold,
-    JPH::ContactSettings& ioSettings
+    [[maybe_unused]] const JPH::Body& inBody1,
+    [[maybe_unused]] const JPH::Body& inBody2,
+    [[maybe_unused]] const JPH::ContactManifold& inManifold,
+    [[maybe_unused]] JPH::ContactSettings& ioSettings
 )
 {
-    ContactListener::OnContactAdded(inBody1, inBody2, inManifold, ioSettings);
+    const uint32_t bodyId1 = inBody1.GetID().GetIndexAndSequenceNumber();
+    const uint32_t bodyId2 = inBody2.GetID().GetIndexAndSequenceNumber();
+    Collider* const c1 = PhysicsWorld::GetColliderFromId(bodyId1);
+    Collider* const c2 = PhysicsWorld::GetColliderFromId(bodyId2);
+
+    if (inBody1.IsSensor() && !inBody2.IsSensor())
+    {
+        // Body 1 is the trigger, so body 2 entered in it
+        c1->OnTriggerEnter(c2);
+    }
+    else if (!inBody1.IsSensor() && inBody2.IsSensor())
+    {
+        // Body 2 is the trigger, so body 1 entered in it
+        c2->OnTriggerEnter(c1);
+    }
 }
 
 void ContactListenerImpl::OnContactPersisted(
-    const JPH::Body& inBody1,
-    const JPH::Body& inBody2,
-    const JPH::ContactManifold& inManifold,
-    JPH::ContactSettings& ioSettings
+    [[maybe_unused]] const JPH::Body& inBody1,
+    [[maybe_unused]] const JPH::Body& inBody2,
+    [[maybe_unused]] const JPH::ContactManifold& inManifold,
+    [[maybe_unused]] JPH::ContactSettings& ioSettings
 )
 {
-    ContactListener::OnContactPersisted(inBody1, inBody2, inManifold, ioSettings);
+    // Logger::LogInfo("Contact persisted between {} and {}", inBody1.GetID().GetIndexAndSequenceNumber(), inBody2.GetID().GetIndexAndSequenceNumber());
 }
 
-void ContactListenerImpl::OnContactRemoved(const JPH::SubShapeIDPair& inSubShapePair)
+void ContactListenerImpl::OnContactRemoved([[maybe_unused]] const JPH::SubShapeIDPair& inSubShapePair)
 {
-    ContactListener::OnContactRemoved(inSubShapePair);
+    // Logger::LogInfo("Contact removed {} and {}", inSubShapePair.GetBody1ID().GetIndexAndSequenceNumber(), inSubShapePair.GetBody1ID().GetIndexAndSequenceNumber());
 }

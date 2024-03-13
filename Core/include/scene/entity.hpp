@@ -16,10 +16,6 @@
 
 BEGIN_XNOR_CORE
 
-/// @brief Concept that forces a type to be a child of Component
-template <class T>
-concept ComponentT = Meta::IsBaseOf<Component, T>;
-
 /// @brief Represents an object of the engine, behaviors can be attached to it via a list of Component
 class Entity : public Serializable
 {
@@ -32,48 +28,48 @@ public:
     std::string name;
 
     /// @brief Adds a Component to the entity
-    /// @tparam ComponentT Component type
+    /// @tparam T Component type
     /// @return Created component
-    template <class ComponentT>
-    ComponentT* AddComponent();
+    template <Concepts::ComponentT T>
+    T* AddComponent();
 
     /// @brief Gets a specified Component
-    /// @tparam ComponentT Component type
+    /// @tparam T Component type
     /// @return Component, @c nullptr if it doesn't exists
-    template <class ComponentT>
+    template <Concepts::ComponentT T>
     [[nodiscard]]
-    ComponentT* GetComponent();
+    T* GetComponent();
 
     /// @brief Gets a specified Component
-    /// @tparam ComponentT Component type
+    /// @tparam T Component type
     /// @return Component, @c nullptr if it doesn't exists
-    template <class ComponentT>
+    template <Concepts::ComponentT T>
     [[nodiscard]]
-    const ComponentT* GetComponent() const;
+    const T* GetComponent() const;
     
     /// @brief Gets all of the specified Component
-    /// @tparam ComponentT Component type
+    /// @tparam T Component type
     /// @param components Result components
-    template <class ComponentT>
-    void GetComponents(std::vector<ComponentT*>* components);
+    template <Concepts::ComponentT T>
+    void GetComponents(std::vector<T*>* components);
 
     /// @brief Gets all of the specified Component
-    /// @tparam ComponentT Component type
+    /// @tparam T Component type
     /// @param components Result components
-    template <class ComponentT>
-    void GetComponents(std::vector<const ComponentT*>* components) const;
+    template <Concepts::ComponentT T>
+    void GetComponents(std::vector<const T*>* components) const;
 
     /// @brief Tries to get a component
-    /// @tparam ComponentT Component type
+    /// @tparam T Component type
     /// @param output Found Component
     /// @return Whether the Component exists
-    template <class ComponentT>
+    template <Concepts::ComponentT T>
     [[nodiscard]]
-    bool_t TryGetComponent(ComponentT** output);
+    bool_t TryGetComponent(T** output);
 
     /// @brief Removes a specified Component
-    /// @tparam ComponentT Component type
-    template <class ComponentT>
+    /// @tparam T Component type
+    template <Concepts::ComponentT T>
     void RemoveComponent();
 
     /// @brief Gets the Guid of the entity

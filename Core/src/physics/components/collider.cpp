@@ -8,6 +8,14 @@ using namespace XnorCore;
 
 REFLECTABLE_IMPL_CPP(Collider)
 
+Collider::Collider()
+{
+    onTriggerEnter += [&](const Collider* const other)
+    {
+        Logger::LogDebug("OnTriggerEnter between {} and {}", entity->name, other->entity->name);
+    };
+}
+
 Collider::~Collider()
 {
     if (!JPH::BodyID(m_BodyId).IsInvalid())
@@ -32,4 +40,9 @@ void Collider::Update()
         else
             PhysicsWorld::SetRotation(m_BodyId, entity->transform.GetRotation());
     }
+}
+
+void Collider::OnTriggerEnter(Collider* other)
+{
+    onTriggerEnter.Invoke(other);
 }

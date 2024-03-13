@@ -543,7 +543,7 @@ constexpr const XnorCore::Reflection::Range<MemberT>* Inspector::GetRange(Descri
         return nullptr;
 }
 
-template <XnorCore::ResourceT T>
+template <XnorCore::Concepts::ResourceT T>
 XnorCore::Pointer<T> Inspector::FilterResources(ImGuiTextFilter& filter)
 {
     ImGui::OpenPopup("Resource");

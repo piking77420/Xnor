@@ -14,10 +14,6 @@
 
 BEGIN_XNOR_CORE
 
-/// @brief A class satisfies the EntryT concept if it is derived of Entry.
-template <class T>
-concept EntryT = std::is_base_of_v<Entry, T>;
-
 /// @brief Static class used to add, load, get, or unload @ref File "Files" and @ref Directory "Directories".
 ///
 /// It contains all wrapper instances of the File and Directory classes. These are either added or loaded using the corresponding
@@ -49,7 +45,7 @@ public:
     /// @tparam T The type of Entry to get.
     /// @param path The system path to get the Entry of.
     /// @return The Entry corresponding to the given @p path, or nullptr if it hasn't been added yet.
-    template <EntryT T = File>
+    template <Concepts::EntryT T = File>
     [[nodiscard]]
     static Pointer<T> Get(const std::filesystem::path& path);
 
@@ -68,7 +64,7 @@ public:
     /// @brief Finds the first Entry of type @p T.
     /// @tparam T The type of Entry to find.
     /// @return The first Entry of type @p T.
-    template <EntryT T = File>
+    template <Concepts::EntryT T = File>
     [[nodiscard]]
     static Pointer<T> Find();
 
@@ -78,19 +74,19 @@ public:
     /// called for each stored Entry.
     /// @return The first Entry for which the @p predicate returned @c true. If every Entry
     /// returned @c false, instead return a null Pointer.
-    template <EntryT T = File>
+    template <Concepts::EntryT T = File>
     [[nodiscard]]
     static Pointer<T> Find(std::function<bool_t(Pointer<T>)>&& predicate);
 
     /// @brief Finds all @ref Entry "Entries" of type @p T.
     /// @tparam T The type of Entry to find.
     /// @return All stored @ref Entry "Entries" of type @p T.
-    template <EntryT T = File>
+    template <Concepts::EntryT T = File>
     [[nodiscard]]
     static std::vector<Pointer<T>> FindAll();
     
     /// @see FileManager::FindAll()
-    template <EntryT T = File>
+    template <Concepts::EntryT T = File>
     static void FindAll(std::vector<Pointer<T>>* result);
     
     /// @brief Finds a list of Entry "Entries" based on a predicate.
@@ -99,12 +95,12 @@ public:
     /// called for each stored Entry.
     /// @return The first Entry for which the @p predicate returned @c true. If every Entry
     /// returned @c false, instead return a null Pointer.
-    template <EntryT T = File>
+    template <Concepts::EntryT T = File>
     [[nodiscard]]
     static std::vector<Pointer<T>> FindAll(std::function<bool_t(Pointer<T>)>&& predicate);
 
     /// @see FileManager::FindAll(std::function<bool(Pointer<T>)>&&)
-    template <EntryT T = File>
+    template <Concepts::EntryT T = File>
     static void FindAll(std::function<bool(Pointer<T>)>&& predicate, std::vector<Pointer<T>>* result);
 
     /// @brief Unloads the Entry corresponding to the given path.

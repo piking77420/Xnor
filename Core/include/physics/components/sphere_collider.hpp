@@ -6,16 +6,16 @@
 
 BEGIN_XNOR_CORE
 
-class XNOR_ENGINE SphereCollider : public Collider
+class SphereCollider : public Collider
 {
     REFLECTABLE_IMPL_MINIMAL(SphereCollider)
 
 public:
-    SphereCollider() = default; 
-    ~SphereCollider() override = default;
+    XNOR_ENGINE SphereCollider() = default; 
+    XNOR_ENGINE ~SphereCollider() override = default;
 
-    void Begin() override;
-    void Update() override;
+    XNOR_ENGINE void Begin() override;
+    XNOR_ENGINE void Update() override;
     
     DEFAULT_COPY_MOVE_OPERATIONS(SphereCollider)
     

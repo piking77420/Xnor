@@ -1,6 +1,6 @@
+#include "editor.hpp"
 #include "file/file_manager.hpp"
 #include "utils/logger.hpp"
-#include "editor.hpp"
 
 #include "physics/physics_world.hpp"
 

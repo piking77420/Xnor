@@ -102,6 +102,8 @@ void PhysicsWorld::Initialize()
     // Create the actual rigid body
     JPH::Body* floor = m_BodyInterface->CreateBody(floorSettings); // Note that if we run out of bodies this can return nullptr
 
+    m_BodyMap.emplace(floor->GetID().GetIndexAndSequenceNumber(), nullptr);
+
     // Add it to the world
     m_BodyInterface->AddBody(floor->GetID(), JPH::EActivation::DontActivate);
 }
@@ -130,27 +132,25 @@ void PhysicsWorld::SetGravity(const Vector3& gravity)
     m_PhysicsSystem->SetGravity(JPH::Vec3Arg(gravity.x, gravity.y, gravity.z));
 }
 
-uint32_t PhysicsWorld::CreateSphere(const Vector3& position, const float_t radius)
+uint32_t PhysicsWorld::CreateSphere(Collider* const c, const Vector3& position, const float_t radius, const bool_t isTrigger)
 {
-    const JPH::BodyCreationSettings settings(new JPH::SphereShape(radius), JPH::RVec3Arg(position.x, position.y, position.z), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, Layers::MOVING);
-    const JPH::BodyID bodyId = m_BodyInterface->CreateAndAddBody(settings, JPH::EActivation::Activate);
+    JPH::BodyCreationSettings settings(new JPH::SphereShape(radius), JPH::RVec3Arg(position.x, position.y, position.z), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, Layers::MOVING);
 
-    return bodyId.GetIndexAndSequenceNumber();
+    return CreateBody(c, settings, isTrigger);
 }
 
-uint32_t PhysicsWorld::CreateBox(const Vector3& position, const Quaternion& rotation, const Vector3& scale)
+uint32_t PhysicsWorld::CreateBox(Collider* const c, const Vector3& position, const Quaternion& rotation, const Vector3& scale, const bool_t isTrigger)
 {
-    const JPH::BodyCreationSettings settings(new JPH::BoxShape(JPH::Vec3Arg(scale.x, scale.y, scale.z)), JPH::RVec3Arg(position.x, position.y, position.z),
+    JPH::BodyCreationSettings settings(new JPH::BoxShape(JPH::Vec3Arg(scale.x, scale.y, scale.z)), JPH::RVec3Arg(position.x, position.y, position.z),
         JPH::Quat(rotation.X(), rotation.Y(), rotation.Z(), rotation.W()), JPH::EMotionType::Dynamic, Layers::MOVING);
 
-    const JPH::BodyID bodyId = m_BodyInterface->CreateAndAddBody(settings, JPH::EActivation::Activate);
-
-    return bodyId.GetIndexAndSequenceNumber();
+    return CreateBody(c, settings, isTrigger);
 }
 
 void PhysicsWorld::DestroyBody(const uint32_t bodyId)
 {
     m_BodyInterface->DestroyBody(JPH::BodyID(bodyId));
+    m_BodyMap.erase(m_BodyMap.find(bodyId));
 }
 
 Vector3 PhysicsWorld::GetBodyPosition(const uint32_t bodyId)
@@ -193,6 +193,11 @@ void PhysicsWorld::SetRotation(const uint32_t bodyId, const Quaternion& rotation
     m_BodyInterface->SetRotation(JPH::BodyID(bodyId), JPH::QuatArg(rotation.X(), rotation.Y(), rotation.Z(), rotation.W()), JPH::EActivation::DontActivate);
 }
 
+Collider* PhysicsWorld::GetColliderFromId(const uint32_t bodyId)
+{
+    return m_BodyMap.find(bodyId)->second;
+}
+
 bool_t PhysicsWorld::IsBodyActive(const uint32_t bodyId)
 {
     return m_BodyInterface->IsActive(JPH::BodyID(bodyId));
@@ -210,4 +215,19 @@ void PhysicsWorld::TraceImpl(const char_t* format, ...)
     // Print to the TTY
     const char_t* const buf = buffer;
     Logger::LogInfo("{}", buf);
+}
+
+uint32_t PhysicsWorld::CreateBody(Collider* const c, JPH::BodyCreationSettings& settings, const bool_t isTrigger)
+{
+    settings.mIsSensor = isTrigger;
+    if (isTrigger)
+        settings.mMotionType = JPH::EMotionType::Static;
+
+    settings.mAllowSleeping = false;
+
+    const uint32_t bodyId = m_BodyInterface->CreateAndAddBody(settings, JPH::EActivation::Activate).GetIndexAndSequenceNumber();
+
+    m_BodyMap.emplace(bodyId, c);
+    
+    return bodyId;
 }
