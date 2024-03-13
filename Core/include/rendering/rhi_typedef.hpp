@@ -137,6 +137,7 @@ enum class TextureInternalFormat
 	Rgba16F,
 	R32F,
 	R32Uint,
+	Srgb,
 	DepthComponent16,
 	DepthComponent24,
 	DepthComponent32,
@@ -446,9 +447,12 @@ struct ShadowMappingData
 struct MaterialData
 {
 	Vector3 albedoColor;
-	int hasAlbedoMap;
-	int hasNormalmap;
-	
+	int32_t hasAlbedoMap;
+	int32_t hasMetallicMap;
+	int32_t hasRoughnessMap;
+	int32_t hasNormalMap;
+	int32_t hasAmbiantOcclusionMap;
+
 	float_t metallic = 0.f;
 	float_t roughness = 0.f;
 	float_t reflectance = 0.f;
@@ -464,6 +468,16 @@ enum Gbuffer : int32_t
 	GbufferAlbedo,
 	GmetallicRoughessReflectance,
 	GemissiveAmbiantOcclusion,
+};
+
+
+enum MaterialTextureEnum : int32_t
+{
+	Albedo = 0,
+	Metallic,
+	Roughness,
+	Normal,
+	AmbiantOcclusion,
 };
 
 /// @brief Buffer attachment flags.

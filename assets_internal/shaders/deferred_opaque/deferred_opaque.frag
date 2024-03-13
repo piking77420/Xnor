@@ -50,13 +50,6 @@ layout (std140, binding = 2) uniform LightData
     DirectionalData directionalData;
 };
 
-
-// PBR FUNCTION //
-// Specular Component // 
-// fr(v,l)=D(h,α)G(v,l,α)F(v,h,f0)4(n⋅v)(n⋅l)
-//Diffuse BRDF
-//fd(l, v) = cdiff/π
-
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gAlbedoSpec;
@@ -87,8 +80,8 @@ float SpecularG1(vec3 n,vec3 v,float k)
 
 float SpecularG(vec3 l, vec3 v, vec3 h, vec3 n, float roughness)
 {
-    float k = pow((roughness + 1),2) / 8f;
-    
+    float k = pow((roughness + 1.0), 2.0) / 8.0;
+
     return SpecularG1(n,l,k) * SpecularG1(n,v,k);
 }
 vec3 SpecularF(float VoH,vec3 F0)
@@ -102,7 +95,7 @@ void main()
 {
     vec3 fragPos = texture(gPosition, texCoords).rgb;
     vec3 normal = texture(gNormal, texCoords).rgb;
-    vec3 albedo = texture(gAlbedoSpec, texCoords).rgb;
+    vec3 albedo =  pow(texture(gAlbedoSpec, texCoords).rgb,vec3(2.2));
     
     float metallic = texture(gMetallicRoughessReflectance,texCoords).r;
     float roughness = texture(gMetallicRoughessReflectance,texCoords).g;
@@ -128,7 +121,8 @@ void main()
     float NoH = clamp(dot(n,h),0.0,1.0);
     float VoH = clamp(dot(v,h),0.0,1.0);
 
-    float ndf = SpecularD(NoH, roughness * roughness);
+    vec3 radiance = directionalData.color * directionalData.intensity;
+    float ndf = SpecularD(NoH, roughness * roughness );
     float g =  SpecularG(l, v, h, n, roughness);
     vec3 f = SpecularF(VoH,F0);
 
@@ -142,8 +136,9 @@ void main()
     kD *= 1.0 - metallic;
     float NdotL = max(dot(n, l), 0.0);
     
-    Lo += (kD * albedo * InvPI + specular) * NdotL;
     
+    vec3 ambient = vec3(0.03) * albedo * ambientOcclusion;
+    Lo += (kD * albedo * InvPI + specular) * radiance * NdotL;
     
-    FragColor = vec4(Lo, 1);
+    FragColor = vec4(Lo + ambient, 1);
 }

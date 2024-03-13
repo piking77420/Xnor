@@ -24,7 +24,10 @@ layout (std140, binding = 4) uniform MaterialDataUniform
 {
     vec3 AlbedoColor;
     bool hasAlbedoMap;
-    bool hasNormalmap;
+    bool hasMetallicMap;
+    bool hasRoughnessMap;
+    bool hasNormalMap;
+    bool hasAmbiantOcclusionMap;
 
     float metallic;
     float roughness;
@@ -63,7 +66,7 @@ void main()
     vs_out.ambiantOccusion = ambiantOccusion;
 
     // Compute Normal
-    if (hasNormalmap == false)
+    if (hasNormalMap == false)
     {
         vs_out.normal = mat3(normalInvertMatrix) * aNormal;
     }

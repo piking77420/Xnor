@@ -398,21 +398,21 @@ uint32_t Rhi::CreateTexture2D(const TextureCreateInfo& textureCreateInfo)
 
 	const GLint openglTextureFilter = static_cast<GLint>(GetOpenglTextureFilter(textureCreateInfo.filtering));
 	const GLint openglTextureWrapper = static_cast<GLint>(GetOpenglTextureWrapper(textureCreateInfo.wrapping));
+	
+	AllocTexture2D(textureId, textureCreateInfo);
+	glGenerateTextureMipmap(textureId);
 
-	glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
-	glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
 	glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
 	glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
-
-	AllocTexture2D(textureId, textureCreateInfo);
-
+	glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
+	glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
+	
 	if (textureCreateInfo.data != nullptr)
 	{
 		glTextureSubImage2D(textureId, 0, 0, 0, static_cast<GLsizei>(textureCreateInfo.size.x), static_cast<GLsizei>(textureCreateInfo.size.y),
 			GetOpenGlTextureFormat(textureCreateInfo.format), GetOpenglDataType(textureCreateInfo.dataType), textureCreateInfo.data);
 	}
 	
-	glGenerateTextureMipmap(textureId);
 
 	return textureId;
 }
@@ -701,7 +701,10 @@ uint32_t Rhi::GetOpenglInternalFormat(const TextureInternalFormat textureFormat)
 		
 		case TextureInternalFormat::R32Uint:
 			return GL_R32UI;
-
+		
+		case TextureInternalFormat::Srgb:
+			return GL_SRGB8;
+		
 		case TextureInternalFormat::DepthComponent16:
 			return GL_DEPTH_COMPONENT16;
 		
@@ -977,8 +980,12 @@ void Rhi::BindMaterial(const Material& material)
 {
 	MaterialData materialData;
 	
-	materialData.hasAlbedoMap = static_cast<int32_t>(material.albedo.IsValid());
-	materialData.hasNormalmap =  static_cast<int32_t>(material.normalMap.IsValid());
+	materialData.hasAlbedoMap = static_cast<int32_t>(material.albedoTexture.IsValid());
+	materialData.hasMetallicMap =  static_cast<int32_t>(material.metallicTexture.IsValid());
+	materialData.hasRoughnessMap =  static_cast<int32_t>(material.roughnessTexture.IsValid());
+	materialData.hasNormalMap =  static_cast<int32_t>(material.normalTexture.IsValid());
+	materialData.hasAmbiantOcclusionMap =  static_cast<int32_t>(material.ambiantOcclusionTexture.IsValid());
+	
 	materialData.albedoColor = material.albedoColor.Rgb();
 	materialData.metallic = material.metallic;
 	materialData.roughness = material.roughness;

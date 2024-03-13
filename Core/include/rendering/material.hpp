@@ -30,9 +30,16 @@ public:
     /// @brief Material type
     MaterialType materialType = MaterialType::Opaque;
     /// @brief Albedo texture
-    Pointer<Texture> albedo;
+    Pointer<Texture> albedoTexture;
+
+    Pointer<Texture> metallicTexture;
+
+    Pointer<Texture> roughnessTexture;
     /// @brief Normal map
-    Pointer<Texture> normalMap;
+    Pointer<Texture> normalTexture;
+
+    Pointer<Texture> ambiantOcclusionTexture;
+
     
     Colorf albedoColor;
     float_t metallic = 0.f;
@@ -50,12 +57,15 @@ END_XNOR_CORE
 REFL_AUTO(
     type(XnorCore::Material),
     field(materialType),
+    field(albedoColor),
     field(metallic),
     field(roughness),
     field(reflectance),
     field(emissive),
     field(ambientOcclusion),
-    field(albedo),
-    field(normalMap),
-    field(albedoColor)
+    field(albedoTexture),
+    field(metallicTexture),
+    field(roughnessTexture),
+    field(normalTexture),
+    field(ambiantOcclusionTexture)
 );

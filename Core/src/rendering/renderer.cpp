@@ -222,11 +222,20 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		
 		Rhi::UpdateModelUniform(modelData);
 
-		if (meshRenderer->material.albedo.IsValid())
-			meshRenderer->material.albedo->BindTexture(0);
+		if (meshRenderer->material.albedoTexture.IsValid())
+			meshRenderer->material.albedoTexture->BindTexture(Albedo);
+		
+		if (meshRenderer->material.metallicTexture.IsValid())
+			meshRenderer->material.metallicTexture->BindTexture(Metallic);
 
-		if (meshRenderer->material.normalMap.IsValid())
-			meshRenderer->material.normalMap->BindTexture(1);
+		if (meshRenderer->material.roughnessTexture.IsValid())
+			meshRenderer->material.roughnessTexture->BindTexture(Roughness);
+
+		if (meshRenderer->material.normalTexture.IsValid())
+			meshRenderer->material.normalTexture->BindTexture(Normal);
+
+		if (meshRenderer->material.ambiantOcclusionTexture.IsValid())
+			meshRenderer->material.ambiantOcclusionTexture->BindTexture(AmbiantOcclusion);
 
 		if (meshRenderer->model.IsValid())
 		{
@@ -263,12 +272,21 @@ void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRe
 		
 		Rhi::UpdateModelUniform(modelData);
 
-		if (meshRenderer->material.albedo.IsValid())
-			meshRenderer->material.albedo->BindTexture(0);
+		if (meshRenderer->material.albedoTexture.IsValid())
+			meshRenderer->material.albedoTexture->BindTexture(Albedo);
+		
+		if (meshRenderer->material.metallicTexture.IsValid())
+			meshRenderer->material.metallicTexture->BindTexture(Metallic);
 
-		if (meshRenderer->material.normalMap.IsValid())
-			meshRenderer->material.normalMap->BindTexture(1);
+		if (meshRenderer->material.roughnessTexture.IsValid())
+			meshRenderer->material.roughnessTexture->BindTexture(Roughness);
 
+		if (meshRenderer->material.normalTexture.IsValid())
+			meshRenderer->material.normalTexture->BindTexture(Normal);
+
+		if (meshRenderer->material.ambiantOcclusionTexture.IsValid())
+			meshRenderer->material.ambiantOcclusionTexture->BindTexture(AmbiantOcclusion);
+		
 		if (meshRenderer->model.IsValid())
 		{
 			Rhi::BindMaterial(meshRenderer->material);
@@ -306,8 +324,12 @@ void Renderer::InitResources()
 	m_GBufferShader->CreateInRhi();
 	// Init diffuse Texture for gbuffer
 	m_GBufferShader->Use();
-	m_GBufferShader->SetInt("material.albedo", 0);
-	m_GBufferShader->SetInt("material.normalMap", 1);
+	m_GBufferShader->SetInt("material.albedoMap", Albedo);
+	m_GBufferShader->SetInt("material.metallicMap", Metallic);
+	m_GBufferShader->SetInt("material.roughnessMap", Roughness);
+	m_GBufferShader->SetInt("material.normalMap", Normal);
+	m_GBufferShader->SetInt("material.ambiantOcclusionMap", AmbiantOcclusion);
+
 	m_GBufferShader->Unuse();
 	// End deferred
 
