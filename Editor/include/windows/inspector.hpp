@@ -80,7 +80,7 @@ private:
 
 
     // TODO maybe move elsewhere
-    template <XnorCore::ResourceT T>
+    template <XnorCore::Concepts::ResourceT T>
     static XnorCore::Pointer<T> FilterResources(ImGuiTextFilter& filter);
 
     static inline XnorCore::Entity* FilterEntity(ImGuiTextFilter& filter);

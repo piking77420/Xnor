@@ -21,6 +21,7 @@
 
 BEGIN_XNOR_CORE
 
+/// @namespace Meta
 /// @brief Defines utilities for meta programming and template manipulation
 namespace Meta
 {
@@ -87,6 +88,22 @@ namespace Meta
     ///
     template <typename T>
     using RemoveConstSpecifier = std::remove_const_t<T>;
+
+    template <typename>
+    struct FunctionTypes
+    {
+        using Ret = void;
+        using Args = void;
+    };
+    
+    template <typename R, typename... A>
+    struct FunctionTypes<R(A...)>
+    {
+        using Ret = R;
+    };
+
+    template <typename T>
+    using FunctionRet = typename FunctionTypes<T>::Ret;
 
     /// @brief Checks whether the type is a @c std::vector
     template <typename>

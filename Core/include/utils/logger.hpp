@@ -35,7 +35,7 @@ BEGIN_XNOR_CORE
 /// of the log. Shortcuts are also available through the use of Logger::LogTempDebug, Logger::LogDebug, Logger::LogInfo, Logger::LogWarning, Logger::LogError and Logger::LogFatal.
 /// Those functions take a format string and format parameters to follow the usage of <a href="https://en.cppreference.com/w/cpp/utility/format/format">std::format</a>.
 /// This means that any new parameter type that is directly printed must satisfy the requirements of the <a href="https://en.cppreference.com/w/cpp/utility/format/formattable">std::formattable</a>
-/// concept (defined a Formattable in the XnorCore namespace), and therefore needs to implement its own version of the <a href="https://en.cppreference.com/w/cpp/utility/format/formatter">std::formatter</a> struct.
+/// concept (defined a Concepts::Formattable in the XnorCore namespace), and therefore needs to implement its own version of the <a href="https://en.cppreference.com/w/cpp/utility/format/formatter">std::formatter</a> struct.
 ///
 /// ### Example
 /// All logs are preceded by their timestamp (the exact time at which the Logger::Log function was called), and a string representation of their LogLevel.
@@ -99,13 +99,13 @@ public:
 
     /// @brief Logs a message using the specified format string, arguments and LogLevel.
     /// 
-    /// @tparam Args The format arguments types. These are generally automatically deducted by the compiler and often don't need to be manually specified. Also, they must satisfy the Formattable concept requirements.
+    /// @tparam Args The format arguments types. These are generally automatically deducted by the compiler and often don't need to be manually specified. Also, they must satisfy the Concepts::Formattable concept requirements.
     /// @param level The log severity.
     /// @param format The format string to log.
     /// @param args The arguments to replace the format string with.
     ///
     /// @see <a href="https://en.cppreference.com/w/cpp/utility/format/spec">The standard format specification</a>
-    template <Formattable... Args>
+    template <Concepts::FormattableT... Args>
     static void Log(LogLevel level, const std::string& format, Args&&... args);
 
     /// @brief Logs a temporary debug message using the current file, line, specified format string and arguments.
@@ -114,37 +114,37 @@ public:
     ///
     /// @see Log
     /// @see LogLevel::TemporaryDebug
-    template <Formattable... Args>
+    template <Concepts::FormattableT... Args>
     static void LogTempDebug(const std::string& format, const char_t* file, int32_t line, Args&&... args);
 
     /// @brief Logs a debug message using the specified format string and arguments.
     ///
     /// @see Log
-    template <Formattable... Args>
+    template <Concepts::FormattableT... Args>
     static void LogDebug(const std::string& format, Args&&... args);
 
     /// @brief Logs a information message using the specified format string and arguments.
     ///
     /// @see Log
-    template <Formattable... Args>
+    template <Concepts::FormattableT... Args>
     static void LogInfo(const std::string& format, Args&&... args);
 
     /// @brief Logs a warning message using the specified format string and arguments.
     ///
     /// @see Log
-    template <Formattable... Args>
+    template <Concepts::FormattableT... Args>
     static void LogWarning(const std::string& format, Args&&... args);
 
     /// @brief Logs an error message using the specified format string and arguments.
     ///
     /// @see Log
-    template <Formattable... Args>
+    template <Concepts::FormattableT... Args>
     static void LogError(const std::string& format, Args&&... args);
 
     /// @brief Logs a fatal error message using the specified format string and arguments.
     ///
     /// @see Log
-    template <Formattable... Args>
+    template <Concepts::FormattableT... Args>
     static void LogFatal(const std::string& format, Args&&... args);
 
     /// @brief Opens a file for logging.

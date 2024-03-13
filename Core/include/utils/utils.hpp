@@ -2,6 +2,7 @@
 #pragma once
 
 #include <filesystem>
+#include <functional>
 
 #include <Maths/quaternion.hpp>
 #include <Maths/vector2.hpp>
@@ -23,6 +24,7 @@ class File;
 class Directory;
 class Entry;
 
+/// @namespace Utils
 /// @brief Namespace containing utility functions that don't belong anywhere else
 namespace Utils
 {
@@ -170,15 +172,20 @@ namespace Utils
     /// @brief Returns whether an array contains an element
     template <std::ranges::input_range Container, typename T>
     [[nodiscard]]
-    bool_t ArrayContains(Container container, T element);
+    bool_t ArrayContains(const Container& container, T element);
 
     /// @brief Returns whether a string array contains an element using Utils::StringEqualsIgnoreCase.
     template <std::ranges::input_range Container>
     [[nodiscard]]
-    bool_t StringArrayContains(Container container, const std::string& element);
+    bool_t StringArrayContains(const Container& container, const std::string& element);
 
     /// @brief Checks if two strings are equal, case-insensitive.
+    [[nodiscard]]
     XNOR_ENGINE bool_t StringEqualsIgnoreCase(const std::string& a, const std::string& b);
+
+    template <typename Ret, typename... Args>
+    [[nodiscard]]
+    constexpr size_t FunctionAddress(std::function<Ret(Args...)> f);
 }
 
 END_XNOR_CORE

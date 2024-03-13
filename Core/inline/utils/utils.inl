@@ -82,13 +82,13 @@ Pointer<T> Utils::DynamicPointerCast(const Pointer<U>& value)
 }
 
 template <std::ranges::input_range Container, typename T>
-bool_t Utils::ArrayContains(Container container, T element)
+bool_t Utils::ArrayContains(const Container& container, T element)
 {
     return std::ranges::find(container, element) != container.end();
 }
 
 template <std::ranges::input_range Container>
-bool_t Utils::StringArrayContains(Container container, const std::string& element)
+bool_t Utils::StringArrayContains(const Container& container, const std::string& element)
 {
     for (const std::string& elem : container)
     {
@@ -97,6 +97,17 @@ bool_t Utils::StringArrayContains(Container container, const std::string& elemen
     }
 
     return false;
+}
+
+template <typename Ret, typename... Args>
+constexpr size_t Utils::FunctionAddress(std::function<Ret(Args...)> f)
+{
+    using Func = Ret(Args...);
+    Func** fnPointer = f.template target<Func*>();
+    if (!fnPointer)
+        return 0;
+    
+    return reinterpret_cast<size_t>(*fnPointer);
 }
 
 END_XNOR_CORE

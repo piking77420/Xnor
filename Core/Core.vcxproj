@@ -233,7 +233,7 @@
     <ClCompile Include="src\utils\meta_programming.cpp" />
     <ClCompile Include="src\utils\pointer.cpp" />
     <ClCompile Include="src\utils\reference_counter.cpp" />
-    <ClCompile Include="src\utils\Serializable.cpp" />
+    <ClCompile Include="src\utils\serializable.cpp" />
     <ClCompile Include="src\utils\utils.cpp" />
     <ClCompile Include="src\window.cpp" />
     <ClCompile Include="src\rendering\vertex.cpp" />
@@ -418,6 +418,8 @@
     <ClInclude Include="include\screen.hpp" />
     <ClInclude Include="include\serialization\serializer.hpp" />
     <ClInclude Include="include\utils\color.hpp" />
+    <ClInclude Include="include\utils\concepts.hpp" />
+    <ClInclude Include="include\utils\event.hpp" />
     <ClInclude Include="include\utils\formatter.hpp" />
     <ClInclude Include="include\utils\list.hpp" />
     <ClInclude Include="include\utils\logger.hpp" />

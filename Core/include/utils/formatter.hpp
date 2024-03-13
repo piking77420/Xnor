@@ -6,7 +6,7 @@
 #include <format>
 #include <sstream>
 
-#include "core.hpp"
+#include "utils/concepts.hpp"
 
 /// @file formatter.hpp
 /// @brief Defines template specializations of @c std::formatter for external types.
@@ -17,21 +17,6 @@
 ///
 /// @see <a href="https://en.cppreference.com/w/cpp/utility/format/formatter">std::formatter</a>
 /// @see <a href="https://en.cppreference.com/w/cpp/utility/format/formattable">std::formattable</a>
-
-BEGIN_XNOR_CORE
-
-/// @brief The Formattable concept requires a type to be formattable.
-///
-/// A type @p T is considered formattable if a template specialization of the @c std::formatter for @p T exists.
-///
-/// @tparam T The type to require to be formattable.
-template<typename T>
-concept Formattable = requires(T& v, std::format_context ctx)
-{
-    std::formatter<std::remove_cvref_t<T>>().format(v, ctx);
-};
-
-END_XNOR_CORE
 
 // These definitions must be in the std namespace
 
@@ -67,14 +52,10 @@ struct std::formatter<std::filesystem::path>
     }
 };
 
-/// @brief A class satisfies the ExceptionT concept if it is derived of Exception.
-template<typename T>
-concept ExceptionT = std::is_base_of_v<std::exception, T>;
-
 /// @brief @c std::formatter template specialization for the @c std::exception type.
 ///
 /// @see <a href="https://en.cppreference.com/w/cpp/error/exception">std::exception</a>
-template <ExceptionT Exception>
+template <XnorCore::Concepts::ExceptionT Exception>
 struct std::formatter<Exception>
 {
     /// @brief Parses the input formatting options.
