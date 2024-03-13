@@ -5,6 +5,7 @@ out vec4 FragColor;
 const int MaxSpotLight = 100;
 const int MaxPointLight = 100;
 const float PI = 3.14159265359;
+const float InvPI = 1/PI;
 
 struct PointLightData
 {
@@ -49,130 +50,12 @@ layout (std140, binding = 2) uniform LightData
     DirectionalData directionalData;
 };
 
-vec3 CalcPointLight(PointLightData light, vec3 viewDir, vec3 fragPos, vec3 normal, vec3 albedo)
-{
-    float distanceLightToFragment = distance(light.position, fragPos);
 
-    if (distanceLightToFragment > light.radius)
-    return vec3(0);
-
-    vec3 lightDir = normalize(light.position - fragPos);
-    // diffuse shading
-    float diff = max(dot(normal, lightDir), 0.0);
-    // specular shading
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    // attenuation
-    float distance = length(light.position - fragPos);
-    float attenuation = 1.0 / (distance * distance);
-
-    vec3 lightColor = light.color * light.intensity;
-
-    // combine results
-    vec3 ambient = lightColor * albedo;
-    vec3 diffuse = lightColor * diff * albedo;
-    vec3 specular = lightColor * spec * albedo;
-
-    ambient *= attenuation;
-    diffuse *= attenuation;
-    specular *= attenuation;
-
-    return ambient + diffuse + specular;
-}
-
-vec3 CalcSpotLight(SpotLightData light, vec3 viewDir, vec3 fragPos, vec3 normal, vec3 albedo)
-{
-    vec3 lightDir = normalize(light.position - fragPos);
-    // diffuse shading
-    float diff = max(dot(normal, lightDir), 0.0);
-    // specular shading
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    // attenuation
-    float distance = length(light.position - fragPos);
-    float attenuation = 1.0 / (distance * distance);
-    // spotlight intensity
-    float theta = dot(lightDir, normalize(-light.direction));
-    float epsilon = light.cutOff - light.outerCutOff;
-    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
-
-    vec3 lightColor = light.color * light.intensity;
-
-    // combine results
-    vec3 ambient = lightColor * albedo;
-    vec3 diffuse = lightColor * diff * albedo;
-    vec3 specular = lightColor * spec * albedo;
-
-    ambient *= attenuation * intensity;
-    diffuse *= attenuation * intensity;
-    specular *= attenuation * intensity;
-
-    return ambient + diffuse + specular;
-}
-
-vec3 CalcDirLight(DirectionalData light, vec3 viewDir, vec3 fragPos, vec3 normal, vec3 albedo)
-{
-    vec3 lightDir = normalize(-light.direction);
-    // diffuse shading
-    float diff = max(dot(normal, lightDir), 0.0);
-    // specular shading
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-
-    vec3 lightColor = light.color * light.intensity;
-
-    // combine results
-    vec3 ambient = lightColor * albedo;
-    vec3 diffuse = lightColor * diff * albedo;
-    vec3 specular = lightColor  * spec * albedo;
-
-    return ambient + diffuse + specular;
-}
-// PBR FUMNCTION //
+// PBR FUNCTION //
 // Specular Component // 
 // fr(v,l)=D(h,α)G(v,l,α)F(v,h,f0)4(n⋅v)(n⋅l)
-
-// NDF // D
-float DistributionGGX(vec3 N, vec3 H, float roughness)
-{
-    float a = roughness*roughness;
-    float a2 = a*a;
-    float NdotH = max(dot(N, H), 0.0);
-    float NdotH2 = NdotH*NdotH;
-
-    float nom   = a2;
-    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
-    denom = PI * denom * denom;
-
-    return nom / denom;
-}
-// ----------------------------------------------------------------------------
-float GeometrySchlickGGX(float NdotV, float roughness)
-{
-    float r = (roughness + 1.0);
-    float k = (r*r) / 8.0;
-
-    float nom   = NdotV;
-    float denom = NdotV * (1.0 - k) + k;
-
-    return nom / denom;
-}
-// ----------------------------------------------------------------------------
-float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
-{
-    float NdotV = max(dot(N, V), 0.0);
-    float NdotL = max(dot(N, L), 0.0);
-    float ggx2 = GeometrySchlickGGX(NdotV, roughness);
-    float ggx1 = GeometrySchlickGGX(NdotL, roughness);
-
-    return ggx1 * ggx2;
-}
-// ----------------------------------------------------------------------------
-vec3 fresnelSchlick(float cosTheta, vec3 F0)
-{
-    return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
-}
-
+//Diffuse BRDF
+//fd(l, v) = cdiff/π
 
 uniform sampler2D gPosition;
 uniform sampler2D gNormal;
@@ -181,9 +64,39 @@ uniform sampler2D gMetallicRoughessReflectance;
 uniform sampler2D gEmissiveAmbiantOcclusion;
 
 
-uniform samplerCube SkyBox;
+uniform samplerCube irradianceMap;
 
 in vec2 texCoords;
+
+//https://de45xmedrsdbp.cloudfront.net/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
+// reparameterization of α = Roughness^2
+float SpecularD(float NoH,float a)
+{
+    float numerator = a * a;
+    float denominator = PI * pow( pow(NoH,2) * (numerator - 1) + 1,2);
+        
+    return numerator / denominator;
+}
+
+float SpecularG1(vec3 n,vec3 v,float k)
+{
+    float NoV = clamp(dot(n,v), 0.0, 1.0);
+    
+    return NoV / ( NoV * ( 1 - k) + k );
+}
+
+float SpecularG(vec3 l, vec3 v, vec3 h, vec3 n, float roughness)
+{
+    float k = pow((roughness + 1),2) / 8f;
+    
+    return SpecularG1(n,l,k) * SpecularG1(n,v,k);
+}
+vec3 SpecularF(float VoH,vec3 F0)
+{
+    float power = (-5.5473 * VoH - 6.98316) * VoH;
+    return F0 + (1 - F0) * pow(2,power); 
+}
+
 
 void main()
 {
@@ -212,32 +125,25 @@ void main()
     // half unit vector
     vec3 h = normalize(v + l);
     
-    vec3 radiance = vec3(1);
-    
-    // Cook-Torrance BRDF
-    float NDF = DistributionGGX(n, h, roughness);
-    float G   = GeometrySmith(n, v, l, roughness);
-    vec3 F  = fresnelSchlick(clamp(dot(h, v), 0.0, 1.0), F0);
-    vec3 numerator    = NDF * G * F;
-    float denominator = 4.0 * max(dot(n, v), 0.0) * max(dot(n, l), 0.0) + 0.0001; // + 0.0001 to prevent divide by zero
-    vec3 specular = numerator / denominator;
+    float NoH = clamp(dot(n,h),0.0,1.0);
+    float VoH = clamp(dot(v,h),0.0,1.0);
+
+    float ndf = SpecularD(NoH, roughness * roughness);
+    float g =  SpecularG(l, v, h, n, roughness);
+    vec3 f = SpecularF(VoH,F0);
+
+    vec3 numerator    = ndf * g * f;
+    float denominator = 4.0 * max(dot(n, v), 0.0) * max(dot(n, l), 0.0) + 0.0001;
+    vec3 specular  = numerator / denominator;
 
 
-    vec3 i = -v;
-    vec3 r = reflect(i, normalize(n));
-    vec3 skyBoxReflectedColor = texture(SkyBox, r).rgb;
-    
-    // kS is equal to Fresnel
-    vec3 kS = F;
+    vec3 kS = f;
     vec3 kD = vec3(1.0) - kS;
-    kD *= (1.0 - metallic);
-
+    kD *= 1.0 - metallic;
     float NdotL = max(dot(n, l), 0.0);
-    Lo += (kD * albedo / PI + specular) * NdotL;
     
-    vec3 ambient = vec3(0.03) * albedo * ambientOcclusion;
-
-    vec3 color = ambient + Lo;
-
-    FragColor = vec4(color, 1);
+    Lo += (kD * albedo * InvPI + specular) * NdotL;
+    
+    
+    FragColor = vec4(Lo, 1);
 }
