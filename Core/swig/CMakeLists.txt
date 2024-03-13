@@ -1,0 +1,51 @@
+cmake_minimum_required(VERSION 3.27)
+
+project(Core VERSION 0.3 LANGUAGES CXX)
+
+set(CORE_PROJECT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/..")
+set(SOLUTION_DIR "${CORE_PROJECT_DIR}/..")
+
+if (MSVC)
+    set(SWIG_DIR "${SOLUTION_DIR}/SWIG/Lib")
+    set(SWIG_EXECUTABLE "${SOLUTION_DIR}/SWIG/swig.exe")
+endif (MSVC)
+
+find_package(SWIG REQUIRED)
+include(${SWIG_USE_FILE})
+
+set(CORE_PROJECT_INCLUDE_DIR "${CORE_PROJECT_DIR}/include")
+set(CORE_PROJECT_SOURCE_DIR "${CORE_PROJECT_DIR}/src")
+
+FILE(GLOB CXX_SOURCES ${CORE_PROJECT_SOURCE_DIR}/*.cpp)
+
+set(NET_PROJECT_NAME "Game")
+set(NET_PROJECT_DIR "${CORE_PROJECT_DIR}/../${NET_PROJECT_NAME}")
+set(NET_PROJECT_XNOR_DIR "${NET_PROJECT_DIR}/XNOR")
+set(NET_PROJECT_DLL_DIR "${NET_PROJECT_DIR}")
+
+set(CMAKE_SWIG_FLAGS "-std=c++23")
+
+cmake_policy(SET CMP0122 NEW)
+
+set_property(SOURCE "${CORE_PROJECT_INCLUDE_DIR}/core.i" PROPERTY CPLUSPLUS ON)
+
+swig_add_library(Core
+    TYPE SHARED
+    LANGUAGE CSharp
+    SOURCES "${CORE_PROJECT_INCLUDE_DIR}/core.i" ${CXX_SOURCES}
+    OUTPUT_DIR ${NET_PROJECT_XNOR_DIR}
+    OUTFILE_DIR ${CMAKE_BINARY_DIR}
+)
+
+set_target_properties(Core
+    PROPERTIES
+    # These copy the shared library on Windows to .Net project directory
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE ${NET_PROJECT_DLL_DIR}
+    RUNTIME_OUTPUT_DIRECTORY_DEBUG ${NET_PROJECT_DLL_DIR}
+    
+    # This copies the shared library on Linux to .Net project directory
+    LIBRARY_OUTPUT_DIRECTORY ${NET_PROJECT_DLL_DIR}
+
+    # Set location of C++ headers
+    INCLUDE_DIRECTORIES ${CORE_PROJECT_INCLUDE_DIR}
+)
