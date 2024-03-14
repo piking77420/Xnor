@@ -5,20 +5,24 @@
 
 #include "core.hpp"
 #include "resource.hpp"
+#include "rendering/rhi_typedef.hpp"
 
 /// @file cubemap.hpp
 /// @brief Defines the XnorCore::Cubemap class
 
 BEGIN_XNOR_CORE
+    enum class TextureFiltering;
 
-/// @brief Represents an array of 6 @ref Texture "Textures"
+    /// @brief Represents an array of 6 @ref Texture "Textures"
 class Cubemap : public Resource
 {
 public:
     /// @brief Creates a cubemap using 6 provided texture file names
     /// @param cubeMapsTextures Texture file names
     XNOR_ENGINE explicit Cubemap(const std::array<std::string, 6>& cubeMapsTextures);
-
+    
+    XNOR_ENGINE explicit Cubemap(const CreateCubeMapInfo& createCubeMapInfo);
+    
     /// @brief Creates the Cubemap in the Rhi
     XNOR_ENGINE void CreateInRhi() override;
 
@@ -39,6 +43,12 @@ private:
     std::array<void*, 6> m_Images;
     Vector2i m_CubemapSize;
     int32_t m_DataChannels = 0;
+
+    TextureFiltering m_TextureFiltering = TextureFiltering::Linear;
+    TextureWrapping m_TextureWrapping = TextureWrapping::ClampToEdge;
+    TextureInternalFormat m_TextureInternalFormat = TextureInternalFormat::Rgba8;
+    TextureFormat m_TextureFormat = TextureFormat::Rgb;
+    
 };
 
 END_XNOR_CORE

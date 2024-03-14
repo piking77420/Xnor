@@ -328,6 +328,110 @@ uint32_t Rhi::GetOpenglBufferBit(const BufferFlag flag)
 	return openglBufferBit;
 }
 
+uint32_t Rhi::AttachementToOpenglAttachement(Attachment attachment)
+{
+	switch (attachment)
+	{
+		case Attachment::Color00:
+			
+			return GL_COLOR_ATTACHMENT0;
+			 
+		case Attachment::Color01:
+			
+			return GL_COLOR_ATTACHMENT1;
+			 
+		case Attachment::Color02:
+			
+			return GL_COLOR_ATTACHMENT2;
+			 
+		case Attachment::Color03:
+			
+			return GL_COLOR_ATTACHMENT3;
+			 
+		case Attachment::Color04:
+			
+			return GL_COLOR_ATTACHMENT4;
+			 
+		case Attachment::Color05:
+			
+			return GL_COLOR_ATTACHMENT5;
+			 
+		case Attachment::Color06:
+			
+			return GL_COLOR_ATTACHMENT6;
+			 
+		case Attachment::Color07:
+			
+			return GL_COLOR_ATTACHMENT7;
+			 
+		case Attachment::Color08:
+			
+			return GL_COLOR_ATTACHMENT8;
+			 
+		case Attachment::Color09:
+			 
+			return GL_COLOR_ATTACHMENT9;
+			 
+		case Attachment::Color10:
+			
+			return GL_COLOR_ATTACHMENT10;
+			 
+		case Attachment::Color11:
+			
+			return GL_COLOR_ATTACHMENT11;
+			 
+		case Attachment::Color12:
+			
+			return GL_COLOR_ATTACHMENT12;
+			 
+		case Attachment::Color13:
+			
+			return GL_COLOR_ATTACHMENT13;
+			 
+		case Attachment::Color14:
+			
+			return GL_COLOR_ATTACHMENT14;
+			 
+		case Attachment::Color15:
+			
+			return GL_COLOR_ATTACHMENT15;
+			 
+		case Attachment::Color16:
+			
+			return GL_COLOR_ATTACHMENT16;
+			 
+		case Attachment::Color17:
+			
+			return GL_COLOR_ATTACHMENT17;
+			 
+		case Attachment::Color18:
+			
+			return GL_COLOR_ATTACHMENT18;
+			 
+		case Attachment::Color19:
+			
+			return GL_COLOR_ATTACHMENT19;
+			 
+		case Attachment::Color20:
+			
+			return GL_COLOR_ATTACHMENT20;
+			 
+		case Attachment::Depth:
+			
+			return GL_DEPTH_ATTACHMENT;
+			  
+		case Attachment::Stencil:
+			
+			return GL_STENCIL_ATTACHMENT;
+			 
+		case Attachment::DepthAndStencil:
+			
+			return  GL_DEPTH_STENCIL_ATTACHMENT;
+	}
+
+	return GL_COLOR_ATTACHMENT0;
+}
+
 uint32_t Rhi::GetOpengDepthEnum(const DepthFunction depthFunction)
 {
 	switch (depthFunction)
@@ -413,7 +517,6 @@ uint32_t Rhi::CreateTexture2D(const TextureCreateInfo& textureCreateInfo)
 			GetOpenGlTextureFormat(textureCreateInfo.format), GetOpenglDataType(textureCreateInfo.dataType), textureCreateInfo.data);
 	}
 	
-
 	return textureId;
 }
 
@@ -448,6 +551,7 @@ uint32_t Rhi::CreateCubeMap(const CreateCubeMapInfo& createCubeMapInfo)
 	const GLsizei width = createCubeMapInfo.size.x;
 	const GLsizei height = createCubeMapInfo.size.y;
 
+	if(createCubeMapInfo.datas != nullptr)
 	for (size_t i = 0; i < createCubeMapInfo.datas->size(); i++)
 	{
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), 0, static_cast<GLint>(GetOpenglInternalFormat(createCubeMapInfo.internalFormat)),
@@ -469,7 +573,7 @@ uint32_t Rhi::CreateFrameBuffer(const RenderPass& renderPass, const std::vector<
 	
 	for (uint32_t i = 0; i < renderTargetInfos.size(); i++)
 	{
-		GLenum openglAttachment = 0 ;
+		GLenum openglAttachment = AttachementToOpenglAttachement(renderTargetInfos[i].attachment);
 		switch (renderTargetInfos[i].attachment)
 		{
 			case Attachment::Color00:
@@ -493,21 +597,8 @@ uint32_t Rhi::CreateFrameBuffer(const RenderPass& renderPass, const std::vector<
 			case Attachment::Color18:
 			case Attachment::Color19:
 			case Attachment::Color20:
-				openglAttachment = GL_COLOR_ATTACHMENT0 + static_cast<uint32_t>(renderTargetInfos[i].attachment);
 				if(renderTargetInfos[i].isDrawingOn)
 				openglAttachmentsdraw.push_back(openglAttachment);
-				break;
-			
-			case Attachment::Depth:
-				openglAttachment = GL_DEPTH_ATTACHMENT;
-				break;
-			
-			case Attachment::Stencil:
-				openglAttachment = GL_STENCIL_ATTACHMENT;
-				break;
-			
-			case Attachment::DepthAndStencil:
-				openglAttachment = GL_DEPTH_STENCIL_ATTACHMENT;
 				break;
 			
 		}
@@ -555,6 +646,11 @@ void Rhi::BindFrameBuffer(const uint32_t frameBufferId)
 void Rhi::UnbindFrameBuffer()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Rhi::AttachTextureToBuffer(const uint32_t bufferId, const Attachment attachment, const uint32_t textureId, const uint32_t level)
+{
+	glFramebufferTexture(bufferId,AttachementToOpenglAttachement(attachment),textureId,level);
 }
 
 void Rhi::GetPixelFromAttachement(const uint32_t attachmentIndex, const Vector2i position, const TextureFormat textureFormat, const DataType dataType, void* const output)

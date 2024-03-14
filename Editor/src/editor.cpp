@@ -14,6 +14,7 @@
 #include "scene/component/mesh_renderer.hpp"
 #include "scene/component/test_component.hpp"
 #include "serialization/serializer.hpp"
+#include "stb/stb_image.h"
 #include "windows/content_browser.hpp"
 #include "windows/editor_window.hpp"
 #include "windows/header_window.hpp"
@@ -234,6 +235,7 @@ void Editor::CreateTestScene()
 	meshRenderer->material.albedoColor = { 0.f, 1.f, 1.f }; 
 	Entity& ent2 = *World::scene.CreateEntity("Directional");
 	ent2.AddComponent<DirectionalLight>();
+	
 	
 	const std::array<std::string, 6> testCubeMap
 	{

@@ -5,6 +5,8 @@
 
 #include "core.hpp"
 #include "resource/cubemap.hpp"
+#include "resource/shader.hpp"
+#include "resource/texture.hpp"
 
 /// @file skybox.hpp
 /// @brief Defines the XnorCore::Skybox class.
@@ -14,10 +16,16 @@ BEGIN_XNOR_CORE
 /// @brief A wrapper for a skybox
 class XNOR_ENGINE Skybox
 {
+private:
+    static inline Vector2i m_EnvironementCubeMapSize { 512 , 512 };
 public:
     /// @brief Loads a cube map using an array of 6 different file paths
     /// @param cubeMapFiles Array of 6 texture file paths
     void LoadCubeMap(const std::array<std::string, 6>& cubeMapFiles);
+    
+    /// @brief take a hdr file in input and wrap it to cubeMap
+    /// @param hdfFile hdr image
+    void LoadFromHdrTexture(const Pointer<Texture>& hdfFile);
 
     /// @brief Gets the cubemap of the skybox
     /// @return Cubemap pointer

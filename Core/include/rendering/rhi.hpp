@@ -143,6 +143,9 @@ public:
 	/// @brief Unbinds a framebuffer
 	XNOR_ENGINE static void UnbindFrameBuffer();
 
+	XNOR_ENGINE static void AttachTextureToBuffer(uint32_t bufferId,Attachment attachment,uint32_t textureId,uint32_t level);
+
+	
 	/// @brief Reads a single pixel of an attachment
 	/// @param attachmentIndex Attachment index
 	/// @param position Pixel position
@@ -241,6 +244,7 @@ private:
 	XNOR_ENGINE static uint32_t GetOpenglTextureFilter(TextureFiltering textureFiltering);
 	XNOR_ENGINE static uint32_t GetBlendValueOpengl(BlendValue blendFunction);
 	XNOR_ENGINE static uint32_t GetOpenglBufferBit(BufferFlag flag);
+	XNOR_ENGINE static uint32_t AttachementToOpenglAttachement(Attachment attachment);
 
 	XNOR_ENGINE static void OpenglDebugCallBack(
 		uint32_t source,

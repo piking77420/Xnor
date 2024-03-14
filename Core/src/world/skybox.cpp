@@ -16,6 +16,27 @@ void Skybox::LoadCubeMap(const std::array<std::string, 6>& cubeMapFiles)
     m_CubeMap->CreateInRhi();
 }
 
+void Skybox::LoadFromHdrTexture(const Pointer<Texture>& hdfFile)
+{
+    if (m_CubeMap != nullptr)
+    {
+        delete m_CubeMap;
+    }
+    
+    CreateCubeMapInfo createCubeMapInfo =
+        {
+            .datas = nullptr,
+            .size = m_EnvironementCubeMapSize,
+            .filtering = TextureFiltering::Linear,
+            .wrapping = TextureWrapping::ClampToEdge,
+            .format = TextureFormat::Rgb,
+            .internalFormat = TextureInternalFormat::Rgb16F,
+            .dataType = DataType::Float
+        };
+    
+    m_CubeMap = new Cubemap(createCubeMapInfo);
+}
+
 const Cubemap* Skybox::GetCubeMap() const
 {
     return m_CubeMap;

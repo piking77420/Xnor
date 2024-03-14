@@ -49,6 +49,13 @@ Cubemap::Cubemap(const std::array<std::string, 6>& cubeMapsTextures)
     m_Loaded = true;
 }
 
+Cubemap::Cubemap(const CreateCubeMapInfo& createCubeMapInfo) : m_CubemapSize(createCubeMapInfo.size),
+m_TextureFiltering(createCubeMapInfo.filtering),m_TextureWrapping(createCubeMapInfo.wrapping), m_TextureInternalFormat(createCubeMapInfo.internalFormat)
+{
+    m_Id = Rhi::CreateCubeMap(createCubeMapInfo);
+    m_LoadedInRhi = true;
+}
+
 void Cubemap::BindTexture(const uint32_t unit) const
 {
     Rhi::BindTexture(unit, m_Id);
