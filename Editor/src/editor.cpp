@@ -249,6 +249,9 @@ void Editor::CreateTestScene()
 	World::scene.skybox.LoadCubeMap(testCubeMap);
 	*/
 	World::scene.skybox.Initialize();
+	Pointer<Texture> texture = ResourceManager::Get<Texture>("assets/textures/puresky.hdr");
+	texture->loadData.flipVertically = true;
+	ResourceManager::Get<Texture>("assets/textures/puresky.hdr")->Reload();
 	World::scene.skybox.LoadFromHdrTexture(ResourceManager::Get<Texture>("assets/textures/puresky.hdr"));
 }
 

@@ -41,7 +41,6 @@ void Cubemap::Unload()
 
 Cubemap::Cubemap(const std::array<std::string, 6>& cubeMapsTextures)
 {
-    stbi_set_flip_vertically_on_load(false);
 
     for (size_t i = 0; i < cubeMapsTextures.size(); i++)
         m_Images[i] = stbi_load(cubeMapsTextures[i].c_str(), &m_CubemapSize.x, &m_CubemapSize.y, &m_DataChannels, 0);

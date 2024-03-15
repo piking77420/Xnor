@@ -23,7 +23,7 @@ public:
     struct LoadOptions
     {
         int32_t desiredChannels = 0;
-        bool_t flipVertically = true;
+        bool_t flipVertically = false;
     };
 
     /// @brief Allowed extensions for texture files
