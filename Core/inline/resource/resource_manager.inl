@@ -6,7 +6,7 @@
 
 BEGIN_XNOR_CORE
 
-template <ResourceT T>
+template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::Add(std::string name)
 {
     Logger::LogDebug("Adding resource {}", name);
@@ -20,13 +20,13 @@ Pointer<T> ResourceManager::Add(std::string name)
     return AddNoCheck<T>(std::forward<std::string>(name));
 }
 
-template <ResourceT T>
+template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::Add(const Pointer<File>& file)
 {
     return Add<T>(file->GetPathString());
 }
 
-template <ResourceT T>
+template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::Load(const Pointer<File>& file)
 {
     Logger::LogDebug("Loading resource {}", file->GetPath());
@@ -50,7 +50,7 @@ Pointer<T> ResourceManager::Load(const Pointer<File>& file)
     return LoadNoCheck<T>(file);
 }
 
-template <ResourceT T>
+template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::Get(const std::string& name)
 {
     if (!Contains(name))
@@ -77,13 +77,13 @@ inline Pointer<Shader> ResourceManager::Get<Shader>(const std::string& name)
     return GetNoCheck<Shader>(name);
 }
 
-template <ResourceT T>
+template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::Get(const Pointer<File>& file)
 {
     return Get<T>(file->GetPathString());
 }
 
-template <ResourceT T>
+template <Concepts::ResourceT T>
 std::vector<Pointer<T>> ResourceManager::FindAll()
 {
     std::vector<Pointer<T>> result;
@@ -91,7 +91,7 @@ std::vector<Pointer<T>> ResourceManager::FindAll()
     return result;
 }
 
-template <ResourceT T>
+template <Concepts::ResourceT T>
 void ResourceManager::FindAll(std::vector<Pointer<T>>* result)
 {
     result->clear();
@@ -106,7 +106,7 @@ void ResourceManager::FindAll(std::vector<Pointer<T>>* result)
     }
 }
 
-template <ResourceT T>
+template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::Find(std::function<bool_t(Pointer<T>)>&& predicate)
 {
     for (const auto& val : m_Resources | std::views::values)
@@ -120,7 +120,7 @@ Pointer<T> ResourceManager::Find(std::function<bool_t(Pointer<T>)>&& predicate)
     return nullptr;
 }
 
-template <ResourceT T>
+template <Concepts::ResourceT T>
 std::vector<Pointer<T>> ResourceManager::FindAll(std::function<bool_t(Pointer<T>)>&& predicate)
 {
     std::vector<Pointer<T>> result;
@@ -128,7 +128,7 @@ std::vector<Pointer<T>> ResourceManager::FindAll(std::function<bool_t(Pointer<T>
     return result;
 }
 
-template <ResourceT T>
+template <Concepts::ResourceT T>
 void ResourceManager::FindAll(std::function<bool_t(Pointer<T>)>&& predicate, std::vector<Pointer<T>>* result)
 {
     result->clear();
@@ -141,7 +141,7 @@ void ResourceManager::FindAll(std::function<bool_t(Pointer<T>)>&& predicate, std
     }
 }
  
-template <ResourceT T>
+template <Concepts::ResourceT T>
 bool_t ResourceManager::IsResourceOfType(const std::string& name)
 {
     Pointer<T> resource = Get<T>(name);
@@ -152,7 +152,7 @@ bool_t ResourceManager::IsResourceOfType(const std::string& name)
     return false;
 }
 
-template <ResourceT T>
+template <Concepts::ResourceT T>
 void ResourceManager::Unload(const Pointer<T>& resource)
 {
     Logger::LogDebug("Unloading resource {}", resource);
@@ -182,7 +182,7 @@ void ResourceManager::Unload(const Pointer<T>& resource)
         Logger::LogWarning("Attempt to unload an unknown file entry: {}", static_cast<T*>(resource));
 }
 
-template <ResourceT T>
+template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::AddNoCheck(std::string name)
 {
     Pointer<T> resource(std::forward<std::string>(name));
@@ -196,7 +196,7 @@ Pointer<T> ResourceManager::AddNoCheck(std::string name)
     return resource;
 }
 
-template <ResourceT T>
+template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file)
 {
     Pointer<T> resource(file->GetPathString());
@@ -215,7 +215,7 @@ Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file)
     return resource;
 }
 
-template <ResourceT T>
+template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::GetNoCheck(const std::string& name)
 {
     return Pointer<T>(m_Resources.at(name));

@@ -4,7 +4,7 @@
 
 BEGIN_XNOR_CORE
 
-template <EntryT T>
+template <Concepts::EntryT T>
 Pointer<T> FileManager::Get(const std::filesystem::path& path)
 {
     if (!Contains(path))
@@ -16,7 +16,7 @@ Pointer<T> FileManager::Get(const std::filesystem::path& path)
     return static_cast<Pointer<T>>(m_Entries.at(path));
 }
 
-template <EntryT T>
+template <Concepts::EntryT T>
 Pointer<T> FileManager::Find()
 {
     for (auto&& mapEntry : m_Entries)
@@ -30,7 +30,7 @@ Pointer<T> FileManager::Find()
     return nullptr;
 }
 
-template <EntryT T>
+template <Concepts::EntryT T>
 Pointer<T> FileManager::Find(std::function<bool_t(Pointer<T>)>&& predicate)
 {
     for (auto&& mapEntry : m_Entries)
@@ -44,7 +44,7 @@ Pointer<T> FileManager::Find(std::function<bool_t(Pointer<T>)>&& predicate)
     return nullptr;
 }
 
-template <EntryT T>
+template <Concepts::EntryT T>
 std::vector<Pointer<T>> FileManager::FindAll()
 {
     std::vector<Pointer<T>> result;
@@ -52,7 +52,7 @@ std::vector<Pointer<T>> FileManager::FindAll()
     return result;
 }
 
-template <EntryT T>
+template <Concepts::EntryT T>
 void FileManager::FindAll(std::vector<Pointer<T>>* result)
 {
     result->clear();
@@ -66,7 +66,7 @@ void FileManager::FindAll(std::vector<Pointer<T>>* result)
     }
 }
 
-template <EntryT T>
+template <Concepts::EntryT T>
 std::vector<Pointer<T>> FileManager::FindAll(std::function<bool_t(Pointer<T>)>&& predicate)
 {
     std::vector<Pointer<T>> result;
@@ -74,7 +74,7 @@ std::vector<Pointer<T>> FileManager::FindAll(std::function<bool_t(Pointer<T>)>&&
     return result;
 }
 
-template <EntryT T>
+template <Concepts::EntryT T>
 void FileManager::FindAll(std::function<bool(Pointer<T>)>&& predicate, std::vector<Pointer<T>>* result)
 {
     result->clear();

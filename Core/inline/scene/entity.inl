@@ -2,68 +2,68 @@
 
 BEGIN_XNOR_CORE
 
-template <class ComponentT>
-ComponentT* Entity::AddComponent()
+template <Concepts::ComponentT T>
+T* Entity::AddComponent()
 {
     m_Components.Add();
     
-    ComponentT* newT = new ComponentT;
+    T* newT = new T;
     newT->entity = this;
     m_Components[m_Components.GetSize() - 1].Create(newT);
 
     return newT;
 }
 
-template <class ComponentT>
-const ComponentT* Entity::GetComponent() const
+template <Concepts::ComponentT T>
+const T* Entity::GetComponent() const
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        if (m_Components[i].IsOfType<ComponentT>())
-            return m_Components[i].Cast<ComponentT>();
+        if (m_Components[i].IsOfType<T>())
+            return m_Components[i].Cast<T>();
     }
 
     return nullptr;
 }
 
-template <class ComponentT>
-void Entity::GetComponents(std::vector<ComponentT*>* components)
+template <Concepts::ComponentT T>
+void Entity::GetComponents(std::vector<T*>* components)
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        if (m_Components[i].IsOfType<ComponentT>())
-            components->push_back(m_Components[i].Cast<ComponentT>());
+        if (m_Components[i].IsOfType<T>())
+            components->push_back(m_Components[i].Cast<T>());
     }
 }
 
-template <class ComponentT>
-void Entity::GetComponents(std::vector<const ComponentT*>* components) const
+template <Concepts::ComponentT T>
+void Entity::GetComponents(std::vector<const T*>* components) const
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        if (m_Components[i].IsOfType<ComponentT>())
-            components->push_back(reinterpret_cast<const ComponentT*>(m_Components[i]));
+        if (m_Components[i].IsOfType<T>())
+            components->push_back(reinterpret_cast<const T*>(m_Components[i]));
     }
 }
 
-template <class ComponentT>
-ComponentT* Entity::GetComponent()
+template <Concepts::ComponentT T>
+T* Entity::GetComponent()
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        if (m_Components[i].IsOfType<ComponentT>())
-            return m_Components[i].Cast<ComponentT>();
+        if (m_Components[i].IsOfType<T>())
+            return m_Components[i].Cast<T>();
     }
     
     return nullptr;
 }
 
-template <class ComponentT>
+template <Concepts::ComponentT T>
 void Entity::RemoveComponent()
 {
     for (int i = 0; i < m_Components.GetSize(); i++)
     {
-        if (m_Components[i].IsOfType<ComponentT>())
+        if (m_Components[i].IsOfType<T>())
         {
             m_Components.RemoveAt(i);
             break;
@@ -71,14 +71,14 @@ void Entity::RemoveComponent()
     }
 }
 
-template <class ComponentT>
-bool_t Entity::TryGetComponent(ComponentT** output)
+template <Concepts::ComponentT T>
+bool_t Entity::TryGetComponent(T** output)
 {
     for (int i = 0; i < m_Components.GetSize(); i++)
     {
-        if (m_Components[i].IsOfType<ComponentT>())
+        if (m_Components[i].IsOfType<T>())
         {
-            *output = m_Components[i].Cast<ComponentT>();
+            *output = m_Components[i].Cast<T>();
             return true;
         }
     }
