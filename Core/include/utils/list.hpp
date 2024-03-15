@@ -29,8 +29,6 @@ public:
     /// @brief The type of the List<T>, refers to T
     using Type = T;
 
-    DELETE_COPY_MOVE_OPERATIONS(List)
-
     /// @brief Creates an empty list with a capacity of 0
     explicit List();
 

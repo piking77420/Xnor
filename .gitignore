@@ -529,3 +529,8 @@ docs
 
 imgui.ini
 assets/scenes/*
+
+!SWIG/**
+
+Core/swig/build
+Core/swig/wraps

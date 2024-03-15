@@ -26,20 +26,20 @@ public:
     /// @param key Key to check
     /// @param status Key status
     /// @return Result
-    XNOR_ENGINE static bool_t GetKey(Key key, KeyStatus status = KeyStatus::Down);
+    XNOR_ENGINE static bool_t GetKey(Key::Key key, KeyStatus::KeyStatus status = KeyStatus::Down);
 
     /// @brief Checks if a specified mouse button is of the specified status
     /// @param mouseButton Mouse button to check
     /// @param status Mouse button status
     /// @return Result
-    XNOR_ENGINE static bool_t GetMouseButton(MouseButton mouseButton, MouseButtonStatus status = MouseButtonStatus::Down);
+    XNOR_ENGINE static bool_t GetMouseButton(MouseButton::MouseButton mouseButton, MouseButtonStatus::MouseButtonStatus status = MouseButtonStatus::Down);
 
     /// @brief Checks if a specified gamepad button is of the specified status
     /// @param gamePadId Gamepad id
     /// @param gamepadButton Gamepad button to check
     /// @param buttonStatus Gamepad button status
     /// @return Result
-    XNOR_ENGINE static bool_t GetGamepadButton(uint32_t gamePadId, GamepadButton gamepadButton, GamepadButtonStatus buttonStatus);
+    XNOR_ENGINE static bool_t GetGamepadButton(uint32_t gamePadId, GamepadButton::GamepadButton gamepadButton, GamepadButtonStatus::GamepadButtonStatus buttonStatus);
 
     /// @brief Processes the input events
     XNOR_ENGINE static void HandleEvent();
@@ -57,14 +57,14 @@ public:
     XNOR_ENGINE static void Update();
 
 private:
-    using KeyStatuses = std::array<bool_t, static_cast<uint8_t>(KeyStatus::Count)>;
-    using MouseStatuses = std::array<bool_t, static_cast<uint8_t>(MouseButtonStatus::Count)>;
+    using KeyStatuses = std::array<bool_t, KeyStatus::Count>;
+    using MouseStatuses = std::array<bool_t, MouseButtonStatus::Count>;
 
     static constexpr uint32_t GamepadMax = 15;
     
-    static inline std::array<KeyStatuses, static_cast<uint16_t>(Key::Count) - 1> m_Keyboard;
+    static inline std::array<KeyStatuses, Key::Count - 1> m_Keyboard;
 
-    static inline std::array<MouseStatuses, static_cast<uint8_t>(MouseButton::Count) - 1> m_Mouse;
+    static inline std::array<MouseStatuses, MouseButton::Count - 1> m_Mouse;
     
     static inline std::array<GamepadInput, GamepadMax> m_Gamepads;
 

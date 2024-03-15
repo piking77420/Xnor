@@ -10,7 +10,7 @@ BEGIN_XNOR_CORE
 /// @brief Handles a spot light
 class SpotLight : public Light
 {
-    REFLECTABLE_IMPL_MINIMAL(SpotLight)
+    REFLECTABLE_IMPL_MINIMAL_DLL(SpotLight)
 
 public:
     /// @brief Cut-off

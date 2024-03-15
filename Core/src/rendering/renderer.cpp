@@ -24,7 +24,7 @@ void Renderer::Initialize()
 void Renderer::BeginFrame(const Scene& scene)
 {
 	m_LightManager.BeginFrame(scene);
-	Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit));
+	Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
 }
 
 void Renderer::EndFrame(const Scene& scene)
@@ -50,7 +50,7 @@ void Renderer::RenderViewport(const Viewport& viewport,
 		.frameBuffer = viewport.frameBuffer,
 		.renderAreaOffset = { 0, 0,},
 		.renderAreaExtent = viewport.viewPortSize,
-		.clearBufferFlags = static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit),
+		.clearBufferFlags = static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit),
 		.clearColor = clearColor
 	};
 
@@ -91,7 +91,7 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 		.frameBuffer = viewportData.gframeBuffer,
 		.renderAreaOffset = { 0, 0,},
 		.renderAreaExtent = viewportSize,
-		.clearBufferFlags = static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit),
+		.clearBufferFlags = static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit),
 		.clearColor = clearColor
 	};
 	
@@ -106,22 +106,24 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 		.frameBuffer = viewportData.renderBuffer,
 		.renderAreaOffset = { 0, 0 },
 		.renderAreaExtent = viewportSize,
-		.clearBufferFlags = static_cast<BufferFlag>(BufferFlagColorBit),
+		.clearBufferFlags = BufferFlag::ColorBit,
 		.clearColor = clearColor
 	};
 
 	Rhi::DepthTest(false);
 	viewportData.colorPass.BeginRenderPass(renderPassBeginInfoLit);
 	m_GBufferShaderLit->Use();
+	
 	// Set G buffer Shader Info
-	viewportData.positionAtttachment->BindTexture(GbufferPosition);
-	viewportData.normalAttachement->BindTexture(GbufferNormal);
-	viewportData.albedoAttachment->BindTexture(GbufferAlbedo);
-	viewportData.metallicRougnessReflectance->BindTexture(GmetallicRoughessReflectance);
-	viewportData.emissiveAmbiantOcclusion->BindTexture(GemissiveAmbiantOcclusion);
+	viewportData.positionAtttachment->BindTexture(Gbuffer::Position);
+	viewportData.normalAttachement->BindTexture(Gbuffer::Normal);
+	viewportData.albedoAttachment->BindTexture(Gbuffer::Albedo);
+	viewportData.metallicRougnessReflectance->BindTexture(Gbuffer::MetallicRoughessReflectance);
+	viewportData.emissiveAmbiantOcclusion->BindTexture(Gbuffer::EmissiveAmbiantOcclusion);
 	
 	skybox.GetCubeMap()->BindTexture(10);
 	
+
 	Rhi::DrawQuad(m_Quad->GetId());
 	m_GBufferShaderLit->Unuse();
 	Rhi::DepthTest(true);
@@ -139,7 +141,7 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
 		.frameBuffer = viewportData.renderBuffer,
 		.renderAreaOffset = { 0, 0,},
 		.renderAreaExtent = viewportSize,
-		.clearBufferFlags = static_cast<BufferFlag>(BufferFlagNone),
+		.clearBufferFlags = BufferFlag::None,
 		.clearColor = clearColor
 	};
 
@@ -223,19 +225,19 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		Rhi::UpdateModelUniform(modelData);
 
 		if (meshRenderer->material.albedoTexture.IsValid())
-			meshRenderer->material.albedoTexture->BindTexture(Albedo);
+			meshRenderer->material.albedoTexture->BindTexture(MaterialTextureEnum::Albedo);
 		
 		if (meshRenderer->material.metallicTexture.IsValid())
-			meshRenderer->material.metallicTexture->BindTexture(Metallic);
+			meshRenderer->material.metallicTexture->BindTexture(MaterialTextureEnum::Metallic);
 
 		if (meshRenderer->material.roughnessTexture.IsValid())
-			meshRenderer->material.roughnessTexture->BindTexture(Roughness);
+			meshRenderer->material.roughnessTexture->BindTexture(MaterialTextureEnum::Roughness);
 
 		if (meshRenderer->material.normalTexture.IsValid())
-			meshRenderer->material.normalTexture->BindTexture(Normal);
+			meshRenderer->material.normalTexture->BindTexture(MaterialTextureEnum::Normal);
 
 		if (meshRenderer->material.ambiantOcclusionTexture.IsValid())
-			meshRenderer->material.ambiantOcclusionTexture->BindTexture(AmbiantOcclusion);
+			meshRenderer->material.ambiantOcclusionTexture->BindTexture(MaterialTextureEnum::AmbiantOcclusion);
 
 		if (meshRenderer->model.IsValid())
 		{
@@ -273,19 +275,19 @@ void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRe
 		Rhi::UpdateModelUniform(modelData);
 
 		if (meshRenderer->material.albedoTexture.IsValid())
-			meshRenderer->material.albedoTexture->BindTexture(Albedo);
+			meshRenderer->material.albedoTexture->BindTexture(MaterialTextureEnum::Albedo);
 		
 		if (meshRenderer->material.metallicTexture.IsValid())
-			meshRenderer->material.metallicTexture->BindTexture(Metallic);
+			meshRenderer->material.metallicTexture->BindTexture(MaterialTextureEnum::Metallic);
 
 		if (meshRenderer->material.roughnessTexture.IsValid())
-			meshRenderer->material.roughnessTexture->BindTexture(Roughness);
+			meshRenderer->material.roughnessTexture->BindTexture(MaterialTextureEnum::Roughness);
 
 		if (meshRenderer->material.normalTexture.IsValid())
-			meshRenderer->material.normalTexture->BindTexture(Normal);
+			meshRenderer->material.normalTexture->BindTexture(MaterialTextureEnum::Normal);
 
 		if (meshRenderer->material.ambiantOcclusionTexture.IsValid())
-			meshRenderer->material.ambiantOcclusionTexture->BindTexture(AmbiantOcclusion);
+			meshRenderer->material.ambiantOcclusionTexture->BindTexture(MaterialTextureEnum::AmbiantOcclusion);
 		
 		if (meshRenderer->model.IsValid())
 		{
@@ -311,12 +313,13 @@ void Renderer::InitResources()
 	m_GBufferShaderLit->CreateInRhi();
 	m_GBufferShaderLit->Use();
 	
-	m_GBufferShaderLit->SetInt("gPosition", GbufferPosition);
-	m_GBufferShaderLit->SetInt("gNormal", GbufferNormal);
-	m_GBufferShaderLit->SetInt("gAlbedoSpec", GbufferAlbedo);
-	m_GBufferShaderLit->SetInt("gMetallicRoughessReflectance", GmetallicRoughessReflectance);
-	m_GBufferShaderLit->SetInt("gEmissiveAmbiantOcclusion", GemissiveAmbiantOcclusion);
+	m_GBufferShaderLit->SetInt("gPosition", Gbuffer::Position);
+	m_GBufferShaderLit->SetInt("gNormal", Gbuffer::Normal);
+	m_GBufferShaderLit->SetInt("gAlbedoSpec", Gbuffer::Albedo);
+	m_GBufferShaderLit->SetInt("gMetallicRoughessReflectance", Gbuffer::MetallicRoughessReflectance);
+	m_GBufferShaderLit->SetInt("gEmissiveAmbiantOcclusion", Gbuffer::EmissiveAmbiantOcclusion);
 	m_GBufferShaderLit->SetInt("SkyBox", 10);
+
 
 	m_GBufferShaderLit->Unuse();
 	
@@ -324,11 +327,11 @@ void Renderer::InitResources()
 	m_GBufferShader->CreateInRhi();
 	// Init diffuse Texture for gbuffer
 	m_GBufferShader->Use();
-	m_GBufferShader->SetInt("material.albedoMap", Albedo);
-	m_GBufferShader->SetInt("material.metallicMap", Metallic);
-	m_GBufferShader->SetInt("material.roughnessMap", Roughness);
-	m_GBufferShader->SetInt("material.normalMap", Normal);
-	m_GBufferShader->SetInt("material.ambiantOcclusionMap", AmbiantOcclusion);
+	m_GBufferShader->SetInt("material.albedoMap", MaterialTextureEnum::Albedo);
+	m_GBufferShader->SetInt("material.metallicMap", MaterialTextureEnum::Metallic);
+	m_GBufferShader->SetInt("material.roughnessMap", MaterialTextureEnum::Roughness);
+	m_GBufferShader->SetInt("material.normalMap", MaterialTextureEnum::Normal);
+	m_GBufferShader->SetInt("material.ambiantOcclusionMap", MaterialTextureEnum::AmbiantOcclusion);
 
 	m_GBufferShader->Unuse();
 	// End deferred

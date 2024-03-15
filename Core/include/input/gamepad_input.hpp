@@ -13,7 +13,7 @@
 BEGIN_XNOR_CORE
 
 /// @brief Gamepad axis enumeration
-enum class GamepadAxis : uint32_t
+BEGIN_ENUM(GamepadAxis)
 {
     LeftStickHorizontalAxis,
     LeftStickVerticalAxis,
@@ -24,11 +24,12 @@ enum class GamepadAxis : uint32_t
 
     Count
 };
+END_ENUM
 
 /// @brief Gamepad button enumeration
 ///
 /// Defines the gamepad button values according to the Xbox controller button placements.
-enum class GamepadButton
+BEGIN_ENUM(GamepadButton)
 {
     A,               
     B,               
@@ -52,10 +53,11 @@ enum class GamepadButton
     Triangle   = Y,
 
     Count = 20
-};
+}
+END_ENUM
 
 /// @brief Gamepad button
-enum class GamepadButtonStatus
+BEGIN_ENUM(GamepadButtonStatus)
 {
     /// @brief Pressed
     Pressed,
@@ -66,6 +68,7 @@ enum class GamepadButtonStatus
     
     Count
 };
+END_ENUM
 
 /// @brief Information about a gamepad
 struct GamepadInput

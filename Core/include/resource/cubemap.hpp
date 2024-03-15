@@ -11,9 +11,8 @@
 /// @brief Defines the XnorCore::Cubemap class
 
 BEGIN_XNOR_CORE
-    enum class TextureFiltering;
 
-    /// @brief Represents an array of 6 @ref Texture "Textures"
+/// @brief Represents an array of 6 @ref Texture "Textures"
 class Cubemap : public Resource
 {
 public:
@@ -63,10 +62,10 @@ private:
     Vector2i m_CubemapSize;
     int32_t m_DataChannels = 0;
 
-    TextureFiltering m_TextureFiltering = TextureFiltering::Linear;
-    TextureWrapping m_TextureWrapping = TextureWrapping::ClampToEdge;
-    TextureInternalFormat m_TextureInternalFormat = TextureInternalFormat::Rgba8;
-    TextureFormat m_TextureFormat = TextureFormat::Rgb;
+    TextureFiltering::TextureFiltering m_TextureFiltering = TextureFiltering::Linear;
+    TextureWrapping::TextureWrapping m_TextureWrapping = TextureWrapping::ClampToEdge;
+    TextureInternalFormat::TextureInternalFormat m_TextureInternalFormat = TextureInternalFormat::Rgba8;
+    TextureFormat::TextureFormat m_TextureFormat = TextureFormat::Rgb;
     
 };
 

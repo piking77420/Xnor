@@ -55,7 +55,7 @@ void EquirectangularToCubeMap::Compute(const Texture& equirectangularMap, const 
             .frameBuffer = m_FrameBuffer,
             .renderAreaOffset = { 0,0 },
             .renderAreaExtent = m_FrameBuffer->GetSize() ,
-            .clearBufferFlags =  static_cast<decltype(renderPassBeginInfo.clearBufferFlags)>(BufferFlagColorBit | BufferFlagDepthBit),
+            .clearBufferFlags =  static_cast<decltype(renderPassBeginInfo.clearBufferFlags)>(BufferFlag::ColorBit | BufferFlag::DepthBit),
             .clearColor = Vector4()
         };
         shader->SetMat4("view",captureViews[i]);

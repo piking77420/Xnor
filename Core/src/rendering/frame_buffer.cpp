@@ -25,12 +25,12 @@ void FrameBuffer::AttachTextures(const RenderPass& renderPass, const std::vector
 	Rhi::AttachsTextureToFrameBuffer(renderPass, *this, attachments);
 }
 
-void FrameBuffer::AttachTexture(const Texture& texture, const Attachment attachment) const
+void FrameBuffer::AttachTexture(const Texture& texture, const Attachment::Attachment attachment) const
 {
 	Rhi::AttachTextureToFrameBuffer(m_Id,attachment,texture.GetId(),0);
 }
 
-void FrameBuffer::AttachTexture(const Cubemap& cubemap, const Attachment attachment, CubeMapFace cubeMapFace) const
+void FrameBuffer::AttachTexture(const Cubemap& cubemap, const Attachment::Attachment attachment, CubeMapFace cubeMapFace) const
 {
 	Rhi::AttachTextureToFrameBuffer(m_Id,attachment,cubeMapFace ,cubemap.GetId(),0);
 }
@@ -38,8 +38,8 @@ void FrameBuffer::AttachTexture(const Cubemap& cubemap, const Attachment attachm
 void FrameBuffer::GetPixelFromAttachment(
 	uint32_t attachmentIndex,
 	Vector2i position,
-	TextureFormat textureFormat,
-	DataType dataType,
+	TextureFormat::TextureFormat textureFormat,
+	DataType::DataType dataType,
 	void* output
 ) const
 {

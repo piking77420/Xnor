@@ -5,25 +5,25 @@
 
 using namespace XnorCore;
 
-bool Input::GetKey(const Key key, const KeyStatus status)
+bool Input::GetKey(const Key::Key key, const KeyStatus::KeyStatus status)
 {
-    return m_Keyboard.at(static_cast<uint16_t>(key)).at(static_cast<uint16_t>(status));
+    return m_Keyboard.at(key).at(status);
 }
 
-bool Input::GetMouseButton(const MouseButton mouseButton, const MouseButtonStatus status)
+bool Input::GetMouseButton(const MouseButton::MouseButton mouseButton, const MouseButtonStatus::MouseButtonStatus status)
 {
-    return m_Mouse.at(static_cast<uint8_t>(mouseButton)).at(static_cast<uint8_t>(status));
+    return m_Mouse.at(mouseButton).at(status);
 }
 
-bool Input::GetGamepadButton(const uint32_t gamePadId, const GamepadButton gamepadButton, const GamepadButtonStatus buttonStatus)
+bool Input::GetGamepadButton(const uint32_t gamePadId, const GamepadButton::GamepadButton gamepadButton, const GamepadButtonStatus::GamepadButtonStatus buttonStatus)
 {
     if (gamePadId > GamepadMax)
     {
-        Logger::LogFatal("Gamepad Id none valid  = {}",gamePadId);
-        throw std::exception("Gamepad Id none valid");
+        Logger::LogFatal("Invalid gamepad ID {}", gamePadId);
+        throw std::invalid_argument("Invalid gamepad ID");
     }
 
-    return m_GamepadsButton.at(gamePadId).at(static_cast<uint32_t>(gamepadButton)).at(static_cast<uint32_t>(buttonStatus));
+    return m_GamepadsButton.at(gamePadId).at(gamepadButton).at(buttonStatus);
 }
 
 void Input::HandleEvent()

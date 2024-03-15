@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "Maths/vector3.hpp"
+#include "rendering/light/light.hpp"
 #include "scene/component.hpp"
 
 BEGIN_XNOR_CORE
@@ -9,7 +10,7 @@ BEGIN_XNOR_CORE
 /// @private
 class TestComponent : public Component
 {
-    REFLECTABLE_IMPL_MINIMAL(TestComponent)
+    REFLECTABLE_IMPL_MINIMAL_DLL(TestComponent)
     
 public:
     XNOR_ENGINE TestComponent() = default;
@@ -44,6 +45,12 @@ private:
     TestEnum m_TestEnum = static_cast<TestEnum>(TestEnum::Four | TestEnum::Sixteen);
     
     float_t m_TestRange;
+
+    List<int32_t> m_List;
+    int32_t m_Array[5];
+    Light* light = nullptr;
+
+    ColorHsv color;
 };
 
 END_XNOR_CORE
@@ -56,5 +63,7 @@ REFL_AUTO(
     field(m_Radius),
     field(m_Test),
     field(m_TestEnum, XnorCore::Reflection::EnumFlags()),
-    field(m_TestRange, XnorCore::Reflection::Range<float_t>(0.f, 5.f))
+    field(m_TestRange, XnorCore::Reflection::Range<float_t>(0.f, 5.f), XnorCore::Reflection::Tooltip("This is a tooltip test")),
+    field(m_List, XnorCore::Reflection::Range<int32_t>(0, 10), XnorCore::Reflection::Tooltip("I'm a list")),
+    field(m_Array, XnorCore::Reflection::Range<int32_t>(-5, 5))
 );

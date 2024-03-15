@@ -102,6 +102,16 @@ namespace Utils
     [[nodiscard]]
     XNOR_ENGINE std::string HumanizeString(const std::string& str);
 
+    /// @brief Humanizes the provided variable name
+    /// 
+    /// The process converts a m_PascalCase styled word to a humanized version that puts spaces between each words and adds an uppercase at the very beginning, it also removes the m_ prefix
+    ///
+    /// e.g. m_ShouldChange will become Should Change
+    /// @param str String to humanize
+    /// @return Result
+    [[nodiscard]]
+    XNOR_ENGINE std::string HumanizeVariableName(const std::string& str);
+
     /// @brief Removes the namespaces indicators from the provided string
     ///
     /// e.g. XnorCore::MyClass will become MyClass
@@ -140,18 +150,6 @@ namespace Utils
     [[nodiscard]]
     Pointer<T> DynamicPointerCast(const Pointer<U>& value);
 
-    /// @brief Opens the specified entry in the file explorer
-    /// @param entry Entry
-    XNOR_ENGINE void OpenInExplorer(const Entry& entry);
-
-    /// @brief Opens the specified directory in the file explorer
-    /// @param directory Directory
-    XNOR_ENGINE void OpenInExplorer(const Directory& directory);
-
-    /// @brief Opens the specified file in the file explorer
-    /// @param file File
-    XNOR_ENGINE void OpenInExplorer(const File& file);
-
     /// @brief Opens the specified path in the file explorer
     /// @param path File system path
     XNOR_ENGINE void OpenInExplorer(const std::filesystem::path& path);
@@ -160,10 +158,6 @@ namespace Utils
     /// @param path File system path
     /// @param isFile Whether path is a file or a directory
     XNOR_ENGINE void OpenInExplorer(const std::filesystem::path& path, bool_t isFile);
-
-    /// @brief Opens the specified file on the user's computer
-    /// @param file File
-    XNOR_ENGINE void OpenFile(const File& file);
 
     /// @brief Opens the specified file on the user's computer
     /// @param filepath File system path

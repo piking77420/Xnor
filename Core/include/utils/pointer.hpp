@@ -69,6 +69,10 @@ class Pointer
 public:
     /// @brief The type of ReferenceCounter, and therefore of raw pointer this Pointer is holding.
     using Type = T;
+
+    /// @brief Creates a Pointer, calling @c new with @p T and forwarding all given arguments to its constructor.
+    template <typename... Args>
+    static Pointer Create(Args&&... args);
     
     /// @brief Creates an empty @ref Pointer without a reference counter and pointing to @c nullptr.
     Pointer() = default;
@@ -109,10 +113,6 @@ public:
     /// @brief Creates a Pointer by moving the value of another one of a different Type.
     template <typename U>
     explicit Pointer(Pointer<U>&& other) noexcept;
-
-    /// @brief Creates a Pointer, calling @c new with @p T and forwarding all given arguments to its constructor.
-    template <typename... Args>
-    explicit Pointer(Args&&... args);
 
     /// @brief Destroys this Pointer, deallocating any memory if this is the last strong reference.
     virtual ~Pointer();
@@ -222,6 +222,8 @@ private:
 
     bool_t m_IsStrongReference = false;
 
+    explicit Pointer(ReferenceCounter<T>*&& referenceCounter, bool_t strongReference);
+
     void SetReferenceCounter(ReferenceCounter<T>* newReferenceCounter);
 
     void CheckReferenceCounterValid();
@@ -231,6 +233,7 @@ END_XNOR_CORE
 
 #include "utils/pointer.inl"
 
+#ifndef SWIG
 /// @brief @c std::formatter template specialization for the XnorCore::Pointer type.
 template <typename T>
 struct std::formatter<XnorCore::Pointer<T>>  // NOLINT(cert-dcl58-cpp)
@@ -274,3 +277,4 @@ struct std::hash<XnorCore::Pointer<T>>  // NOLINT(cert-dcl58-cpp)
         return h1 ^ (h2 << 1);
     }
 };
+#endif

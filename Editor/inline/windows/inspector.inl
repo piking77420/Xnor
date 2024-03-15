@@ -12,8 +12,8 @@
 
 BEGIN_XNOR_EDITOR
 
-template <typename MemberT>
-void Inspector::DisplayScalar(MemberT* const obj, const char_t* name, const Metadata<MemberT>& metadata)
+template <typename MemberT, typename DescriptorT>
+void Inspector::DisplayScalar(MemberT* const obj, const Metadata<MemberT, DescriptorT>& metadata)
 {
     uint32_t type;
 
@@ -34,79 +34,79 @@ void Inspector::DisplayScalar(MemberT* const obj, const char_t* name, const Meta
     else if constexpr (XnorCore::Meta::IsSame<MemberT, double_t>)
         type = ImGuiDataType_Double;
 
-    if (metadata.HasRange())
+    if (metadata.range)
     {
-        ImGui::SliderScalar(name, type, obj, &metadata.range->minimum, &metadata.range->maximum);        
+        ImGui::SliderScalar(metadata.name, type, obj, &metadata.range->minimum, &metadata.range->maximum);        
     }
     else
     {
-        ImGui::DragScalar(name, type, obj, .1f);
+        ImGui::DragScalar(metadata.name, type, obj, .1f);
     }
 }
 
-template <typename MemberT>
-void Inspector::DisplayMathType(MemberT* const obj, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
+template <typename MemberT, typename DescriptorT>
+void Inspector::DisplayMathType(MemberT* const obj, const Metadata<MemberT, DescriptorT>& metadata)
 {
     if constexpr (XnorCore::Meta::IsSame<MemberT, Vector2i>)
     {
-        ImGui::DragInt2(name, obj->Raw(), 0.1f);
+        ImGui::DragInt2(metadata.name, obj->Raw(), 0.1f);
     }
     else if constexpr (XnorCore::Meta::IsSame<MemberT, Vector2>)
     {
-        ImGui::DragFloat2(name, obj->Raw(), 0.1f);
+        ImGui::DragFloat2(metadata.name, obj->Raw(), 0.1f);
     }
     else if constexpr (XnorCore::Meta::IsSame<MemberT, Vector3>)
     {
-        ImGui::DragFloat3(name, obj->Raw(), 0.1f);
+        ImGui::DragFloat3(metadata.name, obj->Raw(), 0.1f);
     }
     else if constexpr (XnorCore::Meta::IsSame<MemberT, Vector4>)
     {
-        ImGui::DragFloat4(name, obj->Raw(), 0.1f);
+        ImGui::DragFloat4(metadata.name, obj->Raw(), 0.1f);
     }
     else if constexpr (XnorCore::Meta::IsSame<MemberT, Quaternion>)
     {
         Vector3 euler = XnorCore::Utils::GetQuaternionEulerAngles(*obj);
-        ImGui::SliderAngle3(name, euler.Raw());
+        ImGui::SliderAngle3(metadata.name, euler.Raw());
         
         *obj = Quaternion::FromEuler(euler);
     }
 }
 
-template <typename MemberT>
-void Inspector::DisplayColorType(MemberT* obj, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
+template <typename MemberT, typename DescriptorT>
+void Inspector::DisplayColorType(MemberT* const obj, const Metadata<MemberT, DescriptorT>& metadata)
 {
     if constexpr (XnorCore::Meta::IsSame<MemberT, XnorCore::ColorRgb>)
     {
         XnorCore::Colorf tmp = static_cast<XnorCore::Colorf>(*obj);
-        ImGui::ColorPicker4(name, &tmp.r, ImGuiColorEditFlags_DisplayHex);
+        ImGui::ColorPicker4(metadata.name, &tmp.r, ImGuiColorEditFlags_DisplayHex);
         *obj = static_cast<XnorCore::ColorRgb>(tmp);
     }
     else if constexpr (XnorCore::Meta::IsSame<MemberT, XnorCore::ColorHsv>)
     {
         XnorCore::Colorf tmp = static_cast<XnorCore::Colorf>(*obj);
-        ImGui::ColorPicker4(name, &tmp.r, ImGuiColorEditFlags_DisplayHSV);
+        ImGui::ColorPicker4(metadata.name, &tmp.r, ImGuiColorEditFlags_DisplayHSV);
         *obj = static_cast<XnorCore::ColorHsv>(tmp);
     }
     else if constexpr (XnorCore::Meta::IsSame<MemberT, XnorCore::Colorf>)
     {
-        ImGui::ColorPicker4(name, reinterpret_cast<float_t*>(obj));
+        ImGui::ColorPicker4(metadata.name, reinterpret_cast<float_t*>(obj));
     }
     else if constexpr (XnorCore::Meta::IsSame<MemberT, XnorCore::ColorRgba>)
     {
         XnorCore::Colorf tmp = static_cast<XnorCore::Colorf>(*obj);
-        ImGui::ColorPicker4(name, &tmp.r, ImGuiColorEditFlags_DisplayHex);
+        ImGui::ColorPicker4(metadata.name, &tmp.r, ImGuiColorEditFlags_DisplayHex);
         *obj = static_cast<XnorCore::ColorRgba>(tmp);
     }
 }
 
-template <typename MemberT>
-void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
+template <typename MemberT, typename DescriptorT>
+void Inspector::DisplayXnorPointer(MemberT* const obj, const Metadata<MemberT, DescriptorT>& metadata)
 {
     using PtrT = typename MemberT::Type;
 
     ImGui::PushID(obj);
     
-    ImGui::Text("%s", name);
+    ImGui::Text("%s", metadata.name);
 
     if constexpr (XnorCore::Meta::IsBaseOf<XnorCore::Resource, PtrT>)
     {
@@ -174,12 +174,12 @@ void Inspector::DisplayXnorPointer(MemberT* obj, const char_t* name, [[maybe_unu
     ImGui::PopID();
 }
 
-template <typename MemberT>
-void Inspector::DisplayRawPointer(MemberT* obj, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
+template <typename MemberT, typename DescriptorT>
+void Inspector::DisplayRawPointer(MemberT* const obj, const Metadata<MemberT, DescriptorT>& metadata)
 {
     using TypeT = XnorCore::Meta::RemovePointerSpecifier<MemberT>;
 
-    ImGui::Text("%s", name);
+    ImGui::Text("%s", metadata.name);
 
     if constexpr (XnorCore::Meta::IsSame<TypeT, XnorCore::Entity>)
     {
@@ -231,12 +231,12 @@ if (hash == XnorCore::Utils::GetTypeHash<type>())\
 DisplayObject<type>(obj->Cast<type>(), XnorCore::Reflection::GetTypeInfo<type>());\
 }\
 
-template <typename MemberT>
-void Inspector::DisplayPolyPointer(MemberT* obj, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
+template <typename MemberT, typename DescriptorT>
+void Inspector::DisplayPolyPointer(MemberT* const obj, const Metadata<MemberT, DescriptorT>& metadata)
 {
     const size_t hash = obj->GetHash();
 
-    if (ImGui::CollapsingHeader(name))
+    if (ImGui::CollapsingHeader(metadata.name))
     {
         // TODO find a less ugly solution to that
 
@@ -248,8 +248,8 @@ void Inspector::DisplayPolyPointer(MemberT* obj, const char_t* name, [[maybe_unu
     }
 }
 
-template <typename MemberT>
-void Inspector::DisplayEnum(MemberT* obj, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
+template <typename MemberT, typename DescriptorT>
+void Inspector::DisplayEnum(MemberT* const obj, const Metadata<MemberT, DescriptorT>& metadata)
 {
     constexpr auto enumNames = magic_enum::enum_names<MemberT>();
     using NamesArrayT = decltype(enumNames);
@@ -260,11 +260,11 @@ void Inspector::DisplayEnum(MemberT* obj, const char_t* name, [[maybe_unused]] c
         return ptr->at(idx).data();
     };
 
-    ImGui::Combo(name, reinterpret_cast<int32_t*>(obj), getter, reinterpret_cast<void*>(const_cast<XnorCore::Meta::RemoveConstSpecifier<NamesArrayT>*>(&enumNames)), static_cast<int32_t>(enumNames.size()));
+    ImGui::Combo(metadata.name, reinterpret_cast<int32_t*>(obj), getter, reinterpret_cast<void*>(const_cast<XnorCore::Meta::RemoveConstSpecifier<NamesArrayT>*>(&enumNames)), static_cast<int32_t>(enumNames.size()));
 }
 
-template <typename MemberT>
-void Inspector::DisplayEnumFlag(MemberT* obj, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
+template <typename MemberT, typename DescriptorT>
+void Inspector::DisplayEnumFlag(MemberT* const obj, const Metadata<MemberT, DescriptorT>& metadata)
 {
     constexpr auto enumNames = magic_enum::enum_names<MemberT>();
     constexpr size_t size = enumNames.size();
@@ -289,7 +289,7 @@ void Inspector::DisplayEnumFlag(MemberT* obj, const char_t* name, [[maybe_unused
         }
     }
 
-    if (ImGui::BeginCombo(name, previewValue.c_str()))
+    if (ImGui::BeginCombo(metadata.name, previewValue.c_str()))
     {
         for (size_t i = 0; i < size; i++)
         {
@@ -363,121 +363,147 @@ void Inspector::DisplayObject(ReflectT* const obj, const XnorCore::TypeDescripto
 template <typename ReflectT, typename MemberT, typename DescriptorT>
 void Inspector::DisplayObjectInternal(ReflectT* obj, DescriptorT member)
 {
-    const constexpr char_t* const name = member.name.c_str();
+    const std::string n = XnorCore::Utils::HumanizeVariableName(member.name.c_str());
+    const char_t* const name = n.c_str();
 
-    constexpr Metadata<MemberT> metadata = {
+    const Metadata<MemberT, DescriptorT> metadata = {
         .flags = GetFlags<MemberT, DescriptorT>(member),
-        .range = GetRange<MemberT, DescriptorT>(member)
+        .name = name,
+        .descriptor = member,
+        .range = XnorCore::Reflection::TryGetAttribute<XnorCore::Reflection::Range<MemberT>, DescriptorT>(member),
+        .tooltip = XnorCore::Reflection::TryGetAttribute<XnorCore::Reflection::Tooltip, DescriptorT>(member)
     };
 
     MemberT* const ptr = &member.get(obj);
             
     if constexpr (XnorCore::Meta::IsArray<MemberT>)
     {
-        DisplayArray<MemberT>(ptr, name, metadata);
+        DisplayArray<MemberT, DescriptorT>(ptr, metadata);
     }
     else if constexpr (XnorCore::Meta::IsXnorList<MemberT>)
     {
-        DisplayList<MemberT>(ptr, name, metadata);
+        DisplayList<MemberT, DescriptorT>(ptr, metadata);
     }
     else
     {
-        DisplaySimpleType<MemberT>(ptr, name, metadata);
+        DisplaySimpleType<MemberT, DescriptorT>(ptr, metadata);
     }
+
+    if (metadata.tooltip)
+        ImGui::SetItemTooltip("%s", metadata.tooltip->text);
 }
 
-template <typename MemberT>
-void Inspector::DisplaySimpleType(MemberT* ptr, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
+template <typename MemberT, typename DescriptorT>
+void Inspector::DisplaySimpleType(MemberT* ptr, const Metadata<MemberT, DescriptorT>& metadata)
 {
     if constexpr (XnorCore::Meta::IsIntegralOrFloating<MemberT>)
     {
-        DisplayScalar<MemberT>(ptr, name, metadata);
+        DisplayScalar<MemberT>(ptr, metadata);
     }
     else if constexpr (XnorCore::Meta::IsMathType<MemberT>)
     {
-        DisplayMathType<MemberT>(ptr, name, metadata);
+        DisplayMathType<MemberT>(ptr, metadata);
     }
     else if constexpr (XnorCore::Meta::IsColorType<MemberT>)
     {
-        DisplayColorType<MemberT>(ptr, name, metadata);
+        DisplayColorType<MemberT>(ptr, metadata);
     }
     else if constexpr (XnorCore::Meta::IsSame<MemberT, bool_t>)
     {
-        ImGui::Checkbox(name, ptr);
+        ImGui::Checkbox(metadata.name, ptr);
     }
     else if constexpr (XnorCore::Meta::IsSame<MemberT, std::string>)
     {
-        ImGui::InputText(name, ptr);
+        ImGui::InputText(metadata.name, ptr);
     }
     else if constexpr (XnorCore::Meta::IsPointer<MemberT>)
     {
-        DisplayRawPointer<MemberT>(ptr, name, metadata);
+        DisplayRawPointer<MemberT>(ptr, metadata);
     }
     else if constexpr (XnorCore::Meta::IsPolyPtr<MemberT>)
     {
-        DisplayPolyPointer<MemberT>(ptr, name, metadata);
+        DisplayPolyPointer<MemberT>(ptr, metadata);
     }
     else if constexpr (XnorCore::Meta::IsXnorPointer<MemberT>)
     {
-        DisplayXnorPointer<MemberT>(ptr, name, metadata);
+        DisplayXnorPointer<MemberT>(ptr, metadata);
     }
     else if constexpr (XnorCore::Meta::IsEnum<MemberT>)
     {
         if (metadata.flags & InspectorFlags::EnumFlag)
-            DisplayEnumFlag<MemberT>(ptr, name, metadata);
+            DisplayEnumFlag<MemberT>(ptr, metadata);
         else
-            DisplayEnum<MemberT>(ptr, name, metadata);
+            DisplayEnum<MemberT>(ptr, metadata);
     }
     else
     {
-        if (ImGui::CollapsingHeader(name))
+        if (ImGui::CollapsingHeader(metadata.name))
             DisplayObject<MemberT>(ptr, XnorCore::Reflection::GetTypeInfo<MemberT>());
     }
 }
 
-template <typename MemberT>
-void Inspector::DisplayArray(MemberT* ptr, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
+template <typename MemberT, typename DescriptorT>
+void Inspector::DisplayArray(MemberT* const obj, const Metadata<MemberT, DescriptorT>& metadata)
 {
     using ArrayT = XnorCore::Meta::RemoveArraySpecifier<MemberT>;
     constexpr size_t arraySize = sizeof(MemberT) / sizeof(ArrayT);
 
-    if (ImGui::CollapsingHeader(name))
+    if (ImGui::CollapsingHeader(metadata.name))
     {
+        Metadata<ArrayT, DescriptorT> metadataArray = {
+            .flags = metadata.flags,
+            .name = "",
+            .descriptor = metadata.descriptor,
+            .range = XnorCore::Reflection::TryGetAttribute<XnorCore::Reflection::Range<ArrayT>>(metadata.descriptor),
+            .tooltip = metadata.tooltip
+        };
+        
         for (size_t i = 0; i < arraySize; i++)
         {
-            DisplaySimpleType<ArrayT>(&(*ptr)[i], std::to_string(i).c_str(), metadata);
+            ImGui::PushID(&i + i);
+            
+            const std::string index = std::to_string(i);
+
+            metadataArray.name = index.c_str();
+            
+            DisplaySimpleType<ArrayT, DescriptorT>(&(*obj)[i], metadataArray);
+
+            ImGui::PopID();
         }
     }
 }
 
-template <typename MemberT>
-void Inspector::DisplayList(MemberT* ptr, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
+template <typename MemberT, typename DescriptorT>
+void Inspector::DisplayList(MemberT* const obj, const Metadata<MemberT, DescriptorT>& metadata)
 {
     using ArrayT = typename MemberT::Type;
 
-    if (ImGui::CollapsingHeader(name))
+    if (ImGui::CollapsingHeader(metadata.name))
     {
         if constexpr (!XnorCore::Meta::IsPolyPtr<ArrayT>)
         {
             if (ImGui::Selectable("Add"))
             {
-                ptr->Add();
+                obj->Add();
             }
         }
 
-        const Metadata<ArrayT> metadataArray = {
+        Metadata<ArrayT, DescriptorT> metadataArray = {
             .flags = metadata.flags,
-            .range = nullptr // TODO find a solution
+            .name = "",
+            .descriptor = metadata.descriptor,
+            .range = XnorCore::Reflection::TryGetAttribute<XnorCore::Reflection::Range<ArrayT>>(metadata.descriptor),
+            .tooltip = metadata.tooltip
         };
 
-        size_t listSize = ptr->GetSize();
+        size_t listSize = obj->GetSize();
                 
         for (size_t i = 0; i < listSize; i++)
         {
-            ImGui::PushID(static_cast<int32_t>(i));
+            ImGui::PushID(&i + i);
             if (ImGui::Button("-"))
             {
-                ptr->RemoveAt(i);
+                obj->RemoveAt(i);
                 --listSize;
 
                 if (listSize == 0 || i == listSize)
@@ -493,14 +519,17 @@ void Inspector::DisplayList(MemberT* ptr, const char_t* name, [[maybe_unused]] c
             {
                 if (ImGui::Button("+"))
                 {
-                    ptr->Insert(i);
+                    obj->Insert(i);
                     ++listSize;
                 }
             }
                 
             ImGui::SameLine();
 
-            DisplaySimpleType<ArrayT>(&(*ptr)[i], std::to_string(i).c_str(), metadataArray);
+            const std::string index = std::to_string(i);
+            metadataArray.name = index.c_str();
+
+            DisplaySimpleType<ArrayT, DescriptorT>(&(*obj)[i], metadataArray);
 
             ImGui::PopID();
         }
@@ -516,17 +545,6 @@ constexpr size_t Inspector::GetFlags(DescriptorT member)
         flags |= InspectorFlags::EnumFlag;
 
     return flags;
-}
-
-template <typename MemberT, typename DescriptorT>
-constexpr const XnorCore::Reflection::Range<MemberT>* Inspector::GetRange(DescriptorT member)
-{
-    using RangeT = XnorCore::Reflection::Range<MemberT>;
-    
-    if constexpr (XnorCore::Reflection::HasAttribute<RangeT>(member))
-        return &XnorCore::Reflection::GetAttribute<RangeT>(member);
-    else
-        return nullptr;
 }
 
 template <XnorCore::Concepts::ResourceT T>

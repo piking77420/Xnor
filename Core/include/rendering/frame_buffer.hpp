@@ -30,12 +30,12 @@ public:
 	/// @param attachments Texture attachments
 	XNOR_ENGINE void AttachTextures(const RenderPass& renderPass, const std::vector<const Texture*>& attachments) const;
 
-	XNOR_ENGINE void AttachTexture(const Texture& texture, Attachment attachment) const;
+	XNOR_ENGINE void AttachTexture(const Texture& texture, Attachment::Attachment attachment) const;
 
-	XNOR_ENGINE void AttachTexture(const Cubemap& cubemap, Attachment attachment ,CubeMapFace cubeMapFace) const;
+	XNOR_ENGINE void AttachTexture(const Cubemap& cubemap, Attachment::Attachment attachment ,CubeMapFace cubeMapFace) const;
 	
 	XNOR_ENGINE void GetPixelFromAttachment(uint32_t attachmentIndex, Vector2i position,
-		TextureFormat textureFormat, DataType dataType, void* output) const;
+		TextureFormat::TextureFormat textureFormat, DataType::DataType dataType, void* output) const;
 
 	/// @brief Gets the size of the framebuffer
 	/// @return Size
