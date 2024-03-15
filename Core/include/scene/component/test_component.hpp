@@ -46,6 +46,7 @@ private:
     float_t m_TestRange;
 
     List<int32_t> m_List;
+    int32_t m_Array[5];
 };
 
 END_XNOR_CORE
@@ -59,5 +60,6 @@ REFL_AUTO(
     field(m_Test),
     field(m_TestEnum, XnorCore::Reflection::EnumFlags()),
     field(m_TestRange, XnorCore::Reflection::Range<float_t>(0.f, 5.f), XnorCore::Reflection::Tooltip("This is a tooltip test")),
-    field(m_List, XnorCore::Reflection::Tooltip("I'm a list"))
+    field(m_List, XnorCore::Reflection::Range<int32_t>(0, 10), XnorCore::Reflection::Tooltip("I'm a list")),
+    field(m_Array, XnorCore::Reflection::Range<int32_t>(-5, 5))
 );
