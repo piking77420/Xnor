@@ -126,7 +126,7 @@ void main()
     float g =  SpecularG(l, v, h, n, roughness);
     vec3 f = SpecularF(VoH,F0);
 
-    vec3 numerator    = ndf * g * f;
+    vec3 numerator = ndf * g * f;
     float denominator = 4.0 * max(dot(n, v), 0.0) * max(dot(n, l), 0.0) + 0.0001;
     vec3 specular  = numerator / denominator;
 

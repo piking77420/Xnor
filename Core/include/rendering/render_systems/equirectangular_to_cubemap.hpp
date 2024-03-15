@@ -9,24 +9,26 @@
 #include "scene/scene.hpp"
 
 BEGIN_XNOR_CORE
-    class EquirectangularToCubeMap
+class XNOR_ENGINE EquirectangularToCubeMap
 {
 
 public:
-    STATIC_CLASS(EquirectangularToCubeMap)
-
-    XNOR_ENGINE static void Initalize();
+    EquirectangularToCubeMap();
     
-    XNOR_ENGINE static void Shutdown();
-
-    XNOR_ENGINE static void Compute(const Texture& equirectangularMap,const Cubemap& cubemap);
+    ~EquirectangularToCubeMap();
+    
+    void Compute(const Texture& equirectangularMap,const Cubemap& cubemap);
 
 private:
-    static inline Pointer<Model> m_Cube;
+    Pointer<Model> m_Cube;
+    FrameBuffer* m_FrameBuffer = nullptr;
+    RenderPass m_RenderPass;
+    Pointer<Shader> m_Shader;
+
+    void InitCreateFrameBuffer(Vector2i size);
+
+    Texture* m_TextureDepth = nullptr;
     
-    static inline FrameBuffer* m_FrameBuffer = nullptr;
-    static inline RenderPass m_RenderPass;
-    static inline Pointer<Shader> m_Shader;
 };
 
 END_XNOR_CORE

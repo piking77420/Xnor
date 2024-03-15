@@ -12,6 +12,12 @@
 /// @brief Defines the XnorCore::Skybox class.
 
 BEGIN_XNOR_CORE
+enum class SkyBoxType
+{
+    CubeMap,
+    Hdr,
+    Procedural
+};
 
 /// @brief A wrapper for a skybox
 class XNOR_ENGINE Skybox
@@ -19,6 +25,11 @@ class XNOR_ENGINE Skybox
 private:
     static inline Vector2i m_EnvironementCubeMapSize { 512 , 512 };
 public:
+
+    Skybox() = default;
+
+    ~Skybox() = default;
+    
     /// @brief Loads a cube map using an array of 6 different file paths
     /// @param cubeMapFiles Array of 6 texture file paths
     void LoadCubeMap(const std::array<std::string, 6>& cubeMapFiles);
@@ -39,6 +50,8 @@ public:
     
 private:
     Cubemap* m_CubeMap = nullptr;
+
+    //EquirectangularToCubeMap m_EquirectangularToCubeMap;
 };
 
 END_XNOR_CORE
