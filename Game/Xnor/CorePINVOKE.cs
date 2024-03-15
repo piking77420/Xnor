@@ -1732,6 +1732,9 @@ class CorePINVOKE {
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_HumanizeString")]
   public static extern string HumanizeString(string jarg1);
 
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_HumanizeVariableName")]
+  public static extern string HumanizeVariableName(string jarg1);
+
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_RemoveNamespaces")]
   public static extern string RemoveNamespaces(string jarg1);
 

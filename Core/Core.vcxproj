@@ -399,4 +399,8 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <Target Name="SwigClean" AfterTargets="Clean">
+    <RemoveDir Directories="$(SolutionDir)Game\Xnor;swig\build" />
+    <Message Text="Cleaning SWIG C# Wrappers" Importance="high" />
+  </Target>
 </Project>

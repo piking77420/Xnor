@@ -84,6 +84,12 @@ public class Core {
     return ret;
   }
 
+  public static string HumanizeVariableName(string str) {
+    string ret = CorePINVOKE.HumanizeVariableName(str);
+    if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
+    return ret;
+  }
+
   public static string RemoveNamespaces(string str) {
     string ret = CorePINVOKE.RemoveNamespaces(str);
     if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
