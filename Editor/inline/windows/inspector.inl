@@ -363,7 +363,8 @@ void Inspector::DisplayObject(ReflectT* const obj, const XnorCore::TypeDescripto
 template <typename ReflectT, typename MemberT, typename DescriptorT>
 void Inspector::DisplayObjectInternal(ReflectT* obj, DescriptorT member)
 {
-    const constexpr char_t* const name = member.name.c_str();
+    const std::string n = XnorCore::Utils::HumanizeVariableName(member.name.c_str());
+    const char_t* const name = n.c_str();
 
     constexpr Metadata<MemberT> metadata = {
         .flags = GetFlags<MemberT, DescriptorT>(member),

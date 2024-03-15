@@ -60,6 +60,16 @@ std::string Utils::HumanizeString(const std::string& str)
     return result;
 }
 
+std::string Utils::HumanizeVariableName(const std::string& str)
+{
+    std::string result = str;
+
+    if (result[0] == 'm' && result[1] == '_')
+        result = result.substr(2);
+
+    return HumanizeString(result);
+}
+
 float_t Utils::NormalizeAngle(float_t angle)
 {
     while (angle > Calc::PiOver2)

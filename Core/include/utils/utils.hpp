@@ -102,6 +102,16 @@ namespace Utils
     [[nodiscard]]
     XNOR_ENGINE std::string HumanizeString(const std::string& str);
 
+    /// @brief Humanizes the provided variable name
+    /// 
+    /// The process converts a m_PascalCase styled word to a humanized version that puts spaces between each words and adds an uppercase at the very beginning, it also removes the m_ prefix
+    ///
+    /// e.g. m_ShouldChange will become Should Change
+    /// @param str String to humanize
+    /// @return Result
+    [[nodiscard]]
+    XNOR_ENGINE std::string HumanizeVariableName(const std::string& str);
+
     /// @brief Removes the namespaces indicators from the provided string
     ///
     /// e.g. XnorCore::MyClass will become MyClass
