@@ -448,6 +448,7 @@
     <ClInclude Include="inline\scene\scene.inl" />
     <ClInclude Include="inline\serialization\serializer.inl" />
     <ClInclude Include="inline\utils\color.inl" />
+    <ClInclude Include="inline\utils\event.inl" />
     <ClInclude Include="inline\utils\list.inl" />
     <ClInclude Include="inline\utils\logger.inl" />
     <ClInclude Include="inline\utils\pointer.inl" />
