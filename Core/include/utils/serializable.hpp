@@ -151,13 +151,30 @@ namespace Reflection
     {
     };
 
+    /// @brief Allows an integer or floating type to be bound between a minimum and a maximum value, it will display the field using a slider
+    /// @tparam T Field type
     template <typename T>
     struct Range : FieldAttribute
     {
+        static_assert(Meta::IsIntegralOrFloating<T>, "Range attribute can only be used on integer or floating values");
+
+        /// @brief Minimum value
         const T minimum;
+        /// @brief Maximum value
         const T maximum;
 
+        /// @brief Creates a range
         constexpr explicit Range(const T& min, const T& max) : minimum(min), maximum(max) {}
+    };
+
+    /// @brief Allows a tooltip to be bound to a field
+    struct Tooltip : FieldAttribute
+    {
+        /// @brief Tooltip text
+        const char_t* const text;
+
+        /// @brief Creates a tooltip from a string literal
+        constexpr explicit Tooltip(const char_t* const t) : text(t) {}
     };
     
     /// @brief Gets the type info of a class
@@ -181,6 +198,9 @@ namespace Reflection
     /// @return Attribute
     template <typename AttributeT, typename DescriptorT>
     static constexpr const AttributeT& GetAttribute(DescriptorT descriptor);
+
+    template <typename AttributeT, typename DescriptorT>
+    static constexpr const AttributeT* TryGetAttribute(DescriptorT descriptor);
 }
 
 END_XNOR_CORE

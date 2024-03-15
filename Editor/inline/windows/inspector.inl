@@ -34,7 +34,7 @@ void Inspector::DisplayScalar(MemberT* const obj, const char_t* name, const Meta
     else if constexpr (XnorCore::Meta::IsSame<MemberT, double_t>)
         type = ImGuiDataType_Double;
 
-    if (metadata.HasRange())
+    if (metadata.range)
     {
         ImGui::SliderScalar(name, type, obj, &metadata.range->minimum, &metadata.range->maximum);        
     }
@@ -368,7 +368,8 @@ void Inspector::DisplayObjectInternal(ReflectT* obj, DescriptorT member)
 
     constexpr Metadata<MemberT> metadata = {
         .flags = GetFlags<MemberT, DescriptorT>(member),
-        .range = GetRange<MemberT, DescriptorT>(member)
+        .range = XnorCore::Reflection::TryGetAttribute<XnorCore::Reflection::Range<MemberT>, DescriptorT>(member),
+        .tooltip = XnorCore::Reflection::TryGetAttribute<XnorCore::Reflection::Tooltip, DescriptorT>(member)
     };
 
     MemberT* const ptr = &member.get(obj);
@@ -385,6 +386,9 @@ void Inspector::DisplayObjectInternal(ReflectT* obj, DescriptorT member)
     {
         DisplaySimpleType<MemberT>(ptr, name, metadata);
     }
+
+    if constexpr (metadata.tooltip)
+        ImGui::SetItemTooltip(metadata.tooltip->text);
 }
 
 template <typename MemberT>
@@ -517,17 +521,6 @@ constexpr size_t Inspector::GetFlags(DescriptorT member)
         flags |= InspectorFlags::EnumFlag;
 
     return flags;
-}
-
-template <typename MemberT, typename DescriptorT>
-constexpr const XnorCore::Reflection::Range<MemberT>* Inspector::GetRange(DescriptorT member)
-{
-    using RangeT = XnorCore::Reflection::Range<MemberT>;
-    
-    if constexpr (XnorCore::Reflection::HasAttribute<RangeT>(member))
-        return &XnorCore::Reflection::GetAttribute<RangeT>(member);
-    else
-        return nullptr;
 }
 
 template <XnorCore::Concepts::ResourceT T>

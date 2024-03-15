@@ -29,13 +29,7 @@ private:
         size_t flags;
 
         const XnorCore::Reflection::Range<MemberT>* range;
-
-        [[nodiscard]]
-        constexpr bool_t HasRange() const
-        {
-            const XnorCore::Reflection::Range<MemberT>* const r = range;
-            return r != nullptr;
-        }
+        const XnorCore::Reflection::Tooltip* tooltip;
     };
 
 
@@ -74,9 +68,6 @@ private:
     template <typename MemberT, typename DescriptorT>
     [[nodiscard]]
     static constexpr size_t GetFlags(DescriptorT member);
-    template <typename MemberT, typename DescriptorT>
-    [[nodiscard]]
-    static constexpr const XnorCore::Reflection::Range<MemberT>* GetRange(DescriptorT member);
 
 
     // TODO maybe move elsewhere

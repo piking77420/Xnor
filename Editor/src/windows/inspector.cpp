@@ -18,7 +18,6 @@ void Inspector::Display()
         return;
     }
     
-    // Get the base address of the selected entity, we'll use this pointer to do arithmetic on it to get the address of the different fields
     void* const ptr = m_Editor->data.selectedEntity;
     
     ImGui::PushID(ptr);

@@ -20,4 +20,13 @@ constexpr const AttributeT& Reflection::GetAttribute(const DescriptorT descripto
     return refl::descriptor::get_attribute<AttributeT>(descriptor);
 }
 
+template <typename AttributeT, typename DescriptorT>
+constexpr const AttributeT* Reflection::TryGetAttribute(DescriptorT descriptor)
+{
+    if constexpr (HasAttribute<AttributeT, DescriptorT>(descriptor))
+        return &GetAttribute<AttributeT, DescriptorT>(descriptor);
+    else
+        return nullptr;
+}
+
 END_XNOR_CORE
