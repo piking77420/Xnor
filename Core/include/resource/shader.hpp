@@ -53,7 +53,7 @@ public:
 	/// @return @ref ShaderType type
 	/// @throw std::invalid_argument If the extension isn't valid
 	[[nodiscard]]
-	static ShaderType FileExtensionToType(const std::string& extension);
+	XNOR_ENGINE static ShaderType::ShaderType FileExtensionToType(const std::string& extension);
 
 	using Resource::Resource;
 
@@ -68,7 +68,7 @@ public:
 	/// @param buffer Raw data
 	/// @param length Raw data length
 	/// @param type Shader type
-	XNOR_ENGINE bool_t Load(const char_t* buffer, int64_t length, ShaderType type);
+	XNOR_ENGINE bool_t Load(const char_t* buffer, int64_t length, ShaderType::ShaderType type);
 
 	/// @brief Creates the shader in the @ref Rhi
 	XNOR_ENGINE void CreateInRhi() override;
@@ -125,16 +125,16 @@ public:
 
 	/// @brief Sets a specialized depth function for the shader, should only be called it before @ref CreateInRhi
 	/// @param depthFunction Depth function
-	void SetDepthFunction(DepthFunction depthFunction);
+	XNOR_ENGINE void SetDepthFunction(DepthFunction::DepthFunction depthFunction);
 	
 	/// @brief Sets a specialized blend function for the shader, should only be called it before @ref CreateInRhi
 	/// @param blendFunction Blend function
-	void SetBlendFunction(const BlendFunction& blendFunction);
+	XNOR_ENGINE void SetBlendFunction(const BlendFunction& blendFunction);
 
 private:
 	uint32_t m_Id = 0;
 	
-	DepthFunction m_DepthFunction = DepthFunction::Less;
+	DepthFunction::DepthFunction m_DepthFunction = DepthFunction::Less;
 	BlendFunction m_BlendFunction =
 	{
 		.isBlending = false,
@@ -143,8 +143,8 @@ private:
 	};
 		
 
-	std::array<Pointer<File>, static_cast<size_t>(ShaderType::Count)> m_Files;
-	std::array<ShaderCode, static_cast<size_t>(ShaderType::Count)> m_Code;
+	std::array<Pointer<File>, ShaderType::Count> m_Files;
+	std::array<ShaderCode, ShaderType::Count> m_Code;
 };
 
 END_XNOR_CORE

@@ -38,6 +38,9 @@ public:
     /// This if effectively the same as calling Unload() and then Load().
     XNOR_ENGINE virtual bool_t Reload();
 
+    /// @brief Opens this Entry in the file explorer
+    XNOR_ENGINE virtual void OpenInExplorer() const;
+
     /// @brief Returns the corresponding filesystem path.
     [[nodiscard]]
     XNOR_ENGINE const std::filesystem::path& GetPath() const;

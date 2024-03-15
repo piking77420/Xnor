@@ -57,6 +57,16 @@ void File::Unload()
     m_Loaded = false;
 }
 
+void File::OpenInExplorer() const
+{
+    Utils::OpenInExplorer(m_Path, true);
+}
+
+void File::OpenFile() const
+{
+    Utils::OpenFile(m_Path);
+}
+
 File::Type File::GetType() const
 {
     return m_Type;

@@ -185,7 +185,7 @@ void ResourceManager::Unload(const Pointer<T>& resource)
 template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::AddNoCheck(std::string name)
 {
-    Pointer<T> resource(std::forward<std::string>(name));
+    Pointer<T> resource = Pointer<T>::Create(std::forward<std::string>(name));
 
     // We cannot reuse the variable 'name' here in case it was moved inside the Resource constructor
     m_Resources[resource->GetName()] = static_cast<Pointer<Resource>>(resource.CreateStrongReference());
@@ -199,7 +199,7 @@ Pointer<T> ResourceManager::AddNoCheck(std::string name)
 template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file)
 {
-    Pointer<T> resource(file->GetPathString());
+    Pointer<T> resource = Pointer<T>::Create(file->GetPathString());
 
     m_Resources[resource->GetName()] = static_cast<Pointer<Resource>>(resource.CreateStrongReference());
 

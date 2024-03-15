@@ -13,7 +13,7 @@ BEGIN_XNOR_CORE
 /// @brief Base class for lights
 class Light : public Component
 {
-    REFLECTABLE_IMPL_MINIMAL(Light)
+    REFLECTABLE_IMPL_MINIMAL_DLL(Light)
     
 public:
     /// @brief Color of the light

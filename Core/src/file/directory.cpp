@@ -51,6 +51,11 @@ void Directory::Unload()
     m_Loaded = false;
 }
 
+void Directory::OpenInExplorer() const
+{
+    Utils::OpenInExplorer(m_Path, false);
+}
+
 const std::vector<Pointer<Entry>>& Directory::GetChildEntries() const
 {
     return m_ChildEntries;

@@ -42,6 +42,7 @@ private:
 
 END_XNOR_CORE
 
+#ifndef SWIG
 /// @brief @c std::formatter template specialization for the XnorCore::Guid type.
 template <>
 struct std::formatter<XnorCore::Guid>
@@ -72,3 +73,4 @@ struct std::formatter<XnorCore::Guid>
         return std::ranges::copy(std::move(out).str(), ctx.out()).out;
     }
 };
+#endif

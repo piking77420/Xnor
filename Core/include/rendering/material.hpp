@@ -13,7 +13,7 @@
 BEGIN_XNOR_CORE
 
 /// @brief Material type
-enum class MaterialType : uint8_t
+enum class MaterialType
 {
     Opaque,
     Lit
@@ -22,7 +22,7 @@ enum class MaterialType : uint8_t
 /// @brief Encapsulates a material, which defines how a @ref Model is rendered
 struct Material : Serializable
 {
-    REFLECTABLE_IMPL_MINIMAL(Material)
+    REFLECTABLE_IMPL_MINIMAL_DLL(Material)
     
 public:
     // Pointer<Shader> shader;
