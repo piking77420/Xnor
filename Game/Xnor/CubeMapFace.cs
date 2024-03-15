@@ -10,28 +10,14 @@
 
 namespace Xnor {
 
-public enum TextureInternalFormat {
-  R8,
-  R16,
-  Rg8,
-  Rg16,
-  Rgb8,
-  Rgb16,
-  Rgba8,
-  Rgba16,
-  R16F,
-  Rg16F,
-  Rgb16F,
-  Rgba16F,
-  R32F,
-  R32Uint,
-  Srgb,
-  DepthComponent16,
-  DepthComponent24,
-  DepthComponent32,
-  DepthComponent32F,
-  Depth24Stencil8,
-  DepthComponent32FStencil8
+public enum CubeMapFace {
+  CubeMapPositiveX,
+  CubeMapNegativeX,
+  CubeMapPositiveY,
+  CubeMapNegativeY,
+  CubeMapPositiveZ,
+  CubeMapNegativeZ,
+  Size
 }
 
 }

@@ -13,7 +13,9 @@ namespace Xnor {
 public enum Gbuffer {
   Position = 4,
   Normal,
-  Albedo
+  Albedo,
+  MetallicRoughessReflectance,
+  EmissiveAmbiantOcclusion
 }
 
 }

@@ -107,12 +107,12 @@
 %include "file/file.hpp"
 %include "file/file_manager.hpp"
 
+%include "rendering/rhi_typedef.hpp"
+
 %include "resource/cubemap.hpp"
 %include "resource/font.hpp"
 %include "resource/model.hpp"
 %include "resource/resource_manager.hpp"
-
-%include "rendering/rhi_typedef.hpp"
 
 %include "resource/shader.hpp"
 %include "resource/texture.hpp"

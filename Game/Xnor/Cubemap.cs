@@ -47,7 +47,11 @@ public class Cubemap : Resource {
     }
   }
 
-  public Cubemap(SWIGTYPE_p_std__arrayT_std__string_6_t cubeMapsTextures) : this(CorePINVOKE.new_Cubemap(SWIGTYPE_p_std__arrayT_std__string_6_t.getCPtr(cubeMapsTextures)), true) {
+  public Cubemap(SWIGTYPE_p_std__arrayT_std__string_6_t cubeMapsTextures) : this(CorePINVOKE.new_Cubemap__SWIG_0(SWIGTYPE_p_std__arrayT_std__string_6_t.getCPtr(cubeMapsTextures)), true) {
+    if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public Cubemap(CreateCubeMapInfo createCubeMapInfo) : this(CorePINVOKE.new_Cubemap__SWIG_1(CreateCubeMapInfo.getCPtr(createCubeMapInfo)), true) {
     if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
   }
 
@@ -71,6 +75,16 @@ public class Cubemap : Resource {
   public void UnBindTexture(SWIGTYPE_p_uint32_t unit) {
     CorePINVOKE.Cubemap_UnBindTexture(swigCPtr, SWIGTYPE_p_uint32_t.getCPtr(unit));
     if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public SWIGTYPE_p_uint32_t GetId() {
+    SWIGTYPE_p_uint32_t ret = new SWIGTYPE_p_uint32_t(CorePINVOKE.Cubemap_GetId(swigCPtr), true);
+    return ret;
+  }
+
+  public SWIGTYPE_p_Vector2i GetSize() {
+    SWIGTYPE_p_Vector2i ret = new SWIGTYPE_p_Vector2i(CorePINVOKE.Cubemap_GetSize(swigCPtr), true);
+    return ret;
   }
 
 }

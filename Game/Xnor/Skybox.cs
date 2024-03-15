@@ -57,8 +57,20 @@ public class Skybox : global::System.IDisposable {
     }
   }
 
+  public Skybox() : this(CorePINVOKE.new_Skybox(), true) {
+  }
+
+  public void Initialize() {
+    CorePINVOKE.Skybox_Initialize(swigCPtr);
+  }
+
   public void LoadCubeMap(SWIGTYPE_p_std__arrayT_std__string_6_t cubeMapFiles) {
     CorePINVOKE.Skybox_LoadCubeMap(swigCPtr, SWIGTYPE_p_std__arrayT_std__string_6_t.getCPtr(cubeMapFiles));
+    if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
+  }
+
+  public void LoadFromHdrTexture(SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t hdfFile) {
+    CorePINVOKE.Skybox_LoadFromHdrTexture(swigCPtr, SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t.getCPtr(hdfFile));
     if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
   }
 
@@ -66,9 +78,6 @@ public class Skybox : global::System.IDisposable {
     global::System.IntPtr cPtr = CorePINVOKE.Skybox_GetCubeMap__SWIG_0(swigCPtr);
     Cubemap ret = (cPtr == global::System.IntPtr.Zero) ? null : new Cubemap(cPtr, false);
     return ret;
-  }
-
-  public Skybox() : this(CorePINVOKE.new_Skybox(), true) {
   }
 
 }

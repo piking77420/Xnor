@@ -418,114 +418,6 @@ class CorePINVOKE {
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_FileManager_UnloadAll")]
   public static extern void FileManager_UnloadAll();
 
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_new_Cubemap")]
-  public static extern global::System.IntPtr new_Cubemap(global::System.Runtime.InteropServices.HandleRef jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Cubemap_CreateInRhi")]
-  public static extern void Cubemap_CreateInRhi(global::System.Runtime.InteropServices.HandleRef jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Cubemap_DestroyInRhi")]
-  public static extern void Cubemap_DestroyInRhi(global::System.Runtime.InteropServices.HandleRef jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Cubemap_Unload")]
-  public static extern void Cubemap_Unload(global::System.Runtime.InteropServices.HandleRef jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Cubemap_BindTexture")]
-  public static extern void Cubemap_BindTexture(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Cubemap_UnBindTexture")]
-  public static extern void Cubemap_UnBindTexture(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_delete_Cubemap")]
-  public static extern void delete_Cubemap(global::System.Runtime.InteropServices.HandleRef jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Font_FileExtensions_get")]
-  public static extern global::System.IntPtr Font_FileExtensions_get();
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_new_Font")]
-  public static extern global::System.IntPtr new_Font();
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_delete_Font")]
-  public static extern void delete_Font(global::System.Runtime.InteropServices.HandleRef jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_Aabb_min_set")]
-  public static extern void Model_Aabb_min_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_Aabb_min_get")]
-  public static extern global::System.IntPtr Model_Aabb_min_get(global::System.Runtime.InteropServices.HandleRef jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_Aabb_max_set")]
-  public static extern void Model_Aabb_max_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_Aabb_max_get")]
-  public static extern global::System.IntPtr Model_Aabb_max_get(global::System.Runtime.InteropServices.HandleRef jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_new_Model_Aabb")]
-  public static extern global::System.IntPtr new_Model_Aabb();
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_delete_Model_Aabb")]
-  public static extern void delete_Model_Aabb(global::System.Runtime.InteropServices.HandleRef jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_FileExtensions_get")]
-  public static extern global::System.IntPtr Model_FileExtensions_get();
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_new_Model__SWIG_0")]
-  public static extern global::System.IntPtr new_Model__SWIG_0();
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_new_Model__SWIG_1")]
-  public static extern global::System.IntPtr new_Model__SWIG_1(string jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_Load__SWIG_0")]
-  public static extern bool Model_Load__SWIG_0(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_delete_Model")]
-  public static extern void delete_Model(global::System.Runtime.InteropServices.HandleRef jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_Load__SWIG_1")]
-  public static extern bool Model_Load__SWIG_1(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_Load__SWIG_2")]
-  public static extern bool Model_Load__SWIG_2(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_CreateInRhi")]
-  public static extern void Model_CreateInRhi(global::System.Runtime.InteropServices.HandleRef jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_DestroyInRhi")]
-  public static extern void Model_DestroyInRhi(global::System.Runtime.InteropServices.HandleRef jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_Unload")]
-  public static extern void Model_Unload(global::System.Runtime.InteropServices.HandleRef jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_GetId")]
-  public static extern global::System.IntPtr Model_GetId(global::System.Runtime.InteropServices.HandleRef jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_GetAabb")]
-  public static extern global::System.IntPtr Model_GetAabb(global::System.Runtime.InteropServices.HandleRef jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ResourceManager_ReservedShaderPrefix_get")]
-  public static extern string ResourceManager_ReservedShaderPrefix_get();
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ResourceManager_LoadAll")]
-  public static extern void ResourceManager_LoadAll();
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ResourceManager_Contains__SWIG_0")]
-  public static extern bool ResourceManager_Contains__SWIG_0(string jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ResourceManager_Contains__SWIG_1")]
-  public static extern bool ResourceManager_Contains__SWIG_1(global::System.Runtime.InteropServices.HandleRef jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ResourceManager_Rename__SWIG_0")]
-  public static extern void ResourceManager_Rename__SWIG_0(string jarg1, string jarg2);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ResourceManager_Rename__SWIG_1")]
-  public static extern void ResourceManager_Rename__SWIG_1(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ResourceManager_Unload")]
-  public static extern void ResourceManager_Unload(string jarg1);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ResourceManager_UnloadAll")]
-  public static extern void ResourceManager_UnloadAll();
-
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaxSpotLights_get")]
   public static extern global::System.IntPtr MaxSpotLights_get();
 
@@ -925,17 +817,71 @@ class CorePINVOKE {
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_delete_ShadowMappingData")]
   public static extern void delete_ShadowMappingData(global::System.Runtime.InteropServices.HandleRef jarg1);
 
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_albedoColor_set")]
+  public static extern void MaterialData_albedoColor_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_albedoColor_get")]
+  public static extern global::System.IntPtr MaterialData_albedoColor_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_hasAlbedoMap_set")]
   public static extern void MaterialData_hasAlbedoMap_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
 
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_hasAlbedoMap_get")]
   public static extern global::System.IntPtr MaterialData_hasAlbedoMap_get(global::System.Runtime.InteropServices.HandleRef jarg1);
 
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_hasNormalmap_set")]
-  public static extern void MaterialData_hasNormalmap_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_hasMetallicMap_set")]
+  public static extern void MaterialData_hasMetallicMap_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
 
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_hasNormalmap_get")]
-  public static extern global::System.IntPtr MaterialData_hasNormalmap_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_hasMetallicMap_get")]
+  public static extern global::System.IntPtr MaterialData_hasMetallicMap_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_hasRoughnessMap_set")]
+  public static extern void MaterialData_hasRoughnessMap_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_hasRoughnessMap_get")]
+  public static extern global::System.IntPtr MaterialData_hasRoughnessMap_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_hasNormalMap_set")]
+  public static extern void MaterialData_hasNormalMap_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_hasNormalMap_get")]
+  public static extern global::System.IntPtr MaterialData_hasNormalMap_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_hasAmbiantOcclusionMap_set")]
+  public static extern void MaterialData_hasAmbiantOcclusionMap_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_hasAmbiantOcclusionMap_get")]
+  public static extern global::System.IntPtr MaterialData_hasAmbiantOcclusionMap_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_metallic_set")]
+  public static extern void MaterialData_metallic_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_metallic_get")]
+  public static extern global::System.IntPtr MaterialData_metallic_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_roughness_set")]
+  public static extern void MaterialData_roughness_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_roughness_get")]
+  public static extern global::System.IntPtr MaterialData_roughness_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_reflectance_set")]
+  public static extern void MaterialData_reflectance_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_reflectance_get")]
+  public static extern global::System.IntPtr MaterialData_reflectance_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_emissive_set")]
+  public static extern void MaterialData_emissive_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_emissive_get")]
+  public static extern global::System.IntPtr MaterialData_emissive_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_ambiantOccusion_set")]
+  public static extern void MaterialData_ambiantOccusion_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaterialData_ambiantOccusion_get")]
+  public static extern global::System.IntPtr MaterialData_ambiantOccusion_get(global::System.Runtime.InteropServices.HandleRef jarg1);
 
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_new_MaterialData")]
   public static extern global::System.IntPtr new_MaterialData();
@@ -978,6 +924,123 @@ class CorePINVOKE {
 
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_delete_RenderPassBeginInfo")]
   public static extern void delete_RenderPassBeginInfo(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_new_Cubemap__SWIG_0")]
+  public static extern global::System.IntPtr new_Cubemap__SWIG_0(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_new_Cubemap__SWIG_1")]
+  public static extern global::System.IntPtr new_Cubemap__SWIG_1(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Cubemap_CreateInRhi")]
+  public static extern void Cubemap_CreateInRhi(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Cubemap_DestroyInRhi")]
+  public static extern void Cubemap_DestroyInRhi(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Cubemap_Unload")]
+  public static extern void Cubemap_Unload(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Cubemap_BindTexture")]
+  public static extern void Cubemap_BindTexture(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Cubemap_UnBindTexture")]
+  public static extern void Cubemap_UnBindTexture(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Cubemap_GetId")]
+  public static extern global::System.IntPtr Cubemap_GetId(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Cubemap_GetSize")]
+  public static extern global::System.IntPtr Cubemap_GetSize(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_delete_Cubemap")]
+  public static extern void delete_Cubemap(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Font_FileExtensions_get")]
+  public static extern global::System.IntPtr Font_FileExtensions_get();
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_new_Font")]
+  public static extern global::System.IntPtr new_Font();
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_delete_Font")]
+  public static extern void delete_Font(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_Aabb_min_set")]
+  public static extern void Model_Aabb_min_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_Aabb_min_get")]
+  public static extern global::System.IntPtr Model_Aabb_min_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_Aabb_max_set")]
+  public static extern void Model_Aabb_max_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_Aabb_max_get")]
+  public static extern global::System.IntPtr Model_Aabb_max_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_new_Model_Aabb")]
+  public static extern global::System.IntPtr new_Model_Aabb();
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_delete_Model_Aabb")]
+  public static extern void delete_Model_Aabb(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_FileExtensions_get")]
+  public static extern global::System.IntPtr Model_FileExtensions_get();
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_new_Model__SWIG_0")]
+  public static extern global::System.IntPtr new_Model__SWIG_0();
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_new_Model__SWIG_1")]
+  public static extern global::System.IntPtr new_Model__SWIG_1(string jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_Load__SWIG_0")]
+  public static extern bool Model_Load__SWIG_0(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_delete_Model")]
+  public static extern void delete_Model(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_Load__SWIG_1")]
+  public static extern bool Model_Load__SWIG_1(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2, global::System.Runtime.InteropServices.HandleRef jarg3);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_Load__SWIG_2")]
+  public static extern bool Model_Load__SWIG_2(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_CreateInRhi")]
+  public static extern void Model_CreateInRhi(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_DestroyInRhi")]
+  public static extern void Model_DestroyInRhi(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_Unload")]
+  public static extern void Model_Unload(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_GetId")]
+  public static extern global::System.IntPtr Model_GetId(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Model_GetAabb")]
+  public static extern global::System.IntPtr Model_GetAabb(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ResourceManager_ReservedShaderPrefix_get")]
+  public static extern string ResourceManager_ReservedShaderPrefix_get();
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ResourceManager_LoadAll")]
+  public static extern void ResourceManager_LoadAll();
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ResourceManager_Contains__SWIG_0")]
+  public static extern bool ResourceManager_Contains__SWIG_0(string jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ResourceManager_Contains__SWIG_1")]
+  public static extern bool ResourceManager_Contains__SWIG_1(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ResourceManager_Rename__SWIG_0")]
+  public static extern void ResourceManager_Rename__SWIG_0(string jarg1, string jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ResourceManager_Rename__SWIG_1")]
+  public static extern void ResourceManager_Rename__SWIG_1(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ResourceManager_Unload")]
+  public static extern void ResourceManager_Unload(string jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ResourceManager_UnloadAll")]
+  public static extern void ResourceManager_UnloadAll();
 
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Shader_VertexFileExtensions_get")]
   public static extern global::System.IntPtr Shader_VertexFileExtensions_get();
@@ -1519,17 +1582,71 @@ class CorePINVOKE {
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_materialType_get")]
   public static extern int Material_materialType_get(global::System.Runtime.InteropServices.HandleRef jarg1);
 
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_albedo_set")]
-  public static extern void Material_albedo_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_albedoTexture_set")]
+  public static extern void Material_albedoTexture_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
 
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_albedo_get")]
-  public static extern global::System.IntPtr Material_albedo_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_albedoTexture_get")]
+  public static extern global::System.IntPtr Material_albedoTexture_get(global::System.Runtime.InteropServices.HandleRef jarg1);
 
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_normalMap_set")]
-  public static extern void Material_normalMap_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_metallicTexture_set")]
+  public static extern void Material_metallicTexture_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
 
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_normalMap_get")]
-  public static extern global::System.IntPtr Material_normalMap_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_metallicTexture_get")]
+  public static extern global::System.IntPtr Material_metallicTexture_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_roughnessTexture_set")]
+  public static extern void Material_roughnessTexture_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_roughnessTexture_get")]
+  public static extern global::System.IntPtr Material_roughnessTexture_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_normalTexture_set")]
+  public static extern void Material_normalTexture_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_normalTexture_get")]
+  public static extern global::System.IntPtr Material_normalTexture_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_ambiantOcclusionTexture_set")]
+  public static extern void Material_ambiantOcclusionTexture_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_ambiantOcclusionTexture_get")]
+  public static extern global::System.IntPtr Material_ambiantOcclusionTexture_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_albedoColor_set")]
+  public static extern void Material_albedoColor_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_albedoColor_get")]
+  public static extern global::System.IntPtr Material_albedoColor_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_metallic_set")]
+  public static extern void Material_metallic_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_metallic_get")]
+  public static extern global::System.IntPtr Material_metallic_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_roughness_set")]
+  public static extern void Material_roughness_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_roughness_get")]
+  public static extern global::System.IntPtr Material_roughness_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_reflectance_set")]
+  public static extern void Material_reflectance_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_reflectance_get")]
+  public static extern global::System.IntPtr Material_reflectance_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_emissive_set")]
+  public static extern void Material_emissive_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_emissive_get")]
+  public static extern global::System.IntPtr Material_emissive_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_ambientOcclusion_set")]
+  public static extern void Material_ambientOcclusion_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Material_ambientOcclusion_get")]
+  public static extern global::System.IntPtr Material_ambientOcclusion_get(global::System.Runtime.InteropServices.HandleRef jarg1);
 
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_new_Material")]
   public static extern global::System.IntPtr new_Material();
@@ -1654,17 +1771,23 @@ class CorePINVOKE {
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Entity_Update")]
   public static extern void Entity_Update(global::System.Runtime.InteropServices.HandleRef jarg1);
 
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_LoadCubeMap")]
-  public static extern void Skybox_LoadCubeMap(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
-
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_GetCubeMap__SWIG_0")]
-  public static extern global::System.IntPtr Skybox_GetCubeMap__SWIG_0(global::System.Runtime.InteropServices.HandleRef jarg1);
-
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_new_Skybox")]
   public static extern global::System.IntPtr new_Skybox();
 
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_delete_Skybox")]
   public static extern void delete_Skybox(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_Initialize")]
+  public static extern void Skybox_Initialize(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_LoadCubeMap")]
+  public static extern void Skybox_LoadCubeMap(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_LoadFromHdrTexture")]
+  public static extern void Skybox_LoadFromHdrTexture(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_GetCubeMap__SWIG_0")]
+  public static extern global::System.IntPtr Skybox_GetCubeMap__SWIG_0(global::System.Runtime.InteropServices.HandleRef jarg1);
 
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Scene_skybox_set")]
   public static extern void Scene_skybox_set(global::System.Runtime.InteropServices.HandleRef jarg1);

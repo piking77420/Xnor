@@ -67,24 +67,128 @@ public class Material : global::System.IDisposable {
     } 
   }
 
-  public SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t albedo {
+  public SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t albedoTexture {
     set {
-      CorePINVOKE.Material_albedo_set(swigCPtr, SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t.getCPtr(value));
+      CorePINVOKE.Material_albedoTexture_set(swigCPtr, SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t.getCPtr(value));
     } 
     get {
-      global::System.IntPtr cPtr = CorePINVOKE.Material_albedo_get(swigCPtr);
+      global::System.IntPtr cPtr = CorePINVOKE.Material_albedoTexture_get(swigCPtr);
       SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t ret = (cPtr == global::System.IntPtr.Zero) ? null : new SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t(cPtr, false);
       return ret;
     } 
   }
 
-  public SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t normalMap {
+  public SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t metallicTexture {
     set {
-      CorePINVOKE.Material_normalMap_set(swigCPtr, SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t.getCPtr(value));
+      CorePINVOKE.Material_metallicTexture_set(swigCPtr, SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t.getCPtr(value));
     } 
     get {
-      global::System.IntPtr cPtr = CorePINVOKE.Material_normalMap_get(swigCPtr);
+      global::System.IntPtr cPtr = CorePINVOKE.Material_metallicTexture_get(swigCPtr);
       SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t ret = (cPtr == global::System.IntPtr.Zero) ? null : new SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t(cPtr, false);
+      return ret;
+    } 
+  }
+
+  public SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t roughnessTexture {
+    set {
+      CorePINVOKE.Material_roughnessTexture_set(swigCPtr, SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t.getCPtr(value));
+    } 
+    get {
+      global::System.IntPtr cPtr = CorePINVOKE.Material_roughnessTexture_get(swigCPtr);
+      SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t ret = (cPtr == global::System.IntPtr.Zero) ? null : new SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t(cPtr, false);
+      return ret;
+    } 
+  }
+
+  public SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t normalTexture {
+    set {
+      CorePINVOKE.Material_normalTexture_set(swigCPtr, SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t.getCPtr(value));
+    } 
+    get {
+      global::System.IntPtr cPtr = CorePINVOKE.Material_normalTexture_get(swigCPtr);
+      SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t ret = (cPtr == global::System.IntPtr.Zero) ? null : new SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t(cPtr, false);
+      return ret;
+    } 
+  }
+
+  public SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t ambiantOcclusionTexture {
+    set {
+      CorePINVOKE.Material_ambiantOcclusionTexture_set(swigCPtr, SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t.getCPtr(value));
+    } 
+    get {
+      global::System.IntPtr cPtr = CorePINVOKE.Material_ambiantOcclusionTexture_get(swigCPtr);
+      SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t ret = (cPtr == global::System.IntPtr.Zero) ? null : new SWIGTYPE_p_XnorCore__PointerT_XnorCore__Texture_t(cPtr, false);
+      return ret;
+    } 
+  }
+
+  public Colorf albedoColor {
+    set {
+      CorePINVOKE.Material_albedoColor_set(swigCPtr, Colorf.getCPtr(value));
+    } 
+    get {
+      global::System.IntPtr cPtr = CorePINVOKE.Material_albedoColor_get(swigCPtr);
+      Colorf ret = (cPtr == global::System.IntPtr.Zero) ? null : new Colorf(cPtr, false);
+      return ret;
+    } 
+  }
+
+  public SWIGTYPE_p_float_t metallic {
+    set {
+      CorePINVOKE.Material_metallic_set(swigCPtr, SWIGTYPE_p_float_t.getCPtr(value));
+      if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      SWIGTYPE_p_float_t ret = new SWIGTYPE_p_float_t(CorePINVOKE.Material_metallic_get(swigCPtr), true);
+      if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public SWIGTYPE_p_float_t roughness {
+    set {
+      CorePINVOKE.Material_roughness_set(swigCPtr, SWIGTYPE_p_float_t.getCPtr(value));
+      if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      SWIGTYPE_p_float_t ret = new SWIGTYPE_p_float_t(CorePINVOKE.Material_roughness_get(swigCPtr), true);
+      if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public SWIGTYPE_p_float_t reflectance {
+    set {
+      CorePINVOKE.Material_reflectance_set(swigCPtr, SWIGTYPE_p_float_t.getCPtr(value));
+      if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      SWIGTYPE_p_float_t ret = new SWIGTYPE_p_float_t(CorePINVOKE.Material_reflectance_get(swigCPtr), true);
+      if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public SWIGTYPE_p_float_t emissive {
+    set {
+      CorePINVOKE.Material_emissive_set(swigCPtr, SWIGTYPE_p_float_t.getCPtr(value));
+      if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      SWIGTYPE_p_float_t ret = new SWIGTYPE_p_float_t(CorePINVOKE.Material_emissive_get(swigCPtr), true);
+      if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
+      return ret;
+    } 
+  }
+
+  public SWIGTYPE_p_float_t ambientOcclusion {
+    set {
+      CorePINVOKE.Material_ambientOcclusion_set(swigCPtr, SWIGTYPE_p_float_t.getCPtr(value));
+      if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
+    } 
+    get {
+      SWIGTYPE_p_float_t ret = new SWIGTYPE_p_float_t(CorePINVOKE.Material_ambientOcclusion_get(swigCPtr), true);
+      if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
       return ret;
     } 
   }
