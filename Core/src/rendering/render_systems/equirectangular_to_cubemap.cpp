@@ -1,18 +1,12 @@
 #include "rendering/render_systems/equirectangular_to_cubemap.hpp"
 
 #include "rendering/frame_buffer.hpp"
+#include "rendering/rhi.hpp"
 #include "resource/resource_manager.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
 
-EquirectangularToCubeMap::EquirectangularToCubeMap()
-{
-    
-    m_Cube = ResourceManager::Get("assets/models/cube.obj");
-    //m_Shader = ResourceManager::Get()
-
-}
 
 EquirectangularToCubeMap::~EquirectangularToCubeMap()
 {
@@ -28,38 +22,65 @@ void EquirectangularToCubeMap::Compute(const Texture& equirectangularMap, const 
     {
         delete m_FrameBuffer;
         delete m_TextureDepth;
-        m_FrameBuffer = new FrameBuffer(cubemap.GetSize());
+        InitCreateFrameBuffer(cubemap.GetSize());
     }
 
     Matrix projection;
     Matrix::Perspective(90.f * Calc::Deg2Rad, 1.0f,0.1f,10.f,&projection);
-
-    /*
-    std::array<Matrix,static_cast<constexpr size_t>(CubeMapFace::Size)> captureViews =
-    {
-        Matrix::LookAt(Vector3(),Vector3::UnitX(),-Vector3::UnitY()),
-        Matrix::LookAt(Vector3(),-Vector3::UnitX(),-Vector3::UnitY()),
-        Matrix::LookAt(Vector3(),Vector3::UnitY(),Vector3::UnitZ()),
-        Matrix::LookAt(Vector3(),-Vector3::UnitX(),-Vector3::UnitY()),
-        Matrix::LookAt(Vector3(),Vector3::UnitZ(),-Vector3::UnitY()),
-        Matrix::LookAt(Vector3(),-Vector3::UnitZ(),-Vector3::UnitY()),
-
-        
-    } */
-
     
-    for (size_t i = 0; i < static_cast<size_t>(CubeMapFace::Size); i++)
+    std::array<Matrix,static_cast<size_t>(CubeMapFace::Size)> captureViews =
     {
+        Matrix::LookAt(Vector3(),-Vector3::UnitX(),-Vector3::UnitY()), // CubeMapPositiveX
+        Matrix::LookAt(Vector3(),Vector3::UnitX(),-Vector3::UnitY()), // CubeMapNegativeX
+        Matrix::LookAt(Vector3(),-Vector3::UnitY(),-Vector3::UnitZ()), // CubeMapPositiveY
+        Matrix::LookAt(Vector3(),Vector3::UnitY(),Vector3::UnitZ()), // CubeMapNegativeY
+        Matrix::LookAt(Vector3(),Vector3::UnitZ(),-Vector3::UnitY()), // CubeMapPositiveZ
+        Matrix::LookAt(Vector3(),-Vector3::UnitZ(),-Vector3::UnitY()), // CubeMapNegativeZ
+    };
+
+    m_Shader->Use();
+    m_Shader->SetMat4("projection",projection);
+    equirectangularMap.BindTexture(0);
+    
+    for (size_t i = 0; i < 6; i++)
+    {
+        RenderPassBeginInfo renderPassBeginInfo =
+        {
+            .frameBuffer = m_FrameBuffer,
+            .renderAreaOffset = { 0,0 },
+            .renderAreaExtent = m_FrameBuffer->GetSize() ,
+            .clearBufferFlags =  static_cast<decltype(renderPassBeginInfo.clearBufferFlags)>(BufferFlagColorBit | BufferFlagDepthBit),
+            .clearColor = Vector4()
+        };
+        m_Shader->SetMat4("view",captureViews[i]);
+
         m_FrameBuffer->AttachTexture(cubemap,Attachment::Color00,static_cast<CubeMapFace>(i));
+        m_RenderPass.BeginRenderPass(renderPassBeginInfo);
 
-        
+        Rhi::DrawModel(m_Cube->GetId());
+
+        m_RenderPass.EndRenderPass();
     }
-    
+
+    m_Shader->Unuse();
+}
+
+void EquirectangularToCubeMap::InitResource()
+{
+    m_Cube = ResourceManager::Get<Model>("assets/models/cube.obj");
+    m_Shader = ResourceManager::Get<Shader>("equirectangular_to_cubemap");
+    m_Shader->SetDepthFunction(DepthFunction::LessEqual);
+    m_Shader->CreateInRhi();
+    m_Shader->SetInt("equirectangularMap",0);
 }
 
 void EquirectangularToCubeMap::InitCreateFrameBuffer(Vector2i size)
 {
     m_FrameBuffer = new FrameBuffer(size);
     m_TextureDepth = new Texture(TextureInternalFormat::DepthComponent32,size);
+    m_TextureDepth->CreateInRhi();
     m_FrameBuffer->AttachTexture(*m_TextureDepth,Attachment::Depth);
+    //m_color = new Texture(TextureInternalFormat::Rgb16,size);
+    //m_FrameBuffer->AttachTexture(*m_color,Attachment::Color00);
+
 }

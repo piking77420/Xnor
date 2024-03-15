@@ -236,7 +236,7 @@ void Editor::CreateTestScene()
 	Entity& ent2 = *World::scene.CreateEntity("Directional");
 	ent2.AddComponent<DirectionalLight>();
 	
-	
+	/*
 	const std::array<std::string, 6> testCubeMap
 	{
 		"assets/skybox/right.jpg",
@@ -247,6 +247,9 @@ void Editor::CreateTestScene()
 		"assets/skybox/back.jpg"
 	};
 	World::scene.skybox.LoadCubeMap(testCubeMap);
+	*/
+	World::scene.skybox.Initialize();
+	World::scene.skybox.LoadFromHdrTexture(ResourceManager::Get<Texture>("assets/textures/puresky.hdr"));
 }
 
 void Editor::MenuBar() const
@@ -330,6 +333,7 @@ void Editor::Update()
 		UpdateWindow();
 		WorldBehaviours();
 		OnRenderingWindow();
+
 		renderer.EndFrame(World::scene);
 
 		Input::Update();

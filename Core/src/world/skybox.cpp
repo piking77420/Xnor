@@ -1,6 +1,13 @@
 #include "world/skybox.hpp"
 
+
 using namespace XnorCore;
+
+
+void Skybox::Initialize()
+{
+    m_EquirectangularToCubeMap.InitResource();
+}
 
 void Skybox::LoadCubeMap(const std::array<std::string, 6>& cubeMapFiles)
 {
@@ -24,17 +31,18 @@ void Skybox::LoadFromHdrTexture(const Pointer<Texture>& hdfFile)
     }
     
     CreateCubeMapInfo createCubeMapInfo =
-        {
-            .datas = nullptr,
-            .size = m_EnvironementCubeMapSize,
-            .filtering = TextureFiltering::Linear,
-            .wrapping = TextureWrapping::ClampToEdge,
-            .format = TextureFormat::Rgb,
-            .internalFormat = TextureInternalFormat::Rgb16F,
-            .dataType = DataType::Float
-        };
-    
+    {
+        .datas = nullptr,
+        .size = m_EnvironementCubeMapSize,
+        .filtering = TextureFiltering::Linear,
+        .wrapping = TextureWrapping::ClampToEdge,
+        .format = TextureFormat::Rgb,
+        .internalFormat = TextureInternalFormat::Rgb16F,
+        .dataType = DataType::Float
+    };
     m_CubeMap = new Cubemap(createCubeMapInfo);
+    
+    m_EquirectangularToCubeMap.Compute(*hdfFile.Get(), *m_CubeMap);
 }
 
 const Cubemap* Skybox::GetCubeMap() const

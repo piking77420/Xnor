@@ -434,7 +434,28 @@ uint32_t Rhi::AttachementToOpenglAttachement(Attachment attachment)
 
 uint32_t Rhi::CubeMapFacesToOpengl(CubeMapFace cubeMapFace)
 {
-	return GL_TEXTURE_CUBE_MAP_POSITIVE_X  + static_cast<uint32_t>(cubeMapFace);
+	switch (cubeMapFace)
+	{
+		case CubeMapFace::CubeMapPositiveX:
+			return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+		
+		case CubeMapFace::CubeMapNegativeX:
+			return GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
+		
+		case CubeMapFace::CubeMapPositiveY:
+			return GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
+		
+		case CubeMapFace::CubeMapNegativeY:
+			return GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
+		
+		case CubeMapFace::CubeMapPositiveZ:
+			return GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
+		
+		case CubeMapFace::CubeMapNegativeZ:
+			return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+	}
+
+	return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 }
 
 uint32_t Rhi::GetOpengDepthEnum(const DepthFunction depthFunction)
@@ -548,20 +569,26 @@ uint32_t Rhi::CreateCubeMap(const CreateCubeMapInfo& createCubeMapInfo)
 	
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
 	
-	if (createCubeMapInfo.datas == nullptr || createCubeMapInfo.datas == nullptr)
-	{
-		Logger::LogError("CubeMapCreateInfo is Invalid");
-	}
-	
 	const GLsizei width = createCubeMapInfo.size.x;
 	const GLsizei height = createCubeMapInfo.size.y;
 
 	if(createCubeMapInfo.datas != nullptr)
-	for (size_t i = 0; i < createCubeMapInfo.datas->size(); i++)
 	{
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), 0, static_cast<GLint>(GetOpenglInternalFormat(createCubeMapInfo.internalFormat)),
-			width, height, 0, GetOpenGlTextureFormat(createCubeMapInfo.format), GetOpenglDataType(createCubeMapInfo.dataType), createCubeMapInfo.datas->at(i));
+		for (size_t i = 0; i < createCubeMapInfo.datas->size(); i++)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), 0, static_cast<GLint>(GetOpenglInternalFormat(createCubeMapInfo.internalFormat)),
+				width, height, 0, GetOpenGlTextureFormat(createCubeMapInfo.format), GetOpenglDataType(createCubeMapInfo.dataType), createCubeMapInfo.datas->at(i));
+		}
 	}
+	else
+	{
+		for (size_t i = 0; i < 6; i++)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), 0, static_cast<GLint>(GetOpenglInternalFormat(createCubeMapInfo.internalFormat)),
+				width, height, 0, GetOpenGlTextureFormat(createCubeMapInfo.format), GetOpenglDataType(createCubeMapInfo.dataType), nullptr);
+		}
+	}
+
 
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
@@ -584,6 +611,7 @@ void Rhi::AttachsTextureToFrameBuffer(const RenderPass& renderPass, const FrameB
 	for (uint32_t i = 0; i < renderTargetInfos.size(); i++)
 	{
 		GLenum openglAttachment = AttachementToOpenglAttachement(renderTargetInfos[i].attachment);
+
 		switch (renderTargetInfos[i].attachment)
 		{
 			case Attachment::Color00:
@@ -607,12 +635,13 @@ void Rhi::AttachsTextureToFrameBuffer(const RenderPass& renderPass, const FrameB
 			case Attachment::Color18:
 			case Attachment::Color19:
 			case Attachment::Color20:
-				if(renderTargetInfos[i].isDrawingOn)
-				openglAttachmentsdraw.push_back(openglAttachment);
+				if (renderTargetInfos[i].isDrawingOn)
+					openglAttachmentsdraw.push_back(openglAttachment);
+				
 				break;
 			
 		}
-		glNamedFramebufferTexture(frameBufferId, openglAttachment, attachments.at(i)->GetId(), 0);
+		glNamedFramebufferTexture(frameBufferId,openglAttachment, attachments.at(i)->GetId(), 0);
 	}
 
 	glNamedFramebufferDrawBuffers(frameBufferId, static_cast<int32_t>(openglAttachmentsdraw.size()), openglAttachmentsdraw.data());
@@ -659,7 +688,13 @@ void Rhi::UnbindFrameBuffer()
 
 void Rhi::AttachTextureToFrameBuffer(const uint32_t bufferId, const Attachment attachment, const uint32_t textureId, const uint32_t level)
 {
-	glFramebufferTexture(bufferId,AttachementToOpenglAttachement(attachment),textureId,level); 
+	const GLenum attachementOpengl = AttachementToOpenglAttachement(attachment);
+	glNamedFramebufferTexture(bufferId, attachementOpengl ,textureId,level);
+	
+	if (attachment != Attachment::Depth && attachment != Attachment::DepthAndStencil && attachment != Attachment::Stencil)
+	{
+		glNamedFramebufferDrawBuffers(bufferId, 1, &attachementOpengl);
+	}
 }
 
 void Rhi::AttachTextureToFrameBuffer(
@@ -670,8 +705,15 @@ void Rhi::AttachTextureToFrameBuffer(
 	const uint32_t level
 )
 {
-	glFramebufferTexture2D(bufferId, AttachementToOpenglAttachement(attachment), CubeMapFacesToOpengl(cubeMapFace), textureId,level); 
+	const GLenum attachement =  AttachementToOpenglAttachement(attachment);
+	glNamedFramebufferTextureLayer(bufferId,attachement,textureId,level, static_cast<GLint>(cubeMapFace));
+	
+	if (attachment != Attachment::Depth && attachment != Attachment::DepthAndStencil && attachment != Attachment::Stencil)
+	{
+		glNamedFramebufferDrawBuffers(bufferId, 1, &attachement);
+	}
 }
+
 
 void Rhi::GetPixelFromAttachement(const uint32_t attachmentIndex, const Vector2i position, const TextureFormat textureFormat, const DataType dataType, void* const output)
 {
@@ -1139,4 +1181,13 @@ TextureFormat Rhi::GetTextureFormatFromChannels(const uint32_t channels)
 void Rhi::DepthTest(bool value)
 {
 	value ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST); 
+}
+
+void Rhi::CheckIfFrameBufferComplete(uint32_t id)
+{
+	if (glCheckNamedFramebufferStatus(id, GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE )
+	{
+		
+	}
+
 }

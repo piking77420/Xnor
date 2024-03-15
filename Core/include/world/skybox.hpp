@@ -4,6 +4,7 @@
 #include <string>
 
 #include "core.hpp"
+#include "rendering/render_systems/equirectangular_to_cubemap.hpp"
 #include "resource/cubemap.hpp"
 #include "resource/shader.hpp"
 #include "resource/texture.hpp"
@@ -12,6 +13,8 @@
 /// @brief Defines the XnorCore::Skybox class.
 
 BEGIN_XNOR_CORE
+
+
 enum class SkyBoxType
 {
     CubeMap,
@@ -29,6 +32,9 @@ public:
     Skybox() = default;
 
     ~Skybox() = default;
+
+
+    void Initialize();
     
     /// @brief Loads a cube map using an array of 6 different file paths
     /// @param cubeMapFiles Array of 6 texture file paths
@@ -51,7 +57,7 @@ public:
 private:
     Cubemap* m_CubeMap = nullptr;
 
-    //EquirectangularToCubeMap m_EquirectangularToCubeMap;
+    EquirectangularToCubeMap m_EquirectangularToCubeMap;
 };
 
 END_XNOR_CORE

@@ -146,8 +146,7 @@ public:
 
 	XNOR_ENGINE static void AttachTextureToFrameBuffer(uint32_t bufferId,Attachment attachment,uint32_t textureId,uint32_t level);
 
-	XNOR_ENGINE static void AttachTextureToFrameBuffer(uint32_t bufferId,Attachment attachment, CubeMapFace cubeMapFace,uint32_t textureId,uint32_t level);
-
+	XNOR_ENGINE static void AttachTextureToFrameBuffer(uint32_t bufferId,Attachment attachment, CubeMapFace cubeMapFace,uint32_t textureId,uint32_t level);	
 	
 	/// @brief Reads a single pixel of an attachment
 	/// @param attachmentIndex Attachment index
@@ -203,6 +202,9 @@ public:
 	XNOR_ENGINE static TextureFormat GetTextureFormatFromChannels(uint32_t channels);
 
 	XNOR_ENGINE static void DepthTest(bool value);
+
+	XNOR_ENGINE static void CheckIfFrameBufferComplete(uint32_t id);
+
 private:
 	struct ModelInternal
 	{

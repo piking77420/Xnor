@@ -6,28 +6,29 @@
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
 #include "resource/texture.hpp"
-#include "scene/scene.hpp"
 
 BEGIN_XNOR_CORE
-class XNOR_ENGINE EquirectangularToCubeMap
+class EquirectangularToCubeMap
 {
 
 public:
-    EquirectangularToCubeMap();
+    XNOR_ENGINE EquirectangularToCubeMap() = default;
     
-    ~EquirectangularToCubeMap();
-    
-    void Compute(const Texture& equirectangularMap,const Cubemap& cubemap);
+    XNOR_ENGINE  ~EquirectangularToCubeMap();
 
+    XNOR_ENGINE void Compute(const Texture& equirectangularMap,const Cubemap& cubemap);
+
+    XNOR_ENGINE void InitResource();
 private:
     Pointer<Model> m_Cube;
     FrameBuffer* m_FrameBuffer = nullptr;
     RenderPass m_RenderPass;
     Pointer<Shader> m_Shader;
 
-    void InitCreateFrameBuffer(Vector2i size);
+    XNOR_ENGINE void InitCreateFrameBuffer(Vector2i size);
 
     Texture* m_TextureDepth = nullptr;
+    Texture* m_color = nullptr;
     
 };
 
