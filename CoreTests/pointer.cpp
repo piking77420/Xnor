@@ -15,7 +15,7 @@ TEST(Pointer, WeakReferences)
     Pointer<int> weakRef;
 
     {
-        const Pointer<int> ptr(2);
+        const Pointer<int> ptr = Pointer<int>::Create(2);
 
         weakRef = ptr;
 
@@ -51,7 +51,7 @@ TEST(Pointer, StrongReferences)
     Pointer<int> strongRef;
 
     {
-        const Pointer<int> ptr(-17);
+        const Pointer<int> ptr = Pointer<int>::Create(-17);
 
         strongRef = ptr.CreateStrongReference();
 
