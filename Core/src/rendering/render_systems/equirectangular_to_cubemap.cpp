@@ -14,8 +14,14 @@ EquirectangularToCubeMap::~EquirectangularToCubeMap()
     delete m_TextureDepth;
 }
 
+void EquirectangularToCubeMap::EquirectangularToCubeMapFunc(const Texture& equirectangularMap, const Cubemap& cubemap)
+{
+    Compute(equirectangularMap,cubemap,m_EquirectangularToCubeMapShader);
+}
 
-void EquirectangularToCubeMap::Compute(const Texture& equirectangularMap, const Cubemap& cubemap)
+
+
+void EquirectangularToCubeMap::Compute(const Texture& equirectangularMap, const Cubemap& cubemap, const Pointer<Shader>& shader)
 {
     
     if (m_FrameBuffer == nullptr ||m_FrameBuffer->GetSize() != cubemap.GetSize())
@@ -38,8 +44,8 @@ void EquirectangularToCubeMap::Compute(const Texture& equirectangularMap, const 
         Matrix::LookAt(Vector3(),-Vector3::UnitZ(),-Vector3::UnitY()), // CubeMapNegativeZ
     };
 
-    m_Shader->Use();
-    m_Shader->SetMat4("projection",projection);
+    shader->Use();
+    shader->SetMat4("projection",projection);
     equirectangularMap.BindTexture(0);
     
     for (size_t i = 0; i < 6; i++)
@@ -52,7 +58,7 @@ void EquirectangularToCubeMap::Compute(const Texture& equirectangularMap, const 
             .clearBufferFlags =  static_cast<decltype(renderPassBeginInfo.clearBufferFlags)>(BufferFlagColorBit | BufferFlagDepthBit),
             .clearColor = Vector4()
         };
-        m_Shader->SetMat4("view",captureViews[i]);
+        shader->SetMat4("view",captureViews[i]);
 
         m_FrameBuffer->AttachTexture(cubemap,Attachment::Color00,static_cast<CubeMapFace>(i));
         m_RenderPass.BeginRenderPass(renderPassBeginInfo);
@@ -62,16 +68,19 @@ void EquirectangularToCubeMap::Compute(const Texture& equirectangularMap, const 
         m_RenderPass.EndRenderPass();
     }
 
-    m_Shader->Unuse();
+    shader->Unuse();
 }
 
 void EquirectangularToCubeMap::InitResource()
 {
     m_Cube = ResourceManager::Get<Model>("assets/models/cube.obj");
-    m_Shader = ResourceManager::Get<Shader>("equirectangular_to_cubemap");
-    m_Shader->SetDepthFunction(DepthFunction::LessEqual);
-    m_Shader->CreateInRhi();
-    m_Shader->SetInt("equirectangularMap",0);
+    
+    m_EquirectangularToCubeMapShader = ResourceManager::Get<Shader>("equirectangular_to_cubemap");
+    m_EquirectangularToCubeMapShader->SetDepthFunction(DepthFunction::LessEqual);
+    m_EquirectangularToCubeMapShader->CreateInRhi();
+    m_EquirectangularToCubeMapShader->SetInt("equirectangularMap",0);
+
+    
 }
 
 void EquirectangularToCubeMap::InitCreateFrameBuffer(Vector2i size)
@@ -84,3 +93,4 @@ void EquirectangularToCubeMap::InitCreateFrameBuffer(Vector2i size)
     //m_FrameBuffer->AttachTexture(*m_color,Attachment::Color00);
 
 }
+

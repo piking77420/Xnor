@@ -27,11 +27,13 @@ class XNOR_ENGINE Skybox
 {
 private:
     static inline Vector2i m_EnvironementCubeMapSize { 512 , 512 };
+    static inline Vector2i m_IradianceCubeSize { 32 , 32 };
+
 public:
 
     Skybox() = default;
 
-    ~Skybox() = default;
+    ~Skybox();
 
 
     void Initialize();
@@ -56,6 +58,7 @@ public:
     
 private:
     Cubemap* m_CubeMap = nullptr;
+    Cubemap* m_IrradianceMap = nullptr;
 
     EquirectangularToCubeMap m_EquirectangularToCubeMap;
 };
