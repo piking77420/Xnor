@@ -1,6 +1,7 @@
 ﻿#include "application.hpp"
 
 #include "screen.hpp"
+#include "csharp/dotnet_runtime.hpp"
 #include "file/file_manager.hpp"
 #include "input/input.hpp"
 #include "rendering/rhi.hpp"
@@ -20,10 +21,14 @@ Application::Application()
 	
     Input::Initialize();
     Screen::Initialize();
+
+	DotnetRuntime::Initialize();
 }
 
 Application::~Application()
 {
+	DotnetRuntime::Shutdown();
+	
     ResourceManager::UnloadAll();
 	Rhi::Shutdown();
 

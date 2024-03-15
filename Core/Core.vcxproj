@@ -59,15 +59,12 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);$(ProjectDir)externals\libs\lib\Common;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp.lib;zlibstatic.lib;toolbox.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp.lib;zlibstatic.lib;toolbox.lib;%(AdditionalDependencies);Coral.Native.lib</AdditionalDependencies>
       <AdditionalOptions>/WHOLEARCHIVE:toolbox.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command> mkdir swig\build &amp; cd swig\build &amp;&amp; cmake .. &amp;&amp; cmake --build .</Command>
-      <Message>Generate C# SWIG Wrapper</Message>
-    </PostBuildEvent>
-    <PostBuildEvent>
-      <Message>Copy dll to running directory</Message>
+      <Message>Create SWIG C# Wrappers</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -88,15 +85,12 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);$(ProjectDir)externals\libs\lib\Common;%(AdditionalLibraryDirectories);$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp.lib;zlibstatic.lib;toolbox.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp.lib;zlibstatic.lib;toolbox.lib;%(AdditionalDependencies);Coral.Native.lib</AdditionalDependencies>
       <AdditionalOptions>/WHOLEARCHIVE:toolbox.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command> mkdir swig\build &amp; cd swig\build &amp;&amp; cmake .. &amp;&amp; cmake --build .</Command>
-      <Message>Generate C# SWIG Wrapper</Message>
-    </PostBuildEvent>
-    <PostBuildEvent>
-      <Message>Copy dll to running directory</Message>
+      <Message>Create SWIG C# Wrappers</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -114,6 +108,7 @@
     <ClCompile Include="externals\src\stb\stb_image.c" />
     <ClCompile Include="externals\src\ttf\ttfParser.cpp" />
     <ClCompile Include="src\application.cpp" />
+    <ClCompile Include="src\csharp\dotnet_runtime.cpp" />
     <ClCompile Include="src\file\directory.cpp" />
     <ClCompile Include="src\file\entry.cpp" />
     <ClCompile Include="src\input\input.cpp" />
@@ -130,7 +125,7 @@
     <ClCompile Include="src\rendering\render_systems\tone_mapping.cpp" />
     <ClCompile Include="src\rendering\rhi.cpp" />
     <ClCompile Include="src\rendering\uniformBuffer.cpp" />
-    <ClCompile Include="src\rendering\viewport_data.cpp"/>
+    <ClCompile Include="src\rendering\viewport_data.cpp" />
     <ClCompile Include="src\resource\cubemap.cpp" />
     <ClCompile Include="src\resource\font.cpp" />
     <ClCompile Include="src\resource\shader.cpp" />
@@ -261,6 +256,24 @@
     <ClInclude Include="externals\include\assimp\XmlParser.h" />
     <ClInclude Include="externals\include\assimp\XMLTools.h" />
     <ClInclude Include="externals\include\assimp\ZipArchiveIOSystem.h" />
+    <ClInclude Include="externals\include\Coral\Array.hpp" />
+    <ClInclude Include="externals\include\Coral\Assembly.hpp" />
+    <ClInclude Include="externals\include\Coral\Attribute.hpp" />
+    <ClInclude Include="externals\include\Coral\Core.hpp" />
+    <ClInclude Include="externals\include\Coral\FieldInfo.hpp" />
+    <ClInclude Include="externals\include\Coral\GC.hpp" />
+    <ClInclude Include="externals\include\Coral\HostInstance.hpp" />
+    <ClInclude Include="externals\include\Coral\ManagedObject.hpp" />
+    <ClInclude Include="externals\include\Coral\Memory.hpp" />
+    <ClInclude Include="externals\include\Coral\MessageLevel.hpp" />
+    <ClInclude Include="externals\include\Coral\MethodInfo.hpp" />
+    <ClInclude Include="externals\include\Coral\PropertyInfo.hpp" />
+    <ClInclude Include="externals\include\Coral\StableVector.hpp" />
+    <ClInclude Include="externals\include\Coral\String.hpp" />
+    <ClInclude Include="externals\include\Coral\StringHelper.hpp" />
+    <ClInclude Include="externals\include\Coral\Type.hpp" />
+    <ClInclude Include="externals\include\Coral\TypeCache.hpp" />
+    <ClInclude Include="externals\include\Coral\Utility.hpp" />
     <ClInclude Include="externals\include\glad\glad.h" />
     <ClInclude Include="externals\include\GLFW\glfw3.h" />
     <ClInclude Include="externals\include\GLFW\glfw3native.h" />
@@ -306,6 +319,7 @@
     <ClInclude Include="externals\include\ttf\ttfParser.h" />
     <ClInclude Include="include\application.hpp" />
     <ClInclude Include="include\core.hpp" />
+    <ClInclude Include="include\csharp\dotnet_runtime.hpp" />
     <ClInclude Include="include\file\directory.hpp" />
     <ClInclude Include="include\file\entry.hpp" />
     <ClInclude Include="include\file\file.hpp" />
@@ -394,13 +408,17 @@
     <Content Include="swig\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="include\core.i"/>
+    <Content Include="include\core.i" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-  <Target Name="SwigClean" AfterTargets="Clean">
-    <RemoveDir Directories="$(SolutionDir)Game\Xnor;swig\build" />
-    <Message Text="Cleaning SWIG C# Wrappers" Importance="high" />
+  <Target Name="CleanSwig" AfterTargets="Clean">
+    <RemoveDir Directories="$(SolutionDir)Game\Xnor;$(ProjectDir)swig\build" />
+    <Message Text="Clean SWIG C# Wrappers" Importance="high" />
+  </Target>
+  <Target Name="CopyCoralManaged" AfterTargets="Build">
+    <Copy SourceFiles="$(ProjectDir)externals\managed\Coral\$(Configuration)\*" DestinationFolder="$(OutDir)" />
+    <Message Text="Copy Coral Managed Assemblies" Importance="high" />
   </Target>
 </Project>
