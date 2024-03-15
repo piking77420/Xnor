@@ -48,6 +48,9 @@ private:
 
     List<int32_t> m_List;
     int32_t m_Array[5];
+    Light* light = nullptr;
+
+    ColorHsv color;
 };
 
 END_XNOR_CORE
