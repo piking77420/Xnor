@@ -11,6 +11,7 @@
 #include "utils/logger.hpp"
 #include "Jolt/Physics/Collision/Shape/SphereShape.h"
 #include "jolt/Physics/Body/BodyCreationSettings.h"
+#include "Jolt/Physics/Collision/Shape/ConvexHullShape.h"
 
 using namespace XnorCore;
 
@@ -86,26 +87,6 @@ void PhysicsWorld::Initialize()
     m_BodyInterface = &m_PhysicsSystem->GetBodyInterface();
 
     SetGravity(Vector3(0.f, -9.81f, 0.f));
-
-    // Next we can create a rigid body to serve as the floor, we make a large box
-    // Create the settings for the collision volume (the shape).
-    // Note that for simple shapes (like boxes) you can also directly construct a BoxShape.
-    JPH::BoxShapeSettings floorShapeSettings(JPH::Vec3(100.0f, 1.0f, 100.0f));
-
-    // Create the shape
-    JPH::ShapeSettings::ShapeResult floorShapeResult = floorShapeSettings.Create();
-    JPH::ShapeRefC floorShape = floorShapeResult.Get(); // We don't expect an error here, but you can check floor_shape_result for HasError() / GetError()
-
-    // Create the settings for the body itself. Note that here you can also set other properties like the restitution / friction.
-    JPH::BodyCreationSettings floorSettings(floorShape, JPH::RVec3(0.0_r, -1.0_r, 0.0_r), JPH::Quat::sEulerAngles(JPH::Vec3Arg(0.f, 0.f, 0.f)), JPH::EMotionType::Static, Layers::NON_MOVING);
-
-    // Create the actual rigid body
-    JPH::Body* floor = m_BodyInterface->CreateBody(floorSettings); // Note that if we run out of bodies this can return nullptr
-
-    m_BodyMap.emplace(floor->GetID().GetIndexAndSequenceNumber(), nullptr);
-
-    // Add it to the world
-    m_BodyInterface->AddBody(floor->GetID(), JPH::EActivation::DontActivate);
 }
 
 void PhysicsWorld::Destroy()
@@ -132,19 +113,49 @@ void PhysicsWorld::SetGravity(const Vector3& gravity)
     m_PhysicsSystem->SetGravity(JPH::Vec3Arg(gravity.x, gravity.y, gravity.z));
 }
 
-uint32_t PhysicsWorld::CreateSphere(Collider* const c, const Vector3& position, const float_t radius, const bool_t isTrigger)
+uint32_t PhysicsWorld::CreateSphere(Collider* const c, const Vector3& position, const float_t radius, const bool_t isTrigger, const bool_t isStatic)
 {
     JPH::BodyCreationSettings settings(new JPH::SphereShape(radius), JPH::RVec3Arg(position.x, position.y, position.z), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, Layers::MOVING);
 
-    return CreateBody(c, settings, isTrigger);
+    return CreateBody(c, settings, isTrigger, isStatic);
 }
 
-uint32_t PhysicsWorld::CreateBox(Collider* const c, const Vector3& position, const Quaternion& rotation, const Vector3& scale, const bool_t isTrigger)
+uint32_t PhysicsWorld::CreateBox(Collider* const c, const Vector3& position, const Quaternion& rotation, const Vector3& scale, const bool_t isTrigger, const bool_t isStatic)
 {
     JPH::BodyCreationSettings settings(new JPH::BoxShape(JPH::Vec3Arg(scale.x, scale.y, scale.z)), JPH::RVec3Arg(position.x, position.y, position.z),
         JPH::Quat(rotation.X(), rotation.Y(), rotation.Z(), rotation.W()), JPH::EMotionType::Dynamic, Layers::MOVING);
 
-    return CreateBody(c, settings, isTrigger);
+    return CreateBody(c, settings, isTrigger, isStatic);
+}
+
+uint32_t PhysicsWorld::CreateConvexHull(
+    Collider* c,
+    const Vector3& position,
+    const Quaternion& rotation,
+    [[maybe_unused]] const Vector3& scale, // TODO apply scale
+    const std::vector<Vertex>& vertices,
+    const bool_t isTrigger,
+    const bool_t isStatic
+)
+{
+    std::vector<JPH::Vec3> positions(vertices.size());
+
+    for (size_t i = 0; i < vertices.size(); i++)
+        positions[i] = JPH::Vec3(vertices[i].position.x, vertices[i].position.y, vertices[i].position.z);
+    
+    JPH::ConvexHullShapeSettings hullSettings(positions.data(), static_cast<int32_t>(positions.size()), JPH::cDefaultConvexRadius);
+
+    const JPH::ShapeSettings::ShapeResult result = hullSettings.Create();
+    if (!result.IsValid())
+    {
+        Logger::LogError("Physics - Couldn't create the convex hull shape");
+        return JPH::BodyID::cInvalidBodyID;
+    }
+    
+    JPH::BodyCreationSettings settings(result.Get(), JPH::RVec3Arg(position.x, position.y, position.z),
+        JPH::Quat(rotation.X(), rotation.Y(), rotation.Z(), rotation.W()), JPH::EMotionType::Dynamic, Layers::MOVING);
+
+    return CreateBody(c, settings, isTrigger, isStatic);
 }
 
 void PhysicsWorld::DestroyBody(const uint32_t bodyId)
@@ -217,10 +228,10 @@ void PhysicsWorld::TraceImpl(const char_t* format, ...)
     Logger::LogInfo("{}", buf);
 }
 
-uint32_t PhysicsWorld::CreateBody(Collider* const c, JPH::BodyCreationSettings& settings, const bool_t isTrigger)
+uint32_t PhysicsWorld::CreateBody(Collider* const c, JPH::BodyCreationSettings& settings, const bool_t isTrigger, const bool_t isStatic)
 {
     settings.mIsSensor = isTrigger;
-    if (isTrigger)
+    if (isTrigger || isStatic)
         settings.mMotionType = JPH::EMotionType::Static;
 
     settings.mAllowSleeping = false;

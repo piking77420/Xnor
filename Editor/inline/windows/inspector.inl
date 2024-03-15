@@ -4,6 +4,7 @@
 #include "ImGui/imgui_stdlib.h"
 #include "magic_enum/magic_enum_all.hpp"
 #include "physics/components/box_collider.hpp"
+#include "physics/components/mesh_collider.hpp"
 #include "physics/components/sphere_collider.hpp"
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
@@ -245,6 +246,7 @@ DisplayObject<type>(reinterpret_cast<type*>(*obj), XnorCore::Reflection::GetType
             POLY_PTR_IF_INSP(XnorCore::SpotLight)
             POLY_PTR_IF_INSP(XnorCore::SphereCollider)
             POLY_PTR_IF_INSP(XnorCore::BoxCollider)
+            POLY_PTR_IF_INSP(XnorCore::MeshCollider)
         }
     }
 }

@@ -9,6 +9,7 @@
 #include "file/file_manager.hpp"
 #include "input/time.hpp"
 #include "physics/components/box_collider.hpp"
+#include "physics/components/mesh_collider.hpp"
 #include "physics/components/sphere_collider.hpp"
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
@@ -239,6 +240,7 @@ void Editor::CreateTestScene()
 	meshRenderer->material.albedo->Unload();
 	meshRenderer->material.albedo->Load(vikingRoomTexture);
 	meshRenderer->material.albedo->CreateInRhi();
+	ent1.AddComponent<MeshCollider>();
 
 	Entity& ent2 = *World::scene.CreateEntity("DirectionalLight");
 	DirectionalLight* dirlight = ent2.AddComponent<DirectionalLight>();
@@ -256,7 +258,8 @@ void Editor::CreateTestScene()
 	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
 	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/wood.jpg");
 	ent3.transform.SetScale() = { 10.f, 0.1f, 10.f };
-	ent3.transform.SetPosition() -= { 0.f, -0.2f, 0.f};
+	ent3.transform.SetPosition() -= { 0.f, -0.2f, 0.f };
+	ent3.AddComponent<BoxCollider>();
 	
 	Entity& ent4 = *World::scene.CreateEntity("Cube");
 	ent4.transform.SetPosition() = { 0.f, 5.f, 0.f };
@@ -265,14 +268,14 @@ void Editor::CreateTestScene()
 	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/diamond_block.jpg");
 	ent4.AddComponent<BoxCollider>();
 	
-	Entity& ent5 = *World::scene.CreateEntity("Sphere");
+	Entity& ent5 = *World::scene.CreateEntity("Sphere1");
 	ent5.transform.SetPosition() = { 1.5f, 2.f, 0.f };
 	meshRenderer = ent5.AddComponent<MeshRenderer>();
 	meshRenderer->model = ResourceManager::Get<Model>("assets/models/sphere.obj");
 	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/diamond_block.jpg");
 	ent5.AddComponent<SphereCollider>();
 	
-	Entity& ent6 = *World::scene.CreateEntity("Sphere1");
+	Entity& ent6 = *World::scene.CreateEntity("Sphere2");
 	ent6.transform.SetPosition() = { -1.5f, 2.f, 0.f };
 	meshRenderer = ent6.AddComponent<MeshRenderer>();
 	meshRenderer->model = ResourceManager::Get<Model>("assets/models/sphere.obj");

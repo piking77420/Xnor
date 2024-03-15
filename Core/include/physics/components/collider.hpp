@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core.hpp"
+#include "physics/data/collision_data.hpp"
 #include "scene/component.hpp"
 #include "utils/event.hpp"
 
@@ -26,13 +27,24 @@ public:
     XNOR_ENGINE void Begin() override;
     XNOR_ENGINE void Update() override;
 
-    XNOR_ENGINE void OnTriggerEnter(Collider* other);
+    [[nodiscard]]
+    XNOR_ENGINE bool_t IsTrigger() const;
 
-    Event<Collider*> onTriggerEnter;
+    Event<Collider*, const CollisionData&> onTriggerEnter;
+    Event<Collider*, const CollisionData&> onTriggerStay;
+    Event<Collider*> onTriggerExit;
+    Event<Collider*, const CollisionData&> onCollisionEnter;
+    Event<Collider*, const CollisionData&> onCollisionStay;
+    Event<Collider*> onCollisionExit;
+
     ColliderConstraints constraints = ConstraintNone;
 
 protected:
+    void AddDebugEvents();
+    
     uint32_t m_BodyId = std::numeric_limits<uint32_t>::max();
+
+    bool_t m_IsStatic = false;
     bool_t m_IsTrigger = false;
 };
 
@@ -40,5 +52,6 @@ END_XNOR_CORE
 
 REFL_AUTO(type(XnorCore::Collider, bases<XnorCore::Component>),
     field(constraints, XnorCore::Reflection::EnumFlags()),
+    field(m_IsStatic),
     field(m_IsTrigger)
 )

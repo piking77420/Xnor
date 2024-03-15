@@ -14,10 +14,10 @@
 #include "physics/body_activation_listener.hpp"
 #include "physics/contact_listener.hpp"
 #include "Maths/vector3.hpp"
+#include "rendering/vertex.hpp"
 
 BEGIN_XNOR_CORE
-
-class PhysicsWorld
+    class PhysicsWorld
 {
     STATIC_CLASS(PhysicsWorld)
 
@@ -29,9 +29,11 @@ public:
     XNOR_ENGINE static void SetGravity(const Vector3& gravity);
 
     [[nodiscard]]
-    XNOR_ENGINE static uint32_t CreateSphere(Collider* c, const Vector3& position, float_t radius, bool_t isTrigger);
+    XNOR_ENGINE static uint32_t CreateSphere(Collider* c, const Vector3& position, float_t radius, bool_t isTrigger, bool_t isStatic);
     [[nodiscard]]
-    XNOR_ENGINE static uint32_t CreateBox(Collider* c, const Vector3& position, const Quaternion& rotation, const Vector3& scale, bool_t isTrigger);
+    XNOR_ENGINE static uint32_t CreateBox(Collider* c, const Vector3& position, const Quaternion& rotation, const Vector3& scale, bool_t isTrigger, bool_t isStatic);
+    [[nodiscard]]
+    XNOR_ENGINE static uint32_t CreateConvexHull(Collider* c, const Vector3& position, const Quaternion& rotation, const Vector3& scale, const std::vector<Vertex>& vertices, bool_t isTrigger, bool_t isStatic);
 
     XNOR_ENGINE static void DestroyBody(uint32_t bodyId);
 
@@ -52,7 +54,7 @@ private:
     XNOR_ENGINE static void TraceImpl(const char_t* format, ...);
 
     [[nodiscard]]
-    XNOR_ENGINE static uint32_t CreateBody(Collider* c, JPH::BodyCreationSettings& settings, bool_t isTrigger);
+    XNOR_ENGINE static uint32_t CreateBody(Collider* c, JPH::BodyCreationSettings& settings, bool_t isTrigger, bool_t isStatic);
 
     static inline std::unordered_map<uint32_t, Collider*> m_BodyMap;
 

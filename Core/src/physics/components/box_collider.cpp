@@ -23,7 +23,7 @@ void BoxCollider::Begin()
     result.Decompose(&position, &q, &s, &skew, &p);
     m_BodyId = PhysicsWorld::CreateBox(position, q, s);*/
 
-    m_BodyId = PhysicsWorld::CreateBox(this, t.GetPosition(), t.GetRotation(), t.GetScale(), m_IsTrigger);
+    m_BodyId = PhysicsWorld::CreateBox(this, t.GetPosition(), t.GetRotation(), t.GetScale(), m_IsTrigger, m_IsStatic);
 }
 
 void BoxCollider::Update()

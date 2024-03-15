@@ -124,6 +124,10 @@ public:
     /// @brief Gets the Aabb bounding box of the model
     /// @return Aabb bounding box
     XNOR_ENGINE Aabb GetAabb() const;
+
+    /// @brief Gets the vertices of the model
+    /// @return Vertices
+    const std::vector<Vertex>& GetVertices() const;
     
 private:
     XNOR_ENGINE void ComputeAabb(const aiAABB& assimpAabb);

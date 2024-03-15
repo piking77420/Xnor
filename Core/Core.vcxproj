@@ -258,6 +258,7 @@
     <ClCompile Include="src\physics\body_activation_listener.cpp" />
     <ClCompile Include="src\physics\broad_phase_layer_interface.cpp" />
     <ClCompile Include="src\physics\components\collider.cpp" />
+    <ClCompile Include="src\physics\components\mesh_collider.cpp" />
     <ClCompile Include="src\physics\components\sphere_collider.cpp" />
     <ClCompile Include="src\physics\contact_listener.cpp" />
     <ClCompile Include="src\physics\physics_world.cpp" />
@@ -833,8 +834,10 @@
     <ClInclude Include="include\physics\broad_phase_layer_interface.hpp" />
     <ClInclude Include="include\physics\components\box_collider.hpp" />
     <ClInclude Include="include\physics\components\collider.hpp" />
+    <ClInclude Include="include\physics\components\mesh_collider.hpp" />
     <ClInclude Include="include\physics\components\sphere_collider.hpp" />
     <ClInclude Include="include\physics\contact_listener.hpp" />
+    <ClInclude Include="include\physics\data\collision_data.hpp" />
     <ClInclude Include="include\physics\layers.hpp" />
     <ClInclude Include="include\physics\physics_world.hpp" />
     <ClInclude Include="include\rendering\camera.hpp" />

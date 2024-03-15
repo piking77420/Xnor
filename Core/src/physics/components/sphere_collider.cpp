@@ -11,7 +11,7 @@ REFLECTABLE_IMPL_CPP(SphereCollider)
 
 void SphereCollider::Begin()
 {
-    m_BodyId = PhysicsWorld::CreateSphere(this, entity->transform.GetPosition(), m_Radius, m_IsTrigger);
+    m_BodyId = PhysicsWorld::CreateSphere(this, entity->transform.GetPosition(), m_Radius, m_IsTrigger, m_IsStatic);
 }
 
 void SphereCollider::Update()

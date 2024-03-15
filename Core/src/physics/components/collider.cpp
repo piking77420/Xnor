@@ -10,10 +10,7 @@ REFLECTABLE_IMPL_CPP(Collider)
 
 Collider::Collider()
 {
-    onTriggerEnter += [&](const Collider* const other)
-    {
-        Logger::LogDebug("OnTriggerEnter between {} and {}", entity->name, other->entity->name);
-    };
+    AddDebugEvents();
 }
 
 Collider::~Collider()
@@ -42,7 +39,40 @@ void Collider::Update()
     }
 }
 
-void Collider::OnTriggerEnter(Collider* other)
+bool_t Collider::IsTrigger() const
 {
-    onTriggerEnter.Invoke(other);
+    return m_IsTrigger;
+}
+
+void Collider::AddDebugEvents()
+{
+    onTriggerEnter += [&](const Collider* const other, const CollisionData& data) -> void
+    {
+        Logger::LogDebug("OnTriggerEnter between {} and {} ; Normal : {} ; Pen depth : {}", entity->name, other->entity->name, data.normal, data.penetrationDepth);
+    };
+    
+    onTriggerStay += [&](const Collider* const other, const CollisionData& data) -> void
+    {
+        Logger::LogDebug("OnTriggerStay between {} and {} ; Normal : {} ; Pen depth : {}", entity->name, other->entity->name, data.normal, data.penetrationDepth);
+    };
+
+    onTriggerExit += [&](const Collider* const other) -> void
+    {
+        Logger::LogDebug("OnTriggerExit between {} and {}", entity->name, other->entity->name);
+    };
+
+    onCollisionEnter += [&](const Collider* const other, const CollisionData& data) -> void
+    {
+        Logger::LogDebug("OnCollisionEnter between {} and {} ; Normal : {} ; Pen depth : {}", entity->name, other->entity->name, data.normal, data.penetrationDepth);
+    };
+
+    onCollisionStay += [&](const Collider* const other, const CollisionData& data) -> void
+    {
+        Logger::LogDebug("OnCollisionStay between {} and {} ; Normal : {} ; Pen depth : {}", entity->name, other->entity->name, data.normal, data.penetrationDepth);
+    };
+
+    onCollisionExit += [&](const Collider* const other) -> void
+    {
+        Logger::LogDebug("OnCollisionExit between {} and {}", entity->name, other->entity->name);
+    };
 }
