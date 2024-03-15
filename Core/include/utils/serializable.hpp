@@ -79,12 +79,46 @@ void type::Deserialize()                                                        
 
 /// @brief Implements the reflection in a .hpp file, it provides a declaration for Serializable::Serialize and Serializable::Deserialize
 /// @param type Type name
+#define REFLECTABLE_IMPL_MINIMAL_DLL(type)                                                                                              \
+public:                                                                                                                                 \
+XNOR_ENGINE virtual void Serialize() const override;                                                                                    \
+\
+XNOR_ENGINE virtual void Deserialize() override;                                                                                        \
+\
+private:                                                                                                                                \
+friend struct refl_impl::metadata::type_info__<type>;
+
+/// @brief Implements the reflection in a .hpp file, it provides a declaration for Serializable::Serialize and Serializable::Deserialize
+/// @param type Type name
 #define REFLECTABLE_IMPL_MINIMAL(type)                                                                                                  \
 public:                                                                                                                                 \
 virtual void Serialize() const override;                                                                                                \
                                                                                                                                         \
 virtual void Deserialize() override;                                                                                                    \
                                                                                                                                         \
+private:                                                                                                                                \
+friend struct refl_impl::metadata::type_info__<type>;
+
+/// @brief Implements the reflection in a .hpp file, it provides a body for Serializable::Serialize and Serializable::Deserialize
+/// @param type Type name
+#define REFLECTABLE_IMPL_H_DLL(type)                                                                                                    \
+public:                                                                                                                                 \
+XNOR_ENGINE virtual void Serialize() const override                                                                                     \
+{                                                                                                                                       \
+    Serializer::Serialize<type>(this, true);                                                                                            \
+}                                                                                                                                       \
+                                                                                                                                        \
+XNOR_ENGINE virtual void Deserialize() override                                                                                         \
+{                                                                                                                                       \
+    Serializer::Deserialize<type>(this);                                                                                                \
+}                                                                                                                                       \
+                                                                                                                                        \
+/*
+Even though the use of the friend functionality is prohibited in the C++ style guidelines of this project, it has to be used here to
+circumvent the issue of accessing private members through reflection, the friend declaration allows the underlying code generated
+by the reflection library to access private types.
+There might be another solution to this, but it's the easiest one found so far, also it works and isn't too ugly
+*/                                                                                                                                      \
 private:                                                                                                                                \
 friend struct refl_impl::metadata::type_info__<type>;
 

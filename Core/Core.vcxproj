@@ -63,8 +63,8 @@
       <AdditionalOptions>/WHOLEARCHIVE:toolbox.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command> mkdir swig\build &amp; cd swig\build &amp;&amp; cmake .. &amp;&amp; cmake --build .</Command>
+      <Message>Generate C# SWIG Wrapper</Message>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy dll to running directory</Message>
@@ -92,8 +92,8 @@
       <AdditionalOptions>/WHOLEARCHIVE:toolbox.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command> mkdir swig\build &amp; cd swig\build &amp;&amp; cmake .. &amp;&amp; cmake --build .</Command>
+      <Message>Generate C# SWIG Wrapper</Message>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Copy dll to running directory</Message>
@@ -161,7 +161,6 @@
     <ClCompile Include="src\utils\meta_programming.cpp" />
     <ClCompile Include="src\utils\pointer.cpp" />
     <ClCompile Include="src\utils\reference_counter.cpp" />
-    <ClCompile Include="src\utils\serializable.cpp" />
     <ClCompile Include="src\utils\utils.cpp" />
     <ClCompile Include="src\window.cpp" />
     <ClCompile Include="src\rendering\vertex.cpp" />

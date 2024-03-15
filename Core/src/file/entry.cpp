@@ -22,6 +22,11 @@ bool_t Entry::Reload()
     return Load();
 }
 
+void Entry::OpenInExplorer() const
+{
+    Utils::OpenInExplorer(m_Path);
+}
+
 const std::filesystem::path& Entry::GetPath() const
 {
     return m_Path;

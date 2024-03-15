@@ -15,7 +15,7 @@ Pointer<File> FileManager::Add(std::filesystem::path path)
     Pointer<File> file;
     try
     {
-        file = Pointer<File>(std::forward<std::filesystem::path>(path));
+        file = Pointer<File>::Create(std::forward<std::filesystem::path>(path));
     }
     catch (const std::invalid_argument& ex)
     {
@@ -53,7 +53,7 @@ Pointer<File> FileManager::Load(std::filesystem::path path)
     Pointer<File> file;
     try
     {
-        file = Pointer<File>(std::forward<std::filesystem::path>(path));
+        file = Pointer<File>::Create(std::forward<std::filesystem::path>(path));
     }
     catch (const std::invalid_argument& ex)
     {
@@ -86,7 +86,7 @@ Pointer<Directory> FileManager::AddDirectory(std::filesystem::path path)
     Pointer<Directory> directory;
     try
     {
-        directory = Pointer<Directory>(std::forward<std::filesystem::path>(path));
+        directory = Pointer<Directory>::Create(std::forward<std::filesystem::path>(path));
     }
     catch (const std::invalid_argument& ex)
     {
@@ -126,7 +126,7 @@ Pointer<Directory> FileManager::LoadDirectory(std::filesystem::path path)
     Pointer<Directory> directory;
     try
     {
-        directory = Pointer<Directory>(std::forward<std::filesystem::path>(path));
+        directory = Pointer<Directory>::Create(std::forward<std::filesystem::path>(path));
     }
     catch (const std::invalid_argument& ex)
     {

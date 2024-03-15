@@ -11,7 +11,7 @@ BEGIN_XNOR_CORE
 /// @brief Handles a point light
 class PointLight : public Light
 {
-    REFLECTABLE_IMPL_MINIMAL(PointLight)
+    REFLECTABLE_IMPL_MINIMAL_DLL(PointLight)
     
 public:
     XNOR_ENGINE PointLight() = default;

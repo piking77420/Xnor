@@ -49,7 +49,7 @@ bool PickingStrategy::GetEntityFromScreen(
         .frameBuffer = frameBuffer,
         .renderAreaOffset = { 0, 0 },
         .renderAreaExtent = frameBuffer->GetSize(),
-        .clearBufferFlags = static_cast<XnorCore::BufferFlag>(XnorCore::BufferFlag::BufferFlagColorBit | XnorCore::BufferFlag::BufferFlagDepthBit),
+        .clearBufferFlags = static_cast<XnorCore::BufferFlag::BufferFlag>(XnorCore::BufferFlag::ColorBit | XnorCore::BufferFlag::DepthBit),
         .clearColor = Vector4(0.f)
     };
     m_Editor->renderer.RenderNonShaded(pointOfView,beginInfo,m_ColorPass,m_PickingShader,scene,true);

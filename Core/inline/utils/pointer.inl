@@ -3,6 +3,13 @@
 BEGIN_XNOR_CORE
 
 template <typename T>
+template <typename... Args>
+Pointer<T> Pointer<T>::Create(Args&&... args)  // NOLINT(cppcoreguidelines-missing-std-forward)
+{
+    return Pointer(new ReferenceCounter<T>(std::forward<Args>(args)...), true);
+}
+
+template <typename T>
 Pointer<T>::Pointer(const Pointer& other, const bool_t strongReference)
     : m_ReferenceCounter(other.m_ReferenceCounter)
     , m_IsStrongReference(strongReference)
@@ -83,14 +90,6 @@ Pointer<T>::Pointer(Pointer<U>&& other) noexcept  // NOLINT(cppcoreguidelines-rv
     }
     
     other.Reset();
-}
-
-template <typename T>
-template <typename... Args>
-Pointer<T>::Pointer(Args&&... args) // NOLINT(cppcoreguidelines-missing-std-forward)
-    : m_ReferenceCounter(new ReferenceCounter<T>(std::forward<Args>(args)...))
-    , m_IsStrongReference(true)
-{
 }
 
 template <typename T>
@@ -279,6 +278,13 @@ void Pointer<T>::Reset()
 
 template <typename T>
 const ReferenceCounter<T>* Pointer<T>::GetReferenceCounter() const { return m_ReferenceCounter; }
+
+template <typename T>
+Pointer<T>::Pointer(ReferenceCounter<T>*&& referenceCounter, const bool_t strongReference)  // NOLINT(cppcoreguidelines-rvalue-reference-param-not-moved)
+    : m_ReferenceCounter(std::move(referenceCounter))
+    , m_IsStrongReference(strongReference)
+{
+}
 
 template <typename T>
 void Pointer<T>::SetReferenceCounter(ReferenceCounter<T>* newReferenceCounter)

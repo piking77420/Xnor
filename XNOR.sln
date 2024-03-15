@@ -15,6 +15,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreTests", "CoreTests\CoreTests.vcxproj", "{58F5F225-2FFD-4A38-AF6E-91E70710A1EB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game", "Game\Game.csproj", "{65031099-7331-4AEF-9DA1-D07EFC4C99EC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5BE6A8F5-F699-4CDF-977B-4A39BADB4C7E} = {5BE6A8F5-F699-4CDF-977B-4A39BADB4C7E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

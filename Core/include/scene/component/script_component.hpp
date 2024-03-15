@@ -12,7 +12,7 @@ BEGIN_XNOR_CORE
 /// @brief Base class for custom behaviors attached to @ref Entity "Entities".
 class ScriptComponent : public Component
 {
-    REFLECTABLE_IMPL_MINIMAL(ScriptComponent)
+    REFLECTABLE_IMPL_MINIMAL_DLL(ScriptComponent)
 
 public:
 };

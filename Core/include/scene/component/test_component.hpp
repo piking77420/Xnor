@@ -10,7 +10,7 @@ BEGIN_XNOR_CORE
 /// @private
 class TestComponent : public Component
 {
-    REFLECTABLE_IMPL_MINIMAL(TestComponent)
+    REFLECTABLE_IMPL_MINIMAL_DLL(TestComponent)
     
 public:
     XNOR_ENGINE TestComponent() = default;

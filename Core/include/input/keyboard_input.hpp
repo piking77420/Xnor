@@ -8,7 +8,7 @@
 BEGIN_XNOR_CORE
 
 /// @brief %List of keyboard buttons
-enum class Key : uint16_t
+BEGIN_ENUM(Key)
 {
        /* Printable keys */
     /// @brief Space
@@ -257,10 +257,11 @@ enum class Key : uint16_t
     Menu               = 348,
     
     Count              = 355,
-};
+}
+END_ENUM
 
 /// @brief %List of keyboard button states
-enum class KeyStatus
+BEGIN_ENUM(KeyStatus)
 {
     /// @brief Pressed
     Pressed,
@@ -272,6 +273,7 @@ enum class KeyStatus
     Repeat,
     
     Count
-};
+}
+END_ENUM
 
 END_XNOR_CORE

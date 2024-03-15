@@ -10,8 +10,10 @@
 /// @brief Defines various types and enumerations needed by XnorCore::Rhi.
 
 BEGIN_XNOR_CORE
-	class FrameBuffer;
-	/// @brief Maximum amount of spot lights that can exists in a same scene
+
+class FrameBuffer;
+
+/// @brief Maximum amount of spot lights that can exists in a same scene
 static constexpr uint32_t MaxSpotLights = 100;
 /// @brief Maximum amount of point lights that can exists in a same scene
 static constexpr uint32_t MaxPointLights = 100;
@@ -20,16 +22,17 @@ static constexpr uint32_t MaxDirectionalLights = 1;
 
 /// @brief Polygon rasterization mode
 /// @see <a href="https://registry.khronos.org/OpenGL-Refpages/gl4/html/glPolygonMode.xhtml">OpenGL specification</a>
-enum class PolygonMode : int32_t
+BEGIN_ENUM(PolygonMode)
 {
 	Point = 0,
 	Line,
 	Fill,
-};
+}
+END_ENUM
 
 /// @brief Polygon draw mode
 /// @see <a href="https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDrawArrays.xhtml">OpenGL specification</a>
-enum class DrawMode
+BEGIN_ENUM(DrawMode)
 {
 	Point = 0,
 	LineStrip,
@@ -41,10 +44,11 @@ enum class DrawMode
 	TrianglesStripAdjency,
 	TrianglesAdjency,
 	Patches 
-};
+}
+END_ENUM
 
 /// @brief Polygon face
-enum class PolygonFace : int32_t
+BEGIN_ENUM(PolygonFace)
 {
 	FrontLeft = 1024,
 	FrontRight,
@@ -55,10 +59,11 @@ enum class PolygonFace : int32_t
 	Left,
 	Right,
 	FrontAndBack 
-};
+}
+END_ENUM
 
 /// @brief Shader type
-enum class ShaderType : int32_t
+BEGIN_ENUM(ShaderType)
 {
 	Vertex,
 	Fragment,
@@ -66,7 +71,8 @@ enum class ShaderType : int32_t
 	Compute,
 
 	Count
-};
+}
+END_ENUM
 
 /// @brief Encapsulates shader code information
 struct ShaderCode
@@ -76,11 +82,11 @@ struct ShaderCode
 	/// @brief Raw code length
 	int32_t codeLength = 0;
 	/// @brief Shader type
-	ShaderType type = ShaderType::Count;
+	ShaderType::ShaderType type = ShaderType::Count;
 };
 
 /// @brief %Texture wrapping, determines how a point will be sampled if it's outside of the texture
-enum class TextureWrapping : int32_t
+BEGIN_ENUM(TextureWrapping)
 {
 	None,
 	/// @brief Repeats the image
@@ -91,20 +97,22 @@ enum class TextureWrapping : int32_t
 	ClampToEdge,
 	/// @brief Samples a user given pixel
 	ClampToBorder
-};
+}
+END_ENUM
 
 /// @brief %Texture filtering, determines how the sampling approximation will be done
-enum class TextureFiltering : int32_t
+BEGIN_ENUM(TextureFiltering)
 {
 	None,
 	/// @brief Performs linear interpolation
 	Linear,
 	/// @brief Selects the nearest texel
 	Nearest
-};
+}
+END_ENUM
 
 /// @brief %sTexture type
-enum class TextureType : int32_t
+BEGIN_ENUM(TextureType)
 {
 	Texture1D,
 	Texture2D,
@@ -117,11 +125,12 @@ enum class TextureType : int32_t
 	TextureBuffer,
 	Texture2DMultisample,
 	Texture2DMultisampleArray,
-};
+}
+END_ENUM
 
 
 /// @brief %Texture internal format
-enum class TextureInternalFormat
+BEGIN_ENUM(TextureInternalFormat)
 {
 	R8,
 	R16,
@@ -143,26 +152,29 @@ enum class TextureInternalFormat
 	DepthComponent32F,
 	Depth24Stencil8,
 	DepthComponent32FStencil8
-};
+}
+END_ENUM
 
 /// @brief %Texture data type
-enum class DataType : int32_t
+BEGIN_ENUM(DataType)
 {
 	Float = 0,
 	UnsignedByte,
 	UnsignedByte64,
-};
+}
+END_ENUM
 
 /// @brief %Texture format
-enum class TextureFormat
+BEGIN_ENUM(TextureFormat)
 {
 	Red,
 	Rgb,
 	Rgba,
-};
+}
+END_ENUM
 
 /// @brief %Framebuffer %attachment
-enum class Attachment
+BEGIN_ENUM(Attachment)
 {
 	/// @brief Color attachment 0
 	Color00,
@@ -212,13 +224,14 @@ enum class Attachment
 	Stencil,
 	/// @brief Depth and stencil attachment
 	DepthAndStencil,
-};
+}
+END_ENUM
 
 /// @brief Render target info for RenderPass
 struct RenderTargetInfo
 {
 	/// @brief Attachment
-	Attachment attachment;
+	Attachment::Attachment attachment;
 
 	bool isDrawingOn = true;
 };
@@ -232,15 +245,15 @@ struct TextureCreateInfo
 	/// @brief Size
 	Vector2i size = Vector2i::Zero();
 	/// @brief Filtering
-	TextureFiltering filtering{};
+	TextureFiltering::TextureFiltering filtering{};
 	/// @brief Wrapping
-	TextureWrapping wrapping{};
+	TextureWrapping::TextureWrapping wrapping{};
 	/// @brief Format
-	TextureFormat format{};
+	TextureFormat::TextureFormat format{};
 	/// @brief Internal format
-	TextureInternalFormat internalFormat{};
+	TextureInternalFormat::TextureInternalFormat internalFormat{};
 	/// @brief Data type
-	DataType dataType = DataType::UnsignedByte;
+	DataType::DataType dataType = DataType::UnsignedByte;
 };
 
 /// @brief Cube map creation info
@@ -251,15 +264,15 @@ struct CreateCubeMapInfo
 	/// @brief Size
 	Vector2i size = Vector2i::Zero();
 	/// @brief Filtering
-	TextureFiltering filtering{};
+	TextureFiltering::TextureFiltering filtering{};
 	/// @brief Wrapping
-	TextureWrapping wrapping{};
+	TextureWrapping::TextureWrapping wrapping{};
 	/// @brief Format
-	TextureFormat format{};
+	TextureFormat::TextureFormat format{};
 	/// @brief Internal format
-	TextureInternalFormat internalFormat{};
+	TextureInternalFormat::TextureInternalFormat internalFormat{};
 	/// @brief Data type
-	DataType dataType = DataType::UnsignedByte;
+	DataType::DataType dataType = DataType::UnsignedByte;
 };
 
 /// @brief Camera UniformBuffer data
@@ -285,7 +298,7 @@ struct ModelUniformData
 };
 
 /// @brief Uniform type for Shader
-enum class UniformType
+BEGIN_ENUM(UniformType)
 {
 	/// @brief Int
 	Int,
@@ -301,10 +314,11 @@ enum class UniformType
 	Mat3,
 	/// @brief Matrix
 	Mat4,
-};
+}
+END_ENUM
 
 /// @brief Depth function
-enum class DepthFunction
+BEGIN_ENUM(DepthFunction)
 {
 	/// @brief Always
 	Always,
@@ -322,10 +336,11 @@ enum class DepthFunction
 	NotEqual,
 	/// @brief >=
 	GreaterEqual,
-};
+}
+END_ENUM
 
 /// @brief Blend value
-enum class BlendValue
+BEGIN_ENUM(BlendValue)
 {
 	/// @brief 0
 	Zero,
@@ -355,21 +370,22 @@ enum class BlendValue
 	ConstantAlpha,
 	/// @brief 1 - Ct.a
 	OneMinusConstantAlpha,
-};
+}
+END_ENUM
 
 /// @brief Blend function for Shader
 struct BlendFunction
 {
 	bool_t isBlending = false;
-	BlendValue sValue;
-	BlendValue dValue;
+	BlendValue::BlendValue sValue;
+	BlendValue::BlendValue dValue;
 };
 
 /// @brief Shader creation info
 struct ShaderCreateInfo
 {
 	/// @brief Depth function
-	DepthFunction depthFunction{};
+	DepthFunction::DepthFunction depthFunction{};
 	/// @brief Blend function
 	BlendFunction blendFunction{};
 };
@@ -450,21 +466,23 @@ struct MaterialData
 };
 
 /// @brief The type of GBuffer.
-enum Gbuffer : int32_t
+BEGIN_ENUM(Gbuffer)
 {
-	GbufferPosition = 4,
-	GbufferNormal,
-	GbufferAlbedo
-};
+	Position = 4,
+	Normal,
+	Albedo
+}
+END_ENUM
 
 /// @brief Buffer attachment flags.
-enum BufferFlag 
+BEGIN_ENUM(BufferFlag) 
 {
-	BufferFlagNone = 0,
-	BufferFlagColorBit = 1 << 0,  
-	BufferFlagDepthBit = 1 << 1,
-	BufferFlagStencilBit = 1 << 2  
-};
+	None = 0,
+	ColorBit = 1 << 0,  
+	DepthBit = 1 << 1,
+	StencilBit = 1 << 2  
+}
+END_ENUM
 
 
 /// @brief Render pass begin info
@@ -477,7 +495,7 @@ struct RenderPassBeginInfo
 	/// @brief Render area size
 	Vector2i renderAreaExtent{};
 
-	BufferFlag clearBufferFlags;
+	BufferFlag::BufferFlag clearBufferFlags;
 
 	Vector4 clearColor;
 };

@@ -30,7 +30,7 @@ public:
 	XNOR_ENGINE void Create(const RenderPass& renderPass, const std::vector<const Texture*>& attachments);
 
 	XNOR_ENGINE void GetPixelFromAttachment(uint32_t attachmentIndex, Vector2i position,
-		TextureFormat textureFormat, DataType dataType, void* output) const;
+		TextureFormat::TextureFormat textureFormat, DataType::DataType dataType, void* output) const;
 
 	/// @brief Gets the size of the framebuffer
 	/// @return Size

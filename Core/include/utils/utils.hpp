@@ -140,18 +140,6 @@ namespace Utils
     [[nodiscard]]
     Pointer<T> DynamicPointerCast(const Pointer<U>& value);
 
-    /// @brief Opens the specified entry in the file explorer
-    /// @param entry Entry
-    XNOR_ENGINE void OpenInExplorer(const Entry& entry);
-
-    /// @brief Opens the specified directory in the file explorer
-    /// @param directory Directory
-    XNOR_ENGINE void OpenInExplorer(const Directory& directory);
-
-    /// @brief Opens the specified file in the file explorer
-    /// @param file File
-    XNOR_ENGINE void OpenInExplorer(const File& file);
-
     /// @brief Opens the specified path in the file explorer
     /// @param path File system path
     XNOR_ENGINE void OpenInExplorer(const std::filesystem::path& path);
@@ -160,10 +148,6 @@ namespace Utils
     /// @param path File system path
     /// @param isFile Whether path is a file or a directory
     XNOR_ENGINE void OpenInExplorer(const std::filesystem::path& path, bool_t isFile);
-
-    /// @brief Opens the specified file on the user's computer
-    /// @param file File
-    XNOR_ENGINE void OpenFile(const File& file);
 
     /// @brief Opens the specified file on the user's computer
     /// @param filepath File system path

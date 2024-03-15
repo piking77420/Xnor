@@ -83,6 +83,7 @@ REFL_AUTO(type(XnorCore::Transform),
 	field(m_Scale, XnorCore::Reflection::NotifyChange(&XnorCore::Transform::m_Changed))
 );
 
+#ifndef SWIG
 /// @brief @c std::formatter template specialization for the XnorCore::Transform type.
 template <>
 struct std::formatter<XnorCore::Transform>
@@ -177,3 +178,4 @@ private:
 	bool m_DegreeRotation = false;
 	bool m_WorldMatrix = false;
 };
+#endif
