@@ -567,7 +567,7 @@ We allow the use of templated functions (also called generics) for some specific
 
 ### Template argument deduction
 
-This is allowed because most of the time it is clear enough for the compiler to be for the developper as well.
+This is allowed because most of the time it is clear enough for the compiler to be for the developer as well.
 
 ### Lambda expressions
 
@@ -575,7 +575,7 @@ Use lambda expressions wherever you need to pass a function as a parameter to an
 
 ### Concepts and Constraints
 
-Use concepts sparingly. They only make a template function code more specific and allow the developper to understand the eligible types more easily.
+Use concepts sparingly. They only make a template function code more specific and allow the developer to understand the eligible types more easily.
 
 ### Typedefs and Aliases
 

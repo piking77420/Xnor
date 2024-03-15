@@ -13,7 +13,7 @@
 BEGIN_XNOR_EDITOR
 
 template <typename MemberT>
-void Inspector::DisplayScalar(MemberT* const obj, const char_t* name, [[maybe_unused]] const Metadata<MemberT>& metadata)
+void Inspector::DisplayScalar(MemberT* const obj, const char_t* name, const Metadata<MemberT>& metadata)
 {
     uint32_t type;
 
@@ -34,10 +34,14 @@ void Inspector::DisplayScalar(MemberT* const obj, const char_t* name, [[maybe_un
     else if constexpr (XnorCore::Meta::IsSame<MemberT, double_t>)
         type = ImGuiDataType_Double;
 
-    ImGui::InputScalar(name, type, obj);
-
     if (metadata.HasRange())
-        *obj = std::clamp<MemberT>(*obj, metadata.range->minimum, metadata.range->maximum);
+    {
+        ImGui::SliderScalar(name, type, obj, &metadata.range->minimum, &metadata.range->maximum);        
+    }
+    else
+    {
+        ImGui::DragScalar(name, type, obj, .1f);
+    }
 }
 
 template <typename MemberT>
@@ -525,7 +529,7 @@ constexpr const XnorCore::Reflection::Range<MemberT>* Inspector::GetRange(Descri
         return nullptr;
 }
 
-template <XnorCore::ResourceT T>
+template <XnorCore::Concepts::ResourceT T>
 XnorCore::Pointer<T> Inspector::FilterResources(ImGuiTextFilter& filter)
 {
     ImGui::OpenPopup("Resource");
