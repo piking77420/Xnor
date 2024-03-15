@@ -38,6 +38,9 @@ public:
     /// @brief Unloads the contents of this Directory.
     XNOR_ENGINE void Unload() override;
 
+    /// @brief Opens this Directory in the file explorer
+    XNOR_ENGINE void OpenInExplorer() const override;
+
     /// @brief Returns all the child @ref Entry "Entries" of this Directory.
     [[nodiscard]]
     XNOR_ENGINE const std::vector<Pointer<Entry>>& GetChildEntries() const;

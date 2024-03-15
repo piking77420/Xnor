@@ -19,7 +19,7 @@ BEGIN_XNOR_CORE
 /// @brief Represents an object of the engine, behaviors can be attached to it via a list of Component
 class Entity : public Serializable
 {
-    REFLECTABLE_IMPL_H(Entity)
+    REFLECTABLE_IMPL_H_DLL(Entity)
 
 public:
     /// @brief Transform of the entity

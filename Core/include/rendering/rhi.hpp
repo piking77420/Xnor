@@ -28,7 +28,7 @@ public:
 	/// @brief Sets the polygon mode
 	/// @param face Polygon face
 	/// @param mode Polygon mode
-	XNOR_ENGINE static void SetPolygonMode(PolygonFace face, PolygonMode mode);
+	XNOR_ENGINE static void SetPolygonMode(PolygonFace::PolygonFace face, PolygonMode::PolygonMode mode);
 	
 	/// @brief Sets the viewport mode
 	/// @param screenSize Screen size
@@ -87,7 +87,7 @@ public:
 	/// @param data Pointer to data
 	/// @param shaderId Shader id
 	/// @param uniformKey Uniform variable name
-	XNOR_ENGINE static void SetUniform(UniformType uniformType, const void* data, uint32_t shaderId, const char_t* uniformKey);
+	XNOR_ENGINE static void SetUniform(UniformType::UniformType uniformType, const void* data, uint32_t shaderId, const char_t* uniformKey);
 	
 	// Texture
 
@@ -134,7 +134,7 @@ public:
 	/// @param bufferFlag Target attachment
 	/// @param textureFiltering Interpolation to be applied
 	XNOR_ENGINE static void BlitFrameBuffer(uint32_t readBuffer, uint32_t targetBuffer, Vector2i srcTopLeft, Vector2i srcBottomRight,
-		Vector2i targetTopLeft, Vector2i targetBottomRight, BufferFlag bufferFlag, TextureFiltering textureFiltering);
+		Vector2i targetTopLeft, Vector2i targetBottomRight, BufferFlag::BufferFlag bufferFlag, TextureFiltering::TextureFiltering textureFiltering);
 
 	/// @brief Binds a framebuffer
 	/// @param frameBufferId Framebuffer id
@@ -149,7 +149,7 @@ public:
 	/// @param textureFormat Texture format
 	/// @param textureInternalFormat Texture internal format
 	/// @param output Output pointer
-	XNOR_ENGINE static void GetPixelFromAttachement(uint32_t attachmentIndex, Vector2i position, TextureFormat textureFormat, DataType dataType, void* output);
+	XNOR_ENGINE static void GetPixelFromAttachement(uint32_t attachmentIndex, Vector2i position, TextureFormat::TextureFormat textureFormat, DataType::DataType dataType, void* output);
 
 	/// @brief Swaps the front and back buffer
 	XNOR_ENGINE static void SwapBuffers();
@@ -169,7 +169,7 @@ public:
 
 	/// @brief Clear the corresponding Buffers
 	/// @param bufferFlag BufferFlag
-	XNOR_ENGINE static void ClearBuffer(BufferFlag bufferFlag);
+	XNOR_ENGINE static void ClearBuffer(BufferFlag::BufferFlag bufferFlag);
 	
 	/// @brief Updates the model @ref UniformBuffer
 	/// @param modelUniformData Data
@@ -194,7 +194,7 @@ public:
 	/// @brief Gets the texture format based on the number of color channels
 	/// @param channels Color channels
 	/// @return Texture format
-	XNOR_ENGINE static TextureFormat GetTextureFormatFromChannels(uint32_t channels);
+	XNOR_ENGINE static TextureFormat::TextureFormat GetTextureFormatFromChannels(uint32_t channels);
 
 	XNOR_ENGINE static void DepthTest(bool value);
 private:
@@ -210,7 +210,7 @@ private:
 	
 	struct ShaderInternal
 	{
-		DepthFunction depthFunction{};
+		DepthFunction::DepthFunction depthFunction{};
 		BlendFunction blendFunction;
 		std::map<std::string, uint32_t> uniformMap;
 	};
@@ -224,23 +224,23 @@ private:
 	
 	XNOR_ENGINE static int32_t GetUniformInMap(uint32_t shaderId, const char_t* uniformKey);
 
-	XNOR_ENGINE static uint32_t GetOpenglDataType(DataType dataType);
+	XNOR_ENGINE static uint32_t GetOpenglDataType(DataType::DataType dataType);
 
 	// Texture 
 	XNOR_ENGINE static void AllocTexture2D(uint32_t textureId, const TextureCreateInfo& textureCreateInfo);
-	XNOR_ENGINE static uint32_t CreateTexture(TextureType textureType);
+	XNOR_ENGINE static uint32_t CreateTexture(TextureType::TextureType textureType);
 
 	// Enum to OpenglEnum
-	XNOR_ENGINE static uint32_t GetOpengDepthEnum(DepthFunction depthFunction);
-	XNOR_ENGINE static uint32_t GetOpenglShaderType(ShaderType shaderType);
-	XNOR_ENGINE static std::string GetShaderTypeToString(ShaderType shaderType);
-	XNOR_ENGINE static uint32_t GetOpenglTextureType(TextureType textureType);
-	XNOR_ENGINE static uint32_t GetOpenglInternalFormat(TextureInternalFormat textureFormat);
-	XNOR_ENGINE static uint32_t GetOpenGlTextureFormat(TextureFormat textureFormat);
-	XNOR_ENGINE static uint32_t GetOpenglTextureWrapper(TextureWrapping textureWrapping);
-	XNOR_ENGINE static uint32_t GetOpenglTextureFilter(TextureFiltering textureFiltering);
-	XNOR_ENGINE static uint32_t GetBlendValueOpengl(BlendValue blendFunction);
-	XNOR_ENGINE static uint32_t GetOpenglBufferBit(BufferFlag flag);
+	XNOR_ENGINE static uint32_t GetOpengDepthEnum(DepthFunction::DepthFunction depthFunction);
+	XNOR_ENGINE static uint32_t GetOpenglShaderType(ShaderType::ShaderType shaderType);
+	XNOR_ENGINE static std::string GetShaderTypeToString(ShaderType::ShaderType shaderType);
+	XNOR_ENGINE static uint32_t GetOpenglTextureType(TextureType::TextureType textureType);
+	XNOR_ENGINE static uint32_t GetOpenglInternalFormat(TextureInternalFormat::TextureInternalFormat textureFormat);
+	XNOR_ENGINE static uint32_t GetOpenGlTextureFormat(TextureFormat::TextureFormat textureFormat);
+	XNOR_ENGINE static uint32_t GetOpenglTextureWrapper(TextureWrapping::TextureWrapping textureWrapping);
+	XNOR_ENGINE static uint32_t GetOpenglTextureFilter(TextureFiltering::TextureFiltering textureFiltering);
+	XNOR_ENGINE static uint32_t GetBlendValueOpengl(BlendValue::BlendValue blendFunction);
+	XNOR_ENGINE static uint32_t GetOpenglBufferBit(BufferFlag::BufferFlag flag);
 
 	XNOR_ENGINE static void OpenglDebugCallBack(
 		uint32_t source,

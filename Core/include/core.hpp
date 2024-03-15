@@ -34,7 +34,7 @@ typedef bool bool_t;
 /// @brief Macro used for DLL export/import.
 ///
 /// This macro should be used at the beginning of static member variable and non-inline function declarations.
-#ifdef XNOR_EXPORT
+#if defined(XNOR_EXPORT)
 #define XNOR_ENGINE __declspec(dllexport)
 #else
 #define XNOR_ENGINE __declspec(dllimport)
@@ -50,6 +50,7 @@ typedef bool bool_t;
 /// @brief Contains all declarations of the XNOR Engine.
 namespace XnorCore {}
 
+#ifndef SWIG
 /// @brief Creates default copy and move operations for a given @p type.
 ///
 /// ### Usage
@@ -104,6 +105,7 @@ namespace XnorCore {}
     type(type&& other) = delete;                   \
     type& operator=(const type& other) = delete;   \
     type& operator=(type&& other) = delete;
+#endif
 
 /// @brief Macro used to declare a static class, e.g. a class that cannot be instantiated.
 /// 
@@ -133,3 +135,12 @@ namespace XnorCore {}
 /// @private
 using stdstring = std::string;
 #endif
+
+#define BEGIN_ENUM(name)  \
+    namespace name  \
+    {               \
+        enum name
+
+#define END_ENUM    \
+        ;           \
+    }

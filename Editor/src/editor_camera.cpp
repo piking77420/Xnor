@@ -42,7 +42,6 @@ void EditorCamera::CameraOnRightClick()
     {
         XnorCore::Window::SetCursorHidden(false);
     }
-
 }
 
 void EditorCamera::EditorCameraRotation()
@@ -68,7 +67,6 @@ void EditorCamera::EditorCameraRotation()
 
 void EditorCamera::EditorCameraMovement()
 {
-    
     const float_t cameraSpeed = m_CameraSpeed;
 
     Vector3 addVector;

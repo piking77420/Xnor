@@ -24,7 +24,7 @@ void Renderer::Initialize()
 void Renderer::BeginFrame(const Scene& scene)
 {
 	m_LightManager.BeginFrame(scene);
-	Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit));
+	Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
 }
 
 void Renderer::EndFrame(const Scene& scene)
@@ -50,7 +50,7 @@ void Renderer::RenderViewport(const Viewport& viewport,
 		.frameBuffer = viewport.frameBuffer,
 		.renderAreaOffset = { 0, 0,},
 		.renderAreaExtent = viewport.viewPortSize,
-		.clearBufferFlags = static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit),
+		.clearBufferFlags = static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit),
 		.clearColor = clearColor
 	};
 
@@ -90,7 +90,7 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 		.frameBuffer = viewportData.gframeBuffer,
 		.renderAreaOffset = { 0, 0,},
 		.renderAreaExtent = viewportSize,
-		.clearBufferFlags = static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit),
+		.clearBufferFlags = static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit),
 		.clearColor = clearColor
 	};
 	
@@ -105,7 +105,7 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 		.frameBuffer = viewportData.renderBuffer,
 		.renderAreaOffset = { 0, 0 },
 		.renderAreaExtent = viewportSize,
-		.clearBufferFlags = static_cast<BufferFlag>(BufferFlagColorBit),
+		.clearBufferFlags = BufferFlag::ColorBit,
 		.clearColor = clearColor
 	};
 
@@ -113,9 +113,9 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	viewportData.colorPass.BeginRenderPass(renderPassBeginInfoLit);
 	m_GBufferShaderLit->Use();
 	// Set Shader Info
-	viewportData.positionAtttachment->BindTexture(GbufferPosition);
-	viewportData.normalAttachement->BindTexture(GbufferNormal);
-	viewportData.albedoAttachment->BindTexture(GbufferAlbedo);
+	viewportData.positionAtttachment->BindTexture(Gbuffer::Position);
+	viewportData.normalAttachement->BindTexture(Gbuffer::Normal);
+	viewportData.albedoAttachment->BindTexture(Gbuffer::Albedo);
 	Rhi::DrawQuad(m_Quad->GetId());
 	m_GBufferShaderLit->Unuse();
 	Rhi::DepthTest(true);
@@ -133,7 +133,7 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
 		.frameBuffer = viewportData.renderBuffer,
 		.renderAreaOffset = { 0, 0,},
 		.renderAreaExtent = viewportSize,
-		.clearBufferFlags = static_cast<BufferFlag>(BufferFlagNone),
+		.clearBufferFlags = BufferFlag::None,
 		.clearColor = clearColor
 	};
 
@@ -286,9 +286,9 @@ void Renderer::InitResources()
 	m_GBufferShaderLit = ResourceManager::Get<Shader>("deferred_opaque");
 	m_GBufferShaderLit->CreateInRhi();
 	m_GBufferShaderLit->Use();
-	m_GBufferShaderLit->SetInt("gPosition", GbufferPosition);
-	m_GBufferShaderLit->SetInt("gNormal", GbufferNormal);
-	m_GBufferShaderLit->SetInt("gAlbedoSpec", GbufferAlbedo);
+	m_GBufferShaderLit->SetInt("gPosition", Gbuffer::Position);
+	m_GBufferShaderLit->SetInt("gNormal", Gbuffer::Normal);
+	m_GBufferShaderLit->SetInt("gAlbedoSpec", Gbuffer::Albedo);
 	m_GBufferShaderLit->Unuse();
 	
 	m_GBufferShader = ResourceManager::Get<Shader>("gbuffer");

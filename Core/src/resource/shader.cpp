@@ -5,7 +5,7 @@
 
 using namespace XnorCore;
 
-ShaderType Shader::FileExtensionToType(const std::string& extension)
+ShaderType::ShaderType Shader::FileExtensionToType(const std::string& extension)
 {
     if (std::ranges::find(VertexFileExtensions, extension) != VertexFileExtensions.end())
         return ShaderType::Vertex;
@@ -25,7 +25,7 @@ ShaderType Shader::FileExtensionToType(const std::string& extension)
 
 bool_t Shader::Load(const Pointer<File>& shader)
 {
-    const ShaderType type = FileExtensionToType(shader->GetExtension());
+    const ShaderType::ShaderType type = FileExtensionToType(shader->GetExtension());
 
     if (!Load(shader->GetData(), shader->GetSize(), type))
         return false;
@@ -37,7 +37,7 @@ bool_t Shader::Load(const Pointer<File>& shader)
     return true;
 }
 
-bool_t Shader::Load(const char_t* const buffer, const int64_t length, const ShaderType type)
+bool_t Shader::Load(const char_t* const buffer, const int64_t length, const ShaderType::ShaderType type)
 {
     ShaderCode& code = m_Code[static_cast<size_t>(type)];
     code.code = buffer;
@@ -130,7 +130,7 @@ void Shader::Unuse() const
     Rhi::UnuseShader();
 }
 
-void Shader::SetDepthFunction(const DepthFunction depthFunction)
+void Shader::SetDepthFunction(const DepthFunction::DepthFunction depthFunction)
 {
     if (m_LoadedInRhi)
     {
