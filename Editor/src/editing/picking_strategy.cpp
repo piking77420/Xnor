@@ -106,6 +106,6 @@ void PickingStrategy::InitRendering(const Vector2i size)
 
     m_ColorPass = XnorCore::RenderPass(attachementsType);
     const std::vector<const XnorCore::Texture*> targets = { m_ColorAttachment, m_DepthAttachement };
-    frameBuffer->Create(m_ColorPass,targets);
+    frameBuffer->AttachTextures(m_ColorPass,targets);
 
 }

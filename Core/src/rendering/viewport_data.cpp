@@ -43,7 +43,7 @@ void ViewportData::InitForward(Vector2i windowSize)
     // Set Up renderPass
     colorPass = RenderPass(attachementsType);
     const std::vector<const Texture*> targets = { colorAttachment, depthAtttachment };
-    renderBuffer->Create(colorPass, targets);
+    renderBuffer->AttachTextures(colorPass, targets);
 }
 
 void ViewportData::InitDeffered(Vector2i windowSize)
@@ -85,5 +85,5 @@ void ViewportData::InitDeffered(Vector2i windowSize)
 
     const std::vector<const Texture*> targets = { positionAtttachment, normalAttachement,
         albedoAttachment, metallicRougnessReflectance, emissiveAmbiantOcclusion, depthAtttachment};
-    gframeBuffer->Create(gbufferPass, targets);
+    gframeBuffer->AttachTextures(gbufferPass, targets);
 }

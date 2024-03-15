@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "window.hpp"
+#include "resource/cubemap.hpp"
 #include "resource/texture.hpp"
 
 /// @file frame_buffer.hpp
@@ -14,7 +15,7 @@ class RenderPass;
 class FrameBuffer
 {
 public:
-	XNOR_ENGINE FrameBuffer() = default;
+	XNOR_ENGINE FrameBuffer();
 
 	/// @brief Creates a framebuffer with a specified size
 	/// @param size Size
@@ -27,8 +28,12 @@ public:
 	/// @brief Creates the framebuffer with a render pass and texture attachments
 	/// @param renderPass Render pass
 	/// @param attachments Texture attachments
-	XNOR_ENGINE void Create(const RenderPass& renderPass, const std::vector<const Texture*>& attachments);
+	XNOR_ENGINE void AttachTextures(const RenderPass& renderPass, const std::vector<const Texture*>& attachments) const;
 
+	XNOR_ENGINE void AttachTexture(const Texture& texture, Attachment attachment) const;
+
+	XNOR_ENGINE void AttachTexture(const Cubemap& cubemap, Attachment attachment ,CubeMapFace cubeMapFace) const;
+	
 	XNOR_ENGINE void GetPixelFromAttachment(uint32_t attachmentIndex, Vector2i position,
 		TextureFormat textureFormat, DataType dataType, void* output) const;
 

@@ -37,10 +37,29 @@ public:
 
     /// @brief Unbinds the Cubemap
     XNOR_ENGINE void UnBindTexture(uint32_t unit) const;
+
+    /// @brief Gets the CubeMap id
+    /// @return CubeMap id
+    [[nodiscard]]
+    XNOR_ENGINE uint32_t GetId() const;
+
+    /// @brief Gets the CubeMap Size
+    /// @return CubeMap size
+    [[nodiscard]]
+    XNOR_ENGINE Vector2i GetSize() const;
     
 private:
     uint32_t m_Id = 0;
-    std::array<void*, 6> m_Images;
+    std::array<void*, 6> m_Images =
+    {
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr
+    };
+    
     Vector2i m_CubemapSize;
     int32_t m_DataChannels = 0;
 

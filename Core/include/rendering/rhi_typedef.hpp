@@ -506,4 +506,17 @@ struct RenderPassBeginInfo
 };
 
 
+enum class CubeMapFace
+{
+	CubeMapPositiveX,
+	CubeMapNegativeX,
+	CubeMapPositiveY,
+	CubeMapNegativeY,
+	CubeMapPositiveZ,
+	CubeMapNegativeZ,
+
+	Size
+};
+
+
 END_XNOR_CORE

@@ -6,10 +6,12 @@
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
 #include "resource/texture.hpp"
+#include "scene/scene.hpp"
 
 BEGIN_XNOR_CORE
-class EquirectangularToCubeMap
+    class EquirectangularToCubeMap
 {
+
 public:
     STATIC_CLASS(EquirectangularToCubeMap)
 
@@ -20,7 +22,7 @@ public:
     XNOR_ENGINE static void Compute(const Texture& equirectangularMap,const Cubemap& cubemap);
 
 private:
-    Pointer<Model> m_Cube;
+    static inline Pointer<Model> m_Cube;
     
     static inline FrameBuffer* m_FrameBuffer = nullptr;
     static inline RenderPass m_RenderPass;

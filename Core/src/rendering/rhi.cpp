@@ -432,6 +432,11 @@ uint32_t Rhi::AttachementToOpenglAttachement(Attachment attachment)
 	return GL_COLOR_ATTACHMENT0;
 }
 
+uint32_t Rhi::CubeMapFacesToOpengl(CubeMapFace cubeMapFace)
+{
+	return GL_TEXTURE_CUBE_MAP_POSITIVE_X  + static_cast<uint32_t>(cubeMapFace);
+}
+
 uint32_t Rhi::GetOpengDepthEnum(const DepthFunction depthFunction)
 {
 	switch (depthFunction)
@@ -563,11 +568,16 @@ uint32_t Rhi::CreateCubeMap(const CreateCubeMapInfo& createCubeMapInfo)
 	return textureId;
 }
 
-uint32_t Rhi::CreateFrameBuffer(const RenderPass& renderPass, const std::vector<const Texture*>& attachments)
+uint32_t Rhi::CreateFrameBuffer()
 {
 	uint32_t frameBufferId;
 	glCreateFramebuffers(1, &frameBufferId);
+	return frameBufferId;
+}
 
+void Rhi::AttachsTextureToFrameBuffer(const RenderPass& renderPass, const FrameBuffer& frameBuffer, const std::vector<const Texture*>& attachments)
+{
+	const uint32_t frameBufferId = frameBuffer.GetId();
 	const std::vector<RenderTargetInfo>& renderTargetInfos = renderPass.renderPassAttachments;
 	std::vector<GLenum> openglAttachmentsdraw;
 	
@@ -607,7 +617,6 @@ uint32_t Rhi::CreateFrameBuffer(const RenderPass& renderPass, const std::vector<
 
 	glNamedFramebufferDrawBuffers(frameBufferId, static_cast<int32_t>(openglAttachmentsdraw.size()), openglAttachmentsdraw.data());
 
-	return frameBufferId;
 }
 
 void Rhi::DestroyFrameBuffer(const uint32_t frameBufferId)
@@ -648,9 +657,20 @@ void Rhi::UnbindFrameBuffer()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Rhi::AttachTextureToBuffer(const uint32_t bufferId, const Attachment attachment, const uint32_t textureId, const uint32_t level)
+void Rhi::AttachTextureToFrameBuffer(const uint32_t bufferId, const Attachment attachment, const uint32_t textureId, const uint32_t level)
 {
-	glFramebufferTexture(bufferId,AttachementToOpenglAttachement(attachment),textureId,level);
+	glFramebufferTexture(bufferId,AttachementToOpenglAttachement(attachment),textureId,level); 
+}
+
+void Rhi::AttachTextureToFrameBuffer(
+	const uint32_t bufferId,
+	const Attachment attachment,
+	const CubeMapFace cubeMapFace,
+	const uint32_t textureId,
+	const uint32_t level
+)
+{
+	glFramebufferTexture2D(bufferId, AttachementToOpenglAttachement(attachment), CubeMapFacesToOpengl(cubeMapFace), textureId,level); 
 }
 
 void Rhi::GetPixelFromAttachement(const uint32_t attachmentIndex, const Vector2i position, const TextureFormat textureFormat, const DataType dataType, void* const output)

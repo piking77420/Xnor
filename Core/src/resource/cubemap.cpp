@@ -65,3 +65,13 @@ void Cubemap::UnBindTexture(const uint32_t unit) const
 {
     Rhi::BindTexture(unit, 0);
 }
+
+uint32_t Cubemap::GetId() const
+{
+    return m_Id;
+}
+
+Vector2i Cubemap::GetSize() const
+{
+    return m_CubemapSize;
+}

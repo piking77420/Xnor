@@ -4,9 +4,15 @@
 
 using namespace XnorCore;
 
+FrameBuffer::FrameBuffer()
+{
+	m_Id = Rhi::CreateFrameBuffer();
+}
+
 FrameBuffer::FrameBuffer(const Vector2i size)
 	: m_FrameBufferSize(size)
 {
+	m_Id = Rhi::CreateFrameBuffer();
 }
 
 FrameBuffer::~FrameBuffer()
@@ -14,9 +20,19 @@ FrameBuffer::~FrameBuffer()
 	Rhi::DestroyFrameBuffer(m_Id);
 }
 
-void FrameBuffer::Create(const RenderPass& renderPass, const std::vector<const Texture*>& attachments)
+void FrameBuffer::AttachTextures(const RenderPass& renderPass, const std::vector<const Texture*>& attachments) const 
 {
-	m_Id = Rhi::CreateFrameBuffer(renderPass, attachments);
+	Rhi::AttachsTextureToFrameBuffer(renderPass, *this, attachments);
+}
+
+void FrameBuffer::AttachTexture(const Texture& texture, const Attachment attachment) const
+{
+	Rhi::AttachTextureToFrameBuffer(m_Id,attachment,texture.GetId(),0);
+}
+
+void FrameBuffer::AttachTexture(const Cubemap& cubemap, const Attachment attachment, CubeMapFace cubeMapFace) const
+{
+	Rhi::AttachTextureToFrameBuffer(m_Id,attachment,cubeMapFace,cubemap.GetId(),0);
 }
 
 void FrameBuffer::GetPixelFromAttachment(
