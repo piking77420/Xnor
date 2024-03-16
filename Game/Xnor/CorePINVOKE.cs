@@ -1204,9 +1204,6 @@ class CorePINVOKE {
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Component_entity_get")]
   public static extern global::System.IntPtr Component_entity_get(global::System.Runtime.InteropServices.HandleRef jarg1);
 
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_new_Component")]
-  public static extern global::System.IntPtr new_Component();
-
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_delete_Component")]
   public static extern void delete_Component(global::System.Runtime.InteropServices.HandleRef jarg1);
 
@@ -1617,6 +1614,9 @@ class CorePINVOKE {
 
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Entity_name_get")]
   public static extern string Entity_name_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Entity_AddComponent")]
+  public static extern void Entity_AddComponent(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
 
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Entity_GetGuid")]
   public static extern global::System.IntPtr Entity_GetGuid(global::System.Runtime.InteropServices.HandleRef jarg1);

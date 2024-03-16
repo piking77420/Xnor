@@ -74,6 +74,12 @@ inline bool_t Factory::IsChildOf(const size_t typeHash, const size_t parentHash)
 {
     auto&& it = m_FactoryMapHash.find(typeHash);
 
+    if (it == m_FactoryMapHash.end())
+    {
+        Logger::LogError("Couldn't find child type : {}", typeHash);
+        return false;
+    }
+
     const std::vector<size_t>& parents = it->second.parentClasses;
     
     auto&& parentIt = std::ranges::find(parents, parentHash);

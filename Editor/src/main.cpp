@@ -14,8 +14,15 @@ int main(int, char**)
 {
 	using namespace XnorCore;
 	using namespace XnorEditor;
-	
+
 	Logger::OpenDefaultFile();
+
+	Factory::RegisterFactoryType<MeshRenderer>();
+	Factory::RegisterFactoryType<Light>();
+	Factory::RegisterFactoryType<DirectionalLight>();
+	Factory::RegisterFactoryType<TestComponent>();
+	Factory::RegisterFactoryType<PointLight>();
+	Factory::RegisterFactoryType<SpotLight>();
 
 	FileManager::LoadDirectory("assets_internal");
 	FileManager::LoadDirectory("assets");

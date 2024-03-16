@@ -99,6 +99,8 @@ void Serializer::SerializeSimpleType(const MemberT* ptr, const char_t* name, con
     }
     else if constexpr (Meta::IsPointer<MemberT>)
     {
+        // TODO fix serialization
+        /*
         if (flags & EXPAND_POINTER)
         {
             Serialize<Meta::RemovePointerSpecifier<MemberT>>(*ptr, false);
@@ -110,16 +112,17 @@ void Serializer::SerializeSimpleType(const MemberT* ptr, const char_t* name, con
             else
                 FetchAttribute(name, static_cast<std::string>((*ptr)->GetGuid()));
         }
+        */
     }
-    else if constexpr (Meta::IsPolyPtr<MemberT>)
+    else if constexpr (false)// (Meta::IsPolyPtr<MemberT>)
     {
         const size_t hash = ptr->GetHash();
         
-#define POLY_PTR_IF_SER(type)                       \
-if (hash == XnorCore::Utils::GetTypeHash<type>())   \
-{                                                   \
-Serialize<type>(ptr->Cast<type>(), false);          \
-}                                                   \
+#define POLY_PTR_IF_SER(type)                                  \
+if (hash == XnorCore::Utils::GetTypeHash<type>())              \
+{                                                              \
+Serialize<type>(reinterpret_cast<type*>(ptr), false);          \
+}                                                              \
         // TODO find a less ugly solution to that
 
         POLY_PTR_IF_SER(MeshRenderer);
@@ -155,6 +158,7 @@ Serialize<type>(ptr->Cast<type>(), false);          \
         Serialize<MemberT>(ptr, false);
     }
 }
+
 
 template <typename MemberT>
 void Serializer::SerializeArrayType(const MemberT*, const char_t*, const size_t)

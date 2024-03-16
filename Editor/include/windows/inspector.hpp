@@ -36,7 +36,6 @@ private:
         const XnorCore::Reflection::Tooltip* tooltip;
     };
 
-
     template <typename MemberT, typename DescriptorT>
     static void DisplayScalar(const Metadata<MemberT, DescriptorT>& metadata);
     template <typename MemberT, typename DescriptorT>
@@ -47,8 +46,6 @@ private:
     static void DisplayRawPointer(const Metadata<MemberT, DescriptorT>& metadata);
     template <typename MemberT, typename DescriptorT>
     static void DisplayXnorPointer(const Metadata<MemberT, DescriptorT>& metadata);
-    template <typename MemberT, typename DescriptorT>
-    static void DisplayPolyPointer(const Metadata<MemberT, DescriptorT>& metadata);
     template <typename MemberT, typename DescriptorT>
     static void DisplayEnum(const Metadata<MemberT, DescriptorT>& metadata);
     template <typename MemberT, typename DescriptorT>
@@ -80,8 +77,11 @@ private:
 
     static inline XnorCore::Entity* FilterEntity(ImGuiTextFilter& filter);
 
+    static XnorCore::Component* FilterComponent(ImGuiTextFilter& filter);
+
     static inline void* m_ResourceFilterTarget = nullptr;
     static inline void* m_EntityFilterTarget = nullptr;
+    static inline void* m_ComponentFilterTarget = nullptr;
     static inline ImGuiTextFilter m_TextFilter;
 };
 

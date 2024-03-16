@@ -353,7 +353,6 @@
     <ClInclude Include="include\utils\list.hpp" />
     <ClInclude Include="include\utils\logger.hpp" />
     <ClInclude Include="include\utils\pointer.hpp" />
-    <ClInclude Include="include\utils\poly_ptr.hpp" />
     <ClInclude Include="include\utils\reference_counter.hpp" />
     <ClInclude Include="include\utils\serializable.hpp" />
     <ClInclude Include="include\utils\ts_queue.hpp" />
@@ -382,7 +381,6 @@
     <ClInclude Include="inline\utils\list.inl" />
     <ClInclude Include="inline\utils\logger.inl" />
     <ClInclude Include="inline\utils\pointer.inl" />
-    <ClInclude Include="inline\utils\poly_ptr.inl" />
     <ClInclude Include="inline\utils\reference_counter.inl" />
     <ClInclude Include="inline\utils\serializable.inl" />
     <ClInclude Include="inline\utils\ts_queue.inl" />

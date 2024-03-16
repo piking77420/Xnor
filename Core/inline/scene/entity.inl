@@ -5,11 +5,9 @@ BEGIN_XNOR_CORE
 template <Concepts::ComponentT T>
 T* Entity::AddComponent()
 {
-    m_Components.Add();
-    
     T* newT = new T;
     newT->entity = this;
-    m_Components[m_Components.GetSize() - 1].Create(newT);
+    m_Components.Add(newT);
 
     return newT;
 }
@@ -19,8 +17,8 @@ const T* Entity::GetComponent() const
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        if (m_Components[i].IsOfType<T>())
-            return m_Components[i].Cast<T>();
+        if (dynamic_cast<T*>(m_Components[i]))
+            return reinterpret_cast<T*>(m_Components[i]);
     }
 
     return nullptr;
@@ -31,8 +29,8 @@ void Entity::GetComponents(std::vector<T*>* components)
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        if (m_Components[i].IsOfType<T>())
-            components->push_back(m_Components[i].Cast<T>());
+        if (dynamic_cast<T*>(m_Components[i]))
+            components->push_back(reinterpret_cast<T*>(m_Components[i]));
     }
 }
 
@@ -41,7 +39,7 @@ void Entity::GetComponents(std::vector<const T*>* components) const
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        if (m_Components[i].IsOfType<T>())
+        if (dynamic_cast<T*>(m_Components[i]))
             components->push_back(reinterpret_cast<const T*>(m_Components[i]));
     }
 }
@@ -51,8 +49,8 @@ T* Entity::GetComponent()
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
-        if (m_Components[i].IsOfType<T>())
-            return m_Components[i].Cast<T>();
+        if (dynamic_cast<T*>(m_Components[i]))
+            return reinterpret_cast<T*>(m_Components[i]);
     }
     
     return nullptr;
@@ -63,7 +61,7 @@ void Entity::RemoveComponent()
 {
     for (int i = 0; i < m_Components.GetSize(); i++)
     {
-        if (m_Components[i].IsOfType<T>())
+        if (dynamic_cast<T*>(m_Components[i]))
         {
             m_Components.RemoveAt(i);
             break;
@@ -76,9 +74,9 @@ bool_t Entity::TryGetComponent(T** output)
 {
     for (int i = 0; i < m_Components.GetSize(); i++)
     {
-        if (m_Components[i].IsOfType<T>())
+        if (dynamic_cast<T*>(m_Components[i]))
         {
-            *output = m_Components[i].Cast<T>();
+            *output = reinterpret_cast<T*>(m_Components[i]);
             return true;
         }
     }

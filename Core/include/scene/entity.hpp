@@ -8,7 +8,6 @@
 #include "resource/model.hpp"
 #include "utils/guid.hpp"
 #include "utils/list.hpp"
-#include "utils/poly_ptr.hpp"
 #include "utils/serializable.hpp"
 
 /// @file entity.hpp
@@ -32,6 +31,8 @@ public:
     /// @return Created component
     template <Concepts::ComponentT T>
     T* AddComponent();
+
+    XNOR_ENGINE void AddComponent(Component* component);
 
     /// @brief Gets a specified Component
     /// @tparam T Component type
@@ -144,7 +145,7 @@ private:
     
     Guid m_EntityId;
 
-    List<PolyPtr<Component>> m_Components;
+    List<Component*> m_Components;
 
     friend class Scene;
 };

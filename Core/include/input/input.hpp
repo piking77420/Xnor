@@ -7,7 +7,6 @@
 #include "input/gamepad_input.hpp"
 #include "input/keyboard_input.hpp"
 #include "input/mouse_input.hpp"
-#include "utils/meta_programming.hpp"
 
 /// @file input.hpp
 /// @brief Defines the XnorCore::Input static class.
