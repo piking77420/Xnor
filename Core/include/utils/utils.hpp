@@ -49,6 +49,7 @@ namespace Utils
     /// @param ptr Polymorphic pointer
     /// @return Hash
     template <typename T>
+    [[nodiscard]]
     size_t GetTypeHash(const T* ptr);
 
     /// @brief Horizontally aligns the cursor of ImGui to be centered around a specific portion of the available space

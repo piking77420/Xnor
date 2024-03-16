@@ -1,14 +1,16 @@
 #pragma once
 
 #include "core.hpp"
-#include "resource/resource.hpp"
 
+#include "resource/resource.hpp"
 #include "scene/component.hpp"
 
 /// @file concepts.hpp
 /// @brief Defines the XnorCore::Concepts namespace which contains useful concepts used in the engine.
 
 BEGIN_XNOR_CORE
+
+class Entry;
 
 /// @namespace Concepts
 /// @brief Contains useful general-use concepts.
@@ -39,7 +41,7 @@ namespace Concepts
 
     /// @brief A class satisfies the ExceptionT concept if it is derived of Exception.
     template<typename T>
-    concept ExceptionT = std::is_base_of_v<std::exception, T>;
+    concept ExceptionT = Meta::IsBaseOf<std::exception, T>;
 
     /// @brief Concept that forces a type to be a function
     template <class T>
