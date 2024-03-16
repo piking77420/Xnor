@@ -348,6 +348,7 @@
     <ClInclude Include="include\utils\color.hpp" />
     <ClInclude Include="include\utils\concepts.hpp" />
     <ClInclude Include="include\utils\event.hpp" />
+    <ClInclude Include="include\utils\factory.hpp" />
     <ClInclude Include="include\utils\formatter.hpp" />
     <ClInclude Include="include\utils\list.hpp" />
     <ClInclude Include="include\utils\logger.hpp" />
@@ -377,6 +378,7 @@
     <ClInclude Include="inline\serialization\serializer.inl" />
     <ClInclude Include="inline\utils\color.inl" />
     <ClInclude Include="inline\utils\event.inl" />
+    <ClInclude Include="inline\utils\factory.inl" />
     <ClInclude Include="inline\utils\list.inl" />
     <ClInclude Include="inline\utils\logger.inl" />
     <ClInclude Include="inline\utils\pointer.inl" />

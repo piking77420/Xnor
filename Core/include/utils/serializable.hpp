@@ -218,21 +218,26 @@ namespace Reflection
     static constexpr TypeDescriptor<ReflectT> GetTypeInfo();
 
     /// @brief Checks if a descriptor has a specified attribute
-    /// @tparam DescriptorT Descriptor type
     /// @tparam AttributeT Attribute type
+    /// @tparam DescriptorT Descriptor type
     /// @param descriptor Type descriptor
     /// @return Result
     template <typename AttributeT, typename DescriptorT>
     static constexpr bool_t HasAttribute(DescriptorT descriptor);
 
     /// @brief Gets the specified attribute of a descriptor
-    /// @tparam DescriptorT Descriptor type
     /// @tparam AttributeT Attribute type
+    /// @tparam DescriptorT Descriptor type
     /// @param descriptor Type descriptor
     /// @return Attribute
     template <typename AttributeT, typename DescriptorT>
     static constexpr const AttributeT& GetAttribute(DescriptorT descriptor);
 
+    /// @brief Tries to get a specified attribute of a descriptor
+    /// @tparam AttributeT Attribute type
+    /// @tparam DescriptorT Descriptor type
+    /// @param descriptor Type descriptor
+    /// @return Attribute, @c nullptr if not found
     template <typename AttributeT, typename DescriptorT>
     static constexpr const AttributeT* TryGetAttribute(DescriptorT descriptor);
 }

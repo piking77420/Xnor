@@ -228,7 +228,7 @@ void Inspector::DisplayRawPointer(const Metadata<MemberT, DescriptorT>& metadata
 #define POLY_PTR_IF_INSP(type)\
 if (hash == XnorCore::Utils::GetTypeHash<type>())\
 {\
-DisplayObject<type>(metadata.obj->Cast<type>(), XnorCore::Reflection::GetTypeInfo<type>());\
+DisplayObject<type>(metadata.obj->Cast<type>());\
 }\
 
 template <typename MemberT, typename DescriptorT>
@@ -321,8 +321,9 @@ void Inspector::DisplayEnumFlag(const Metadata<MemberT, DescriptorT>& metadata)
 }
 
 template <typename ReflectT>
-void Inspector::DisplayObject(ReflectT* const obj, const XnorCore::TypeDescriptor<ReflectT> desc)
+void Inspector::DisplayObject(ReflectT* const obj)
 {
+    constexpr XnorCore::TypeDescriptor<ReflectT> desc = XnorCore::Reflection::GetTypeInfo<ReflectT>();
     const std::string typeName = XnorCore::Utils::RemoveNamespaces(desc.name.c_str());
     const float_t textSize = ImGui::CalcTextSize(typeName.c_str()).x;
     XnorCore::Utils::AlignImGuiCursor(textSize);
@@ -437,7 +438,7 @@ void Inspector::DisplaySimpleType(const Metadata<MemberT, DescriptorT>& metadata
     else
     {
         if (ImGui::CollapsingHeader(metadata.name))
-            DisplayObject<MemberT>(metadata.obj, XnorCore::Reflection::GetTypeInfo<MemberT>());
+            DisplayObject<MemberT>(metadata.obj);
     }
 }
 

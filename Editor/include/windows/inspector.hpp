@@ -55,7 +55,7 @@ private:
     static void DisplayEnumFlag(const Metadata<MemberT, DescriptorT>& metadata);
 
     template <typename ReflectT>
-    static void DisplayObject(ReflectT* obj, XnorCore::TypeDescriptor<ReflectT> desc);
+    static void DisplayObject(ReflectT* obj);
 
     template <typename ReflectT, typename MemberT, typename DescriptorT>
     static void DisplayObjectInternal(ReflectT* obj, DescriptorT member);
