@@ -121,8 +121,9 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	viewportData.metallicRougnessReflectance->BindTexture(Gbuffer::MetallicRoughessReflectance);
 	viewportData.emissiveAmbiantOcclusion->BindTexture(Gbuffer::EmissiveAmbiantOcclusion);
 	
-	skybox.GetCubeMap()->BindTexture(10);
-	
+	skybox.irradianceMap->BindTexture(10);
+	skybox.prefilterMap->BindTexture(11);
+	skybox.precomputeBrdfTexture->BindTexture(12);
 
 	Rhi::DrawQuad(m_Quad->GetId());
 	m_GBufferShaderLit->Unuse();
@@ -239,6 +240,7 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		if (meshRenderer->material.ambiantOcclusionTexture.IsValid())
 			meshRenderer->material.ambiantOcclusionTexture->BindTexture(MaterialTextureEnum::AmbiantOcclusion);
 
+
 		if (meshRenderer->model.IsValid())
 		{
 			Rhi::BindMaterial(meshRenderer->material);
@@ -318,9 +320,10 @@ void Renderer::InitResources()
 	m_GBufferShaderLit->SetInt("gAlbedoSpec", Gbuffer::Albedo);
 	m_GBufferShaderLit->SetInt("gMetallicRoughessReflectance", Gbuffer::MetallicRoughessReflectance);
 	m_GBufferShaderLit->SetInt("gEmissiveAmbiantOcclusion", Gbuffer::EmissiveAmbiantOcclusion);
-	m_GBufferShaderLit->SetInt("SkyBox", 10);
-
-
+	
+	m_GBufferShaderLit->SetInt("irradianceMap", 10);
+	m_GBufferShaderLit->SetInt("prefilterMap", 11);
+	m_GBufferShaderLit->SetInt("brdfLUT", 12);
 	m_GBufferShaderLit->Unuse();
 	
 	m_GBufferShader = ResourceManager::Get<Shader>("gbuffer");

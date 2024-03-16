@@ -249,10 +249,10 @@ void Editor::CreateTestScene()
 	World::scene.skybox.LoadCubeMap(testCubeMap);
 	*/
 	World::scene.skybox.Initialize();
-	Pointer<Texture> texture = ResourceManager::Get<Texture>("assets/textures/puresky.hdr");
+	Pointer<Texture> texture = ResourceManager::Get<Texture>("assets/textures/newport_loft.hdr");
 	texture->loadData.flipVertically = true;
-	ResourceManager::Get<Texture>("assets/textures/puresky.hdr")->Reload();
-	World::scene.skybox.LoadFromHdrTexture(ResourceManager::Get<Texture>("assets/textures/puresky.hdr"));
+	texture->Reload();
+	World::scene.skybox.LoadFromHdrTexture(texture);
 }
 
 void Editor::MenuBar() const
@@ -336,7 +336,7 @@ void Editor::Update()
 		UpdateWindow();
 		WorldBehaviours();
 		OnRenderingWindow();
-
+		
 		renderer.EndFrame(World::scene);
 
 		Input::Update();

@@ -202,9 +202,8 @@ public:
 	XNOR_ENGINE static TextureFormat::TextureFormat GetTextureFormatFromChannels(uint32_t channels);
 
 	XNOR_ENGINE static void DepthTest(bool value);
-
-	XNOR_ENGINE static void CheckIfFrameBufferComplete(uint32_t id);
-
+	
+	XNOR_ENGINE static void GetCubeMapViewMatrices(std::array<Matrix,6>* viewsMatricies);
 private:
 	struct ModelInternal
 	{

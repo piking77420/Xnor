@@ -1786,8 +1786,23 @@ class CorePINVOKE {
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_LoadFromHdrTexture")]
   public static extern void Skybox_LoadFromHdrTexture(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
 
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_GetCubeMap__SWIG_0")]
-  public static extern global::System.IntPtr Skybox_GetCubeMap__SWIG_0(global::System.Runtime.InteropServices.HandleRef jarg1);
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_irradianceMap_set")]
+  public static extern void Skybox_irradianceMap_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_irradianceMap_get")]
+  public static extern global::System.IntPtr Skybox_irradianceMap_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_cubeMap_set")]
+  public static extern void Skybox_cubeMap_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_cubeMap_get")]
+  public static extern global::System.IntPtr Skybox_cubeMap_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_prefilterMap_set")]
+  public static extern void Skybox_prefilterMap_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_prefilterMap_get")]
+  public static extern global::System.IntPtr Skybox_prefilterMap_get(global::System.Runtime.InteropServices.HandleRef jarg1);
 
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Scene_skybox_set")]
   public static extern void Scene_skybox_set(global::System.Runtime.InteropServices.HandleRef jarg1);

@@ -125,7 +125,7 @@
     <ClCompile Include="src\rendering\light\spot_light.cpp" />
     <ClCompile Include="src\rendering\material.cpp" />
     <ClCompile Include="src\rendering\render_pass.cpp" />
-    <ClCompile Include="src\rendering\render_systems\equirectangular_to_cubemap.cpp">
+    <ClCompile Include="src\rendering\render_systems\skybox_parser.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <Optimization>Disabled</Optimization>
@@ -397,7 +397,7 @@
     <ClInclude Include="include\rendering\light\spot_light.hpp" />
     <ClInclude Include="include\rendering\material.hpp" />
     <ClInclude Include="include\rendering\renderer.hpp" />
-    <ClInclude Include="include\rendering\render_systems\equirectangular_to_cubemap.hpp" />
+    <ClInclude Include="include\rendering\render_systems\skybox_parser.hpp" />
     <ClInclude Include="include\rendering\viewport.hpp" />
     <ClInclude Include="include\rendering\render_pass.hpp" />
     <ClInclude Include="include\rendering\render_systems\light_manager.hpp" />

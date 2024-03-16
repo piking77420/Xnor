@@ -92,8 +92,17 @@ void main()
         gNormal.rgb = normalize(fs_in.Tbn * normal); 
     }
 
-  
+    float currentOcclusion = 0.f;
+    
+    if (hasAmbiantOcclusionMap == false)
+    {
+        currentOcclusion = ambiantOccusion;
+    }
+    else
+    {
+        currentOcclusion = texture(material.ambiantOcclusionMap,fs_in.texCoords).r;
+    }
 
     gMetallicRoughessReflectance = vec3(gMetallicRoughessReflectance.r,gMetallicRoughessReflectance.g,reflectance);
-    gEmissiveAmbiantOcclusion = vec2(emissive,ambiantOccusion);
+    gEmissiveAmbiantOcclusion = vec2(emissive,currentOcclusion);
 }

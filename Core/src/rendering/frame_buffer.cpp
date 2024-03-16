@@ -25,14 +25,14 @@ void FrameBuffer::AttachTextures(const RenderPass& renderPass, const std::vector
 	Rhi::AttachsTextureToFrameBuffer(renderPass, *this, attachments);
 }
 
-void FrameBuffer::AttachTexture(const Texture& texture, const Attachment::Attachment attachment) const
+void FrameBuffer::AttachTexture(const Texture& texture, const Attachment::Attachment attachment,const uint32_t level) const
 {
-	Rhi::AttachTextureToFrameBuffer(m_Id,attachment,texture.GetId(),0);
+	Rhi::AttachTextureToFrameBuffer(m_Id,attachment,texture.GetId(), level);
 }
 
-void FrameBuffer::AttachTexture(const Cubemap& cubemap, const Attachment::Attachment attachment, CubeMapFace cubeMapFace) const
+void FrameBuffer::AttachTexture(const Cubemap& cubemap, const Attachment::Attachment attachment, CubeMapFace cubeMapFace, const uint32_t level) const
 {
-	Rhi::AttachTextureToFrameBuffer(m_Id,attachment,cubeMapFace ,cubemap.GetId(),0);
+	Rhi::AttachTextureToFrameBuffer(m_Id,attachment,cubeMapFace ,cubemap.GetId(), level);
 }
 
 void FrameBuffer::GetPixelFromAttachment(

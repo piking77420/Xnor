@@ -74,10 +74,37 @@ public class Skybox : global::System.IDisposable {
     if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
   }
 
-  public Cubemap GetCubeMap() {
-    global::System.IntPtr cPtr = CorePINVOKE.Skybox_GetCubeMap__SWIG_0(swigCPtr);
-    Cubemap ret = (cPtr == global::System.IntPtr.Zero) ? null : new Cubemap(cPtr, false);
-    return ret;
+  public Cubemap irradianceMap {
+    set {
+      CorePINVOKE.Skybox_irradianceMap_set(swigCPtr, Cubemap.getCPtr(value));
+    } 
+    get {
+      global::System.IntPtr cPtr = CorePINVOKE.Skybox_irradianceMap_get(swigCPtr);
+      Cubemap ret = (cPtr == global::System.IntPtr.Zero) ? null : new Cubemap(cPtr, false);
+      return ret;
+    } 
+  }
+
+  public Cubemap cubeMap {
+    set {
+      CorePINVOKE.Skybox_cubeMap_set(swigCPtr, Cubemap.getCPtr(value));
+    } 
+    get {
+      global::System.IntPtr cPtr = CorePINVOKE.Skybox_cubeMap_get(swigCPtr);
+      Cubemap ret = (cPtr == global::System.IntPtr.Zero) ? null : new Cubemap(cPtr, false);
+      return ret;
+    } 
+  }
+
+  public Cubemap prefilterMap {
+    set {
+      CorePINVOKE.Skybox_prefilterMap_set(swigCPtr, Cubemap.getCPtr(value));
+    } 
+    get {
+      global::System.IntPtr cPtr = CorePINVOKE.Skybox_prefilterMap_get(swigCPtr);
+      Cubemap ret = (cPtr == global::System.IntPtr.Zero) ? null : new Cubemap(cPtr, false);
+      return ret;
+    } 
   }
 
 }

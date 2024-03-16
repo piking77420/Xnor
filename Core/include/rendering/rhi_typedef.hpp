@@ -107,7 +107,15 @@ BEGIN_ENUM(TextureFiltering)
 	/// @brief Performs linear interpolation
 	Linear,
 	/// @brief Selects the nearest texel
-	Nearest
+	Nearest,
+
+	NearestMipmapNearest,
+
+	LinearMimapNearest,
+
+	NearestMimapLinear,
+	
+	LinearMimMapLinear
 }
 END_ENUM
 
@@ -169,6 +177,7 @@ END_ENUM
 BEGIN_ENUM(TextureFormat)
 {
 	Red,
+	RedGreen,
 	Rgb,
 	Rgba,
 }
