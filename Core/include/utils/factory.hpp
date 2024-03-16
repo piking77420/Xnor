@@ -15,7 +15,7 @@ class Factory
         std::function<void*()> createFunc;
         std::function<void(void*)> displayFunc;
         std::function<void(void*)> serializeFunc;
-        const char_t* name;
+        std::string name;
         std::vector<size_t> parentClasses;
     };
     
@@ -24,12 +24,12 @@ public:
     static constexpr void RegisterFactoryType();
 
     static void* CreateObject(size_t hash);
-    static void* CreateObject(const char_t* name);
+    static void* CreateObject(std::string name);
 
     static void DisplayObject(void* obj, size_t hash);
 
     template <typename T>
-    static void FindAllChildClasses(std::vector<const char_t*>* names);
+    static void FindAllChildClasses(std::vector<std::string>* names);
 
 private:
     static bool_t IsChildOf(size_t typeHash, size_t parentHash);

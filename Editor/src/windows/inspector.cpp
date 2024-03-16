@@ -41,12 +41,12 @@ XnorCore::Component* Inspector::FilterComponent(ImGuiTextFilter& filter)
 
     XnorCore::Component* c = nullptr;
     
-    std::vector<const char_t*> names;
+    std::vector<std::string> names;
     XnorCore::Factory::FindAllChildClasses<XnorCore::Component>(&names);
 
     for (size_t i = 0; i < names.size(); i++)
     {
-        if (filter.PassFilter(names[i]) && ImGui::Selectable(names[i]))
+        if (filter.PassFilter(names[i].c_str()) && ImGui::Selectable(names[i].c_str()))
         {
             c = static_cast<XnorCore::Component*>(XnorCore::Factory::CreateObject(names[i]));
             break;
