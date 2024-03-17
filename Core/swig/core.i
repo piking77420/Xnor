@@ -117,7 +117,6 @@ namespace XnorCore
 #include "utils/logger.hpp"
 #include "utils/meta_programming.hpp"
 #include "utils/pointer.hpp"
-#include "utils/poly_ptr.hpp"
 #include "utils/reference_counter.hpp"
 #include "utils/serializable.hpp"
 #include "utils/ts_queue.hpp"

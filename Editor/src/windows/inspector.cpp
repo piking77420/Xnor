@@ -1,6 +1,7 @@
 ﻿#include "windows/inspector.hpp"
 
 #include "imgui/imgui.h"
+#include "reflection/type_renderer.hpp"
 
 using namespace XnorEditor;
 
@@ -11,21 +12,18 @@ Inspector::Inspector(Editor* editor)
 
 void Inspector::Display()
 {
+    XnorCore::Entity* const ptr = m_Editor->data.selectedEntity;
+    
     // Check if an entity was selected
-    if (!m_Editor->data.selectedEntity)
+    if (!ptr)
     {
         ImGui::Text("Nothing selected");
         return;
     }
     
-    void* const ptr = m_Editor->data.selectedEntity;
-    
     ImGui::PushID(ptr);
 
-    using ObjType = std::remove_reference_t<decltype(*m_Editor->data.selectedEntity)>;
-    constexpr XnorCore::TypeDescriptor<ObjType> desc = XnorCore::Reflection::GetTypeInfo<ObjType>();
-
-    DisplayObject(static_cast<ObjType*>(ptr), desc);
+    XnorCore::TypeRenderer::DisplayObject<XnorCore::Entity>(ptr);
     
     ImGui::PopID();
 }

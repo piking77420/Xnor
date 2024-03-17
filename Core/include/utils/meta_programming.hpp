@@ -15,7 +15,6 @@
 #include "utils/color.hpp"
 #include "utils/list.hpp"
 #include "utils/pointer.hpp"
-#include "utils/poly_ptr.hpp"
 
 #include "core.hpp"
 
@@ -119,14 +118,6 @@ namespace Meta
     /// @private
     template <typename T>
     constexpr bool_t IsXnorList<List<T>> = true;
-
-    /// @brief Checks whether the type is a @ref PolyPtr
-    template <typename>
-    constexpr bool_t IsPolyPtr = false;
-
-    /// @private
-    template <typename T>
-    constexpr bool_t IsPolyPtr<PolyPtr<T>> = true;
 
     /// @brief Checks whether the type is a @ref Pointer
     template <typename>

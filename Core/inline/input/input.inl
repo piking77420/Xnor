@@ -1,5 +1,7 @@
 #pragma once
 
+#include "utils/meta_programming.hpp"
+
 BEGIN_XNOR_CORE
 
 template <class T>

@@ -49,6 +49,7 @@ namespace Utils
     /// @param ptr Polymorphic pointer
     /// @return Hash
     template <typename T>
+    [[nodiscard]]
     size_t GetTypeHash(const T* ptr);
 
     /// @brief Horizontally aligns the cursor of ImGui to be centered around a specific portion of the available space
@@ -120,6 +121,17 @@ namespace Utils
     /// @return Result
     [[nodiscard]]
     XNOR_ENGINE constexpr std::string RemoveNamespaces(const std::string& str);
+
+#ifndef SWIG
+    /// @brief Removes the namespaces indicators from the provided string
+    ///
+    /// e.g. XnorCore::MyClass will become MyClass
+    /// 
+    /// @param str String to modify
+    /// @return Result
+    [[nodiscard]]
+    XNOR_ENGINE constexpr const char_t* RemoveNamespaces(const char_t* str);
+#endif
 
     /// @brief Normalizes an angle (clamps its value between 0 and 2 * PI)
     /// @param angle Angle to normalize

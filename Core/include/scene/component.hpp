@@ -21,7 +21,9 @@ public:
 
     Component() = default;
     
-    ~Component() override = default;
+    virtual ~Component() override = 0;
+
+    DEFAULT_COPY_MOVE_OPERATIONS(Component)
 
     /// @brief Begins the component
     virtual void Begin() {}

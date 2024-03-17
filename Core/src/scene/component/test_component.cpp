@@ -18,7 +18,7 @@ void TestComponent::Begin()
 
 void TestComponent::Update()
 {
-    if (!m_Rotate)
+    if (!m_Rotate || light == nullptr)
         return;
 
     m_CurrentAngle += m_RotationSpeed * Time::GetDeltaTime();
