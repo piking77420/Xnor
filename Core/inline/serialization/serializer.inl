@@ -4,6 +4,7 @@
 
 #include <format>
 
+#include "reflection/reflection.hpp"
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
 #include "rendering/light/spot_light.hpp"
@@ -12,7 +13,6 @@
 #include "utils/guid.hpp"
 #include "utils/logger.hpp"
 #include "utils/meta_programming.hpp"
-#include "utils/serializable.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -117,7 +117,7 @@ void Serializer::SerializeSimpleType(const MemberT* ptr, const char_t* name, con
     else if constexpr (false)// (Meta::IsPolyPtr<MemberT>)
     {
         const size_t hash = ptr->GetHash();
-        
+
 #define POLY_PTR_IF_SER(type)                                  \
 if (hash == XnorCore::Utils::GetTypeHash<type>())              \
 {                                                              \

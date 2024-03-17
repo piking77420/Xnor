@@ -5,6 +5,7 @@
 #include "component.hpp"
 #include "core.hpp"
 #include "transform.hpp"
+#include "reflection/reflection.hpp"
 #include "resource/model.hpp"
 #include "utils/guid.hpp"
 #include "utils/list.hpp"

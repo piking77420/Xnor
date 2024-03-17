@@ -3,7 +3,7 @@
 #include "core.hpp"
 
 #include "resource/resource_manager.hpp"
-#include "utils/serializable.hpp"
+#include "reflection/reflection.hpp"
 
 /// @file type_renderer.hpp
 /// @brief Defines the TypeRenderer

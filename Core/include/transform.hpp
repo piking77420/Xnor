@@ -8,6 +8,7 @@
 #include <Maths/vector3.hpp>
 
 #include "core.hpp"
+#include "reflection/reflection.hpp"
 #include "serialization/serializer.hpp"
 #include "utils/serializable.hpp"
 

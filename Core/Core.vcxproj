@@ -330,6 +330,7 @@
     <ClInclude Include="include\input\keyboard_input.hpp" />
     <ClInclude Include="include\input\mouse_input.hpp" />
     <ClInclude Include="include\input\time.hpp" />
+    <ClInclude Include="include\reflection\reflection.hpp" />
     <ClInclude Include="include\reflection\type_renderer.hpp" />
     <ClInclude Include="include\rendering\camera.hpp" />
     <ClInclude Include="include\rendering\frame_buffer.hpp" />
@@ -386,6 +387,7 @@
     <ClInclude Include="inline\file\file_manager.inl" />
     <ClInclude Include="inline\input\input.inl" />
     <ClInclude Include="inline\input\time.inl" />
+    <ClInclude Include="inline\reflection\reflection.inl" />
     <ClInclude Include="inline\reflection\type_renderer.inl" />
     <ClInclude Include="inline\resource\resource_manager.inl" />
     <ClInclude Include="inline\resource\texture.inl" />
@@ -399,7 +401,6 @@
     <ClInclude Include="inline\utils\logger.inl" />
     <ClInclude Include="inline\utils\pointer.inl" />
     <ClInclude Include="inline\utils\reference_counter.inl" />
-    <ClInclude Include="inline\utils\serializable.inl" />
     <ClInclude Include="inline\utils\ts_queue.inl" />
     <ClInclude Include="inline\utils\utils.inl" />
   </ItemGroup>
