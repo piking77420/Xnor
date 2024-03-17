@@ -210,6 +210,10 @@ namespace Reflection
         /// @brief Creates a tooltip from a string literal
         constexpr explicit Tooltip(const char_t* const t) : text(t) {}
     };
+
+    struct AsEulerAngles : FieldAttribute
+    {
+    };
     
     /// @brief Gets the type info of a class
     /// @tparam ReflectT Type
