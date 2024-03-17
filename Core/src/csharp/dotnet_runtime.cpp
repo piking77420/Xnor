@@ -2,6 +2,8 @@
 
 #include "file/file.hpp"
 
+#include "application.hpp"
+
 using namespace XnorCore;
 
 constexpr const char* AlcName = "XNOR Coral AssemblyLoadContext";
@@ -15,15 +17,17 @@ Coral::HostSettings DotnetRuntime::m_Settings =
 
 bool_t DotnetRuntime::Initialize()
 {
-    Logger::LogDebug("Initializing .NET runtime");
+    Logger::LogInfo("Initializing .NET runtime");
+
+    m_Settings.CoralDirectory = Application::executablePath.parent_path().string();
     
-    if (!m_Instance.Initialize(m_Settings))
+    if (!m_Runtime.Initialize(m_Settings))
     {
         Logger::LogError("An unknown error occured while initializing .NET runtime");
         return false;
     }
 
-    m_Alc = m_Instance.CreateAssemblyLoadContext(AlcName);
+    m_Alc = m_Runtime.CreateAssemblyLoadContext(AlcName);
 
     LoadAssembly("CoreCSharp.dll");
 
@@ -32,28 +36,44 @@ bool_t DotnetRuntime::Initialize()
 
 void DotnetRuntime::Shutdown()
 {
-    Logger::LogDebug("Shutting down .NET runtime");
+    Logger::LogInfo("Shutting down .NET runtime");
 
     if (!m_LoadedAssemblies.empty())
         UnloadAllAssemblies();
     if (m_Initialized)
-        m_Instance.Shutdown();
+        m_Runtime.Shutdown();
 }
 
-void DotnetRuntime::LoadAssembly(const std::string& filename)
+bool_t DotnetRuntime::LoadAssembly(const std::string& filename)
 {
-    Logger::LogInfo("Loading .NET assembly {}", filename);
-    m_LoadedAssemblies.emplace_back(m_Alc.LoadAssembly(filename), filename);
+    const std::filesystem::path&& filepath = Application::executablePath.parent_path().string() + static_cast<char_t>(std::filesystem::path::preferred_separator) + filename;
+    
+    Logger::LogInfo("Loading .NET assembly {}", filepath.filename());
+
+    const std::string&& str = filepath.string();
+    
+    DotnetAssembly* assembly = new DotnetAssembly(str);
+    if (assembly->Load(m_Alc))
+    {
+        assembly->ProcessTypes();
+        m_LoadedAssemblies.push_back(assembly);
+    }
+
+    return false;
 }
 
 void DotnetRuntime::UnloadAllAssemblies(const bool_t reloadContext)
 {
     Logger::LogInfo("Unloading {} .NET assemblies", m_LoadedAssemblies.size());
+    
+    for (auto&& assembly : m_LoadedAssemblies)
+        delete assembly;
     m_LoadedAssemblies.clear();
-    m_Instance.UnloadAssemblyLoadContext(m_Alc);
+    
+    m_Runtime.UnloadAssemblyLoadContext(m_Alc);
 
     if (reloadContext)
-        m_Alc = m_Instance.CreateAssemblyLoadContext(AlcName);
+        m_Alc = m_Runtime.CreateAssemblyLoadContext(AlcName);
 }
 
 void DotnetRuntime::ReloadAllAssemblies()
@@ -62,7 +82,7 @@ void DotnetRuntime::ReloadAllAssemblies()
     UnloadAllAssemblies();
     
     for (auto&& assembly : assemblies)
-        LoadAssembly(assembly.filename);
+        LoadAssembly(assembly->GetFilename());
 }
 
 bool_t DotnetRuntime::GetInitialized()

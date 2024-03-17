@@ -11,7 +11,7 @@ using namespace XnorCore;
 
 void ResourceManager::LoadAll()
 {
-    Logger::LogDebug("Loading all resources from FileManager");
+    Logger::LogInfo("Loading all resources from FileManager");
 
     auto&& start = std::chrono::system_clock::now();
 
@@ -48,7 +48,7 @@ void ResourceManager::LoadAll()
         }
     }
 
-    Logger::LogDebug(
+    Logger::LogInfo(
         "Successfully loaded {} files in {} resources. Took {}",
         files.size(),
         m_Resources.size() - oldResourceCount,
@@ -108,7 +108,7 @@ void ResourceManager::Unload(const std::string& name)
 
 void ResourceManager::UnloadAll()
 {
-    Logger::LogDebug("Unloading all resources ({})", m_Resources.size());
+    Logger::LogInfo("Unloading all resources ({})", m_Resources.size());
 
     auto&& start = std::chrono::system_clock::now();
     
@@ -125,5 +125,5 @@ void ResourceManager::UnloadAll()
     // Smart pointers are deleted automatically, we only need to clear the container
     m_Resources.clear();
     
-    Logger::LogDebug("ResourceManager unload successful. Took {}", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start));
+    Logger::LogInfo("ResourceManager unload successful. Took {}", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start));
 }

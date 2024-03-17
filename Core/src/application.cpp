@@ -1,5 +1,12 @@
 ﻿#include "application.hpp"
 
+// We need windows.h for GetModuleFileNameA
+#undef APIENTRY
+// ReSharper disable once CppInconsistentNaming
+#define XMLDocument XMLDocument_dont_care
+#include <windows.h>
+#undef XMLDocument
+
 #include "screen.hpp"
 #include "csharp/dotnet_runtime.hpp"
 #include "file/file_manager.hpp"
@@ -12,6 +19,10 @@ using namespace XnorCore;
 Application::Application()
 {
     m_ApplicationInstance = this;
+
+	char_t exePath[MAX_PATH];
+	GetModuleFileNameA(nullptr, exePath, MAX_PATH);
+	executablePath = absolute(std::filesystem::path(exePath));
     
     Window::Initialize();
 
@@ -22,12 +33,14 @@ Application::Application()
     Input::Initialize();
     Screen::Initialize();
 
-	//DotnetRuntime::Initialize();
+	DotnetRuntime::Initialize();
+
+	DotnetRuntime::LoadAssembly("Game.dll");
 }
 
 Application::~Application()
 {
-	//DotnetRuntime::Shutdown();
+	DotnetRuntime::Shutdown();
 	
     ResourceManager::UnloadAll();
 	Rhi::Shutdown();

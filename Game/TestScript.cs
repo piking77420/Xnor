@@ -30,8 +30,6 @@ namespace Game
 
             Guid g = Guid.New();
             Logger.LogInfo("GUID: {0}", g);
-
-            Matrix3 m;
         }
 
         public override void Update()
