@@ -63,6 +63,14 @@ private:
     template <typename ReflectT, typename MemberT, typename DescriptorT>
     static void DisplayScalar(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
     
+    /// @brief Displays a grid plotting for a Vector2
+    /// @tparam ReflectT Reflected top level type
+    /// @tparam MemberT Member type
+    /// @tparam DescriptorT Field descriptor type
+    /// @param metadata Member metadata
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DisplayGridPlotting(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
+    
     /// @brief Displays a math type (Vector and Quaternion)
     /// @tparam ReflectT Reflected top level type
     /// @tparam MemberT Member type
@@ -113,6 +121,9 @@ private:
 
     template <typename ReflectT, typename MemberT, typename DescriptorT>
     static void DisplayObjectInternal(ReflectT* obj, DescriptorT member);
+
+    template <typename ReflectT, bool_t StaticT>
+    static void DisplayFields(ReflectT* obj);
 
     template <typename ReflectT, typename MemberT, typename DescriptorT>
     static void DisplaySimpleType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);

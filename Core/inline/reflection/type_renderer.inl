@@ -45,6 +45,62 @@ void TypeRenderer::DisplayScalar(const Metadata<ReflectT, MemberT, DescriptorT>&
 }
 
 template <typename ReflectT, typename MemberT, typename DescriptorT>
+void TypeRenderer::DisplayGridPlotting(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
+{
+    const Reflection::GridPlotting* const plotting = Reflection::TryGetAttribute<Reflection::GridPlotting, DescriptorT>(metadata.descriptor);
+    
+    ImGui::Text("%s", metadata.name);
+    ImDrawList* const drawList = ImGui::GetWindowDrawList();
+
+    // TODO handle resize
+    constexpr Vector2 size = Vector2(100, 100);
+    ImGui::InvisibleButton("##canvas", Utils::ToImVec(size));
+
+    const ImVec2 p0 = ImGui::GetItemRectMin();
+    const ImVec2 p1 = ImGui::GetItemRectMax();
+
+    const Vector2 plottingRange = Vector2(plotting->minimum, plotting->maximum);
+    constexpr Vector2 uniformRange = Vector2(0.f, 1.f);
+
+    // Handle clicking
+    if (ImGui::IsItemActive() && ImGui::IsMouseDown(ImGuiMouseButton_Left))
+    {
+        const ImGuiIO& io = ImGui::GetIO();
+
+        // Compute new value, ranged between 0 and 1
+        const Vector2 newValue = (Utils::FromImVec(io.MousePos) - Utils::FromImVec(p0)) / size;
+
+        // Remap the value from [0; 1] to [min; max]
+        metadata.obj->x = Utils::RemapValue(newValue.x, uniformRange, plottingRange);
+        metadata.obj->y = Utils::RemapValue(newValue.y, uniformRange, plottingRange);
+
+        // Clamp the value between min and max
+        metadata.obj->x = std::clamp<float_t>(metadata.obj->x, plotting->minimum, plotting->maximum);
+        metadata.obj->y = std::clamp<float_t>(metadata.obj->y, plotting->minimum, plotting->maximum);
+    }
+
+    // Create rectangle
+    ImGui::PushClipRect(p0, p1, true);
+    drawList->AddRectFilled(p0, p1, IM_COL32(90, 90, 120, 255));
+
+    // Remap from [min; max] to [0, 1]
+    const Vector2 clamped = Vector2(
+        Utils::RemapValue(metadata.obj->x, plottingRange, uniformRange),
+        Utils::RemapValue(metadata.obj->y, plottingRange, uniformRange)
+    );;
+
+    // Compute cursor position
+    const Vector2 position = Utils::FromImVec(p0) + clamped * size;
+
+    drawList->AddCircle(Utils::ToImVec(position), 5, IM_COL32_WHITE);
+    ImGui::PopClipRect();
+
+    // Draw slider float version
+    ImGui::SameLine();
+    ImGui::SliderFloat2("##v2", metadata.obj->Raw(), plotting->minimum, plotting->maximum, "%.3f", ImGuiSliderFlags_AlwaysClamp);
+}
+
+template <typename ReflectT, typename MemberT, typename DescriptorT>
 void TypeRenderer::DisplayMathType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
     // Display vector types as drag
@@ -54,58 +110,9 @@ void TypeRenderer::DisplayMathType(const Metadata<ReflectT, MemberT, DescriptorT
     }
     else if constexpr (Meta::IsSame<MemberT, Vector2>)
     {
-        const Reflection::GridPlotting* const plotting = Reflection::TryGetAttribute<Reflection::GridPlotting, DescriptorT>(metadata.descriptor);
-        if (plotting)
+        if (metadata.template HasAttribute<Reflection::GridPlotting>())
         {
-            ImGui::Text("%s", metadata.name);
-            ImDrawList* const drawList = ImGui::GetWindowDrawList();
-
-            // TODO handle resize
-            constexpr Vector2 size = Vector2(100, 100);
-            ImGui::InvisibleButton("##canvas", Utils::ToImVec(size));
-
-            const ImVec2 p0 = ImGui::GetItemRectMin();
-            const ImVec2 p1 = ImGui::GetItemRectMax();
-
-            const Vector2 plottingRange = Vector2(plotting->minimum, plotting->maximum);
-            constexpr Vector2 uniformRange = Vector2(0.f, 1.f);
-
-            // Handle clicking
-            if (ImGui::IsItemActive() && ImGui::IsMouseDown(ImGuiMouseButton_Left))
-            {
-                const ImGuiIO& io = ImGui::GetIO();
-
-                // Compute new value, ranged between 0 and 1
-                const Vector2 newValue = (Utils::FromImVec(io.MousePos) - Utils::FromImVec(p0)) / size;
-
-                // Remap the value from [0; 1] to [min; max]
-                metadata.obj->x = Utils::RemapValue(newValue.x, uniformRange, plottingRange);
-                metadata.obj->y = Utils::RemapValue(newValue.y, uniformRange, plottingRange);
-
-                // Clamp the value between min and max
-                metadata.obj->x = std::clamp<float_t>(metadata.obj->x, plotting->minimum, plotting->maximum);
-                metadata.obj->y = std::clamp<float_t>(metadata.obj->y, plotting->minimum, plotting->maximum);
-            }
-
-            // Create rectangle
-            ImGui::PushClipRect(p0, p1, true);
-            drawList->AddRectFilled(p0, p1, IM_COL32(90, 90, 120, 255));
-
-            // Remap from [min; max] to [0, 1]
-            const Vector2 clamped = Vector2(
-                Utils::RemapValue(metadata.obj->x, plottingRange, uniformRange),
-                Utils::RemapValue(metadata.obj->y, plottingRange, uniformRange)
-            );;
-
-            // Compute cursor position
-            const Vector2 position = Utils::FromImVec(p0) + clamped * size;
-
-            drawList->AddCircle(Utils::ToImVec(position), 5, IM_COL32_WHITE);
-            ImGui::PopClipRect();
-
-            // Draw slider float version
-            ImGui::SameLine();
-            ImGui::SliderFloat2("##v2", metadata.obj->Raw(), plotting->minimum, plotting->maximum, "%.3f", ImGuiSliderFlags_AlwaysClamp);
+            DisplayGridPlotting<ReflectT, MemberT, DescriptorT>(metadata);
         }
         else
         {
@@ -445,20 +452,48 @@ void TypeRenderer::DisplayObject(ReflectT* const obj)
     Utils::AlignImGuiCursor(textSize);
     ImGui::Text("%s", typeName.c_str());
 
+    DisplayFields<ReflectT, true>(obj);
+    DisplayFields<ReflectT, false>(obj);
+}
+
+template <typename ReflectT, bool_t StaticT>
+void TypeRenderer::DisplayFields(ReflectT* const obj)
+{
+    // Get reflected data
+    constexpr TypeDescriptor<ReflectT> desc = Reflection::GetTypeInfo<ReflectT>();
+
+    bool_t hasStatic = false;
+
     // Loop over each reflected member
     refl::util::for_each(desc.members, [&]<typename T>(const T member)
     {
         // Get member type
-        using MemberT = typename T::value_type;
+        using MemberT = Meta::RemoveConstSpecifier<typename T::value_type>;
 
         // Shorthand for the notify change attribute
         using NotifyChangeT = Reflection::NotifyChange<ReflectT>;
-    
+
+        constexpr bool_t isConst = !member.is_writable;
         constexpr bool_t hidden = Reflection::HasAttribute<Reflection::HideInInspector>(member);
+        constexpr bool_t display = [&](const bool_t isStatic) -> bool_t
+        {
+            if constexpr (StaticT)
+                return isStatic;
+            else
+                return !isStatic;
+        }(member.is_static);
+
+        if constexpr (StaticT && member.is_static)
+        {
+            hasStatic = true;
+        }
+
         constexpr bool_t notifyChange = Reflection::HasAttribute<NotifyChangeT>(member);
 
-        if constexpr (!hidden)
+        if constexpr (!hidden && display)
         {
+            ImGui::BeginDisabled(isConst);
+            
             if constexpr (notifyChange)
             {
                 // Need to notify if a change happened, so keep the old value
@@ -482,8 +517,18 @@ void TypeRenderer::DisplayObject(ReflectT* const obj)
                 // Don't need to notify, simply display the object
                 DisplayObjectInternal<ReflectT, MemberT, T>(obj, member);
             }
+
+            ImGui::EndDisabled();
         }
     });
+
+    if constexpr (StaticT)
+    {
+        if (hasStatic)
+        {
+            ImGui::Separator();
+        }
+    }
 }
 
 template <typename ReflectT, typename MemberT, typename DescriptorT>
@@ -497,7 +542,13 @@ void TypeRenderer::DisplayObjectInternal(ReflectT* obj, DescriptorT member)
     const Metadata<ReflectT, MemberT, DescriptorT> metadata = {
         .topLevelObj = obj,
         .name = name,
-        .obj = &member.get(obj),
+        .obj = [&]() -> MemberT*
+        {
+            if constexpr (member.is_static)
+                return const_cast<MemberT*>(&member.get());
+            else
+                return const_cast<MemberT*>(&member.get(obj));
+        }(),
         .descriptor = member,
         .range = Reflection::TryGetAttribute<Reflection::Range<MemberT>, DescriptorT>(member)
     };

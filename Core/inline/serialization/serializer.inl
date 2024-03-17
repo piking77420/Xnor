@@ -31,7 +31,7 @@ void Serializer::FetchAttribute(const std::string& attributeName, const T& value
 }
 
 template <typename ReflectT>
-void Serializer::Serialize(const ReflectT* const obj, const bool_t isRoot)
+void Serializer::Serialize([[maybe_unused]] const ReflectT* const obj, const bool_t isRoot)
 {
     constexpr TypeDescriptor<ReflectT> desc = Reflection::GetTypeInfo<ReflectT>();
 
@@ -40,6 +40,7 @@ void Serializer::Serialize(const ReflectT* const obj, const bool_t isRoot)
     else
         BeginXmlElement(desc.name.c_str(), "");
 
+    /*
     refl::util::for_each(desc.members, [&]<typename T>(const T member)
     {
         constexpr bool_t isFunction = refl::descriptor::is_function(member);
@@ -73,6 +74,7 @@ void Serializer::Serialize(const ReflectT* const obj, const bool_t isRoot)
             Logger::LogInfo("{} ; {}", desc.name.c_str(), member.name.c_str());
         }
     });
+    */
 
     if (isRoot)
         EndRootElement();

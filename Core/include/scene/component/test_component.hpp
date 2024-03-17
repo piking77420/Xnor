@@ -34,10 +34,13 @@ private:
     Vector3 m_BasePosition;
 
     bool_t m_Rotate = true;
-    
+
     Vector2 m_PlottingTest1;
     Vector2 m_PlottingTest2;
-    Vector2 m_PlottingTest3;
+
+    const int32_t m_ConstTest = 0;
+    static inline int32_t m_StaticTest1 = 5;
+    static inline int32_t m_StaticTest2 = 10;
 };
 
 END_XNOR_CORE
@@ -50,5 +53,7 @@ REFL_AUTO(
     field(m_Radius),
     field(m_PlottingTest1, XnorCore::Reflection::GridPlotting(0.f, 1.f)),
     field(m_PlottingTest2, XnorCore::Reflection::GridPlotting(-1.f, 1.f)),
-    field(m_PlottingTest3, XnorCore::Reflection::GridPlotting(0.f, 100.f))
+    field(m_ConstTest),
+    field(m_StaticTest1),
+    field(m_StaticTest2)
 );
