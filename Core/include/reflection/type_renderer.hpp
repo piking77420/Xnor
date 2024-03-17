@@ -14,9 +14,11 @@ public:
     static void DisplayObject(ReflectT* obj);
     
 private:
-    template <typename MemberT, typename DescriptorT>
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
     struct Metadata
     {
+        ReflectT* topLevelObj;
+        
         const char_t* name;
         MemberT* obj;
 
@@ -33,32 +35,32 @@ private:
         }
     };
 
-    template <typename MemberT, typename DescriptorT>
-    static void DisplayScalar(const Metadata<MemberT, DescriptorT>& metadata);
-    template <typename MemberT, typename DescriptorT>
-    static void DisplayMathType(const Metadata<MemberT, DescriptorT>& metadata);
-    template <typename MemberT, typename DescriptorT>
-    static void DisplayColorType(const Metadata<MemberT, DescriptorT>& metadata);
-    template <typename MemberT, typename DescriptorT>
-    static void DisplayRawPointer(const Metadata<MemberT, DescriptorT>& metadata);
-    template <typename MemberT, typename DescriptorT>
-    static void DisplayXnorPointer(const Metadata<MemberT, DescriptorT>& metadata);
-    template <typename MemberT, typename DescriptorT>
-    static void DisplayEnum(const Metadata<MemberT, DescriptorT>& metadata);
-    template <typename MemberT, typename DescriptorT>
-    static void DisplayEnumFlag(const Metadata<MemberT, DescriptorT>& metadata);
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DisplayScalar(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DisplayMathType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DisplayColorType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DisplayRawPointer(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DisplayXnorPointer(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DisplayEnum(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DisplayEnumFlag(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 
     template <typename ReflectT, typename MemberT, typename DescriptorT>
     static void DisplayObjectInternal(ReflectT* obj, DescriptorT member);
 
-    template <typename MemberT, typename DescriptorT>
-    static void DisplaySimpleType(const Metadata<MemberT, DescriptorT>& metadata);
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DisplaySimpleType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 
-    template <typename MemberT, typename DescriptorT>
-    static void DisplayArray(const Metadata<MemberT, DescriptorT>& metadata);
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DisplayArray(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 
-    template <typename MemberT, typename DescriptorT>
-    static void DisplayList(const Metadata<MemberT, DescriptorT>& metadata);
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DisplayList(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 
     XNOR_ENGINE static void DisplayObjectUsingFactory(void* obj, size_t hash);
     

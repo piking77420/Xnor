@@ -8,8 +8,8 @@
 
 BEGIN_XNOR_CORE
 
-template <typename MemberT, typename DescriptorT>
-void TypeRenderer::DisplayScalar(const Metadata<MemberT, DescriptorT>& metadata)
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void TypeRenderer::DisplayScalar(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
     uint32_t type;
 
@@ -40,8 +40,8 @@ void TypeRenderer::DisplayScalar(const Metadata<MemberT, DescriptorT>& metadata)
     }
 }
 
-template <typename MemberT, typename DescriptorT>
-void TypeRenderer::DisplayMathType(const Metadata<MemberT, DescriptorT>& metadata)
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void TypeRenderer::DisplayMathType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
     if constexpr (Meta::IsSame<MemberT, Vector2i>)
     {
@@ -68,8 +68,8 @@ void TypeRenderer::DisplayMathType(const Metadata<MemberT, DescriptorT>& metadat
     }
 }
 
-template <typename MemberT, typename DescriptorT>
-void TypeRenderer::DisplayColorType(const Metadata<MemberT, DescriptorT>& metadata)
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void TypeRenderer::DisplayColorType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
     if constexpr (Meta::IsSame<MemberT, ColorRgb>)
     {
@@ -95,8 +95,8 @@ void TypeRenderer::DisplayColorType(const Metadata<MemberT, DescriptorT>& metada
     }
 }
 
-template <typename MemberT, typename DescriptorT>
-void TypeRenderer::DisplayXnorPointer(const Metadata<MemberT, DescriptorT>& metadata)
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void TypeRenderer::DisplayXnorPointer(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
     using PtrT = typename MemberT::Type;
 
@@ -170,8 +170,8 @@ void TypeRenderer::DisplayXnorPointer(const Metadata<MemberT, DescriptorT>& meta
     ImGui::PopID();
 }
 
-template <typename MemberT, typename DescriptorT>
-void TypeRenderer::DisplayRawPointer(const Metadata<MemberT, DescriptorT>& metadata)
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void TypeRenderer::DisplayRawPointer(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
     using TypeT = Meta::RemovePointerSpecifier<MemberT>;
 
@@ -229,8 +229,8 @@ void TypeRenderer::DisplayRawPointer(const Metadata<MemberT, DescriptorT>& metad
     }
 }
 
-template <typename MemberT, typename DescriptorT>
-void TypeRenderer::DisplayEnum(const Metadata<MemberT, DescriptorT>& metadata)
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void TypeRenderer::DisplayEnum(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
     constexpr auto enumNames = magic_enum::enum_names<MemberT>();
     using NamesArrayT = decltype(enumNames);
@@ -244,8 +244,8 @@ void TypeRenderer::DisplayEnum(const Metadata<MemberT, DescriptorT>& metadata)
     ImGui::Combo(metadata.name, reinterpret_cast<int32_t*>(metadata.obj), getter, reinterpret_cast<void*>(const_cast<Meta::RemoveConstSpecifier<NamesArrayT>*>(&enumNames)), static_cast<int32_t>(enumNames.size()));
 }
 
-template <typename MemberT, typename DescriptorT>
-void TypeRenderer::DisplayEnumFlag(const Metadata<MemberT, DescriptorT>& metadata)
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void TypeRenderer::DisplayEnumFlag(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
     constexpr auto enumNames = magic_enum::enum_names<MemberT>();
     constexpr size_t size = enumNames.size();
@@ -348,7 +348,8 @@ void TypeRenderer::DisplayObjectInternal(ReflectT* obj, DescriptorT member)
     const std::string n = Utils::HumanizeVariableName(member.name.c_str());
     const char_t* const name = n.c_str();
 
-    const Metadata<MemberT, DescriptorT> metadata = {
+    const Metadata<ReflectT, MemberT, DescriptorT> metadata = {
+        .topLevelObj = obj,
         .name = name,
         .obj = &member.get(obj),
         .descriptor = member,
@@ -358,45 +359,35 @@ void TypeRenderer::DisplayObjectInternal(ReflectT* obj, DescriptorT member)
 
     if constexpr (Meta::IsArray<MemberT>)
     {
-        DisplayArray<MemberT, DescriptorT>(metadata);
+        DisplayArray<ReflectT, MemberT, DescriptorT>(metadata);
     }
     else if constexpr (Meta::IsXnorList<MemberT>)
     {
-        if constexpr (Meta::IsSame<typename MemberT::Type, Component*>)
-        {
-            const size_t size = metadata.obj->GetSize();
-            DisplayList<MemberT, DescriptorT>(metadata);
-            if (size + 1 == metadata.obj->GetSize())
-                (*metadata.obj)[size]->entity = obj;
-        }
-        else
-        {
-            DisplayList<MemberT, DescriptorT>(metadata);
-        }
+        DisplayList<ReflectT, MemberT, DescriptorT>(metadata);
     }
     else
     {
-        DisplaySimpleType<MemberT, DescriptorT>(metadata);
+        DisplaySimpleType<ReflectT, MemberT, DescriptorT>(metadata);
     }
 
     if (metadata.tooltip)
         ImGui::SetItemTooltip("%s", metadata.tooltip->text);
 }
 
-template <typename MemberT, typename DescriptorT>
-void TypeRenderer::DisplaySimpleType(const Metadata<MemberT, DescriptorT>& metadata)
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void TypeRenderer::DisplaySimpleType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
     if constexpr (Meta::IsIntegralOrFloating<MemberT>)
     {
-        DisplayScalar<MemberT, DescriptorT>(metadata);
+        DisplayScalar<ReflectT, MemberT, DescriptorT>(metadata);
     }
     else if constexpr (Meta::IsMathType<MemberT>)
     {
-        DisplayMathType<MemberT, DescriptorT>(metadata);
+        DisplayMathType<ReflectT, MemberT, DescriptorT>(metadata);
     }
     else if constexpr (Meta::IsColorType<MemberT>)
     {
-        DisplayColorType<MemberT, DescriptorT>(metadata);
+        DisplayColorType<ReflectT, MemberT, DescriptorT>(metadata);
     }
     else if constexpr (Meta::IsSame<MemberT, bool_t>)
     {
@@ -408,18 +399,18 @@ void TypeRenderer::DisplaySimpleType(const Metadata<MemberT, DescriptorT>& metad
     }
     else if constexpr (Meta::IsPointer<MemberT>)
     {
-        DisplayRawPointer<MemberT, DescriptorT>(metadata);
+        DisplayRawPointer<ReflectT, MemberT, DescriptorT>(metadata);
     }
     else if constexpr (Meta::IsXnorPointer<MemberT>)
     {
-        DisplayXnorPointer<MemberT, DescriptorT>(metadata);
+        DisplayXnorPointer<ReflectT, MemberT, DescriptorT>(metadata);
     }
     else if constexpr (Meta::IsEnum<MemberT>)
     {
         if (metadata.HasAttribute<Reflection::EnumFlags>())
-            DisplayEnumFlag<MemberT, DescriptorT>(metadata);
+            DisplayEnumFlag<ReflectT, MemberT, DescriptorT>(metadata);
         else
-            DisplayEnum<MemberT, DescriptorT>(metadata);
+            DisplayEnum<ReflectT, MemberT, DescriptorT>(metadata);
     }
     else
     {
@@ -428,15 +419,16 @@ void TypeRenderer::DisplaySimpleType(const Metadata<MemberT, DescriptorT>& metad
     }
 }
 
-template <typename MemberT, typename DescriptorT>
-void TypeRenderer::DisplayArray(const Metadata<MemberT, DescriptorT>& metadata)
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void TypeRenderer::DisplayArray(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
     using ArrayT = Meta::RemoveArraySpecifier<MemberT>;
     constexpr size_t arraySize = sizeof(MemberT) / sizeof(ArrayT);
 
     if (ImGui::CollapsingHeader(metadata.name))
     {
-        Metadata<ArrayT, DescriptorT> metadataArray = {
+        Metadata<ReflectT, ArrayT, DescriptorT> metadataArray = {
+            .topLevelObj = metadata.topLevelObj,
             .name = "",
             .descriptor = metadata.descriptor,
             .range = Reflection::TryGetAttribute<Reflection::Range<ArrayT>>(metadata.descriptor),
@@ -452,15 +444,15 @@ void TypeRenderer::DisplayArray(const Metadata<MemberT, DescriptorT>& metadata)
             metadataArray.name = index.c_str();
             metadataArray.obj = &(*metadata.obj)[i];
             
-            DisplaySimpleType<ArrayT, DescriptorT>(metadataArray);
+            DisplaySimpleType<ReflectT, ArrayT, DescriptorT>(metadataArray);
 
             ImGui::PopID();
         }
     }
 }
 
-template <typename MemberT, typename DescriptorT>
-void TypeRenderer::DisplayList(const Metadata<MemberT, DescriptorT>& metadata)
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void TypeRenderer::DisplayList(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
     using ArrayT = typename MemberT::Type;
     constexpr bool_t isComponentList = Meta::IsSame<ArrayT, Component*>;
@@ -480,7 +472,8 @@ void TypeRenderer::DisplayList(const Metadata<MemberT, DescriptorT>& metadata)
             }
         }
 
-        Metadata<ArrayT, DescriptorT> metadataArray = {
+        Metadata<ReflectT, ArrayT, DescriptorT> metadataArray = {
+            .topLevelObj = metadata.topLevelObj,
             .name = "",
             .descriptor = metadata.descriptor,
             .range = Reflection::TryGetAttribute<Reflection::Range<ArrayT>>(metadata.descriptor),
@@ -522,7 +515,7 @@ void TypeRenderer::DisplayList(const Metadata<MemberT, DescriptorT>& metadata)
             metadataArray.name = index.c_str();
             metadataArray.obj = &(*metadata.obj)[i];
 
-            DisplaySimpleType<ArrayT, DescriptorT>(metadataArray);
+            DisplaySimpleType<ReflectT, ArrayT, DescriptorT>(metadataArray);
 
             ImGui::PopID();
         }
@@ -535,6 +528,7 @@ void TypeRenderer::DisplayList(const Metadata<MemberT, DescriptorT>& metadata)
                 if (e)
                 {
                     metadata.obj->Add(e);
+                    e->entity = metadata.topLevelObj;
                     m_ComponentFilterTarget = nullptr;
                 }
             }
