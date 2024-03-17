@@ -13,7 +13,7 @@ void TestComponent::Begin()
 
     light = entity->GetComponent<Light>();
 
-    color = static_cast<ColorHsv>(ColorRgb::Red());
+    color = static_cast<ColorHsva>(ColorRgb::Red());
 }
 
 void TestComponent::Update()

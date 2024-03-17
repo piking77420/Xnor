@@ -277,6 +277,7 @@ public:
 	[[nodiscard]]
 	constexpr float_t W() const noexcept;
 
+#ifndef SWIG
     /// @brief Returns a reference to the @c x component of this Quaternion.
 	[[nodiscard]]
 	constexpr float_t& X() noexcept;
@@ -292,6 +293,7 @@ public:
     /// @brief Returns a reference to the @c w component of this Quaternion.
 	[[nodiscard]]
 	constexpr float_t& W() noexcept;
+#endif
 
     /// @brief Computes the conjugate of this Quaternion.
     ///
@@ -340,13 +342,15 @@ public:
 	/// @returns The value of the component at index i.
 	[[nodiscard]]
 	constexpr float_t operator[](size_t i) const;
-	
+
+#ifndef SWIG
 	/// @brief Retrieves this vector's component at index i.
 	/// 
 	/// @param i The index of the component to get. It would be 0 for x, 1 for y, etc...
 	/// @returns The value of the component at index i.
 	[[nodiscard]]
 	constexpr float_t& operator[](size_t i);
+#endif
 	
     /// @brief Converts this Quaternion to a Vector3 by returning its imaginary part.
 	constexpr explicit operator Vector3() const noexcept;
@@ -494,6 +498,7 @@ constexpr Quaternion operator*(const float_t factor, const Quaternion q) noexcep
 [[nodiscard]]
 constexpr Quaternion operator/(const Quaternion& v, const float_t factor) noexcept { return Quaternion(v.imaginary / factor, v.real / factor); }
 
+#ifndef SWIG
 /// @brief Adds two @ref Quaternion "Quaternions" according to @ref operator+(const Quaternion&, const Quaternion&), placing the result in @p a.
 constexpr Quaternion& operator+=(Quaternion& a, const Quaternion& b) noexcept { return a = a + b; }
 
@@ -508,6 +513,7 @@ constexpr Quaternion& operator*=(Quaternion& q, const float_t factor) noexcept {
 
 /// @brief Divides a Quaternion by a factor according to @ref operator/(const Quaternion&, const float_t), placing the result in @p a.
 constexpr Quaternion& operator/=(Quaternion& q, const float_t factor) noexcept { return q = q / factor; }
+#endif
 
 /// @brief Checks if two Quaternions are considered equal using @ref Calc::Equals.
 [[nodiscard]]

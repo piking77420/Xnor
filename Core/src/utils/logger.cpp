@@ -248,3 +248,12 @@ void Logger::PrintLog(const LogEntry& log)
     if (log.printToFile && file.is_open())
         file << baseMessage;
 }
+
+// Explicitly instantiate empty template versions of the Log functions for the C# DLL linkage
+template void Logger::Log<>(LogLevel level, const std::string& format);
+template void Logger::LogTempDebug<>(const std::string& format, const char_t* file, int32_t line);
+template void Logger::LogDebug<>(const std::string& format);
+template void Logger::LogInfo<>(const std::string& format);
+template void Logger::LogWarning<>(const std::string& format);
+template void Logger::LogError<>(const std::string& format);
+template void Logger::LogFatal<>(const std::string& format);

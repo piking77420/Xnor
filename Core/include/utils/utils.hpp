@@ -84,7 +84,7 @@ namespace Utils
     /// @param color ColorHsv to convert
     /// @return ImVec4 representation
     [[nodiscard]]
-    XNOR_ENGINE constexpr ImVec4 ToImCol(ColorHsv color);
+    XNOR_ENGINE constexpr ImVec4 ToImCol(ColorHsva color);
 
     /// @brief Converts an ImVec4 to a @ref Colorf
     /// @param color ImVec4 to convert

@@ -52,7 +52,7 @@ void LightManager::BeginFrame(const Scene& scene)
 		
 		gpuLightData.pointLightData[i] =
 		{
-			.color = pointLight->color.Rgb(),
+			.color = static_cast<Vector3>(pointLight->color),
 			.intensity = pointLight->intensity,
 			.position = static_cast<Vector3>(pointLight->entity->transform.worldMatrix[3]),
 			.radius = 30.f * sqrt(pointLight->intensity),
@@ -68,7 +68,7 @@ void LightManager::BeginFrame(const Scene& scene)
 		
 		gpuLightData.spotLightData[i] =
 		{
-			.color = spotLight->color.Rgb(),
+			.color = static_cast<Vector3>(spotLight->color),
 			.intensity = spotLight->intensity,
 			.position = static_cast<Vector3>(spotLight->entity->transform.worldMatrix[3]),
 			.cutOff = std::cos(spotLight->cutOff),
@@ -87,7 +87,7 @@ void LightManager::BeginFrame(const Scene& scene)
 		
 		gpuLightData.directionalData[i] =
 		{
-			.color = directionalLights[i]->color.Rgb(),
+			.color = static_cast<Vector3>(directionalLights[i]->color),
 			.intensity = directionalLights[i]->intensity,
 			.direction = { direction.x, direction.y, direction.z },
 		};

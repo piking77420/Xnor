@@ -4,7 +4,6 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <Company>XNOR</Company>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -18,15 +17,5 @@
   <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Using Include="Xnor.Core"/>
-    <Using Include="Xnor.Core.Guid" Alias="Guid"/>
-    <Using Remove="System.IO;System.Linq;System.Net.Http;System.Threading;System.Threading.Tasks"/>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\CoreCSharp\CoreCSharp.csproj" />
-  </ItemGroup>
 
 </Project>

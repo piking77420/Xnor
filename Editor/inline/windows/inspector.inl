@@ -81,11 +81,11 @@ void Inspector::DisplayColorType(MemberT* const obj, const Metadata<MemberT, Des
         ImGui::ColorPicker4(metadata.name, &tmp.r, ImGuiColorEditFlags_DisplayHex);
         *obj = static_cast<XnorCore::ColorRgb>(tmp);
     }
-    else if constexpr (XnorCore::Meta::IsSame<MemberT, XnorCore::ColorHsv>)
+    else if constexpr (XnorCore::Meta::IsSame<MemberT, XnorCore::ColorHsva>)
     {
         XnorCore::Colorf tmp = static_cast<XnorCore::Colorf>(*obj);
         ImGui::ColorPicker4(metadata.name, &tmp.r, ImGuiColorEditFlags_DisplayHSV);
-        *obj = static_cast<XnorCore::ColorHsv>(tmp);
+        *obj = static_cast<XnorCore::ColorHsva>(tmp);
     }
     else if constexpr (XnorCore::Meta::IsSame<MemberT, XnorCore::Colorf>)
     {

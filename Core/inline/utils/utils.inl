@@ -36,7 +36,7 @@ constexpr ImVec4 Utils::ToImCol(const Colorf& color)
     return ImVec4(color.r, color.g, color.b, color.a);
 }
 
-constexpr ImVec4 Utils::ToImCol(const ColorHsv color)
+constexpr ImVec4 Utils::ToImCol(const ColorHsva color)
 {
     const Colorf c = static_cast<Colorf>(static_cast<ColorRgb>(color));
     return ImVec4(c.r, c.g, c.b, c.a);

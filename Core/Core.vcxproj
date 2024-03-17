@@ -406,19 +406,24 @@
     <Content Include="include\rendering\rhi_typedef.hpp" />
     <Content Include="include\utils\meta_programming.hpp" />
     <Content Include="swig\CMakeLists.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="include\core.i" />
+    <Content Include="swig\core.i" />
+    <Content Include="swig\file\file.i" />
+    <Content Include="swig\toolbox.i" />
+    <Content Include="swig\utils\color.i" />
+    <Content Include="swig\utils\logger.i" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <Target Name="CleanSwig" AfterTargets="Clean">
-    <RemoveDir Directories="$(SolutionDir)Game\Xnor;$(ProjectDir)swig\build" />
+    <RemoveDir Directories="$(SolutionDir)CoreCSharp\src;$(ProjectDir)swig\build" />
     <Message Text="Clean SWIG C# Wrappers" Importance="high" />
   </Target>
+  <ItemGroup>
+    <CoralManagedFiles Include="$(ProjectDir)externals\managed\Coral\$(Configuration)\*"/>
+  </ItemGroup>
   <Target Name="CopyCoralManaged" AfterTargets="Build">
-    <Copy SourceFiles="$(ProjectDir)externals\managed\Coral\$(Configuration)\*" DestinationFolder="$(OutDir)" />
+    <Copy SourceFiles="@(CoralManagedFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
     <Message Text="Copy Coral Managed Assemblies" Importance="high" />
   </Target>
 </Project>
