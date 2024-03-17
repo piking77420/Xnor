@@ -216,7 +216,6 @@
     <ClInclude Include="include\windows\render_window.hpp" />
     <ClInclude Include="include\windows\hierarchy.hpp" />
     <ClInclude Include="include\windows\ui_window.hpp" />
-    <ClInclude Include="inline\windows\inspector.inl" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

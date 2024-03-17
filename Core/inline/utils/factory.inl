@@ -1,8 +1,7 @@
 #pragma once
 
-#include "utils/factory.hpp"
-
 #include "core.hpp"
+#include "reflection/type_renderer.hpp"
 #include "serialization/serializer.hpp"
 
 #include <unordered_map>
@@ -14,11 +13,11 @@ constexpr void Factory::RegisterFactoryType()
 {
     constexpr TypeDescriptor<T> desc = Reflection::GetTypeInfo<T>();
     const constexpr char_t* const name = desc.name.c_str();
-    const std::string humanizedName = Utils::RemoveNamespaces(name);
+    /* constexpr */ const char_t* const humanizedName = Utils::RemoveNamespaces(name);
 
     FactoryTypeInfo info = {
         .createFunc = []() -> void* { return new T(); },
-        .displayFunc = [](void* const) -> void { /* XnorEditor::Inspector::DisplayObject<T>(static_cast<T*>(obj)); */ },
+        .displayFunc = [](void* const obj) -> void { TypeRenderer::DisplayObject<T>(static_cast<T*>(obj)); },
         .serializeFunc = [](void* const obj) -> void { Serializer::Serialize<T>(static_cast<T*>(obj), false); },
         .name = humanizedName
     };
@@ -45,7 +44,7 @@ inline void* Factory::CreateObject(const size_t hash)
     return it->second.createFunc();
 }
 
-inline void* Factory::CreateObject(std::string name)
+inline void* Factory::CreateObject(const char_t* name)
 {
     auto&& it = m_FactoryMapName.find(name);
 
@@ -98,7 +97,7 @@ inline bool_t Factory::IsChildOf(const size_t typeHash, const size_t parentHash)
 }
 
 template <typename T>
-void Factory::FindAllChildClasses(std::vector<std::string>* names)
+void Factory::FindAllChildClasses(std::vector<const char_t*>* names)
 {
     const size_t hash = Utils::GetTypeHash<T>();
 

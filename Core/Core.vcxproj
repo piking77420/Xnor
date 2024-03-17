@@ -119,6 +119,7 @@
     <ClCompile Include="src\input\input.cpp" />
     <ClCompile Include="src\input\gamepad_input.cpp" />
     <ClCompile Include="src\input\time.cpp" />
+    <ClCompile Include="src\reflection\type_renderer.cpp" />
     <ClCompile Include="src\rendering\light\directional_light.cpp" />
     <ClCompile Include="src\rendering\light\light.cpp" />
     <ClCompile Include="src\rendering\light\point_light.cpp" />
@@ -130,7 +131,7 @@
     <ClCompile Include="src\rendering\render_systems\tone_mapping.cpp" />
     <ClCompile Include="src\rendering\rhi.cpp" />
     <ClCompile Include="src\rendering\uniformBuffer.cpp" />
-    <ClCompile Include="src\rendering\viewport_data.cpp"/>
+    <ClCompile Include="src\rendering\viewport_data.cpp" />
     <ClCompile Include="src\resource\cubemap.cpp" />
     <ClCompile Include="src\resource\font.cpp" />
     <ClCompile Include="src\resource\shader.cpp" />
@@ -315,6 +316,7 @@
     <ClInclude Include="include\input\keyboard_input.hpp" />
     <ClInclude Include="include\input\mouse_input.hpp" />
     <ClInclude Include="include\input\time.hpp" />
+    <ClInclude Include="include\reflection\type_renderer.hpp" />
     <ClInclude Include="include\rendering\camera.hpp" />
     <ClInclude Include="include\rendering\frame_buffer.hpp" />
     <ClInclude Include="include\rendering\light\directional_light.hpp" />
@@ -370,6 +372,7 @@
     <ClInclude Include="inline\file\file_manager.inl" />
     <ClInclude Include="inline\input\input.inl" />
     <ClInclude Include="inline\input\time.inl" />
+    <ClInclude Include="inline\reflection\type_renderer.inl" />
     <ClInclude Include="inline\resource\resource_manager.inl" />
     <ClInclude Include="inline\resource\texture.inl" />
     <ClInclude Include="inline\scene\entity.inl" />
@@ -394,7 +397,7 @@
     <Content Include="swig\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="include\core.i"/>
+    <Content Include="include\core.i" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

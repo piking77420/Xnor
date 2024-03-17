@@ -91,7 +91,7 @@ public class Core {
   }
 
   public static string RemoveNamespaces(string str) {
-    string ret = CorePINVOKE.RemoveNamespaces(str);
+    string ret = CorePINVOKE.RemoveNamespaces__SWIG_0(str);
     if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
