@@ -22,7 +22,7 @@ void ToneMapping::ComputeToneMaping(const Texture& imageWithoutToneMapping, cons
 {
     m_Aces->Use();
     imageWithoutToneMapping.BindTexture(10);
-    Rhi::DrawQuad(quadModel->GetId());
+    Rhi::DrawModel(quadModel->GetId());
     m_Aces->Unuse();
 }
 

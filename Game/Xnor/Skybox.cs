@@ -107,6 +107,17 @@ public class Skybox : global::System.IDisposable {
     } 
   }
 
+  public Texture precomputeBrdfTexture {
+    set {
+      CorePINVOKE.Skybox_precomputeBrdfTexture_set(swigCPtr, Texture.getCPtr(value));
+    } 
+    get {
+      global::System.IntPtr cPtr = CorePINVOKE.Skybox_precomputeBrdfTexture_get(swigCPtr);
+      Texture ret = (cPtr == global::System.IntPtr.Zero) ? null : new Texture(cPtr, false);
+      return ret;
+    } 
+  }
+
 }
 
 }

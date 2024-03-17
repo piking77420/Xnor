@@ -219,6 +219,7 @@ private:
 	{
 		DepthFunction::DepthFunction depthFunction{};
 		BlendFunction blendFunction;
+		ShaderProgramCullInfo cullInfo;
 		std::map<std::string, uint32_t> uniformMap;
 	};
 
@@ -250,6 +251,9 @@ private:
 	XNOR_ENGINE static uint32_t GetOpenglBufferBit(BufferFlag::BufferFlag flag);
 	XNOR_ENGINE static uint32_t AttachementToOpenglAttachement(Attachment::Attachment attachment);
 	XNOR_ENGINE static uint32_t CubeMapFacesToOpengl(CubeMapFace cubeMapFace);
+	
+	XNOR_ENGINE static uint32_t FrontFaceToOpenglFrontFace(FrontFace::FrontFace frontFace);
+	XNOR_ENGINE static uint32_t CullFaceToOpenglCullFace(CullFace::CullFace cullFace);
 
 	XNOR_ENGINE static void OpenglDebugCallBack(
 		uint32_t source,

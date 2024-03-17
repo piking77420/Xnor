@@ -54,7 +54,7 @@ void Shader::CreateInRhi()
     std::vector<ShaderCode> code(m_Code.size());
     std::ranges::copy(m_Code, code.begin());
     
-    m_Id = Rhi::CreateShaders(code, { m_DepthFunction, m_BlendFunction });
+    m_Id = Rhi::CreateShaders(code, { m_DepthFunction, m_BlendFunction, m_ShaderProgramCullInfo });
     m_LoadedInRhi = true;
 }
 
@@ -150,4 +150,16 @@ void Shader::SetBlendFunction(const BlendFunction& blendFunction)
     }
     
     m_BlendFunction = blendFunction;
+}
+
+void Shader::SetFaceCullingInfo(const ShaderProgramCullInfo& shaderProgramCullInfo)
+{
+    if (m_LoadedInRhi)
+    {
+        Logger::LogError("Can't modify blend function in already loaded shader\n Shader id = {}",m_Id);
+        return;
+    }
+    
+    
+    m_ShaderProgramCullInfo = shaderProgramCullInfo;
 }

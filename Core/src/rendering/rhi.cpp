@@ -165,6 +165,7 @@ uint32_t Rhi::CreateShaders(const std::vector<ShaderCode>& shaderCodes, const Sh
 	ShaderInternal shaderInternal;
 	shaderInternal.depthFunction = shaderCreateInfo.depthFunction;
 	shaderInternal.blendFunction = shaderCreateInfo.blendFunction;
+	shaderInternal.cullInfo = shaderCreateInfo.shaderProgramCullInfo;
 	
 	m_ShaderMap.emplace(programId, shaderInternal);
 	
@@ -192,6 +193,17 @@ void Rhi::UseShader(const uint32_t shaderId)
 		const uint32_t srcValue = GetBlendValueOpengl(BlendValue::One);
 		const uint32_t destValue = GetBlendValueOpengl(BlendValue::Zero);
 		glBlendFunc(srcValue, destValue);
+	}
+
+	if (shaderInternal.cullInfo.enableCullFace)
+	{
+		glEnable(GL_CULL_FACE);
+		glCullFace(CullFaceToOpenglCullFace(shaderInternal.cullInfo.cullFace));
+		glFrontFace(FrontFaceToOpenglFrontFace(shaderInternal.cullInfo.frontFace));
+	}
+	else
+	{
+		glDisable(GL_CULL_FACE);
 	}
 	
 	glUseProgram(shaderId);
@@ -456,6 +468,39 @@ uint32_t Rhi::CubeMapFacesToOpengl(CubeMapFace cubeMapFace)
 	}
 
 	return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+}
+
+uint32_t Rhi::FrontFaceToOpenglFrontFace(FrontFace::FrontFace frontFace)
+{
+	switch (frontFace)
+	{
+		case FrontFace::CW:
+			return GL_CW;
+		case FrontFace::CCW:
+			return GL_CCW;
+	}
+
+	return GL_CW;
+}
+
+uint32_t Rhi::CullFaceToOpenglCullFace(CullFace::CullFace cullFace)
+{
+	switch (cullFace)
+	{
+		case CullFace::None:
+			return GL_NONE;
+		
+		case CullFace::Front:
+			return GL_FRONT;
+		
+		case CullFace::Back:
+			return GL_BACK;
+		
+		case CullFace::FrontAndBack:
+			return GL_FRONT_AND_BACK;
+	}
+
+	return GL_FRONT_AND_BACK;
 }
 
 uint32_t Rhi::GetOpengDepthEnum(const DepthFunction::DepthFunction depthFunction)
@@ -1084,7 +1129,6 @@ void Rhi::Initialize()
 	glDepthFunc(GL_LESS);
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);  
-
 
 #ifdef _DEBUG
 	glEnable(GL_DEBUG_OUTPUT);

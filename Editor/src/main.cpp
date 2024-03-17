@@ -25,6 +25,7 @@ int main(int, char**)
 	Factory::RegisterFactoryType<SpotLight>();
 
 	FileManager::LoadDirectory("assets_internal");
+	
 	FileManager::LoadDirectory("assets");
 
 	Editor editor;
