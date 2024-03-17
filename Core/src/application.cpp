@@ -22,12 +22,12 @@ Application::Application()
     Input::Initialize();
     Screen::Initialize();
 
-	DotnetRuntime::Initialize();
+	//DotnetRuntime::Initialize();
 }
 
 Application::~Application()
 {
-	DotnetRuntime::Shutdown();
+	//DotnetRuntime::Shutdown();
 	
     ResourceManager::UnloadAll();
 	Rhi::Shutdown();
