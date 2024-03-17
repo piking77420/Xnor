@@ -102,6 +102,15 @@ namespace Reflection
     struct AsEulerAngles : FieldAttribute
     {
     };
+
+    /// @brief Allows to edit a Vector2 by plotting on a 2D grid
+    struct GridPlotting : FieldAttribute
+    {
+        float_t minimum;
+        float_t maximum;
+
+        constexpr explicit GridPlotting(const float_t min, const float_t max) : minimum(min), maximum(max) {}
+    };
     
     /// @brief Gets the type info of a class
     /// @tparam ReflectT Type

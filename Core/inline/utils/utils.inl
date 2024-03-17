@@ -76,6 +76,11 @@ constexpr const char_t* Utils::RemoveNamespaces(const char_t* const str)
     return str;
 }
 
+constexpr float_t Utils::RemapValue(const float_t oldValue, const Vector2 oldRange, const Vector2 newRange)
+{
+    return (((oldValue - oldRange.x) * (newRange.y - newRange.x)) / (oldRange.y - oldRange.x)) + newRange.x;
+}
+
 template <typename T>
 size_t Utils::GetTypeHash()
 {

@@ -54,14 +54,70 @@ void TypeRenderer::DisplayMathType(const Metadata<ReflectT, MemberT, DescriptorT
     }
     else if constexpr (Meta::IsSame<MemberT, Vector2>)
     {
-        ImGui::DragFloat2(metadata.name, metadata.obj->Raw(), 0.1f);
+        const Reflection::GridPlotting* const plotting = Reflection::TryGetAttribute<Reflection::GridPlotting, DescriptorT>(metadata.descriptor);
+        if (plotting)
+        {
+            ImGui::Text("%s", metadata.name);
+            ImDrawList* const drawList = ImGui::GetWindowDrawList();
+
+            // TODO handle resize
+            constexpr Vector2 size = Vector2(100, 100);
+            ImGui::InvisibleButton("##canvas", Utils::ToImVec(size));
+
+            const ImVec2 p0 = ImGui::GetItemRectMin();
+            const ImVec2 p1 = ImGui::GetItemRectMax();
+
+            const Vector2 plottingRange = Vector2(plotting->minimum, plotting->maximum);
+            constexpr Vector2 uniformRange = Vector2(0.f, 1.f);
+
+            // Handle clicking
+            if (ImGui::IsItemActive() && ImGui::IsMouseDown(ImGuiMouseButton_Left))
+            {
+                const ImGuiIO& io = ImGui::GetIO();
+
+                // Compute new value, ranged between 0 and 1
+                const Vector2 newValue = (Utils::FromImVec(io.MousePos) - Utils::FromImVec(p0)) / size;
+
+                // Remap the value from [0; 1] to [min; max]
+                metadata.obj->x = Utils::RemapValue(newValue.x, uniformRange, plottingRange);
+                metadata.obj->y = Utils::RemapValue(newValue.y, uniformRange, plottingRange);
+
+                // Clamp the value between min and max
+                metadata.obj->x = std::clamp<float_t>(metadata.obj->x, plotting->minimum, plotting->maximum);
+                metadata.obj->y = std::clamp<float_t>(metadata.obj->y, plotting->minimum, plotting->maximum);
+            }
+
+            // Create rectangle
+            ImGui::PushClipRect(p0, p1, true);
+            drawList->AddRectFilled(p0, p1, IM_COL32(90, 90, 120, 255));
+
+            // Remap from [min; max] to [0, 1]
+            const Vector2 clamped = Vector2(
+                Utils::RemapValue(metadata.obj->x, plottingRange, uniformRange),
+                Utils::RemapValue(metadata.obj->y, plottingRange, uniformRange)
+            );;
+
+            // Compute cursor position
+            const Vector2 position = Utils::FromImVec(p0) + clamped * size;
+
+            drawList->AddCircle(Utils::ToImVec(position), 5, IM_COL32_WHITE);
+            ImGui::PopClipRect();
+
+            // Draw slider float version
+            ImGui::SameLine();
+            ImGui::SliderFloat2("##v2", metadata.obj->Raw(), plotting->minimum, plotting->maximum, "%.3f", ImGuiSliderFlags_AlwaysClamp);
+        }
+        else
+        {
+            ImGui::DragFloat2(metadata.name, metadata.obj->Raw(), 0.1f);
+        }
     }
     else if constexpr (Meta::IsSame<MemberT, Vector3>)
     {
         if (metadata.template HasAttribute<Reflection::AsEulerAngles>())
         {
             // Supposed to be euler angles, so draw as a slider angle
-            ImGui::SliderAngle3(metadata.name, metadata.obj->Raw());
+            ImGui::SliderAngle3(metadata.name, metadata.obj->Raw(), -360, 360, "%.0f deg", ImGuiSliderFlags_AlwaysClamp);
         }
         else
         {
@@ -446,6 +502,8 @@ void TypeRenderer::DisplayObjectInternal(ReflectT* obj, DescriptorT member)
         .range = Reflection::TryGetAttribute<Reflection::Range<MemberT>, DescriptorT>(member)
     };
 
+    ImGui::PushID(metadata.obj);
+
     if constexpr (Meta::IsArray<MemberT>)
     {
         // Native array
@@ -464,6 +522,8 @@ void TypeRenderer::DisplayObjectInternal(ReflectT* obj, DescriptorT member)
 
     // Check for a tooltip
     CheckDisplayTooltip<ReflectT, MemberT, DescriptorT>(metadata);
+
+    ImGui::PopID();
 }
 
 template <typename ReflectT, typename MemberT, typename DescriptorT>

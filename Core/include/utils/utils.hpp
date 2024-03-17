@@ -133,6 +133,9 @@ namespace Utils
     XNOR_ENGINE constexpr const char_t* RemoveNamespaces(const char_t* str);
 #endif
 
+    [[nodiscard]]
+    XNOR_ENGINE constexpr float_t RemapValue(float_t oldValue, Vector2 oldRange, Vector2 newRange); 
+
     /// @brief Normalizes an angle (clamps its value between 0 and 2 * PI)
     /// @param angle Angle to normalize
     /// @return Normalized representation
