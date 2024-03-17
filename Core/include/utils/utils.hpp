@@ -85,7 +85,7 @@ namespace Utils
     /// @param color ColorHsv to convert
     /// @return ImVec4 representation
     [[nodiscard]]
-    XNOR_ENGINE constexpr ImVec4 ToImCol(ColorHsv color);
+    XNOR_ENGINE constexpr ImVec4 ToImCol(ColorHsva color);
 
     /// @brief Converts an ImVec4 to a @ref Colorf
     /// @param color ImVec4 to convert
@@ -122,6 +122,7 @@ namespace Utils
     [[nodiscard]]
     XNOR_ENGINE constexpr std::string RemoveNamespaces(const std::string& str);
 
+#ifndef SWIG
     /// @brief Removes the namespaces indicators from the provided string
     ///
     /// e.g. XnorCore::MyClass will become MyClass
@@ -130,6 +131,7 @@ namespace Utils
     /// @return Result
     [[nodiscard]]
     XNOR_ENGINE constexpr const char_t* RemoveNamespaces(const char_t* str);
+#endif
 
     /// @brief Normalizes an angle (clamps its value between 0 and 2 * PI)
     /// @param angle Angle to normalize

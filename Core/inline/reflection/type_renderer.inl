@@ -93,11 +93,11 @@ void TypeRenderer::DisplayColorType(const Metadata<ReflectT, MemberT, Descriptor
         ImGui::ColorPicker4(metadata.name, &tmp.r, ImGuiColorEditFlags_DisplayHex);
         *metadata.obj = static_cast<ColorRgb>(tmp);
     }
-    else if constexpr (Meta::IsSame<MemberT, ColorHsv>)
+    else if constexpr (Meta::IsSame<MemberT, ColorHsva>)
     {
         Colorf tmp = static_cast<Colorf>(*metadata.obj);
         ImGui::ColorPicker4(metadata.name, &tmp.r, ImGuiColorEditFlags_DisplayHSV);
-        *metadata.obj = static_cast<ColorHsv>(tmp);
+        *metadata.obj = static_cast<ColorHsva>(tmp);
     }
     else if constexpr (Meta::IsSame<MemberT, Colorf>)
     {

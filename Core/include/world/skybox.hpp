@@ -24,10 +24,12 @@ public:
     [[nodiscard]]
     const Cubemap* GetCubeMap() const;
 
+#ifndef SWIG
     /// @brief Gets the cubemap of the skybox
     /// @return Cubemap pointer
     [[nodiscard]]
     Cubemap* GetCubeMap();
+#endif
     
 private:
     Cubemap* m_CubeMap = nullptr;

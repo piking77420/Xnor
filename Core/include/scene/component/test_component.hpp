@@ -50,7 +50,7 @@ private:
     int32_t m_Array[5];
     Light* light = nullptr;
 
-    ColorHsv color;
+    ColorHsva color;
 };
 
 END_XNOR_CORE

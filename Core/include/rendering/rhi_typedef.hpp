@@ -78,7 +78,7 @@ END_ENUM
 struct ShaderCode
 {
 	/// @brief Pointer to raw code
-	const char_t* code = nullptr;
+	std::string code;
 	/// @brief Raw code length
 	int32_t codeLength = 0;
 	/// @brief Shader type
