@@ -8,6 +8,7 @@
 #include <Maths/vector3.hpp>
 
 #include "core.hpp"
+#include "reflection/reflection.hpp"
 #include "serialization/serializer.hpp"
 #include "utils/serializable.hpp"
 
@@ -79,7 +80,7 @@ END_XNOR_CORE
 /// @private
 REFL_AUTO(type(XnorCore::Transform),
 	field(m_Position, XnorCore::Reflection::NotifyChange(&XnorCore::Transform::m_Changed)),
-	field(m_EulerRotation, XnorCore::Reflection::NotifyChange(&XnorCore::Transform::m_Changed)),
+	field(m_EulerRotation, XnorCore::Reflection::NotifyChange(&XnorCore::Transform::m_Changed), XnorCore::Reflection::AsEulerAngles()),
 	field(m_Scale, XnorCore::Reflection::NotifyChange(&XnorCore::Transform::m_Changed))
 );
 

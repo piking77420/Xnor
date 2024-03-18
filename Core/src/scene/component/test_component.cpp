@@ -11,21 +11,21 @@ void TestComponent::Begin()
 {
     m_BasePosition = entity->transform.GetPosition();
 
-    light = entity->GetComponent<Light>();
+    m_Light = entity->GetComponent<Light>();
 
-    color = static_cast<ColorHsv>(ColorRgb::Red());
+    m_Color = static_cast<ColorHsva>(ColorRgb::Red());
 }
 
 void TestComponent::Update()
 {
-    if (!m_Rotate || light == nullptr)
+    if (!m_Rotate || m_Light == nullptr)
         return;
 
     m_CurrentAngle += m_RotationSpeed * Time::GetDeltaTime();
     entity->transform.SetPosition().x = (std::cos(m_CurrentAngle) - std::sin(m_CurrentAngle)) * m_Radius;
     entity->transform.SetPosition().z = (std::cos(m_CurrentAngle) + std::sin(m_CurrentAngle)) * m_Radius;
 
-    color.h++;
+    m_Color.h++;
 
-    light->color = static_cast<Colorf>(color);
+    m_Light->color = static_cast<Colorf>(m_Color);
 }

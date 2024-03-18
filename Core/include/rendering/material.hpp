@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "core.hpp"
+#include "reflection/reflection.hpp"
 #include "resource/texture.hpp"
 #include "utils/pointer.hpp"
 #include "utils/serializable.hpp"

@@ -147,12 +147,13 @@ uint32_t Rhi::CreateShaders(const std::vector<ShaderCode>& shaderCodes, const Sh
 	for (size_t i = 0; i < shaderCodes.size(); i++)
 	{
 		const ShaderCode& code = shaderCodes[i];
-		if (code.code == nullptr)
+		if (code.code.empty())
 			continue;
 
 		uint32_t& shaderId = shaderIds[i];
 		shaderId = glCreateShader(GetOpenglShaderType(code.type));
-		glShaderSource(shaderId, 1, &code.code, &code.codeLength);
+		const char_t* data = code.code.c_str();
+		glShaderSource(shaderId, 1, &data, &code.codeLength);
 		glCompileShader(shaderId);
 
 		CheckCompilationError(shaderId, GetShaderTypeToString(code.type));
@@ -1211,7 +1212,7 @@ void Rhi::BindMaterial(const Material& material)
 	materialData.hasNormalMap =  static_cast<int32_t>(material.normalTexture.IsValid());
 	materialData.hasAmbiantOcclusionMap =  static_cast<int32_t>(material.ambiantOcclusionTexture.IsValid());
 	
-	materialData.albedoColor = material.albedoColor.Rgb();
+	materialData.albedoColor = static_cast<Vector3>(material.albedoColor);
 	materialData.metallic = material.metallic;
 	materialData.roughness = material.roughness;
 	materialData.reflectance = material.reflectance;

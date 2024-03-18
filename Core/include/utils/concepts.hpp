@@ -46,6 +46,10 @@ namespace Concepts
     /// @brief Concept that forces a type to be a function
     template <class T>
     concept FunctionT = std::is_function_v<T>;
+
+    /// @brief Concept that forces a type to be a color, e.g. one of: ColorRgb, ColorRgba, Colorf or ColorHsv
+    template <class T>
+    concept ColorT = Meta::IsAny<ColorRgb, ColorRgba, Colorf, ColorHsva>;
 }
 
 END_XNOR_CORE

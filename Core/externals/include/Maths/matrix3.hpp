@@ -288,6 +288,7 @@ public:
     [[nodiscard]]
     constexpr float_t At(size_t row, size_t col) const;
 
+#ifndef SWIG
     /// @brief Retrieves this matrix's col at position @c [col, row].
     /// 
     /// @param row The index of the col to get.
@@ -295,6 +296,7 @@ public:
     /// @returns The value at position @c [col, row].
     [[nodiscard]]
     constexpr float_t& At(size_t row, size_t col);
+#endif
 
     /// @brief	Retrieves this matrix's column vector at position @c col.
     /// 
@@ -306,6 +308,7 @@ public:
     [[nodiscard]]
     constexpr Vector3 operator[](size_t col) const;
 
+#ifndef SWIG
     /// @brief	Retrieves this matrix's column vector at position @c col.
     /// 
     ///	If you want to get a value of this matrix, consider using <see cref="At(size_t, size_t)"/>
@@ -315,6 +318,7 @@ public:
     /// @returns The column vector at index @c col.
     [[nodiscard]]
     constexpr Vector3& operator[](size_t col);
+#endif
 
     /// @brief Converts this Matrix3 to a Matrix, homogenizing the new row and column.
     [[nodiscard]]
@@ -679,6 +683,7 @@ constexpr Matrix3 operator*(const Matrix3& m1, const Matrix3& m2) noexcept
     );
 }
 
+#ifndef SWIG
 /// @brief Adds two @ref Matrix "Matrices" according to @ref operator+(const Matrix&, const Matrix&), placing the result in @p m1.
 constexpr Matrix3& operator+=(Matrix3& m1, const Matrix3& m2) noexcept { return m1 = m1 + m2; }
 
@@ -693,6 +698,7 @@ constexpr Vector3& operator*=(const Matrix3& m, Vector3& v) noexcept { return v 
 
 /// @brief Multiplies two @ref Matrix "Matrices" according to @ref operator*(const Matrix&, const Matrix&), placing the result in @p m1.
 constexpr Matrix3& operator*=(Matrix3& m1, const Matrix3& m2) noexcept { return m1 = m1 * m2; }
+#endif
 
 /// @brief	Checks if two Matrices are considered equal using @c Calc::Equals.
 [[nodiscard]]

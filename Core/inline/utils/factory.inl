@@ -1,8 +1,7 @@
 #pragma once
 
-#include "utils/factory.hpp"
-
 #include "core.hpp"
+#include "reflection/type_renderer.hpp"
 #include "serialization/serializer.hpp"
 
 #include <unordered_map>
@@ -14,12 +13,13 @@ constexpr void Factory::RegisterFactoryType()
 {
     constexpr TypeDescriptor<T> desc = Reflection::GetTypeInfo<T>();
     const constexpr char_t* const name = desc.name.c_str();
+    /* constexpr */ const char_t* const humanizedName = Utils::RemoveNamespaces(name);
 
     FactoryTypeInfo info = {
         .createFunc = []() -> void* { return new T(); },
-        .displayFunc = [](void* const) -> void { /* XnorEditor::Inspector::DisplayObject<T>(static_cast<T*>(obj)); */ },
+        .displayFunc = [](void* const obj) -> void { TypeRenderer::DisplayObject<T>(static_cast<T*>(obj)); },
         .serializeFunc = [](void* const obj) -> void { Serializer::Serialize<T>(static_cast<T*>(obj), false); },
-        .name = name
+        .name = humanizedName
     };
 
     refl::util::for_each(refl::util::reflect_types(desc.declared_bases), [&]<typename ParentT>(const ParentT)
@@ -28,7 +28,7 @@ constexpr void Factory::RegisterFactoryType()
     });
 
     m_FactoryMapHash.emplace(Utils::GetTypeHash<T>(), info);
-    m_FactoryMapName.emplace(name, info);
+    m_FactoryMapName.emplace(humanizedName, info);
 }
 
 inline void* Factory::CreateObject(const size_t hash)
@@ -44,7 +44,7 @@ inline void* Factory::CreateObject(const size_t hash)
     return it->second.createFunc();
 }
 
-inline void* Factory::CreateObject(const char_t* const name)
+inline void* Factory::CreateObject(const char_t* name)
 {
     auto&& it = m_FactoryMapName.find(name);
 

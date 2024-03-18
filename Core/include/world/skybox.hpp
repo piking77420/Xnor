@@ -39,8 +39,6 @@ public:
     /// @brief take a hdr file in input and wrap it to cubeMap
     /// @param hdfFile hdr image
     XNOR_ENGINE void LoadFromHdrTexture(const Pointer<Texture>& hdfFile);
-
-
     
     Cubemap* irradianceMap = nullptr;
     
@@ -49,6 +47,12 @@ public:
     Cubemap* prefilterMap = nullptr;
 
     Texture* precomputeBrdfTexture = nullptr;
+#ifndef SWIG
+    /// @brief Gets the cubemap of the skybox
+    /// @return Cubemap pointer
+    [[nodiscard]]
+    Cubemap* GetCubeMap();
+#endif
     
 private:
     SkyBoxParser m_SkyBoxParser;

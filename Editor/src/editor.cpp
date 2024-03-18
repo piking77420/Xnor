@@ -302,19 +302,18 @@ void Editor::MenuBar() const
 
 void Editor::UpdateWindow()
 {
-	for (UiWindow* w : m_UiWindows)
+	for (UiWindow* const w : m_UiWindows)
 	{
-		ImGui::Begin(w->GetName(),nullptr,w->windowFlags);
+		ImGui::Begin(w->GetName(), nullptr, w->windowFlags);
 		w->FetchInfo();
 		w->Display();
 		ImGui::End();
 	}
-	
 }
 
 void Editor::OnRenderingWindow()
 {
-	for (UiWindow* w : m_UiWindows)
+	for (UiWindow* const w : m_UiWindows)
 	{
 		w->OnApplicationRendering();
 	}
