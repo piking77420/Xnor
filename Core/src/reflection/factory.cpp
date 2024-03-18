@@ -1,5 +1,12 @@
 #include "reflection/factory.hpp"
 
+#include "rendering/light/directional_light.hpp"
+#include "rendering/light/light.hpp"
+#include "rendering/light/point_light.hpp"
+#include "rendering/light/spot_light.hpp"
+#include "scene/component/mesh_renderer.hpp"
+#include "scene/component/test_component.hpp"
+
 using namespace XnorCore;
 
 inline void* Factory::CreateObject(const size_t hash)
@@ -39,6 +46,19 @@ inline void Factory::DisplayObject(void* const obj, const size_t hash)
     }
 
     it->second.displayFunc(obj);
+}
+
+void Factory::SerializeObject(void* obj, size_t hash)
+{
+    auto&& it = m_FactoryMapHash.find(hash);
+
+    if (it == m_FactoryMapHash.end())
+    {
+        Logger::LogError("Couldn't find type : {}", hash);
+        return;
+    }
+
+    it->second.serializeFunc(obj);
 }
 
 void Factory::RegisterTypes()

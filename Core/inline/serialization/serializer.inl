@@ -4,12 +4,9 @@
 
 #include <format>
 
+#include "magic_enum/magic_enum.hpp"
+#include "magic_enum/magic_enum_flags.hpp"
 #include "reflection/reflection.hpp"
-#include "rendering/light/directional_light.hpp"
-#include "rendering/light/point_light.hpp"
-#include "rendering/light/spot_light.hpp"
-#include "scene/component/mesh_renderer.hpp"
-#include "scene/component/test_component.hpp"
 #include "utils/guid.hpp"
 #include "utils/logger.hpp"
 #include "utils/meta_programming.hpp"
@@ -17,66 +14,65 @@
 BEGIN_XNOR_CORE
 
 template <typename T>
-void Serializer::FetchAttribute(const std::string& attributeName, const T& value)
+void Serializer::AddSimpleAttribute(const std::string& attributeName, const T& value)
 {
     if constexpr (Meta::IsAny<T, std::string, const char_t*>)
     {
-        FetchAttributeInternal(attributeName, value);
+        BeginXmlElement(attributeName, value);
     }
     else
     {
         const std::string valueString = std::format("{}", value);
-        FetchAttributeInternal(attributeName, valueString);
+        BeginXmlElement(attributeName, valueString);
     }
+
+    EndXmlElement();
 }
 
-template <typename ReflectT>
-void Serializer::Serialize([[maybe_unused]] const ReflectT* const obj, const bool_t isRoot)
+template <typename ReflectT, bool_t IsRoot>
+void Serializer::Serialize(const ReflectT* const obj)
 {
     constexpr TypeDescriptor<ReflectT> desc = Reflection::GetTypeInfo<ReflectT>();
 
-    if (isRoot)
-        BeginRootElement(desc.name.c_str(), "");
+    const std::string typeName = Utils::RemoveNamespaces(desc.name.c_str());
+
+    if constexpr (IsRoot)
+        BeginRootElement(typeName.c_str(), "");
     else
-        BeginXmlElement(desc.name.c_str(), "");
+        BeginXmlElement(typeName.c_str(), "");
 
-    /*
-    refl::util::for_each(desc.members, [&]<typename T>(const T member)
+    refl::util::for_each(desc.members, [&]<typename T>(const T)
     {
-        constexpr bool_t isFunction = refl::descriptor::is_function(member);
-        
-        constexpr bool_t dontSerialize = Reflection::HasAttribute<Reflection::NotSerializable>(member);
-        constexpr size_t flags = GetFlags<T>(member);
+        constexpr bool_t dontSerialize = Reflection::HasAttribute<Reflection::NotSerializable, T>();
+        constexpr bool_t isStatic = T::is_static;
             
-        if constexpr (!isFunction)
+        if constexpr (!dontSerialize && !isStatic)
         {
-            if constexpr (!dontSerialize)
-            {
-                using MemberT = typename T::value_type;
-                const constexpr char_t* const name = member.name.c_str();
+            using MemberT = Meta::RemoveConstSpecifier<typename T::value_type>;
+            constexpr const char_t* const name = T::name.c_str();
 
-                if constexpr (Meta::IsArray<MemberT>)
-                {
-                    SerializeArrayType<MemberT>(&member.get(obj), name, flags);
-                }
-                else if constexpr (Meta::IsXnorList<MemberT>)
-                {
-                    SerializeListType<MemberT>(&member.get(obj), name, flags);
-                }
-                else
-                {
-                    SerializeSimpleType<MemberT>(&member.get(obj), name, flags);
-                }
+            Metadata<ReflectT, MemberT, T> metadata = {
+                .topLevelObj = const_cast<ReflectT*>(obj),
+                .name = name,
+                .obj = const_cast<MemberT*>(&T::get(obj))
+            };
+
+            if constexpr (Meta::IsArray<MemberT>)
+            {
+                SerializeArrayType<ReflectT, MemberT, T>(metadata);
+            }
+            else if constexpr (Meta::IsXnorList<MemberT>)
+            {
+                SerializeListType<ReflectT, MemberT, T>(metadata);
+            }
+            else
+            {
+                SerializeSimpleType<ReflectT, MemberT, T>(metadata);
             }
         }
-        else
-        {
-            Logger::LogInfo("{} ; {}", desc.name.c_str(), member.name.c_str());
-        }
     });
-    */
 
-    if (isRoot)
+    if constexpr (IsRoot)
         EndRootElement();
     else
         EndXmlElement();
@@ -88,12 +84,12 @@ void Serializer::Deserialize(ReflectT* const)
     // TODO Deserialize
 }
 
-template <typename MemberT>
-void Serializer::SerializeSimpleType(const MemberT* ptr, const char_t* name, const size_t flags)
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void Serializer::SerializeSimpleType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
     if constexpr (Meta::IsNativeType<MemberT> || Meta::IsMathType<MemberT> || Meta::IsSame<MemberT, std::string>)
     {
-        FetchAttribute<MemberT>(name, *ptr);
+        AddSimpleAttribute<MemberT>(metadata.name, *metadata.obj);
     }
     else if constexpr (Meta::IsColorType<MemberT>)
     {
@@ -101,97 +97,108 @@ void Serializer::SerializeSimpleType(const MemberT* ptr, const char_t* name, con
     }
     else if constexpr (Meta::IsPointer<MemberT>)
     {
-        // TODO fix serialization
-        /*
-        if (flags & EXPAND_POINTER)
+        using PtrT = Meta::RemovePointerSpecifier<MemberT>;
+        
+        if constexpr (Meta::IsAbstract<PtrT>)
         {
-            Serialize<Meta::RemovePointerSpecifier<MemberT>>(*ptr, false);
+            const size_t hash = Utils::GetTypeHash<Component>(*metadata.obj);
+            SerializeObjectUsingFactory(*metadata.obj, hash);
+        }
+        else if constexpr (Reflection::HasAttribute<Reflection::ExpandPointer, DescriptorT>())
+        {
+            Serialize<PtrT, false>(*metadata.obj);
         }
         else
         {
-            if (*ptr == nullptr)
-                FetchAttribute(name, Guid());
+            if (*metadata.obj == nullptr)
+                AddSimpleAttribute(metadata.name, static_cast<std::string>(Guid()));
             else
-                FetchAttribute(name, static_cast<std::string>((*ptr)->GetGuid()));
+                AddSimpleAttribute(metadata.name, static_cast<std::string>((*metadata.obj)->GetGuid()));
         }
-        */
-    }
-    else if constexpr (false)// (Meta::IsPolyPtr<MemberT>)
-    {
-        const size_t hash = ptr->GetHash();
-
-#define POLY_PTR_IF_SER(type)                                  \
-if (hash == XnorCore::Utils::GetTypeHash<type>())              \
-{                                                              \
-Serialize<type>(reinterpret_cast<type*>(ptr), false);          \
-}                                                              \
-        // TODO find a less ugly solution to that
-
-        POLY_PTR_IF_SER(MeshRenderer);
-        POLY_PTR_IF_SER(DirectionalLight);
-        POLY_PTR_IF_SER(TestComponent);
-        POLY_PTR_IF_SER(PointLight);
-        POLY_PTR_IF_SER(SpotLight);
     }
     else if constexpr (Meta::IsXnorPointer<MemberT>)
     {
-        if (flags & EXPAND_POINTER)
-        {
-            // Serialize<Meta::RemovePointerSpecifier<typename MemberT::Type>>(*ptr, false);
-        }
+        if (*metadata.obj == nullptr)
+            AddSimpleAttribute(metadata.name, Guid());
         else
-        {
-            if (*ptr == nullptr)
-                FetchAttribute(name, Guid());
-            else
-                FetchAttribute(name, static_cast<std::string>((*ptr)->GetGuid()));
-        }
+            AddSimpleAttribute(metadata.name, static_cast<std::string>((*metadata.obj)->GetGuid()));
     }
     else if constexpr (Meta::IsSame<MemberT, Guid>)
     {
-        FetchAttribute<std::string>(name, static_cast<std::string>(*ptr));
+        AddSimpleAttribute<std::string>(metadata.name, static_cast<std::string>(*metadata.obj));
     }
     else if constexpr (Meta::IsEnum<MemberT>)
     {
-        // TODO enum serialization
+        SerializeEnum<ReflectT, MemberT, DescriptorT>(metadata);
     }
     else
     {
-        Serialize<MemberT>(ptr, false);
+        Serialize<MemberT, false>(metadata.obj);
     }
 }
 
 
-template <typename MemberT>
-void Serializer::SerializeArrayType(const MemberT*, const char_t*, const size_t)
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void Serializer::SerializeArrayType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
-    // TODO SerializeArrayType
-}
+    using ArrayT = Meta::RemoveArraySpecifier<MemberT>;
+    constexpr size_t size = sizeof(MemberT) / sizeof(ArrayT); 
 
-template <typename MemberT>
-void Serializer::SerializeListType(const MemberT* ptr, const char_t* name, const size_t flags)
-{
-    using ListT = typename MemberT::Type;
-    
-    BeginXmlElement(std::string(name), "");
+    BeginXmlElement(metadata.name, "");
 
-    for (size_t i = 0; i < ptr->GetSize(); i++)
+    Metadata<ReflectT, ArrayT, DescriptorT> metadataList = {
+        .topLevelObj = metadata.topLevelObj
+    };
+
+    for (size_t i = 0; i < size; i++)
     {
-        SerializeSimpleType<ListT>(&(*ptr)[i], std::to_string(i).c_str(), flags);
+        const std::string index = std::to_string(i);
+        metadataList.name = index.c_str();
+        metadataList.obj = &(*metadata.obj)[i];
+        SerializeSimpleType<ReflectT, ArrayT, DescriptorT>(metadataList);
     }
     
     EndXmlElement();
 }
 
-template <typename T>
-constexpr size_t Serializer::GetFlags(const T member)
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void Serializer::SerializeListType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
-    size_t flags = NONE; 
+    using ListT = typename MemberT::Type;
+    
+    BeginXmlElement(metadata.name, "");
 
-    if constexpr (Reflection::HasAttribute<Reflection::ExpandPointer>(member))
-        flags |= EXPAND_POINTER;
+    const size_t size = metadata.obj->GetSize();
 
-    return flags;
+    Metadata<ReflectT, ListT, DescriptorT> metadataList = {
+        .topLevelObj = metadata.topLevelObj
+    };
+
+    for (size_t i = 0; i < size; i++)
+    {
+        const std::string index = std::to_string(i);
+        metadataList.name = index.c_str();
+        metadataList.obj = &(*metadata.obj)[i];
+        SerializeSimpleType<ReflectT, ListT, DescriptorT>(metadataList);
+    }
+    
+    EndXmlElement();
+}
+
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void Serializer::SerializeEnum(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
+{
+    constexpr bool_t isEnumFlag = Reflection::HasAttribute<Reflection::EnumFlags, DescriptorT>();
+    constexpr auto enumNames = magic_enum::enum_names<MemberT>();
+    
+    if constexpr (isEnumFlag)
+    {
+        AddSimpleAttribute<std::string>(metadata.name, magic_enum::enum_flags_name<MemberT>(*metadata.obj, ',').data());
+    }
+    else
+    {
+        AddSimpleAttribute<std::string>(metadata.name, magic_enum::enum_name<MemberT>(*metadata.obj).data());
+    }
 }
 
 END_XNOR_CORE

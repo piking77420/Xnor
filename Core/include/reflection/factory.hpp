@@ -31,6 +31,8 @@ public:
 
     XNOR_ENGINE static void DisplayObject(void* obj, size_t hash);
 
+    XNOR_ENGINE static void SerializeObject(void* obj, size_t hash);
+
     XNOR_ENGINE static void RegisterTypes();
 
     template <typename T>

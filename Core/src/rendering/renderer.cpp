@@ -130,7 +130,7 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 
 }
 
-void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox, const Viewport& viewport, const Vector2i viewportSize, const bool isEditor) const
+void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox, const Viewport& viewport, const Vector2i viewportSize, const bool_t isEditor) const
 {
 	const ViewportData& viewportData = viewport.viewportData;
 	

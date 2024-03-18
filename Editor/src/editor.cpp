@@ -289,7 +289,7 @@ void Editor::MenuBar() const
 					path = data.currentScene->GetPathString();
 				}
 				XnorCore::Serializer::StartSerialization(path);
-				XnorCore::Serializer::Serialize<XnorCore::Scene>(&XnorCore::World::scene, true);
+				XnorCore::Serializer::Serialize<XnorCore::Scene, true>(&XnorCore::World::scene);
 				XnorCore::Serializer::EndSerialization();
 			}
 			

@@ -1,6 +1,7 @@
 #include "serialization/serializer.hpp"
 
 #include "Maths/vector2i.hpp"
+#include "reflection/factory.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -10,6 +11,11 @@ void Serializer::OpenFileToWrite(const std::string& filePath)
     std::string error;
     m_CurrentFilePath = filePath;
     m_XmlDoc = CreateXML(1, "utf-16", error);
+}
+
+void Serializer::SerializeObjectUsingFactory(void* obj, size_t hash)
+{
+    Factory::SerializeObject(obj, hash);
 }
 
 void Serializer::StartSerialization(const std::string& filePath)
