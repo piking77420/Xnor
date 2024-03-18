@@ -22,7 +22,7 @@ void Viewport::Init(Vector2i initViewportSize)
     // Set Up renderPass
     const RenderPass renderPass(attachementsType);
     const std::vector<const Texture*> targets = { finalImage };
-    frameBuffer->Create(renderPass,targets);
+    frameBuffer->AttachTextures(renderPass,targets);
     
     viewportData.Init(viewPortSize);
 }

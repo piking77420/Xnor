@@ -9,22 +9,22 @@ constexpr TypeDescriptor<ReflectT> Reflection::GetTypeInfo()
 }
 
 template <typename AttributeT, typename DescriptorT>
-constexpr bool_t Reflection::HasAttribute(const DescriptorT descriptor)
+constexpr bool_t Reflection::HasAttribute()
 {
-    return refl::descriptor::has_attribute<AttributeT>(descriptor);
+    return refl::descriptor::has_attribute<AttributeT, DescriptorT>(DescriptorT{});
 }
 
 template <typename AttributeT, typename DescriptorT>
-constexpr const AttributeT& Reflection::GetAttribute(const DescriptorT descriptor)
+constexpr const AttributeT& Reflection::GetAttribute()
 {
-    return refl::descriptor::get_attribute<AttributeT>(descriptor);
+    return refl::descriptor::get_attribute<AttributeT, DescriptorT>(DescriptorT{});
 }
 
 template <typename AttributeT, typename DescriptorT>
-constexpr const AttributeT* Reflection::TryGetAttribute(DescriptorT descriptor)
+constexpr const AttributeT* Reflection::TryGetAttribute()
 {
-    if constexpr (HasAttribute<AttributeT, DescriptorT>(descriptor))
-        return &GetAttribute<AttributeT, DescriptorT>(descriptor);
+    if constexpr (HasAttribute<AttributeT, DescriptorT>())
+        return &GetAttribute<AttributeT, DescriptorT>();
     else
         return nullptr;
 }

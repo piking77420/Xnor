@@ -15,7 +15,6 @@ class PointLight : public Light
     
 public:
     XNOR_ENGINE PointLight() = default;
-
     XNOR_ENGINE ~PointLight() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(PointLight)

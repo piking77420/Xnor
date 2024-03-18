@@ -121,26 +121,23 @@ namespace Reflection
     /// @brief Checks if a descriptor has a specified attribute
     /// @tparam AttributeT Attribute type
     /// @tparam DescriptorT Descriptor type
-    /// @param descriptor Type descriptor
     /// @return Result
     template <typename AttributeT, typename DescriptorT>
-    static constexpr bool_t HasAttribute(DescriptorT descriptor);
+    static constexpr bool_t HasAttribute();
 
     /// @brief Gets the specified attribute of a descriptor
     /// @tparam AttributeT Attribute type
     /// @tparam DescriptorT Descriptor type
-    /// @param descriptor Type descriptor
     /// @return Attribute
     template <typename AttributeT, typename DescriptorT>
-    static constexpr const AttributeT& GetAttribute(DescriptorT descriptor);
+    static constexpr const AttributeT& GetAttribute();
 
     /// @brief Tries to get a specified attribute of a descriptor
     /// @tparam AttributeT Attribute type
     /// @tparam DescriptorT Descriptor type
-    /// @param descriptor Type descriptor
     /// @return Attribute, @c nullptr if not found
     template <typename AttributeT, typename DescriptorT>
-    static constexpr const AttributeT* TryGetAttribute(DescriptorT descriptor);
+    static constexpr const AttributeT* TryGetAttribute();
 }
 
 END_XNOR_CORE

@@ -112,13 +112,14 @@ public:
 	/// @return textureId Texture id
 	XNOR_ENGINE static uint32_t CreateCubeMap(const CreateCubeMapInfo& createCubeMapInfo);
 
-	// FrameBuffer
 
+	XNOR_ENGINE static uint32_t CreateFrameBuffer();
+	
 	/// @brief Create a framebuffer
 	/// @param renderPass Associated @ref RenderPass
 	/// @param attachments @ref Texture attachments
 	/// @return Framebuffer id
-	XNOR_ENGINE static uint32_t CreateFrameBuffer(const RenderPass& renderPass, const std::vector<const Texture*>& attachments);
+	XNOR_ENGINE static void AttachsTextureToFrameBuffer(const RenderPass& renderPass, const FrameBuffer& frameBuffer, const std::vector<const Texture*>& attachments);
 
 	/// @brief Destroys a framebuffer
 	/// @param frameBufferId Framebuffer id
@@ -143,6 +144,10 @@ public:
 	/// @brief Unbinds a framebuffer
 	XNOR_ENGINE static void UnbindFrameBuffer();
 
+	XNOR_ENGINE static void AttachTextureToFrameBuffer(uint32_t bufferId, Attachment::Attachment attachment,uint32_t textureId,uint32_t level);
+
+	XNOR_ENGINE static void AttachTextureToFrameBuffer(uint32_t bufferId, Attachment::Attachment attachment, CubeMapFace cubeMapFace,uint32_t textureId,uint32_t level);	
+	
 	/// @brief Reads a single pixel of an attachment
 	/// @param attachmentIndex Attachment index
 	/// @param position Pixel position
@@ -197,6 +202,8 @@ public:
 	XNOR_ENGINE static TextureFormat::TextureFormat GetTextureFormatFromChannels(uint32_t channels);
 
 	XNOR_ENGINE static void DepthTest(bool value);
+	
+	XNOR_ENGINE static void GetCubeMapViewMatrices(std::array<Matrix,6>* viewsMatricies);
 private:
 	struct ModelInternal
 	{
@@ -212,6 +219,7 @@ private:
 	{
 		DepthFunction::DepthFunction depthFunction{};
 		BlendFunction blendFunction;
+		ShaderProgramCullInfo cullInfo;
 		std::map<std::string, uint32_t> uniformMap;
 	};
 
@@ -241,6 +249,11 @@ private:
 	XNOR_ENGINE static uint32_t GetOpenglTextureFilter(TextureFiltering::TextureFiltering textureFiltering);
 	XNOR_ENGINE static uint32_t GetBlendValueOpengl(BlendValue::BlendValue blendFunction);
 	XNOR_ENGINE static uint32_t GetOpenglBufferBit(BufferFlag::BufferFlag flag);
+	XNOR_ENGINE static uint32_t AttachementToOpenglAttachement(Attachment::Attachment attachment);
+	XNOR_ENGINE static uint32_t CubeMapFacesToOpengl(CubeMapFace cubeMapFace);
+	
+	XNOR_ENGINE static uint32_t FrontFaceToOpenglFrontFace(FrontFace::FrontFace frontFace);
+	XNOR_ENGINE static uint32_t CullFaceToOpenglCullFace(CullFace::CullFace cullFace);
 
 	XNOR_ENGINE static void OpenglDebugCallBack(
 		uint32_t source,

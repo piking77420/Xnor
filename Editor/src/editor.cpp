@@ -14,6 +14,7 @@
 #include "scene/component/mesh_renderer.hpp"
 #include "scene/component/test_component.hpp"
 #include "serialization/serializer.hpp"
+#include "stb/stb_image.h"
 #include "windows/content_browser.hpp"
 #include "windows/editor_window.hpp"
 #include "windows/header_window.hpp"
@@ -34,7 +35,9 @@ void Editor::CheckWindowResize()
 
 Editor::Editor()
 {
+	
 	const XnorCore::Pointer<XnorCore::File> logoFile = XnorCore::FileManager::Get("assets_internal/editor/logo.png");
+	
 	XnorCore::Pointer<XnorCore::Texture> logo = XnorCore::ResourceManager::Get<XnorCore::Texture>(logoFile);
 	logo->loadData.desiredChannels = 4;
 	logo->Reload(logoFile);
@@ -225,54 +228,45 @@ void Editor::SetupImGuiStyle() const
 void Editor::CreateTestScene()
 {
 	using namespace XnorCore;
+	Entity& ent1 = *World::scene.CreateEntity("Directional");
+	ent1.AddComponent<DirectionalLight>();
+
+	Entity& Cube = *World::scene.CreateEntity("Plane");
+	MeshRenderer* meshRenderer = Cube.AddComponent<MeshRenderer>();
+	Cube.transform.SetPosition() = { 0.f, -1.f, 0.f };
+	Cube.transform.SetScale() = { 10.f, 1.f, 10.f };
+	meshRenderer->model = ResourceManager::Get<Model>(FileManager::Get("assets/models/cube.obj"));
+	meshRenderer->material.albedoTexture = ResourceManager::Get<Texture>(FileManager::Get("assets/textures/wood.jpg"));
 	
 	// init Scene //
-	Entity& ent1 = *World::scene.CreateEntity("VikingRoom");
-	MeshRenderer* meshRenderer = ent1.AddComponent<MeshRenderer>();
-	ent1.transform.SetPosition() = { 0.f, 3.f, 0.f };
-	
+	Entity& sphere = *World::scene.CreateEntity("Sphere");
+	meshRenderer = sphere.AddComponent<MeshRenderer>();
+	sphere.transform.SetPosition() = { 0.f, 2.f, 2.f };
+	meshRenderer->model = ResourceManager::Get<Model>(FileManager::Get("assets/models/sphere.obj"));
+	meshRenderer->material.albedoColor = { 0.f, 1.f, 1.f }; 
+
+	Entity& vikingRoom = *World::scene.CreateEntity("VikingRoom");
+	meshRenderer = vikingRoom.AddComponent<MeshRenderer>();
+	vikingRoom.transform.SetPosition() = { 0.f, 1.f, 0.f };
+	vikingRoom.transform.SetRotationEulerAngle() = { -90.f * Calc::Deg2Rad, 0, 0.f };
+
 	meshRenderer->model = ResourceManager::Get<Model>(FileManager::Get("assets/models/viking_room.obj"));
-	Pointer<File>&& vikingRoomTexture = FileManager::Get("assets/textures/viking_room.png");
-	meshRenderer->material.albedo = ResourceManager::Get<Texture>(vikingRoomTexture);
-	meshRenderer->material.albedo->loadData.flipVertically = true;
-	meshRenderer->material.albedo->Unload();
-	meshRenderer->material.albedo->Load(vikingRoomTexture);
-	meshRenderer->material.albedo->CreateInRhi();
+	meshRenderer->material.albedoTexture = ResourceManager::Get<Texture>(FileManager::Get("assets/textures/viking_room.png"));
 
-	Entity& ent2 = *World::scene.CreateEntity("DirectionalLight");
-	DirectionalLight* dirlight = ent2.AddComponent<DirectionalLight>();
-	dirlight->intensity = 0.2f;
-	dirlight->color = Colorf(1.f, 1.f, 1.f);
+	Entity& pointLight = *World::scene.CreateEntity("PointLight");
+	pointLight.AddComponent<PointLight>();
+	pointLight.transform.SetPosition() = { 2.f, 3.f, 2.f };
 
-	Entity& pointLightentity = *World::scene.CreateEntity("PointLight");
-	PointLight* pointLight = pointLightentity.AddComponent<PointLight>();
-	pointLight->color = { 7.7f, 0.f, 3.f };
-	pointLightentity.AddComponent<TestComponent>();
-	pointLightentity.transform.SetPosition() = { 0.f, 2.f, -2.f };
-	
-	Entity& ent3 = *World::scene.CreateEntity("Plane");
-	meshRenderer = ent3.AddComponent<MeshRenderer>();
-	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
-	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/wood.jpg");
-	ent3.transform.SetScale() = { 10.f, 0.1f, 10.f };
-	ent3.transform.SetPosition() -= { 0.f, -0.2f, 0.f};
-	
-	Entity& ent4 = *World::scene.CreateEntity("CubeMinecraft");
-	ent4.transform.SetPosition() = { 2.f, 0, 2.f};
-	meshRenderer = ent4.AddComponent<MeshRenderer>();
-	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
-	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/diamond_block.jpg");
+	Entity& spotLight = *World::scene.CreateEntity("SpotLight");
+	spotLight.AddComponent<SpotLight>();
+	spotLight.transform.SetPosition() = { -2.f, 3.f, -2.f };
 
-	const std::array<std::string, 6> testCubeMap
-	{
-		"assets/skybox/right.jpg",
-		"assets/skybox/left.jpg",
-		"assets/skybox/top.jpg",
-		"assets/skybox/bottom.jpg",
-		"assets/skybox/front.jpg",
-		"assets/skybox/back.jpg"
-	};
-	World::scene.skybox.LoadCubeMap(testCubeMap);
+	// Init SkyBox
+	World::scene.skybox.Initialize();
+	Pointer<Texture> texture = ResourceManager::Get<Texture>("assets/textures/puresky.hdr");
+	texture->loadData.flipVertically = true;
+	texture->Reload();
+	World::scene.skybox.LoadFromHdrTexture(texture);
 }
 
 void Editor::MenuBar() const
@@ -355,6 +349,7 @@ void Editor::Update()
 		UpdateWindow();
 		WorldBehaviours();
 		OnRenderingWindow();
+		
 		renderer.EndFrame(World::scene);
 
 		Input::Update();

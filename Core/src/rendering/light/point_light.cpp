@@ -1,5 +1,5 @@
 ﻿#include "rendering/light/point_light.hpp"
-#include "serialization/serializer.hpp"
+#include "utils/factory.hpp"
 
 using namespace XnorCore;
 

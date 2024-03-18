@@ -41,12 +41,18 @@ void Cubemap::Unload()
 
 Cubemap::Cubemap(const std::array<std::string, 6>& cubeMapsTextures)
 {
-    stbi_set_flip_vertically_on_load(false);
 
     for (size_t i = 0; i < cubeMapsTextures.size(); i++)
         m_Images[i] = stbi_load(cubeMapsTextures[i].c_str(), &m_CubemapSize.x, &m_CubemapSize.y, &m_DataChannels, 0);
     
     m_Loaded = true;
+}
+
+Cubemap::Cubemap(const CreateCubeMapInfo& createCubeMapInfo) : m_CubemapSize(createCubeMapInfo.size),
+m_TextureFiltering(createCubeMapInfo.filtering),m_TextureWrapping(createCubeMapInfo.wrapping), m_TextureInternalFormat(createCubeMapInfo.internalFormat)
+{
+    m_Id = Rhi::CreateCubeMap(createCubeMapInfo);
+    m_LoadedInRhi = true;
 }
 
 void Cubemap::BindTexture(const uint32_t unit) const
@@ -57,4 +63,14 @@ void Cubemap::BindTexture(const uint32_t unit) const
 void Cubemap::UnBindTexture(const uint32_t unit) const
 {
     Rhi::BindTexture(unit, 0);
+}
+
+uint32_t Cubemap::GetId() const
+{
+    return m_Id;
+}
+
+Vector2i Cubemap::GetSize() const
+{
+    return m_CubemapSize;
 }

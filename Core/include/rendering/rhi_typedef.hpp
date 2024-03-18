@@ -30,6 +30,29 @@ BEGIN_ENUM(PolygonMode)
 }
 END_ENUM
 
+BEGIN_ENUM(CullFace)
+{
+	None,
+	Front,
+	Back,
+	FrontAndBack
+}
+END_ENUM
+
+BEGIN_ENUM(FrontFace)
+{
+	CW,
+	CCW
+}
+END_ENUM
+
+struct ShaderProgramCullInfo
+{
+	bool enableCullFace = false; 
+	CullFace::CullFace cullFace = CullFace::Front;
+	FrontFace::FrontFace frontFace = FrontFace::CCW;
+};
+
 /// @brief Polygon draw mode
 /// @see <a href="https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDrawArrays.xhtml">OpenGL specification</a>
 BEGIN_ENUM(DrawMode)
@@ -107,7 +130,15 @@ BEGIN_ENUM(TextureFiltering)
 	/// @brief Performs linear interpolation
 	Linear,
 	/// @brief Selects the nearest texel
-	Nearest
+	Nearest,
+
+	NearestMipmapNearest,
+
+	LinearMimapNearest,
+
+	NearestMimapLinear,
+	
+	LinearMimMapLinear
 }
 END_ENUM
 
@@ -146,6 +177,7 @@ BEGIN_ENUM(TextureInternalFormat)
 	Rgba16F,
 	R32F,
 	R32Uint,
+	Srgb,
 	DepthComponent16,
 	DepthComponent24,
 	DepthComponent32,
@@ -168,6 +200,7 @@ END_ENUM
 BEGIN_ENUM(TextureFormat)
 {
 	Red,
+	RedGreen,
 	Rgb,
 	Rgba,
 }
@@ -388,6 +421,8 @@ struct ShaderCreateInfo
 	DepthFunction::DepthFunction depthFunction{};
 	/// @brief Blend function
 	BlendFunction blendFunction{};
+
+	ShaderProgramCullInfo shaderProgramCullInfo;
 };
 
 /// @brief Point light UniformBuffer data
@@ -461,8 +496,18 @@ struct ShadowMappingData
 /// @brief Material UniformBuffer data
 struct MaterialData
 {
-	int32_t hasAlbedoMap = 0;
-	int32_t hasNormalmap = 0;
+	Vector3 albedoColor;
+	int32_t hasAlbedoMap;
+	int32_t hasMetallicMap;
+	int32_t hasRoughnessMap;
+	int32_t hasNormalMap;
+	int32_t hasAmbiantOcclusionMap;
+
+	float_t metallic = 0.f;
+	float_t roughness = 0.f;
+	float_t reflectance = 0.f;
+	float_t emissive = 0.f;
+	float_t ambiantOccusion = 0.f;
 };
 
 /// @brief The type of GBuffer.
@@ -470,8 +515,20 @@ BEGIN_ENUM(Gbuffer)
 {
 	Position = 4,
 	Normal,
-	Albedo
-}
+	Albedo,
+	MetallicRoughessReflectance,
+	EmissiveAmbiantOcclusion,
+};
+END_ENUM
+
+BEGIN_ENUM(MaterialTextureEnum) : int32_t
+{
+	Albedo = 0,
+	Metallic,
+	Roughness,
+	Normal,
+	AmbiantOcclusion,
+};
 END_ENUM
 
 /// @brief Buffer attachment flags.
@@ -499,6 +556,20 @@ struct RenderPassBeginInfo
 
 	Vector4 clearColor;
 };
+
+
+enum class CubeMapFace
+{
+	CubeMapPositiveX,
+	CubeMapNegativeX,
+	CubeMapPositiveY,
+	CubeMapNegativeY,
+	CubeMapPositiveZ,
+	CubeMapNegativeZ,
+
+	Size
+};
+
 
 
 END_XNOR_CORE

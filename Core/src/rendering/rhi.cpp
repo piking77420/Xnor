@@ -166,6 +166,7 @@ uint32_t Rhi::CreateShaders(const std::vector<ShaderCode>& shaderCodes, const Sh
 	ShaderInternal shaderInternal;
 	shaderInternal.depthFunction = shaderCreateInfo.depthFunction;
 	shaderInternal.blendFunction = shaderCreateInfo.blendFunction;
+	shaderInternal.cullInfo = shaderCreateInfo.shaderProgramCullInfo;
 	
 	m_ShaderMap.emplace(programId, shaderInternal);
 	
@@ -193,6 +194,17 @@ void Rhi::UseShader(const uint32_t shaderId)
 		const uint32_t srcValue = GetBlendValueOpengl(BlendValue::One);
 		const uint32_t destValue = GetBlendValueOpengl(BlendValue::Zero);
 		glBlendFunc(srcValue, destValue);
+	}
+
+	if (shaderInternal.cullInfo.enableCullFace)
+	{
+		glEnable(GL_CULL_FACE);
+		glCullFace(CullFaceToOpenglCullFace(shaderInternal.cullInfo.cullFace));
+		glFrontFace(FrontFaceToOpenglFrontFace(shaderInternal.cullInfo.frontFace));
+	}
+	else
+	{
+		glDisable(GL_CULL_FACE);
 	}
 	
 	glUseProgram(shaderId);
@@ -329,6 +341,169 @@ uint32_t Rhi::GetOpenglBufferBit(const BufferFlag::BufferFlag flag)
 	return openglBufferBit;
 }
 
+uint32_t Rhi::AttachementToOpenglAttachement(Attachment::Attachment attachment)
+{
+	switch (attachment)
+	{
+		case Attachment::Color00:
+			
+			return GL_COLOR_ATTACHMENT0;
+			 
+		case Attachment::Color01:
+			
+			return GL_COLOR_ATTACHMENT1;
+			 
+		case Attachment::Color02:
+			
+			return GL_COLOR_ATTACHMENT2;
+			 
+		case Attachment::Color03:
+			
+			return GL_COLOR_ATTACHMENT3;
+			 
+		case Attachment::Color04:
+			
+			return GL_COLOR_ATTACHMENT4;
+			 
+		case Attachment::Color05:
+			
+			return GL_COLOR_ATTACHMENT5;
+			 
+		case Attachment::Color06:
+			
+			return GL_COLOR_ATTACHMENT6;
+			 
+		case Attachment::Color07:
+			
+			return GL_COLOR_ATTACHMENT7;
+			 
+		case Attachment::Color08:
+			
+			return GL_COLOR_ATTACHMENT8;
+			 
+		case Attachment::Color09:
+			 
+			return GL_COLOR_ATTACHMENT9;
+			 
+		case Attachment::Color10:
+			
+			return GL_COLOR_ATTACHMENT10;
+			 
+		case Attachment::Color11:
+			
+			return GL_COLOR_ATTACHMENT11;
+			 
+		case Attachment::Color12:
+			
+			return GL_COLOR_ATTACHMENT12;
+			 
+		case Attachment::Color13:
+			
+			return GL_COLOR_ATTACHMENT13;
+			 
+		case Attachment::Color14:
+			
+			return GL_COLOR_ATTACHMENT14;
+			 
+		case Attachment::Color15:
+			
+			return GL_COLOR_ATTACHMENT15;
+			 
+		case Attachment::Color16:
+			
+			return GL_COLOR_ATTACHMENT16;
+			 
+		case Attachment::Color17:
+			
+			return GL_COLOR_ATTACHMENT17;
+			 
+		case Attachment::Color18:
+			
+			return GL_COLOR_ATTACHMENT18;
+			 
+		case Attachment::Color19:
+			
+			return GL_COLOR_ATTACHMENT19;
+			 
+		case Attachment::Color20:
+			
+			return GL_COLOR_ATTACHMENT20;
+			 
+		case Attachment::Depth:
+			
+			return GL_DEPTH_ATTACHMENT;
+			  
+		case Attachment::Stencil:
+			
+			return GL_STENCIL_ATTACHMENT;
+			 
+		case Attachment::DepthAndStencil:
+			
+			return  GL_DEPTH_STENCIL_ATTACHMENT;
+	}
+
+	return GL_COLOR_ATTACHMENT0;
+}
+
+uint32_t Rhi::CubeMapFacesToOpengl(CubeMapFace cubeMapFace)
+{
+	switch (cubeMapFace)
+	{
+		case CubeMapFace::CubeMapPositiveX:
+			return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+		
+		case CubeMapFace::CubeMapNegativeX:
+			return GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
+		
+		case CubeMapFace::CubeMapPositiveY:
+			return GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
+		
+		case CubeMapFace::CubeMapNegativeY:
+			return GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
+		
+		case CubeMapFace::CubeMapPositiveZ:
+			return GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
+		
+		case CubeMapFace::CubeMapNegativeZ:
+			return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+	}
+
+	return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+}
+
+uint32_t Rhi::FrontFaceToOpenglFrontFace(FrontFace::FrontFace frontFace)
+{
+	switch (frontFace)
+	{
+		case FrontFace::CW:
+			return GL_CW;
+		case FrontFace::CCW:
+			return GL_CCW;
+	}
+
+	return GL_CW;
+}
+
+uint32_t Rhi::CullFaceToOpenglCullFace(CullFace::CullFace cullFace)
+{
+	switch (cullFace)
+	{
+		case CullFace::None:
+			return GL_NONE;
+		
+		case CullFace::Front:
+			return GL_FRONT;
+		
+		case CullFace::Back:
+			return GL_BACK;
+		
+		case CullFace::FrontAndBack:
+			return GL_FRONT_AND_BACK;
+	}
+
+	return GL_FRONT_AND_BACK;
+}
+
 uint32_t Rhi::GetOpengDepthEnum(const DepthFunction::DepthFunction depthFunction)
 {
 	switch (depthFunction)
@@ -399,22 +574,28 @@ uint32_t Rhi::CreateTexture2D(const TextureCreateInfo& textureCreateInfo)
 
 	const GLint openglTextureFilter = static_cast<GLint>(GetOpenglTextureFilter(textureCreateInfo.filtering));
 	const GLint openglTextureWrapper = static_cast<GLint>(GetOpenglTextureWrapper(textureCreateInfo.wrapping));
+	
+	AllocTexture2D(textureId, textureCreateInfo);
+	glGenerateTextureMipmap(textureId);
 
-	glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
-	glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
 	glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
 	glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
-
-	AllocTexture2D(textureId, textureCreateInfo);
-
+	if(textureCreateInfo.filtering == TextureFiltering::Linear)
+	{
+		glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	}
+	else
+	{
+		glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
+	}
+	glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
+	
 	if (textureCreateInfo.data != nullptr)
 	{
 		glTextureSubImage2D(textureId, 0, 0, 0, static_cast<GLsizei>(textureCreateInfo.size.x), static_cast<GLsizei>(textureCreateInfo.size.y),
 			GetOpenGlTextureFormat(textureCreateInfo.format), GetOpenglDataType(textureCreateInfo.dataType), textureCreateInfo.data);
 	}
 	
-	glGenerateTextureMipmap(textureId);
-
 	return textureId;
 }
 
@@ -433,44 +614,67 @@ uint32_t Rhi::CreateCubeMap(const CreateCubeMapInfo& createCubeMapInfo)
 	const uint32_t textureId = CreateTexture(TextureType::TextureCubeMap);
 	const GLint openglTextureFilter =  static_cast<GLint>(GetOpenglTextureFilter(createCubeMapInfo.filtering));
 	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(createCubeMapInfo.wrapping));
-	glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
-	glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
+
+	if (createCubeMapInfo.filtering == TextureFiltering::LinearMimMapLinear)
+	{
+		glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
+	else
+	{
+		glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
+		glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
+	}
+	
 	glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
 	glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
 	glTextureParameteri(textureId, GL_TEXTURE_WRAP_R, openglTextureWrapper);
-	
+
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
-	
-	if (createCubeMapInfo.datas == nullptr || createCubeMapInfo.datas == nullptr)
-	{
-		Logger::LogError("CubeMapCreateInfo is Invalid");
-	}
 	
 	const GLsizei width = createCubeMapInfo.size.x;
 	const GLsizei height = createCubeMapInfo.size.y;
 
-	for (size_t i = 0; i < createCubeMapInfo.datas->size(); i++)
+	if(createCubeMapInfo.datas != nullptr)
 	{
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), 0, static_cast<GLint>(GetOpenglInternalFormat(createCubeMapInfo.internalFormat)),
-			width, height, 0, GetOpenGlTextureFormat(createCubeMapInfo.format), GetOpenglDataType(createCubeMapInfo.dataType), createCubeMapInfo.datas->at(i));
+		for (size_t i = 0; i < createCubeMapInfo.datas->size(); i++)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), 0, static_cast<GLint>(GetOpenglInternalFormat(createCubeMapInfo.internalFormat)),
+				width, height, 0, GetOpenGlTextureFormat(createCubeMapInfo.format), GetOpenglDataType(createCubeMapInfo.dataType), createCubeMapInfo.datas->at(i));
+		}
 	}
-
+	else
+	{
+		for (size_t i = 0; i < 6; i++)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), 0, static_cast<GLint>(GetOpenglInternalFormat(createCubeMapInfo.internalFormat)),
+				width, height, 0, GetOpenGlTextureFormat(createCubeMapInfo.format), GetOpenglDataType(createCubeMapInfo.dataType), nullptr);
+		}
+	}
 	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	
+	glGenerateTextureMipmap(textureId);
 
 	return textureId;
 }
 
-uint32_t Rhi::CreateFrameBuffer(const RenderPass& renderPass, const std::vector<const Texture*>& attachments)
+uint32_t Rhi::CreateFrameBuffer()
 {
 	uint32_t frameBufferId;
 	glCreateFramebuffers(1, &frameBufferId);
+	return frameBufferId;
+}
 
+void Rhi::AttachsTextureToFrameBuffer(const RenderPass& renderPass, const FrameBuffer& frameBuffer, const std::vector<const Texture*>& attachments)
+{
+	const uint32_t frameBufferId = frameBuffer.GetId();
 	const std::vector<RenderTargetInfo>& renderTargetInfos = renderPass.renderPassAttachments;
 	std::vector<GLenum> openglAttachmentsdraw;
 	
 	for (uint32_t i = 0; i < renderTargetInfos.size(); i++)
 	{
-		GLenum openglAttachment = 0 ;
+		GLenum openglAttachment = AttachementToOpenglAttachement(renderTargetInfos[i].attachment);
+
 		switch (renderTargetInfos[i].attachment)
 		{
 			case Attachment::Color00:
@@ -494,30 +698,17 @@ uint32_t Rhi::CreateFrameBuffer(const RenderPass& renderPass, const std::vector<
 			case Attachment::Color18:
 			case Attachment::Color19:
 			case Attachment::Color20:
-				openglAttachment = GL_COLOR_ATTACHMENT0 + static_cast<uint32_t>(renderTargetInfos[i].attachment);
-				if(renderTargetInfos[i].isDrawingOn)
-				openglAttachmentsdraw.push_back(openglAttachment);
-				break;
-			
-			case Attachment::Depth:
-				openglAttachment = GL_DEPTH_ATTACHMENT;
-				break;
-			
-			case Attachment::Stencil:
-				openglAttachment = GL_STENCIL_ATTACHMENT;
-				break;
-			
-			case Attachment::DepthAndStencil:
-				openglAttachment = GL_DEPTH_STENCIL_ATTACHMENT;
+				if (renderTargetInfos[i].isDrawingOn)
+					openglAttachmentsdraw.push_back(openglAttachment);
+				
 				break;
 			
 		}
-		glNamedFramebufferTexture(frameBufferId, openglAttachment, attachments.at(i)->GetId(), 0);
+		glNamedFramebufferTexture(frameBufferId,openglAttachment, attachments.at(i)->GetId(), 0);
 	}
 
 	glNamedFramebufferDrawBuffers(frameBufferId, static_cast<int32_t>(openglAttachmentsdraw.size()), openglAttachmentsdraw.data());
 
-	return frameBufferId;
 }
 
 void Rhi::DestroyFrameBuffer(const uint32_t frameBufferId)
@@ -557,6 +748,36 @@ void Rhi::UnbindFrameBuffer()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
+void Rhi::AttachTextureToFrameBuffer(const uint32_t bufferId, const Attachment::Attachment attachment, const uint32_t textureId, const uint32_t level)
+{
+	const GLenum attachementOpengl = AttachementToOpenglAttachement(attachment);
+	glNamedFramebufferTexture(bufferId, attachementOpengl ,textureId,level);
+	
+	if (attachment != Attachment::Depth && attachment != Attachment::DepthAndStencil && attachment != Attachment::Stencil)
+	{
+		glNamedFramebufferDrawBuffers(bufferId, 1, &attachementOpengl);
+	}
+}
+
+void Rhi::AttachTextureToFrameBuffer(
+	const uint32_t bufferId,
+	const Attachment::Attachment attachment,
+	const CubeMapFace cubeMapFace,
+	const uint32_t textureId,
+	const uint32_t level
+)
+{
+	const GLenum attachement =  AttachementToOpenglAttachement(attachment);
+	glNamedFramebufferTextureLayer(bufferId,attachement,textureId,level, static_cast<GLint>(cubeMapFace));
+	
+	if (attachment != Attachment::Depth && attachment != Attachment::DepthAndStencil && attachment != Attachment::Stencil)
+	{
+		glNamedFramebufferDrawBuffers(bufferId, 1, &attachement);
+	}
+}
+
+
 
 void Rhi::GetPixelFromAttachement(const uint32_t attachmentIndex, const Vector2i position, const TextureFormat::TextureFormat textureFormat, const DataType::DataType dataType, void* const output)
 {
@@ -702,7 +923,10 @@ uint32_t Rhi::GetOpenglInternalFormat(const TextureInternalFormat::TextureIntern
 		
 		case TextureInternalFormat::R32Uint:
 			return GL_R32UI;
-
+		
+		case TextureInternalFormat::Srgb:
+			return GL_SRGB8;
+		
 		case TextureInternalFormat::DepthComponent16:
 			return GL_DEPTH_COMPONENT16;
 		
@@ -733,12 +957,16 @@ uint32_t Rhi::GetOpenGlTextureFormat(const TextureFormat::TextureFormat textureF
 	{
 		case TextureFormat::Red: 
 			return GL_RED;
-	
+		
+		case TextureFormat::RedGreen:
+			return GL_RG;
+		
 		case TextureFormat::Rgb:
 			return GL_RGB;
 	
 		case TextureFormat::Rgba:
 			return GL_RGBA;
+	
 	}
 	
 	return GL_RGB;
@@ -901,6 +1129,7 @@ void Rhi::Initialize()
 	glEnable(GL_BLEND);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_STENCIL_TEST);
+	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);  
 
 #ifdef _DEBUG
 	glEnable(GL_DEBUG_OUTPUT);
@@ -977,8 +1206,19 @@ void Rhi::BindMaterial(const Material& material)
 {
 	MaterialData materialData;
 	
-	materialData.hasAlbedoMap = static_cast<int32_t>(material.albedo.IsValid());
-	materialData.hasNormalmap =  static_cast<int32_t>(material.normalMap.IsValid());
+	materialData.hasAlbedoMap = static_cast<int32_t>(material.albedoTexture.IsValid());
+	materialData.hasMetallicMap =  static_cast<int32_t>(material.metallicTexture.IsValid());
+	materialData.hasRoughnessMap =  static_cast<int32_t>(material.roughnessTexture.IsValid());
+	materialData.hasNormalMap =  static_cast<int32_t>(material.normalTexture.IsValid());
+	materialData.hasAmbiantOcclusionMap =  static_cast<int32_t>(material.ambiantOcclusionTexture.IsValid());
+	
+	materialData.albedoColor = static_cast<Vector3>(material.albedoColor);
+	materialData.metallic = material.metallic;
+	materialData.roughness = material.roughness;
+	materialData.reflectance = material.reflectance;
+	materialData.emissive = material.emissive;
+	materialData.ambiantOccusion = material.ambientOcclusion;
+	
 	constexpr size_t size = sizeof(MaterialData);
 	m_MaterialUniform->Update(size, 0, &materialData);
 }
@@ -1009,4 +1249,19 @@ TextureFormat::TextureFormat Rhi::GetTextureFormatFromChannels(const uint32_t ch
 void Rhi::DepthTest(bool value)
 {
 	value ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST); 
+}
+
+
+void Rhi::GetCubeMapViewMatrices(std::array<Matrix, 6>* viewsMatricies)
+{
+	*viewsMatricies =
+	{
+		Matrix::LookAt(Vector3(),-Vector3::UnitX(),-Vector3::UnitY()), // CubeMapPositiveX
+		Matrix::LookAt(Vector3(),Vector3::UnitX(),-Vector3::UnitY()), // CubeMapNegativeX
+		Matrix::LookAt(Vector3(),-Vector3::UnitY(),-Vector3::UnitZ()), // CubeMapPositiveY
+		Matrix::LookAt(Vector3(),Vector3::UnitY(),Vector3::UnitZ()), // CubeMapNegativeY
+		Matrix::LookAt(Vector3(),Vector3::UnitZ(),-Vector3::UnitY()), // CubeMapPositiveZ
+		Matrix::LookAt(Vector3(),-Vector3::UnitZ(),-Vector3::UnitY()), // CubeMapNegativeZ
+	};
+
 }

@@ -28,6 +28,7 @@ Texture::Texture(const TextureInternalFormat::TextureInternalFormat textureForma
         .format = m_TextureFormat,
         .internalFormat = m_TextureInternalFormat
     };
+    
 
     m_Id = Rhi::CreateTexture2D(createInfo);
     m_LoadedInRhi = true;
@@ -45,7 +46,16 @@ Texture::~Texture()
 bool Texture::Load(const uint8_t* buffer, const int64_t length)
 {
     stbi_set_flip_vertically_on_load(loadData.flipVertically);
-    m_Data = stbi_load_from_memory(buffer, static_cast<int32_t>(length), &m_Size.x, &m_Size.y, &m_DataChannels, loadData.desiredChannels);
+    
+    if (std::filesystem::path(m_Name).extension() == ".hdr")
+    {
+        m_Data = reinterpret_cast<decltype(m_Data)>(stbi_loadf_from_memory(buffer, static_cast<int32_t>(length), &m_Size.x, &m_Size.y, &m_DataChannels, loadData.desiredChannels));
+    }
+    else
+    {
+        m_Data = stbi_load_from_memory(buffer, static_cast<int32_t>(length), &m_Size.x, &m_Size.y, &m_DataChannels, loadData.desiredChannels);
+    }
+    
     m_TextureFormat = Rhi::GetTextureFormatFromChannels(m_DataChannels);
     m_Loaded = true;
     return true;
@@ -53,16 +63,25 @@ bool Texture::Load(const uint8_t* buffer, const int64_t length)
 
 void Texture::CreateInRhi()
 {
-    const TextureCreateInfo createInfo
+    TextureCreateInfo createInfo
+   {
+       .data = m_Data,
+       .size = m_Size,
+       .filtering = m_TextureFiltering,
+       .wrapping = m_TextureWrapping,
+       .format = m_TextureFormat,
+       .internalFormat = m_TextureInternalFormat,
+       .dataType = DataType::UnsignedByte
+   };
+
+    if (std::filesystem::path(m_Name).extension() == ".hdr")
     {
-        .data = m_Data,
-        .size = m_Size,
-        .filtering = m_TextureFiltering,
-        .wrapping = m_TextureWrapping,
-        .format = m_TextureFormat,
-        .internalFormat = m_TextureInternalFormat,
-        .dataType = DataType::UnsignedByte
-    };
+        createInfo.filtering = TextureFiltering::Linear;
+        createInfo.wrapping = TextureWrapping::ClampToEdge;
+        createInfo.internalFormat = TextureInternalFormat::Rgb16F;
+        createInfo.format = TextureFormat::Rgb;
+        createInfo.dataType = DataType::Float;
+    }
     
     m_Id = Rhi::CreateTexture2D(createInfo);
     

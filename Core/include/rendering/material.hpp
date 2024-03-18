@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "core.hpp"
+#include "reflection/reflection.hpp"
 #include "resource/texture.hpp"
 #include "utils/pointer.hpp"
 #include "utils/serializable.hpp"
@@ -30,9 +31,22 @@ public:
     /// @brief Material type
     MaterialType materialType = MaterialType::Opaque;
     /// @brief Albedo texture
-    Pointer<Texture> albedo;
+    Pointer<Texture> albedoTexture;
+
+    Pointer<Texture> metallicTexture;
+
+    Pointer<Texture> roughnessTexture;
     /// @brief Normal map
-    Pointer<Texture> normalMap;
+    Pointer<Texture> normalTexture;
+
+    Pointer<Texture> ambiantOcclusionTexture;
+
+    Colorf albedoColor;
+    float_t metallic = 0.f;
+    float_t roughness = 0.f;
+    float_t reflectance = 0.f;
+    float_t emissive = 0.f;
+    float_t ambientOcclusion = 0.f;
 };
 
 END_XNOR_CORE
@@ -41,6 +55,15 @@ END_XNOR_CORE
 REFL_AUTO(
     type(XnorCore::Material),
     field(materialType),
-    field(albedo),
-    field(normalMap)
+    field(albedoColor),
+    field(metallic, XnorCore::Reflection::Range(0.f, 1.f)),
+    field(roughness, XnorCore::Reflection::Range(0.f, 1.f)),
+    field(reflectance, XnorCore::Reflection::Range(0.f, 1.f)),
+    field(emissive, XnorCore::Reflection::Range(0.f, 1.f)),
+    field(ambientOcclusion, XnorCore::Reflection::Range(0.f, 1.f)),
+    field(albedoTexture),
+    field(metallicTexture),
+    field(roughnessTexture),
+    field(normalTexture),
+    field(ambiantOcclusionTexture)
 );

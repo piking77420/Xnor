@@ -15,7 +15,7 @@ class XNOR_ENGINE Camera
 {
 public:
 	/// @brief Position
-	Vector3 position = { 0, 2, -8.f };
+	Vector3 position = { 0, 0, -3.f };
 
 	/// @brief Front vector, where the camera is looking
 	Vector3 front = -Vector3::UnitZ();

@@ -131,10 +131,14 @@ public:
 	/// @param blendFunction Blend function
 	XNOR_ENGINE void SetBlendFunction(const BlendFunction& blendFunction);
 
+	XNOR_ENGINE void SetFaceCullingInfo(const ShaderProgramCullInfo& shaderProgramCullInfo);
+
+
 private:
 	uint32_t m_Id = 0;
 	
 	DepthFunction::DepthFunction m_DepthFunction = DepthFunction::Less;
+	ShaderProgramCullInfo m_ShaderProgramCullInfo;
 	BlendFunction m_BlendFunction =
 	{
 		.isBlending = false,

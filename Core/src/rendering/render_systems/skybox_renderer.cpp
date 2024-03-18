@@ -15,10 +15,10 @@ void SkyboxRenderer::InitializeResources()
     m_SkyboxDrawerShader->SetInt("skybox",0);
 }
 
-void SkyboxRenderer::DrawSkymap(const Pointer<Model>& cubeModel, const Skybox& skybox) const
+void SkyboxRenderer::DrawSkymap(const Pointer<Model>& cubeModel, const Skybox& skybox) const 
 {
     m_SkyboxDrawerShader->Use();
-    skybox.GetCubeMap()->BindTexture(0);
+    skybox.cubeMap->BindTexture(0);
     Rhi::DrawModel(cubeModel->GetId());
     m_SkyboxDrawerShader->Unuse();
 }

@@ -31,9 +31,24 @@ vec3 ChangeExposure(vec3 col, float b)
 }
 
 void main()
-{
+{    
     const float gamma = 2.2;
-    vec3 hdrColor = texture(beforeToneMappedImage, texCoords).rgb;
 
-    fragColor = vec4(ChangeExposure(Aces(hdrColor), 1.0), 1.0);
+
+    vec3 color = texture(beforeToneMappedImage, texCoords).rgb;
+    // tone mapping
+    color = color / (color + vec3(1.0));
+    // gamma correction
+    color = pow(color, vec3(1.0/gamma));
+    fragColor = vec4(color, 1.0);
+
+    
+    // Test power down // 
+    
+    //vec3 hdrColor = texture(beforeToneMappedImage, texCoords).rgb;
+    //fragColor = vec4(ChangeExposure(Aces(hdrColor), 1.0), 1.0);
+    //fragColor = vec4(pow(vec3(fragColor), vec3(1.0/2.2)),1.0);
+    
+    //
+
 }

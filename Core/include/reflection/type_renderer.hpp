@@ -37,22 +37,6 @@ private:
         const char_t* name;
         /// @brief Member object
         MemberT* obj;
-
-        /// @brief Member descriptor
-        DescriptorT descriptor;
-
-        /// @brief Range attribute for the member
-        const Reflection::Range<MemberT>* range;
-
-        /// @brief Checks if the member has an attribute
-        /// @tparam AttributeT Attribute type
-        /// @return Has attribute
-        template <typename AttributeT>
-        [[nodiscard]]
-        constexpr bool_t HasAttribute() const
-        {
-            return Reflection::HasAttribute<AttributeT, DescriptorT>(descriptor);
-        }
     };
 
     /// @brief Displays a simple scalar

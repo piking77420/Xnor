@@ -14,6 +14,10 @@ public:
     Texture* positionAtttachment = nullptr;
     Texture* normalAttachement = nullptr;
     Texture* albedoAttachment = nullptr;
+
+    Texture* metallicRougnessReflectance = nullptr;
+    Texture* emissiveAmbiantOcclusion = nullptr;
+
     
     // Forward Rendering
     RenderPass colorPass{};

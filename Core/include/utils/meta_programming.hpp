@@ -67,6 +67,16 @@ namespace Meta
     template <typename T>
     constexpr bool_t IsFloatingPoint = std::is_floating_point_v<T>;
 
+    /// @brief Checks whether @c T is an abstract class
+    /// @tparam T Type
+    template <typename T>
+    constexpr bool_t IsAbstract = std::is_abstract_v<T>;
+
+    /// @brief Checks whether @c T is default constructible (has a public constructor, with no parameters)
+    /// @tparam T Type
+    template <typename T>
+    constexpr bool_t IsDefaultConstructible = std::is_default_constructible_v<T>;
+
     /// @brief Removes the array specification from @c T
     ///
     /// e.g. if @c T was @c int[4], then @c RemoveArraySpecifier<T> will be @c int

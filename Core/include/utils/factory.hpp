@@ -5,8 +5,7 @@
 #include <functional>
 
 BEGIN_XNOR_CORE
-
-class Factory
+    class Factory
 {
     STATIC_CLASS(Factory)
 
@@ -15,6 +14,8 @@ class Factory
         std::function<void*()> createFunc;
         std::function<void(void*)> displayFunc;
         std::function<void(void*)> serializeFunc;
+
+        bool_t isConstructible;
         const char_t* name;
         std::vector<size_t> parentClasses;
     };
@@ -28,12 +29,16 @@ public:
 
     XNOR_ENGINE static void DisplayObject(void* obj, size_t hash);
 
+    XNOR_ENGINE static void RegisterTypes();
+
     template <typename T>
     static void FindAllChildClasses(std::vector<const char_t*>* names);
 
+    XNOR_ENGINE static void Print();
+
 private:
     XNOR_ENGINE static bool_t IsChildOf(size_t typeHash, size_t parentHash);
-    
+
     XNOR_ENGINE static inline std::unordered_map<size_t, FactoryTypeInfo> m_FactoryMapHash;
     XNOR_ENGINE static inline std::unordered_map<const char_t*, FactoryTypeInfo> m_FactoryMapName;
 };

@@ -17,6 +17,8 @@ void ViewportData::Destroy()
     delete positionAtttachment;
     delete normalAttachement;
     delete albedoAttachment;
+    delete metallicRougnessReflectance;
+    delete emissiveAmbiantOcclusion;
 
     delete colorAttachment;
     delete depthAtttachment;
@@ -41,7 +43,7 @@ void ViewportData::InitForward(Vector2i windowSize)
     // Set Up renderPass
     colorPass = RenderPass(attachementsType);
     const std::vector<const Texture*> targets = { colorAttachment, depthAtttachment };
-    renderBuffer->Create(colorPass, targets);
+    renderBuffer->AttachTextures(colorPass, targets);
 }
 
 void ViewportData::InitDeffered(Vector2i windowSize)
@@ -50,7 +52,9 @@ void ViewportData::InitDeffered(Vector2i windowSize)
     positionAtttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);
     normalAttachement = new Texture(TextureInternalFormat::Rgb16F, windowSize);
     albedoAttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);
-	
+    metallicRougnessReflectance = new Texture(TextureInternalFormat::Rgb16F,windowSize);
+    emissiveAmbiantOcclusion = new Texture(TextureInternalFormat::Rg16F,windowSize);
+    
     const std::vector<RenderTargetInfo> attachementsType =
     {
         {
@@ -64,6 +68,14 @@ void ViewportData::InitDeffered(Vector2i windowSize)
             
         },
         {
+            .attachment = Attachment::Color03
+                    
+        },
+        {
+            .attachment = Attachment::Color04
+                    
+        },
+        {
             .attachment = Attachment::Depth
         },
     };
@@ -71,6 +83,7 @@ void ViewportData::InitDeffered(Vector2i windowSize)
     // Set Up renderPass
     gbufferPass = RenderPass(attachementsType);
 
-    const std::vector<const Texture*> targets = { positionAtttachment, normalAttachement, albedoAttachment, depthAtttachment};
-    gframeBuffer->Create(gbufferPass, targets);
+    const std::vector<const Texture*> targets = { positionAtttachment, normalAttachement,
+        albedoAttachment, metallicRougnessReflectance, emissiveAmbiantOcclusion, depthAtttachment};
+    gframeBuffer->AttachTextures(gbufferPass, targets);
 }

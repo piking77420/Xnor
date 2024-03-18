@@ -1,6 +1,6 @@
 #include "scene/component/script_component.hpp"
 
-#include "serialization/serializer.hpp"
+#include "utils/factory.hpp"
 
 using namespace XnorCore;
 

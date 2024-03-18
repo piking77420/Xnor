@@ -32,10 +32,11 @@ void TypeRenderer::DisplayScalar(const Metadata<ReflectT, MemberT, DescriptorT>&
     else if constexpr (Meta::IsSame<MemberT, double_t>)
         type = ImGuiDataType_Double;
 
-    if (metadata.range)
+    if constexpr (Reflection::HasAttribute<Reflection::Range<MemberT>, DescriptorT>())
     {
+        const Reflection::Range<MemberT>& range = Reflection::GetAttribute<Reflection::Range<MemberT>, DescriptorT>();
         // Has a range attribute, display as a slider
-        ImGui::SliderScalar(metadata.name, type, metadata.obj, &metadata.range->minimum, &metadata.range->maximum);        
+        ImGui::SliderScalar(metadata.name, type, metadata.obj, &range.minimum, &range.maximum);        
     }
     else
     {
@@ -47,7 +48,7 @@ void TypeRenderer::DisplayScalar(const Metadata<ReflectT, MemberT, DescriptorT>&
 template <typename ReflectT, typename MemberT, typename DescriptorT>
 void TypeRenderer::DisplayGridPlotting(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
-    const Reflection::GridPlotting* const plotting = Reflection::TryGetAttribute<Reflection::GridPlotting, DescriptorT>(metadata.descriptor);
+    const Reflection::GridPlotting& plotting = Reflection::GetAttribute<Reflection::GridPlotting, DescriptorT>();
     
     ImGui::Text("%s", metadata.name);
     ImDrawList* const drawList = ImGui::GetWindowDrawList();
@@ -59,7 +60,7 @@ void TypeRenderer::DisplayGridPlotting(const Metadata<ReflectT, MemberT, Descrip
     const ImVec2 p0 = ImGui::GetItemRectMin();
     const ImVec2 p1 = ImGui::GetItemRectMax();
 
-    const Vector2 plottingRange = Vector2(plotting->minimum, plotting->maximum);
+    const Vector2 plottingRange = Vector2(plotting.minimum, plotting.maximum);
     constexpr Vector2 uniformRange = Vector2(0.f, 1.f);
 
     // Handle clicking
@@ -75,8 +76,8 @@ void TypeRenderer::DisplayGridPlotting(const Metadata<ReflectT, MemberT, Descrip
         metadata.obj->y = Utils::RemapValue(newValue.y, uniformRange, plottingRange);
 
         // Clamp the value between min and max
-        metadata.obj->x = std::clamp<float_t>(metadata.obj->x, plotting->minimum, plotting->maximum);
-        metadata.obj->y = std::clamp<float_t>(metadata.obj->y, plotting->minimum, plotting->maximum);
+        metadata.obj->x = std::clamp<float_t>(metadata.obj->x, plotting.minimum, plotting.maximum);
+        metadata.obj->y = std::clamp<float_t>(metadata.obj->y, plotting.minimum, plotting.maximum);
     }
 
     // Create rectangle
@@ -97,7 +98,7 @@ void TypeRenderer::DisplayGridPlotting(const Metadata<ReflectT, MemberT, Descrip
 
     // Draw slider float version
     ImGui::SameLine();
-    ImGui::SliderFloat2("##v2", metadata.obj->Raw(), plotting->minimum, plotting->maximum, "%.3f", ImGuiSliderFlags_AlwaysClamp);
+    ImGui::SliderFloat2("##v2", metadata.obj->Raw(), plotting.minimum, plotting.maximum, "%.3f", ImGuiSliderFlags_AlwaysClamp);
 }
 
 template <typename ReflectT, typename MemberT, typename DescriptorT>
@@ -110,7 +111,7 @@ void TypeRenderer::DisplayMathType(const Metadata<ReflectT, MemberT, DescriptorT
     }
     else if constexpr (Meta::IsSame<MemberT, Vector2>)
     {
-        if (metadata.template HasAttribute<Reflection::GridPlotting>())
+        if constexpr (Reflection::HasAttribute<Reflection::GridPlotting, DescriptorT>())
         {
             DisplayGridPlotting<ReflectT, MemberT, DescriptorT>(metadata);
         }
@@ -121,7 +122,7 @@ void TypeRenderer::DisplayMathType(const Metadata<ReflectT, MemberT, DescriptorT
     }
     else if constexpr (Meta::IsSame<MemberT, Vector3>)
     {
-        if (metadata.template HasAttribute<Reflection::AsEulerAngles>())
+        if constexpr (Reflection::HasAttribute<Reflection::AsEulerAngles, DescriptorT>())
         {
             // Supposed to be euler angles, so draw as a slider angle
             ImGui::SliderAngle3(metadata.name, metadata.obj->Raw(), -360, 360, "%.0f deg", ImGuiSliderFlags_AlwaysClamp);
@@ -456,7 +457,7 @@ void TypeRenderer::DisplayObject(ReflectT* const obj)
     DisplayFields<ReflectT, false>(obj);
 }
 
-template <typename ReflectT, bool_t StaticT>
+template <typename ReflectT, bool_t IsStatic>
 void TypeRenderer::DisplayFields(ReflectT* const obj)
 {
     // Get reflected data
@@ -474,21 +475,21 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
         using NotifyChangeT = Reflection::NotifyChange<ReflectT>;
 
         constexpr bool_t isConst = !member.is_writable;
-        constexpr bool_t hidden = Reflection::HasAttribute<Reflection::HideInInspector>(member);
+        constexpr bool_t hidden = Reflection::HasAttribute<Reflection::HideInInspector, T>();
         constexpr bool_t display = [&](const bool_t isStatic) -> bool_t
         {
-            if constexpr (StaticT)
+            if constexpr (IsStatic)
                 return isStatic;
             else
                 return !isStatic;
         }(member.is_static);
 
-        if constexpr (StaticT && member.is_static)
+        if constexpr (IsStatic && member.is_static)
         {
             hasStatic = true;
         }
 
-        constexpr bool_t notifyChange = Reflection::HasAttribute<NotifyChangeT>(member);
+        constexpr bool_t notifyChange = Reflection::HasAttribute<NotifyChangeT, T>();
 
         if constexpr (!hidden && display)
         {
@@ -508,7 +509,7 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
                 if (newValue != oldValue)
                 {
                     // Value was changed, set the pointer to true
-                    const auto notify = Reflection::GetAttribute<NotifyChangeT>(member);
+                    const auto notify = Reflection::GetAttribute<NotifyChangeT, T>();
                     obj->*notify.pointer = true;
                 }
             }
@@ -522,7 +523,7 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
         }
     });
 
-    if constexpr (StaticT)
+    if constexpr (IsStatic)
     {
         if (hasStatic)
         {
@@ -548,9 +549,7 @@ void TypeRenderer::DisplayObjectInternal(ReflectT* obj, DescriptorT member)
                 return const_cast<MemberT*>(&member.get());
             else
                 return const_cast<MemberT*>(&member.get(obj));
-        }(),
-        .descriptor = member,
-        .range = Reflection::TryGetAttribute<Reflection::Range<MemberT>, DescriptorT>(member)
+        }()
     };
 
     ImGui::PushID(metadata.obj);
@@ -611,7 +610,7 @@ void TypeRenderer::DisplaySimpleType(const Metadata<ReflectT, MemberT, Descripto
     }
     else if constexpr (Meta::IsEnum<MemberT>)
     {
-        if (metadata.template HasAttribute<Reflection::EnumFlags>())
+        if constexpr (Reflection::HasAttribute<Reflection::EnumFlags, DescriptorT>())
             DisplayEnumFlag<ReflectT, MemberT, DescriptorT>(metadata);
         else
             DisplayEnum<ReflectT, MemberT, DescriptorT>(metadata);
@@ -638,9 +637,7 @@ void TypeRenderer::DisplayArray(const Metadata<ReflectT, MemberT, DescriptorT>& 
         // Construct common metadata for the array type, this allows a range attribute to be used
         Metadata<ReflectT, ArrayT, DescriptorT> metadataArray = {
             .topLevelObj = metadata.topLevelObj,
-            .name = "",
-            .descriptor = metadata.descriptor,
-            .range = Reflection::TryGetAttribute<Reflection::Range<ArrayT>>(metadata.descriptor)
+            .name = ""
         };
         
         for (size_t i = 0; i < arraySize; i++)
@@ -689,9 +686,7 @@ void TypeRenderer::DisplayList(const Metadata<ReflectT, MemberT, DescriptorT>& m
         // Construct common metadata for the array type, this allows a range attribute to be used
         Metadata<ReflectT, ArrayT, DescriptorT> metadataArray = {
             .topLevelObj = metadata.topLevelObj,
-            .name = "",
-            .descriptor = metadata.descriptor,
-            .range = Reflection::TryGetAttribute<Reflection::Range<ArrayT>>(metadata.descriptor)
+            .name = ""
         };
 
         size_t listSize = metadata.obj->GetSize();
@@ -764,14 +759,13 @@ void TypeRenderer::DisplayList(const Metadata<ReflectT, MemberT, DescriptorT>& m
 
 
 template <typename ReflectT, typename MemberT, typename DescriptorT>
-void TypeRenderer::CheckDisplayTooltip(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
+void TypeRenderer::CheckDisplayTooltip(const Metadata<ReflectT, MemberT, DescriptorT>&)
 {
     // Check if it has the attribute
-    const Reflection::Tooltip* const tooltip = Reflection::TryGetAttribute<Reflection::Tooltip, DescriptorT>(metadata.descriptor);
-    if (tooltip)
+    if constexpr (Reflection::HasAttribute<Reflection::Tooltip, DescriptorT>())
     {
         // Set tooltip        
-        ImGui::SetItemTooltip("%s", tooltip->text);
+        ImGui::SetItemTooltip("%s", Reflection::GetAttribute<Reflection::Tooltip, DescriptorT>().text);
     }
 }
 

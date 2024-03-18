@@ -46,6 +46,7 @@ typedef float float_t;
 #define DELETE_COPY_MOVE_OPERATIONS(...)
 #define REFLECTABLE_IMPL_MINIMAL(...)
 #define REFLECTABLE_IMPL_MINIMAL_DLL(...)
+#define REFLECTABLE_IMPL_MINIMAL_DLL_PRIVATE_CTOR(...)
 #define REFLECTABLE_IMPL_H(...)
 #define REFLECTABLE_IMPL_H_DLL(...)
 #define REFLECTABLE_IMPL_CPP(...)
@@ -146,12 +147,12 @@ namespace XnorCore
 %include "file/file.i"
 %include "file/file_manager.hpp"
 
+%include "rendering/rhi_typedef.hpp"
+
 %include "resource/cubemap.hpp"
 %include "resource/font.hpp"
 %include "resource/model.hpp"
 %include "resource/resource_manager.hpp"
-
-%include "rendering/rhi_typedef.hpp"
 
 %include "resource/shader.hpp"
 %include "resource/texture.hpp"
