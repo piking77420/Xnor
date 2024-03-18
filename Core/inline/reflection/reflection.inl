@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 BEGIN_XNOR_CORE
 

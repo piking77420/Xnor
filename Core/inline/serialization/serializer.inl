@@ -4,6 +4,7 @@
 
 #include <format>
 
+#include "reflection/reflection.hpp"
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
 #include "rendering/light/spot_light.hpp"
@@ -12,7 +13,6 @@
 #include "utils/guid.hpp"
 #include "utils/logger.hpp"
 #include "utils/meta_programming.hpp"
-#include "utils/serializable.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -31,7 +31,7 @@ void Serializer::FetchAttribute(const std::string& attributeName, const T& value
 }
 
 template <typename ReflectT>
-void Serializer::Serialize(const ReflectT* const obj, const bool_t isRoot)
+void Serializer::Serialize([[maybe_unused]] const ReflectT* const obj, const bool_t isRoot)
 {
     constexpr TypeDescriptor<ReflectT> desc = Reflection::GetTypeInfo<ReflectT>();
 
@@ -40,6 +40,7 @@ void Serializer::Serialize(const ReflectT* const obj, const bool_t isRoot)
     else
         BeginXmlElement(desc.name.c_str(), "");
 
+    /*
     refl::util::for_each(desc.members, [&]<typename T>(const T member)
     {
         constexpr bool_t isFunction = refl::descriptor::is_function(member);
@@ -73,6 +74,7 @@ void Serializer::Serialize(const ReflectT* const obj, const bool_t isRoot)
             Logger::LogInfo("{} ; {}", desc.name.c_str(), member.name.c_str());
         }
     });
+    */
 
     if (isRoot)
         EndRootElement();
@@ -117,7 +119,7 @@ void Serializer::SerializeSimpleType(const MemberT* ptr, const char_t* name, con
     else if constexpr (false)// (Meta::IsPolyPtr<MemberT>)
     {
         const size_t hash = ptr->GetHash();
-        
+
 #define POLY_PTR_IF_SER(type)                                  \
 if (hash == XnorCore::Utils::GetTypeHash<type>())              \
 {                                                              \
