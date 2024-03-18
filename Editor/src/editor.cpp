@@ -35,7 +35,9 @@ void Editor::CheckWindowResize()
 
 Editor::Editor()
 {
+	
 	const XnorCore::Pointer<XnorCore::File> logoFile = XnorCore::FileManager::Get("assets_internal/editor/logo.png");
+	
 	XnorCore::Pointer<XnorCore::Texture> logo = XnorCore::ResourceManager::Get<XnorCore::Texture>(logoFile);
 	logo->loadData.desiredChannels = 4;
 	logo->Reload(logoFile);
@@ -251,8 +253,8 @@ void Editor::CreateTestScene()
 	World::scene.skybox.Initialize();
 	Pointer<Texture> texture = ResourceManager::Get<Texture>("assets/textures/puresky.hdr");
 	texture->loadData.flipVertically = true;
-	ResourceManager::Get<Texture>("assets/textures/puresky.hdr")->Reload();
-	World::scene.skybox.LoadFromHdrTexture(ResourceManager::Get<Texture>("assets/textures/puresky.hdr"));
+	texture->Reload();
+	World::scene.skybox.LoadFromHdrTexture(texture);
 }
 
 void Editor::MenuBar() const
@@ -336,7 +338,7 @@ void Editor::Update()
 		UpdateWindow();
 		WorldBehaviours();
 		OnRenderingWindow();
-
+		
 		renderer.EndFrame(World::scene);
 
 		Input::Update();

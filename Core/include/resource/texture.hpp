@@ -23,7 +23,7 @@ public:
     struct LoadOptions
     {
         int32_t desiredChannels = 0;
-        bool_t flipVertically = false;
+        bool_t flipVertically = true;
     };
 
     /// @brief Allowed extensions for texture files
@@ -138,7 +138,7 @@ private:
     int32_t m_DataChannels = 0;
     uint32_t m_Id = 0;
     
-    TextureFiltering::TextureFiltering m_TextureFiltering = TextureFiltering::Linear;
+    TextureFiltering::TextureFiltering m_TextureFiltering = TextureFiltering::Nearest;
     TextureWrapping::TextureWrapping m_TextureWrapping = TextureWrapping::Repeat;
     TextureInternalFormat::TextureInternalFormat m_TextureInternalFormat = TextureInternalFormat::Rgba8;
     TextureFormat::TextureFormat m_TextureFormat = TextureFormat::Rgb;

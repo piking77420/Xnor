@@ -68,9 +68,6 @@ public class Component : global::System.IDisposable {
     } 
   }
 
-  public Component() : this(CorePINVOKE.new_Component(), true) {
-  }
-
   public virtual void Begin() {
     CorePINVOKE.Component_Begin(swigCPtr);
   }

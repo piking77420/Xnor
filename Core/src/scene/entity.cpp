@@ -38,6 +38,12 @@ void Entity::Update()
     }
 }
 
+void Entity::AddComponent(Component* const component)
+{
+    component->entity = this;
+    m_Components.Add(component);
+}
+
 const Guid& Entity::GetGuid() const
 {
     return m_EntityId;

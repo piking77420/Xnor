@@ -179,10 +179,9 @@ void Inspector::DisplayRawPointer(const Metadata<MemberT, DescriptorT>& metadata
 {
     using TypeT = XnorCore::Meta::RemovePointerSpecifier<MemberT>;
 
-    ImGui::Text("%s", metadata.name);
-
     if constexpr (XnorCore::Meta::IsSame<TypeT, XnorCore::Entity>)
     {
+        ImGui::Text("%s", metadata.name);
         ImGui::SameLine();
 
         if (*metadata.obj != nullptr)
@@ -223,28 +222,26 @@ void Inspector::DisplayRawPointer(const Metadata<MemberT, DescriptorT>& metadata
             }
         }
     }
-}
-
+    else if constexpr (XnorCore::Meta::IsSame<TypeT, XnorCore::Component>)
+    {
+        const size_t hash = XnorCore::Utils::GetTypeHash<XnorCore::Component>(*metadata.obj);
+        
 #define POLY_PTR_IF_INSP(type)\
 if (hash == XnorCore::Utils::GetTypeHash<type>())\
 {\
-DisplayObject<type>(metadata.obj->Cast<type>(), XnorCore::Reflection::GetTypeInfo<type>());\
+DisplayObject<type>(reinterpret_cast<type*>(*metadata.obj));\
 }\
 
-template <typename MemberT, typename DescriptorT>
-void Inspector::DisplayPolyPointer(const Metadata<MemberT, DescriptorT>& metadata)
-{
-    const size_t hash = metadata.obj->GetHash();
+        if (ImGui::CollapsingHeader(metadata.name))
+        {
+            // TODO find a less ugly solution to that
 
-    if (ImGui::CollapsingHeader(metadata.name))
-    {
-        // TODO find a less ugly solution to that
-
-        POLY_PTR_IF_INSP(XnorCore::MeshRenderer)
-        POLY_PTR_IF_INSP(XnorCore::DirectionalLight)
-        POLY_PTR_IF_INSP(XnorCore::TestComponent)
-        POLY_PTR_IF_INSP(XnorCore::PointLight)
-        POLY_PTR_IF_INSP(XnorCore::SpotLight)
+            POLY_PTR_IF_INSP(XnorCore::MeshRenderer)
+            POLY_PTR_IF_INSP(XnorCore::DirectionalLight)
+            POLY_PTR_IF_INSP(XnorCore::TestComponent)
+            POLY_PTR_IF_INSP(XnorCore::PointLight)
+            POLY_PTR_IF_INSP(XnorCore::SpotLight)
+        }
     }
 }
 
@@ -321,8 +318,9 @@ void Inspector::DisplayEnumFlag(const Metadata<MemberT, DescriptorT>& metadata)
 }
 
 template <typename ReflectT>
-void Inspector::DisplayObject(ReflectT* const obj, const XnorCore::TypeDescriptor<ReflectT> desc)
+void Inspector::DisplayObject(ReflectT* const obj)
 {
+    constexpr XnorCore::TypeDescriptor<ReflectT> desc = XnorCore::Reflection::GetTypeInfo<ReflectT>();
     const std::string typeName = XnorCore::Utils::RemoveNamespaces(desc.name.c_str());
     const float_t textSize = ImGui::CalcTextSize(typeName.c_str()).x;
     XnorCore::Utils::AlignImGuiCursor(textSize);
@@ -381,7 +379,17 @@ void Inspector::DisplayObjectInternal(ReflectT* obj, DescriptorT member)
     }
     else if constexpr (XnorCore::Meta::IsXnorList<MemberT>)
     {
-        DisplayList<MemberT, DescriptorT>(metadata);
+        if constexpr (XnorCore::Meta::IsSame<typename MemberT::Type, XnorCore::Component*>)
+        {
+            const size_t size = metadata.obj->GetSize();
+            DisplayList<MemberT, DescriptorT>(metadata);
+            if (size + 1 == metadata.obj->GetSize())
+                (*metadata.obj)[size]->entity = obj;
+        }
+        else
+        {
+            DisplayList<MemberT, DescriptorT>(metadata);
+        }
     }
     else
     {
@@ -419,10 +427,6 @@ void Inspector::DisplaySimpleType(const Metadata<MemberT, DescriptorT>& metadata
     {
         DisplayRawPointer<MemberT, DescriptorT>(metadata);
     }
-    else if constexpr (XnorCore::Meta::IsPolyPtr<MemberT>)
-    {
-        DisplayPolyPointer<MemberT, DescriptorT>(metadata);
-    }
     else if constexpr (XnorCore::Meta::IsXnorPointer<MemberT>)
     {
         DisplayXnorPointer<MemberT, DescriptorT>(metadata);
@@ -437,7 +441,7 @@ void Inspector::DisplaySimpleType(const Metadata<MemberT, DescriptorT>& metadata
     else
     {
         if (ImGui::CollapsingHeader(metadata.name))
-            DisplayObject<MemberT>(metadata.obj, XnorCore::Reflection::GetTypeInfo<MemberT>());
+            DisplayObject<MemberT>(metadata.obj);
     }
 }
 
@@ -477,12 +481,18 @@ template <typename MemberT, typename DescriptorT>
 void Inspector::DisplayList(const Metadata<MemberT, DescriptorT>& metadata)
 {
     using ArrayT = typename MemberT::Type;
+    constexpr bool_t isComponentList = XnorCore::Meta::IsSame<ArrayT, XnorCore::Component*>;
 
     if (ImGui::CollapsingHeader(metadata.name))
     {
-        if constexpr (!XnorCore::Meta::IsPolyPtr<ArrayT>)
+        if (ImGui::Selectable("Add"))
         {
-            if (ImGui::Selectable("Add"))
+            if constexpr (isComponentList)
+            {
+                m_ComponentFilterTarget = static_cast<void*>(metadata.obj);
+                m_TextFilter.Clear();         
+            }
+            else
             {
                 metadata.obj->Add();
             }
@@ -515,7 +525,7 @@ void Inspector::DisplayList(const Metadata<MemberT, DescriptorT>& metadata)
                 
             ImGui::SameLine();
                     
-            if constexpr (!XnorCore::Meta::IsPolyPtr<ArrayT>)
+            if constexpr (!isComponentList)
             {
                 if (ImGui::Button("+"))
                 {
@@ -534,6 +544,19 @@ void Inspector::DisplayList(const Metadata<MemberT, DescriptorT>& metadata)
             DisplaySimpleType<ArrayT, DescriptorT>(metadataArray);
 
             ImGui::PopID();
+        }
+
+        if constexpr (isComponentList)
+        {
+            if (m_ComponentFilterTarget == static_cast<void*>(metadata.obj))
+            {
+                XnorCore::Component* e = FilterComponent(m_TextFilter);
+                if (e)
+                {
+                    metadata.obj->Add(e);
+                    m_ComponentFilterTarget = nullptr;
+                }
+            }
         }
     }
 }

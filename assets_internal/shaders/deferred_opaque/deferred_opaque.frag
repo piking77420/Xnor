@@ -58,6 +58,8 @@ uniform sampler2D gEmissiveAmbiantOcclusion;
 
 
 uniform samplerCube irradianceMap;
+uniform samplerCube prefilterMap;
+uniform sampler2D brdfLUT;
 
 in vec2 texCoords;
 
@@ -84,11 +86,27 @@ float SpecularG(vec3 l, vec3 v, vec3 h, vec3 n, float roughness)
 
     return SpecularG1(n,l,k) * SpecularG1(n,v,k);
 }
-vec3 SpecularF(float VoH,vec3 F0)
+vec3 SpecularF(float VoH,vec3 F0, float roughness)
 {
     float power = (-5.5473 * VoH - 6.98316) * VoH;
-    return F0 + (1 - F0) * pow(2,power); 
+    return F0 + ((1 - F0) - roughness) * pow(2,power); 
 }
+
+vec3 ComputeIbl(float roughness,vec3 kD, float ao,vec3 albedo, vec3 N , vec3 R ,vec3 V,vec3 F) 
+{
+    vec3 irradiance = texture(irradianceMap, N).rgb;
+    vec3 diffuse    = irradiance * albedo;
+    const float MAX_REFLECTION_LOD = 4.0;
+    vec3 prefilteredColor = textureLod(prefilterMap, R,  roughness * MAX_REFLECTION_LOD).rgb;
+    vec2 brdf  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
+    vec3 specularAmbiant = prefilteredColor * (F * brdf.x + brdf.y);
+
+    vec3 ambient = (kD * diffuse + specularAmbiant) * ao;
+
+    return ambient;
+}
+
+
 
 
 void main()
@@ -104,17 +122,20 @@ void main()
     float emissive = texture(gEmissiveAmbiantOcclusion,texCoords).r;
     float ambientOcclusion = texture(gEmissiveAmbiantOcclusion,texCoords).g;
 
-
     vec3 F0 = vec3(0.04);
-    F0 = mix(F0, albedo, metallic);
+    F0 = 0.16 * reflectance * reflectance * (1.0 - metallic) + albedo * metallic;
+    
     vec3 Lo = vec3(0.0);
     
     // view unit vector
     vec3 v = normalize(cameraPos - fragPos);
-    // Incident Light Unit Vector
-    vec3 l = normalize(directionalData.direction);
     // Surface Normal
     vec3 n = normalize(normal);
+    //reflect Vector
+    vec3 r = reflect(-v, n); 
+
+    // Incident Light Unit Vector
+    vec3 l = normalize(directionalData.direction);
     // half unit vector
     vec3 h = normalize(v + l);
     
@@ -124,21 +145,52 @@ void main()
     vec3 radiance = directionalData.color * directionalData.intensity;
     float ndf = SpecularD(NoH, roughness * roughness );
     float g =  SpecularG(l, v, h, n, roughness);
-    vec3 f = SpecularF(VoH,F0);
+    vec3 f = SpecularF(VoH,F0,roughness);
 
     vec3 numerator = ndf * g * f;
     float denominator = 4.0 * max(dot(n, v), 0.0) * max(dot(n, l), 0.0) + 0.0001;
     vec3 specular  = numerator / denominator;
-
-
+    
     vec3 kS = f;
     vec3 kD = vec3(1.0) - kS;
     kD *= 1.0 - metallic;
     float NdotL = max(dot(n, l), 0.0);
-    
-    
-    vec3 ambient = vec3(0.03) * albedo * ambientOcclusion;
     Lo += (kD * albedo * InvPI + specular) * radiance * NdotL;
     
-    FragColor = vec4(Lo + ambient, 1);
+    // Compute PointLight
+    for (int i = 0; i < nbrOfPointLight; i++)
+    {
+        PointLightData pointLightData =  pointLightData[i];
+        
+        l = normalize(vec3(pointLightData.position - fragPos));
+        h = normalize(v + l);
+        float distance = length(pointLightData.position - fragPos);
+        float attenuation = 1.0 / (distance * distance);
+        radiance = pointLightData.color * attenuation;
+        
+        float NoH = clamp(dot(n,h),0.0,1.0);
+        float VoH = clamp(dot(v,h),0.0,1.0);
+
+        
+        ndf = SpecularD(NoH, roughness * roughness );
+        g =  SpecularG(l, v, h, n, roughness);
+        f = SpecularF(VoH,F0,roughness);
+
+        numerator = ndf * g * f;
+        denominator = 4.0 * max(dot(n, v), 0.0) * max(dot(n, l), 0.0) + 0.0001;
+        
+        specular  = numerator / denominator;
+        kS = f;
+        kD = vec3(1.0) - kS;
+        kD *= 1.0 - metallic;
+
+        NdotL = max(dot(n, l), 0.0);
+        Lo += (kD * albedo * InvPI + specular) * radiance * NdotL;
+    }
+    
+
+    vec3 ambient = ComputeIbl(roughness, kD, ambientOcclusion, albedo, n, r, v, f);
+    vec3 color = Lo + ambient;
+    
+    FragColor = vec4(color, 1);
 }

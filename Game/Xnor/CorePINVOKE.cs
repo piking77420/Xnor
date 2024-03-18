@@ -1267,9 +1267,6 @@ class CorePINVOKE {
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Component_entity_get")]
   public static extern global::System.IntPtr Component_entity_get(global::System.Runtime.InteropServices.HandleRef jarg1);
 
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_new_Component")]
-  public static extern global::System.IntPtr new_Component();
-
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_delete_Component")]
   public static extern void delete_Component(global::System.Runtime.InteropServices.HandleRef jarg1);
 
@@ -1735,6 +1732,9 @@ class CorePINVOKE {
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Entity_name_get")]
   public static extern string Entity_name_get(global::System.Runtime.InteropServices.HandleRef jarg1);
 
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Entity_AddComponent")]
+  public static extern void Entity_AddComponent(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Entity_GetGuid")]
   public static extern global::System.IntPtr Entity_GetGuid(global::System.Runtime.InteropServices.HandleRef jarg1);
 
@@ -1786,8 +1786,29 @@ class CorePINVOKE {
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_LoadFromHdrTexture")]
   public static extern void Skybox_LoadFromHdrTexture(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
 
-  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_GetCubeMap__SWIG_0")]
-  public static extern global::System.IntPtr Skybox_GetCubeMap__SWIG_0(global::System.Runtime.InteropServices.HandleRef jarg1);
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_irradianceMap_set")]
+  public static extern void Skybox_irradianceMap_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_irradianceMap_get")]
+  public static extern global::System.IntPtr Skybox_irradianceMap_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_cubeMap_set")]
+  public static extern void Skybox_cubeMap_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_cubeMap_get")]
+  public static extern global::System.IntPtr Skybox_cubeMap_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_prefilterMap_set")]
+  public static extern void Skybox_prefilterMap_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_prefilterMap_get")]
+  public static extern global::System.IntPtr Skybox_prefilterMap_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_precomputeBrdfTexture_set")]
+  public static extern void Skybox_precomputeBrdfTexture_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Skybox_precomputeBrdfTexture_get")]
+  public static extern global::System.IntPtr Skybox_precomputeBrdfTexture_get(global::System.Runtime.InteropServices.HandleRef jarg1);
 
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Scene_skybox_set")]
   public static extern void Scene_skybox_set(global::System.Runtime.InteropServices.HandleRef jarg1);

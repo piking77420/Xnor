@@ -13,7 +13,11 @@ namespace Xnor {
 public enum TextureFiltering {
   None,
   Linear,
-  Nearest
+  Nearest,
+  NearestMipmapNearest,
+  LinearMimapNearest,
+  NearestMimapLinear,
+  LinearMimMapLinear
 }
 
 }

@@ -38,7 +38,6 @@ public:
     XNOR_ENGINE void DrawLightGizmo(const Camera& camera, const Scene& scene) const;
 
     XNOR_ENGINE void DrawLightGizmoWithShader(const Camera& camera, const Scene& scene,const Pointer<Shader>& shader) const;
-
     
 private:
     enum class RenderingLight

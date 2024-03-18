@@ -30,6 +30,29 @@ BEGIN_ENUM(PolygonMode)
 }
 END_ENUM
 
+BEGIN_ENUM(CullFace)
+{
+	None,
+	Front,
+	Back,
+	FrontAndBack
+}
+END_ENUM
+
+BEGIN_ENUM(FrontFace)
+{
+	CW,
+	CCW
+}
+END_ENUM
+
+struct ShaderProgramCullInfo
+{
+	bool enableCullFace = false; 
+	CullFace::CullFace cullFace = CullFace::Front;
+	FrontFace::FrontFace frontFace = FrontFace::CCW;
+};
+
 /// @brief Polygon draw mode
 /// @see <a href="https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDrawArrays.xhtml">OpenGL specification</a>
 BEGIN_ENUM(DrawMode)
@@ -107,7 +130,15 @@ BEGIN_ENUM(TextureFiltering)
 	/// @brief Performs linear interpolation
 	Linear,
 	/// @brief Selects the nearest texel
-	Nearest
+	Nearest,
+
+	NearestMipmapNearest,
+
+	LinearMimapNearest,
+
+	NearestMimapLinear,
+	
+	LinearMimMapLinear
 }
 END_ENUM
 
@@ -169,6 +200,7 @@ END_ENUM
 BEGIN_ENUM(TextureFormat)
 {
 	Red,
+	RedGreen,
 	Rgb,
 	Rgba,
 }
@@ -389,6 +421,8 @@ struct ShaderCreateInfo
 	DepthFunction::DepthFunction depthFunction{};
 	/// @brief Blend function
 	BlendFunction blendFunction{};
+
+	ShaderProgramCullInfo shaderProgramCullInfo;
 };
 
 /// @brief Point light UniformBuffer data
@@ -535,6 +569,7 @@ enum class CubeMapFace
 
 	Size
 };
+
 
 
 END_XNOR_CORE

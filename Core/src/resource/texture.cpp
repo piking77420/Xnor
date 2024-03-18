@@ -53,7 +53,6 @@ bool Texture::Load(const uint8_t* buffer, const int64_t length)
     }
     else
     {
-        loadData.flipVertically = true;
         m_Data = stbi_load_from_memory(buffer, static_cast<int32_t>(length), &m_Size.x, &m_Size.y, &m_DataChannels, loadData.desiredChannels);
     }
     

@@ -12,6 +12,7 @@ namespace Xnor {
 
 public enum TextureFormat {
   Red,
+  RedGreen,
   Rgb,
   Rgba
 }

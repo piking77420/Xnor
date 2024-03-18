@@ -80,6 +80,10 @@ public class Entity : global::System.IDisposable {
     } 
   }
 
+  public void AddComponent(Component component) {
+    CorePINVOKE.Entity_AddComponent(swigCPtr, Component.getCPtr(component));
+  }
+
   public Guid GetGuid() {
     Guid ret = new Guid(CorePINVOKE.Entity_GetGuid(swigCPtr), false);
     return ret;
