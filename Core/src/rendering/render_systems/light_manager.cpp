@@ -71,9 +71,9 @@ void LightManager::BeginFrame(const Scene& scene)
 			.color = spotLight->color.Rgb(),
 			.intensity = spotLight->intensity,
 			.position = static_cast<Vector3>(spotLight->entity->transform.worldMatrix[3]),
-			.cutOff = std::cos(spotLight->cutOff),
+			.cutOff = std::cos(spotLight->cutOff * Calc::Deg2Rad),
 			.direction = { direction.x, direction.y, direction.z },
-			.outerCutOff = std::cos(spotLight->outerCutOff),
+			.outerCutOff = std::cos(spotLight->outerCutOff * Calc::Deg2Rad),
 		};
 	}
 	

@@ -178,6 +178,11 @@ public class Shader : Resource {
     if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
   }
 
+  public void SetFaceCullingInfo(ShaderProgramCullInfo shaderProgramCullInfo) {
+    CorePINVOKE.Shader_SetFaceCullingInfo(swigCPtr, ShaderProgramCullInfo.getCPtr(shaderProgramCullInfo));
+    if (CorePINVOKE.SWIGPendingException.Pending) throw CorePINVOKE.SWIGPendingException.Retrieve();
+  }
+
 }
 
 }

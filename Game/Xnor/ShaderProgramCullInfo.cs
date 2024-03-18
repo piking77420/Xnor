@@ -10,20 +10,20 @@
 
 namespace Xnor {
 
-public class ShaderCreateInfo : global::System.IDisposable {
+public class ShaderProgramCullInfo : global::System.IDisposable {
   private global::System.Runtime.InteropServices.HandleRef swigCPtr;
   protected bool swigCMemOwn;
 
-  internal ShaderCreateInfo(global::System.IntPtr cPtr, bool cMemoryOwn) {
+  internal ShaderProgramCullInfo(global::System.IntPtr cPtr, bool cMemoryOwn) {
     swigCMemOwn = cMemoryOwn;
     swigCPtr = new global::System.Runtime.InteropServices.HandleRef(this, cPtr);
   }
 
-  internal static global::System.Runtime.InteropServices.HandleRef getCPtr(ShaderCreateInfo obj) {
+  internal static global::System.Runtime.InteropServices.HandleRef getCPtr(ShaderProgramCullInfo obj) {
     return (obj == null) ? new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero) : obj.swigCPtr;
   }
 
-  internal static global::System.Runtime.InteropServices.HandleRef swigRelease(ShaderCreateInfo obj) {
+  internal static global::System.Runtime.InteropServices.HandleRef swigRelease(ShaderProgramCullInfo obj) {
     if (obj != null) {
       if (!obj.swigCMemOwn)
         throw new global::System.ApplicationException("Cannot release ownership as memory is not owned");
@@ -36,7 +36,7 @@ public class ShaderCreateInfo : global::System.IDisposable {
     }
   }
 
-  ~ShaderCreateInfo() {
+  ~ShaderProgramCullInfo() {
     Dispose(false);
   }
 
@@ -50,46 +50,44 @@ public class ShaderCreateInfo : global::System.IDisposable {
       if (swigCPtr.Handle != global::System.IntPtr.Zero) {
         if (swigCMemOwn) {
           swigCMemOwn = false;
-          CorePINVOKE.delete_ShaderCreateInfo(swigCPtr);
+          CorePINVOKE.delete_ShaderProgramCullInfo(swigCPtr);
         }
         swigCPtr = new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
       }
     }
   }
 
-  public DepthFunction depthFunction {
+  public bool enableCullFace {
     set {
-      CorePINVOKE.ShaderCreateInfo_depthFunction_set(swigCPtr, (int)value);
+      CorePINVOKE.ShaderProgramCullInfo_enableCullFace_set(swigCPtr, value);
     } 
     get {
-      DepthFunction ret = (DepthFunction)CorePINVOKE.ShaderCreateInfo_depthFunction_get(swigCPtr);
+      bool ret = CorePINVOKE.ShaderProgramCullInfo_enableCullFace_get(swigCPtr);
       return ret;
     } 
   }
 
-  public BlendFunction blendFunction {
+  public CullFace cullFace {
     set {
-      CorePINVOKE.ShaderCreateInfo_blendFunction_set(swigCPtr, BlendFunction.getCPtr(value));
+      CorePINVOKE.ShaderProgramCullInfo_cullFace_set(swigCPtr, (int)value);
     } 
     get {
-      global::System.IntPtr cPtr = CorePINVOKE.ShaderCreateInfo_blendFunction_get(swigCPtr);
-      BlendFunction ret = (cPtr == global::System.IntPtr.Zero) ? null : new BlendFunction(cPtr, false);
+      CullFace ret = (CullFace)CorePINVOKE.ShaderProgramCullInfo_cullFace_get(swigCPtr);
       return ret;
     } 
   }
 
-  public ShaderProgramCullInfo shaderProgramCullInfo {
+  public FrontFace frontFace {
     set {
-      CorePINVOKE.ShaderCreateInfo_shaderProgramCullInfo_set(swigCPtr, ShaderProgramCullInfo.getCPtr(value));
+      CorePINVOKE.ShaderProgramCullInfo_frontFace_set(swigCPtr, (int)value);
     } 
     get {
-      global::System.IntPtr cPtr = CorePINVOKE.ShaderCreateInfo_shaderProgramCullInfo_get(swigCPtr);
-      ShaderProgramCullInfo ret = (cPtr == global::System.IntPtr.Zero) ? null : new ShaderProgramCullInfo(cPtr, false);
+      FrontFace ret = (FrontFace)CorePINVOKE.ShaderProgramCullInfo_frontFace_get(swigCPtr);
       return ret;
     } 
   }
 
-  public ShaderCreateInfo() : this(CorePINVOKE.new_ShaderCreateInfo(), true) {
+  public ShaderProgramCullInfo() : this(CorePINVOKE.new_ShaderProgramCullInfo(), true) {
   }
 
 }

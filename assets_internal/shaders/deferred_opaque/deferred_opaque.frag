@@ -106,6 +106,92 @@ vec3 ComputeIbl(float roughness,vec3 kD, float ao,vec3 albedo, vec3 N , vec3 R ,
     return ambient;
 }
 
+vec3 ComputeSpotLight(vec3 baseColor,vec3 fragPos,vec3 v, vec3 n, float roughness, float metallic, vec3 f0)
+{
+    vec3 outLo = vec3(0.f); 
+    
+    for (int i = 0; i < nbrOfPointLight; i++)
+    {
+        SpotLightData light = spotLightData[i];
+        float distance = length(light.position - fragPos);
+        
+        vec3 l = normalize(vec3(light.position - fragPos));
+        vec3 h = normalize(v + l);
+
+        float theta = dot(l, normalize(-light.direction));
+        float epsilon = light.cutOff - light.outerCutOff;
+        float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
+
+
+        float attenuation = 1.0 / (distance * distance);
+        vec3 radiance = light.color * attenuation * light.intensity * intensity;
+        
+        float NoH = clamp(dot(n,h),0.0,1.0);
+        float VoH = clamp(dot(v,h),0.0,1.0);
+        
+
+        float ndf = SpecularD(NoH, roughness * roughness );
+        float g =  SpecularG(l, v, h, n, roughness);
+        vec3 f = SpecularF(VoH,f0,roughness);
+
+        vec3 numerator = ndf * g * f;
+        float denominator = 4.0 * max(dot(n, v), 0.0) * max(dot(n, l), 0.0) + 0.0001;
+        
+        vec3 specular  = numerator / denominator;
+        vec3 kS = f;
+        vec3 kD = vec3(1.0) - kS;
+        kD *= 1.0 - metallic;
+        float NdotL = max(dot(n, l), 0.0);
+
+        NdotL = max(dot(n, l), 0.0);
+        outLo += (kD * baseColor * InvPI + specular) * radiance * NdotL;
+    }
+    
+    return outLo;
+}
+
+vec3 ComputePointLight(vec3 baseColor,vec3 fragPos,vec3 v, vec3 n, float roughness, float metallic, vec3 f0)
+{
+    vec3 outLo = vec3(0.f);
+
+    for (int i = 0; i < nbrOfSpotLight; i++)
+    {
+        PointLightData light = pointLightData[i];
+        float distance = length(light.position - fragPos);
+
+        if(distance > light.radius)
+        continue;
+
+        vec3 l = normalize(vec3(light.position - fragPos));
+        vec3 h = normalize(v + l);
+
+        float attenuation = 1.0 / (distance * distance);
+        vec3 radiance = light.color * attenuation * light.intensity;
+
+        float NoH = clamp(dot(n,h),0.0,1.0);
+        float VoH = clamp(dot(v,h),0.0,1.0);
+
+
+        float ndf = SpecularD(NoH, roughness * roughness );
+        float g =  SpecularG(l, v, h, n, roughness);
+        vec3 f = SpecularF(VoH,f0,roughness);
+
+        vec3 numerator = ndf * g * f;
+        float denominator = 4.0 * max(dot(n, v), 0.0) * max(dot(n, l), 0.0) + 0.0001;
+
+        vec3 specular  = numerator / denominator;
+        vec3 kS = f;
+        vec3 kD = vec3(1.0) - kS;
+        kD *= 1.0 - metallic;
+        float NdotL = max(dot(n, l), 0.0);
+
+        NdotL = max(dot(n, l), 0.0);
+        outLo += (kD * baseColor * InvPI + specular) * radiance * NdotL;
+    }
+
+    return outLo;
+}
+
 
 
 
@@ -157,40 +243,13 @@ void main()
     float NdotL = max(dot(n, l), 0.0);
     Lo += (kD * albedo * InvPI + specular) * radiance * NdotL;
     
-    // Compute PointLight
-    for (int i = 0; i < nbrOfPointLight; i++)
-    {
-        PointLightData pointLightData =  pointLightData[i];
-        
-        l = normalize(vec3(pointLightData.position - fragPos));
-        h = normalize(v + l);
-        float distance = length(pointLightData.position - fragPos);
-        float attenuation = 1.0 / (distance * distance);
-        radiance = pointLightData.color * attenuation;
-        
-        float NoH = clamp(dot(n,h),0.0,1.0);
-        float VoH = clamp(dot(v,h),0.0,1.0);
+    Lo += ComputePointLight(albedo, fragPos, v, n, roughness, metallic, F0);
+    Lo += ComputeSpotLight(albedo, fragPos, v, n, roughness, metallic, F0);
 
-        
-        ndf = SpecularD(NoH, roughness * roughness );
-        g =  SpecularG(l, v, h, n, roughness);
-        f = SpecularF(VoH,F0,roughness);
 
-        numerator = ndf * g * f;
-        denominator = 4.0 * max(dot(n, v), 0.0) * max(dot(n, l), 0.0) + 0.0001;
-        
-        specular  = numerator / denominator;
-        kS = f;
-        kD = vec3(1.0) - kS;
-        kD *= 1.0 - metallic;
-
-        NdotL = max(dot(n, l), 0.0);
-        Lo += (kD * albedo * InvPI + specular) * radiance * NdotL;
-    }
-    
-
+    vec3 emissiveColor = albedo * emissive;
     vec3 ambient = ComputeIbl(roughness, kD, ambientOcclusion, albedo, n, r, v, f);
-    vec3 color = Lo + ambient;
+    vec3 color = Lo + ambient + emissiveColor;
     
     FragColor = vec4(color, 1);
 }

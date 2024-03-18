@@ -427,6 +427,30 @@ class CorePINVOKE {
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_MaxDirectionalLights_get")]
   public static extern global::System.IntPtr MaxDirectionalLights_get();
 
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ShaderProgramCullInfo_enableCullFace_set")]
+  public static extern void ShaderProgramCullInfo_enableCullFace_set(global::System.Runtime.InteropServices.HandleRef jarg1, bool jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ShaderProgramCullInfo_enableCullFace_get")]
+  public static extern bool ShaderProgramCullInfo_enableCullFace_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ShaderProgramCullInfo_cullFace_set")]
+  public static extern void ShaderProgramCullInfo_cullFace_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ShaderProgramCullInfo_cullFace_get")]
+  public static extern int ShaderProgramCullInfo_cullFace_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ShaderProgramCullInfo_frontFace_set")]
+  public static extern void ShaderProgramCullInfo_frontFace_set(global::System.Runtime.InteropServices.HandleRef jarg1, int jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ShaderProgramCullInfo_frontFace_get")]
+  public static extern int ShaderProgramCullInfo_frontFace_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_new_ShaderProgramCullInfo")]
+  public static extern global::System.IntPtr new_ShaderProgramCullInfo();
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_delete_ShaderProgramCullInfo")]
+  public static extern void delete_ShaderProgramCullInfo(global::System.Runtime.InteropServices.HandleRef jarg1);
+
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ShaderCode_code_set")]
   public static extern void ShaderCode_code_set(global::System.Runtime.InteropServices.HandleRef jarg1, string jarg2);
 
@@ -648,6 +672,12 @@ class CorePINVOKE {
 
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ShaderCreateInfo_blendFunction_get")]
   public static extern global::System.IntPtr ShaderCreateInfo_blendFunction_get(global::System.Runtime.InteropServices.HandleRef jarg1);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ShaderCreateInfo_shaderProgramCullInfo_set")]
+  public static extern void ShaderCreateInfo_shaderProgramCullInfo_set(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_ShaderCreateInfo_shaderProgramCullInfo_get")]
+  public static extern global::System.IntPtr ShaderCreateInfo_shaderProgramCullInfo_get(global::System.Runtime.InteropServices.HandleRef jarg1);
 
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_new_ShaderCreateInfo")]
   public static extern global::System.IntPtr new_ShaderCreateInfo();
@@ -1116,6 +1146,9 @@ class CorePINVOKE {
 
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Shader_SetBlendFunction")]
   public static extern void Shader_SetBlendFunction(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
+
+  [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_Shader_SetFaceCullingInfo")]
+  public static extern void Shader_SetFaceCullingInfo(global::System.Runtime.InteropServices.HandleRef jarg1, global::System.Runtime.InteropServices.HandleRef jarg2);
 
   [global::System.Runtime.InteropServices.DllImport("CoreCSharp", EntryPoint="CSharp_Xnor_delete_Shader")]
   public static extern void delete_Shader(global::System.Runtime.InteropServices.HandleRef jarg1);
