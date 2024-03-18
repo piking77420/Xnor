@@ -447,7 +447,6 @@
     <ClInclude Include="include\utils\logger.hpp" />
     <ClInclude Include="include\utils\pointer.hpp" />
     <ClInclude Include="include\utils\reference_counter.hpp" />
-    <ClInclude Include="include\utils\serializable.hpp" />
     <ClInclude Include="include\utils\ts_queue.hpp" />
     <ClInclude Include="include\utils\utils.hpp" />
     <ClInclude Include="include\window.hpp" />

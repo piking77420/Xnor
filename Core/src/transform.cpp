@@ -3,8 +3,6 @@
 
 using namespace XnorCore;
 
-REFLECTABLE_IMPL_CPP(Transform)
-
 const Vector3& Transform::GetPosition() const
 {
     return m_Position;

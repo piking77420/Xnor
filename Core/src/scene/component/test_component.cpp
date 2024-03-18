@@ -6,8 +6,6 @@
 
 using namespace XnorCore;
 
-REFLECTABLE_IMPL_CPP(TestComponent)
-
 void TestComponent::Begin()
 {
     m_BasePosition = entity->transform.GetPosition();

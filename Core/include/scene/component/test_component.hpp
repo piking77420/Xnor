@@ -11,7 +11,7 @@ BEGIN_XNOR_CORE
 /// @private
 class TestComponent : public Component
 {
-    REFLECTABLE_IMPL_MINIMAL_DLL(TestComponent)
+    REFLECTABLE_IMPL(TestComponent)
     
 public:
     XNOR_ENGINE void Begin() override;

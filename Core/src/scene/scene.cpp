@@ -5,8 +5,6 @@
 
 using namespace XnorCore;
 
-REFLECTABLE_IMPL_CPP(Scene)
-
 void Scene::Begin()
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)

@@ -7,9 +7,9 @@
 #include "transform.hpp"
 #include "reflection/reflection.hpp"
 #include "resource/model.hpp"
+#include "utils/concepts.hpp"
 #include "utils/guid.hpp"
 #include "utils/list.hpp"
-#include "utils/serializable.hpp"
 
 /// @file entity.hpp
 /// @brief Defines the XnorCore::Entity class.
@@ -17,9 +17,9 @@
 BEGIN_XNOR_CORE
 
 /// @brief Represents an object of the engine, behaviors can be attached to it via a list of Component
-class Entity : public Serializable
+class Entity
 {
-    REFLECTABLE_IMPL_MINIMAL_DLL_PRIVATE_CTOR(Entity)
+    REFLECTABLE_IMPL(Entity)
 
 public:
     /// @brief Transform of the entity
@@ -138,7 +138,9 @@ private:
     XNOR_ENGINE explicit Entity(const Guid& entiyId);
 
     XNOR_ENGINE Entity() = default;
-    XNOR_ENGINE ~Entity() override;
+    XNOR_ENGINE ~Entity();
+
+    DEFAULT_COPY_MOVE_OPERATIONS(Entity)
     
     Entity* m_Parent = nullptr;
     List<Entity*> m_Children;

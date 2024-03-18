@@ -6,6 +6,7 @@
 #include "editor.hpp"
 #include "input/time.hpp"
 #include "scene/component/mesh_renderer.hpp"
+#include "utils/utils.hpp"
 
 using namespace XnorEditor;
 

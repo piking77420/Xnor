@@ -1,13 +1,10 @@
 ﻿#include "scene/entity.hpp"
 
 #include "scene/component.hpp"
-#include "serialization/serializer.hpp"
-#include "world/scene_graph.hpp"
 #include "utils/factory.hpp"
+#include "world/scene_graph.hpp"
 
 using namespace XnorCore;
-
-REFLECTABLE_IMPL_CPP(Entity)
 
 Entity::Entity(const Guid& entiyId)
     : m_EntityId(entiyId)
