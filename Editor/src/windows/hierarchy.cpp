@@ -143,6 +143,7 @@ void Hierarchy::ProcessEntityDragDrop(XnorCore::Entity* const entity)
     if (ImGui::BeginDragDropSource())
     {
         ImGui::SetDragDropPayload("HierarchyEntity", &entity, sizeof(XnorCore::Entity*));
+        ImGui::SetTooltip("%s", entity->name.c_str());
         ImGui::EndDragDropSource();
     }
 
