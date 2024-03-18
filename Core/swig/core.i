@@ -54,7 +54,7 @@ typedef float float_t;
 // Define the Serializable class to avoid SWIG warning 401
 namespace XnorCore
 {
-    class Serializable { Serializable() = default; };
+    class Serializable { Serializable() = default; virtual ~Serializable() = default; };
 }
 
 %{

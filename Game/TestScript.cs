@@ -1,8 +1,16 @@
+using System.Runtime.InteropServices;
+
 namespace Game
 {
     public class TestScript : ScriptComponent
     {
         private ColorHsva color;
+
+        public TestScript()
+        {
+            Logger.LogTempDebug("Bobby is alive!");
+            test = "Hello from Bobby";
+        }
         
         public override void Begin()
         {

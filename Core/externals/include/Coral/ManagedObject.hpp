@@ -85,19 +85,7 @@ namespace Coral {
 		void GetPropertyValueRaw(std::string_view InPropertyName, void* OutValue) const;
 
 		const Type& GetType() const;
-
-		template<typename T>
-		const T* GetHandle() const
-		{
-			return static_cast<const T*>(m_Handle);
-		}
-
-		template<typename T>
-		T* GetHandle()
-		{
-			return static_cast<T*>(m_Handle);
-		}
-
+		
 		void Destroy();
 
 	private:

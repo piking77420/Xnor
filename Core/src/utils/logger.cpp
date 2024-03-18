@@ -133,7 +133,7 @@ Logger::LogEntry::LogEntry(std::string&& message, const LogLevel level)
 {
 }
 
-Logger::LogEntry::LogEntry(std::string&& message, const LogLevel level, const char_t* file, const int32_t line)
+Logger::LogEntry::LogEntry(std::string&& message, const LogLevel level, const std::string& file, const int32_t line)
     : LogEntry(
         std::move(message),
         level,

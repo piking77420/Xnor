@@ -18,12 +18,12 @@ void Logger::Log(const LogLevel level, const std::string& format, Args&&... args
     m_CondVar.notify_one();
 }
 
-template<Concepts::FormattableT ... Args>
-void Logger::LogTempDebug(const std::string& format, const char_t* file, int32_t line, Args&&... args)
+template <Concepts::FormattableT ... Args>
+void Logger::LogTempDebug(const std::string& format, const char_t* file, const int32_t line, Args&&... args)
 {
     if (LogLevel::TemporaryDebug < minimumConsoleLevel && LogLevel::TemporaryDebug < minimumFileLevel)
         return;
-    
+
     m_Lines.Push(LogEntry(std::vformat(format, std::make_format_args(args...)), LogLevel::TemporaryDebug, file, line));
     m_CondVar.notify_one();
 }

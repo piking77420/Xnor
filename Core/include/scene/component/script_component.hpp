@@ -15,6 +15,7 @@ class ScriptComponent : public Component
     REFLECTABLE_IMPL_MINIMAL_DLL(ScriptComponent)
 
 public:
+    const char* test = "Hello";
 };
 
 END_XNOR_CORE

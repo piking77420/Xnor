@@ -74,5 +74,6 @@ void DotnetAssembly::ProcessScriptComponent(Coral::Type& scriptComponent, Coral:
 {
     Entity* entity = World::scene.CreateEntity(static_cast<std::string>(subclass.GetFullName()) + " Entity");
     auto&& instance = subclass.CreateInstance();
-    //entity->AddComponent(instance.GetHandle<ScriptComponent>());
+    ScriptComponent* ptr = instance.GetFieldValue<ScriptComponent*>("swigCPtr");
+    entity->AddComponent(ptr);
 }

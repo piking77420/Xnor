@@ -92,7 +92,7 @@ bool_t DotnetRuntime::GetInitialized()
 
 void DotnetRuntime::CoralMessageCallback(std::string_view message, const Coral::MessageLevel level)
 {
-    Logger::Log(CoralMessageLevelToXnor(level), "{}", message);
+    Logger::Log(CoralMessageLevelToXnor(level), "[.NET] {}", message);
 }
 
 void DotnetRuntime::CoralExceptionCallback(std::string_view message)
