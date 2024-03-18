@@ -35,16 +35,16 @@
 
     public static Matrix operator*(Matrix a, Matrix b) { return Core.OperatorMul(a, b); }
 
-    public static bool operator==(Matrix a, Matrix b) { return Core.OperatorEq(a, b); }
+    public static bool operator==(Matrix a, Matrix b) { return a.Equals(b); }
 
-    public static bool operator!=(Matrix a, Matrix b) { return Core.OperatorNotEq(a, b); }
+    public static bool operator!=(Matrix a, Matrix b) { return !a.Equals(b); }
 
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return this == (Matrix) obj;
+        return Core.OperatorEq(this, (Matrix) obj);
     }
 
     public override int GetHashCode()
@@ -102,16 +102,16 @@
 
     public static Matrix3 operator*(Matrix3 a, Matrix3 b) { return Core.OperatorMul(a, b); }
 
-    public static bool operator==(Matrix3 a, Matrix3 b) { return Core.OperatorEq(a, b); }
+    public static bool operator==(Matrix3 a, Matrix3 b) { return a.Equals(b); }
 
-    public static bool operator!=(Matrix3 a, Matrix3 b) { return Core.OperatorNotEq(a, b); }
+    public static bool operator!=(Matrix3 a, Matrix3 b) { return !a.Equals(b); }
 
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return this == (Matrix3) obj;
+        return Core.OperatorEq(this, (Matrix3) obj);
     }
 
     public override int GetHashCode()
@@ -167,16 +167,16 @@
 
     public static Vector2 operator/(Vector2 a, float b) { return Core.OperatorDiv(a, b); }
 
-    public static bool operator==(Vector2 a, Vector2 b) { return Core.OperatorEq(a, b); }
+    public static bool operator==(Vector2 a, Vector2 b) { return a.Equals(b); }
 
-    public static bool operator!=(Vector2 a, Vector2 b) { return Core.OperatorNotEq(a, b); }
+    public static bool operator!=(Vector2 a, Vector2 b) { return !a.Equals(b); }
 
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return this == (Vector2) obj;
+        return Core.OperatorEq(this, (Vector2) obj);
     }
 
     public override int GetHashCode() { return HashCode.Combine(x, y); }
@@ -219,16 +219,16 @@
 
     public static Vector2 operator/(Vector2i a, float b) { return Core.OperatorDiv(a, b); }
 
-    public static bool operator==(Vector2i a, Vector2i b) { return Core.OperatorEq(a, b); }
+    public static bool operator==(Vector2i a, Vector2i b) { return a.Equals(b); }
 
-    public static bool operator!=(Vector2i a, Vector2i b) { return Core.OperatorNotEq(a, b); }
+    public static bool operator!=(Vector2i a, Vector2i b) { return !a.Equals(b); }
 
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return this == (Vector2i) obj;
+        return Core.OperatorEq(this, (Vector2i) obj);
     }
 
     public override int GetHashCode() { return HashCode.Combine(x, y); }
@@ -269,16 +269,16 @@
 
     public static Vector3 operator/(Vector3 a, float b) { return Core.OperatorDiv(a, b); }
 
-    public static bool operator==(Vector3 a, Vector3 b) { return Core.OperatorEq(a, b); }
+    public static bool operator==(Vector3 a, Vector3 b) { return a.Equals(b); }
 
-    public static bool operator!=(Vector3 a, Vector3 b) { return Core.OperatorNotEq(a, b); }
+    public static bool operator!=(Vector3 a, Vector3 b) { return !a.Equals(b); }
 
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return this == (Vector3) obj;
+        return Core.OperatorEq(this, (Vector3) obj);
     }
 
     public override int GetHashCode() { return HashCode.Combine(x, y, z); }
@@ -319,16 +319,16 @@
 
     public static Vector4 operator/(Vector4 a, float b) { return Core.OperatorDiv(a, b); }
 
-    public static bool operator==(Vector4 a, Vector4 b) { return Core.OperatorEq(a, b); }
+    public static bool operator==(Vector4 a, Vector4 b) { return a.Equals(b); }
 
-    public static bool operator!=(Vector4 a, Vector4 b) { return Core.OperatorNotEq(a, b); }
+    public static bool operator!=(Vector4 a, Vector4 b) { return !a.Equals(b); }
 
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return this == (Vector4) obj;
+        return Core.OperatorEq(this, (Vector4) obj);
     }
 
     public override int GetHashCode() { return HashCode.Combine(x, y, z, w); }
@@ -367,16 +367,16 @@
 
     public static Quaternion operator/(Quaternion a, float b) { return Core.OperatorDiv(a, b); }
 
-    public static bool operator==(Quaternion a, Quaternion b) { return Core.OperatorEq(a, b); }
+    public static bool operator==(Quaternion a, Quaternion b) { return a.Equals(b); }
 
-    public static bool operator!=(Quaternion a, Quaternion b) { return Core.OperatorNotEq(a, b); }
+    public static bool operator!=(Quaternion a, Quaternion b) { return !a.Equals(b); }
 
     public override bool Equals(object obj)
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return this == (Quaternion) obj;
+        return Core.OperatorEq(this, (Quaternion) obj);
     }
 
     public override int GetHashCode() { return HashCode.Combine(X(), Y(), Z(), W()); }

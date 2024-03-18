@@ -1,5 +1,7 @@
 #include "utils/factory.hpp"
 
+#include "scene/component/script_component.hpp"
+
 using namespace XnorCore;
 
 inline void* Factory::CreateObject(const size_t hash)
@@ -43,7 +45,7 @@ inline void Factory::DisplayObject(void* const obj, const size_t hash)
 
 void Factory::RegisterTypes()
 {
-    // Manually registering the types is sub-optimal, however, it's the best way i've found so far
+    // Manually registering the types is sub-optimal, however, it's the best way I've found so far
     // It'll probably stay this way for the classes internal to Core, and as for the user scripts generated from the editor, a solution will be found at a later date probably
     
     RegisterFactoryType<MeshRenderer>();
@@ -52,6 +54,7 @@ void Factory::RegisterTypes()
     RegisterFactoryType<TestComponent>();
     RegisterFactoryType<PointLight>();
     RegisterFactoryType<SpotLight>();
+    RegisterFactoryType<ScriptComponent>();
 }
 
 void Factory::Print()

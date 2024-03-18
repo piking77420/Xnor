@@ -2,11 +2,11 @@
 
 #include <vector>
 
-#include "component.hpp"
 #include "core.hpp"
 #include "transform.hpp"
 #include "reflection/reflection.hpp"
 #include "resource/model.hpp"
+#include "scene/component.hpp"
 #include "utils/guid.hpp"
 #include "utils/list.hpp"
 #include "utils/serializable.hpp"
@@ -109,7 +109,7 @@ public:
     /// @param child Child entity
     /// @return If this is any parent of child
     [[nodiscard]]
-    XNOR_ENGINE bool_t IsAParentOf(const Entity* child) const;
+    XNOR_ENGINE bool_t IsParentOf(const Entity* child) const;
 
     /// @brief Sets the parent of the entity
     /// @param parent New parent, use @c nullptr to orphan it
@@ -133,6 +133,10 @@ public:
     /// @param entity Other
     /// @return Equals
     XNOR_ENGINE bool_t operator==(const Entity& entity) const;
+
+#ifdef SWIG
+    XNOR_ENGINE List<Component*>& GetComponents();
+#endif
     
 private:
     XNOR_ENGINE explicit Entity(const Guid& entiyId);

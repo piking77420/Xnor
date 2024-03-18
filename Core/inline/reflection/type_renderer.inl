@@ -812,7 +812,7 @@ inline Entity* TypeRenderer::FilterEntity(ImGuiTextFilter& filter)
         return nullptr;
 
     filter.Draw();
-    const List<Entity*>& entities = World::scene.GetEntities();
+    const List<Entity*>& entities = World::scene->GetEntities();
 
     Entity* e = nullptr;
     for (size_t i = 0; i < entities.GetSize(); i++)

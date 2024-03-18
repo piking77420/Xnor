@@ -3,7 +3,7 @@
 #include "core.hpp"
 
 #include "resource/resource.hpp"
-#include "scene/component.hpp"
+#include "utils/meta_programming.hpp"
 
 /// @file concepts.hpp
 /// @brief Defines the XnorCore::Concepts namespace which contains useful concepts used in the engine.
@@ -23,10 +23,6 @@ namespace Concepts
     /// @brief A class satisfies the EntryT concept if it is derived of Entry.
     template <class T>
     concept EntryT = Meta::IsBaseOf<Entry, T>;
-    
-    /// @brief Concept that forces a type to be a child of Component
-    template <class T>
-    concept ComponentT = Meta::IsBaseOf<Component, T>;
 
     /// @brief The Formattable concept requires a type to be formattable.
     ///

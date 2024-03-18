@@ -220,11 +220,13 @@ public:
     [[nodiscard]]
     constexpr const float_t* Raw() const noexcept;
 
+#ifndef SWIG
     /// @brief Gets a pointer to the first value of this Matrix3.
     /// 
     /// @returns A pointer to the first value of this Matrix3.
     [[nodiscard]]
     constexpr float_t* Raw() noexcept;
+#endif
 
     /// @brief Uses the @c std::cout stream to print the values of this matrix in a square-like shape, e.g. by using newlines to make it easier to read.
     void DebugPrint() const noexcept;
@@ -482,7 +484,9 @@ constexpr void Matrix3::Scaling(const Vector3& scale, Matrix3* result) noexcept
 
 constexpr const float_t* Matrix3::Raw() const noexcept { return &m00; }
 
+#ifndef SWIG
 constexpr float_t* Matrix3::Raw() noexcept { return &m00; }
+#endif
 
 constexpr bool_t Matrix3::IsDiagonal() const noexcept
 {
@@ -590,6 +594,7 @@ constexpr float_t Matrix3::At(const size_t row, const size_t col) const
     throw std::out_of_range("Matrix3 subscript out of range");
 }
 
+#ifndef SWIG
 constexpr float_t& Matrix3::At(const size_t row, const size_t col)
 {
     if (row < 3 && col < 3) [[likely]]
@@ -598,17 +603,20 @@ constexpr float_t& Matrix3::At(const size_t row, const size_t col)
     [[unlikely]]
     throw std::out_of_range("Matrix3 subscript out of range");
 }
+#endif
 
 constexpr Vector3 Matrix3::operator[](const size_t col) const
 {
     return Vector3(Raw() + static_cast<ptrdiff_t>(col) * 3);
 }
 
+#ifndef SWIG
 constexpr Vector3& Matrix3::operator[](const size_t col)
 {
     // Pointer arithmetic magic to get around not being able to use reinterpret_cast
     return *static_cast<Vector3*>(static_cast<void*>(Raw() + static_cast<ptrdiff_t>(col) * 3));
 }
+#endif
 
 /// @brief Returns the opposite of a Matrix3.
 ///

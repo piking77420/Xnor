@@ -50,13 +50,13 @@ void DotnetAssembly::ProcessTypes()
 {
     if (!xnorCoreAssembly)
         return;
-    
-    Coral::Type& scriptComponentType = xnorCoreAssembly->GetCoralAssembly()->GetType("Xnor.Core.ScriptComponent");
+
+    const Coral::Type& scriptComponentType = xnorCoreAssembly->GetCoralAssembly()->GetType("Xnor.Core.ScriptComponent");
     
     for (auto&& type : m_Assembly->GetTypes())
     {
         if (type->IsSubclassOf(scriptComponentType))
-            ProcessScriptComponent(scriptComponentType, *type);
+            ProcessScriptComponent(*type);
     }
 }
 
@@ -70,10 +70,11 @@ const std::string& DotnetAssembly::GetFilename() const
     return m_Filepath;
 }
 
-void DotnetAssembly::ProcessScriptComponent(Coral::Type& scriptComponent, Coral::Type& subclass)
+void DotnetAssembly::ProcessScriptComponent(Coral::Type& subclass)
 {
-    Entity* entity = World::scene.CreateEntity(static_cast<std::string>(subclass.GetFullName()) + " Entity");
+    Entity* const entity = World::scene->CreateEntity(static_cast<std::string>(subclass.GetFullName()) + " Entity");
     auto&& instance = subclass.CreateInstance();
-    ScriptComponent* ptr = instance.GetFieldValue<ScriptComponent*>("swigCPtr");
+    ScriptComponent* const ptr = instance.GetFieldValue<ScriptComponent*>("swigCPtr");
+    ptr->Initialize(instance);
     entity->AddComponent(ptr);
 }

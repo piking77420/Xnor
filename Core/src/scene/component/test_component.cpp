@@ -1,6 +1,7 @@
 #include "scene/component/test_component.hpp"
 
 #include "input/time.hpp"
+#include "rendering/light/light.hpp"
 #include "scene/entity.hpp"
 #include "utils/factory.hpp"
 

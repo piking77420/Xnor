@@ -492,6 +492,7 @@
     <Content Include="swig\CMakeLists.txt" />
     <Content Include="swig\core.i" />
     <Content Include="swig\file\file.i" />
+    <Content Include="swig\scene\component.i" />
     <Content Include="swig\toolbox.i" />
     <Content Include="swig\utils\color.i" />
     <Content Include="swig\utils\logger.i" />

@@ -12,11 +12,10 @@
 #include <Maths/vector2.hpp>
 #include <Maths/vector3.hpp>
 
+#include "core.hpp"
 #include "utils/color.hpp"
 #include "utils/list.hpp"
 #include "utils/pointer.hpp"
-
-#include "core.hpp"
 
 BEGIN_XNOR_CORE
 

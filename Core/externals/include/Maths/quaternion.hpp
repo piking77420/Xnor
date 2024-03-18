@@ -255,11 +255,13 @@ public:
 	[[nodiscard]]
 	constexpr const float_t* Raw() const noexcept;
 
+#ifndef SWIG
 	/// @brief Gets a pointer to the first component of this vector.
 	/// 
 	/// @returns A pointer to the first component of this vector.
 	[[nodiscard]]
 	constexpr float_t* Raw() noexcept;
+#endif
 
     /// @brief Returns a copy of the @c x component of this Quaternion.
 	[[nodiscard]]
@@ -403,7 +405,19 @@ constexpr float_t Quaternion::Dot(const Quaternion& a, const Quaternion& b) noex
 
 constexpr const float_t* Quaternion::Raw() const noexcept { return &imaginary.x; }
 
+#ifndef SWIG
 constexpr float_t* Quaternion::Raw() noexcept { return &imaginary.x; }
+#endif
+
+#ifndef SWIG
+constexpr float_t Quaternion::X() const noexcept { return imaginary.x; }
+
+constexpr float_t Quaternion::Y() const noexcept { return imaginary.y; }
+
+constexpr float_t Quaternion::Z() const noexcept { return imaginary.z; }
+
+constexpr float_t Quaternion::W() const noexcept { return real; }
+#endif
 
 constexpr float_t& Quaternion::X() noexcept { return imaginary.x; }
 
@@ -412,14 +426,6 @@ constexpr float_t& Quaternion::Y() noexcept { return imaginary.y; }
 constexpr float_t& Quaternion::Z() noexcept { return imaginary.z; }
 
 constexpr float_t& Quaternion::W() noexcept { return real; }
-
-constexpr float_t Quaternion::X() const noexcept { return imaginary.x; }
-
-constexpr float_t Quaternion::Y() const noexcept { return imaginary.y; }
-
-constexpr float_t Quaternion::Z() const noexcept { return imaginary.z; }
-
-constexpr float_t Quaternion::W() const noexcept { return real; }
 
 constexpr Quaternion Quaternion::Conjugate() const noexcept { return Quaternion(-imaginary, real); }
 

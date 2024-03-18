@@ -5,7 +5,8 @@
 #include <functional>
 
 BEGIN_XNOR_CORE
-    class Factory
+
+class Factory
 {
     STATIC_CLASS(Factory)
 

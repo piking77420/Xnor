@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "light.hpp"
+#include "rendering/light/light.hpp"
 
 /// @file spot_light.hpp
 /// @brief Defines the XnorCore::DirectionalLight class

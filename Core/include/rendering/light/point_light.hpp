@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "core.hpp"
-#include "light.hpp"
+#include "rendering/light/light.hpp"
 
 /// @file point_light.hpp
 /// @brief Defines the XnorCore::PointLight class

@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include <Maths/vector3.hpp>
-
 #include "core.hpp"
 #include "scene/component.hpp"
 

@@ -20,6 +20,7 @@ public:
     Entity* entity = nullptr;
 
     Component() = default;
+    
     virtual ~Component() override = 0;
 
     DEFAULT_COPY_MOVE_OPERATIONS(Component)
@@ -30,6 +31,13 @@ public:
     /// @brief Updates the component
     virtual void Update() {}
 };
+
+namespace Concepts
+{
+    /// @brief Concept that forces a type to be a child of Component
+    template <class T>
+    concept ComponentT = Meta::IsBaseOf<Component, T>;
+}
 
 END_XNOR_CORE
 

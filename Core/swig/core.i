@@ -163,7 +163,7 @@ namespace XnorCore
 %include "input/input.hpp"
 %include "input/time.hpp"
 
-%include "scene/component.hpp"
+%include "scene/component.i"
 
 %include "utils/color.i"
 
@@ -183,10 +183,11 @@ namespace XnorCore
 
 %include "transform.hpp"
 
-%include "scene/entity.hpp"
+%include "utils/list.hpp"
+
+%include "scene/entity.i"
 
 %include "world/skybox.hpp"
-%include "utils/list.hpp"
 
 %include "scene/scene.hpp"
 %include "utils/utils.hpp"

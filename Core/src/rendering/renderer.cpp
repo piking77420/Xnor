@@ -160,7 +160,7 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
 
 	if (isEditor)
 	{
-		m_LightManager.DrawLightGizmo(*Viewport.camera,World::scene);
+		m_LightManager.DrawLightGizmo(*Viewport.camera, *World::scene);
 	}
 	viewportData.colorPass.EndRenderPass();
 }

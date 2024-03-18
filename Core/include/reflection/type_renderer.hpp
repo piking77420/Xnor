@@ -3,7 +3,7 @@
 #include "core.hpp"
 
 #include "resource/resource_manager.hpp"
-#include "reflection/reflection.hpp"
+#include "scene/entity.hpp"
 
 /// @file type_renderer.hpp
 /// @brief Defines the TypeRenderer

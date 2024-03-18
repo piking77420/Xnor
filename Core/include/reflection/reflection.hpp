@@ -1,6 +1,7 @@
 ﻿#pragma once
 
-#include "refl/refl.hpp"
+#include <refl/refl.hpp>
+
 #include "utils/meta_programming.hpp"
 
 /// @file reflection.hpp

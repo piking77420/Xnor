@@ -1,7 +1,8 @@
 #pragma once
 
+#include <Maths/vector3.hpp>
+
 #include "core.hpp"
-#include "Maths/vector3.hpp"
 #include "reflection/reflection.hpp"
 #include "rendering/light/light.hpp"
 #include "scene/component.hpp"

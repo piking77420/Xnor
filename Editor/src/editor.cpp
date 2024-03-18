@@ -228,10 +228,10 @@ void Editor::SetupImGuiStyle() const
 void Editor::CreateTestScene()
 {
 	using namespace XnorCore;
-	Entity& ent1 = *World::scene.CreateEntity("Directional");
+	Entity& ent1 = *World::scene->CreateEntity("Directional");
 	ent1.AddComponent<DirectionalLight>();
 
-	Entity& Cube = *World::scene.CreateEntity("Plane");
+	Entity& Cube = *World::scene->CreateEntity("Plane");
 	MeshRenderer* meshRenderer = Cube.AddComponent<MeshRenderer>();
 	Cube.transform.SetPosition() = { 0.f, -1.f, 0.f };
 	Cube.transform.SetScale() = { 10.f, 1.f, 10.f };
@@ -239,13 +239,13 @@ void Editor::CreateTestScene()
 	meshRenderer->material.albedoTexture = ResourceManager::Get<Texture>(FileManager::Get("assets/textures/wood.jpg"));
 	
 	// init Scene //
-	Entity& sphere = *World::scene.CreateEntity("Sphere");
+	Entity& sphere = *World::scene->CreateEntity("Sphere");
 	meshRenderer = sphere.AddComponent<MeshRenderer>();
 	sphere.transform.SetPosition() = { 0.f, 2.f, 2.f };
 	meshRenderer->model = ResourceManager::Get<Model>(FileManager::Get("assets/models/sphere.obj"));
 	meshRenderer->material.albedoColor = { 0.f, 1.f, 1.f }; 
 
-	Entity& vikingRoom = *World::scene.CreateEntity("VikingRoom");
+	Entity& vikingRoom = *World::scene->CreateEntity("VikingRoom");
 	meshRenderer = vikingRoom.AddComponent<MeshRenderer>();
 	vikingRoom.transform.SetPosition() = { 0.f, 1.f, 0.f };
 	vikingRoom.transform.SetRotationEulerAngle() = { -90.f * Calc::Deg2Rad, 0, 0.f };
@@ -253,20 +253,20 @@ void Editor::CreateTestScene()
 	meshRenderer->model = ResourceManager::Get<Model>(FileManager::Get("assets/models/viking_room.obj"));
 	meshRenderer->material.albedoTexture = ResourceManager::Get<Texture>(FileManager::Get("assets/textures/viking_room.png"));
 
-	Entity& pointLight = *World::scene.CreateEntity("PointLight");
+	Entity& pointLight = *World::scene->CreateEntity("PointLight");
 	pointLight.AddComponent<PointLight>();
 	pointLight.transform.SetPosition() = { 2.f, 3.f, 2.f };
 
-	Entity& spotLight = *World::scene.CreateEntity("SpotLight");
+	Entity& spotLight = *World::scene->CreateEntity("SpotLight");
 	spotLight.AddComponent<SpotLight>();
 	spotLight.transform.SetPosition() = { -2.f, 3.f, -2.f };
 
 	// Init SkyBox
-	World::scene.skybox.Initialize();
+	World::scene->skybox.Initialize();
 	Pointer<Texture> texture = ResourceManager::Get<Texture>("assets/textures/puresky.hdr");
 	texture->loadData.flipVertically = true;
 	texture->Reload();
-	World::scene.skybox.LoadFromHdrTexture(texture);
+	World::scene->skybox.LoadFromHdrTexture(texture);
 }
 
 void Editor::MenuBar() const
@@ -289,7 +289,7 @@ void Editor::MenuBar() const
 					path = data.currentScene->GetPathString();
 				}
 				XnorCore::Serializer::StartSerialization(path);
-				XnorCore::World::scene.Serialize();
+				XnorCore::World::scene->Serialize();
 				XnorCore::Serializer::EndSerialization();
 			}
 			
@@ -345,12 +345,12 @@ void Editor::Update()
 		BeginFrame();
 		CheckWindowResize();
 		
-		renderer.BeginFrame(World::scene);
+		renderer.BeginFrame(*World::scene);
 		UpdateWindow();
 		WorldBehaviours();
 		OnRenderingWindow();
 		
-		renderer.EndFrame(World::scene);
+		renderer.EndFrame(*World::scene);
 
 		Input::Update();
 		EndFrame();
@@ -371,7 +371,7 @@ void Editor::EndFrame()
 
 void Editor::WorldBehaviours()
 {
-	XnorCore::SceneGraph::Update(XnorCore::World::scene.GetEntities());
+	XnorCore::SceneGraph::Update(XnorCore::World::scene->GetEntities());
 	
 	if (XnorCore::World::isPlaying)
 	{

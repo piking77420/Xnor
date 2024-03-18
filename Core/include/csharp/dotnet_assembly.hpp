@@ -30,7 +30,7 @@ private:
 
     std::string m_Filepath;
     
-    void ProcessScriptComponent(Coral::Type& scriptComponent, Coral::Type& subclass);
+    void ProcessScriptComponent(Coral::Type& subclass);
 };
 
 END_XNOR_CORE

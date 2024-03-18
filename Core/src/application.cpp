@@ -35,11 +35,15 @@ Application::Application()
 
 	DotnetRuntime::Initialize();
 
+	World::scene = new Scene;
 	DotnetRuntime::LoadAssembly("Game.dll");
+
 }
 
 Application::~Application()
 {
+	delete World::scene;
+	
 	DotnetRuntime::Shutdown();
 	
     ResourceManager::UnloadAll();

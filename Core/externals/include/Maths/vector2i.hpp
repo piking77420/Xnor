@@ -75,11 +75,13 @@ public:
 	[[nodiscard]]
 	constexpr const int32_t* Raw() const noexcept;
 
+#ifndef SWIG
 	/// @brief 	Gets a pointer to the first component of this vector.
 	/// 
 	/// @returns A pointer to the first component of this vector.
 	[[nodiscard]]
 	constexpr int32_t* Raw() noexcept;
+#endif
 
 	/// @brief Returns the length of the vector.
 	[[nodiscard]]
@@ -155,7 +157,9 @@ constexpr float_t Vector2i::Determinant(const Vector2i a, const Vector2i b) noex
 
 constexpr const int32_t* Vector2i::Raw() const noexcept { return &x; }
 
+#ifndef SWIG
 constexpr int32_t* Vector2i::Raw() noexcept { return &x; }
+#endif
 
 constexpr float_t Vector2i::SquaredLength() const noexcept { return static_cast<float_t>(x * x + y * y); }
 
@@ -167,6 +171,7 @@ constexpr int32_t Vector2i::operator[](const size_t i) const
 		throw std::out_of_range("Vector2i subscript out of range");
 }
 
+#ifndef SWIG
 constexpr int32_t& Vector2i::operator[](const size_t i)
 {
 	if (i < 2) [[likely]]
@@ -174,6 +179,7 @@ constexpr int32_t& Vector2i::operator[](const size_t i)
 	[[unlikely]]
 		throw std::out_of_range("Vector2i subscript out of range");
 }
+#endif
 
 /// @brief Adds two Vector2i together.
 [[nodiscard]]
