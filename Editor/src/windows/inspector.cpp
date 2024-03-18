@@ -2,7 +2,6 @@
 
 #include "imgui/imgui.h"
 #include "reflection/type_renderer.hpp"
-#include "utils/factory.hpp"
 
 using namespace XnorEditor;
 

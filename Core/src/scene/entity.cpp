@@ -1,7 +1,7 @@
 ﻿#include "scene/entity.hpp"
 
 #include "scene/component.hpp"
-#include "utils/factory.hpp"
+#include "utils/logger.hpp"
 #include "world/scene_graph.hpp"
 
 using namespace XnorCore;

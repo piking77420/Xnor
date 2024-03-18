@@ -1,5 +1,4 @@
 #include "transform.hpp"
-#include "utils/factory.hpp"
 
 using namespace XnorCore;
 

@@ -2,7 +2,6 @@
 
 #include "input/time.hpp"
 #include "scene/entity.hpp"
-#include "utils/factory.hpp"
 
 using namespace XnorCore;
 

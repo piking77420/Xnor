@@ -26,6 +26,7 @@ constexpr void Factory::RegisterFactoryType()
     FactoryTypeInfo info = {
         .displayFunc = [](void* const obj) -> void { TypeRenderer::DisplayObject<T>(static_cast<T*>(obj)); },
         .serializeFunc = [](void* const obj) -> void { Serializer::Serialize<T>(static_cast<T*>(obj), false); },
+        .deserializeFunc = [](void* const obj) -> void { Serializer::Deserialize<T>(static_cast<T*>(obj)); },
         .isConstructible = isConstructible,
         .name = humanizedName
     };
