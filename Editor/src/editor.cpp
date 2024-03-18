@@ -255,6 +255,7 @@ void Editor::CreateTestScene()
 
 	Entity& pointLight = *World::scene.CreateEntity("PointLight");
 	pointLight.AddComponent<PointLight>();
+	pointLight.AddComponent<TestComponent>();
 	pointLight.transform.SetPosition() = { 2.f, 3.f, 2.f };
 
 	Entity& spotLight = *World::scene.CreateEntity("SpotLight");
@@ -275,22 +276,35 @@ void Editor::MenuBar() const
 	{	
 		if (ImGui::BeginMenu("File"))
 		{
+			std::string path;
+			if (data.currentScene == nullptr)
+			{
+				if (!std::filesystem::exists("assets/scenes"))
+					std::filesystem::create_directories("assets/scenes");
+				path = SerializedScenePath;
+			}
+			else
+			{
+				path = data.currentScene->GetPathString();
+			}
+
+			std::vector<XnorCore::TestComponent*> v;
+			XnorCore::World::scene.GetAllComponentOfType<XnorCore::TestComponent>(&v);
+
 			if (ImGui::MenuItem("Save"))
 			{
-				std::string path;
-				if (data.currentScene == nullptr)
-				{
-					if (!std::filesystem::exists("assets/scenes"))
-						std::filesystem::create_directories("assets/scenes");
-					path = SerializedScenePath;
-				}
-				else
-				{
-					path = data.currentScene->GetPathString();
-				}
 				XnorCore::Serializer::StartSerialization(path);
-				XnorCore::Serializer::Serialize<XnorCore::Scene, true>(&XnorCore::World::scene);
+				// XnorCore::Serializer::Serialize<XnorCore::Scene, true>(&XnorCore::World::scene);
+				XnorCore::Serializer::Serialize<XnorCore::TestComponent, true>(v[0]);
 				XnorCore::Serializer::EndSerialization();
+			}
+
+			if (ImGui::MenuItem("Load"))
+			{
+				XnorCore::Serializer::StartDeserialization(path);
+				// XnorCore::Serializer::Deserialize<XnorCore::Scene, true>(&XnorCore::World::scene);
+				XnorCore::Serializer::Deserialize<XnorCore::TestComponent, true>(v[0]);
+				XnorCore::Serializer::EndDeserialization();
 			}
 			
 			ImGui::EndMenu();

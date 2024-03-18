@@ -14,7 +14,7 @@
 BEGIN_XNOR_CORE
 
 template <typename T>
-void Serializer::AddSimpleAttribute(const std::string& attributeName, const T& value)
+void Serializer::AddSimpleValue(const std::string& attributeName, const T& value)
 {
     if constexpr (Meta::IsAny<T, std::string, const char_t*>)
     {
@@ -32,6 +32,8 @@ void Serializer::AddSimpleAttribute(const std::string& attributeName, const T& v
 template <typename ReflectT, bool_t IsRoot>
 void Serializer::Serialize(const ReflectT* const obj)
 {
+    // TODO static variables
+
     constexpr TypeDescriptor<ReflectT> desc = Reflection::GetTypeInfo<ReflectT>();
 
     const std::string typeName = Utils::RemoveNamespaces(desc.name.c_str());
@@ -78,10 +80,58 @@ void Serializer::Serialize(const ReflectT* const obj)
         EndXmlElement();
 }
 
-template <typename ReflectT>
-void Serializer::Deserialize(ReflectT* const)
+template <typename ReflectT, bool_t IsRoot>
+void Serializer::Deserialize(ReflectT* const obj)
 {
-    // TODO Deserialize
+    // TODO static variables
+    
+    constexpr TypeDescriptor<ReflectT> desc = Reflection::GetTypeInfo<ReflectT>();
+
+    constexpr const char_t* const typeName = desc.name.c_str();
+    const std::string humanizedTypeName = Utils::RemoveNamespaces(typeName);
+
+    ReadElement(humanizedTypeName);
+    if constexpr (IsRoot)
+    {
+        
+    }
+
+    refl::util::for_each(desc.members, [&]<typename T>(const T)
+    {
+        constexpr bool_t dontSerialize = Reflection::HasAttribute<Reflection::NotSerializable, T>();
+        constexpr bool_t isStatic = T::is_static;
+
+        if constexpr (!dontSerialize && !isStatic)
+        {
+            using MemberT = Meta::RemoveConstSpecifier<typename T::value_type>;
+            constexpr const char_t* const name = T::name.c_str();
+
+            Metadata<ReflectT, MemberT, T> metadata = {
+                .topLevelObj = const_cast<ReflectT*>(obj),
+                .name = name,
+                .obj = const_cast<MemberT*>(&T::get(obj))
+            };
+
+            ReadElement(name);
+            
+            if constexpr (Meta::IsArray<MemberT>)
+            {
+                DeserializeArrayType<ReflectT, MemberT, T>(metadata);
+            }
+            else if constexpr (Meta::IsXnorList<MemberT>)
+            {
+                DeserializeListType<ReflectT, MemberT, T>(metadata);
+            }
+            else
+            {
+                DeserializeSimpleType<ReflectT, MemberT, T>(metadata);
+            }
+
+            FinishReadElement();
+        }
+    });
+
+    FinishReadElement();
 }
 
 template <typename ReflectT, typename MemberT, typename DescriptorT>
@@ -89,7 +139,7 @@ void Serializer::SerializeSimpleType(const Metadata<ReflectT, MemberT, Descripto
 {
     if constexpr (Meta::IsNativeType<MemberT> || Meta::IsMathType<MemberT> || Meta::IsSame<MemberT, std::string>)
     {
-        AddSimpleAttribute<MemberT>(metadata.name, *metadata.obj);
+        AddSimpleValue<MemberT>(metadata.name, *metadata.obj);
     }
     else if constexpr (Meta::IsColorType<MemberT>)
     {
@@ -111,21 +161,21 @@ void Serializer::SerializeSimpleType(const Metadata<ReflectT, MemberT, Descripto
         else
         {
             if (*metadata.obj == nullptr)
-                AddSimpleAttribute(metadata.name, static_cast<std::string>(Guid()));
+                AddSimpleValue(metadata.name, static_cast<std::string>(Guid()));
             else
-                AddSimpleAttribute(metadata.name, static_cast<std::string>((*metadata.obj)->GetGuid()));
+                AddSimpleValue(metadata.name, static_cast<std::string>((*metadata.obj)->GetGuid()));
         }
     }
     else if constexpr (Meta::IsXnorPointer<MemberT>)
     {
         if (*metadata.obj == nullptr)
-            AddSimpleAttribute(metadata.name, Guid());
+            AddSimpleValue(metadata.name, Guid());
         else
-            AddSimpleAttribute(metadata.name, static_cast<std::string>((*metadata.obj)->GetGuid()));
+            AddSimpleValue(metadata.name, static_cast<std::string>((*metadata.obj)->GetGuid()));
     }
     else if constexpr (Meta::IsSame<MemberT, Guid>)
     {
-        AddSimpleAttribute<std::string>(metadata.name, static_cast<std::string>(*metadata.obj));
+        AddSimpleValue<std::string>(metadata.name, static_cast<std::string>(*metadata.obj));
     }
     else if constexpr (Meta::IsEnum<MemberT>)
     {
@@ -193,12 +243,44 @@ void Serializer::SerializeEnum(const Metadata<ReflectT, MemberT, DescriptorT>& m
     
     if constexpr (isEnumFlag)
     {
-        AddSimpleAttribute<std::string>(metadata.name, magic_enum::enum_flags_name<MemberT>(*metadata.obj, ',').data());
+        AddSimpleValue<std::string>(metadata.name, magic_enum::enum_flags_name<MemberT>(*metadata.obj, ',').data());
     }
     else
     {
-        AddSimpleAttribute<std::string>(metadata.name, magic_enum::enum_name<MemberT>(*metadata.obj).data());
+        AddSimpleValue<std::string>(metadata.name, magic_enum::enum_name<MemberT>(*metadata.obj).data());
     }
+}
+
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void Serializer::DeserializeSimpleType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
+{
+    if constexpr (Meta::IsSame<MemberT, bool_t>)
+    {
+        const char_t* const v = ReadElementValue(metadata.name);
+        if (std::strcmp(v, "true") == 0)
+            *metadata.obj = true;
+        else
+            *metadata.obj = false;
+    }
+    else if constexpr (Meta::IsIntegral<MemberT>)
+    {
+        *metadata.obj = std::atoi(ReadElementValue(metadata.name));
+    }
+    else if constexpr (Meta::IsFloatingPoint<MemberT>)
+    {
+        *metadata.obj = std::stof(ReadElementValue(metadata.name));
+    }
+}
+
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void Serializer::DeserializeArrayType(const Metadata<ReflectT, MemberT, DescriptorT>&)
+{
+}
+
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void Serializer::DeserializeListType(const Metadata<ReflectT, MemberT, DescriptorT>&)
+{
+    
 }
 
 END_XNOR_CORE

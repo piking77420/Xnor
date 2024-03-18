@@ -39,8 +39,11 @@ public:
     /// @param filePath File name
     XNOR_ENGINE static void StartSerialization(const std::string& filePath);
 
+    XNOR_ENGINE static void StartDeserialization(const std::string& filePath);
+
     /// @brief Ends the serialization
     XNOR_ENGINE static void EndSerialization();
+    XNOR_ENGINE static void EndDeserialization();
 
     /// @brief Starts a root element
     /// @param elementName Name of root
@@ -63,7 +66,7 @@ public:
     /// @param attributeName Attribute name
     /// @param value Attribute value
     template <typename T>
-    static void AddSimpleAttribute(const std::string& attributeName, const T& value);
+    static void AddSimpleValue(const std::string& attributeName, const T& value);
 
     /// @brief Serializes an object in the current document
     /// @tparam ReflectT Type
@@ -74,12 +77,15 @@ public:
 
     /// @brief Deserializes an object in the current document
     /// @tparam ReflectT Type
+    /// @tparam IsRoot Is root object
     /// @param obj Object pointer
-    template <typename ReflectT>
+    template <typename ReflectT, bool_t IsRoot>
     static void Deserialize(ReflectT* obj);
     
 private:
     XNOR_ENGINE static inline std::string m_CurrentFilePath;
+
+    XNOR_ENGINE static inline XMLFile* m_File;
     
     XNOR_ENGINE static inline XMLDocument* m_XmlDoc = nullptr;
     
@@ -90,12 +96,17 @@ private:
     // Serialize
     XNOR_ENGINE static void OpenFileToWrite(const std::string& filePath);
 
+    XNOR_ENGINE static void OpenFileToRead(const std::string& filePath);
+
     XNOR_ENGINE static void SerializeObjectUsingFactory(void* obj, size_t hash);
     
     // Element
     XNOR_ENGINE static void AddElementToDoc();
-    
-    XNOR_ENGINE static void FetchAttributeInternal(const std::string& attributeName, const std::string& attributeValue);
+
+
+    XNOR_ENGINE static void ReadElement(const std::string& name);
+    XNOR_ENGINE static const char_t* ReadElementValue(const std::string& name);
+    XNOR_ENGINE static void FinishReadElement();
 
     template <typename ReflectT, typename MemberT, typename DescriptorT>
     static void SerializeSimpleType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
@@ -108,6 +119,16 @@ private:
 
     template <typename ReflectT, typename MemberT, typename DescriptorT>
     static void SerializeEnum(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
+
+
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DeserializeSimpleType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
+
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DeserializeArrayType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
+
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DeserializeListType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 };
 
 END_XNOR_CORE
