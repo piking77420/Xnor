@@ -231,10 +231,11 @@ void Editor::CreateTestScene()
 	Entity& ent1 = *World::scene->CreateEntity("Directional");
 	ent1.AddComponent<DirectionalLight>();
 
-	Entity& Cube = *World::scene->CreateEntity("Plane");
-	MeshRenderer* meshRenderer = Cube.AddComponent<MeshRenderer>();
-	Cube.transform.SetPosition() = { 0.f, -1.f, 0.f };
-	Cube.transform.SetScale() = { 10.f, 1.f, 10.f };
+	Entity& plane = *World::scene->CreateEntity("Plane");
+	MeshRenderer* meshRenderer = plane.AddComponent<MeshRenderer>();
+	plane.transform.SetPosition() = { 0.f, -2.f, 0.f };
+	plane.transform.SetScale() = { 10.f, 1.f, 10.f };
+	
 	meshRenderer->model = ResourceManager::Get<Model>(FileManager::Get("assets/models/cube.obj"));
 	meshRenderer->material.albedoTexture = ResourceManager::Get<Texture>(FileManager::Get("assets/textures/wood.jpg"));
 	
@@ -289,7 +290,11 @@ void Editor::MenuBar() const
 					path = data.currentScene->GetPathString();
 				}
 				XnorCore::Serializer::StartSerialization(path);
+<<<<<<< HEAD
 				XnorCore::World::scene->Serialize();
+=======
+				XnorCore::Serializer::Serialize<XnorCore::Scene>(&XnorCore::World::scene, true);
+>>>>>>> dev
 				XnorCore::Serializer::EndSerialization();
 			}
 			

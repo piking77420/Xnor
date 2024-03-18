@@ -25,28 +25,27 @@ void FrameBuffer::AttachTextures(const RenderPass& renderPass, const std::vector
 	Rhi::AttachsTextureToFrameBuffer(renderPass, *this, attachments);
 }
 
-void FrameBuffer::AttachTexture(const Texture& texture, const Attachment::Attachment attachment,const uint32_t level) const
+void FrameBuffer::AttachTexture(const Texture& texture, const Attachment::Attachment attachment, const uint32_t level) const
 {
-	Rhi::AttachTextureToFrameBuffer(m_Id,attachment,texture.GetId(), level);
+	Rhi::AttachTextureToFrameBuffer(m_Id, attachment, texture.GetId(), level);
 }
 
-void FrameBuffer::AttachTexture(const Cubemap& cubemap, const Attachment::Attachment attachment, CubeMapFace cubeMapFace, const uint32_t level) const
+void FrameBuffer::AttachTexture(const Cubemap& cubemap, const Attachment::Attachment attachment, const CubeMapFace cubeMapFace, const uint32_t level) const
 {
-	Rhi::AttachTextureToFrameBuffer(m_Id,attachment,cubeMapFace ,cubemap.GetId(), level);
+	Rhi::AttachTextureToFrameBuffer(m_Id, attachment, cubeMapFace, cubemap.GetId(), level);
 }
 
 void FrameBuffer::GetPixelFromAttachment(
-	uint32_t attachmentIndex,
-	Vector2i position,
-	TextureFormat::TextureFormat textureFormat,
-	DataType::DataType dataType,
+	const uint32_t attachmentIndex,
+	const Vector2i position,
+	const TextureFormat::TextureFormat textureFormat,
+	const DataType::DataType dataType,
 	void* output
 ) const
 {
 	Rhi::BindFrameBuffer(m_Id);
-	Rhi::GetPixelFromAttachement(attachmentIndex,position,textureFormat,dataType,output);
+	Rhi::GetPixelFromAttachement(attachmentIndex, position, textureFormat, dataType, output);
 	Rhi::UnbindFrameBuffer();
-
 }
 
 Vector2i FrameBuffer::GetSize() const

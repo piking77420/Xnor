@@ -552,11 +552,10 @@ struct RenderPassBeginInfo
 	/// @brief Render area size
 	Vector2i renderAreaExtent{};
 
-	BufferFlag::BufferFlag clearBufferFlags;
+	BufferFlag::BufferFlag clearBufferFlags{};
 
-	Vector4 clearColor;
+	Vector4 clearColor = Vector4();
 };
-
 
 enum class CubeMapFace
 {
@@ -569,7 +568,5 @@ enum class CubeMapFace
 
 	Size
 };
-
-
 
 END_XNOR_CORE

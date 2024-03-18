@@ -9,8 +9,6 @@
 
 #include "core.hpp"
 #include "reflection/reflection.hpp"
-#include "serialization/serializer.hpp"
-#include "utils/serializable.hpp"
 
 /// @file transform.hpp
 /// @brief Defines the XnorCore::Transform class.
@@ -20,30 +18,34 @@ BEGIN_XNOR_CORE
 class SceneGraph;
 
 /// @brief Represents a 3D transformation, containing Position, Rotation and Scaling
-class XNOR_ENGINE Transform final : public Serializable
+class XNOR_ENGINE Transform final
 {
-	REFLECTABLE_IMPL_MINIMAL(Transform);
+	REFLECTABLE_IMPL(Transform)
 
 public:
 	/// @brief Returns the position of this Transform.
+	[[nodiscard]]
 	const Vector3& GetPosition() const;
 	
 	/// @brief Sets the position of this Transform.
 	Vector3& SetPosition();
 
 	/// @brief Returns the rotation of this Transform in euler angles.
+	[[nodiscard]]
 	const Vector3& GetRotationEulerAngle() const;
 
 	/// @brief Sets the rotation of this Transform in euler angles.
 	Vector3& SetRotationEulerAngle();
 
 	/// @brief Returns the rotation of this Transform.
+	[[nodiscard]]
 	const Quaternion& GetRotation() const;
 
 	/// @brief Sets the rotation of this Transform.
 	Quaternion& SetRotation();
 
 	/// @brief Returns the scale of this Transform.
+	[[nodiscard]]
 	const Vector3& GetScale() const;
 
 	/// @brief Sets the scale of this Transform.

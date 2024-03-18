@@ -60,8 +60,7 @@ void Renderer::RenderViewport(const Viewport& viewport,
 }
 
 void Renderer::RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass,
-	const Pointer<Shader>& shadertoUse
-	,const Scene& scene,bool_t drawEditorUi
+	const Pointer<Shader>& shadertoUse, const Scene& scene,	const bool_t drawEditorUi
 ) const
 {
 	std::vector<const MeshRenderer*> meshrenderers;
@@ -131,11 +130,9 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 
 }
 
-void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers,Skybox& skybox, const Viewport& Viewport,
-	Vector2i viewportSize, bool isEditor) const
+void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox, const Viewport& viewport, const Vector2i viewportSize, const bool isEditor) const
 {
-
-	const ViewportData& viewportData = Viewport.viewportData;
+	const ViewportData& viewportData = viewport.viewportData;
 	
 	const RenderPassBeginInfo renderPassBeginInfoLit =
 	{
@@ -160,7 +157,7 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
 
 	if (isEditor)
 	{
-		m_LightManager.DrawLightGizmo(*Viewport.camera, *World::scene);
+		m_LightManager.DrawLightGizmo(*viewport.camera, *World::scene);
 	}
 	viewportData.colorPass.EndRenderPass();
 }
@@ -185,7 +182,7 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 		const Model::Aabb&& modelAabb = meshRenderer->model->GetAabb();
 
 		const Vector3&& aabbSize = (modelAabb.max - modelAabb.min) * 0.5f;
-		const Vector3&& center  = (modelAabb.max + modelAabb.min) * 0.5f;
+		const Vector3&& center = (modelAabb.max + modelAabb.min) * 0.5f;
 
 		const Matrix&& trsAabb = Matrix::Trs(center, Quaternion::Identity(), aabbSize);
 		modelData.model = transform.worldMatrix * trsAabb;
@@ -240,17 +237,15 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		if (meshRenderer->material.ambiantOcclusionTexture.IsValid())
 			meshRenderer->material.ambiantOcclusionTexture->BindTexture(MaterialTextureEnum::AmbiantOcclusion);
 
-
 		if (meshRenderer->model.IsValid())
 		{
 			Rhi::BindMaterial(meshRenderer->material);
 			Rhi::DrawModel(meshRenderer->model->GetId());
 		}
 	}
-
 }
 
-void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRenderers,const Scene& scene) const
+void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRenderers, const Scene& scene) const
 {
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 
@@ -261,9 +256,8 @@ void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRe
 		Transform& transform = meshRenderer->entity->transform;
 		ModelUniformData modelData;
 		modelData.model = transform.worldMatrix;
-		// +1 to avoid the black color of the attachement be a valid index  
+		// +1 to avoid the black color of the attachment be a valid index  
 		modelData.meshRenderIndex = scene.GetEntityIndex(meshRenderer->entity) + 1;
-
 		
 		try
 		{

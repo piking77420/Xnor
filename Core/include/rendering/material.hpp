@@ -6,7 +6,6 @@
 #include "reflection/reflection.hpp"
 #include "resource/texture.hpp"
 #include "utils/pointer.hpp"
-#include "utils/serializable.hpp"
 
 /// @file material.hpp
 /// @brief Defines types related to materials
@@ -21,9 +20,9 @@ enum class MaterialType
 };
 
 /// @brief Encapsulates a material, which defines how a @ref Model is rendered
-struct Material : Serializable
+struct Material
 {
-    REFLECTABLE_IMPL_MINIMAL_DLL(Material)
+    REFLECTABLE_IMPL(Material)
     
 public:
     // Pointer<Shader> shader;

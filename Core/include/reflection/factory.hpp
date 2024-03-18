@@ -15,6 +15,7 @@ class Factory
         std::function<void*()> createFunc;
         std::function<void(void*)> displayFunc;
         std::function<void(void*)> serializeFunc;
+        std::function<void(void*)> deserializeFunc;
 
         bool_t isConstructible;
         const char_t* name;
@@ -46,4 +47,4 @@ private:
 
 END_XNOR_CORE
 
-#include "utils/factory.inl"
+#include "reflection/factory.inl"

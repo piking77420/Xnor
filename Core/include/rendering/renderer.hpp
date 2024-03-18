@@ -3,11 +3,11 @@
 #include <Maths/vector4.hpp>
 
 #include "core.hpp"
-#include "render_systems/light_manager.hpp"
+#include "material.hpp"
 #include "viewport.hpp"
+#include "render_systems/light_manager.hpp"
 #include "render_systems/skybox_renderer.hpp"
 #include "render_systems/tone_mapping.hpp"
-#include "rendering/render_pass.hpp"
 #include "resource/model.hpp"
 #include "world/world.hpp"
 
@@ -40,19 +40,19 @@ public:
     XNOR_ENGINE void Initialize();
     
     /// @brief Update All the infos of the current frame lights, animation, etc...
-    /// @param scene The current world's scene of the app
+    /// @param scene The scene
     XNOR_ENGINE void BeginFrame(const Scene& scene);
 
     /// @brief stuff made at the end of the frame
-    /// @param world The current world's scene of the app
+    /// @param scene The scene
     XNOR_ENGINE void EndFrame(const Scene& scene);
 
     /// @brief Renders the current scene
     /// @param rendererContext Renderer context
     XNOR_ENGINE void RenderViewport(const Viewport& viewport, Scene& scene) const;
 
-    XNOR_ENGINE void RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& renderPassBeginInfo , const RenderPass& renderPass, const Pointer<Shader>& shadertoUse
-        ,const Scene& scene, bool_t drawEditorUi) const;
+    XNOR_ENGINE void RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass, const Pointer<Shader>& shadertoUse,
+        const Scene& scene, bool_t drawEditorUi) const;
 
     
     /// @brief Swaps the front and back buffer
@@ -73,18 +73,19 @@ private:
     Pointer<Model> m_Quad;
     Pointer<Model> m_Cube;
     
-    XNOR_ENGINE void BindCamera(const Camera& camera,const Vector2i screenSize) const;
+    XNOR_ENGINE void BindCamera(const Camera& camera, Vector2i screenSize) const;
     
     XNOR_ENGINE void InitResources();
     
-    XNOR_ENGINE void DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers, MaterialType materialtype) const;
+    XNOR_ENGINE void DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers, MaterialType materialType) const;
     
     XNOR_ENGINE void DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRenderers,const Scene& scene) const;
     
     XNOR_ENGINE void DefferedRendering(const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox, const ViewportData& viewportData, Vector2i viewportSize) const;
     
-    XNOR_ENGINE void ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers,Skybox& skybox,
-        const Viewport& Viewport, Vector2i viewportSize, bool isEditor) const;
+    XNOR_ENGINE void ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers,
+                                 const Skybox& skybox,
+        const Viewport& viewport, Vector2i viewportSize, bool isEditor) const;
     
     XNOR_ENGINE void DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) const;
 };

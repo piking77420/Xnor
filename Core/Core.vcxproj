@@ -115,6 +115,80 @@
     <ClCompile Include="src\input\input.cpp" />
     <ClCompile Include="src\input\gamepad_input.cpp" />
     <ClCompile Include="src\input\time.cpp" />
+    <ClCompile Include="src\reflection\factory.cpp">
+      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>x64\Debug\</AssemblerListingLocation>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformationFile>x64\Debug\</BrowseInformationFile>
+      <CompileAs>Default</CompileAs>
+      <ConformanceMode>false</ConformanceMode>
+      <DiagnosticsFormat>Column</DiagnosticsFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ErrorReporting>Prompt</ErrorReporting>
+      <ExpandAttributedSource>false</ExpandAttributedSource>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <EnableASAN>false</EnableASAN>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <GenerateModuleDependencies>false</GenerateModuleDependencies>
+      <GenerateSourceDependencies>false</GenerateSourceDependencies>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ModuleDependenciesFile>x64\Debug\</ModuleDependenciesFile>
+      <ModuleOutputFile>x64\Debug\</ModuleOutputFile>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ObjectFileName>x64\Debug\</ObjectFileName>
+      <CallingConvention>Cdecl</CallingConvention>
+      <ProgramDataBaseFileName>x64\Debug\vc142.pdb</ProgramDataBaseFileName>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>x64\Debug\Core.pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ShowIncludes>false</ShowIncludes>
+      <SourceDependenciesFile>x64\Debug\</SourceDependenciesFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <SpectreMitigation>false</SpectreMitigation>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <TrackerLogDirectory>x64\Debug\Core.tlog\</TrackerLogDirectory>
+      <TranslateIncludes>false</TranslateIncludes>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>true</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <XMLDocumentationFileName>x64\Debug\</XMLDocumentationFileName>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_WINDLL;_UNICODE;UNICODE;;XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>;include;externals\include;inline</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LinkCompiled>true</LinkCompiled>
+    </ClCompile>
     <ClCompile Include="src\reflection\type_renderer.cpp" />
     <ClCompile Include="src\rendering\light\directional_light.cpp" />
     <ClCompile Include="src\rendering\light\light.cpp" />
@@ -226,7 +300,6 @@
     <ClCompile Include="src\serialization\serializer.cpp" />
     <ClCompile Include="src\transform.cpp" />
     <ClCompile Include="src\utils\color.cpp" />
-    <ClCompile Include="src\utils\factory.cpp" />
     <ClCompile Include="src\utils\formatter.cpp" />
     <ClCompile Include="src\utils\list.cpp" />
     <ClCompile Include="src\utils\logger.cpp" />
@@ -408,6 +481,7 @@
     <ClInclude Include="include\input\keyboard_input.hpp" />
     <ClInclude Include="include\input\mouse_input.hpp" />
     <ClInclude Include="include\input\time.hpp" />
+    <ClInclude Include="include\reflection\factory.hpp" />
     <ClInclude Include="include\reflection\reflection.hpp" />
     <ClInclude Include="include\reflection\type_renderer.hpp" />
     <ClInclude Include="include\rendering\camera.hpp" />
@@ -444,13 +518,11 @@
     <ClInclude Include="include\utils\color.hpp" />
     <ClInclude Include="include\utils\concepts.hpp" />
     <ClInclude Include="include\utils\event.hpp" />
-    <ClInclude Include="include\utils\factory.hpp" />
     <ClInclude Include="include\utils\formatter.hpp" />
     <ClInclude Include="include\utils\list.hpp" />
     <ClInclude Include="include\utils\logger.hpp" />
     <ClInclude Include="include\utils\pointer.hpp" />
     <ClInclude Include="include\utils\reference_counter.hpp" />
-    <ClInclude Include="include\utils\serializable.hpp" />
     <ClInclude Include="include\utils\ts_queue.hpp" />
     <ClInclude Include="include\utils\utils.hpp" />
     <ClInclude Include="include\window.hpp" />
@@ -466,6 +538,7 @@
     <ClInclude Include="inline\file\file_manager.inl" />
     <ClInclude Include="inline\input\input.inl" />
     <ClInclude Include="inline\input\time.inl" />
+    <ClInclude Include="inline\reflection\factory.inl" />
     <ClInclude Include="inline\reflection\reflection.inl" />
     <ClInclude Include="inline\reflection\type_renderer.inl" />
     <ClInclude Include="inline\resource\resource_manager.inl" />
@@ -475,7 +548,6 @@
     <ClInclude Include="inline\serialization\serializer.inl" />
     <ClInclude Include="inline\utils\color.inl" />
     <ClInclude Include="inline\utils\event.inl" />
-    <ClInclude Include="inline\utils\factory.inl" />
     <ClInclude Include="inline\utils\list.inl" />
     <ClInclude Include="inline\utils\logger.inl" />
     <ClInclude Include="inline\utils\pointer.inl" />

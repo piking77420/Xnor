@@ -1,5 +1,5 @@
 ﻿#include "reflection/type_renderer.hpp"
-#include "utils/factory.hpp"
+#include "reflection/factory.hpp"
 
 using namespace XnorCore;
 

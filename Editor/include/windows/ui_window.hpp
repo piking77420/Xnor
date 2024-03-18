@@ -1,6 +1,9 @@
 #pragma once
 
 #include "core.hpp"
+
+#include <ImGui/imgui.h>
+
 #include "definitions.hpp"
 #include "editor.hpp"
 #include "Maths/vector2i.hpp"

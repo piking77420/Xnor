@@ -12,9 +12,9 @@
 BEGIN_XNOR_CORE
 
 /// @brief Represents a scene, encapsulates a List of Entity and provides utility functions to manipulate said entities
-class Scene : public Serializable
+class Scene
 {
-    REFLECTABLE_IMPL_MINIMAL_DLL(Scene)
+    REFLECTABLE_IMPL(Scene)
     
 public:
     /// @brief Skybox handler
@@ -22,7 +22,7 @@ public:
 
     XNOR_ENGINE Scene() = default;
 
-    XNOR_ENGINE ~Scene() override;
+    XNOR_ENGINE ~Scene();
 
     DEFAULT_COPY_MOVE_OPERATIONS(Scene)
 

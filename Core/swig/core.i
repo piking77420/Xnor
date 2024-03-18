@@ -44,19 +44,8 @@ typedef float float_t;
 // Ignore these macros
 #define DEFAULT_COPY_MOVE_OPERATIONS(...)
 #define DELETE_COPY_MOVE_OPERATIONS(...)
-#define REFLECTABLE_IMPL_MINIMAL(...)
-#define REFLECTABLE_IMPL_MINIMAL_DLL(...)
-#define REFLECTABLE_IMPL_MINIMAL_DLL_PRIVATE_CTOR(...)
-#define REFLECTABLE_IMPL_H(...)
-#define REFLECTABLE_IMPL_H_DLL(...)
-#define REFLECTABLE_IMPL_CPP(...)
+#define REFLECTABLE_IMPL(...)
 #define REFL_AUTO(...)
-
-// Define the Serializable class to avoid SWIG warning 401
-namespace XnorCore
-{
-    class Serializable { Serializable() = default; virtual ~Serializable() = default; };
-}
 
 %{
 #include <format>
@@ -119,7 +108,6 @@ namespace XnorCore
 #include "utils/meta_programming.hpp"
 #include "utils/pointer.hpp"
 #include "utils/reference_counter.hpp"
-#include "utils/serializable.hpp"
 #include "utils/ts_queue.hpp"
 #include "utils/utils.hpp"
 

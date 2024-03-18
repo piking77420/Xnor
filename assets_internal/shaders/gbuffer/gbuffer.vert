@@ -36,7 +36,6 @@ layout (std140, binding = 4) uniform MaterialDataUniform
     float ambiantOccusion;
 };
 
-
 out VS_OUT
 {
     vec3 fragPos;
@@ -48,7 +47,6 @@ out VS_OUT
     float reflectance;
     float emissive;
     float ambiantOccusion;
-    
 
     mat3 Tbn;
 } vs_out;
@@ -59,7 +57,7 @@ void main()
     vs_out.fragPos = vec3(pos);
     vs_out.texCoords = aTexCoords;
     gl_Position =  projection * view * model * vec4(aPos, 1.0);
-    
+
     vs_out.roughness = roughness;
     vs_out.metallic = metallic;
     vs_out.reflectance = reflectance;
@@ -73,14 +71,10 @@ void main()
     }
     else
     { 
-        
         vs_out.normal = mat3(normalInvertMatrix) * aNormal;
         vec3 T = normalize(vec3(model * vec4(aTangent, 0.0)));
         vec3 B = normalize(vec3(model * vec4(aBitangent, 0.0)));
         vec3 N = normalize(vec3(model * vec4(aNormal, 0.0)));
         vs_out.Tbn = mat3(T, B, N);
     }
-
-
-
 }

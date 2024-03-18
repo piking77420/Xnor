@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "core.hpp"
+#include "reflection/reflection.hpp"
 #include "scene/component.hpp"
 
 /// @file light.hpp
@@ -11,7 +12,7 @@ BEGIN_XNOR_CORE
 /// @brief Base class for lights
 class Light : public Component
 {
-    REFLECTABLE_IMPL_MINIMAL_DLL(Light)
+    REFLECTABLE_IMPL(Light)
     
 public:
     /// @brief Color of the light

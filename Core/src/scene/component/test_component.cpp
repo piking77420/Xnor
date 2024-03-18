@@ -3,11 +3,8 @@
 #include "input/time.hpp"
 #include "rendering/light/light.hpp"
 #include "scene/entity.hpp"
-#include "utils/factory.hpp"
 
 using namespace XnorCore;
-
-REFLECTABLE_IMPL_CPP(TestComponent)
 
 void TestComponent::Begin()
 {

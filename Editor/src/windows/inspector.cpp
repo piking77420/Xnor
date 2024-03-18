@@ -2,7 +2,6 @@
 
 #include "imgui/imgui.h"
 #include "reflection/type_renderer.hpp"
-#include "utils/factory.hpp"
 
 using namespace XnorEditor;
 
@@ -24,10 +23,6 @@ void Inspector::Display()
     
     ImGui::PushID(ptr);
 
-    if (ImGui::Button("Print factory"))
-    {
-        XnorCore::Factory::Print();
-    }
     XnorCore::TypeRenderer::DisplayObject<XnorCore::Entity>(ptr);
     
     ImGui::PopID();

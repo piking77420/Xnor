@@ -21,12 +21,10 @@ layout (std140, binding = 1) uniform ModelUniform
 out VS_OUT
 {
     flat uint meshDrawId;
-
 } vs_out;
 
 void main()
 {
     gl_Position = projection * view * model * vec4(aPos, 1.0);
-	vs_out.meshDrawId = drawId;
-
+    vs_out.meshDrawId = drawId;
 }
