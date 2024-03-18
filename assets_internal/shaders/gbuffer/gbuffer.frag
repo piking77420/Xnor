@@ -6,8 +6,6 @@ layout (location = 2) out vec4 gAlbedoSpec;
 layout (location = 3) out vec3 gMetallicRoughessReflectance;
 layout (location = 4) out vec2 gEmissiveAmbiantOcclusion;
 
-
-
 struct Material
 {
     sampler2D albedoMap;
@@ -43,7 +41,7 @@ in VS_OUT {
     float reflectance;
     float emissive;
     float ambiantOccusion;
-    
+
     mat3 Tbn;
 } fs_in;
 
@@ -70,7 +68,7 @@ void main()
     {
         gMetallicRoughessReflectance.r = texture(material.metallicMap, fs_in.texCoords).r;
     }
-    
+
     if (hasRoughnessMap == false)
     {
         gMetallicRoughessReflectance.g = roughness;
@@ -79,7 +77,7 @@ void main()
     {
         gMetallicRoughessReflectance.g = texture(material.roughnessMap, fs_in.texCoords).r;
     }
-    
+
     if (hasNormalMap == false)
     {
         gNormal = normalize(fs_in.normal);
@@ -88,21 +86,21 @@ void main()
     {
         // Compute NormalMap
         vec3 normal = texture(material.normalMap, fs_in.texCoords).rgb;
-        normal = normal  * 2.0f - 1.0f;
+        normal = normal * 2.0f - 1.0f;
         gNormal.rgb = normalize(fs_in.Tbn * normal); 
     }
 
     float currentOcclusion = 0.f;
-    
+
     if (hasAmbiantOcclusionMap == false)
     {
         currentOcclusion = ambiantOccusion;
     }
     else
     {
-        currentOcclusion = texture(material.ambiantOcclusionMap,fs_in.texCoords).r;
+        currentOcclusion = texture(material.ambiantOcclusionMap, fs_in.texCoords).r;
     }
 
-    gMetallicRoughessReflectance = vec3(gMetallicRoughessReflectance.r,gMetallicRoughessReflectance.g,reflectance);
-    gEmissiveAmbiantOcclusion = vec2(emissive,currentOcclusion);
+    gMetallicRoughessReflectance = vec3(gMetallicRoughessReflectance.r, gMetallicRoughessReflectance.g, reflectance);
+    gEmissiveAmbiantOcclusion = vec2(emissive, currentOcclusion);
 }

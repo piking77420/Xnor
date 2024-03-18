@@ -1,5 +1,4 @@
 #version 460 core
-#extension GL_NV_gpu_shader5 : require
 
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
@@ -23,7 +22,7 @@ void main()
 {
     vs_out.texCoords = aPos;
 
-	mat3 viewMat3 = mat3(view);
+    mat3 viewMat3 = mat3(view);
  
     vec4 pos = projection * mat4(viewMat3) * vec4(aPos, 1.0);
 

@@ -24,10 +24,6 @@ void Inspector::Display()
     
     ImGui::PushID(ptr);
 
-    if (ImGui::Button("Print factory"))
-    {
-        XnorCore::Factory::Print();
-    }
     XnorCore::TypeRenderer::DisplayObject<XnorCore::Entity>(ptr);
     
     ImGui::PopID();

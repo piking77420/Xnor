@@ -8,21 +8,23 @@
 #include "resource/texture.hpp"
 
 BEGIN_XNOR_CORE
+
 class SkyBoxParser
 {
-
 public:
     XNOR_ENGINE SkyBoxParser() = default;
     
-    XNOR_ENGINE  ~SkyBoxParser();
+    XNOR_ENGINE ~SkyBoxParser();
+
+    DEFAULT_COPY_MOVE_OPERATIONS(SkyBoxParser)
 
     XNOR_ENGINE void EquirectangularToCubeMapFunc(const Texture& equirectangularMap,const Cubemap& cubemap);
 
-    XNOR_ENGINE void ComputeIrradiance(const Cubemap& irradianceInput,const Cubemap& irradianceOuPut, Vector2i irradianceSize);
+    XNOR_ENGINE void ComputeIrradiance(const Cubemap& irradianceInput,const Cubemap& irradianceOutput, Vector2i irradianceSize);
     
-    XNOR_ENGINE void ComputePreFiltering(const Cubemap& environementMap, const Cubemap& PrefilteringMap, uint32_t mipLevels);
+    XNOR_ENGINE void ComputePreFiltering(const Cubemap& environementMap, const Cubemap& prefilteringMap, uint32_t mipLevels);
 
-    XNOR_ENGINE void PreComputeBrdf(const Vector2i environementMapSize, const Texture& brdfTexture);
+    XNOR_ENGINE void PreComputeBrdf(Vector2i environementMapSize, const Texture& brdfTexture);
     
     XNOR_ENGINE void InitResource();
 
@@ -38,13 +40,12 @@ private:
     Pointer<Shader> m_PrefilterShader;
     Pointer<Shader> m_PreComputeBrdr;
 
-
     Texture* m_TextureDepth = nullptr;
-    Texture* m_color = nullptr;
+    Texture* m_Color = nullptr;
     
     XNOR_ENGINE void IsFrameBufferValid(Vector2i size);
     
-    XNOR_ENGINE void Compute(const Texture& textureToBind,const Cubemap& cubemap, const Pointer<Shader>& shader);
+    XNOR_ENGINE void Compute(const Texture& equirectangularMap, const Cubemap& cubemap, const Pointer<Shader>& shader);
 };
 
 END_XNOR_CORE
