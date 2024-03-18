@@ -14,8 +14,6 @@ class TestComponent : public Component
     REFLECTABLE_IMPL_MINIMAL_DLL(TestComponent)
     
 public:
-    XNOR_ENGINE TestComponent() = default;
-    
     XNOR_ENGINE void Begin() override;
 
     XNOR_ENGINE void Update() override;

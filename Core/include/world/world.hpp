@@ -29,7 +29,6 @@ public:
 
     /// @brief The currently loaded scene in the world
     XNOR_ENGINE static inline Scene scene;
-    
 };
 
 END_XNOR_CORE

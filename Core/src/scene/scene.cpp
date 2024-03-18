@@ -1,9 +1,11 @@
 ﻿#include "scene/scene.hpp"
 #include "scene/entity.hpp"
-#include "serialization/serializer.hpp"
+#include "utils/factory.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
+
+REFLECTABLE_IMPL_CPP(Scene)
 
 void Scene::Begin()
 {

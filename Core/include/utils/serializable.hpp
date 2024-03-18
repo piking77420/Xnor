@@ -55,11 +55,25 @@ void type::Deserialize()                                                        
 #define REFLECTABLE_IMPL_MINIMAL_DLL(type)                                                                                              \
 public:                                                                                                                                 \
 XNOR_ENGINE virtual void Serialize() const override;                                                                                    \
-\
+                                                                                                                                        \
 XNOR_ENGINE virtual void Deserialize() override;                                                                                        \
-\
+                                                                                                                                        \
 private:                                                                                                                                \
 friend struct refl_impl::metadata::type_info__<type>;
+
+
+/// @brief Implements the reflection in a .hpp file, it provides a declaration for Serializable::Serialize and Serializable::Deserialize
+/// @param type Type name
+#define REFLECTABLE_IMPL_MINIMAL_DLL_PRIVATE_CTOR(type)                                                                                 \
+private:                                                                                                                                \
+public:                                                                                                                                 \
+XNOR_ENGINE virtual void Serialize() const override;                                                                                    \
+                                                                                                                                        \
+XNOR_ENGINE virtual void Deserialize() override;                                                                                        \
+                                                                                                                                        \
+private:                                                                                                                                \
+friend struct refl_impl::metadata::type_info__<type>;
+
 
 /// @brief Implements the reflection in a .hpp file, it provides a declaration for Serializable::Serialize and Serializable::Deserialize
 /// @param type Type name

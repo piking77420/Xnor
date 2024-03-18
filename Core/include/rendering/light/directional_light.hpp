@@ -14,7 +14,6 @@ class DirectionalLight : public Light
 
 public:
     XNOR_ENGINE DirectionalLight() = default;
-    
     XNOR_ENGINE ~DirectionalLight() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(DirectionalLight)

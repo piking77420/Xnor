@@ -225,6 +225,7 @@
     <ClCompile Include="src\serialization\serializer.cpp" />
     <ClCompile Include="src\transform.cpp" />
     <ClCompile Include="src\utils\color.cpp" />
+    <ClCompile Include="src\utils\factory.cpp" />
     <ClCompile Include="src\utils\formatter.cpp" />
     <ClCompile Include="src\utils\list.cpp" />
     <ClCompile Include="src\utils\logger.cpp" />
@@ -499,7 +500,7 @@
     <Message Text="Clean SWIG C# Wrappers" Importance="high" />
   </Target>
   <ItemGroup>
-    <CoralManagedFiles Include="$(ProjectDir)externals\managed\Coral\$(Configuration)\*"/>
+    <CoralManagedFiles Include="$(ProjectDir)externals\managed\Coral\$(Configuration)\*" />
   </ItemGroup>
   <Target Name="CopyCoralManaged" AfterTargets="Build">
     <Copy SourceFiles="@(CoralManagedFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />

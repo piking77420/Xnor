@@ -1,5 +1,5 @@
 #include "scene/component/mesh_renderer.hpp"
-#include "serialization/serializer.hpp"
+#include "utils/factory.hpp"
 
 using namespace XnorCore;
 

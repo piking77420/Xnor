@@ -41,15 +41,12 @@ public:
 
     Pointer<Texture> ambiantOcclusionTexture;
 
-    
     Colorf albedoColor;
     float_t metallic = 0.f;
     float_t roughness = 0.f;
     float_t reflectance = 0.f;
     float_t emissive = 0.f;
     float_t ambientOcclusion = 0.f;
-
-
 };
 
 END_XNOR_CORE

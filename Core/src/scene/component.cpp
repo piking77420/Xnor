@@ -1,5 +1,5 @@
 ﻿#include "scene/component.hpp"
-#include "serialization/serializer.hpp"
+#include "utils/factory.hpp"
 
 using namespace XnorCore;
 

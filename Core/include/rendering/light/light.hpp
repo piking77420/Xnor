@@ -23,7 +23,6 @@ public:
     float_t intensity = 1.f;
 
     XNOR_ENGINE Light() = default;
-
     XNOR_ENGINE ~Light() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(Light)

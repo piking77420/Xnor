@@ -19,7 +19,6 @@ public:
     float_t outerCutOff = 15.f;
     
     XNOR_ENGINE SpotLight() = default;
-    
     XNOR_ENGINE ~SpotLight() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(SpotLight)
