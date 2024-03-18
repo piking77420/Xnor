@@ -34,7 +34,7 @@ public:
     /// @brief Computes the tone mapping
     /// @param imageWithoutToneMapping Initial image
     /// @param quadModel Quad model
-    XNOR_ENGINE void ComputeToneMaping(const Texture& imageWithoutToneMapping) const;
+    XNOR_ENGINE void ComputeToneMaping(const Texture& imageWithoutToneMapping, const Texture& bloomTexture) const;
 };
 
 END_XNOR_CORE

@@ -4,6 +4,7 @@ out vec4 fragColor;
 
 in vec2 texCoords;
 uniform sampler2D beforeToneMappedImage;
+uniform sampler2D bloomBlur;
 
 // linear to tonemapped
 vec3 Aces(vec3 x)
@@ -33,9 +34,10 @@ vec3 ChangeExposure(vec3 col, float b)
 void main()
 {    
     const float gamma = 2.2;
+	vec3 bloomColor = texture(bloomBlur,texCoords).rgb;
+	vec3 hdrImage = texture(beforeToneMappedImage,texCoords).rgb;
 
-
-    vec3 color = texture(beforeToneMappedImage, texCoords).rgb;
+    vec3 color = mix(hdrImage, bloomColor, 0.1f);
     // tone mapping
     color = color / (color + vec3(1.0));
     // gamma correction
@@ -45,7 +47,7 @@ void main()
     
     // Test power down // 
     
-    //vec3 hdrColor = texture(beforeToneMappedImage, texCoords).rgb;
+    //vec3 hdrColor = texture(hdrImage, texCoords).rgb;
     //fragColor = vec4(ChangeExposure(Aces(hdrColor), 1.0), 1.0);
     //fragColor = vec4(pow(vec3(fragColor), vec3(1.0/2.2)),1.0);
     

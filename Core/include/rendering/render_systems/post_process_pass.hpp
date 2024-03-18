@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "bloom_pass.hpp"
 #include "core.hpp"
 #include "tone_mapping.hpp"
 #include "rendering/frame_buffer.hpp"
@@ -23,6 +24,7 @@ private:
 
     FrameBuffer* m_FrameBuffer = nullptr;
     ToneMapping m_ToneMapping;
+    BloomPass m_BloomPass;
 
     RenderPass m_RenderPass;
     

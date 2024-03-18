@@ -114,7 +114,8 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	Rhi::DrawModel(m_Quad->GetId());
 	m_GBufferShaderLit->Unuse();
 	Rhi::DepthTest(true);
-
+	
+	viewportData.colorPass.EndRenderPass();
 }
 
 void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers,Skybox& skybox, const Viewport& Viewport,

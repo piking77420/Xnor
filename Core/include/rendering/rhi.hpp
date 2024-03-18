@@ -240,6 +240,7 @@ private:
 
 	// Enum to OpenglEnum
 	XNOR_ENGINE static uint32_t GetOpengDepthEnum(DepthFunction::DepthFunction depthFunction);
+	XNOR_ENGINE static uint32_t BlendEquationToOpengl(BlendEquation::BlendEquation blendEquation);
 	XNOR_ENGINE static uint32_t GetOpenglShaderType(ShaderType::ShaderType shaderType);
 	XNOR_ENGINE static std::string GetShaderTypeToString(ShaderType::ShaderType shaderType);
 	XNOR_ENGINE static uint32_t GetOpenglTextureType(TextureType::TextureType textureType);
@@ -270,6 +271,8 @@ private:
 	XNOR_ENGINE static inline UniformBuffer* m_ModelUniform;
 	XNOR_ENGINE static inline UniformBuffer* m_LightUniform;
 	XNOR_ENGINE static inline UniformBuffer* m_MaterialUniform;
+
+	XNOR_ENGINE static inline bool_t m_Blending = false;
 };
 
 END_XNOR_CORE

@@ -190,13 +190,11 @@ void Rhi::UseShader(const uint32_t shaderId)
 	{
 		const uint32_t srcValue = GetBlendValueOpengl(shaderInternal.blendFunction.sValue);
 		const uint32_t destValue = GetBlendValueOpengl(shaderInternal.blendFunction.dValue);
+		const uint32_t blendEquation = BlendEquationToOpengl(shaderInternal.blendFunction.blendEquation);
+		glEnable(GL_BLEND);
 		glBlendFunc(srcValue, destValue);
-	}
-	else
-	{
-		const uint32_t srcValue = GetBlendValueOpengl(BlendValue::One);
-		const uint32_t destValue = GetBlendValueOpengl(BlendValue::Zero);
-		glBlendFunc(srcValue, destValue);
+		glBlendEquation(blendEquation);
+		Rhi::m_Blending = true;
 	}
 
 	if (shaderInternal.cullInfo.enableCullFace)
@@ -215,6 +213,13 @@ void Rhi::UseShader(const uint32_t shaderId)
 
 void Rhi::UnuseShader()
 {
+	if (m_Blending)
+	{
+		glDisable(GL_BLEND);
+		m_Blending = false;
+	}
+	
+	
 	glUseProgram(0);
 }
 
@@ -235,7 +240,11 @@ void Rhi::SetUniform(const UniformType::UniformType uniformType, const void* con
 		case UniformType::Float:
 			glUniform1f(uniformLocation, *static_cast<const GLfloat*>(data));
 			break;
-			
+
+		case UniformType::Vec2:
+			glUniform2fv(uniformLocation, 1, static_cast<const GLfloat*>(data));
+			break;
+
 		case UniformType::Vec3:
 			glUniform3fv(uniformLocation, 1, static_cast<const GLfloat*>(data));
 			break;
@@ -539,6 +548,28 @@ uint32_t Rhi::GetOpengDepthEnum(const DepthFunction::DepthFunction depthFunction
 	return GL_LESS;
 }
 
+uint32_t Rhi::BlendEquationToOpengl(BlendEquation::BlendEquation blendEquation)
+{
+	switch (blendEquation)
+	{
+		case BlendEquation::Add:
+			return GL_FUNC_ADD;
+			
+		case BlendEquation::Sub:
+			return GL_FUNC_SUBTRACT;
+			
+		case BlendEquation::ReverSub:
+			return GL_FUNC_REVERSE_SUBTRACT;
+			
+		case BlendEquation::Min:
+			return GL_MIN;
+			
+		case BlendEquation::Max:
+			return GL_MAX;
+	}
+	return GL_FUNC_ADD;
+}
+
 uint32_t Rhi::GetOpenglTextureWrapper(const TextureWrapping::TextureWrapping textureWrapping)
 {
 	switch (textureWrapping)
@@ -583,7 +614,7 @@ uint32_t Rhi::CreateTexture2D(const TextureCreateInfo& textureCreateInfo)
 
 	glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
 	glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
-	if(textureCreateInfo.filtering == TextureFiltering::Linear)
+	if(textureCreateInfo.filtering == TextureFiltering::LinearMimMapLinear)
 	{
 		glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	}
@@ -755,7 +786,7 @@ void Rhi::UnbindFrameBuffer()
 void Rhi::AttachTextureToFrameBuffer(const uint32_t bufferId, const Attachment::Attachment attachment, const uint32_t textureId, const uint32_t level)
 {
 	const GLenum attachementOpengl = AttachementToOpenglAttachement(attachment);
-	glNamedFramebufferTexture(bufferId, attachementOpengl ,textureId,level);
+	glNamedFramebufferTexture(bufferId, attachementOpengl, textureId, level);
 	
 	if (attachment != Attachment::Depth && attachment != Attachment::DepthAndStencil && attachment != Attachment::Stencil)
 	{
@@ -1132,7 +1163,6 @@ void Rhi::Initialize()
 {
 	gladLoadGL();
 	DepthTest(true);
-	glEnable(GL_BLEND);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);  

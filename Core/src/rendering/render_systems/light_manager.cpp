@@ -79,7 +79,7 @@ void LightManager::BeginFrame(const Scene& scene)
 	
 	gpuLightData.nbrOfSpotLight = static_cast<uint32_t>(nbrOfSpotLight);
 
-	for (size_t i = 0 ; i < nbrOfDirectionalLight ; i++)
+	for (size_t i = 0 ; i < MaxDirectionalLights ; i++)
 	{
 		const Matrix matrix = Matrix::Trs(Vector3(0.f), directionalLights[i]->entity->transform.GetRotation(), Vector3(1.f));
 		const Vector4 direction = matrix * Vector4::UnitY(); 

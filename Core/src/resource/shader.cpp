@@ -104,6 +104,10 @@ void Shader::SetVec3(const std::string& keyName, const Vector3& value) const
 {
     Rhi::SetUniform(UniformType::Vec3, &value, m_Id, keyName.c_str());
 }
+void Shader::SetVec2(const std::string& keyName, const Vector2& value) const
+{
+    Rhi::SetUniform(UniformType::Vec2, &value, m_Id, keyName.c_str());
+}
 
 void Shader::SetVec4(const std::string& keyName, const Vector4& value) const
 {

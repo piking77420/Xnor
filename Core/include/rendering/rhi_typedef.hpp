@@ -341,6 +341,8 @@ BEGIN_ENUM(UniformType)
 	/// @brief Float
 	Float,
 	/// @brief Vector3
+	Vec2,
+	/// @brief Vector3
 	Vec3,
 	/// @brief Vector4
 	Vec4,
@@ -407,13 +409,25 @@ BEGIN_ENUM(BlendValue)
 }
 END_ENUM
 
+BEGIN_ENUM(BlendEquation)
+{
+	Add,
+	Sub,
+	ReverSub,
+	Min,
+	Max,
+}
+END_ENUM
+
 /// @brief Blend function for Shader
 struct BlendFunction
 {
 	bool_t isBlending = false;
-	BlendValue::BlendValue sValue;
-	BlendValue::BlendValue dValue;
+	BlendValue::BlendValue sValue = BlendValue::One;
+	BlendValue::BlendValue dValue = BlendValue::Zero;
+	BlendEquation::BlendEquation blendEquation = BlendEquation::Add;
 };
+
 
 /// @brief Shader creation info
 struct ShaderCreateInfo

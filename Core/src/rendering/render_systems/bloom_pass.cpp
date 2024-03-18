@@ -1,65 +1,154 @@
 ﻿#include "rendering/render_systems/bloom_pass.hpp"
 
+#include "rendering/rhi.hpp"
 #include "resource/resource_manager.hpp"
 
 using namespace XnorCore;
 
-void BloomPass::Init(uint32_t mipChainLength)
+void BloomPass::Init(uint32_t bloomMips)
 {
-    //m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
-    //mMipChain.resize(mipChainLength);
+    m_BloomMips = bloomMips;
+    m_FrameBuffer = new FrameBuffer(Window::GetSize());
+    m_MipChain.resize(m_BloomMips);
 
     
+    if (m_Quad != nullptr && m_DownSample != nullptr && m_UpSample != nullptr)
+       return; 
     
+    m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
+    // Downsample
+    m_DownSample = ResourceManager::Get<Shader>("down_sample");
+    m_DownSample->CreateInRhi();
+    m_DownSample->Use();
+    m_DownSample->SetInt("srcTexture", 0);
+    m_DownSample->Unuse();
+
+    // Upsample
+    m_UpSample = ResourceManager::Get<Shader>("up_sample");
+    m_UpSample->SetBlendFunction( {true, BlendValue::One, BlendValue::One, BlendEquation::Add });
+    m_UpSample->CreateInRhi();
+    m_UpSample->Use();
+    m_UpSample->SetInt("srcTexture", 0);
+    m_UpSample->Use();
   
 }
 
-void BloomPass::Destroy()
-{
-}
-
-
 void BloomPass::ComputeBloom(const Texture& textureWithoutBloom)
 {
+    HandleBlooMip(textureWithoutBloom.GetSize());
+    DownSampling(textureWithoutBloom);
+    UpSampling();
+
+    
 }
 
-void BloomPass::ComputeMiMap(Vector2i currentViewPortSize)
+Texture* BloomPass::GetBloomTexture() const
 {
-    /*
-    m_BloomPassSize = sizeof
-    
-    for (unsigned int i = 0; i < mipChainLength; i++)
+    return m_MipChain[0].texture;
+}
+
+void BloomPass::UpSampling()
+{
+    m_UpSample->Use();
+    m_UpSample->SetFloat("filterRadius", filterRadius);
+
+    for (size_t i = m_MipChain.size() - 1; i > 0; i--)
     {
-        mipSize *= 0.5f;
-        mipIntSize /= 2;
-        mip.size = mipSize;
-        mip.intSize = mipIntSize;
+        const BloomMip& mip = m_MipChain[i];
+        const BloomMip& nextMip = m_MipChain[i - 1];
+        mip.texture->BindTexture(0);
+        m_FrameBuffer->AttachTexture(*mip.texture, Attachment::Color00, 0);
         
-        TextureCreateInfo createInfo =
-            {
+        const RenderPassBeginInfo renderPassBeginInfo =
+        {
+            .frameBuffer = m_FrameBuffer,
+            .renderAreaOffset = { 0,0 },
+            .renderAreaExtent = nextMip.texture->GetSize(),
+            .clearBufferFlags = BufferFlag::None,
+        };
+        m_RenderPass.BeginRenderPass(renderPassBeginInfo);
+
+        Rhi::DrawModel(m_Quad->GetId());
+        
+        m_RenderPass.EndRenderPass();
+        mip.texture->UnbindTexture(0);
+    }
+
+    
+    m_UpSample->Unuse();
+
+}
+
+void BloomPass::DownSampling(const Texture& textureWithoutBloom)
+{
+    textureWithoutBloom.BindTexture(0);
+    m_DownSample->Use();
+    const Vector2 textureSizef = { static_cast<float_t>(textureWithoutBloom.GetSize().x), static_cast<float_t>(textureWithoutBloom.GetSize().y) } ;
+    
+    m_DownSample->SetVec2("srcResolution",textureSizef);
+
+    for (BloomMip& bloomMip : m_MipChain)
+    {
+        m_FrameBuffer->AttachTexture(*bloomMip.texture, Attachment::Color00, 0);
+        const RenderPassBeginInfo renderPassBeginInfo =
+        {
+            .frameBuffer = m_FrameBuffer,
+            .renderAreaOffset = { 0,0 },
+            .renderAreaExtent = bloomMip.texture->GetSize(),
+            .clearBufferFlags = BufferFlag::None,
+        };
+        
+       m_RenderPass.BeginRenderPass(renderPassBeginInfo);
+        
+        Rhi::DrawModel(m_Quad->GetId());
+        m_RenderPass.EndRenderPass();
+        m_DownSample->SetVec2("srcResolution", bloomMip.sizef);
+
+        bloomMip.texture->BindTexture(0);
+    }
+    textureWithoutBloom.UnbindTexture(0);
+    m_DownSample->Unuse();
+}
+
+void BloomPass::HandleBlooMip(const Vector2i currentViewPortSize)
+{
+    if (m_FrameBuffer->GetSize() == currentViewPortSize)
+        return;
+    
+    delete m_FrameBuffer;
+    m_FrameBuffer = nullptr;
+    for (BloomMip& mip : m_MipChain)
+    {
+        delete mip.texture;
+    }
+    m_FrameBuffer = new FrameBuffer(currentViewPortSize);
+
+    
+    const Vector2i currentBufferSize = m_FrameBuffer->GetSize();
+    Vector2 mimSizeF = { static_cast<float_t>(currentBufferSize.x) , static_cast<float_t>(currentBufferSize.y) };
+    Vector2i mimSize = { static_cast<int32_t>(currentBufferSize.x) , static_cast<int32_t>(currentBufferSize.y) };
+
+    for (size_t i = 0; i < m_MipChain.size(); i++)
+    {
+        mimSizeF *= 0.5f;
+        mimSize.x /= 2;
+        mimSize.y /= 2;
+        m_MipChain[i].sizef = mimSizeF;
+        
+        const TextureCreateInfo createInfo =
+        {
             .data = nullptr,
-            .size = ,
+            .size = { static_cast<int32_t>(mimSizeF.x), static_cast<int32_t>(mimSizeF.y) },
             .filtering = TextureFiltering::Linear,
             .wrapping = TextureWrapping::ClampToEdge,
             .format = TextureFormat::Rgb,
             .internalFormat = TextureInternalFormat::R11FG11FB10F,
             .dataType = DataType::Float
         };
-
         
-        mMipChain[i] = new Texture();
+        m_MipChain[i].texture = new Texture(createInfo);
+    }
+     m_FrameBuffer->AttachTexture(*m_MipChain[0].texture,Attachment::Color00,0);
+    
 
-
-
-        glGenTextures(1, &mip.texture);
-        glBindTexture(GL_TEXTURE_2D, mip.texture);
-        // we are downscaling an HDR color buffer, so we need a float texture format
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_R11F_G11F_B10F,
-                     (int)mipSize.x, (int)mipSize.y,
-                     0, GL_RGB, GL_FLOAT, nullptr);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    }*/
 }

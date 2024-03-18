@@ -97,11 +97,16 @@ public:
 	/// @param value Value
 	XNOR_ENGINE void SetFloat(const std::string& keyName, float_t value) const;
 
+	/// @brief Sets a @ref Vector2 (2 float, 64 bits) variable in a shader
+	/// @param keyName Variable name
+	/// @param value Value
+	XNOR_ENGINE void SetVec2(const std::string& keyName, const Vector2& value) const;
+	
 	/// @brief Sets a @ref Vector3 (3 float, 96 bits) variable in a shader
 	/// @param keyName Variable name
 	/// @param value Value
 	XNOR_ENGINE void SetVec3(const std::string& keyName, const Vector3& value) const;
-
+	
 	/// @brief Sets a @ref Vector4 (4 float, 128 bits) variable in a shader
 	/// @param keyName Variable name
 	/// @param value Value
@@ -139,14 +144,8 @@ private:
 	
 	DepthFunction::DepthFunction m_DepthFunction = DepthFunction::Less;
 	ShaderProgramCullInfo m_ShaderProgramCullInfo;
-	BlendFunction m_BlendFunction =
-	{
-		.isBlending = false,
-		.sValue = BlendValue::One,
-		.dValue = BlendValue::Zero
-	};
-		
-
+	BlendFunction m_BlendFunction;
+	
 	std::array<Pointer<File>, ShaderType::Count> m_Files;
 	std::array<ShaderCode, ShaderType::Count> m_Code;
 };

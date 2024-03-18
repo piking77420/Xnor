@@ -27,6 +27,7 @@ PostProcessPass::~PostProcessPass()
 void PostProcessPass::Init()
 {
     m_ToneMapping.InitializeResources();
+    m_BloomPass.Init(5);
 }
 
 void PostProcessPass::Compute(const Texture& textureToCompute, const Texture& PostProcessedTexture)
@@ -35,10 +36,11 @@ void PostProcessPass::Compute(const Texture& textureToCompute, const Texture& Po
         return;
     
     HandleResize(textureToCompute.GetSize());
-    m_FrameBuffer->AttachTexture(PostProcessedTexture, Attachment::Color00, 0);
-
+    m_BloomPass.ComputeBloom(textureToCompute);
     
-    RenderPassBeginInfo beginInfo =
+    
+    m_FrameBuffer->AttachTexture(PostProcessedTexture, Attachment::Color00, 0);
+    const RenderPassBeginInfo beginInfo =
     {
         .frameBuffer = m_FrameBuffer,
         .renderAreaOffset = { 0,0 },
@@ -46,9 +48,7 @@ void PostProcessPass::Compute(const Texture& textureToCompute, const Texture& Po
         .clearBufferFlags = BufferFlag::None,
         .clearColor = Vector4::Zero()
     };
-    
     m_RenderPass.BeginRenderPass(beginInfo);
-    m_ToneMapping.ComputeToneMaping(textureToCompute);
-
+    m_ToneMapping.ComputeToneMaping(textureToCompute,*m_BloomPass.GetBloomTexture());
     m_RenderPass.EndRenderPass();
 }

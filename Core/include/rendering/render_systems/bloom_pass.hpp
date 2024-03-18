@@ -4,6 +4,7 @@
 #include "rendering/frame_buffer.hpp"
 #include "rendering/render_pass.hpp"
 #include "resource/model.hpp"
+#include "resource/shader.hpp"
 
 BEGIN_XNOR_CORE
 class BloomPass
@@ -15,23 +16,38 @@ public:
 
     XNOR_ENGINE ~BloomPass() = default;
     
-    XNOR_ENGINE void Init(uint32_t mipChainLength);
-
-    XNOR_ENGINE void Destroy();
+    XNOR_ENGINE void Init(uint32_t bloomMips);
     
     XNOR_ENGINE void ComputeBloom(const Texture& textureWithoutBloom);
 
+    XNOR_ENGINE Texture* GetBloomTexture() const;
+
 private:
-    FrameBuffer m_FrameBuffer;
+    struct BloomMip
+    {
+        Texture* texture;
+        Vector2 sizef;
+    };
+    
+    FrameBuffer* m_FrameBuffer = nullptr;
     RenderPass m_RenderPass;
-    Pointer<Model> m_Quad;
-    
-    std::vector<Texture*> mMipChain;
+    static inline Pointer<Model> m_Quad = nullptr;
+    static inline Pointer<Shader> m_DownSample = nullptr;
+    static inline Pointer<Shader> m_UpSample = nullptr;
 
-    Vector2i m_BloomPassSize;
+    std::vector<BloomMip> m_MipChain;
 
-    void ComputeMiMap(Vector2i Size);
+    uint32_t m_BloomMips{};
+
+    float_t filterRadius = 0.005f;
+
+    XNOR_ENGINE void UpSampling();
     
+    XNOR_ENGINE void DownSampling(const Texture& textureWithoutBloom);
+
+    XNOR_ENGINE void HandleBlooMip(Vector2i currentViewPortSize);
+    
+
 };
 
 END_XNOR_CORE
