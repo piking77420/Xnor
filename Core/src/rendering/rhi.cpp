@@ -32,7 +32,10 @@ void Rhi::BeginRenderPassInternal(const RenderPassBeginInfo& beginInfo)
 {
 	Rhi::BindFrameBuffer(beginInfo.frameBuffer->GetId());
 	Rhi::SetClearColor(beginInfo.clearColor);
-	Rhi::ClearBuffer(beginInfo.clearBufferFlags);
+	
+	if (beginInfo.clearBufferFlags != BufferFlag::None)
+		Rhi::ClearBuffer(beginInfo.clearBufferFlags);
+	
 	Rhi::SetViewport(beginInfo.renderAreaOffset,beginInfo.renderAreaExtent);
 }
 
@@ -926,6 +929,9 @@ uint32_t Rhi::GetOpenglInternalFormat(const TextureInternalFormat::TextureIntern
 		
 		case TextureInternalFormat::Srgb:
 			return GL_SRGB8;
+		
+		case TextureInternalFormat::R11FG11FB10F:
+			return GL_R11F_G11F_B10F;
 		
 		case TextureInternalFormat::DepthComponent16:
 			return GL_DEPTH_COMPONENT16;

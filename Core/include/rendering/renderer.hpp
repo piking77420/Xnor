@@ -59,7 +59,6 @@ public:
     XNOR_ENGINE void SwapBuffers();
 private:
     LightManager m_LightManager;
-    ToneMapping m_ToneMapping;
     SkyboxRenderer m_SkyboxRenderer;
     
     

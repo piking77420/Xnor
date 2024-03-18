@@ -163,19 +163,24 @@ void SkyBoxParser::InitResource()
     m_EquirectangularToCubeMapShader = ResourceManager::Get<Shader>("equirectangular_to_cubemap");
     m_EquirectangularToCubeMapShader->SetDepthFunction(DepthFunction::LessEqual);
     m_EquirectangularToCubeMapShader->CreateInRhi();
+    m_EquirectangularToCubeMapShader->Use();
     m_EquirectangularToCubeMapShader->SetInt("equirectangularMap",0);
+    m_EquirectangularToCubeMapShader->Use();
 
     
     m_IrradianceConvolution = ResourceManager::Get<Shader>("irradiance_convolution");
     m_IrradianceConvolution->SetDepthFunction(DepthFunction::LessEqual);
     m_IrradianceConvolution->CreateInRhi();
+    m_IrradianceConvolution->Use();
     m_IrradianceConvolution->SetInt("environmentMap",0);
-
+    m_IrradianceConvolution->Unuse();
     
     m_PrefilterShader = ResourceManager::Get<Shader>("prefilter_shader");
     m_PrefilterShader->SetDepthFunction(DepthFunction::LessEqual);
     m_PrefilterShader->CreateInRhi();
+    m_PrefilterShader->Use();
     m_PrefilterShader->SetInt("environmentMap",0);
+    m_PrefilterShader->Use();
 
         
     m_PreComputeBrdr = ResourceManager::Get<Shader>("precompute_brdf");

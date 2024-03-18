@@ -14,6 +14,10 @@ BEGIN_XNOR_CORE
 /// @brief Encapsulates the ACES tone mapping algorithm
 class ToneMapping
 {
+private:
+    static inline Pointer<Shader> m_Aces = nullptr;
+    static inline Pointer<Model> m_Quad = nullptr;
+    static constexpr uint32_t ToneMapedTextureBinding = 10;
 public:
     XNOR_ENGINE ToneMapping() = default;
     
@@ -30,9 +34,7 @@ public:
     /// @brief Computes the tone mapping
     /// @param imageWithoutToneMapping Initial image
     /// @param quadModel Quad model
-    XNOR_ENGINE void ComputeToneMaping(const Texture& imageWithoutToneMapping, const Pointer<Model>& quadModel) const;
-private:
-    Pointer<Shader> m_Aces = nullptr;
+    XNOR_ENGINE void ComputeToneMaping(const Texture& imageWithoutToneMapping) const;
 };
 
 END_XNOR_CORE

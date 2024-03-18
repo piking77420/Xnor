@@ -3,6 +3,8 @@
 #include "frame_buffer.hpp"
 #include "viewport_data.hpp"
 #include "rendering/camera.hpp"
+#include "render_systems/post_process_pass.hpp"
+#include "render_systems/tone_mapping.hpp"
 #include "scene/entity.hpp"
 
 /// @file renderer_context.hpp
@@ -25,8 +27,6 @@ public:
 	RenderPass colorPass;
 	
 	FrameBuffer* frameBuffer = nullptr;
-
-	Texture* finalImage = nullptr;
 	
 	/// @brief Whether this is used in the editor.
 	bool_t isEditor = false;
@@ -38,10 +38,21 @@ public:
 	XNOR_ENGINE void Destroy();
 
 	XNOR_ENGINE void OnResize(Vector2i newSize);
-	
+
+	XNOR_ENGINE void ComputePostProcess();
+
+	// image to give to renderer
+	XNOR_ENGINE Texture* GetImage() const;
 	/// @brief Whether the context is valid.
 	[[nodiscard]]
 	XNOR_ENGINE bool_t IsValid() const;
+	
+private:
+	PostProcessPass m_PostProcessPass;
+	
+	Texture* m_PostProcessImage = nullptr;
+	Texture* m_BaseImage = nullptr;
+
 };
 
 END_XNOR_CORE

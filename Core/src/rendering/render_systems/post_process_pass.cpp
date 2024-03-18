@@ -1,0 +1,54 @@
+﻿#include "rendering/render_systems/post_process_pass.hpp"
+
+using namespace XnorCore;
+
+void PostProcessPass::HandleResize(Vector2i size)
+{
+    if(m_FrameBuffer != nullptr)
+    {
+        if (m_FrameBuffer->GetSize() != size)
+        {
+            delete m_FrameBuffer;
+            m_FrameBuffer = nullptr;
+            m_FrameBuffer = new FrameBuffer(size);
+            return;
+        }
+        return;
+    }
+    m_FrameBuffer = new FrameBuffer(size);
+}
+
+PostProcessPass::~PostProcessPass()
+{
+    delete m_FrameBuffer;
+    m_FrameBuffer = nullptr;
+}
+
+void PostProcessPass::Init()
+{
+    m_ToneMapping.InitializeResources();
+}
+
+void PostProcessPass::Compute(const Texture& textureToCompute, const Texture& PostProcessedTexture)
+{
+    if (!enable)
+        return;
+    
+    HandleResize(textureToCompute.GetSize());
+    m_FrameBuffer->AttachTexture(PostProcessedTexture, Attachment::Color00, 0);
+
+    
+    RenderPassBeginInfo beginInfo =
+    {
+        .frameBuffer = m_FrameBuffer,
+        .renderAreaOffset = { 0,0 },
+        .renderAreaExtent = m_FrameBuffer->GetSize(),
+        .clearBufferFlags = BufferFlag::None,
+        .clearColor = Vector4::Zero()
+    };
+    
+    m_RenderPass.BeginRenderPass(beginInfo);
+    m_ToneMapping.ComputeToneMaping(textureToCompute);
+
+    m_RenderPass.EndRenderPass();
+}

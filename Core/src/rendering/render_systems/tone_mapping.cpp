@@ -7,23 +7,28 @@
 
 using namespace XnorCore;
 
-void ToneMapping::InitializeResources()
+void ToneMapping::ComputeToneMaping(const Texture& imageWithoutToneMapping) const
 {
-    m_Aces = ResourceManager::Get<Shader>("tone_mapper");
-    m_Aces->CreateInRhi();
+    Rhi::SetViewport({ 0, 0 }, imageWithoutToneMapping.GetSize());
+    
     m_Aces->Use();
-    m_Aces->SetInt("beforeToneMappedImage", 10);
+    imageWithoutToneMapping.BindTexture(ToneMapedTextureBinding);
+    Rhi::DrawModel(m_Quad->GetId());
     m_Aces->Unuse();
 }
 
-
-
-void ToneMapping::ComputeToneMaping(const Texture& imageWithoutToneMapping, const Pointer<Model>& quadModel) const
+void ToneMapping::InitializeResources()
 {
-    m_Aces->Use();
-    imageWithoutToneMapping.BindTexture(10);
-    Rhi::DrawModel(quadModel->GetId());
-    m_Aces->Unuse();
+    if (m_Aces == nullptr || m_Quad == nullptr)
+    {
+        m_Aces = ResourceManager::Get<Shader>("tone_mapper");
+        m_Aces->CreateInRhi();
+        m_Aces->Use();
+        m_Aces->SetInt("beforeToneMappedImage", ToneMapedTextureBinding);
+        m_Aces->Unuse();
+
+        m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
+    }
 }
 
 void ToneMapping::RecompileShader()

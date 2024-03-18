@@ -14,7 +14,6 @@ void Renderer::Initialize()
 	Rhi::SetClearColor(clearColor);
 
 	InitResources();
-	m_ToneMapping.InitializeResources();
 	m_SkyboxRenderer.InitializeResources();
 	m_LightManager.InitResources();
 
@@ -44,19 +43,6 @@ void Renderer::RenderViewport(const Viewport& viewport,
 
 	DefferedRendering(meshrenderers,scene.skybox,viewportData,viewport.viewPortSize);
 	ForwardPass(meshrenderers, scene.skybox, viewport, viewport.viewPortSize, viewport.isEditor);
-	
-	const RenderPassBeginInfo renderPassBeginInfo =
-	{
-		.frameBuffer = viewport.frameBuffer,
-		.renderAreaOffset = { 0, 0,},
-		.renderAreaExtent = viewport.viewPortSize,
-		.clearBufferFlags = static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit),
-		.clearColor = clearColor
-	};
-
-	viewport.colorPass.BeginRenderPass(renderPassBeginInfo);
-	m_ToneMapping.ComputeToneMaping(*viewport.viewportData.colorAttachment,m_Quad);
-	viewport.colorPass.EndRenderPass();
 }
 
 void Renderer::RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass,
