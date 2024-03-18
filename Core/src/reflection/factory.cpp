@@ -63,3 +63,16 @@ void Factory::Print()
     for (auto& val : m_FactoryMapHash | std::views::values)
         Logger::LogInfo("{}", val.name);
 }
+
+const char_t* Factory::GetName(const size_t hash)
+{
+    auto&& it = m_FactoryMapHash.find(hash);
+
+    if (it == m_FactoryMapHash.end())
+    {
+        Logger::LogError("Couldn't find type : {}", hash);
+        return nullptr;
+    }
+
+    return it->second.name;
+}

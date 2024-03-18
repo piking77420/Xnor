@@ -38,6 +38,8 @@ public:
 
     XNOR_ENGINE static void Print();
 
+    XNOR_ENGINE static const char_t* GetName(size_t hash);
+
 private:
     XNOR_ENGINE static bool_t IsChildOf(size_t typeHash, size_t parentHash);
 

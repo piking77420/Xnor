@@ -133,8 +133,8 @@ public:
     /// @return Equals
     XNOR_ENGINE bool_t operator==(const Entity& entity) const;
 
-#ifdef SWIG
-    XNOR_ENGINE List<Component*>& GetComponents();
+#ifdef SWIG_ONLY
+    const List<Component*>& GetComponents() const;
 #endif
     
 private:

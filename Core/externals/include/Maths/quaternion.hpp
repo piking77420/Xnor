@@ -405,11 +405,8 @@ constexpr float_t Quaternion::Dot(const Quaternion& a, const Quaternion& b) noex
 
 constexpr const float_t* Quaternion::Raw() const noexcept { return &imaginary.x; }
 
-#ifndef SWIG
 constexpr float_t* Quaternion::Raw() noexcept { return &imaginary.x; }
-#endif
 
-#ifndef SWIG
 constexpr float_t Quaternion::X() const noexcept { return imaginary.x; }
 
 constexpr float_t Quaternion::Y() const noexcept { return imaginary.y; }
@@ -417,7 +414,6 @@ constexpr float_t Quaternion::Y() const noexcept { return imaginary.y; }
 constexpr float_t Quaternion::Z() const noexcept { return imaginary.z; }
 
 constexpr float_t Quaternion::W() const noexcept { return real; }
-#endif
 
 constexpr float_t& Quaternion::X() noexcept { return imaginary.x; }
 

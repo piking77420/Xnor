@@ -144,3 +144,7 @@ using stdstring = std::string;
 #define END_ENUM    \
         ;           \
     }
+
+#if defined(SWIG) || defined(SWIG_WRAP)
+#define SWIG_ONLY
+#endif

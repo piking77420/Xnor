@@ -226,9 +226,7 @@ constexpr void Vector3::Cross(const Vector3& a, const Vector3& b, Vector3* resul
 
 constexpr const float_t* Vector3::Raw() const noexcept { return &x; }
 
-#ifndef SWIG
 constexpr float_t* Vector3::Raw() noexcept { return &x; }
-#endif
 
 constexpr float_t Vector3::SquaredLength() const noexcept { return SQ(x) + SQ(y) + SQ(z); }
 
@@ -240,7 +238,6 @@ constexpr float_t Vector3::operator[](const size_t i) const
 	throw std::out_of_range("Vector3 subscript out of range");
 }
 
-#ifndef SWIG
 constexpr float_t& Vector3::operator[](const size_t i)
 {
 	if (i < 3) [[likely]]
@@ -248,7 +245,6 @@ constexpr float_t& Vector3::operator[](const size_t i)
 	[[unlikely]]
 	throw std::out_of_range("Vector3 subscript out of range");
 }
-#endif
 
 /// @brief Adds two Vector3 together.
 [[nodiscard]]

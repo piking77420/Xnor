@@ -1,14 +1,16 @@
 %module Core
 
-%typemap(cscode) Component
+%typemap(csclassmodifiers) XnorCore::Component "public abstract class";
+
+%typemap(cscode) XnorCore::Component
 %{
-    T GetComponent<T>() where T : Component { return entity.GetComponent<T>(); }
+    public T GetComponent<T>() where T : Component { return entity.GetComponent<T>(); }
     
-    List<T> GetComponents<T>() where T : Component { return entity.GetComponents<T>(); }
+    public List<T> GetComponents<T>() where T : Component { return entity.GetComponents<T>(); }
 
-    bool_t TryGetComponent<T>(out T component) where T : Component { return entity.TryGetComponent<T>(out component); }
+    public bool TryGetComponent<T>(out T component) where T : Component { return entity.TryGetComponent<T>(out component); }
 
-    void RemoveComponent<T>() where T : Component { entity.RemoveComponent<T>(); }
+    public void RemoveComponent<T>() where T : Component { entity.RemoveComponent<T>(); }
 %}
 
 %include "scene/component.hpp"

@@ -110,6 +110,7 @@
     <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\csharp\dotnet_assembly.cpp" />
     <ClCompile Include="src\csharp\dotnet_runtime.cpp" />
+    <ClCompile Include="src\csharp\dotnet_utils.cpp" />
     <ClCompile Include="src\file\directory.cpp" />
     <ClCompile Include="src\file\entry.cpp" />
     <ClCompile Include="src\input\input.cpp" />
@@ -472,6 +473,7 @@
     <ClInclude Include="include\csharp\dotnet_assembly.hpp" />
     <ClInclude Include="include\csharp\dotnet_runtime.hpp" />
     <ClInclude Include="include\csharp\dotnet_type.hpp" />
+    <ClInclude Include="include\csharp\dotnet_utils.hpp" />
     <ClInclude Include="include\file\directory.hpp" />
     <ClInclude Include="include\file\entry.hpp" />
     <ClInclude Include="include\file\file.hpp" />

@@ -12,6 +12,7 @@ class DotnetAssembly
 {
 public:
     static inline const DotnetAssembly* xnorCoreAssembly = nullptr;
+    static inline constexpr std::string XnorCoreNamespace = "Xnor.Core";
 
     explicit DotnetAssembly(std::string filepath);
 

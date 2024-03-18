@@ -1,25 +1,53 @@
 %module Core
 
-%typemap(cscode) Entity
+%typemap(cscode) XnorCore::Entity
 %{
-    T GetComponent<T>() where T : Component
+    public T GetComponent<T>() where T : Component
     {
+        if (TryGetComponent<T>(out T result))
+            return result;
 
+        return null;
     }
     
-    List<T> GetComponents<T>() where T : Component
+    public global::System.Collections.Generic.List<T> GetComponents<T>() where T : Component
     {
+        global::System.Collections.Generic.List<T> result = new();
 
+        foreach (Component component in GetComponents())
+        {
+            if (component is T t)
+                result.Add(t);
+        }
+
+        return result;
     }
 
-    bool_t TryGetComponent<T>(out T component) where T : Component
+    public bool TryGetComponent<T>(out T component) where T : Component
     {
+        foreach (Component comp in GetComponents())
+        {
+            if (comp is T t)
+            {
+                component = t;
+                return true;
+            }
+        }
 
+        component = null;
+        return false;
     }
 
-    void RemoveComponent<T>() where T : Component
+    public void RemoveComponent<T>() where T : Component
     {
-
+        foreach (Component component in GetComponents())
+        {
+            if (component is T t)
+            {
+                GetComponents().Remove(t);
+                return;
+            }
+        }
     }
 %}
 

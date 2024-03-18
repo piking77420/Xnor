@@ -71,4 +71,4 @@ target_link_directories(CoreCSharpNative PUBLIC "${SOLUTION_DIR}/x64/")
 
 target_link_libraries(CoreCSharpNative "Core.lib")
 
-add_compile_definitions(MATH_DEFINE_FORMATTER SWIG)
+add_compile_definitions(MATH_DEFINE_FORMATTER SWIG_WRAP)

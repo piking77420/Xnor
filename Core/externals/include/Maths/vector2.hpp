@@ -179,9 +179,7 @@ constexpr float_t Vector2::Determinant(const Vector2 a, const Vector2 b) noexcep
 
 constexpr const float_t* Vector2::Raw() const noexcept { return& x; }
 
-#ifndef SWIG
 constexpr float_t* Vector2::Raw() noexcept { return& x; }
-#endif
 
 constexpr float_t Vector2::SquaredLength() const noexcept { return SQ(x) + SQ(y); }
 
@@ -193,7 +191,6 @@ constexpr float_t Vector2::operator[](const size_t i) const
     throw std::out_of_range("Vector2 subscript out of range");
 }
 
-#ifndef SWIG
 constexpr float_t& Vector2::operator[](const size_t i)
 {
 	if (i < 2) [[likely]]
@@ -201,7 +198,6 @@ constexpr float_t& Vector2::operator[](const size_t i)
 	[[unlikely]]
     throw std::out_of_range("Vector2 subscript out of range");
 }
-#endif
 
 /// @brief Adds two Vector2 together.
 [[nodiscard]]

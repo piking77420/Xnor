@@ -51,7 +51,7 @@ void DotnetAssembly::ProcessTypes()
     if (!xnorCoreAssembly)
         return;
 
-    const Coral::Type& scriptComponentType = xnorCoreAssembly->GetCoralAssembly()->GetType("Xnor.Core.ScriptComponent");
+    const Coral::Type& scriptComponentType = xnorCoreAssembly->GetCoralAssembly()->GetType(XnorCoreNamespace + ".ScriptComponent");
     
     for (auto&& type : m_Assembly->GetTypes())
     {

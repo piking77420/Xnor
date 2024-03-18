@@ -4,6 +4,9 @@
 %include <csharp/std_array.i>
 %include <csharp/std_unordered_map.i>
 %include <csharp/typemaps.i>
+%include <csharp/swiginterface.i>
+%include <csharp/swigmove.i>
+%include <csharp/swigtype_inout.i>
 %include <stdint.i>
 %include <cpointer.i>
 
@@ -49,6 +52,8 @@ typedef float float_t;
 
 %{
 #include <format>
+
+#include "csharp/dotnet_utils.hpp"
 
 #include "file/directory.hpp"
 #include "file/entry.hpp"
@@ -153,6 +158,8 @@ typedef float float_t;
 
 %include "scene/component.i"
 
+%include "csharp/dotnet_utils.hpp"
+
 %include "utils/color.i"
 
 %include "rendering/light/light.hpp"
@@ -171,7 +178,7 @@ typedef float float_t;
 
 %include "transform.hpp"
 
-%include "utils/list.hpp"
+%include "utils/list.i"
 
 %include "scene/entity.i"
 

@@ -147,10 +147,3 @@ bool_t Entity::operator==(const Entity& entity) const
 {
     return m_EntityId == entity.m_EntityId;
 }
-
-#ifdef SWIG
-List<Component*>& Entity::GetComponents()
-{
-    return m_Components;
-}
-#endif
