@@ -483,6 +483,81 @@ uint32_t Rhi::CubeMapFacesToOpengl(CubeMapFace cubeMapFace)
 	return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 }
 
+uint32_t Rhi::MemoryBarrierToOpengl(MemoryBarrier memoryBarrier)
+{
+	switch (memoryBarrier)
+	{
+		case MemoryBarrier::VertexAttribArrayBarrierBit: 
+			return GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT;
+		
+		case MemoryBarrier::ElementArrayBarrierBit: 
+			return GL_ELEMENT_ARRAY_BARRIER_BIT;
+		
+		case MemoryBarrier::UniformBarrierBit: 
+			return GL_UNIFORM_BARRIER_BIT;
+		
+		case MemoryBarrier::TextureFetchBarrierBit: 
+			return GL_TEXTURE_FETCH_BARRIER_BIT	;
+		
+		case MemoryBarrier::ShaderImageAccessBarrierBit: 
+			return GL_SHADER_IMAGE_ACCESS_BARRIER_BIT;
+		
+		case MemoryBarrier::CommandBarrierBit: 
+			return GL_COMMAND_BARRIER_BIT;
+		
+		case MemoryBarrier::PixelBufferBarrierBit: 
+			return GL_PIXEL_BUFFER_BARRIER_BIT;
+		
+		case MemoryBarrier::TextureUpdateBarrierBit: 
+			return GL_TEXTURE_UPDATE_BARRIER_BIT;
+		
+		case MemoryBarrier::BufferUpdateBarrierBit: 
+			return GL_BUFFER_UPDATE_BARRIER_BIT;
+		
+		case MemoryBarrier::ClientMappedBufferBarrierBit: 
+			return GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT;
+		
+		case MemoryBarrier::FramebufferBarrierBit: 
+			return GL_FRAMEBUFFER_BARRIER_BIT;
+		
+		case MemoryBarrier::TransformFeedbackBarrierBit: 
+			return GL_TRANSFORM_FEEDBACK_BARRIER_BIT;
+		
+		case MemoryBarrier::AtomicCounterBarrierBit: 
+			return GL_ATOMIC_COUNTER_BARRIER_BIT;
+		
+		case MemoryBarrier::ShaderStorageBarrierBit: 
+			return GL_SHADER_STORAGE_BARRIER_BIT;
+		
+		case MemoryBarrier::QueryBufferBarrierBit: 
+			return GL_QUERY_BUFFER_BARRIER_BIT;
+
+		case MemoryBarrier::AllBarrierBits:
+			return GL_ALL_BARRIER_BITS;
+		
+	}
+
+	Logger::LogError("Undefined MemoryBarrier");
+	return 0;
+}
+
+uint32_t Rhi::GetImageAccessOpengl(ImageAccess imageAcess)
+{
+	switch (imageAcess)
+	{
+		case ImageAccess::ReadOnly: 
+		return GL_READ_ONLY;
+		
+		case ImageAccess::WriteOnly: 
+		return GL_WRITE_ONLY;
+		
+		case ImageAccess::ReadWrite: 
+		return GL_READ_WRITE ;
+	}
+
+	return GL_READ_WRITE ;
+}
+
 uint32_t Rhi::FrontFaceToOpenglFrontFace(FrontFace::FrontFace frontFace)
 {
 	switch (frontFace)
@@ -1009,6 +1084,25 @@ uint32_t Rhi::GetOpenGlTextureFormat(const TextureFormat::TextureFormat textureF
 	return GL_RGB;
 }
 
+void Rhi::LogComputeShaderInfo()
+{
+	int32_t work_grp_cnt[3];
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &work_grp_cnt[0]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &work_grp_cnt[1]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &work_grp_cnt[2]);
+	Logger::LogDebug("Max work groups per compute shader x: {} y: {} x: {}", work_grp_cnt[0], work_grp_cnt[1], work_grp_cnt[2]);
+	
+	int32_t work_grp_size[3];
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &work_grp_size[0]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, &work_grp_size[1]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, &work_grp_size[2]);
+	Logger::LogDebug("Max work group sizes  x: {} y: {} x: {}", work_grp_size[0], work_grp_size[1], work_grp_size[2]); 
+
+	int32_t work_grp_inv;
+	glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &work_grp_inv);
+	Logger::LogDebug("Max invocations count per work group: {} ",work_grp_inv);
+}
+
 void Rhi::IsShaderValid(const uint32_t shaderId)
 {
 	if (!m_ShaderMap.contains(shaderId) || !glIsProgram(shaderId))
@@ -1172,6 +1266,7 @@ void Rhi::Initialize()
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 
 	glDebugMessageCallback(reinterpret_cast<GLDEBUGPROC>(OpenglDebugCallBack), nullptr);
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+	LogComputeShaderInfo();
 #endif
 }
 
@@ -1300,4 +1395,30 @@ void Rhi::GetCubeMapViewMatrices(std::array<Matrix, 6>* viewsMatricies)
 		Matrix::LookAt(Vector3(),-Vector3::UnitZ(),-Vector3::UnitY()), // CubeMapNegativeZ
 	};
 
+}
+
+void Rhi::DispactCompute(const uint32_t numberOfGroupX, const uint32_t numberOfGroupY, const uint32_t numberOfGroupZ)
+{
+	glDispatchCompute(numberOfGroupX, numberOfGroupY, numberOfGroupZ);
+}
+
+void Rhi::GpuMemoryBarrier(const XnorCore::MemoryBarrier memoryBarrier)
+{
+	glMemoryBarrier(MemoryBarrierToOpengl(memoryBarrier));
+}
+
+void Rhi::BindImageTexture(
+	const uint32_t unit,
+	const uint32_t texture,
+	const uint32_t level,
+	const bool_t layered,
+	const uint32_t layer,
+	const ImageAccess imageAcess,
+	const TextureInternalFormat::TextureInternalFormat textureInternalFormat
+)
+{
+	const GLenum access = GetImageAccessOpengl(imageAcess);
+	const  GLenum textureFormatInternal = GetOpenglInternalFormat(textureInternalFormat);
+	
+	glBindImageTexture(unit, texture, level, layered, layer, access, textureFormatInternal);
 }

@@ -9,6 +9,13 @@
 BEGIN_XNOR_CORE
 class BloomPass
 {
+private:
+    static inline Pointer<Model> m_Quad = nullptr;
+    static inline Pointer<Shader> m_DownSample = nullptr;
+    static inline Pointer<Shader> m_UpSample = nullptr;
+    static inline Pointer<Shader> m_TresholdFilter = nullptr;
+    static inline Pointer<Shader> m_TestShaderCompute = nullptr;
+    
 public:
     DEFAULT_COPY_MOVE_OPERATIONS(BloomPass)
 
@@ -31,22 +38,22 @@ private:
     
     FrameBuffer* m_FrameBuffer = nullptr;
     RenderPass m_RenderPass;
-    static inline Pointer<Model> m_Quad = nullptr;
-    static inline Pointer<Shader> m_DownSample = nullptr;
-    static inline Pointer<Shader> m_UpSample = nullptr;
-
     std::vector<BloomMip> m_MipChain;
+    Texture* m_ThresholdTexture = nullptr;
 
     uint32_t m_BloomMips{};
 
-    float_t filterRadius = 0.005f;
+    float_t m_FilterRadius = 0.005f;
+
 
     XNOR_ENGINE void UpSampling();
     
-    XNOR_ENGINE void DownSampling(const Texture& textureWithoutBloom);
+    XNOR_ENGINE void DownSampling();
 
     XNOR_ENGINE void HandleBlooMip(Vector2i currentViewPortSize);
-    
+
+    XNOR_ENGINE void ThresholdFilter(const Texture& textureToCompute);
+
 
 };
 

@@ -585,6 +585,33 @@ enum class CubeMapFace
 	Size
 };
 
+enum class MemoryBarrier
+{
+	VertexAttribArrayBarrierBit,
+	ElementArrayBarrierBit,
+	UniformBarrierBit,
+	TextureFetchBarrierBit,
+	ShaderImageAccessBarrierBit,
+	CommandBarrierBit,
+	PixelBufferBarrierBit,
+	TextureUpdateBarrierBit,
+	BufferUpdateBarrierBit,
+	ClientMappedBufferBarrierBit,
+	FramebufferBarrierBit,
+	TransformFeedbackBarrierBit,
+	AtomicCounterBarrierBit,
+	ShaderStorageBarrierBit,
+	QueryBufferBarrierBit,
+	AllBarrierBits
+};
+
+enum class ImageAccess
+{
+	ReadOnly,
+	WriteOnly,
+	ReadWrite,
+};
+
 
 
 END_XNOR_CORE

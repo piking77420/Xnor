@@ -36,21 +36,18 @@ void main()
     const float gamma = 2.2;
 	vec3 bloomColor = texture(bloomBlur,texCoords).rgb;
 	vec3 hdrImage = texture(beforeToneMappedImage,texCoords).rgb;
-
-    vec3 color = mix(hdrImage, bloomColor, 0.1f);
+    vec3 color = mix(hdrImage, bloomColor, 0.08f);
+    
+    
     // tone mapping
-    color = color / (color + vec3(1.0));
+    //color = color / (color + vec3(1.0));
     // gamma correction
-    color = pow(color, vec3(1.0/gamma));
-    fragColor = vec4(color, 1.0);
+    //color = pow(color, vec3(1.0/gamma));
+    //fragColor = vec4(color, 1.0);
 
     
-    // Test power down // 
-    
-    //vec3 hdrColor = texture(hdrImage, texCoords).rgb;
-    //fragColor = vec4(ChangeExposure(Aces(hdrColor), 1.0), 1.0);
-    //fragColor = vec4(pow(vec3(fragColor), vec3(1.0/2.2)),1.0);
-    
-    //
+    // Test power down //
+    fragColor = vec4(ChangeExposure(Aces(color), 1.0), 1.0);
+    fragColor = vec4(pow(vec3(fragColor), vec3(1.0/2.2)),1.0);
 
 }

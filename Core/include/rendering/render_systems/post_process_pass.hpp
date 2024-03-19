@@ -21,13 +21,11 @@ public:
 
 private:
     XNOR_ENGINE void HandleResize(Vector2i size);
-
+    
     FrameBuffer* m_FrameBuffer = nullptr;
     ToneMapping m_ToneMapping;
     BloomPass m_BloomPass;
-
     RenderPass m_RenderPass;
-    
 };
 
 END_XNOR_CORE;

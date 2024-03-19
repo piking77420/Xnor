@@ -16,6 +16,8 @@ class ToneMapping
 {
 private:
     static inline Pointer<Shader> m_Aces = nullptr;
+    static inline Pointer<Shader> m_TestCompute = nullptr;
+
     static inline Pointer<Model> m_Quad = nullptr;
     static constexpr uint32_t ToneMapedTextureBinding = 10;
 public:
@@ -35,6 +37,9 @@ public:
     /// @param imageWithoutToneMapping Initial image
     /// @param quadModel Quad model
     XNOR_ENGINE void ComputeToneMaping(const Texture& imageWithoutToneMapping, const Texture& bloomTexture) const;
+
+
+    
 };
 
 END_XNOR_CORE

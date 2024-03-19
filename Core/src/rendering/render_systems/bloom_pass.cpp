@@ -9,6 +9,7 @@ void BloomPass::Init(uint32_t bloomMips)
 {
     m_BloomMips = bloomMips;
     m_FrameBuffer = new FrameBuffer(Window::GetSize());
+    m_ThresholdTexture = new Texture(TextureInternalFormat::R11FG11FB10F,m_FrameBuffer->GetSize());
     m_MipChain.resize(m_BloomMips);
 
     
@@ -30,16 +31,22 @@ void BloomPass::Init(uint32_t bloomMips)
     m_UpSample->Use();
     m_UpSample->SetInt("srcTexture", 0);
     m_UpSample->Use();
-  
+
+    m_TresholdFilter = ResourceManager::Get<Shader>("bloom_threshold");
+    m_TresholdFilter->CreateInRhi();
+    m_TresholdFilter->Use();
+    m_TresholdFilter->SetInt("srcTexture",0);
+    m_TresholdFilter->Unuse();
+
+
 }
 
 void BloomPass::ComputeBloom(const Texture& textureWithoutBloom)
 {
     HandleBlooMip(textureWithoutBloom.GetSize());
-    DownSampling(textureWithoutBloom);
+    ThresholdFilter(textureWithoutBloom);
+    DownSampling();
     UpSampling();
-
-    
 }
 
 Texture* BloomPass::GetBloomTexture() const
@@ -50,14 +57,14 @@ Texture* BloomPass::GetBloomTexture() const
 void BloomPass::UpSampling()
 {
     m_UpSample->Use();
-    m_UpSample->SetFloat("filterRadius", filterRadius);
+    m_UpSample->SetFloat("filterRadius", m_FilterRadius);
 
     for (size_t i = m_MipChain.size() - 1; i > 0; i--)
     {
         const BloomMip& mip = m_MipChain[i];
         const BloomMip& nextMip = m_MipChain[i - 1];
         mip.texture->BindTexture(0);
-        m_FrameBuffer->AttachTexture(*mip.texture, Attachment::Color00, 0);
+        m_FrameBuffer->AttachTexture(*nextMip.texture, Attachment::Color00, 0);
         
         const RenderPassBeginInfo renderPassBeginInfo =
         {
@@ -79,14 +86,13 @@ void BloomPass::UpSampling()
 
 }
 
-void BloomPass::DownSampling(const Texture& textureWithoutBloom)
+void BloomPass::DownSampling()
 {
-    textureWithoutBloom.BindTexture(0);
     m_DownSample->Use();
-    const Vector2 textureSizef = { static_cast<float_t>(textureWithoutBloom.GetSize().x), static_cast<float_t>(textureWithoutBloom.GetSize().y) } ;
     
+    m_ThresholdTexture->BindTexture(0);
+    const Vector2 textureSizef = { static_cast<float_t>(m_ThresholdTexture->GetSize().x), static_cast<float_t>(m_ThresholdTexture->GetSize().y) } ;
     m_DownSample->SetVec2("srcResolution",textureSizef);
-
     for (BloomMip& bloomMip : m_MipChain)
     {
         m_FrameBuffer->AttachTexture(*bloomMip.texture, Attachment::Color00, 0);
@@ -98,15 +104,16 @@ void BloomPass::DownSampling(const Texture& textureWithoutBloom)
             .clearBufferFlags = BufferFlag::None,
         };
         
-       m_RenderPass.BeginRenderPass(renderPassBeginInfo);
-        
+        m_RenderPass.BeginRenderPass(renderPassBeginInfo);
         Rhi::DrawModel(m_Quad->GetId());
         m_RenderPass.EndRenderPass();
+        
         m_DownSample->SetVec2("srcResolution", bloomMip.sizef);
-
         bloomMip.texture->BindTexture(0);
+     
     }
-    textureWithoutBloom.UnbindTexture(0);
+    
+    m_ThresholdTexture->UnbindTexture(0);
     m_DownSample->Unuse();
 }
 
@@ -116,13 +123,18 @@ void BloomPass::HandleBlooMip(const Vector2i currentViewPortSize)
         return;
     
     delete m_FrameBuffer;
+    delete m_ThresholdTexture;
+    
+    m_ThresholdTexture = nullptr;
     m_FrameBuffer = nullptr;
-    for (BloomMip& mip : m_MipChain)
+    
+    for (const BloomMip& mip : m_MipChain)
     {
         delete mip.texture;
     }
     m_FrameBuffer = new FrameBuffer(currentViewPortSize);
-
+    m_ThresholdTexture = new Texture(TextureInternalFormat::R11FG11FB10F,m_FrameBuffer->GetSize());
+    
     
     const Vector2i currentBufferSize = m_FrameBuffer->GetSize();
     Vector2 mimSizeF = { static_cast<float_t>(currentBufferSize.x) , static_cast<float_t>(currentBufferSize.y) };
@@ -148,7 +160,29 @@ void BloomPass::HandleBlooMip(const Vector2i currentViewPortSize)
         
         m_MipChain[i].texture = new Texture(createInfo);
     }
-     m_FrameBuffer->AttachTexture(*m_MipChain[0].texture,Attachment::Color00,0);
     
+    m_FrameBuffer->AttachTexture(*m_MipChain[0].texture,Attachment::Color00,0);
 
+}
+
+void BloomPass::ThresholdFilter(const Texture& textureToCompute)
+{
+    m_FrameBuffer->AttachTexture(*m_ThresholdTexture, Attachment::Color00, 0);
+    m_TresholdFilter->Use();
+    
+    textureToCompute.BindTexture(0);
+    const RenderPassBeginInfo renderPassBeginInfo =
+    {
+        .frameBuffer = m_FrameBuffer,
+        .renderAreaOffset = { 0,0 },
+        .renderAreaExtent = m_ThresholdTexture->GetSize(),
+        .clearBufferFlags = BufferFlag::None,
+    };
+
+    m_RenderPass.BeginRenderPass(renderPassBeginInfo);
+    Rhi::DrawModel(m_Quad->GetId());
+    m_TresholdFilter->Unuse();
+    textureToCompute.UnbindTexture(0);
+    m_RenderPass.EndRenderPass();
+    
 }
