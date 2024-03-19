@@ -84,6 +84,17 @@ Pointer<T> ResourceManager::Get(const Pointer<File>& file)
 }
 
 template <Concepts::ResourceT T>
+Pointer<T> ResourceManager::Get(const Guid& guid)
+{
+    auto&& it = m_GuidMap.find(guid);
+
+    if (it == m_GuidMap.end())
+        return nullptr;
+
+    return Utils::DynamicPointerCast<T>(it->second);
+}
+
+template <Concepts::ResourceT T>
 std::vector<Pointer<T>> ResourceManager::FindAll()
 {
     std::vector<Pointer<T>> result;

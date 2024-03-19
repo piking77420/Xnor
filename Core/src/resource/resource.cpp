@@ -101,6 +101,11 @@ void Resource::SetName(std::string newName)
     m_Name = std::move(newName);
 }
 
+void Resource::SetGuid(const Guid& guid)
+{
+    m_Guid = guid;
+}
+
 const Guid& Resource::GetGuid() const
 {
     return m_Guid;

@@ -67,12 +67,12 @@ public:
     XNOR_ENGINE std::string GetExtension() const;
 
     /// @brief Returns a @c const pointer to the raw loaded data.
-    template<typename T = char_t>
+    template <typename T = char_t>
     [[nodiscard]]
     const T* GetData() const;
 
     /// @brief Returns a pointer to the raw loaded data.
-    template<typename T = char_t>
+    template <typename T = char_t>
     [[nodiscard]]
     T* GetData();
 

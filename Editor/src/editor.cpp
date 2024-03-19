@@ -228,39 +228,6 @@ void Editor::SetupImGuiStyle() const
 void Editor::CreateTestScene()
 {
 	using namespace XnorCore;
-	Entity& ent1 = *World::scene->CreateEntity("Directional");
-	ent1.AddComponent<DirectionalLight>();
-
-	Entity& plane = *World::scene->CreateEntity("Plane");
-	MeshRenderer* meshRenderer = plane.AddComponent<MeshRenderer>();
-	plane.transform.SetPosition() = { 0.f, -2.f, 0.f };
-	plane.transform.SetScale() = { 10.f, 1.f, 10.f };
-	meshRenderer->model = ResourceManager::Get<Model>(FileManager::Get("assets/models/cube.obj"));
-	meshRenderer->material.albedoTexture = ResourceManager::Get<Texture>(FileManager::Get("assets/textures/wood.jpg"));
-	
-	// init Scene //
-	Entity& sphere = *World::scene->CreateEntity("Sphere");
-	meshRenderer = sphere.AddComponent<MeshRenderer>();
-	sphere.transform.SetPosition() = { 0.f, 2.f, 2.f };
-	meshRenderer->model = ResourceManager::Get<Model>(FileManager::Get("assets/models/sphere.obj"));
-	meshRenderer->material.albedoColor = { 0.f, 1.f, 1.f }; 
-
-	Entity& vikingRoom = *World::scene->CreateEntity("VikingRoom");
-	meshRenderer = vikingRoom.AddComponent<MeshRenderer>();
-	vikingRoom.transform.SetPosition() = { 0.f, 1.f, 0.f };
-	vikingRoom.transform.SetRotationEulerAngle() = { -90.f * Calc::Deg2Rad, 0, 0.f };
-
-	meshRenderer->model = ResourceManager::Get<Model>(FileManager::Get("assets/models/viking_room.obj"));
-	meshRenderer->material.albedoTexture = ResourceManager::Get<Texture>(FileManager::Get("assets/textures/viking_room.png"));
-
-	Entity& pointLight = *World::scene->CreateEntity("PointLight");
-	pointLight.AddComponent<PointLight>();
-	pointLight.AddComponent<TestComponent>();
-	pointLight.transform.SetPosition() = { 2.f, 3.f, 2.f };
-
-	Entity& spotLight = *World::scene->CreateEntity("SpotLight");
-	spotLight.AddComponent<SpotLight>();
-	spotLight.transform.SetPosition() = { -2.f, 3.f, -2.f };
 
 	// Init SkyBox
 	World::scene->skybox.Initialize();

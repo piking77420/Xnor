@@ -323,10 +323,8 @@ void Serializer::DeserializeSimpleType(const Metadata<ReflectT, MemberT, Descrip
     else if constexpr (Meta::IsSame<MemberT, Guid>)
     {
         const char_t* const value = ReadElementValue(metadata.name);
-        Guid guid = Guid();
-        guid.FromString(value);
 
-        *metadata.obj = guid;
+        *metadata.obj = Guid::FromString(value);
     }
     else
     {
@@ -367,8 +365,7 @@ void Serializer::DeserializeXnorPointer(const Metadata<ReflectT, MemberT, Descri
     using PtrT = typename MemberT::Type;
     
     const char_t* const value = ReadElementValue(metadata.name);
-    Guid guid = Guid();
-    guid.FromString(value);
+    const Guid guid = Guid::FromString(value);
 
     if (guid == Guid())
     {
@@ -376,11 +373,7 @@ void Serializer::DeserializeXnorPointer(const Metadata<ReflectT, MemberT, Descri
         return;
     }
 
-    // TODO move to resource manager
-    Pointer<PtrT> res = ResourceManager::Find<PtrT>([guid](Pointer<PtrT>&& p) -> bool_t
-    {
-        return p->GetGuid() == guid;
-    });
+    Pointer<PtrT> res = ResourceManager::Get<PtrT>(guid);
 
     if (res == nullptr)
     {
