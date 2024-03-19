@@ -13,17 +13,17 @@ class DotnetRuntime
     STATIC_CLASS(DotnetRuntime)
     
 public:
-    static bool_t Initialize();
+    XNOR_ENGINE static bool_t Initialize();
 
-    static void Shutdown();
+    XNOR_ENGINE static void Shutdown();
 
-    static bool_t LoadAssembly(const std::string& filename);
+    XNOR_ENGINE static bool_t LoadAssembly(const std::string& filename);
 
-    static void UnloadAllAssemblies(bool_t reloadContext = false);
+    XNOR_ENGINE static void UnloadAllAssemblies(bool_t reloadContext = false);
 
-    static void ReloadAllAssemblies();
+    XNOR_ENGINE static void ReloadAllAssemblies();
 
-    static bool_t GetInitialized();
+    XNOR_ENGINE static bool_t GetInitialized();
 
 private:
     static Coral::HostSettings m_Settings;

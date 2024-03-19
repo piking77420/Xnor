@@ -6,6 +6,7 @@
 #include <ImGui/imgui_internal.h>
 #include <ImguiGizmo/ImGuizmo.h>
 
+#include "csharp/dotnet_runtime.hpp"
 #include "file/file_manager.hpp"
 #include "input/time.hpp"
 #include "rendering/light/directional_light.hpp"
@@ -310,6 +311,11 @@ void Editor::UpdateWindow()
 		w->Display();
 		ImGui::End();
 	}
+
+	ImGui::Begin("Debug");
+	if (ImGui::Button("Reload C# Assemblies"))
+		XnorCore::DotnetRuntime::ReloadAllAssemblies();
+	ImGui::End();
 }
 
 void Editor::OnRenderingWindow()

@@ -11,20 +11,20 @@ BEGIN_XNOR_CORE
 class DotnetAssembly
 {
 public:
-    static inline const DotnetAssembly* xnorCoreAssembly = nullptr;
-    static inline const std::string XnorCoreNamespace = "Xnor.Core";
+    XNOR_ENGINE static inline const DotnetAssembly* xnorCoreAssembly = nullptr;
+    XNOR_ENGINE static inline const std::string XnorCoreNamespace = "Xnor.Core";
 
-    explicit DotnetAssembly(std::string filepath);
+    XNOR_ENGINE explicit DotnetAssembly(std::string filepath);
 
-    bool_t Load(Coral::AssemblyLoadContext& alc);
+    XNOR_ENGINE bool_t Load(Coral::AssemblyLoadContext& alc);
     
-    void ProcessTypes();
+    XNOR_ENGINE void ProcessTypes();
 
     [[nodiscard]]
-    const Coral::ManagedAssembly* GetCoralAssembly() const;
+    XNOR_ENGINE const Coral::ManagedAssembly* GetCoralAssembly() const;
 
     [[nodiscard]]
-    const std::string& GetFilename() const;
+    XNOR_ENGINE const std::string& GetFilename() const;
 
 private:
     Coral::ManagedAssembly* m_Assembly = nullptr;

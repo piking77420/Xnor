@@ -78,11 +78,12 @@ void DotnetRuntime::UnloadAllAssemblies(const bool_t reloadContext)
 
 void DotnetRuntime::ReloadAllAssemblies()
 {
-    const decltype(m_LoadedAssemblies) assemblies = m_LoadedAssemblies;
+    std::vector<std::string> assemblies;
+    std::ranges::transform(m_LoadedAssemblies, assemblies.begin(), [](const decltype(m_LoadedAssemblies)::value_type& loadedAssembly) { return loadedAssembly->GetFilename(); });
     UnloadAllAssemblies();
     
     for (auto&& assembly : assemblies)
-        LoadAssembly(assembly->GetFilename());
+        LoadAssembly(assembly);
 }
 
 bool_t DotnetRuntime::GetInitialized()
