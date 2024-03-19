@@ -29,7 +29,7 @@ void RenderWindow::OnApplicationRendering()
         m_Viewport->OnResize(m_Size);
     }
     
-    m_Editor->renderer.RenderViewport(*m_Viewport, XnorCore::World::scene);
+    m_Editor->renderer.RenderViewport(*m_Viewport, *XnorCore::World::scene);
 }
 
 

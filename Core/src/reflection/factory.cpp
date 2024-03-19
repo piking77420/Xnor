@@ -22,7 +22,7 @@ inline void* Factory::CreateObject(const size_t hash)
     return it->second.createFunc();
 }
 
-inline void* Factory::CreateObject(const char_t* name)
+inline void* Factory::CreateObject(const std::string& name)
 {
     auto&& it = m_FactoryMapName.find(name);
 
@@ -61,6 +61,19 @@ void Factory::SerializeObject(void* obj, size_t hash)
     it->second.serializeFunc(obj);
 }
 
+void Factory::DeserializeObject(void* obj, size_t hash)
+{
+    auto&& it = m_FactoryMapHash.find(hash);
+
+    if (it == m_FactoryMapHash.end())
+    {
+        Logger::LogError("Couldn't find type : {}", hash);
+        return;
+    }
+
+    it->second.deserializeFunc(obj);
+}
+
 void Factory::RegisterTypes()
 {
     // Manually registering the types is sub-optimal, however, it's the best way i've found so far
@@ -72,6 +85,19 @@ void Factory::RegisterTypes()
     RegisterFactoryType<TestComponent>();
     RegisterFactoryType<PointLight>();
     RegisterFactoryType<SpotLight>();
+}
+
+std::string Factory::GetTypeName(const size_t hash)
+{
+    auto&& it = m_FactoryMapHash.find(hash);
+ 
+     if (it == m_FactoryMapHash.end())
+     {
+         Logger::LogError("Couldn't find type : {}", hash);
+         return std::string();
+     }
+ 
+     return it->second.name;
 }
 
 void Factory::Print()

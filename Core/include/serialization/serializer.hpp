@@ -99,6 +99,8 @@ private:
     XNOR_ENGINE static void OpenFileToRead(const std::string& filePath);
 
     XNOR_ENGINE static void SerializeObjectUsingFactory(void* obj, size_t hash);
+    XNOR_ENGINE static void DeserializeObjectUsingFactory(void* obj, size_t hash);
+    XNOR_ENGINE static void* CreateObjectUsingFactory(const std::string& name);
     
     // Element
     XNOR_ENGINE static void AddElementToDoc();
@@ -120,6 +122,12 @@ private:
     template <typename ReflectT, typename MemberT, typename DescriptorT>
     static void SerializeEnum(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 
+
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DeserializePointer(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
+
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DeserializeXnorPointer(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 
     template <typename ReflectT, typename MemberT, typename DescriptorT>
     static void DeserializeSimpleType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);

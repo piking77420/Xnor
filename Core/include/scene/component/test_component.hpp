@@ -14,9 +14,14 @@ class TestComponent : public Component
     REFLECTABLE_IMPL(TestComponent)
     
 public:
+    DEFAULT_COPY_MOVE_OPERATIONS(TestComponent)
+    
     XNOR_ENGINE void Begin() override;
 
     XNOR_ENGINE void Update() override;
+
+    XNOR_ENGINE TestComponent() = default;
+    XNOR_ENGINE ~TestComponent() override = default;
 
 private:
     enum TestEnum
@@ -46,11 +51,13 @@ private:
     Vector2 m_PlottingTest1;
     Vector2 m_PlottingTest2;
 
-    List<int32_t> m_List;
+    List<int32_t> m_List = { 0, 1, 2, 3, 4, 5 };
     float_t m_Array[5] = { 0, 1, 2.5, 6, 8 };
     TestEnum m_Enum = static_cast<TestEnum>(One | Sixteen);
 
-    const int32_t m_ConstTest = 0;
+    std::string m_String = "Hello"; 
+
+    int32_t m_ConstTest = 0;
     static inline int32_t m_StaticTest1 = 5;
     static inline int32_t m_StaticTest2 = 10;
 };
@@ -68,6 +75,7 @@ REFL_AUTO(
     field(m_List, XnorCore::Reflection::Tooltip("I'm a list"), XnorCore::Reflection::Range<int32_t>(0, 5)),
     field(m_Array),
     field(m_Enum, XnorCore::Reflection::EnumFlags()),
+    field(m_String),
     field(m_ConstTest),
     field(m_StaticTest1),
     field(m_StaticTest2)

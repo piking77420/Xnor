@@ -2,6 +2,7 @@
 
 #include "input/time.hpp"
 #include "scene/entity.hpp"
+#include "utils/logger.hpp"
 
 using namespace XnorCore;
 

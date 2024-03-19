@@ -112,9 +112,10 @@ Pointer<T> ResourceManager::Find(std::function<bool_t(Pointer<T>)>&& predicate)
     for (const auto& val : m_Resources | std::views::values)
     {
         Pointer<Resource> resource = val;
-        
-        if (Utils::DynamicPointerCast<T>(resource) && predicate(resource))
-            return resource;
+
+        Pointer<T> r = Utils::DynamicPointerCast<T>(val);
+        if (r && predicate(r))
+            return r;
     }
 
     return nullptr;

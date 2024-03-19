@@ -22,6 +22,11 @@ class Entity
     REFLECTABLE_IMPL(Entity)
 
 public:
+    XNOR_ENGINE Entity() = default;
+    XNOR_ENGINE ~Entity();
+
+    DEFAULT_COPY_MOVE_OPERATIONS(Entity)
+    
     /// @brief Transform of the entity
     Transform transform;
     /// @brief Name of the entity
@@ -136,11 +141,6 @@ public:
     
 private:
     XNOR_ENGINE explicit Entity(const Guid& entiyId);
-
-    XNOR_ENGINE Entity() = default;
-    XNOR_ENGINE ~Entity();
-
-    DEFAULT_COPY_MOVE_OPERATIONS(Entity)
     
     Entity* m_Parent = nullptr;
     List<Entity*> m_Children;

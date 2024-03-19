@@ -28,6 +28,8 @@ public:
     [[nodiscard]]
     bool_t operator==(const Guid& other) const;
 
+    void FromString(const char_t* str);
+
     /// @brief Converts a @ref Guid to a string representation
     explicit operator std::string() const;
 

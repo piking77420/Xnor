@@ -21,7 +21,7 @@ constexpr void Factory::RegisterFactoryType()
     constexpr TypeDescriptor<T> desc = Reflection::GetTypeInfo<T>();
 
     const constexpr char_t* const name = desc.name.c_str();
-    /* constexpr */ const char_t* const humanizedName = Utils::RemoveNamespaces(name);
+    const std::string humanizedName = Utils::RemoveNamespaces(std::string(name));
     
     FactoryTypeInfo info = {
         .displayFunc = [](void* const obj) -> void { TypeRenderer::DisplayObject<T>(static_cast<T*>(obj)); },
@@ -72,7 +72,7 @@ inline bool_t Factory::IsChildOf(const size_t typeHash, const size_t parentHash)
 }
 
 template <typename T>
-void Factory::FindAllChildClasses(std::vector<const char_t*>* names)
+void Factory::FindAllChildClasses(std::vector<std::string>* names)
 {
     const size_t hash = Utils::GetTypeHash<T>();
 

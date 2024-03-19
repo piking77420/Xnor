@@ -29,7 +29,21 @@ void Serializer::OpenFileToRead(const std::string& filePath)
 
 void Serializer::SerializeObjectUsingFactory(void* obj, const size_t hash)
 {
+    std::string error;
+    
+    XMLAttributte* const attribute = CreateAttribute(m_XmlDoc, "typeName", Factory::GetTypeName(hash), error);
+    AddAttributeToElement(m_ElementsStack.top(), attribute, error);
     Factory::SerializeObject(obj, hash);
+}
+
+void Serializer::DeserializeObjectUsingFactory(void* obj, size_t hash)
+{
+    Factory::DeserializeObject(obj, hash);
+}
+
+void* Serializer::CreateObjectUsingFactory(const std::string& name)
+{
+    return Factory::CreateObject(name);
 }
 
 void Serializer::StartSerialization(const std::string& filePath)
@@ -155,9 +169,18 @@ void Serializer::ReadElement(const std::string& name)
     m_ElementsStack.push(elem);
 }
 
-const char_t* Serializer::ReadElementValue(const std::string&)
+const char_t* Serializer::ReadElementValue(const std::string& name)
 {
-    return m_ElementsStack.top()->value();
+    const XMLElement* const elem = m_ElementsStack.top();
+    const XMLElement* const vElem = elem->first_node(name.c_str());
+
+    if (!vElem)
+    {
+        Logger::LogInfo("Couldn't find element named : {}", name);
+        return nullptr;
+    }
+
+    return vElem->value();
 }
 
 void Serializer::FinishReadElement()

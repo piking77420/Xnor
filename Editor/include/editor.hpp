@@ -52,7 +52,7 @@ private:
 
 	void CreateTestScene();
 	
-	void MenuBar() const;
+	void MenuBar();
 };
 
 END_XNOR_EDITOR
