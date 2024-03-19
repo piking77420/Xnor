@@ -5,22 +5,20 @@
 
 using namespace XnorCore;
 
-namespace XnorCore::DotnetUtils { XNOR_ENGINE const Component& GetComponentListItem(const ::XnorCore::List<Component*>& list, size_t index, int32_t* managedTypeId); }
-
-const Component& DotnetUtils::GetComponentListItem(const ::XnorCore::List<Component*>& list, const size_t index, int32_t* managedTypeId)
+const Component& DotnetUtils::ComponentListGetItem(const List<Component*>& list, const size_t index, std::string* managedTypeName)
 {
-    const Component& result = reinterpret_cast<const Component&>(list[index]);
+    const Component* result = list[index];
 
-    if (managedTypeId == nullptr)
-        return result;
+    if (managedTypeName == nullptr)
+        return *result;
     
     // Get type name from raw pointer using C++ reflection
-    const char_t* typeName = Factory::GetName(Utils::GetTypeHash<Component>(&result));
+    const char_t* typeName = Factory::GetName(Utils::GetTypeHash<Component>(result));
 
     // Convert these names to their C# type equivalent
     auto&& dotnetAssembly = DotnetAssembly::xnorCoreAssembly->GetCoralAssembly();
 
-    *managedTypeId = dotnetAssembly->GetType(DotnetAssembly::XnorCoreNamespace + '.' + typeName).GetTypeId();
+    *managedTypeName = dotnetAssembly->GetType(DotnetAssembly::XnorCoreNamespace + '.' + typeName).GetFullName();
     
-    return result;
+    return *result;
 }

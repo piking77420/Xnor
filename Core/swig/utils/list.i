@@ -27,7 +27,7 @@
                 return false;
             }
 
-            current = list.OperatorIndex(index++);
+            current = list[index++];
 
             return true;
         }
@@ -55,9 +55,9 @@
         return GetEnumerator();
     }
 
-    public Component this[int index]
+    public Component this[uint index]
     {
-        get => Xnor.Core.Core.GetComponentListItem(this, index, new(IntPtr.Zero, false));
+        get => Xnor.Core.Core.ComponentListGetItem(this, index);
     }
 %}
 

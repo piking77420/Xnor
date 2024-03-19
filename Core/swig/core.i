@@ -1,4 +1,4 @@
-%module Core
+%module(imclassname = "CoreNative") Core
 
 %include <csharp/stl.i>
 %include <csharp/std_array.i>
@@ -14,8 +14,10 @@
 
 typedef float float_t;
 
-// Make sure the Core class is static
-%pragma(csharp) moduleclassmodifiers = "public static class";
+// Make sure the Core and CoreNative classes are partial if we need to manually add something in them
+%pragma(csharp) moduleclassmodifiers = "public static partial class";
+// The CoreNative class cannot be static as SWIG seems to generate protected members for some reason
+%pragma(csharp) imclassclassmodifiers = "internal partial class";
 
 // Rename all C++ operator overloads to intermediate C# functions
 %csmethodmodifiers operator "internal";

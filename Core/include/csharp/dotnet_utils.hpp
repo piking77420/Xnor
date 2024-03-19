@@ -8,8 +8,8 @@ BEGIN_XNOR_CORE
 
 namespace DotnetUtils
 {
-#ifdef SWIG_ONLY
-    XNOR_ENGINE const Component& GetComponentListItem(const ::XnorCore::List<Component*>& list, size_t index, int32_t* managedTypeId);
+#ifndef SWIG
+    XNOR_ENGINE const Component& ComponentListGetItem(const List<Component*>& list, size_t index, std::string* managedTypeName);
 #endif
 }
 
