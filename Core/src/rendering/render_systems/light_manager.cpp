@@ -97,9 +97,6 @@ void LightManager::BeginFrame(const Scene& scene)
 
 void LightManager::EndFrame(const Scene&)
 {
-	pointLights.clear();
-	spotLights.clear();
-	directionalLights.clear();
 }
 
 void LightManager::DrawLightGizmo(const Camera& camera, const Scene& scene) const
