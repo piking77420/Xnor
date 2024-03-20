@@ -2,6 +2,7 @@
 
 #include <ranges>
 
+#include "resource/compute_shader.hpp"
 #include "resource/shader.hpp"
 
 BEGIN_XNOR_CORE
@@ -76,6 +77,22 @@ inline Pointer<Shader> ResourceManager::Get<Shader>(const std::string& name)
 
     return GetNoCheck<Shader>(name);
 }
+
+template <>
+inline Pointer<ComputeShader> ResourceManager::Get<ComputeShader>(const std::string& name)
+{
+    if (!Contains(name))
+    {
+        if (Contains(ReservedShaderPrefix + name))
+            return GetNoCheck<ComputeShader>(ReservedShaderPrefix + name);
+        
+        Logger::LogError("Attempt to get an unknown resource: {}", name);
+        return nullptr;
+    }
+
+    return GetNoCheck<ComputeShader>(name);
+}
+
 
 template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::Get(const Pointer<File>& file)

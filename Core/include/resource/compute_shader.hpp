@@ -1,63 +1,40 @@
-#pragma once
-
-#include <array>
+﻿#pragma once
 
 #include "core.hpp"
-#include "file/file.hpp"
-#include "Maths/math.hpp"
+
+#include <array>
+#include <Maths/vector2.hpp>
+#include <Maths/vector3.hpp>
+#include <Maths/vector4.hpp>
+#include <Maths/matrix.hpp>
+#include <Maths/matrix3.hpp.>
+
+#include "texture.hpp"
 #include "rendering/rhi_typedef.hpp"
 #include "resource/resource.hpp"
-#include "utils/pointer.hpp"
-
-/// @file shader.hpp
-/// @brief Defines the XnorCore::Shader class
 
 BEGIN_XNOR_CORE
 
-/// @brief Encapsulates a GPU shader
-class Shader : public Resource
+class ComputeShader : public Resource
 {
-private:
-	ShaderPipeline::ShaderPipeline ShaderTypeToShaderPipeline(ShaderType::ShaderType shaderType);
-
-	ShaderType::ShaderType ShaderPipelineToShaderType(ShaderPipeline::ShaderPipeline shaderPipeline);
-
 public:
-	/// @brief Allowed extensions for vertex shaders
-	XNOR_ENGINE static inline constexpr std::array<const char_t*, 3> VertexFileExtensions
-	{
-		".vert",
-		".vertex",
-		".vs"
-	};
+    /// @brief Allowed extensions for compute shaders
+    XNOR_ENGINE static inline constexpr std::array<const char_t*, 2> ComputeFileExtensions
+    {
+        ".comp",
+        ".compute"
+    };
 
-	/// @brief Allowed extensions for fragment shaders
-	XNOR_ENGINE static inline constexpr std::array<const char_t*, 3> FragmentFileExtensions
-	{
-		".frag",
-		".fragment",
-		".fs"
-	};
+    
+    using Resource::Resource;
 
-	/// @brief Allowed extensions for geometry shaders
-	XNOR_ENGINE static inline constexpr std::array<const char_t*, 2> GeometryFileExtensions
-	{
-		".geom",
-		".geometry"
-	};
-	
-	/// @brief Gets the shader type via a file extension
-	/// @param extension File extension
-	/// @return @ref ShaderType type
-	/// @throw std::invalid_argument If the extension isn't valid
-	[[nodiscard]]
-	XNOR_ENGINE static ShaderPipeline::ShaderPipeline FileExtensionToType(const std::string& extension);
+    using Resource::Load;
 
-	using Resource::Resource;
+	XNOR_ENGINE ComputeShader() = default;
 
-	using Resource::Load;
+    DEFAULT_COPY_MOVE_OPERATIONS(ComputeShader)
 
-	/// @brief Loads a single shader file
+    	/// @brief Loads a single shader file
 	/// @param shader File
 	/// @return Whether the load succeeded
 	XNOR_ENGINE bool_t Load(const Pointer<File>& shader) override;
@@ -66,7 +43,7 @@ public:
 	/// @param buffer Raw data
 	/// @param length Raw data length
 	/// @param type Shader type
-	XNOR_ENGINE bool_t Load(const char_t* buffer, int64_t length, ShaderPipeline::ShaderPipeline type);
+	XNOR_ENGINE bool_t Load(const char_t* buffer, int64_t length);
 
 	/// @brief Creates the shader in the @ref Rhi
 	XNOR_ENGINE void CreateInRhi() override;
@@ -126,26 +103,17 @@ public:
 	/// @brief Unbinds the shader
 	XNOR_ENGINE void Unuse() const;
 
-	/// @brief Sets a specialized depth function for the shader, should only be called it before @ref CreateInRhi
-	/// @param depthFunction Depth function
-	XNOR_ENGINE void SetDepthFunction(DepthFunction::DepthFunction depthFunction);
-	
-	/// @brief Sets a specialized blend function for the shader, should only be called it before @ref CreateInRhi
-	/// @param blendFunction Blend function
-	XNOR_ENGINE void SetBlendFunction(const BlendFunction& blendFunction);
+	XNOR_ENGINE void DispatchCompute(uint32_t numberOfGroupX, uint32_t numberOfGroupY, uint32_t numberOfGroupZ);
 
-	XNOR_ENGINE void SetFaceCullingInfo(const ShaderProgramCullInfo& shaderProgramCullInfo);
+	XNOR_ENGINE void BindTexture(uint32_t unit, const XnorCore::Texture& texture, const uint32_t level, const bool_t layered, const uint32_t layer, const ImageAccess imageAcess);
+
+	XNOR_ENGINE void SetMemoryBarrier(GpuMemoryBarrier memoryBarrier);
 
 private:
 	uint32_t m_Id = 0;
 	
-	DepthFunction::DepthFunction m_DepthFunction = DepthFunction::Less;
-	ShaderProgramCullInfo m_ShaderProgramCullInfo;
-	BlendFunction m_BlendFunction;
-	
-	std::array<Pointer<File>, ShaderPipeline::Count> m_Files;
-	std::array<ShaderCode, ShaderPipeline::Count> m_Code;
-
+	ShaderCode m_ShaderCode;
+	Pointer<File> m_File;
 };
 
 END_XNOR_CORE

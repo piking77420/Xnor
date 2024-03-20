@@ -92,7 +92,15 @@ BEGIN_ENUM(ShaderType)
 	Fragment,
 	Geometry,
 	Compute,
+}
+END_ENUM
 
+BEGIN_ENUM(ShaderPipeline)
+{
+	Vertex,
+	Fragment,
+	Geometry,
+	
 	Count
 }
 END_ENUM
@@ -105,7 +113,7 @@ struct ShaderCode
 	/// @brief Raw code length
 	int32_t codeLength = 0;
 	/// @brief Shader type
-	ShaderType::ShaderType type = ShaderType::Count;
+	ShaderType::ShaderType type;
 };
 
 /// @brief %Texture wrapping, determines how a point will be sampled if it's outside of the texture
@@ -585,8 +593,8 @@ enum class CubeMapFace
 	Size
 };
 
-/*
-enum class MemoryBarrier
+
+enum class GpuMemoryBarrier
 {
 	VertexAttribArrayBarrierBit,
 	ElementArrayBarrierBit,
@@ -605,7 +613,7 @@ enum class MemoryBarrier
 	QueryBufferBarrierBit,
 	AllBarrierBits
 };
-*/
+
 enum class ImageAccess
 {
 	ReadOnly,

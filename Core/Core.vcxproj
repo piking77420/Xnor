@@ -419,6 +419,7 @@
     <ClCompile Include="src\rendering\rhi.cpp" />
     <ClCompile Include="src\rendering\uniformBuffer.cpp" />
     <ClCompile Include="src\rendering\viewport_data.cpp" />
+    <ClCompile Include="src\resource\compute_shader.cpp" />
     <ClCompile Include="src\resource\cubemap.cpp" />
     <ClCompile Include="src\resource\font.cpp" />
     <ClCompile Include="src\resource\shader.cpp" />
@@ -646,6 +647,7 @@
     <ClInclude Include="include\rendering\render_systems\tone_mapping.hpp" />
     <ClInclude Include="include\rendering\uniform_buffer.hpp" />
     <ClInclude Include="include\rendering\viewport_data.hpp" />
+    <ClInclude Include="include\resource\compute_shader.hpp" />
     <ClInclude Include="include\resource\cubemap.hpp" />
     <ClInclude Include="include\resource\font.hpp" />
     <ClInclude Include="include\resource\model.hpp" />

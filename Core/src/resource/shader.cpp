@@ -5,19 +5,50 @@
 
 using namespace XnorCore;
 
-ShaderType::ShaderType Shader::FileExtensionToType(const std::string& extension)
+ShaderPipeline::ShaderPipeline Shader::ShaderTypeToShaderPipeline(ShaderType::ShaderType shaderType)
+{
+    switch (shaderType)
+    {
+        case ShaderType::Vertex: 
+            return ShaderPipeline::Vertex;
+        
+        case ShaderType::Fragment: 
+            return ShaderPipeline::Fragment;
+        
+        case ShaderType::Geometry: 
+            return ShaderPipeline::Geometry;
+    }
+
+    return ShaderPipeline::Vertex;
+}
+
+ShaderType::ShaderType Shader::ShaderPipelineToShaderType(ShaderPipeline::ShaderPipeline shaderPipeline)
+{
+    switch (shaderPipeline)
+    {
+        case ShaderPipeline::Vertex: 
+            return ShaderType::Vertex;
+        
+        case ShaderPipeline::Fragment: 
+            return ShaderType::Fragment;
+        
+        case ShaderPipeline::Geometry: 
+            return ShaderType::Geometry;
+    }
+
+    return ShaderType::Vertex;
+}
+
+ShaderPipeline::ShaderPipeline Shader::FileExtensionToType(const std::string& extension)
 {
     if (std::ranges::find(VertexFileExtensions, extension) != VertexFileExtensions.end())
-        return ShaderType::Vertex;
+        return ShaderPipeline::Vertex;
 
     if (std::ranges::find(FragmentFileExtensions, extension) != FragmentFileExtensions.end())
-        return ShaderType::Fragment;
-
-    if (std::ranges::find(ComputeFileExtensions, extension) != ComputeFileExtensions.end())
-        return ShaderType::Compute;
-
+        return ShaderPipeline::Fragment;
+    
     if (std::ranges::find(GeometryFileExtensions, extension) != GeometryFileExtensions.end())
-        return ShaderType::Geometry;
+        return ShaderPipeline::Geometry;
 
     Logger::LogError("Invalid file extension for shader : {}", extension);
     throw std::invalid_argument("Invalid file extension for shader");
@@ -25,7 +56,7 @@ ShaderType::ShaderType Shader::FileExtensionToType(const std::string& extension)
 
 bool_t Shader::Load(const Pointer<File>& shader)
 {
-    const ShaderType::ShaderType type = FileExtensionToType(shader->GetExtension());
+    const ShaderPipeline::ShaderPipeline type = FileExtensionToType(shader->GetExtension());
 
     if (!Load(shader->GetData(), shader->GetSize(), type))
         return false;
@@ -37,12 +68,12 @@ bool_t Shader::Load(const Pointer<File>& shader)
     return true;
 }
 
-bool_t Shader::Load(const char_t* const buffer, const int64_t length, const ShaderType::ShaderType type)
+bool_t Shader::Load(const char_t* const buffer, const int64_t length, const ShaderPipeline::ShaderPipeline type)
 {
     ShaderCode& code = m_Code[static_cast<size_t>(type)];
     code.code = buffer;
     code.codeLength = static_cast<int32_t>(length);
-    code.type = type;
+    code.type = ShaderPipelineToShaderType(type);
     
     m_Loaded = true;
     

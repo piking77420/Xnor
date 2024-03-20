@@ -18,8 +18,7 @@ void Viewport::Init(Vector2i initViewportSize)
     };
     // Init Rendering
     frameBuffer = new FrameBuffer(viewPortSize);
-    m_BaseImage = new Texture(TextureInternalFormat::Rgb16, viewPortSize);
-    m_PostProcessImage = new Texture(TextureInternalFormat::Rgb16, viewPortSize);
+    m_BaseImage = new Texture(TextureInternalFormat::Rgba32F, viewPortSize, TextureFormat::Rgb);
     // Set Up renderPass
     const RenderPass renderPass(attachementsType);
     const std::vector<const Texture*> targets = { m_BaseImage };
@@ -33,7 +32,6 @@ void Viewport::Destroy()
 {
     delete frameBuffer;
     delete m_BaseImage;
-    delete m_PostProcessImage;
     viewportData.Destroy();
 }
 

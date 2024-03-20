@@ -4,9 +4,10 @@
 #include "core.hpp"
 #include "tone_mapping.hpp"
 #include "rendering/frame_buffer.hpp"
+#include "resource/compute_shader.hpp"
 
 BEGIN_XNOR_CORE
-class PostProcessPass
+    class PostProcessPass
 {
 public:
     bool enable = true;
@@ -27,7 +28,7 @@ private:
     BloomPass m_BloomPass;
     RenderPass m_RenderPass;
 
-    static inline Pointer<Shader> m_TestCompute = nullptr;
+    static inline Pointer<ComputeShader> m_TestCompute = nullptr;
 
 };
 
