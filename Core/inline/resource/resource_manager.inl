@@ -27,7 +27,7 @@ Pointer<T> ResourceManager::Add(const Pointer<File>& file)
 }
 
 template <Concepts::ResourceT T>
-Pointer<T> ResourceManager::Load(const Pointer<File>& file)
+Pointer<T> ResourceManager::Load(const Pointer<File>& file, bool_t loadInRhi)
 {
     Logger::LogDebug("Loading resource {}", file->GetPath());
 
@@ -47,7 +47,7 @@ Pointer<T> ResourceManager::Load(const Pointer<File>& file)
         return resource;
     }
 
-    return LoadNoCheck<T>(file);
+    return LoadNoCheck<T>(file, loadInRhi);
 }
 
 template <Concepts::ResourceT T>
@@ -209,7 +209,7 @@ Pointer<T> ResourceManager::AddNoCheck(std::string name)
 }
 
 template <Concepts::ResourceT T>
-Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file)
+Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file, const bool_t loadInRhi)
 {
     Pointer<T> resource = Pointer<T>::Create(file->GetPathString());
 
@@ -222,7 +222,8 @@ Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file)
 
     file->m_Resource = std::move(Pointer<Resource>(resource, false));
 
-    resource->CreateInRhi();
+    if (loadInRhi)
+        resource->CreateInRhi();
 
     return resource;
 }

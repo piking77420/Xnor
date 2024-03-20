@@ -1,6 +1,7 @@
 ﻿#include "resource/resource_manager.hpp"
 
 #include <array>
+#include <execution>
 
 #include "file/file_manager.hpp"
 #include "resource/model.hpp"
@@ -20,17 +21,26 @@ void ResourceManager::LoadAll()
 
     const size_t oldResourceCount = m_Resources.size();
 
+    std::for_each(
+        std::execution::par,
+        files.begin(),
+        files.end(),
+        [](auto&& file) -> void
+        {
+            if (std::ranges::find(Texture::FileExtensions, file->GetExtension()) != Texture::FileExtensions.end())
+            {
+                Load<Texture>(file, false);
+            }
+            else if (std::ranges::find(Model::FileExtensions, file->GetExtension()) != Model::FileExtensions.end())
+            {
+                Load<Model>(file, false);
+            }
+        }
+    );
+
     for (auto&& file : files)
     {
-        if (std::ranges::find(Texture::FileExtensions, file->GetExtension()) != Texture::FileExtensions.end())
-        {
-            Load<Texture>(file);
-        }
-        else if (std::ranges::find(Model::FileExtensions, file->GetExtension()) != Model::FileExtensions.end())
-        {
-            Load<Model>(file);
-        }
-        else if (std::ranges::find(Shader::VertexFileExtensions, file->GetExtension()) != Shader::VertexFileExtensions.end() ||
+        if (std::ranges::find(Shader::VertexFileExtensions, file->GetExtension()) != Shader::VertexFileExtensions.end() ||
             std::ranges::find(Shader::FragmentFileExtensions, file->GetExtension()) != Shader::FragmentFileExtensions.end() ||
             std::ranges::find(Shader::GeometryFileExtensions, file->GetExtension()) != Shader::GeometryFileExtensions.end() ||
             std::ranges::find(Shader::ComputeFileExtensions, file->GetExtension()) != Shader::ComputeFileExtensions.end())
@@ -43,8 +53,13 @@ void ResourceManager::LoadAll()
                 shader = Get<Shader>(filenameNoExtension);
             else
                 shader = Add<Shader>(filenameNoExtension);
-            
+        
             shader->Load(file);
+        }
+        else
+        {
+            if (Contains(file))
+                Get(file)->CreateInRhi();
         }
     }
 
@@ -64,7 +79,7 @@ void ResourceManager::LoadGuidMap()
 
     std::string data = std::string(dataRaw);
 
-    size_t position = 0;
+    size_t position = 0; // TODO Fix loop bavure
     while (position < dataSize)
     {
         const size_t guidPos = data.find_first_of(';');
@@ -81,7 +96,7 @@ void ResourceManager::LoadGuidMap()
 
         if (it == m_Resources.end())
         {
-            Logger::LogInfo("Resource in the guid map wasn't found : {}", resourceName);
+            //Logger::LogInfo("Resource in the guid map wasn't found : {}", resourceName);
         }
         else
         {
@@ -89,7 +104,7 @@ void ResourceManager::LoadGuidMap()
             m_GuidMap.emplace(guid, it->second);
         }
 
-        Logger::LogInfo("{} ; {}", resourceName, static_cast<std::string>(guid));
+        //Logger::LogInfo("{} ; {}", resourceName, static_cast<std::string>(guid));
     }
 }
 

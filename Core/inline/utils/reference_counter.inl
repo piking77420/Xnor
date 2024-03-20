@@ -29,6 +29,7 @@ void ReferenceCounter<T>::IncStrong()
 template <typename T>
 void ReferenceCounter<T>::IncWeak(Pointer<T>* weakReferenceOwner)
 {
+    std::scoped_lock lock(m_Mutex);
     m_WeakReferenceOwners.push_back(weakReferenceOwner);
 }
 

@@ -39,7 +39,7 @@ public:
 
     /// @brief Creates the Resource corresponding to the given @p file and loads it.
     template <Concepts::ResourceT T>
-    static Pointer<T> Load(const Pointer<File>& file);
+    static Pointer<T> Load(const Pointer<File>& file, bool_t loadInRhi = true);
 
     /// @brief Creates one Resource for each @ref FileManager entry.
     XNOR_ENGINE static void LoadAll();
@@ -139,7 +139,7 @@ private:
     static Pointer<T> AddNoCheck(std::string name);
     
     template <Concepts::ResourceT T>
-    static Pointer<T> LoadNoCheck(Pointer<File> file);
+    static Pointer<T> LoadNoCheck(Pointer<File> file, bool_t loadInRhi = true);
 
     template <Concepts::ResourceT T>
     [[nodiscard]]
