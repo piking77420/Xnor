@@ -9,18 +9,19 @@
 BEGIN_XNOR_CORE
 
 class Entity;
+class Transform;
 
 /// @brief Represents a behavior that can be attached to an Entity.
 class XNOR_ENGINE Component
 {
     REFLECTABLE_IMPL(Component)
-    
+
 public:
     /// @brief Entity bound to the component
     Entity* entity = nullptr;
 
     Component() = default;
-    
+
     virtual ~Component() = 0;
 
     DEFAULT_COPY_MOVE_OPERATIONS(Component)

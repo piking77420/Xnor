@@ -1,4 +1,4 @@
-﻿%module Core
+﻿%module CoreC
 
 %csmethodmodifiers XnorCore::ColorRgb::operator ColorRgba "private";
 %csmethodmodifiers XnorCore::ColorRgb::operator ColorHsva "private";
@@ -10,9 +10,9 @@
 
 %typemap(cscode) XnorCore::ColorRgb
 %{
-    public static ColorRgb operator+(ColorRgb a, ColorRgb b) { return Core.OperatorAdd(a, b); }
+    public static ColorRgb operator+(ColorRgb a, ColorRgb b) { return CoreC.OperatorAdd(a, b); }
 
-    public static ColorRgb operator*(ColorRgb a, ColorRgb b) { return Core.OperatorMul(a, b); }
+    public static ColorRgb operator*(ColorRgb a, ColorRgb b) { return CoreC.OperatorMul(a, b); }
 
     public static explicit operator ColorRgba(ColorRgb color) { return color.ToColorRgba(); }
 
@@ -31,11 +31,11 @@
 
 %typemap(cscode) XnorCore::ColorRgba
 %{
-    public static ColorRgba operator+(ColorRgba a, ColorRgba b) { return Core.OperatorAdd(a, b); }
+    public static ColorRgba operator+(ColorRgba a, ColorRgba b) { return CoreC.OperatorAdd(a, b); }
 
-    public static ColorRgba operator*(ColorRgba a, ColorRgba b) { return Core.OperatorMul(a, b); }
+    public static ColorRgba operator*(ColorRgba a, ColorRgba b) { return CoreC.OperatorMul(a, b); }
 
-    public static ColorRgba operator*(ColorRgba c, float alphaFactor) { return Core.OperatorMul(c, alphaFactor); }
+    public static ColorRgba operator*(ColorRgba c, float alphaFactor) { return CoreC.OperatorMul(c, alphaFactor); }
 
     public static explicit operator ColorRgb(ColorRgba color) { return color.ToColorRgb(); }
 
@@ -58,11 +58,11 @@
 
 %typemap(cscode) XnorCore::Colorf
 %{
-    public static Colorf operator+(Colorf a, Colorf b) { return Core.OperatorAdd(a, b); }
+    public static Colorf operator+(Colorf a, Colorf b) { return CoreC.OperatorAdd(a, b); }
 
-    public static Colorf operator*(Colorf a, Colorf b) { return Core.OperatorMul(a, b); }
+    public static Colorf operator*(Colorf a, Colorf b) { return CoreC.OperatorMul(a, b); }
 
-    public static Colorf operator*(Colorf c, float alphaFactor) { return Core.OperatorMul(c, alphaFactor); }
+    public static Colorf operator*(Colorf c, float alphaFactor) { return CoreC.OperatorMul(c, alphaFactor); }
 
     public static explicit operator ColorRgb(Colorf color) { return color.ToColorRgb(); }
 
@@ -85,7 +85,7 @@
 
 %typemap(cscode) XnorCore::ColorHsva
 %{
-    public static ColorHsva operator*(ColorHsva c, float alphaFactor) { return Core.OperatorMul(c, alphaFactor); }
+    public static ColorHsva operator*(ColorHsva c, float alphaFactor) { return CoreC.OperatorMul(c, alphaFactor); }
 
     public static explicit operator ColorRgb(ColorHsva color) { return color.ToColorRgb(); }
 

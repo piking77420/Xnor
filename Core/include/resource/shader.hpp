@@ -145,7 +145,6 @@ private:
 		.sValue = BlendValue::One,
 		.dValue = BlendValue::Zero
 	};
-		
 
 	std::array<Pointer<File>, ShaderType::Count> m_Files;
 	std::array<ShaderCode, ShaderType::Count> m_Code;

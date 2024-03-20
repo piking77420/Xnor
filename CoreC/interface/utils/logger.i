@@ -1,4 +1,4 @@
-﻿%module Core
+﻿%module CoreC
 
 %csmethodmodifiers XnorCore::Logger::Log<> "private";
 %csmethodmodifiers XnorCore::Logger::LogTempDebug<> "private";

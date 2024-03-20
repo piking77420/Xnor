@@ -1,4 +1,4 @@
-%module(imclassname = "CoreNative") Core
+%module(imclassname = "CoreCNative") CoreC
 
 %include <csharp/stl.i>
 %include <csharp/std_array.i>

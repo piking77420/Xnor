@@ -4,7 +4,7 @@ namespace Game
     {
         private ColorHsva color;
 
-        private Light light = null;
+        private Light light;
 
         public TestScript()
         {

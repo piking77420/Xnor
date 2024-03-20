@@ -2,14 +2,14 @@ using System.Runtime.InteropServices;
 
 namespace Xnor.Core
 {
-    internal partial class CoreNative
+    internal partial class CoreCNative
     {
         protected class StringHelper {
 
             public delegate string StringDelegate(string message);
             static StringDelegate stringDelegate = new StringDelegate(CreateString);
 
-            [DllImport("CoreCSharpNative", EntryPoint="RegisterStringCallback_Core")]
+            [DllImport("CoreC", EntryPoint="RegisterStringCallback_Core")]
             public static extern void SWIGRegisterStringCallback_Core(StringDelegate stringDelegate);
 
             static string CreateString(string cString)
@@ -25,7 +25,7 @@ namespace Xnor.Core
 
         private static StringHelper stringHelper = new StringHelper();
 
-        [DllImport("CoreCSharpNative")]
+        [DllImport("CoreC")]
         public static extern string NativeComponentListGetItem(nint componentList, uint index, out nint item);
     }
 }

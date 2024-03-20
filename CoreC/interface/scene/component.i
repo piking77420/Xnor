@@ -1,4 +1,4 @@
-%module Core
+%module CoreC
 
 %typemap(csclassmodifiers) XnorCore::Component "public abstract class";
 

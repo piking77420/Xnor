@@ -245,7 +245,7 @@ static void SWIGUNUSED SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpExcepti
 #ifdef __cplusplus
 extern "C" 
 #endif
-SWIGEXPORT void SWIGSTDCALL SWIGRegisterExceptionCallbacks_CoreCSharpNative(
+SWIGEXPORT void SWIGSTDCALL SWIGRegisterExceptionCallbacks_CoreC(
                                                 SWIG_CSharpExceptionCallback_t applicationCallback,
                                                 SWIG_CSharpExceptionCallback_t arithmeticCallback,
                                                 SWIG_CSharpExceptionCallback_t divideByZeroCallback, 
@@ -273,7 +273,7 @@ SWIGEXPORT void SWIGSTDCALL SWIGRegisterExceptionCallbacks_CoreCSharpNative(
 #ifdef __cplusplus
 extern "C" 
 #endif
-SWIGEXPORT void SWIGSTDCALL SWIGRegisterExceptionArgumentCallbacks_CoreCSharpNative(
+SWIGEXPORT void SWIGSTDCALL SWIGRegisterExceptionArgumentCallbacks_CoreC(
                                                 SWIG_CSharpExceptionArgumentCallback_t argumentCallback,
                                                 SWIG_CSharpExceptionArgumentCallback_t argumentNullCallback,
                                                 SWIG_CSharpExceptionArgumentCallback_t argumentOutOfRangeCallback) {
@@ -291,7 +291,7 @@ static SWIG_CSharpStringHelperCallback SWIG_csharp_string_callback = NULL;
 #ifdef __cplusplus
 extern "C" 
 #endif
-SWIGEXPORT void SWIGSTDCALL SWIGRegisterStringCallback_CoreCSharpNative(SWIG_CSharpStringHelperCallback callback) {
+SWIGEXPORT void SWIGSTDCALL SWIGRegisterStringCallback_CoreC(SWIG_CSharpStringHelperCallback callback) {
   SWIG_csharp_string_callback = callback;
 }
 
@@ -7298,6 +7298,18 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_XnorfCore_Guid_OperatorEq___(void * j
 }
 
 
+SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_Guid_FromString___(char * jarg1) {
+  void * jresult ;
+  char_t *arg1 = (char_t *) 0 ;
+  XnorCore::Guid result;
+  
+  arg1 = (char_t *)jarg1; 
+  result = XnorCore::Guid::FromString((char const *)arg1);
+  jresult = new XnorCore::Guid(result); 
+  return jresult;
+}
+
+
 SWIGEXPORT const char * SWIGSTDCALL CSharp_XnorfCore_Guid_ToString___(void * jarg1) {
   const char * jresult ;
   XnorCore::Guid *arg1 = (XnorCore::Guid *) 0 ;
@@ -7529,6 +7541,20 @@ SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Resource_SetName___(void * jarg1, c
   }
   (&arg2)->assign(jarg2); 
   (arg1)->SetName(arg2);
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Resource_SetGuid___(void * jarg1, void * jarg2) {
+  XnorCore::Resource *arg1 = (XnorCore::Resource *) 0 ;
+  XnorCore::Guid *arg2 = 0 ;
+  
+  arg1 = (XnorCore::Resource *)jarg1; 
+  arg2 = (XnorCore::Guid *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "XnorCore::Guid const & is null", 0);
+    return ;
+  } 
+  (arg1)->SetGuid((XnorCore::Guid const &)*arg2);
 }
 
 
@@ -10349,8 +10375,23 @@ SWIGEXPORT char * SWIGSTDCALL CSharp_XnorfCore_ResourceManager_ReservedShaderPre
 }
 
 
+SWIGEXPORT char * SWIGSTDCALL CSharp_XnorfCore_ResourceManager_GuidMapFilePath_get___() {
+  char * jresult ;
+  char *result = 0 ;
+  
+  result = (char *)XnorCore::ResourceManager::GuidMapFilePath;
+  jresult = SWIG_csharp_string_callback((const char *)result); 
+  return jresult;
+}
+
+
 SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_ResourceManager_LoadAll___() {
   XnorCore::ResourceManager::LoadAll();
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_ResourceManager_LoadGuidMap___() {
+  XnorCore::ResourceManager::LoadGuidMap();
 }
 
 
@@ -10858,6 +10899,24 @@ SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_delete_Texture_LoadOptions___(void 
   
   arg1 = (XnorCore::Texture::LoadOptions *)jarg1; 
   delete arg1;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Texture_defaultLoadOptions_set___(void * jarg1) {
+  XnorCore::Texture::LoadOptions *arg1 = (XnorCore::Texture::LoadOptions *) 0 ;
+  
+  arg1 = (XnorCore::Texture::LoadOptions *)jarg1; 
+  XnorCore::Texture::defaultLoadOptions = *arg1;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_Texture_defaultLoadOptions_get___() {
+  void * jresult ;
+  XnorCore::Texture::LoadOptions *result = 0 ;
+  
+  result = (XnorCore::Texture::LoadOptions *)&XnorCore::Texture::defaultLoadOptions;
+  jresult = (void *)result; 
+  return jresult;
 }
 
 
@@ -13896,6 +13955,24 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_XnorfCore_ComponentList_GetTypeSize__
   result = ((XnorCore::List< XnorCore::Component * > const *)arg1)->GetTypeSize();
   jresult = (unsigned int)result; 
   return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_new_Entity___() {
+  void * jresult ;
+  XnorCore::Entity *result = 0 ;
+  
+  result = (XnorCore::Entity *)new XnorCore::Entity();
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_delete_Entity___(void * jarg1) {
+  XnorCore::Entity *arg1 = (XnorCore::Entity *) 0 ;
+  
+  arg1 = (XnorCore::Entity *)jarg1; 
+  delete arg1;
 }
 
 

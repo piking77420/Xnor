@@ -159,8 +159,8 @@
       <FileType>Document</FileType>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Creating SWIG wrappers</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Creating SWIG wrappers</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(SwigPath)" -csharp -o "$(ProjectDir)Core_wrap.cxx" -outdir "$(TargetCsDir)" -namespace Xnor.Core -std=c++23 -c++ -I"$(TargetCppProjectDir)include" -I"$(TargetCppProjectDir)externals\include" -I"$(ProjectDir)interface" -module $(ProjectName) "$(ProjectDir)%(Identity)"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(SwigPath)" -csharp -o "$(ProjectDir)Core_wrap.cxx" -outdir "$(TargetCsDir)" -namespace Xnor.Core -std=c++23 -c++ -I"$(TargetCppProjectDir)include" -I"$(TargetCppProjectDir)externals\include" -I"$(ProjectDir)interface" -module $(ProjectName) "$(ProjectDir)%(Identity)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(SwigPath)" -csharp -o "$(ProjectDir)Core_wrap.cxx" -outdir "$(TargetCsDir)" -namespace Xnor.Core -std=c++23 -c++ -I"$(TargetCppProjectDir)include" -I"$(TargetCppProjectDir)externals\include" -I"$(ProjectDir)interface" "$(ProjectDir)%(Identity)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(SwigPath)" -csharp -o "$(ProjectDir)Core_wrap.cxx" -outdir "$(TargetCsDir)" -namespace Xnor.Core -std=c++23 -c++ -I"$(TargetCppProjectDir)include" -I"$(TargetCppProjectDir)externals\include" -I"$(ProjectDir)interface" "$(ProjectDir)%(Identity)"</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)Core_wrap.cxx</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)Core_wrap.cxx</Outputs>
     </CustomBuild>

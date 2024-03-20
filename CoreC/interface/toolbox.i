@@ -1,4 +1,6 @@
-﻿%module Core
+﻿%module CoreC
+
+%import "csharp/value_type.i"
 
 %{
 #include "Maths/math.hpp"
@@ -19,21 +21,21 @@
 
 %typemap(cscode) Matrix
 %{
-    public static Matrix operator+(Matrix a, Matrix b) { return Core.OperatorAdd(a, b); }
+    public static Matrix operator+(Matrix a, Matrix b) { return CoreC.OperatorAdd(a, b); }
 
-    public static Matrix operator-(Matrix m) { return Core.OperatorSub(m); }
+    public static Matrix operator-(Matrix m) { return CoreC.OperatorSub(m); }
 
-    public static Matrix operator-(Matrix a, Matrix b) { return Core.OperatorSub(a, b); }
+    public static Matrix operator-(Matrix a, Matrix b) { return CoreC.OperatorSub(a, b); }
 
-    public static Matrix operator*(Matrix a, float b) { return Core.OperatorMul(a, b); }
+    public static Matrix operator*(Matrix a, float b) { return CoreC.OperatorMul(a, b); }
 
-    public static Matrix operator*(float a, Matrix b) { return Core.OperatorMul(b, a); }
+    public static Matrix operator*(float a, Matrix b) { return CoreC.OperatorMul(b, a); }
 
-    public static Vector3 operator*(Matrix a, Vector3 b) { return Core.OperatorMul(a, b); }
+    public static Vector3 operator*(Matrix a, Vector3 b) { return CoreC.OperatorMul(a, b); }
 
-    public static Vector4 operator*(Matrix a, Vector4 b) { return Core.OperatorMul(a, b); }
+    public static Vector4 operator*(Matrix a, Vector4 b) { return CoreC.OperatorMul(a, b); }
 
-    public static Matrix operator*(Matrix a, Matrix b) { return Core.OperatorMul(a, b); }
+    public static Matrix operator*(Matrix a, Matrix b) { return CoreC.OperatorMul(a, b); }
 
     public static bool operator==(Matrix a, Matrix b) { return a.Equals(b); }
 
@@ -44,7 +46,7 @@
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return Core.OperatorEq(this, (Matrix) obj);
+        return CoreC.OperatorEq(this, (Matrix) obj);
     }
 
     public override int GetHashCode()
@@ -88,19 +90,19 @@
 
 %typemap(cscode) Matrix3
 %{
-    public static Matrix3 operator+(Matrix3 a, Matrix3 b) { return Core.OperatorAdd(a, b); }
+    public static Matrix3 operator+(Matrix3 a, Matrix3 b) { return CoreC.OperatorAdd(a, b); }
 
-    public static Matrix3 operator-(Matrix3 m) { return Core.OperatorSub(m); }
+    public static Matrix3 operator-(Matrix3 m) { return CoreC.OperatorSub(m); }
 
-    public static Matrix3 operator-(Matrix3 a, Matrix3 b) { return Core.OperatorSub(a, b); }
+    public static Matrix3 operator-(Matrix3 a, Matrix3 b) { return CoreC.OperatorSub(a, b); }
 
-    public static Matrix3 operator*(Matrix3 a, float b) { return Core.OperatorMul(a, b); }
+    public static Matrix3 operator*(Matrix3 a, float b) { return CoreC.OperatorMul(a, b); }
 
-    public static Matrix3 operator*(float a, Matrix3 b) { return Core.OperatorMul(b, a); }
+    public static Matrix3 operator*(float a, Matrix3 b) { return CoreC.OperatorMul(b, a); }
 
-    public static Vector3 operator*(Matrix3 a, Vector3 b) { return Core.OperatorMul(a, b); }
+    public static Vector3 operator*(Matrix3 a, Vector3 b) { return CoreC.OperatorMul(a, b); }
 
-    public static Matrix3 operator*(Matrix3 a, Matrix3 b) { return Core.OperatorMul(a, b); }
+    public static Matrix3 operator*(Matrix3 a, Matrix3 b) { return CoreC.OperatorMul(a, b); }
 
     public static bool operator==(Matrix3 a, Matrix3 b) { return a.Equals(b); }
 
@@ -111,7 +113,7 @@
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return Core.OperatorEq(this, (Matrix3) obj);
+        return CoreC.OperatorEq(this, (Matrix3) obj);
     }
 
     public override int GetHashCode()
@@ -151,21 +153,21 @@
 
 %typemap(cscode) Vector2
 %{
-    public static Vector2 operator+(Vector2 a, Vector2 b) { return Core.OperatorAdd(a, b); }
+    public static Vector2 operator+(Vector2 a, Vector2 b) { return CoreC.OperatorAdd(a, b); }
 
-    public static Vector2 operator-(Vector2 m) { return Core.OperatorSub(m); }
+    public static Vector2 operator-(Vector2 m) { return CoreC.OperatorSub(m); }
 
-    public static Vector2 operator-(Vector2 a, Vector2 b) { return Core.OperatorSub(a, b); }
+    public static Vector2 operator-(Vector2 a, Vector2 b) { return CoreC.OperatorSub(a, b); }
 
-    public static Vector2 operator*(Vector2 a, Vector2 b) { return Core.OperatorMul(a, b); }
+    public static Vector2 operator*(Vector2 a, Vector2 b) { return CoreC.OperatorMul(a, b); }
 
-    public static Vector2 operator*(Vector2 a, float b) { return Core.OperatorMul(a, b); }
+    public static Vector2 operator*(Vector2 a, float b) { return CoreC.OperatorMul(a, b); }
 
-    public static Vector2 operator*(float a, Vector2 b) { return Core.OperatorMul(b, a); }
+    public static Vector2 operator*(float a, Vector2 b) { return CoreC.OperatorMul(b, a); }
 
-    public static Vector2 operator/(Vector2 a, Vector2 b) { return Core.OperatorDiv(a, b); }
+    public static Vector2 operator/(Vector2 a, Vector2 b) { return CoreC.OperatorDiv(a, b); }
 
-    public static Vector2 operator/(Vector2 a, float b) { return Core.OperatorDiv(a, b); }
+    public static Vector2 operator/(Vector2 a, float b) { return CoreC.OperatorDiv(a, b); }
 
     public static bool operator==(Vector2 a, Vector2 b) { return a.Equals(b); }
 
@@ -176,7 +178,7 @@
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return Core.OperatorEq(this, (Vector2) obj);
+        return CoreC.OperatorEq(this, (Vector2) obj);
     }
 
     public override int GetHashCode() { return HashCode.Combine(x, y); }
@@ -203,21 +205,21 @@
 
 %typemap(cscode) Vector2i
 %{
-    public static Vector2i operator+(Vector2i a, Vector2i b) { return Core.OperatorAdd(a, b); }
+    public static Vector2i operator+(Vector2i a, Vector2i b) { return CoreC.OperatorAdd(a, b); }
 
-    public static Vector2i operator-(Vector2i m) { return Core.OperatorSub(m); }
+    public static Vector2i operator-(Vector2i m) { return CoreC.OperatorSub(m); }
 
-    public static Vector2i operator-(Vector2i a, Vector2i b) { return Core.OperatorSub(a, b); }
+    public static Vector2i operator-(Vector2i a, Vector2i b) { return CoreC.OperatorSub(a, b); }
 
-    public static Vector2i operator*(Vector2i a, int b) { return Core.OperatorMul(a, b); }
+    public static Vector2i operator*(Vector2i a, int b) { return CoreC.OperatorMul(a, b); }
 
-    public static Vector2i operator*(int a, Vector2i b) { return Core.OperatorMul(b, a); }
+    public static Vector2i operator*(int a, Vector2i b) { return CoreC.OperatorMul(b, a); }
 
-    public static Vector2i operator*(Vector2i a, Vector2i b) { return Core.OperatorMul(a, b); }
+    public static Vector2i operator*(Vector2i a, Vector2i b) { return CoreC.OperatorMul(a, b); }
 
-    public static Vector2 operator/(Vector2i a, Vector2i b) { return Core.OperatorDiv(a, b); }
+    public static Vector2 operator/(Vector2i a, Vector2i b) { return CoreC.OperatorDiv(a, b); }
 
-    public static Vector2 operator/(Vector2i a, float b) { return Core.OperatorDiv(a, b); }
+    public static Vector2 operator/(Vector2i a, float b) { return CoreC.OperatorDiv(a, b); }
 
     public static bool operator==(Vector2i a, Vector2i b) { return a.Equals(b); }
 
@@ -228,7 +230,7 @@
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return Core.OperatorEq(this, (Vector2i) obj);
+        return CoreC.OperatorEq(this, (Vector2i) obj);
     }
 
     public override int GetHashCode() { return HashCode.Combine(x, y); }
@@ -253,21 +255,21 @@
 
 %typemap(cscode) Vector3
 %{
-    public static Vector3 operator+(Vector3 a, Vector3 b) { return Core.OperatorAdd(a, b); }
+    public static Vector3 operator+(Vector3 a, Vector3 b) { return CoreC.OperatorAdd(a, b); }
 
-    public static Vector3 operator-(Vector3 m) { return Core.OperatorSub(m); }
+    public static Vector3 operator-(Vector3 m) { return CoreC.OperatorSub(m); }
 
-    public static Vector3 operator-(Vector3 a, Vector3 b) { return Core.OperatorSub(a, b); }
+    public static Vector3 operator-(Vector3 a, Vector3 b) { return CoreC.OperatorSub(a, b); }
 
-    public static Vector3 operator*(Vector3 a, float b) { return Core.OperatorMul(a, b); }
+    public static Vector3 operator*(Vector3 a, float b) { return CoreC.OperatorMul(a, b); }
 
-    public static Vector3 operator*(float a, Vector3 b) { return Core.OperatorMul(b, a); }
+    public static Vector3 operator*(float a, Vector3 b) { return CoreC.OperatorMul(b, a); }
 
-    public static Vector3 operator*(Vector3 a, Vector3 b) { return Core.OperatorMul(a, b); }
+    public static Vector3 operator*(Vector3 a, Vector3 b) { return CoreC.OperatorMul(a, b); }
 
-    public static Vector3 operator/(Vector3 a, Vector3 b) { return Core.OperatorDiv(a, b); }
+    public static Vector3 operator/(Vector3 a, Vector3 b) { return CoreC.OperatorDiv(a, b); }
 
-    public static Vector3 operator/(Vector3 a, float b) { return Core.OperatorDiv(a, b); }
+    public static Vector3 operator/(Vector3 a, float b) { return CoreC.OperatorDiv(a, b); }
 
     public static bool operator==(Vector3 a, Vector3 b) { return a.Equals(b); }
 
@@ -278,7 +280,7 @@
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return Core.OperatorEq(this, (Vector3) obj);
+        return CoreC.OperatorEq(this, (Vector3) obj);
     }
 
     public override int GetHashCode() { return HashCode.Combine(x, y, z); }
@@ -303,21 +305,21 @@
 
 %typemap(cscode) Vector4
 %{
-    public static Vector4 operator+(Vector4 a, Vector4 b) { return Core.OperatorAdd(a, b); }
+    public static Vector4 operator+(Vector4 a, Vector4 b) { return CoreC.OperatorAdd(a, b); }
 
-    public static Vector4 operator-(Vector4 m) { return Core.OperatorSub(m); }
+    public static Vector4 operator-(Vector4 m) { return CoreC.OperatorSub(m); }
 
-    public static Vector4 operator-(Vector4 a, Vector4 b) { return Core.OperatorSub(a, b); }
+    public static Vector4 operator-(Vector4 a, Vector4 b) { return CoreC.OperatorSub(a, b); }
 
-    public static Vector4 operator*(Vector4 a, float b) { return Core.OperatorMul(a, b); }
+    public static Vector4 operator*(Vector4 a, float b) { return CoreC.OperatorMul(a, b); }
 
-    public static Vector4 operator*(float a, Vector4 b) { return Core.OperatorMul(b, a); }
+    public static Vector4 operator*(float a, Vector4 b) { return CoreC.OperatorMul(b, a); }
 
-    public static Vector4 operator*(Vector4 a, Vector4 b) { return Core.OperatorMul(a, b); }
+    public static Vector4 operator*(Vector4 a, Vector4 b) { return CoreC.OperatorMul(a, b); }
 
-    public static Vector4 operator/(Vector4 a, Vector4 b) { return Core.OperatorDiv(a, b); }
+    public static Vector4 operator/(Vector4 a, Vector4 b) { return CoreC.OperatorDiv(a, b); }
 
-    public static Vector4 operator/(Vector4 a, float b) { return Core.OperatorDiv(a, b); }
+    public static Vector4 operator/(Vector4 a, float b) { return CoreC.OperatorDiv(a, b); }
 
     public static bool operator==(Vector4 a, Vector4 b) { return a.Equals(b); }
 
@@ -328,7 +330,7 @@
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return Core.OperatorEq(this, (Vector4) obj);
+        return CoreC.OperatorEq(this, (Vector4) obj);
     }
 
     public override int GetHashCode() { return HashCode.Combine(x, y, z, w); }
@@ -353,19 +355,19 @@
 
 %typemap(cscode) Quaternion
 %{
-    public static Quaternion operator+(Quaternion a, Quaternion b) { return Core.OperatorAdd(a, b); }
+    public static Quaternion operator+(Quaternion a, Quaternion b) { return CoreC.OperatorAdd(a, b); }
 
-    public static Quaternion operator-(Quaternion m) { return Core.OperatorSub(m); }
+    public static Quaternion operator-(Quaternion m) { return CoreC.OperatorSub(m); }
 
-    public static Quaternion operator-(Quaternion a, Quaternion b) { return Core.OperatorSub(a, b); }
+    public static Quaternion operator-(Quaternion a, Quaternion b) { return CoreC.OperatorSub(a, b); }
 
-    public static Quaternion operator*(Quaternion a, float b) { return Core.OperatorMul(a, b); }
+    public static Quaternion operator*(Quaternion a, float b) { return CoreC.OperatorMul(a, b); }
 
-    public static Quaternion operator*(float a, Quaternion b) { return Core.OperatorMul(b, a); }
+    public static Quaternion operator*(float a, Quaternion b) { return CoreC.OperatorMul(b, a); }
 
-    public static Quaternion operator*(Quaternion a, Quaternion b) { return Core.OperatorMul(a, b); }
+    public static Quaternion operator*(Quaternion a, Quaternion b) { return CoreC.OperatorMul(a, b); }
 
-    public static Quaternion operator/(Quaternion a, float b) { return Core.OperatorDiv(a, b); }
+    public static Quaternion operator/(Quaternion a, float b) { return CoreC.OperatorDiv(a, b); }
 
     public static bool operator==(Quaternion a, Quaternion b) { return a.Equals(b); }
 
@@ -376,7 +378,7 @@
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != this.GetType()) return false;
-        return Core.OperatorEq(this, (Quaternion) obj);
+        return CoreC.OperatorEq(this, (Quaternion) obj);
     }
 
     public override int GetHashCode() { return HashCode.Combine(X(), Y(), Z(), W()); }

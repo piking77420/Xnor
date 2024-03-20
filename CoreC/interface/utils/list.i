@@ -1,4 +1,4 @@
-%module Core
+%module CoreC
 
 %typemap(csinterfaces) XnorCore::List<XnorCore::Component*>
 %{
@@ -57,7 +57,7 @@
 
     public Component this[uint index]
     {
-        get => Xnor.Core.Core.ComponentListGetItem(this, index);
+        get => CoreC.ComponentListGetItem(this, index);
     }
 %}
 
