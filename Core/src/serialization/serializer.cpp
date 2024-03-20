@@ -54,6 +54,7 @@ void Serializer::StartSerialization(const std::string& filePath)
 void Serializer::StartDeserialization(const std::string& filePath)
 {
     OpenFileToRead(filePath);
+    m_GuidEntityMap.clear();
 }
 
 void Serializer::EndSerialization()
@@ -72,6 +73,7 @@ void Serializer::EndDeserialization()
     DisposeXMLObject(m_XmlDoc);
     DisposeXMLFile(m_File);
     m_CurrentFilePath = "";
+    m_GuidEntityMap.clear();
 }
 
 void Serializer::BeginRootElement(const std::string& elementName, const std::string& elementValue)
