@@ -111,8 +111,7 @@ void ComputeShader::BindTexture(
     const ImageAccess imageAcess
 )
 {
-    Rhi::BindImageTexture(0,texture.GetId(),0,false,0,ImageAccess::ReadWrite,TextureInternalFormat::Rgba32F);
-
+    Rhi::BindImageTexture(unit,texture.GetId(),level,layered,layer,ImageAccess::ReadWrite, texture.GetInternalFormat());
 }
 
 void ComputeShader::SetMemoryBarrier(GpuMemoryBarrier memoryBarrier)

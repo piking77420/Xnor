@@ -18,7 +18,8 @@ layout (location = 0) uniform float t;                 /** Time */
 //
 // ----------------------------------------------------------------------------
 
-void main() {
+void main() 
+{
 	vec4 value = vec4(0.0, 0.0, 0.0, 1.0);
 	ivec2 texelCoord = ivec2(gl_GlobalInvocationID.xy);
 	float speed = 100;

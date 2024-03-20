@@ -3,6 +3,7 @@
 #include "core.hpp"
 #include "rendering/frame_buffer.hpp"
 #include "rendering/render_pass.hpp"
+#include "resource/compute_shader.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
 
@@ -12,7 +13,7 @@ class BloomPass
 private:
     static inline Pointer<Model> m_Quad = nullptr;
     static inline Pointer<Shader> m_DownSample = nullptr;
-    static inline Pointer<Shader> m_UpSample = nullptr;
+    static inline Pointer<ComputeShader> m_UpSample = nullptr;
     static inline Pointer<Shader> m_TresholdFilter = nullptr;
     static inline Pointer<Shader> m_TestShaderCompute = nullptr;
     

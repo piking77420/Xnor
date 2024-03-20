@@ -26,10 +26,11 @@ void BloomPass::Init(uint32_t bloomMips)
 
     // Upsample
     m_UpSample = ResourceManager::Get<Shader>("up_sample");
-    m_UpSample->SetBlendFunction( {true, BlendValue::One, BlendValue::One, BlendEquation::Add });
+    //m_UpSample->SetBlendFunction( {true, BlendValue::One, BlendValue::One, BlendEquation::Add });
     m_UpSample->CreateInRhi();
     m_UpSample->Use();
-    m_UpSample->SetInt("srcTexture", 0);
+    m_UpSample->SetInt("currentMip", 0);
+    m_UpSample->SetInt("nextMip", 1);    
     m_UpSample->Unuse();
 
     m_TresholdFilter = ResourceManager::Get<Shader>("bloom_threshold");
@@ -63,22 +64,11 @@ void BloomPass::UpSampling()
     {
         const BloomMip& mip = m_MipChain[i];
         const BloomMip& nextMip = m_MipChain[i - 1];
-        mip.texture->BindTexture(0);
-        m_FrameBuffer->AttachTexture(*nextMip.texture, Attachment::Color00, 0);
-        
-        const RenderPassBeginInfo renderPassBeginInfo =
-        {
-            .frameBuffer = m_FrameBuffer,
-            .renderAreaOffset = { 0,0 },
-            .renderAreaExtent = nextMip.texture->GetSize(),
-            .clearBufferFlags = BufferFlag::None,
-        };
-        m_RenderPass.BeginRenderPass(renderPassBeginInfo);
+        m_UpSample->BindTexture(0, *mip.texture, 0, false, 0, ImageAccess::ReadWrite);
+        m_UpSample->BindTexture(1, *nextMip.texture, 0, false, 0, ImageAccess::ReadWrite);
 
-        Rhi::DrawModel(m_Quad->GetId());
-        
-        m_RenderPass.EndRenderPass();
-        mip.texture->UnbindTexture(0);
+        m_UpSample->DispatchCompute(std::ceil(mip.texture->GetSize().x), std::ceil(mip.texture->GetSize().y) ,1);
+        m_UpSample->SetMemoryBarrier(GpuMemoryBarrier::AllBarrierBits);
     }
 
     
