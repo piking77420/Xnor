@@ -11374,24 +11374,42 @@ SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Time_Update___() {
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Component_entity_set___(void * jarg1, void * jarg2) {
-  XnorCore::Component *arg1 = (XnorCore::Component *) 0 ;
-  XnorCore::Entity *arg2 = (XnorCore::Entity *) 0 ;
+SWIGEXPORT float SWIGSTDCALL CSharp_XnorfCore_Time_GetTotalTime___() {
+  float jresult ;
+  float result;
   
-  arg1 = (XnorCore::Component *)jarg1; 
-  arg2 = (XnorCore::Entity *)jarg2; 
-  if (arg1) (arg1)->entity = arg2;
+  result = (float)XnorCore::Time::SWIGTEMPLATEDISAMBIGUATOR GetTotalTime< float_t >();
+  jresult = result; 
+  return jresult;
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_Component_entity_get___(void * jarg1) {
-  void * jresult ;
-  XnorCore::Component *arg1 = (XnorCore::Component *) 0 ;
-  XnorCore::Entity *result = 0 ;
+SWIGEXPORT float SWIGSTDCALL CSharp_XnorfCore_Time_GetLastTotalTime___() {
+  float jresult ;
+  float result;
   
-  arg1 = (XnorCore::Component *)jarg1; 
-  result = (XnorCore::Entity *) ((arg1)->entity);
-  jresult = (void *)result; 
+  result = (float)XnorCore::Time::SWIGTEMPLATEDISAMBIGUATOR GetLastTotalTime< float_t >();
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT float SWIGSTDCALL CSharp_XnorfCore_Time_GetDeltaTime___() {
+  float jresult ;
+  float result;
+  
+  result = (float)XnorCore::Time::SWIGTEMPLATEDISAMBIGUATOR GetDeltaTime< float_t >();
+  jresult = result; 
+  return jresult;
+}
+
+
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_XnorfCore_Time_GetTotalFrameCount___() {
+  unsigned int jresult ;
+  unsigned int result;
+  
+  result = (unsigned int)XnorCore::Time::SWIGTEMPLATEDISAMBIGUATOR GetTotalFrameCount< uint32_t >();
+  jresult = (unsigned int)result; 
   return jresult;
 }
 
@@ -11417,6 +11435,30 @@ SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Component_Update___(void * jarg1) {
   
   arg1 = (XnorCore::Component *)jarg1; 
   (arg1)->Update();
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_Component_GetEntity___(void * jarg1) {
+  void * jresult ;
+  XnorCore::Component *arg1 = (XnorCore::Component *) 0 ;
+  XnorCore::Entity *result = 0 ;
+  
+  arg1 = (XnorCore::Component *)jarg1; 
+  result = (XnorCore::Entity *)((XnorCore::Component const *)arg1)->GetEntity();
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_Component_GetTransform___(void * jarg1) {
+  void * jresult ;
+  XnorCore::Component *arg1 = (XnorCore::Component *) 0 ;
+  XnorCore::Transform *result = 0 ;
+  
+  arg1 = (XnorCore::Component *)jarg1; 
+  result = (XnorCore::Transform *) &((XnorCore::Component const *)arg1)->GetTransform();
+  jresult = (void *)result; 
+  return jresult;
 }
 
 
@@ -13482,15 +13524,47 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_Transform_GetPosition___(void * j
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_Transform_SetPosition___(void * jarg1) {
-  void * jresult ;
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Transform_SetPosition___(void * jarg1, void * jarg2) {
   XnorCore::Transform *arg1 = (XnorCore::Transform *) 0 ;
-  Vector3 *result = 0 ;
+  Vector3 *arg2 = 0 ;
   
   arg1 = (XnorCore::Transform *)jarg1; 
-  result = (Vector3 *) &(arg1)->SetPosition();
-  jresult = (void *)result; 
-  return jresult;
+  arg2 = (Vector3 *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "Vector3 const & is null", 0);
+    return ;
+  } 
+  (arg1)->SetPosition((Vector3 const &)*arg2);
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Transform_SetPositionX___(void * jarg1, float jarg2) {
+  XnorCore::Transform *arg1 = (XnorCore::Transform *) 0 ;
+  float_t arg2 ;
+  
+  arg1 = (XnorCore::Transform *)jarg1; 
+  arg2 = (float_t)jarg2; 
+  (arg1)->SetPositionX(arg2);
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Transform_SetPositionY___(void * jarg1, float jarg2) {
+  XnorCore::Transform *arg1 = (XnorCore::Transform *) 0 ;
+  float_t arg2 ;
+  
+  arg1 = (XnorCore::Transform *)jarg1; 
+  arg2 = (float_t)jarg2; 
+  (arg1)->SetPositionY(arg2);
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Transform_SetPositionZ___(void * jarg1, float jarg2) {
+  XnorCore::Transform *arg1 = (XnorCore::Transform *) 0 ;
+  float_t arg2 ;
+  
+  arg1 = (XnorCore::Transform *)jarg1; 
+  arg2 = (float_t)jarg2; 
+  (arg1)->SetPositionZ(arg2);
 }
 
 
@@ -13506,15 +13580,47 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_Transform_GetRotationEulerAngle__
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_Transform_SetRotationEulerAngle___(void * jarg1) {
-  void * jresult ;
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Transform_SetRotationEulerAngle___(void * jarg1, void * jarg2) {
   XnorCore::Transform *arg1 = (XnorCore::Transform *) 0 ;
-  Vector3 *result = 0 ;
+  Vector3 *arg2 = 0 ;
   
   arg1 = (XnorCore::Transform *)jarg1; 
-  result = (Vector3 *) &(arg1)->SetRotationEulerAngle();
-  jresult = (void *)result; 
-  return jresult;
+  arg2 = (Vector3 *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "Vector3 const & is null", 0);
+    return ;
+  } 
+  (arg1)->SetRotationEulerAngle((Vector3 const &)*arg2);
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Transform_SetRotationEulerAngleX___(void * jarg1, float jarg2) {
+  XnorCore::Transform *arg1 = (XnorCore::Transform *) 0 ;
+  float_t arg2 ;
+  
+  arg1 = (XnorCore::Transform *)jarg1; 
+  arg2 = (float_t)jarg2; 
+  (arg1)->SetRotationEulerAngleX(arg2);
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Transform_SetRotationEulerAngleY___(void * jarg1, float jarg2) {
+  XnorCore::Transform *arg1 = (XnorCore::Transform *) 0 ;
+  float_t arg2 ;
+  
+  arg1 = (XnorCore::Transform *)jarg1; 
+  arg2 = (float_t)jarg2; 
+  (arg1)->SetRotationEulerAngleY(arg2);
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Transform_SetRotationEulerAngleZ___(void * jarg1, float jarg2) {
+  XnorCore::Transform *arg1 = (XnorCore::Transform *) 0 ;
+  float_t arg2 ;
+  
+  arg1 = (XnorCore::Transform *)jarg1; 
+  arg2 = (float_t)jarg2; 
+  (arg1)->SetRotationEulerAngleZ(arg2);
 }
 
 
@@ -13530,15 +13636,57 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_Transform_GetRotation___(void * j
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_Transform_SetRotation___(void * jarg1) {
-  void * jresult ;
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Transform_SetRotation___(void * jarg1, void * jarg2) {
   XnorCore::Transform *arg1 = (XnorCore::Transform *) 0 ;
-  Quaternion *result = 0 ;
+  Quaternion *arg2 = 0 ;
   
   arg1 = (XnorCore::Transform *)jarg1; 
-  result = (Quaternion *) &(arg1)->SetRotation();
-  jresult = (void *)result; 
-  return jresult;
+  arg2 = (Quaternion *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "Quaternion const & is null", 0);
+    return ;
+  } 
+  (arg1)->SetRotation((Quaternion const &)*arg2);
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Transform_SetRotationX___(void * jarg1, float jarg2) {
+  XnorCore::Transform *arg1 = (XnorCore::Transform *) 0 ;
+  float_t arg2 ;
+  
+  arg1 = (XnorCore::Transform *)jarg1; 
+  arg2 = (float_t)jarg2; 
+  (arg1)->SetRotationX(arg2);
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Transform_SetRotationY___(void * jarg1, float jarg2) {
+  XnorCore::Transform *arg1 = (XnorCore::Transform *) 0 ;
+  float_t arg2 ;
+  
+  arg1 = (XnorCore::Transform *)jarg1; 
+  arg2 = (float_t)jarg2; 
+  (arg1)->SetRotationY(arg2);
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Transform_SetRotationZ___(void * jarg1, float jarg2) {
+  XnorCore::Transform *arg1 = (XnorCore::Transform *) 0 ;
+  float_t arg2 ;
+  
+  arg1 = (XnorCore::Transform *)jarg1; 
+  arg2 = (float_t)jarg2; 
+  (arg1)->SetRotationZ(arg2);
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Transform_SetRotationW___(void * jarg1, float jarg2) {
+  XnorCore::Transform *arg1 = (XnorCore::Transform *) 0 ;
+  float_t arg2 ;
+  
+  arg1 = (XnorCore::Transform *)jarg1; 
+  arg2 = (float_t)jarg2; 
+  (arg1)->SetRotationW(arg2);
 }
 
 
@@ -13554,15 +13702,47 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_Transform_GetScale___(void * jarg
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_Transform_SetScale___(void * jarg1) {
-  void * jresult ;
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Transform_SetScale___(void * jarg1, void * jarg2) {
   XnorCore::Transform *arg1 = (XnorCore::Transform *) 0 ;
-  Vector3 *result = 0 ;
+  Vector3 *arg2 = 0 ;
   
   arg1 = (XnorCore::Transform *)jarg1; 
-  result = (Vector3 *) &(arg1)->SetScale();
-  jresult = (void *)result; 
-  return jresult;
+  arg2 = (Vector3 *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "Vector3 const & is null", 0);
+    return ;
+  } 
+  (arg1)->SetScale((Vector3 const &)*arg2);
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Transform_SetScaleX___(void * jarg1, float jarg2) {
+  XnorCore::Transform *arg1 = (XnorCore::Transform *) 0 ;
+  float_t arg2 ;
+  
+  arg1 = (XnorCore::Transform *)jarg1; 
+  arg2 = (float_t)jarg2; 
+  (arg1)->SetScaleX(arg2);
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Transform_SetScaleY___(void * jarg1, float jarg2) {
+  XnorCore::Transform *arg1 = (XnorCore::Transform *) 0 ;
+  float_t arg2 ;
+  
+  arg1 = (XnorCore::Transform *)jarg1; 
+  arg2 = (float_t)jarg2; 
+  (arg1)->SetScaleY(arg2);
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Transform_SetScaleZ___(void * jarg1, float jarg2) {
+  XnorCore::Transform *arg1 = (XnorCore::Transform *) 0 ;
+  float_t arg2 ;
+  
+  arg1 = (XnorCore::Transform *)jarg1; 
+  arg2 = (float_t)jarg2; 
+  (arg1)->SetScaleZ(arg2);
 }
 
 

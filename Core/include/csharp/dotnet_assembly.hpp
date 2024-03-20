@@ -26,10 +26,15 @@ public:
     [[nodiscard]]
     XNOR_ENGINE const std::string& GetFilename() const;
 
+    [[nodiscard]]
+    XNOR_ENGINE const std::string& GetName() const;
+
 private:
     Coral::ManagedAssembly* m_Assembly = nullptr;
 
     std::string m_Filepath;
+
+    std::string m_Name;
     
     void ProcessScriptComponent(Coral::Type& subclass);
 };

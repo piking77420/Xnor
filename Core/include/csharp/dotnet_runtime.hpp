@@ -17,7 +17,9 @@ public:
 
     XNOR_ENGINE static void Shutdown();
 
-    XNOR_ENGINE static bool_t LoadAssembly(const std::string& filename);
+    XNOR_ENGINE static bool_t LoadAssembly(const std::string& name);
+
+    XNOR_ENGINE static DotnetAssembly* GetAssembly(const std::string& name);
 
     XNOR_ENGINE static void UnloadAllAssemblies(bool_t reloadContext = false);
 

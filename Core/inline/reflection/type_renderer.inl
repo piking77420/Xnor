@@ -725,12 +725,12 @@ void TypeRenderer::DisplayList(const Metadata<ReflectT, MemberT, DescriptorT>& m
             // Check if the filter should be displayed
             if (m_ComponentFilterTarget == static_cast<void*>(metadata.obj))
             {
-                Component* const e = FilterComponent(m_TextFilter);
-                if (e)
+                Component* const c = FilterComponent(m_TextFilter);
+                if (c)
                 {
-                    metadata.obj->Add(e);
+                    metadata.obj->Add(c);
                     // Set entity pointer
-                    e->entity = metadata.topLevelObj;
+                    c->entity = metadata.topLevelObj;
                     m_ComponentFilterTarget = nullptr;
                 }
             }

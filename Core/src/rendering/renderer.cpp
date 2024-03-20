@@ -178,7 +178,7 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 		if (!meshRenderer->drawModelAabb)
 			continue;
 
-		const Transform& transform =  meshRenderer->entity->transform;
+		const Transform& transform =  meshRenderer->GetEntity()->transform;
 		const Model::Aabb&& modelAabb = meshRenderer->model->GetAabb();
 
 		const Vector3&& aabbSize = (modelAabb.max - modelAabb.min) * 0.5f;
@@ -206,10 +206,10 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		if (meshRenderer->material.materialType != materialType)
 			continue;
 		
-		Transform& transform = meshRenderer->entity->transform;
+		const Transform& transform = meshRenderer->GetEntity()->transform;
 		ModelUniformData modelData;
 		modelData.model = transform.worldMatrix;
-		modelData.meshRenderIndex = reinterpret_cast<uint64_t>(meshRenderers[i]->entity);
+		modelData.meshRenderIndex = reinterpret_cast<uint64_t>(meshRenderers[i]->GetEntity());
 		
 		try
 		{
@@ -253,11 +253,11 @@ void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRe
 	{
 		const MeshRenderer* meshRenderer =  meshRenderers[i];
 		
-		Transform& transform = meshRenderer->entity->transform;
+		const Transform& transform = meshRenderer->GetEntity()->transform;
 		ModelUniformData modelData;
 		modelData.model = transform.worldMatrix;
 		// +1 to avoid the black color of the attachment be a valid index  
-		modelData.meshRenderIndex = scene.GetEntityIndex(meshRenderer->entity) + 1;
+		modelData.meshRenderIndex = scene.GetEntityIndex(meshRenderer->GetEntity()) + 1;
 		
 		try
 		{

@@ -47,7 +47,7 @@ bool_t DotnetRuntime::Initialize()
 
     m_Alc = m_Runtime.CreateAssemblyLoadContext(AlcName);
 
-    LoadAssembly("CoreCSharp.dll");
+    LoadAssembly("CoreCSharp");
 
     return true;
 }
@@ -62,9 +62,9 @@ void DotnetRuntime::Shutdown()
         m_Runtime.Shutdown();
 }
 
-bool_t DotnetRuntime::LoadAssembly(const std::string& filename)
+bool_t DotnetRuntime::LoadAssembly(const std::string& name)
 {
-    const std::filesystem::path&& filepath = Application::executablePath.parent_path().string() + static_cast<char_t>(std::filesystem::path::preferred_separator) + filename;
+    const std::filesystem::path&& filepath = Application::executablePath.parent_path().string() + static_cast<char_t>(std::filesystem::path::preferred_separator) + name + ".dll";
     
     Logger::LogInfo("Loading .NET assembly {}", filepath.filename());
 
@@ -73,11 +73,22 @@ bool_t DotnetRuntime::LoadAssembly(const std::string& filename)
     DotnetAssembly* assembly = new DotnetAssembly(str);
     if (assembly->Load(m_Alc))
     {
-        assembly->ProcessTypes();
+        //assembly->ProcessTypes();
         m_LoadedAssemblies.push_back(assembly);
     }
 
     return false;
+}
+
+DotnetAssembly* DotnetRuntime::GetAssembly(const std::string& name)
+{
+    for (auto&& assembly : m_LoadedAssemblies)
+    {
+        if (assembly->GetName() == name)
+            return assembly;
+    }
+
+    return nullptr;
 }
 
 void DotnetRuntime::UnloadAllAssemblies(const bool_t reloadContext)
@@ -97,7 +108,7 @@ void DotnetRuntime::UnloadAllAssemblies(const bool_t reloadContext)
 void DotnetRuntime::ReloadAllAssemblies()
 {
     std::vector<std::string> assemblies;
-    std::ranges::transform(m_LoadedAssemblies, assemblies.begin(), [](const decltype(m_LoadedAssemblies)::value_type& loadedAssembly) { return loadedAssembly->GetFilename(); });
+    std::ranges::transform(m_LoadedAssemblies, std::back_inserter(assemblies), [](const decltype(m_LoadedAssemblies)::value_type& loadedAssembly) { return loadedAssembly->GetName(); });
     UnloadAllAssemblies();
     
     for (auto&& assembly : assemblies)
@@ -112,7 +123,7 @@ bool_t DotnetRuntime::GetInitialized()
 bool DotnetRuntime::CheckDotnetInstalled()
 {
     // Check if the dotnet command returns a non-zero exit code
-    return std::system("dotnet --info 1> nil") == 0;  // NOLINT(concurrency-mt-unsafe)
+    return std::system("dotnet --info 1> nul") == 0;  // NOLINT(concurrency-mt-unsafe)
 }
 
 #define TEMP_FILE_PATH "%temp%/xnor_dotnet_list_runtimes.txt"

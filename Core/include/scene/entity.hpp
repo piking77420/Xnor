@@ -73,6 +73,14 @@ public:
     [[nodiscard]]
     bool_t TryGetComponent(T** output);
 
+    /// @brief Tries to get a component
+    /// @tparam T Component type
+    /// @param output Found Component
+    /// @return Whether the Component exists
+    template <Concepts::ComponentT T>
+    [[nodiscard]]
+    bool_t TryGetComponent(const T** output) const;
+
     /// @brief Removes a specified Component
     /// @tparam T Component type
     template <Concepts::ComponentT T>

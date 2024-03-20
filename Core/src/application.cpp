@@ -45,7 +45,7 @@ Application::Application()
 
 	World::scene = new Scene;
 
-	DotnetRuntime::LoadAssembly("Game.dll");
+	DotnetRuntime::LoadAssembly("Game");
 }
 
 Application::~Application()

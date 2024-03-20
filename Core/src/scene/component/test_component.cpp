@@ -9,9 +9,9 @@ using namespace XnorCore;
 
 void TestComponent::Begin()
 {
-    m_BasePosition = entity->transform.GetPosition();
+    m_BasePosition = GetEntity()->transform.GetPosition();
 
-    m_Light = entity->GetComponent<Light>();
+    m_Light = GetEntity()->GetComponent<Light>();
 
     m_Color = static_cast<ColorHsva>(ColorRgb::Red());
 }
@@ -22,8 +22,8 @@ void TestComponent::Update()
         return;
 
     m_CurrentAngle += m_RotationSpeed * Time::GetDeltaTime();
-    entity->transform.SetPosition().x = (std::cos(m_CurrentAngle) - std::sin(m_CurrentAngle)) * m_Radius;
-    entity->transform.SetPosition().z = (std::cos(m_CurrentAngle) + std::sin(m_CurrentAngle)) * m_Radius;
+    GetEntity()->transform.SetPositionX((std::cos(m_CurrentAngle) - std::sin(m_CurrentAngle)) * m_Radius);
+    GetEntity()->transform.SetPositionZ((std::cos(m_CurrentAngle) + std::sin(m_CurrentAngle)) * m_Radius);
 
     m_Color.h++;
 

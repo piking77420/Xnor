@@ -9,6 +9,7 @@ using namespace XnorCore;
 DotnetAssembly::DotnetAssembly(std::string filepath)
     : m_Filepath(std::move(filepath))
 {
+    m_Name = std::filesystem::path(m_Filepath).stem().string();
 }
 
 bool_t DotnetAssembly::Load(Coral::AssemblyLoadContext& alc)
@@ -68,6 +69,11 @@ const Coral::ManagedAssembly* DotnetAssembly::GetCoralAssembly() const
 const std::string& DotnetAssembly::GetFilename() const
 {
     return m_Filepath;
+}
+
+const std::string& DotnetAssembly::GetName() const
+{
+    return m_Name;
 }
 
 void DotnetAssembly::ProcessScriptComponent(Coral::Type& subclass)

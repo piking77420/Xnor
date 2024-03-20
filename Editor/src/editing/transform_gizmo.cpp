@@ -37,11 +37,11 @@ bool TransfromGizmo::Manipulate(XnorCore::Entity& entity)
     
     ImGuizmo::DecomposeMatrixToComponents(matrix.Raw(), position.Raw(), eulerRotation.Raw(), scale.Raw());
 
-    transform.SetPosition() = position;
+    transform.SetPosition(position);
     // Convert Imgui gizmoRot
-    transform.SetRotationEulerAngle() = eulerRotation * Calc::Deg2Rad;
-    transform.SetRotation() = Quaternion::FromEuler(eulerRotation);
-    transform.SetScale() = scale;
+    transform.SetRotationEulerAngle(eulerRotation * Calc::Deg2Rad);
+    transform.SetRotation(Quaternion::FromEuler(eulerRotation));
+    transform.SetScale(scale);
     
     return true;
     

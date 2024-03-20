@@ -29,6 +29,9 @@ namespace Game
             color.h++;
 
             light.color = (Colorf) color;
+
+            transform.SetPositionX(MathF.Cos(Time.GetTotalTime()) * 2f);
+            transform.SetPositionZ(MathF.Sin(Time.GetTotalTime()) * 2f);
         }
     }
 }

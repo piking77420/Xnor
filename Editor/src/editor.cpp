@@ -300,7 +300,10 @@ void Editor::UpdateWindow()
 		ImGui::End();
 	}
 
+	// TEMPORARY
 	ImGui::Begin("Debug");
+	if (ImGui::Button("Create C# TestScript entity"))
+		XnorCore::DotnetRuntime::GetAssembly("Game")->ProcessTypes();
 	if (ImGui::Button("Reload C# Assemblies"))
 		XnorCore::DotnetRuntime::ReloadAllAssemblies();
 	ImGui::End();
