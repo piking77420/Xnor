@@ -13,10 +13,10 @@
 #include "utils/guid.hpp"
 #include "utils/logger.hpp"
 #include "utils/meta_programming.hpp"
+#include "world/world.hpp"
 
 BEGIN_XNOR_CORE
-
-template <typename T>
+    template <typename T>
 void Serializer::AddSimpleValue(const std::string& attributeName, const T& value)
 {
     if constexpr (Meta::IsAny<T, std::string, const char_t*>)
@@ -128,7 +128,14 @@ void Serializer::Deserialize(ReflectT* const obj)
     });
 
     if constexpr (IsRoot)
+    {
         FinishReadElement();
+
+        for (auto&& it : m_GuidEntityMap)
+        {
+            *it.second = World::scene->GetEntityById(it.first);
+        }
+    }
 }
 
 template <typename ReflectT, typename MemberT, typename DescriptorT>
@@ -354,9 +361,13 @@ void Serializer::DeserializePointer(const Metadata<ReflectT, MemberT, Descriptor
         DeserializeObjectUsingFactory(*metadata.obj, hash);
         FinishReadElement();
     }
-    else
+    else if constexpr (Meta::IsSame<PtrT, Entity>)
     {
-        // TODO prepare guid pass
+        const Guid guid = Guid::FromString(ReadElementValue(metadata.name));
+        if (guid == Guid())
+            *metadata.obj = nullptr;
+        else
+            m_GuidEntityMap.emplace(guid, metadata.obj);
     }
 }
 
