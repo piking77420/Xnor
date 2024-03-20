@@ -16,7 +16,7 @@ void ResourceManager::LoadAll()
     auto&& start = std::chrono::system_clock::now();
 
     std::vector<Pointer<File>> files;
-    FileManager::FindAll<File>(&files);
+    FileManager::FindAll<File>([](Pointer<File> file) { return file->GetResource() == nullptr; }, &files);
 
     const size_t oldResourceCount = m_Resources.size();
 

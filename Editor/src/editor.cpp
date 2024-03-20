@@ -35,7 +35,11 @@ void Editor::CheckWindowResize()
 
 Editor::Editor()
 {
-	const XnorCore::Pointer<XnorCore::File> logoFile = XnorCore::FileManager::Get("assets_internal/editor/logo.png");
+	XnorCore::Texture::defaultLoadOptions = { .flipVertically = false };
+	XnorCore::FileManager::LoadDirectory("assets_internal/editor");
+	XnorCore::ResourceManager::LoadAll();
+	
+	const XnorCore::Pointer<XnorCore::File> logoFile = XnorCore::FileManager::Get("assets_internal/editor/ui/logo.png");
 	
 	XnorCore::Pointer<XnorCore::Texture> logo = XnorCore::ResourceManager::Get<XnorCore::Texture>(logoFile);
 	logo->loadData.desiredChannels = 4;

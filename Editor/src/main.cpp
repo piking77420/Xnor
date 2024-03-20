@@ -19,10 +19,6 @@ int main(int, char**)
 
 	Factory::RegisterTypes();
 
-	FileManager::LoadDirectory("assets_internal");
-	
-	FileManager::LoadDirectory("assets");
-
 	Editor editor;
 
 	editor.Update();

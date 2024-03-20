@@ -36,9 +36,10 @@ Pointer<T> FileManager::Find(std::function<bool_t(Pointer<T>)>&& predicate)
     for (auto&& mapEntry : m_Entries)
     {
         Pointer<Entry> entry = mapEntry.second;
+        auto&& t = Utils::DynamicPointerCast<T>(entry);
         
-        if (Utils::DynamicPointerCast<T>(entry) && predicate(entry))
-            return entry;
+        if (t && predicate(t))
+            return t;
     }
 
     return nullptr;
@@ -82,9 +83,10 @@ void FileManager::FindAll(std::function<bool(Pointer<T>)>&& predicate, std::vect
     for (auto&& mapEntry : m_Entries)
     {
         Pointer<Entry> entry = mapEntry.second;
+        auto&& t = Utils::DynamicPointerCast<T>(entry);
         
-        if (Utils::DynamicPointerCast<T>(entry) && predicate(entry))
-            result->push_back(entry);
+        if (t && predicate(t))
+            result->push_back(t);
     }
 }
 

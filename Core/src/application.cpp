@@ -26,9 +26,16 @@ Application::Application()
     
     Window::Initialize();
 
-    Rhi::Initialize();
+	Rhi::Initialize();
+
+	Texture::defaultLoadOptions = { .flipVertically = true };
+	FileManager::LoadDirectory("assets");
+	FileManager::LoadDirectory("assets_internal/shaders");
+	FileManager::LoadDirectory("assets_internal/editor/gizmos");
     ResourceManager::LoadAll();
+	
 	ResourceManager::LoadGuidMap();
+	
     renderer.Initialize();
 	
     Input::Initialize();

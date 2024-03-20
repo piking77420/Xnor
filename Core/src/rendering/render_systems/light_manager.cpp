@@ -10,9 +10,9 @@ using namespace XnorCore;
 
 void LightManager::InitResources()
 {
-	m_DirLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/dirlight_icon.png");
-	m_PointLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/point_light.png");
-	m_SpotLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/spot_light.png");
+	m_DirLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/gizmos/dirlight_icon.png");
+	m_PointLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/gizmos/point_light.png");
+	m_SpotLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/gizmos/spot_light.png");
 	m_EditorUi = ResourceManager::Get<Shader>("editor_ui_shader");
 
 	constexpr BlendFunction blendFunction = {
