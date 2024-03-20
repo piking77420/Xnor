@@ -64,15 +64,15 @@ bool Texture::Load(const uint8_t* buffer, const int64_t length)
 void Texture::CreateInRhi()
 {
     TextureCreateInfo createInfo
-   {
-       .data = m_Data,
-       .size = m_Size,
-       .filtering = m_TextureFiltering,
-       .wrapping = m_TextureWrapping,
-       .format = m_TextureFormat,
-       .internalFormat = m_TextureInternalFormat,
-       .dataType = DataType::UnsignedByte
-   };
+    {
+        .data = m_Data,
+        .size = m_Size,
+        .filtering = m_TextureFiltering,
+        .wrapping = m_TextureWrapping,
+        .format = m_TextureFormat,
+        .internalFormat = m_TextureInternalFormat,
+        .dataType = DataType::UnsignedByte
+    };
 
     if (std::filesystem::path(m_Name).extension() == ".hdr")
     {
