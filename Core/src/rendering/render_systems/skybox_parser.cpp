@@ -7,7 +7,6 @@
 
 using namespace XnorCore;
 
-
 SkyBoxParser::~SkyBoxParser()
 {
     delete m_FrameBuffer;
@@ -16,47 +15,46 @@ SkyBoxParser::~SkyBoxParser()
 
 void SkyBoxParser::EquirectangularToCubeMapFunc(const Texture& equirectangularMap, const Cubemap& cubemap)
 {
-    Compute(equirectangularMap,cubemap,m_EquirectangularToCubeMapShader);
+    Compute(equirectangularMap, cubemap, m_EquirectangularToCubeMapShader);
 }
 
-void SkyBoxParser::ComputeIrradiance(const Cubemap& irradianceInput, const Cubemap& irradianceOuPut,const Vector2i irradianceSize) 
+void SkyBoxParser::ComputeIrradiance(const Cubemap& irradianceInput, const Cubemap& irradianceOutput, const Vector2i irradianceSize) 
 {
     Matrix projection;
-    Matrix::Perspective(90.f * Calc::Deg2Rad, 1.0f,0.1f,10.f,&projection);
-    std::array<Matrix,static_cast<size_t>(CubeMapFace::Size)> captureViews;
+    Matrix::Perspective(90.f * Calc::Deg2Rad, 1.0f, 0.1f, 10.f,&projection);
+    std::array<Matrix, static_cast<size_t>(CubeMapFace::Size)> captureViews;
     Rhi::GetCubeMapViewMatrices(&captureViews);
 
     m_IrradianceConvolution->Use();
-    m_IrradianceConvolution->SetMat4("projection",projection);
+    m_IrradianceConvolution->SetMat4("projection", projection);
     irradianceInput.BindTexture(0);
     
     for (size_t i = 0; i < 6; i++)
     {
-        RenderPassBeginInfo renderPassBeginInfo =
+        const RenderPassBeginInfo renderPassBeginInfo =
         {
             .frameBuffer = m_FrameBuffer,
             .renderAreaOffset = { 0, 0 },
             .renderAreaExtent = irradianceSize,
-            .clearBufferFlags =  static_cast<decltype(renderPassBeginInfo.clearBufferFlags)>(BufferFlag::ColorBit | BufferFlag::DepthBit),
-            .clearColor = Vector4()
+            .clearBufferFlags = static_cast<decltype(renderPassBeginInfo.clearBufferFlags)>(BufferFlag::ColorBit | BufferFlag::DepthBit)
         };
-        m_IrradianceConvolution->SetMat4("view",captureViews[i]);
 
-        m_FrameBuffer->AttachTexture(irradianceOuPut,Attachment::Color00,static_cast<CubeMapFace>(i));
+        m_IrradianceConvolution->SetMat4("view", captureViews[i]);
+
+        m_FrameBuffer->AttachTexture(irradianceOutput, Attachment::Color00, static_cast<CubeMapFace>(i));
         m_RenderPass.BeginRenderPass(renderPassBeginInfo);
 
         Rhi::DrawModel(m_Cube->GetId());
 
         m_RenderPass.EndRenderPass();
     }
-    
 }
 
-void SkyBoxParser::ComputePreFiltering(const Cubemap& environementMap, const Cubemap& PrefilteringMap, uint32_t mipLevels)
+void SkyBoxParser::ComputePreFiltering(const Cubemap& environementMap, const Cubemap& prefilteringMap, const uint32_t mipLevels)
 {
     Matrix projection;
-    Matrix::Perspective(90.f * Calc::Deg2Rad, 1.0f,0.1f,10.f,&projection);
-    std::array<Matrix,static_cast<size_t>(CubeMapFace::Size)> captureViews;
+    Matrix::Perspective(90.f * Calc::Deg2Rad, 1.0f, 0.1f, 10.f,&projection);
+    std::array<Matrix, static_cast<size_t>(CubeMapFace::Size)> captureViews;
     Rhi::GetCubeMapViewMatrices(&captureViews);
     
     m_PrefilterShader->Use();
@@ -74,16 +72,15 @@ void SkyBoxParser::ComputePreFiltering(const Cubemap& environementMap, const Cub
         {
             .frameBuffer = m_FrameBuffer,
             .renderAreaOffset = { 0,0 },
-            .renderAreaExtent = { static_cast<int32_t>(mipWidth), static_cast<int32_t>(mipHeight) },
-            .clearColor = Vector4()
+            .renderAreaExtent = { static_cast<int32_t>(mipWidth), static_cast<int32_t>(mipHeight) }
         };
         
         m_RenderPass.BeginRenderPass(renderPassBeginInfo);
         
-        for (uint32_t i = 0; i < 6; ++i)
+        for (uint32_t i = 0; i < 6; i++)
         {
-            m_FrameBuffer->AttachTexture(PrefilteringMap,Attachment::Color00,static_cast<CubeMapFace>(i), mip);
-            Rhi::ClearBuffer(static_cast<decltype(renderPassBeginInfo.clearBufferFlags)>(BufferFlag::DepthBit));
+            m_FrameBuffer->AttachTexture(prefilteringMap, Attachment::Color00, static_cast<CubeMapFace>(i), mip);
+            Rhi::ClearBuffer(BufferFlag::DepthBit);
             m_PrefilterShader->SetMat4("view", captureViews[i]);
             
             Rhi::DrawModel(m_Cube->GetId());
@@ -94,42 +91,40 @@ void SkyBoxParser::ComputePreFiltering(const Cubemap& environementMap, const Cub
     m_PrefilterShader->Unuse();
 }
 
-void SkyBoxParser::PreComputeBrdf(const Vector2i environementMapSize,const Texture& brdfTexture)
+void SkyBoxParser::PreComputeBrdf(const Vector2i environementMapSize, const Texture& brdfTexture)
 {
     RenderPassBeginInfo renderPassBeginInfo =
     {
         .frameBuffer = m_FrameBuffer,
         .renderAreaOffset = { 0,0 },
         .renderAreaExtent = environementMapSize,
-        .clearBufferFlags =  static_cast<decltype(renderPassBeginInfo.clearBufferFlags)>(BufferFlag::ColorBit | BufferFlag::DepthBit),
-        .clearColor = Vector4()
+        .clearBufferFlags =  static_cast<decltype(renderPassBeginInfo.clearBufferFlags)>(BufferFlag::ColorBit | BufferFlag::DepthBit)
     };
-    m_FrameBuffer->AttachTexture(brdfTexture,Attachment::Color00);
+
+    m_FrameBuffer->AttachTexture(brdfTexture, Attachment::Color00);
 
     m_PreComputeBrdr->Use();
     m_RenderPass.BeginRenderPass(renderPassBeginInfo);
 
     Rhi::DrawModel(m_Quad->GetId());
-    
-    
+
     m_RenderPass.EndRenderPass();
     m_PreComputeBrdr->Unuse();
     m_RenderPass.EndRenderPass();
 }
-
 
 void SkyBoxParser::Compute(const Texture& equirectangularMap, const Cubemap& cubemap, const Pointer<Shader>& shader)
 {
     IsFrameBufferValid(cubemap.GetSize());
 
     Matrix projection;
-    Matrix::Perspective(90.f * Calc::Deg2Rad, 1.0f,0.1f,10.f,&projection);
-    
-    std::array<Matrix,static_cast<size_t>(CubeMapFace::Size)> captureViews;
+    Matrix::Perspective(90.f * Calc::Deg2Rad, 1.0f, 0.1f, 10.f, &projection);
+
+    std::array<Matrix, static_cast<size_t>(CubeMapFace::Size)> captureViews;
     Rhi::GetCubeMapViewMatrices(&captureViews);
-    
+
     shader->Use();
-    shader->SetMat4("projection",projection);
+    shader->SetMat4("projection", projection);
     equirectangularMap.BindTexture(0);
     
     for (size_t i = 0; i < 6; i++)
@@ -139,12 +134,12 @@ void SkyBoxParser::Compute(const Texture& equirectangularMap, const Cubemap& cub
             .frameBuffer = m_FrameBuffer,
             .renderAreaOffset = { 0,0 },
             .renderAreaExtent = m_FrameBuffer->GetSize(),
-            .clearBufferFlags =  static_cast<decltype(renderPassBeginInfo.clearBufferFlags)>(BufferFlag::ColorBit | BufferFlag::DepthBit),
-            .clearColor = Vector4()
+            .clearBufferFlags = static_cast<decltype(renderPassBeginInfo.clearBufferFlags)>(BufferFlag::ColorBit | BufferFlag::DepthBit)
         };
-        shader->SetMat4("view",captureViews[i]);
 
-        m_FrameBuffer->AttachTexture(cubemap,Attachment::Color00,static_cast<CubeMapFace>(i));
+        shader->SetMat4("view", captureViews[i]);
+
+        m_FrameBuffer->AttachTexture(cubemap, Attachment::Color00, static_cast<CubeMapFace>(i));
         m_RenderPass.BeginRenderPass(renderPassBeginInfo);
 
         Rhi::DrawModel(m_Cube->GetId());
@@ -167,14 +162,15 @@ void SkyBoxParser::InitResource()
     m_EquirectangularToCubeMapShader->SetInt("equirectangularMap",0);
     m_EquirectangularToCubeMapShader->Use();
 
-    
     m_IrradianceConvolution = ResourceManager::Get<Shader>("irradiance_convolution");
     m_IrradianceConvolution->SetDepthFunction(DepthFunction::LessEqual);
     m_IrradianceConvolution->CreateInRhi();
+    
     m_IrradianceConvolution->Use();
     m_IrradianceConvolution->SetInt("environmentMap",0);
     m_IrradianceConvolution->Unuse();
     
+
     m_PrefilterShader = ResourceManager::Get<Shader>("prefilter_shader");
     m_PrefilterShader->SetDepthFunction(DepthFunction::LessEqual);
     m_PrefilterShader->CreateInRhi();
@@ -182,25 +178,20 @@ void SkyBoxParser::InitResource()
     m_PrefilterShader->SetInt("environmentMap",0);
     m_PrefilterShader->Use();
 
-        
     m_PreComputeBrdr = ResourceManager::Get<Shader>("precompute_brdf");
     m_PreComputeBrdr->CreateInRhi();
-
-    
-    
 }
 
-void SkyBoxParser::IsFrameBufferValid(Vector2i size)
+void SkyBoxParser::IsFrameBufferValid(const Vector2i size)
 {
     if (m_FrameBuffer == nullptr || m_FrameBuffer->GetSize() != size)
     {
         delete m_FrameBuffer;
         delete m_TextureDepth;
         m_FrameBuffer = new FrameBuffer(size);
-        m_TextureDepth = new Texture(TextureInternalFormat::DepthComponent32,size);
+        m_TextureDepth = new Texture(TextureInternalFormat::DepthComponent32, size);
         m_TextureDepth->CreateInRhi();
         m_FrameBuffer->AttachTexture(*m_TextureDepth,Attachment::Depth);
     }
-
 }
 

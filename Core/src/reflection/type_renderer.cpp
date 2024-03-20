@@ -1,5 +1,5 @@
 ﻿#include "reflection/type_renderer.hpp"
-#include "utils/factory.hpp"
+#include "reflection/factory.hpp"
 
 using namespace XnorCore;
 
@@ -19,12 +19,12 @@ Component* TypeRenderer::FilterComponent(ImGuiTextFilter& filter)
 
     Component* c = nullptr;
     
-    std::vector<const char_t*> names;
+    std::vector<std::string> names;
     Factory::FindAllChildClasses<Component>(&names);
 
     for (size_t i = 0; i < names.size(); i++)
     {
-        if (filter.PassFilter(names[i]) && ImGui::Selectable(names[i]))
+        if (filter.PassFilter(names[i].c_str()) && ImGui::Selectable(names[i].c_str()))
         {
             c = static_cast<Component*>(Factory::CreateObject(names[i]));
             break;

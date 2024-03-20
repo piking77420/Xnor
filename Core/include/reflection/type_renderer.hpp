@@ -3,7 +3,7 @@
 #include "core.hpp"
 
 #include "resource/resource_manager.hpp"
-#include "reflection/reflection.hpp"
+#include "scene/entity.hpp"
 
 /// @file type_renderer.hpp
 /// @brief Defines the TypeRenderer
@@ -104,7 +104,7 @@ private:
     static void DisplayEnumFlag(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 
     template <typename ReflectT, typename MemberT, typename DescriptorT>
-    static void DisplayObjectInternal(ReflectT* obj, DescriptorT member);
+    static void DisplayObjectInternal(ReflectT* obj);
 
     template <typename ReflectT, bool_t StaticT>
     static void DisplayFields(ReflectT* obj);

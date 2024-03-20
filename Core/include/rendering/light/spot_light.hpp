@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "light.hpp"
+#include "rendering/light/light.hpp"
 
 /// @file spot_light.hpp
 /// @brief Defines the XnorCore::DirectionalLight class
@@ -10,7 +10,7 @@ BEGIN_XNOR_CORE
 /// @brief Handles a spot light
 class SpotLight : public Light
 {
-    REFLECTABLE_IMPL_MINIMAL_DLL(SpotLight)
+    REFLECTABLE_IMPL(SpotLight)
 
 public:
     /// @brief Cut-off
@@ -19,7 +19,6 @@ public:
     float_t outerCutOff = 15.f;
     
     XNOR_ENGINE SpotLight() = default;
-    
     XNOR_ENGINE ~SpotLight() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(SpotLight)

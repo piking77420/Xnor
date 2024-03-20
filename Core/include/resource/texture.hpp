@@ -23,8 +23,10 @@ public:
     struct LoadOptions
     {
         int32_t desiredChannels = 0;
-        bool_t flipVertically = true;
+        bool_t flipVertically = false;
     };
+
+    XNOR_ENGINE static inline LoadOptions defaultLoadOptions;
 
     /// @brief Allowed extensions for texture files
     XNOR_ENGINE static inline constexpr std::array<const char_t*, 11> FileExtensions
@@ -45,7 +47,7 @@ public:
     /// @brief Options to use when loading this Texture.
     ///
     /// This doesn't affect an already-loaded Texture. If necessary, change these settings and then call Texture::Reload for the changes to take effect.
-    LoadOptions loadData;
+    LoadOptions loadData = defaultLoadOptions;
     
     // Same constructor from base class
     using Resource::Resource;

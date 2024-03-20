@@ -12,6 +12,11 @@ BEGIN_XNOR_CORE
 class Application
 {
 public:
+    /// @brief The path of the current executable
+    ///
+    /// This is valid once @ref Application::Application "the Application constructor" has been called
+    static inline std::filesystem::path executablePath;
+    
     /// @brief Renderer of the application
     Renderer renderer;
 

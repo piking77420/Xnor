@@ -55,7 +55,7 @@ void PostProcessPass::Compute(const Texture& textureToCompute, const Texture& Po
     m_RenderPass.BeginRenderPass(beginInfo);
     m_ToneMapping.ComputeToneMaping(textureToCompute,*m_BloomPass.GetBloomTexture());
     m_RenderPass.EndRenderPass();
-
+    /*
     static bool_t init = [&]() -> bool_t
     {
         m_TestCompute = XnorCore::ResourceManager::Get<Shader>("test_compute");
@@ -67,6 +67,7 @@ void PostProcessPass::Compute(const Texture& textureToCompute, const Texture& Po
     }();
 
     
+    
     m_TestCompute->Use();
     
     textureToCompute.BindTexture(0);
@@ -75,6 +76,6 @@ void PostProcessPass::Compute(const Texture& textureToCompute, const Texture& Po
     Rhi::DispactCompute(textureToCompute.GetSize().x / 10,textureToCompute.GetSize().y /10,1);
     Rhi::GpuMemoryBarrier(MemoryBarrier::AllBarrierBits);
     
-
+*/
     
 }

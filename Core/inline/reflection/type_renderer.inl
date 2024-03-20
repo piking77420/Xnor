@@ -371,31 +371,12 @@ void TypeRenderer::DisplayEnumFlag(const Metadata<ReflectT, MemberT, DescriptorT
     constexpr size_t size = enumNames.size();
 
     // Compute preview value, it should display as all the selected values, comma separated
-    // e.g. : Value1, Value2, Value8
-    std::string previewValue;
-    for (size_t i = 0; i < size; i++)
-    {
-        const size_t value = static_cast<size_t>(*metadata.obj);
-        // Get current value
-        const MemberT enumValue = magic_enum::enum_value<MemberT>(i);
-
-        // Check value is set
-        if (value & static_cast<size_t>(enumValue))
-        {
-            if (previewValue.empty())
-            {
-                previewValue = magic_enum::enum_name<MemberT>(enumValue).data();
-            }
-            else
-            {
-                previewValue += ", ";
-                previewValue += magic_enum::enum_name<MemberT>(enumValue).data();
-            }
-        }
-    }
+    // e.g. : Value1,Value2,Value8
+    auto v = magic_enum::enum_flags_name<MemberT>(*metadata.obj, ',');
+    const char_t* const previewValue = v.data();
 
     // Need to do a custom combo implementation because we can select multiple values
-    if (ImGui::BeginCombo(metadata.name, previewValue.c_str()))
+    if (ImGui::BeginCombo(metadata.name, previewValue))
     {
         for (size_t i = 0; i < size; i++)
         {
@@ -501,7 +482,7 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
                 const MemberT oldValue = member.get(obj);
 
                 // Display object
-                DisplayObjectInternal<ReflectT, MemberT, T>(obj, member);
+                DisplayObjectInternal<ReflectT, MemberT, T>(obj);
 
                 // Get the new value
                 const MemberT newValue = member.get(obj);
@@ -516,7 +497,7 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
             else
             {
                 // Don't need to notify, simply display the object
-                DisplayObjectInternal<ReflectT, MemberT, T>(obj, member);
+                DisplayObjectInternal<ReflectT, MemberT, T>(obj);
             }
 
             ImGui::EndDisabled();
@@ -533,10 +514,10 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
 }
 
 template <typename ReflectT, typename MemberT, typename DescriptorT>
-void TypeRenderer::DisplayObjectInternal(ReflectT* obj, DescriptorT member)
+void TypeRenderer::DisplayObjectInternal(ReflectT* obj)
 {
     // Get humanized variable name
-    const std::string n = Utils::HumanizeVariableName(member.name.c_str());
+    const std::string n = Utils::HumanizeVariableName(DescriptorT::name.c_str());
     const char_t* const name = n.c_str();
 
     // Construct metadata
@@ -545,10 +526,10 @@ void TypeRenderer::DisplayObjectInternal(ReflectT* obj, DescriptorT member)
         .name = name,
         .obj = [&]() -> MemberT*
         {
-            if constexpr (member.is_static)
-                return const_cast<MemberT*>(&member.get());
+            if constexpr (DescriptorT::is_static)
+                return const_cast<MemberT*>(&DescriptorT::get());
             else
-                return const_cast<MemberT*>(&member.get(obj));
+                return const_cast<MemberT*>(&DescriptorT::get(obj));
         }()
     };
 
@@ -812,7 +793,7 @@ inline Entity* TypeRenderer::FilterEntity(ImGuiTextFilter& filter)
         return nullptr;
 
     filter.Draw();
-    const List<Entity*>& entities = World::scene.GetEntities();
+    const List<Entity*>& entities = World::scene->GetEntities();
 
     Entity* e = nullptr;
     for (size_t i = 0; i < entities.GetSize(); i++)

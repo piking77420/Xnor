@@ -492,7 +492,7 @@ uint32_t Rhi::CubeMapFacesToOpengl(CubeMapFace cubeMapFace)
 
 	return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 }
-
+/*
 uint32_t Rhi::MemoryBarrierToOpengl(MemoryBarrier memoryBarrier)
 {
 	switch (memoryBarrier)
@@ -550,7 +550,7 @@ uint32_t Rhi::MemoryBarrierToOpengl(MemoryBarrier memoryBarrier)
 	Logger::LogError("Undefined MemoryBarrier");
 	return 0;
 }
-
+*/
 uint32_t Rhi::GetImageAccessOpengl(ImageAccess imageAcess)
 {
 	switch (imageAcess)
@@ -1415,11 +1415,11 @@ void Rhi::DispactCompute(const uint32_t numberOfGroupX, const uint32_t numberOfG
 {
 	glDispatchCompute(numberOfGroupX, numberOfGroupY, numberOfGroupZ);
 }
-
+/*
 void Rhi::GpuMemoryBarrier(const XnorCore::MemoryBarrier memoryBarrier)
 {
 	glMemoryBarrier(MemoryBarrierToOpengl(memoryBarrier));
-}
+}*/
 
 void Rhi::BindImageTexture(
 	const uint32_t unit,

@@ -11,12 +11,12 @@ using namespace XnorCore;
 
 void ResourceManager::LoadAll()
 {
-    Logger::LogDebug("Loading all resources from FileManager");
+    Logger::LogInfo("Loading all resources from FileManager");
 
     auto&& start = std::chrono::system_clock::now();
 
     std::vector<Pointer<File>> files;
-    FileManager::FindAll<File>(&files);
+    FileManager::FindAll<File>([](Pointer<File> file) { return file->GetResource() == nullptr; }, &files);
 
     const size_t oldResourceCount = m_Resources.size();
 
@@ -48,12 +48,49 @@ void ResourceManager::LoadAll()
         }
     }
 
-    Logger::LogDebug(
+    Logger::LogInfo(
         "Successfully loaded {} files in {} resources. Took {}",
         files.size(),
         m_Resources.size() - oldResourceCount,
         std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start)
     );
+}
+
+void ResourceManager::LoadGuidMap()
+{
+    const Pointer<File> guidMap = FileManager::Get(GuidMapFilePath);
+    const char_t* const dataRaw = guidMap.Get()->GetData();
+    const size_t dataSize = guidMap.Get()->GetSize();
+
+    std::string data = std::string(dataRaw);
+
+    size_t position = 0;
+    while (position < dataSize)
+    {
+        const size_t guidPos = data.find_first_of(';');
+
+        const std::string resourceName = data.substr(0, guidPos);
+        const Guid guid = Guid::FromString(&data[guidPos + 1]);
+
+        const size_t backslashPos = data.find_first_of('\n');
+        position += backslashPos;
+
+        data = data.substr(backslashPos + 1);
+
+        auto&& it = m_Resources.find(resourceName);
+
+        if (it == m_Resources.end())
+        {
+            Logger::LogInfo("Resource in the guid map wasn't found : {}", resourceName);
+        }
+        else
+        {
+            it->second->SetGuid(guid);
+            m_GuidMap.emplace(guid, it->second);
+        }
+
+        Logger::LogInfo("{} ; {}", resourceName, static_cast<std::string>(guid));
+    }
 }
 
 bool ResourceManager::Contains(const std::string& name)
@@ -108,7 +145,7 @@ void ResourceManager::Unload(const std::string& name)
 
 void ResourceManager::UnloadAll()
 {
-    Logger::LogDebug("Unloading all resources ({})", m_Resources.size());
+    Logger::LogInfo("Unloading all resources ({})", m_Resources.size());
 
     auto&& start = std::chrono::system_clock::now();
     
@@ -125,5 +162,5 @@ void ResourceManager::UnloadAll()
     // Smart pointers are deleted automatically, we only need to clear the container
     m_Resources.clear();
     
-    Logger::LogDebug("ResourceManager unload successful. Took {}", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start));
+    Logger::LogInfo("ResourceManager unload successful. Took {}", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start));
 }

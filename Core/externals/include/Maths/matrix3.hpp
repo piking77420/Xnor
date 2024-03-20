@@ -220,11 +220,13 @@ public:
     [[nodiscard]]
     constexpr const float_t* Raw() const noexcept;
 
+#ifndef SWIG
     /// @brief Gets a pointer to the first value of this Matrix3.
     /// 
     /// @returns A pointer to the first value of this Matrix3.
     [[nodiscard]]
     constexpr float_t* Raw() noexcept;
+#endif
 
     /// @brief Uses the @c std::cout stream to print the values of this matrix in a square-like shape, e.g. by using newlines to make it easier to read.
     void DebugPrint() const noexcept;

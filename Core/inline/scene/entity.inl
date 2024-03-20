@@ -84,4 +84,11 @@ bool_t Entity::TryGetComponent(T** output)
     return false;
 }
 
+#ifdef SWIG_ONLY
+const List<Component*>& Entity::GetComponents() const
+{
+    return m_Components;
+}
+#endif
+
 END_XNOR_CORE

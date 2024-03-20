@@ -568,11 +568,10 @@ struct RenderPassBeginInfo
 	/// @brief Render area size
 	Vector2i renderAreaExtent{};
 
-	BufferFlag::BufferFlag clearBufferFlags;
+	BufferFlag::BufferFlag clearBufferFlags{};
 
-	Vector4 clearColor;
+	Vector4 clearColor = Vector4();
 };
-
 
 enum class CubeMapFace
 {
@@ -586,6 +585,7 @@ enum class CubeMapFace
 	Size
 };
 
+/*
 enum class MemoryBarrier
 {
 	VertexAttribArrayBarrierBit,
@@ -605,14 +605,12 @@ enum class MemoryBarrier
 	QueryBufferBarrierBit,
 	AllBarrierBits
 };
-
+*/
 enum class ImageAccess
 {
 	ReadOnly,
 	WriteOnly,
 	ReadWrite,
 };
-
-
 
 END_XNOR_CORE

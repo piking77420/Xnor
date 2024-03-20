@@ -1,6 +1,7 @@
 ﻿#pragma once
 
-#include "refl/refl.hpp"
+#include <refl/refl.hpp>
+
 #include "utils/meta_programming.hpp"
 
 /// @file reflection.hpp
@@ -32,6 +33,11 @@ using FunctionAttribute = refl::attr::usage::function;
 ///
 /// Specifies that an attribute can only be used on a member (field and function)
 using MemberAttribute = refl::attr::usage::member;
+
+#define REFLECTABLE_IMPL(type)                         \
+private:                                               \
+friend struct refl_impl::metadata::type_info__<type>;  \
+
 
 /// @brief Provides utility functions for reflection
 namespace Reflection

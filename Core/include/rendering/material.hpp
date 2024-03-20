@@ -6,7 +6,6 @@
 #include "reflection/reflection.hpp"
 #include "resource/texture.hpp"
 #include "utils/pointer.hpp"
-#include "utils/serializable.hpp"
 
 /// @file material.hpp
 /// @brief Defines types related to materials
@@ -21,9 +20,9 @@ enum class MaterialType
 };
 
 /// @brief Encapsulates a material, which defines how a @ref Model is rendered
-struct Material : Serializable
+struct Material
 {
-    REFLECTABLE_IMPL_MINIMAL_DLL(Material)
+    REFLECTABLE_IMPL(Material)
     
 public:
     // Pointer<Shader> shader;
@@ -41,15 +40,12 @@ public:
     
     Pointer<Texture> ambiantOcclusionTexture;
 
-    
     Colorf albedoColor;
     float_t metallic = 0.f;
     float_t roughness = 0.f;
     float_t reflectance = 0.f;
     float_t emissive = 0.f;
     float_t ambientOcclusion = 0.f;
-
-
 };
 
 END_XNOR_CORE

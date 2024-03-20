@@ -26,6 +26,8 @@ public:
     ///
     /// This is mainly used in LoadAll.
     static constexpr const char_t* ReservedShaderPrefix = "_shaders/";
+
+    static constexpr const char_t* GuidMapFilePath = "assets/guid_map.txt";
     
     /// @brief Creates the Resource corresponding to the given @p name without loading it.
     template <Concepts::ResourceT T>
@@ -41,6 +43,9 @@ public:
 
     /// @brief Creates one Resource for each @ref FileManager entry.
     XNOR_ENGINE static void LoadAll();
+
+    /// @brief Loads the Guid resource map internally
+    XNOR_ENGINE static void LoadGuidMap();
 
     /// @brief Checks whether the ResourceManager contains the specified Resource name.
     [[nodiscard]]
@@ -59,6 +64,10 @@ public:
     template <Concepts::ResourceT T = Resource>
     [[nodiscard]]
     static Pointer<T> Get(const Pointer<File>& file);
+
+    template <Concepts::ResourceT T = Resource>
+    [[nodiscard]]
+    static Pointer<T> Get(const Guid& guid);
 
     /// @brief Renames the Resource with the given @p name to @p newName.
     ///
@@ -124,6 +133,7 @@ public:
 
 private:
     XNOR_ENGINE static inline std::unordered_map<std::string, Pointer<Resource>> m_Resources;
+    XNOR_ENGINE static inline std::unordered_map<Guid, Pointer<Resource>> m_GuidMap;
     
     template <Concepts::ResourceT T>
     static Pointer<T> AddNoCheck(std::string name);

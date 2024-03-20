@@ -183,12 +183,12 @@ private:
         LogLevel level;
         std::chrono::system_clock::time_point time;
         bool_t printToConsole, printToFile;
-        const char_t* file = nullptr;
+        std::string file;
         int32_t line = -1;
 
         XNOR_ENGINE LogEntry(std::string&& message, LogLevel level);
 
-        XNOR_ENGINE LogEntry(std::string&& message, LogLevel level, const char_t* file, int32_t line);
+        XNOR_ENGINE LogEntry(std::string&& message, LogLevel level, const std::string& file, int32_t line);
 
         XNOR_ENGINE LogEntry(std::string&& message, LogLevel level, std::chrono::system_clock::time_point timePoint);
 

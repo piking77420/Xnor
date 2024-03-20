@@ -27,6 +27,10 @@ namespace Coral {
 		std::vector<FieldInfo> GetFields() const;
 		std::vector<PropertyInfo> GetProperties() const;
 
+		MethodInfo GetMethod(std::string_view InName) const;
+		FieldInfo GetField(std::string_view InName) const;
+		PropertyInfo GetProperty(std::string_view InName) const;
+
 		bool HasAttribute(const Type& InAttributeType) const;
 		std::vector<Attribute> GetAttributes() const;
 

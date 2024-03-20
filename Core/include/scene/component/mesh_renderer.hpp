@@ -13,7 +13,7 @@ BEGIN_XNOR_CORE
 /// @brief Component that defines a mesh to render
 class MeshRenderer : public Component
 {
-    REFLECTABLE_IMPL_MINIMAL_DLL(MeshRenderer)
+    REFLECTABLE_IMPL(MeshRenderer)
     
 public:
     XNOR_ENGINE MeshRenderer() = default;

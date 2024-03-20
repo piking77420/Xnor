@@ -207,7 +207,7 @@ public:
 	
 	XNOR_ENGINE static void DispactCompute(uint32_t numberOfGroupX,uint32_t numberOfGroupY, uint32_t numberOfGroupZ);
 	
-	XNOR_ENGINE static void GpuMemoryBarrier(MemoryBarrier memoryBarrier);
+	//XNOR_ENGINE static void GpuMemoryBarrier(MemoryBarrier memoryBarrier);
 
 	XNOR_ENGINE static void BindImageTexture(uint32_t unit, uint32_t texture, uint32_t level, bool_t layered,uint32_t layer,
 		ImageAccess imageAcess, TextureInternalFormat::TextureInternalFormat textureInternalFormat);
@@ -262,7 +262,7 @@ private:
 	XNOR_ENGINE static uint32_t GetOpenglBufferBit(BufferFlag::BufferFlag flag);
 	XNOR_ENGINE static uint32_t AttachementToOpenglAttachement(Attachment::Attachment attachment);
 	XNOR_ENGINE static uint32_t CubeMapFacesToOpengl(CubeMapFace cubeMapFace);
-	XNOR_ENGINE static uint32_t MemoryBarrierToOpengl(MemoryBarrier memoryBarrier);
+	//XNOR_ENGINE static uint32_t MemoryBarrierToOpengl(MemoryBarrier memoryBarrier);
 	XNOR_ENGINE static uint32_t GetImageAccessOpengl(ImageAccess imageAcess);
 
 	XNOR_ENGINE static uint32_t FrontFaceToOpenglFrontFace(FrontFace::FrontFace frontFace);

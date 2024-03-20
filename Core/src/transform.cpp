@@ -1,9 +1,6 @@
 #include "transform.hpp"
-#include "serialization/serializer.hpp"
 
 using namespace XnorCore;
-
-REFLECTABLE_IMPL_CPP(Transform)
 
 const Vector3& Transform::GetPosition() const
 {

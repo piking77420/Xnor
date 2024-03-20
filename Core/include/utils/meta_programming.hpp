@@ -12,11 +12,10 @@
 #include <Maths/vector2.hpp>
 #include <Maths/vector3.hpp>
 
+#include "core.hpp"
 #include "utils/color.hpp"
 #include "utils/list.hpp"
 #include "utils/pointer.hpp"
-
-#include "core.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -66,6 +65,16 @@ namespace Meta
     /// @tparam T Type
     template <typename T>
     constexpr bool_t IsFloatingPoint = std::is_floating_point_v<T>;
+
+    /// @brief Checks whether @c T is an abstract class
+    /// @tparam T Type
+    template <typename T>
+    constexpr bool_t IsAbstract = std::is_abstract_v<T>;
+
+    /// @brief Checks whether @c T is default constructible (has a public constructor, with no parameters)
+    /// @tparam T Type
+    template <typename T>
+    constexpr bool_t IsDefaultConstructible = std::is_default_constructible_v<T>;
 
     /// @brief Removes the array specification from @c T
     ///

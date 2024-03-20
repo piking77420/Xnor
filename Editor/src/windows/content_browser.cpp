@@ -5,7 +5,7 @@
 #include "ImGui/imgui_stdlib.h"
 #include "resource/resource_manager.hpp"
 
-#define ASSETS_PATH "assets_internal/editor/content_browser/"
+#define ASSETS_PATH "assets_internal/editor/ui/content_browser/"
 
 using namespace XnorEditor;
 

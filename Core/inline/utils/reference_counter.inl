@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdexcept>
+
 BEGIN_XNOR_CORE
 
 template <typename T>

@@ -4,10 +4,10 @@ using namespace XnorCore;
 
 void World::Begin()
 {
-    scene.Begin();
+    scene->Begin();
 }
 
 void World::Update()
 {
-    scene.Update();
+    scene->Update();
 }

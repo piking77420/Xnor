@@ -10,6 +10,12 @@ Pointer<T> Pointer<T>::Create(Args&&... args)  // NOLINT(cppcoreguidelines-missi
 }
 
 template <typename T>
+Pointer<T> Pointer<T>::Create(Construct)
+{
+    return Pointer(new ReferenceCounter<T>, true);
+}
+
+template <typename T>
 Pointer<T>::Pointer(const Pointer& other, const bool_t strongReference)
     : m_ReferenceCounter(other.m_ReferenceCounter)
     , m_IsStrongReference(strongReference)
@@ -42,13 +48,6 @@ Pointer<T>::Pointer(Pointer&& other) noexcept
 
 template <typename T>
 Pointer<T>::Pointer(nullptr_t)
-{
-}
-
-template <typename T>
-Pointer<T>::Pointer(Construct)
-    : m_ReferenceCounter(new ReferenceCounter<T>)
-    , m_IsStrongReference(true)
 {
 }
 

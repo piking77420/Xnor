@@ -1,8 +1,7 @@
 ﻿#pragma once
 
-#include <Maths/vector3.hpp>
-
 #include "core.hpp"
+#include "reflection/reflection.hpp"
 #include "scene/component.hpp"
 
 /// @file light.hpp
@@ -13,7 +12,7 @@ BEGIN_XNOR_CORE
 /// @brief Base class for lights
 class Light : public Component
 {
-    REFLECTABLE_IMPL_MINIMAL_DLL(Light)
+    REFLECTABLE_IMPL(Light)
     
 public:
     /// @brief Color of the light
@@ -23,7 +22,6 @@ public:
     float_t intensity = 1.f;
 
     XNOR_ENGINE Light() = default;
-
     XNOR_ENGINE ~Light() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(Light)

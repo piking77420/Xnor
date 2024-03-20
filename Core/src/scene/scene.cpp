@@ -1,6 +1,5 @@
 ﻿#include "scene/scene.hpp"
 #include "scene/entity.hpp"
-#include "serialization/serializer.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -73,7 +72,7 @@ uint32_t Scene::GetEntityIndex(const Entity* entity) const
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)
     {
-        if(entity->GetGuid() == m_Entities[i]->GetGuid())
+        if (entity->GetGuid() == m_Entities[i]->GetGuid())
         {
             return static_cast<uint32_t>(i);
         }

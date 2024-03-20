@@ -75,11 +75,13 @@ public:
 	[[nodiscard]]
 	constexpr const int32_t* Raw() const noexcept;
 
+#ifndef SWIG
 	/// @brief 	Gets a pointer to the first component of this vector.
 	/// 
 	/// @returns A pointer to the first component of this vector.
 	[[nodiscard]]
 	constexpr int32_t* Raw() noexcept;
+#endif
 
 	/// @brief Returns the length of the vector.
 	[[nodiscard]]
