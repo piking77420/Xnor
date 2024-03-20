@@ -6,7 +6,11 @@
 #include <RapidXML/rapidxml.hpp>
 #include <RapidXML/RapidXMLSTD.hpp>
 
+#include <unordered_map>
+
 #include "core.hpp"
+#include "scene/entity.hpp"
+#include "utils/guid.hpp"
 
 /// @file serializer.hpp
 /// @brief Defines the XnorCore::Serializer static class.
@@ -92,6 +96,8 @@ private:
     XNOR_ENGINE static inline XMLElement* m_RootElement = nullptr;
 
     XNOR_ENGINE static inline std::stack<XMLElement*> m_ElementsStack;
+    
+    XNOR_ENGINE static inline std::unordered_map<Guid, Entity**> m_GuidEntityMap;
 
     // Serialize
     XNOR_ENGINE static void OpenFileToWrite(const std::string& filePath);
