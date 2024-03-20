@@ -249,7 +249,7 @@ void Serializer::SerializeEnum(const Metadata<ReflectT, MemberT, DescriptorT>& m
     
     if constexpr (isEnumFlag)
     {
-        AddSimpleValue<std::string>(metadata.name, magic_enum::enum_flags_name<MemberT>(*metadata.obj, ',').data());
+        AddSimpleValue<std::string>(metadata.name, magic_enum::enum_flags_name<MemberT>(*metadata.obj, '|').data());
     }
     else
     {
@@ -314,7 +314,7 @@ void Serializer::DeserializeSimpleType(const Metadata<ReflectT, MemberT, Descrip
     }
     else if constexpr (Meta::IsEnum<MemberT>)
     {
-        // TODO enum
+        DeserializeEnum<ReflectT, MemberT, DescriptorT>(metadata);
     }
     else if constexpr (Meta::IsSame<MemberT, std::string>)
     {
@@ -400,6 +400,24 @@ void Serializer::DeserializeXnorPointer(const Metadata<ReflectT, MemberT, Descri
 }
 
 template <typename ReflectT, typename MemberT, typename DescriptorT>
+void Serializer::DeserializeEnum(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
+{
+    constexpr bool_t isEnumFlag = Reflection::HasAttribute<Reflection::EnumFlags, DescriptorT>();
+    constexpr auto enumNames = magic_enum::enum_names<MemberT>();
+
+    const char_t* const value = ReadElementValue(metadata.name);
+    
+    if constexpr (isEnumFlag)
+    {
+        *metadata.obj = magic_enum::enum_flags_cast<MemberT>(value).value_or(static_cast<MemberT>(0));
+    }
+    else
+    {
+        *metadata.obj = magic_enum::enum_cast<MemberT>(value).value_or(static_cast<MemberT>(0));
+    }
+}
+
+template <typename ReflectT, typename MemberT, typename DescriptorT>
 void Serializer::DeserializeArrayType(const Metadata<ReflectT, MemberT, DescriptorT>&)
 {
 }
@@ -411,7 +429,7 @@ void Serializer::DeserializeListType(const Metadata<ReflectT, MemberT, Descripto
 
     ReadElement(metadata.name);
 
-    // metadata.obj->Clear();
+    metadata.obj->Clear();
 
     const XMLElement* const parent = m_ElementsStack.top();
     const XMLElement* child = parent->first_node("0");

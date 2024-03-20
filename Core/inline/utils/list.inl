@@ -90,6 +90,9 @@ void List<T>::Reserve(const size_t capacity)
 template <typename T>
 void List<T>::Clear()
 {
+    if (m_Size == 0)
+        return;
+    
     for (size_t i = 0; i < m_Size; i++)
     {
         m_Data[i].~T();

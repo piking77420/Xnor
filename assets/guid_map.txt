@@ -1,4 +1,3 @@
-assets/models/viking_room.obj ; 7D4A901C-2429-4A7D-B2-98-A0-92-E4-79-B4-BE
 assets/models/viking_room.obj;7D4A901C-2429-4A7D-B2-98-A0-92-E4-79-B4-BE
 assets_internal/editor/logo.png;D85F878-81A2-40E4-B4-53-C1-DD-67-35-6F-78
 assets/textures/viking_room.png;E01B5F33-4744-4694-92-4-19-7E-C7-F2-98-A1
