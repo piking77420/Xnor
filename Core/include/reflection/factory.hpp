@@ -18,7 +18,7 @@ class Factory
         std::function<void(void*)> deserializeFunc;
 
         bool_t isConstructible;
-        const char_t* name;
+        std::string name;
         std::vector<size_t> parentClasses;
     };
     
@@ -27,24 +27,26 @@ public:
     static constexpr void RegisterFactoryType();
 
     XNOR_ENGINE static void* CreateObject(size_t hash);
-    XNOR_ENGINE static void* CreateObject(const char_t* name);
-
+    XNOR_ENGINE static void* CreateObject(const std::string& name);
     XNOR_ENGINE static void DisplayObject(void* obj, size_t hash);
+
+    XNOR_ENGINE static void SerializeObject(void* obj, size_t hash);
+    XNOR_ENGINE static void DeserializeObject(void* obj, size_t hash);
 
     XNOR_ENGINE static void RegisterTypes();
 
+    XNOR_ENGINE static std::string GetTypeName(size_t hash);
+
     template <typename T>
-    static void FindAllChildClasses(std::vector<const char_t*>* names);
+    static void FindAllChildClasses(std::vector<std::string>* names);
 
     XNOR_ENGINE static void Print();
-
-    XNOR_ENGINE static const char_t* GetName(size_t hash);
 
 private:
     XNOR_ENGINE static bool_t IsChildOf(size_t typeHash, size_t parentHash);
 
     XNOR_ENGINE static inline std::unordered_map<size_t, FactoryTypeInfo> m_FactoryMapHash;
-    XNOR_ENGINE static inline std::unordered_map<const char_t*, FactoryTypeInfo> m_FactoryMapName;
+    XNOR_ENGINE static inline std::unordered_map<std::string, FactoryTypeInfo> m_FactoryMapName;
 };
 
 END_XNOR_CORE

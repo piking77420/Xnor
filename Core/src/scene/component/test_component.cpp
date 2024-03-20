@@ -3,6 +3,7 @@
 #include "input/time.hpp"
 #include "rendering/light/light.hpp"
 #include "scene/entity.hpp"
+#include "utils/logger.hpp"
 
 using namespace XnorCore;
 

@@ -28,6 +28,7 @@ Application::Application()
 
     Rhi::Initialize();
     ResourceManager::LoadAll();
+	ResourceManager::LoadGuidMap();
     renderer.Initialize();
 	
     Input::Initialize();

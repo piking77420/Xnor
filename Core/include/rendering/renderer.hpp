@@ -83,9 +83,8 @@ private:
     
     XNOR_ENGINE void DefferedRendering(const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox, const ViewportData& viewportData, Vector2i viewportSize) const;
     
-    XNOR_ENGINE void ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers,
-                                 const Skybox& skybox,
-        const Viewport& viewport, Vector2i viewportSize, bool isEditor) const;
+    XNOR_ENGINE void ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox,
+        const Viewport& viewport, Vector2i viewportSize, bool_t isEditor) const;
     
     XNOR_ENGINE void DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) const;
 };

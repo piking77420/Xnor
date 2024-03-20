@@ -13,7 +13,7 @@ const Component& DotnetUtils::ComponentListGetItem(const List<Component*>& list,
         return *result;
     
     // Get type name from raw pointer using C++ reflection
-    const char_t* typeName = Factory::GetName(Utils::GetTypeHash<Component>(result));
+    const std::string typeName = Factory::GetTypeName(Utils::GetTypeHash<Component>(result));
 
     // Convert these names to their C# type equivalent
     auto&& dotnetAssembly = DotnetAssembly::xnorCoreAssembly->GetCoralAssembly();

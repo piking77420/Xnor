@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <Maths/vector3.hpp>
+#include <format>
 
 #include "core.hpp"
 
@@ -401,5 +402,150 @@ constexpr XnorCore::Colorf operator*(XnorCore::Colorf color, float_t alphaFactor
 /// @return Color.a * alphaFactor
 [[nodiscard]]
 constexpr XnorCore::ColorHsva operator*(XnorCore::ColorHsva color, float_t alphaFactor);
+
+template <>
+struct std::formatter<XnorCore::ColorRgb>
+{
+    template <class ParseContext>
+    constexpr typename ParseContext::iterator parse(ParseContext& ctx);
+
+    template <class FmtContext>
+    typename FmtContext::iterator format(XnorCore::ColorRgb c, FmtContext& ctx) const;
+
+private:
+    std::string m_Format;
+};
+
+template <class ParseContext>
+constexpr typename ParseContext::iterator std::formatter<XnorCore::ColorRgb, char_t>::parse(ParseContext& ctx)
+{
+    auto it = ctx.begin();
+    if (it == ctx.end())
+        return it;
+ 
+    if (*it != '}')
+        throw std::format_error("Invalid format args for ColorRgb");
+ 
+    return it;
+}
+
+template <class FmtContext>
+typename FmtContext::iterator std::formatter<XnorCore::ColorRgb>::format(XnorCore::ColorRgb c, FmtContext &ctx) const
+{
+    std::ostringstream out;
+
+    out << std::vformat("{:" + m_Format + "} ; {:" + m_Format + "} ; {:" + m_Format + '}', std::make_format_args(c.r, c.g, c.b));
+
+    return std::ranges::copy(std::move(out).str(), ctx.out()).out;
+}
+
+template <>
+struct std::formatter<XnorCore::ColorRgba>
+{
+    template <class ParseContext>
+    constexpr typename ParseContext::iterator parse(ParseContext& ctx);
+
+    template <class FmtContext>
+    typename FmtContext::iterator format(XnorCore::ColorRgba c, FmtContext& ctx) const;
+
+private:
+    std::string m_Format;
+};
+
+template <class ParseContext>
+constexpr typename ParseContext::iterator std::formatter<XnorCore::ColorRgba, char_t>::parse(ParseContext& ctx)
+{
+    auto it = ctx.begin();
+    if (it == ctx.end())
+        return it;
+ 
+    if (*it != '}')
+        throw std::format_error("Invalid format args for ColorRgba");
+ 
+    return it;
+}
+
+template <class FmtContext>
+typename FmtContext::iterator std::formatter<XnorCore::ColorRgba>::format(XnorCore::ColorRgba c, FmtContext &ctx) const
+{
+    std::ostringstream out;
+
+    out << std::vformat("{:" + m_Format + "} ; {:" + m_Format + "} ; {:" + m_Format + "} ; {:" + m_Format + '}', std::make_format_args(c.r, c.g, c.b, c.a));
+
+    return std::ranges::copy(std::move(out).str(), ctx.out()).out;
+}
+
+template <>
+struct std::formatter<XnorCore::Colorf>
+{
+    template <class ParseContext>
+    constexpr typename ParseContext::iterator parse(ParseContext& ctx);
+
+    template <class FmtContext>
+    typename FmtContext::iterator format(XnorCore::Colorf c, FmtContext& ctx) const;
+
+private:
+    std::string m_Format;
+};
+
+template <class ParseContext>
+constexpr typename ParseContext::iterator std::formatter<XnorCore::Colorf, char_t>::parse(ParseContext& ctx)
+{
+    auto it = ctx.begin();
+    if (it == ctx.end())
+        return it;
+ 
+    if (*it != '}')
+        throw std::format_error("Invalid format args for Colorf");
+ 
+    return it;
+}
+
+template <class FmtContext>
+typename FmtContext::iterator std::formatter<XnorCore::Colorf>::format(XnorCore::Colorf c, FmtContext &ctx) const
+{
+    std::ostringstream out;
+
+    out << std::vformat("{:" + m_Format + "} ; {:" + m_Format + "} ; {:" + m_Format + "} ; {:" + m_Format + '}', std::make_format_args(c.r, c.g, c.b, c.a));
+
+    return std::ranges::copy(std::move(out).str(), ctx.out()).out;
+}
+
+template <>
+struct std::formatter<XnorCore::ColorHsva>
+{
+    template <class ParseContext>
+    constexpr typename ParseContext::iterator parse(ParseContext& ctx);
+
+    template <class FmtContext>
+    typename FmtContext::iterator format(XnorCore::ColorHsva c, FmtContext& ctx) const;
+
+private:
+    std::string m_Format;
+};
+
+template <class ParseContext>
+constexpr typename ParseContext::iterator std::formatter<XnorCore::ColorHsva, char_t>::parse(ParseContext& ctx)
+{
+    auto it = ctx.begin();
+    if (it == ctx.end())
+        return it;
+ 
+    if (*it != '}')
+        throw std::format_error("Invalid format args for ColorHsva");
+ 
+    return it;
+}
+
+template <class FmtContext>
+typename FmtContext::iterator std::formatter<XnorCore::ColorHsva>::format(XnorCore::ColorHsva c, FmtContext &ctx) const
+{
+    std::ostringstream out;
+
+    out << std::vformat("{:" + m_Format + "} ; {:" + m_Format + "} ; {:" + m_Format + "} ; {:" + m_Format + '}', std::make_format_args(c.h, c.s, c.v, c.a));
+
+    return std::ranges::copy(std::move(out).str(), ctx.out()).out;
+}
+
 
 #include "utils/color.inl"
