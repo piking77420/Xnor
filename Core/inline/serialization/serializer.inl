@@ -213,7 +213,7 @@ void Serializer::SerializeArrayType(const Metadata<ReflectT, MemberT, Descriptor
         metadataList.obj = &(*metadata.obj)[i];
         SerializeSimpleType<ReflectT, ArrayT, DescriptorT>(metadataList);
     }
-    
+
     EndXmlElement();
 }
 
@@ -418,8 +418,31 @@ void Serializer::DeserializeEnum(const Metadata<ReflectT, MemberT, DescriptorT>&
 }
 
 template <typename ReflectT, typename MemberT, typename DescriptorT>
-void Serializer::DeserializeArrayType(const Metadata<ReflectT, MemberT, DescriptorT>&)
+void Serializer::DeserializeArrayType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
+    using ArrayT = Meta::RemoveArraySpecifier<MemberT>;
+
+    ReadElement(metadata.name);
+
+    const XMLElement* const parent = m_ElementsStack.top();
+    const XMLElement* child = parent->first_node("0");
+
+    size_t i = 0;
+    for (; child != nullptr; child = child->next_sibling())
+    {
+        const std::string index = std::to_string(i);
+        const Metadata<ReflectT, ArrayT, DescriptorT> metadataArray = {
+            .topLevelObj = metadata.topLevelObj,
+            .name = index.c_str(),
+            .obj = &(*metadata.obj)[i]
+        };
+
+        DeserializeSimpleType<ReflectT, ArrayT, DescriptorT>(metadataArray);
+
+        i++;
+    }
+
+    FinishReadElement();
 }
 
 template <typename ReflectT, typename MemberT, typename DescriptorT>
