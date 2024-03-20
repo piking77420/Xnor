@@ -7,16 +7,16 @@
 #include "resource/resource_manager.hpp"
 #include "scene/scene.hpp"
 #include "utils/utils.hpp"
+#include "serialization/serializer.hpp"
 
 using namespace XnorEditor;
-using namespace XnorCore;
 
 HeaderWindow::HeaderWindow(Editor* editor)
     : UiWindow(editor, "Header")
 {
-    m_PauseButton =  ResourceManager::Get<Texture>("assets_internal/editor/ui/pause_button.png");
-    m_PlayButton = ResourceManager::Get<Texture>("assets_internal/editor/ui/play_button.png");
-    m_StopButton = ResourceManager::Get<Texture>("assets_internal/editor/ui/stop_button.png");
+    m_PauseButton = XnorCore::ResourceManager::Get<XnorCore::Texture>("assets_internal/editor/ui/pause_button.png");
+    m_PlayButton = XnorCore::ResourceManager::Get<XnorCore::Texture>("assets_internal/editor/ui/play_button.png");
+    m_StopButton = XnorCore::ResourceManager::Get<XnorCore::Texture>("assets_internal/editor/ui/stop_button.png");
     windowFlags = ImGuiWindowFlags_NoScrollbar;
 }
 
@@ -37,9 +37,11 @@ void HeaderWindow::Display()
         m_ImagePos[i].x = x - offSet;
         m_ImagePos[i].y = y;
     }
-    
-    DisplayOnEditor();
-    DisplayOnPlay();
+
+    if (XnorCore::World::isPlaying)
+        DisplayOnPlay();
+    else
+        DisplayOnEditor();
 }
 
 void HeaderWindow::DisplayOnEditor()
@@ -47,30 +49,54 @@ void HeaderWindow::DisplayOnEditor()
     const ImVec2 currentimagePos = { m_ImagePos[0].x,m_ImagePos[0].y };
     ImGui::SetCursorPos(currentimagePos);
 
-    if (ImGui::ImageButton(Utils::IntToPointer<ImTextureID>(m_PlayButton->GetId()), { m_ImageSize, m_ImageSize }))
-        World::isPlaying = true;
+    if (ImGui::ImageButton(XnorCore::Utils::IntToPointer<ImTextureID>(m_PlayButton->GetId()), { m_ImageSize, m_ImageSize }))
+    {
+        XnorCore::World::isPlaying = true;
+        XnorCore::World::hasStarted = false;
+    }
 }
 
 void HeaderWindow::DisplayOnPlay()
 {
-    if (!World::isPlaying)
-        return;
-    
     ImVec2 currentimagePos = { m_ImagePos[1].x, m_ImagePos[1].y };
 
     ImGui::SetCursorPos(currentimagePos);
 
-    if (ImGui::ImageButton(Utils::IntToPointer<ImTextureID>(m_PauseButton->GetId()), { m_ImageSize, m_ImageSize }))
+    if (ImGui::ImageButton(XnorCore::Utils::IntToPointer<ImTextureID>(m_PauseButton->GetId()), { m_ImageSize, m_ImageSize }))
     {
-        World::isPlaying = false;
+        XnorCore::World::isPlaying = false;
         return;
     }
     
     currentimagePos = { m_ImagePos[0].x, m_ImagePos[0].y };
     ImGui::SetCursorPos(currentimagePos);
     
-    if (ImGui::ImageButton(Utils::IntToPointer<ImTextureID>(m_StopButton->GetId()), { m_ImageSize, m_ImageSize }))
+    if (ImGui::ImageButton(XnorCore::Utils::IntToPointer<ImTextureID>(m_StopButton->GetId()), { m_ImageSize, m_ImageSize }))
     {
-        // Reload Scene
+        std::string path;
+        if (m_Editor->data.currentScene == nullptr)
+        {
+            if (!std::filesystem::exists("assets/scenes"))
+                std::filesystem::create_directories("assets/scenes");
+            path = Editor::SerializedScenePath;
+        }
+        else
+        {
+            path = m_Editor->data.currentScene->GetPathString();
+        }
+
+        XnorCore::Serializer::StartDeserialization(path);
+        m_Editor->data.selectedEntity = nullptr;
+        delete XnorCore::World::scene;
+        XnorCore::World::scene = new XnorCore::Scene();
+        // Possible memory leak?
+        XnorCore::Serializer::Deserialize<XnorCore::Scene, true>(XnorCore::World::scene);
+        // XnorCore::Serializer::Deserialize<XnorCore::TestComponent, true>(v[0]);
+        XnorCore::Serializer::EndDeserialization();
+
+        XnorCore::World::isPlaying = false;
+        XnorCore::World::hasStarted = false;
+
+        m_Editor->renderer.BeginFrame(*XnorCore::World::scene);
     }
 }
