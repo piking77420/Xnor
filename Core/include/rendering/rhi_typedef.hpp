@@ -179,6 +179,7 @@ BEGIN_ENUM(TextureInternalFormat)
 	R32Uint,
 	Srgb,
 	R11FG11FB10F,
+	Rgba32F,
 	DepthComponent16,
 	DepthComponent24,
 	DepthComponent32,

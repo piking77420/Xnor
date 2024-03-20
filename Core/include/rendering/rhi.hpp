@@ -285,6 +285,8 @@ private:
 	XNOR_ENGINE static inline UniformBuffer* m_MaterialUniform;
 
 	XNOR_ENGINE static inline bool_t m_Blending = false;
+	XNOR_ENGINE static inline bool_t m_Cullface = false;
+
 };
 
 END_XNOR_CORE

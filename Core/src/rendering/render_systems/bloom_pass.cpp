@@ -30,7 +30,7 @@ void BloomPass::Init(uint32_t bloomMips)
     m_UpSample->CreateInRhi();
     m_UpSample->Use();
     m_UpSample->SetInt("srcTexture", 0);
-    m_UpSample->Use();
+    m_UpSample->Unuse();
 
     m_TresholdFilter = ResourceManager::Get<Shader>("bloom_threshold");
     m_TresholdFilter->CreateInRhi();

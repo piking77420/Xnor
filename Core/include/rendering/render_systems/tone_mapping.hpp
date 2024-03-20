@@ -16,7 +16,6 @@ class ToneMapping
 {
 private:
     static inline Pointer<Shader> m_Aces = nullptr;
-    static inline Pointer<Shader> m_TestCompute = nullptr;
 
     static inline Pointer<Model> m_Quad = nullptr;
     static constexpr uint32_t ToneMapedTextureBinding = 10;

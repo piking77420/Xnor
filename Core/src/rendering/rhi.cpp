@@ -161,9 +161,16 @@ uint32_t Rhi::CreateShaders(const std::vector<ShaderCode>& shaderCodes, const Sh
 
 		CheckCompilationError(shaderId, GetShaderTypeToString(code.type));
 		glAttachShader(programId, shaderId);
+		
 	}
-	
 	glLinkProgram(programId);
+
+	for (size_t i = 0; i < shaderIds.size(); i++)
+	{
+		if (glIsShader(shaderIds[i]))
+			glDeleteShader(shaderIds[i]);
+	}
+		
 	CheckCompilationError(programId, "PROGRAM");
 
 	ShaderInternal shaderInternal;
@@ -196,16 +203,13 @@ void Rhi::UseShader(const uint32_t shaderId)
 		glBlendEquation(blendEquation);
 		Rhi::m_Blending = true;
 	}
-
+	
 	if (shaderInternal.cullInfo.enableCullFace)
 	{
 		glEnable(GL_CULL_FACE);
 		glCullFace(CullFaceToOpenglCullFace(shaderInternal.cullInfo.cullFace));
 		glFrontFace(FrontFaceToOpenglFrontFace(shaderInternal.cullInfo.frontFace));
-	}
-	else
-	{
-		glDisable(GL_CULL_FACE);
+		Rhi::m_Cullface = true;
 	}
 	
 	glUseProgram(shaderId);
@@ -217,6 +221,12 @@ void Rhi::UnuseShader()
 	{
 		glDisable(GL_BLEND);
 		m_Blending = false;
+	}
+
+	if (m_Cullface)
+	{
+		glDisable(GL_CULL_FACE);
+		Rhi::m_Cullface = false;
 	}
 	
 	
@@ -685,7 +695,6 @@ uint32_t Rhi::CreateTexture2D(const TextureCreateInfo& textureCreateInfo)
 	const GLint openglTextureWrapper = static_cast<GLint>(GetOpenglTextureWrapper(textureCreateInfo.wrapping));
 	
 	AllocTexture2D(textureId, textureCreateInfo);
-	glGenerateTextureMipmap(textureId);
 
 	glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
 	glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
@@ -704,6 +713,8 @@ uint32_t Rhi::CreateTexture2D(const TextureCreateInfo& textureCreateInfo)
 		glTextureSubImage2D(textureId, 0, 0, 0, static_cast<GLsizei>(textureCreateInfo.size.x), static_cast<GLsizei>(textureCreateInfo.size.y),
 			GetOpenGlTextureFormat(textureCreateInfo.format), GetOpenglDataType(textureCreateInfo.dataType), textureCreateInfo.data);
 	}
+	glGenerateTextureMipmap(textureId);
+
 	
 	return textureId;
 }
@@ -1038,6 +1049,8 @@ uint32_t Rhi::GetOpenglInternalFormat(const TextureInternalFormat::TextureIntern
 		
 		case TextureInternalFormat::R11FG11FB10F:
 			return GL_R11F_G11F_B10F;
+		case TextureInternalFormat::Rgba32F:
+			return GL_RGBA32F;
 		
 		case TextureInternalFormat::DepthComponent16:
 			return GL_DEPTH_COMPONENT16;
@@ -1056,6 +1069,7 @@ uint32_t Rhi::GetOpenglInternalFormat(const TextureInternalFormat::TextureIntern
 
 		case TextureInternalFormat::DepthComponent32FStencil8:
 			return GL_DEPTH32F_STENCIL8;
+		default: ;
 	}
 
 	Logger::LogError("Texture InternalFormat not supported, defaulting to RGB");
@@ -1420,5 +1434,5 @@ void Rhi::BindImageTexture(
 	const GLenum access = GetImageAccessOpengl(imageAcess);
 	const  GLenum textureFormatInternal = GetOpenglInternalFormat(textureInternalFormat);
 	
-	glBindImageTexture(unit, texture, level, layered, layer, access, textureFormatInternal);
+	glBindImageTexture(unit, texture, level, static_cast<GLenum>(layered), layer, access, textureFormatInternal);
 }

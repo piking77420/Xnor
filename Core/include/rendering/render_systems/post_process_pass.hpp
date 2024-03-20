@@ -26,6 +26,9 @@ private:
     ToneMapping m_ToneMapping;
     BloomPass m_BloomPass;
     RenderPass m_RenderPass;
+
+    static inline Pointer<Shader> m_TestCompute = nullptr;
+
 };
 
 END_XNOR_CORE;
