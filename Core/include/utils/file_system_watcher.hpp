@@ -16,8 +16,8 @@ END_ENUM
 
 struct FileSystemWatcherEventArgs
 {
-    Pointer<Entry> name;
-    FileSystemWatcherChangeTypes::FileSystemWatcherChangeTypes changeTypes;
+    Pointer<Entry> entry;
+    ENUM_VALUE(FileSystemWatcherChangeTypes) changeTypes;
 };
 
 struct RenamedFileSystemWatcherEventArgs : FileSystemWatcherEventArgs
@@ -33,10 +33,24 @@ public:
     Event<const FileSystemWatcherEventArgs&> created;
     Event<const FileSystemWatcherEventArgs&> deleted;
     Event<const RenamedFileSystemWatcherEventArgs&> renamed;
+    
+    bool_t recursive = false;
 
-    explicit FileSystemWatcher(std::string path);
+    explicit FileSystemWatcher(const std::string& path);
 
-    FileSystemWatcher(std::string path, std::string filter);
+    FileSystemWatcher(const std::string& path, std::string filter);
+
+    ~FileSystemWatcher();
+
+private:
+    std::thread* m_Thread = nullptr;
+    Pointer<Entry> m_Entry;
+    std::string m_Filter;
+    bool_t m_IsDirectory = false;
+
+    bool_t m_Running = true;
+
+    void Run();
 };
 
 END_XNOR_CORE

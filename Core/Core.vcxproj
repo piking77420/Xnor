@@ -295,6 +295,7 @@
     <ClCompile Include="src\serialization\serializer.cpp" />
     <ClCompile Include="src\transform.cpp" />
     <ClCompile Include="src\utils\color.cpp" />
+    <ClCompile Include="src\utils\file_system_watcher.cpp" />
     <ClCompile Include="src\utils\formatter.cpp" />
     <ClCompile Include="src\utils\list.cpp" />
     <ClCompile Include="src\utils\logger.cpp" />
