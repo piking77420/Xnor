@@ -1,5 +1,6 @@
 ﻿#include "rendering/render_systems/bloom_pass.hpp"
 
+#include "input/keyboard_input.hpp"
 #include "rendering/rhi.hpp"
 #include "resource/resource_manager.hpp"
 
@@ -25,7 +26,7 @@ void BloomPass::Init(uint32_t bloomMips)
     m_DownSample->Unuse();
 
     // Upsample
-    m_UpSample = ResourceManager::Get<Shader>("up_sample");
+    m_UpSample = ResourceManager::Get<ComputeShader>("up_sample");
     //m_UpSample->SetBlendFunction( {true, BlendValue::One, BlendValue::One, BlendEquation::Add });
     m_UpSample->CreateInRhi();
     m_UpSample->Use();
@@ -58,19 +59,27 @@ Texture* BloomPass::GetBloomTexture() const
 void BloomPass::UpSampling()
 {
     m_UpSample->Use();
-    m_UpSample->SetFloat("filterRadius", m_FilterRadius);
+    //m_UpSample->SetFloat("filterRadius", m_FilterRadius);
+    m_UpSample->SetFloat("bloom_intensity",  1.f);
 
     for (size_t i = m_MipChain.size() - 1; i > 0; i--)
     {
         const BloomMip& mip = m_MipChain[i];
         const BloomMip& nextMip = m_MipChain[i - 1];
-        m_UpSample->BindTexture(0, *mip.texture, 0, false, 0, ImageAccess::ReadWrite);
+
+        const Vector2 mipSize =  { std::floor(nextMip.sizef.x),std::floor(nextMip.sizef.y) };
+        
+        m_UpSample->SetInt("u_mip_level", i);
+        m_UpSample->SetVec2("u_texel_size",Vector2(1.0f) / mipSize);
+        
+        // Source
+        mip.texture->BindTexture(0);
+        // Target
         m_UpSample->BindTexture(1, *nextMip.texture, 0, false, 0, ImageAccess::ReadWrite);
 
-        m_UpSample->DispatchCompute(std::ceil(mip.texture->GetSize().x), std::ceil(mip.texture->GetSize().y) ,1);
+        m_UpSample->DispatchCompute(std::ceil(mipSize.x/ 8.f), std::ceil(mipSize.y/ 8.f) ,1);
         m_UpSample->SetMemoryBarrier(GpuMemoryBarrier::AllBarrierBits);
     }
-
     
     m_UpSample->Unuse();
 
@@ -123,7 +132,7 @@ void BloomPass::HandleBlooMip(const Vector2i currentViewPortSize)
         delete mip.texture;
     }
     m_FrameBuffer = new FrameBuffer(currentViewPortSize);
-    m_ThresholdTexture = new Texture(TextureInternalFormat::R11FG11FB10F,m_FrameBuffer->GetSize());
+    m_ThresholdTexture = new Texture(BloomTextureFormat,m_FrameBuffer->GetSize());
     
     
     const Vector2i currentBufferSize = m_FrameBuffer->GetSize();
@@ -144,7 +153,7 @@ void BloomPass::HandleBlooMip(const Vector2i currentViewPortSize)
             .filtering = TextureFiltering::Linear,
             .wrapping = TextureWrapping::ClampToEdge,
             .format = TextureFormat::Rgb,
-            .internalFormat = TextureInternalFormat::R11FG11FB10F,
+            .internalFormat = BloomTextureFormat,
             .dataType = DataType::Float
         };
         

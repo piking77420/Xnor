@@ -12,6 +12,7 @@ bool_t ComputeShader::Load(const Pointer<File>& shader)
 
     m_File = shader;
     m_Loaded = true;
+    return m_Loaded;
 }
 
 bool_t ComputeShader::Load(const char_t* buffer, int64_t length)

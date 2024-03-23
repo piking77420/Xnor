@@ -16,6 +16,7 @@ private:
     static inline Pointer<ComputeShader> m_UpSample = nullptr;
     static inline Pointer<Shader> m_TresholdFilter = nullptr;
     static inline Pointer<Shader> m_TestShaderCompute = nullptr;
+    static inline constexpr TextureInternalFormat::TextureInternalFormat BloomTextureFormat = TextureInternalFormat::TextureInternalFormat::Rgba32F;
     
 public:
     DEFAULT_COPY_MOVE_OPERATIONS(BloomPass)
@@ -33,7 +34,7 @@ public:
 private:
     struct BloomMip
     {
-        Texture* texture;
+        Texture* texture {nullptr};
         Vector2 sizef;
     };
     
