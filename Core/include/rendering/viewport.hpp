@@ -19,6 +19,7 @@ class Viewport
 {
 public:
 	
+	
 	/// @brief The Camera used to render a frame.
 	const Camera* camera = nullptr;
 
@@ -38,9 +39,7 @@ public:
 	XNOR_ENGINE void Destroy();
 
 	XNOR_ENGINE void OnResize(Vector2i newSize);
-
-	XNOR_ENGINE void ComputePostProcess();
-
+	
 	// image to give to renderer
 	XNOR_ENGINE Texture* GetImage() const;
 	/// @brief Whether the context is valid.
@@ -48,11 +47,7 @@ public:
 	XNOR_ENGINE bool_t IsValid() const;
 	
 private:
-	PostProcessPass m_PostProcessPass;
-	
-	Texture* m_PostProcessImage = nullptr;
-	Texture* m_BaseImage = nullptr;
-
+	Texture* m_Image = nullptr;
 };
 
 END_XNOR_CORE

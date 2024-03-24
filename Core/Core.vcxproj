@@ -185,11 +185,13 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="src\reflection\type_renderer.cpp" />
+    <ClCompile Include="src\rendering\bloom_rendertarget.cpp" />
     <ClCompile Include="src\rendering\light\directional_light.cpp" />
     <ClCompile Include="src\rendering\light\light.cpp" />
     <ClCompile Include="src\rendering\light\point_light.cpp" />
     <ClCompile Include="src\rendering\light\spot_light.cpp" />
     <ClCompile Include="src\rendering\material.cpp" />
+    <ClCompile Include="src\rendering\postprocess_rendertarget.cpp" />
     <ClCompile Include="src\rendering\render_pass.cpp" />
     <ClCompile Include="src\rendering\render_systems\bloom_pass.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
@@ -629,6 +631,7 @@
     <ClInclude Include="include\reflection\factory.hpp" />
     <ClInclude Include="include\reflection\reflection.hpp" />
     <ClInclude Include="include\reflection\type_renderer.hpp" />
+    <ClInclude Include="include\rendering\bloom_rendertarget.hpp" />
     <ClInclude Include="include\rendering\camera.hpp" />
     <ClInclude Include="include\rendering\frame_buffer.hpp" />
     <ClInclude Include="include\rendering\light\directional_light.hpp" />
@@ -636,6 +639,7 @@
     <ClInclude Include="include\rendering\light\point_light.hpp" />
     <ClInclude Include="include\rendering\light\spot_light.hpp" />
     <ClInclude Include="include\rendering\material.hpp" />
+    <ClInclude Include="include\rendering\postprocess_rendertarget.hpp" />
     <ClInclude Include="include\rendering\renderer.hpp" />
     <ClInclude Include="include\rendering\render_systems\bloom_pass.hpp" />
     <ClInclude Include="include\rendering\render_systems\post_process_pass.hpp" />

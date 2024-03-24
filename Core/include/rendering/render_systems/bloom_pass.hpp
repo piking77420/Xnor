@@ -54,7 +54,7 @@ private:
 
     XNOR_ENGINE void HandleBlooMip(Vector2i currentViewPortSize);
 
-    XNOR_ENGINE void ThresholdFilter(const Texture& textureToCompute);
+    XNOR_ENGINE void ThresholdFilter(const Texture& textureToCompute) const;
 
 
 };

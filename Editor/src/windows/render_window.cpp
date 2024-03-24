@@ -19,7 +19,7 @@ RenderWindow::RenderWindow(Editor* editor, const std::string& title, XnorCore::V
 
 void RenderWindow::Display()
 {
-    ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_Viewport->GetImage()->GetId()), ImGui::GetContentRegionAvail(),  ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_Viewport->viewportData.colorAttachment->GetId()), ImGui::GetContentRegionAvail(),  ImVec2(0, 1), ImVec2(1, 0));
 }
 
 void RenderWindow::OnApplicationRendering()
@@ -30,7 +30,6 @@ void RenderWindow::OnApplicationRendering()
     }
     
     m_Editor->renderer.RenderViewport(*m_Viewport, *XnorCore::World::scene);
-    //m_Viewport->ComputePostProcess();
 }
 
 

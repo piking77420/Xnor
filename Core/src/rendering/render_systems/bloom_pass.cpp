@@ -77,7 +77,8 @@ void BloomPass::UpSampling()
         // Target
         m_UpSample->BindTexture(1, *nextMip.texture, 0, false, 0, ImageAccess::ReadWrite);
 
-        m_UpSample->DispatchCompute(std::ceil(mipSize.x/ 8.f), std::ceil(mipSize.y/ 8.f) ,1);
+        m_UpSample->DispatchCompute(std::ceil(mipSize.x/ 8.f), std::ceil(mipSize.y/ 8.f) ,1);  
+
         m_UpSample->SetMemoryBarrier(GpuMemoryBarrier::AllBarrierBits);
     }
     
@@ -164,7 +165,7 @@ void BloomPass::HandleBlooMip(const Vector2i currentViewPortSize)
 
 }
 
-void BloomPass::ThresholdFilter(const Texture& textureToCompute)
+void BloomPass::ThresholdFilter(const Texture& textureToCompute) const
 {
     m_FrameBuffer->AttachTexture(*m_ThresholdTexture, Attachment::Color00, 0);
     m_TresholdFilter->Use();

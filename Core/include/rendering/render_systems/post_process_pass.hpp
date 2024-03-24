@@ -4,21 +4,20 @@
 #include "core.hpp"
 #include "tone_mapping.hpp"
 #include "rendering/frame_buffer.hpp"
+#include "rendering/postprocess_rendertarget.hpp"
 #include "resource/compute_shader.hpp"
 
 BEGIN_XNOR_CORE
 class PostProcessPass
 {
 public:
-    bool enable = true;
-    
     XNOR_ENGINE PostProcessPass() = default;
     
     XNOR_ENGINE ~PostProcessPass();
     
     XNOR_ENGINE void Init();
     
-    XNOR_ENGINE void Compute(const Texture& textureToCompute, const Texture& postProcessedTexture);
+    XNOR_ENGINE void Compute(const Texture& textureToCompute, const Texture& postProcessedTexture,const PostprocessRendertarget& postprocessRendertarget) const;
 
 private:
     XNOR_ENGINE void HandleResize(Vector2i size);

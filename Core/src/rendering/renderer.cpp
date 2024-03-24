@@ -43,6 +43,9 @@ void Renderer::RenderViewport(const Viewport& viewport,
 
 	DefferedRendering(meshrenderers,scene.skybox,viewportData,viewport.viewPortSize);
 	ForwardPass(meshrenderers, scene.skybox, viewport, viewport.viewPortSize, viewport.isEditor);
+	
+	if (viewportData.usePostProcess)
+	m_PostProcessPass.Compute(*viewport.viewportData.colorAttachment , *viewport.GetImage(), viewportData.postprocessRendertarget);
 }
 
 void Renderer::RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass,
