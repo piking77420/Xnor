@@ -27,7 +27,6 @@ void BloomPass::Init(uint32_t bloomMips)
 
     // Upsample
     m_UpSample = ResourceManager::Get<ComputeShader>("up_sample");
-    //m_UpSample->SetBlendFunction( {true, BlendValue::One, BlendValue::One, BlendEquation::Add });
     m_UpSample->CreateInRhi();
     m_UpSample->Use();
     m_UpSample->SetInt("currentMip", 0);
@@ -45,6 +44,7 @@ void BloomPass::Init(uint32_t bloomMips)
 
 void BloomPass::ComputeBloom(const Texture& textureWithoutBloom)
 {
+    
     HandleBlooMip(textureWithoutBloom.GetSize());
     ThresholdFilter(textureWithoutBloom);
     DownSampling();

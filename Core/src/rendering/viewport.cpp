@@ -35,7 +35,7 @@ void Viewport::Destroy()
     viewportData.Destroy();
 }
 
-void Viewport::OnResize(Vector2i newSize)
+void Viewport::OnResize(const Vector2i newSize)
 {
     Destroy();
     Init(newSize);

@@ -34,7 +34,7 @@ void PostProcessPass::Init()
     m_BloomPass.Init(5);
 }
 
-void PostProcessPass::Compute(const Texture& textureToCompute, const Texture& PostProcessedTexture)
+void PostProcessPass::Compute(const Texture& textureToCompute, const Texture& postProcessedTexture)
 {
     if (!enable)
         return;
@@ -43,7 +43,7 @@ void PostProcessPass::Compute(const Texture& textureToCompute, const Texture& Po
     m_BloomPass.ComputeBloom(textureToCompute);
     
     
-    m_FrameBuffer->AttachTexture(PostProcessedTexture, Attachment::Color00, 0);
+    m_FrameBuffer->AttachTexture(postProcessedTexture, Attachment::Color00, 0);
     const RenderPassBeginInfo beginInfo =
     {
         .frameBuffer = m_FrameBuffer,

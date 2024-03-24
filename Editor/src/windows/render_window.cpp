@@ -30,7 +30,7 @@ void RenderWindow::OnApplicationRendering()
     }
     
     m_Editor->renderer.RenderViewport(*m_Viewport, *XnorCore::World::scene);
-    m_Viewport->ComputePostProcess();
+    //m_Viewport->ComputePostProcess();
 }
 
 

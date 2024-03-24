@@ -12,7 +12,7 @@ uniform sampler2D srcTexture;
 uniform vec2 srcResolution;
 
 // which mip we are writing to, used for Karis average
-uniform int mipLevel = 1;
+uniform int mipLevel = 0;
 
 in vec2 texCoord;
 layout (location = 0) out vec3 downsample;

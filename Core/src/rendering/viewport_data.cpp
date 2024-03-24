@@ -27,7 +27,7 @@ void ViewportData::Destroy()
 void ViewportData::InitForward(Vector2i windowSize)
 {
     renderBuffer = new FrameBuffer(windowSize);
-    colorAttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize, TextureFormat::Rgb);
+    colorAttachment = new Texture(TextureInternalFormat::Rgba32F, windowSize, TextureFormat::Rgba);
 
     const std::vector<RenderTargetInfo> attachementsType =
     {
