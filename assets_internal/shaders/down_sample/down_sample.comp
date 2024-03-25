@@ -10,11 +10,11 @@
 // Remember to use edge clamping for this texture!
 
 #define GroupSize         8
-#define GROUP_THREAD_COUNT (GroupSize * GroupSize)
-#define FILTER_SIZE        3
-#define FILTER_RADIUS      (FILTER_SIZE / 2)
-#define TILE_SIZE          (GroupSize + 2 * FILTER_RADIUS)
-#define TILE_PIXEL_COUNT   (TILE_SIZE * TILE_SIZE)
+#define GroupThreadCount (GroupSize * GroupSize)
+#define FilterSize        3
+#define FilterRadius      (FilterSize / 2)
+#define TileSize          (GroupSize + 2 * FilterRadius)
+#define TilePixelCount   (TileSize * TileSize)
 
 layout (local_size_x = GroupSize, local_size_y = GroupSize) in;
 layout(rgba32f, binding = 1) uniform image2D nextMip;
@@ -23,9 +23,9 @@ uniform vec2  uTexelSize;
 uniform sampler2D currentMip;
 
 
-shared float sm_r[TILE_PIXEL_COUNT];
-shared float sm_g[TILE_PIXEL_COUNT];
-shared float sm_b[TILE_PIXEL_COUNT];
+shared float sm_r[TilePixelCount];
+shared float sm_g[TilePixelCount];
+shared float sm_b[TilePixelCount];
 
 vec3 PowVec3(vec3 v, float p)
 {
@@ -66,13 +66,13 @@ void main()
 {
 
 	ivec2 pixelCoords = ivec2(gl_GlobalInvocationID.xy);
-	vec2  base_index   = ivec2(gl_WorkGroupID) * GroupSize - FILTER_RADIUS;
+	vec2  base_index   = ivec2(gl_WorkGroupID) * GroupSize - FilterRadius;
 	
-	// The first (TILE_PIXEL_COUNT - GROUP_THREAD_COUNT) threads load at most 2 texel values
-	for (int i = int(gl_LocalInvocationIndex); i < TILE_PIXEL_COUNT; i += GROUP_THREAD_COUNT)
+	// The first (TilePixelCount - GroupThreadCount) threads load at most 2 texel values
+	for (int i = int(gl_LocalInvocationIndex); i < TilePixelCount; i += GroupThreadCount)
 	{
 		vec2 uv        = (base_index + 0.5) * uTexelSize;
-		vec2 uv_offset = vec2(i % TILE_SIZE, i / TILE_SIZE) * uTexelSize;
+		vec2 uv_offset = vec2(i % TileSize, i / TileSize) * uTexelSize;
 
 		vec4 color = texture(currentMip, (uv + uv_offset));
 		StoreLds(i, color);
@@ -81,7 +81,7 @@ void main()
 	memoryBarrierShared();
 	barrier();
 
-	int sm_idx = int((gl_LocalInvocationID.x + FILTER_RADIUS) + (gl_LocalInvocationID.y + FILTER_RADIUS) * TILE_SIZE);
+	int sm_idx = int((gl_LocalInvocationID.x + FilterRadius) + (gl_LocalInvocationID.y + FilterRadius) * TileSize);
 
 	// Take 13 samples around current texel:
 	// a - b - c
@@ -90,15 +90,15 @@ void main()
 	// - l - m -
 	// g - h - i
 	
-	vec3 a = load_lds(sm_idx - TILE_SIZE - 1).rgb;
-	vec3 b = load_lds(sm_idx - TILE_SIZE    ).rgb;
-	vec3 c = load_lds(sm_idx - TILE_SIZE + 1).rgb;
+	vec3 a = load_lds(sm_idx - TileSize - 1).rgb;
+	vec3 b = load_lds(sm_idx - TileSize    ).rgb;
+	vec3 c = load_lds(sm_idx - TileSize + 1).rgb;
 	vec3 f = load_lds(sm_idx - 1            ).rgb;
 	vec3 g = load_lds(sm_idx                ).rgb;
 	vec3 h = load_lds(sm_idx + 1            ).rgb;
-	vec3 k = load_lds(sm_idx + TILE_SIZE - 1).rgb;
-	vec3 l = load_lds(sm_idx + TILE_SIZE    ).rgb;
-	vec3 m = load_lds(sm_idx + TILE_SIZE + 1).rgb;
+	vec3 k = load_lds(sm_idx + TileSize - 1).rgb;
+	vec3 l = load_lds(sm_idx + TileSize    ).rgb;
+	vec3 m = load_lds(sm_idx + TileSize + 1).rgb;
 
 	vec3 d = (a + b + f + f) * 0.25;
 	vec3 e = (b + c + h + g) * 0.25;
