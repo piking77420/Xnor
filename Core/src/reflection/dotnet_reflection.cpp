@@ -96,6 +96,6 @@ void DotnetReflection::DisplayType(ScriptComponent* const script)
         const std::string fieldName = field.GetName();
         const std::string typeName = field.GetType().GetFullName();
         
-        // DisplayType(obj.GetFieldPointer(fieldName), fieldName.c_str(), typeName);
+        DisplayType(obj.GetFieldPointer<void>(fieldName), fieldName.c_str(), typeName);
     }
 }

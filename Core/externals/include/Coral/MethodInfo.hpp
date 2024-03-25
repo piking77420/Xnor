@@ -3,8 +3,6 @@
 #include "Core.hpp"
 #include "String.hpp"
 
-#include <vector>
-
 namespace Coral {
 
 	class Type;
