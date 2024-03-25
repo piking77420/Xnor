@@ -27,10 +27,11 @@ void BloomPass::Init()
     m_UpSample->SetInt("nextMip", 1);    
     m_UpSample->Unuse();
 
-    m_ThresholdFilter = ResourceManager::Get<Shader>("bloom_threshold");
+    m_ThresholdFilter = ResourceManager::Get<ComputeShader>("bloom_threshold");
     m_ThresholdFilter->CreateInRhi();
     m_ThresholdFilter->Use();
-    m_ThresholdFilter->SetInt("srcTexture",0);
+    m_ThresholdFilter->SetInt("baseImage",0);
+    m_ThresholdFilter->SetInt("thresholdTexture",1);
     m_ThresholdFilter->Unuse();
     
 }
@@ -61,7 +62,7 @@ void BloomPass::UpSampling(const BloomRenderTarget& bloomRenderTarget) const
         // Source
         mip.texture->BindTexture(0);
         // Target
-        m_UpSample->BindTexture(1, *nextMip.texture, 0, false, 0, ImageAccess::ReadWrite);
+        m_UpSample->BindImage(1, *nextMip.texture, 0, false, 0, ImageAccess::ReadWrite);
 
         m_UpSample->DispatchCompute(static_cast<uint32_t>(std::ceil(mipSize.x/ 8.f)), static_cast<uint32_t>(std::ceil(mipSize.y/ 8.f)) ,1);  
 
@@ -106,23 +107,14 @@ void BloomPass::DownSampling(const BloomRenderTarget& bloomRenderTarget) const
 void BloomPass::ThresholdFilter(const Texture& imageWithoutBloom, const BloomRenderTarget& bloomRenderTarget) const
 {
     const Texture& thresholdTexture = *bloomRenderTarget.thresholdTexture;
+    const Vector2i viewportSize = imageWithoutBloom.GetSize();
     
-    bloomRenderTarget.frameBuffer->AttachTexture(thresholdTexture, Attachment::Color00, 0);
     m_ThresholdFilter->Use();
     
-    imageWithoutBloom.BindTexture(0);
-    const RenderPassBeginInfo renderPassBeginInfo =
-    {
-        .frameBuffer = bloomRenderTarget.frameBuffer,
-        .renderAreaOffset = { 0,0 },
-        .renderAreaExtent = thresholdTexture.GetSize(),
-        .clearBufferFlags = BufferFlag::None,
-    };
+    m_UpSample->BindImage(0, imageWithoutBloom, 0, false, 0, ImageAccess::ReadWrite);
+    m_UpSample->BindImage(1,*bloomRenderTarget.thresholdTexture, 0, false, 0, ImageAccess::ReadWrite);
 
-    bloomRenderTarget.renderPass.BeginRenderPass(renderPassBeginInfo);
-    Rhi::DrawModel(m_Quad->GetId());
+    m_ThresholdFilter->DispatchCompute(static_cast<uint32_t>(std::ceil(viewportSize.x/ 8.f)), static_cast<uint32_t>(std::ceil(viewportSize.y/ 8.f)) ,1);  
+    m_ThresholdFilter->SetMemoryBarrier(GpuMemoryBarrier::AllBarrierBits);
     m_ThresholdFilter->Unuse();
-    imageWithoutBloom.UnbindTexture(0);
-    bloomRenderTarget.renderPass.EndRenderPass();
-    
 }

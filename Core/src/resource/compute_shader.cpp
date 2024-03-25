@@ -103,7 +103,7 @@ void ComputeShader::DispatchCompute(uint32_t numberOfGroupX, uint32_t numberOfGr
     Rhi::DispactCompute(numberOfGroupX, numberOfGroupY, numberOfGroupZ);
 }
 
-void ComputeShader::BindTexture(
+void ComputeShader::BindImage(
     uint32_t unit,
     const XnorCore::Texture& texture,
     const uint32_t level,

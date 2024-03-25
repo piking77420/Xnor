@@ -105,7 +105,7 @@ public:
 
 	XNOR_ENGINE void DispatchCompute(uint32_t numberOfGroupX, uint32_t numberOfGroupY, uint32_t numberOfGroupZ);
 
-	XNOR_ENGINE void BindTexture(uint32_t unit, const XnorCore::Texture& texture, const uint32_t level, const bool_t layered, const uint32_t layer, const ImageAccess imageAcess);
+	XNOR_ENGINE void BindImage(uint32_t unit, const XnorCore::Texture& texture, const uint32_t level, const bool_t layered, const uint32_t layer, const ImageAccess imageAcess);
 
 	XNOR_ENGINE void SetMemoryBarrier(GpuMemoryBarrier memoryBarrier);
 
