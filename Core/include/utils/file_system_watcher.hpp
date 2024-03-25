@@ -38,14 +38,20 @@ public:
 
     explicit FileSystemWatcher(const std::string& path);
 
-    FileSystemWatcher(const std::string& path, std::string filter);
-
     ~FileSystemWatcher();
 
+    DEFAULT_COPY_MOVE_OPERATIONS(FileSystemWatcher)
+
 private:
-    std::thread* m_Thread = nullptr;
+    struct WatcherData
+    {
+        FileSystemWatcher* watcher;
+        Pointer<Directory> directory;
+        bool_t includeSubdirectories;
+    };
+    
+    std::thread m_Thread;
     Pointer<Entry> m_Entry;
-    std::string m_Filter;
     bool_t m_IsDirectory = false;
 
     bool_t m_Running = true;

@@ -1,5 +1,7 @@
 #include "utils/file_system_watcher.hpp"
 
+#include <chrono>
+
 #include "file/file_manager.hpp"
 #include "utils/logger.hpp"
 
@@ -20,31 +22,30 @@ FileSystemWatcher::FileSystemWatcher(const std::string& path)
     if (FileManager::Contains(fPath))
         m_Entry = FileManager::Get<Entry>(fPath);
     else
-        m_Entry = m_IsDirectory ? static_cast<Pointer<Entry>>(FileManager::AddDirectory(fPath)) : static_cast<Pointer<Entry>>(FileManager::Add(fPath));
+    {
+        if (m_IsDirectory)
+            m_Entry = FileManager::AddDirectory(fPath);
+        else
+            m_Entry = FileManager::Add(fPath);
+    }
 
-    m_Thread = new std::thread(Run);
-}
-
-FileSystemWatcher::FileSystemWatcher(const std::string& path, std::string filter)
-    : FileSystemWatcher(path)
-{
-    m_Filter = std::move(filter);
+    m_Thread = std::thread(&FileSystemWatcher::Run, this);
 }
 
 FileSystemWatcher::~FileSystemWatcher()
 {
     m_Running = false;
     
-    if (m_Thread->joinable())
-        m_Thread->join();
-    
-    delete m_Thread;
+    if (m_Thread.joinable())
+        m_Thread.join();
 }
 
 void FileSystemWatcher::Run()
 {
     while (m_Running)
     {
-        // TODO
+        using namespace std::chrono_literals;
+        
+        std::this_thread::sleep_for(500ms);
     }
 }
