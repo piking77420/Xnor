@@ -10,6 +10,8 @@
 #undef APIENTRY
 #include <Windows.h>
 
+#include "reflection/dotnet_reflection.hpp"
+
 using namespace XnorCore;
 
 constexpr const char* AlcName = "XNOR Coral AssemblyLoadContext";
@@ -70,11 +72,14 @@ bool_t DotnetRuntime::LoadAssembly(const std::string& name)
 
     const std::string&& str = filepath.string();
     
-    DotnetAssembly* assembly = new DotnetAssembly(str);
+    DotnetAssembly* const assembly = new DotnetAssembly(str);
     if (assembly->Load(m_Alc))
     {
         //assembly->ProcessTypes();
         m_LoadedAssemblies.push_back(assembly);
+
+        if (name == "Game")
+            DotnetReflection::PrintTypes();
     }
 
     return false;

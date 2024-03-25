@@ -4,6 +4,8 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_stdlib.h"
 #include "magic_enum/magic_enum_all.hpp"
+#include "reflection/dotnet_reflection.hpp"
+#include "scene/component/script_component.hpp"
 #include "utils/utils.hpp"
 #include "world/world.hpp"
 
@@ -337,9 +339,19 @@ void TypeRenderer::DisplayRawPointer(const Metadata<ReflectT, MemberT, Descripto
     
         const size_t hash = Utils::GetTypeHash<Component>(*metadata.obj);
 
-        if (ImGui::CollapsingHeader(metadata.name))
+        if (dynamic_cast<ScriptComponent*>(*metadata.obj) == nullptr)
         {
-            DisplayObjectUsingFactory(*metadata.obj, hash);
+            if (ImGui::CollapsingHeader(metadata.name))
+            {
+                DisplayObjectUsingFactory(*metadata.obj, hash);
+            }
+        }
+        else
+        {
+            if (ImGui::CollapsingHeader(metadata.name))
+            {
+                DotnetReflection::DisplayType(reinterpret_cast<ScriptComponent*>(*metadata.obj));
+            }
         }
     }
 }

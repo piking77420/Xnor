@@ -110,6 +110,7 @@
     <ClCompile Include="src\input\input.cpp" />
     <ClCompile Include="src\input\gamepad_input.cpp" />
     <ClCompile Include="src\input\time.cpp" />
+    <ClCompile Include="src\reflection\dotnet_reflection.cpp" />
     <ClCompile Include="src\reflection\factory.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -477,6 +478,7 @@
     <ClInclude Include="include\input\keyboard_input.hpp" />
     <ClInclude Include="include\input\mouse_input.hpp" />
     <ClInclude Include="include\input\time.hpp" />
+    <ClInclude Include="include\reflection\dotnet_reflection.hpp" />
     <ClInclude Include="include\reflection\factory.hpp" />
     <ClInclude Include="include\reflection\reflection.hpp" />
     <ClInclude Include="include\reflection\type_renderer.hpp" />
@@ -557,6 +559,7 @@
     <Content Include="externals\include\assimp\config.h.in" />
     <Content Include="include\rendering\rhi_typedef.hpp" />
     <Content Include="include\utils\meta_programming.hpp" />
+    <ClInclude Include="inline\reflection\dotnet_reflection.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
