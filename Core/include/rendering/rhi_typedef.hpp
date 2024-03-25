@@ -546,7 +546,8 @@ BEGIN_ENUM(Gbuffer)
 	Normal,
 	Albedo,
 	MetallicRoughessReflectance,
-	EmissiveAmbiantOcclusion,
+	AmbiantOcclusion,
+	Emissivive,
 };
 END_ENUM
 

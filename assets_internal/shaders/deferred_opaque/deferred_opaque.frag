@@ -54,7 +54,8 @@ uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gAlbedoSpec;
 uniform sampler2D gMetallicRoughessReflectance;
-uniform sampler2D gEmissiveAmbiantOcclusion;
+uniform sampler2D gAmbiantOcclusion;
+uniform sampler2D gEmissive;
 
 
 uniform samplerCube irradianceMap;
@@ -205,8 +206,12 @@ void main()
     float roughness = texture(gMetallicRoughessReflectance,texCoords).g;
     float reflectance = texture(gMetallicRoughessReflectance,texCoords).b;
 
-    float emissive = texture(gEmissiveAmbiantOcclusion,texCoords).r;
-    float ambientOcclusion = texture(gEmissiveAmbiantOcclusion,texCoords).g;
+    float ambientOcclusion = texture(gAmbiantOcclusion,texCoords).r;
+
+    vec4 emissiveValue = texture(gEmissive,texCoords);
+    
+    float emissive = emissiveValue.w;
+    vec3 emissiveColor = emissiveValue.rgb;
 
     vec3 F0 = vec3(0.04);
     F0 = 0.16 * reflectance * reflectance * (1.0 - metallic) + albedo * metallic;
@@ -247,9 +252,8 @@ void main()
     Lo += ComputeSpotLight(albedo, fragPos, v, n, roughness, metallic, F0);
 
 
-    vec3 emissiveColor = albedo * emissive;
     vec3 ambient = ComputeIbl(roughness, kD, ambientOcclusion, albedo, n, r, v, f);
-    vec3 color = Lo + ambient + emissiveColor;
+    vec3 color = Lo + ambient + (emissiveColor * emissive);
     
     FragColor = vec4(color, 1);
 }

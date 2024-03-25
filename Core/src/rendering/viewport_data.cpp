@@ -19,8 +19,9 @@ void ViewportData::Destroy()
     delete normalAttachement;
     delete albedoAttachment;
     delete metallicRougnessReflectance;
-    delete emissiveAmbiantOcclusion;
-
+    delete ambiantOcclusion;
+    delete emissive;
+    
     delete colorAttachment;
     delete depthAtttachment;
     postprocessRendertarget.Destroy();
@@ -55,7 +56,9 @@ void ViewportData::InitDeffered(Vector2i windowSize)
     normalAttachement = new Texture(TextureInternalFormat::Rgb16F, windowSize);
     albedoAttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);
     metallicRougnessReflectance = new Texture(TextureInternalFormat::Rgb16F,windowSize);
-    emissiveAmbiantOcclusion = new Texture(TextureInternalFormat::Rg16F,windowSize);
+    ambiantOcclusion = new Texture(TextureInternalFormat::Rg16F,windowSize);
+    
+    emissive = new Texture(TextureInternalFormat::Rgba16F,windowSize);
     
     const std::vector<RenderTargetInfo> attachementsType =
     {
@@ -75,7 +78,9 @@ void ViewportData::InitDeffered(Vector2i windowSize)
         },
         {
             .attachment = Attachment::Color04
-                    
+        },
+        {
+            .attachment = Attachment::Color05
         },
         {
             .attachment = Attachment::Depth
@@ -86,6 +91,6 @@ void ViewportData::InitDeffered(Vector2i windowSize)
     gbufferPass = RenderPass(attachementsType);
 
     const std::vector<const Texture*> targets = { positionAtttachment, normalAttachement,
-        albedoAttachment, metallicRougnessReflectance, emissiveAmbiantOcclusion, depthAtttachment};
+        albedoAttachment, metallicRougnessReflectance, ambiantOcclusion, emissive, depthAtttachment};
     gframeBuffer->AttachTextures(gbufferPass, targets);
 }

@@ -17,8 +17,8 @@ public:
     Texture* albedoAttachment = nullptr;
 
     Texture* metallicRougnessReflectance = nullptr;
-    Texture* emissiveAmbiantOcclusion = nullptr;
-
+    Texture* ambiantOcclusion = nullptr;
+    Texture* emissive = nullptr;
     
     // Forward Rendering
     RenderPass colorPass{};
