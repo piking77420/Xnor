@@ -1,4 +1,4 @@
-%module(imclassname = "CoreNative") Core
+%module(imclassname = "CoreCNative") CoreC
 
 %include <csharp/stl.i>
 %include <csharp/std_array.i>
@@ -156,7 +156,7 @@ typedef float float_t;
 %include "input/keyboard_input.hpp"
 %include "input/mouse_input.hpp"
 %include "input/input.hpp"
-%include "input/time.hpp"
+%include "input/time.i"
 
 %include "scene/component.i"
 

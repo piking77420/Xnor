@@ -2,11 +2,11 @@ using System.Reflection;
 
 namespace Xnor.Core
 {
-    public static partial class Core
+    public static partial class CoreC
     {
         public static Component ComponentListGetItem(ComponentList list, uint index)
         {
-            string managedTypeName = CoreNative.NativeComponentListGetItem(ComponentList.getCPtr(list).Handle, index, out nint item);
+            string managedTypeName = CoreCNative.NativeComponentListGetItem(ComponentList.getCPtr(list).Handle, index, out nint item);
             
             Type managedType = Assembly.GetExecutingAssembly().GetType(managedTypeName);
             if (managedType == null)

@@ -403,6 +403,7 @@ constexpr XnorCore::Colorf operator*(XnorCore::Colorf color, float_t alphaFactor
 [[nodiscard]]
 constexpr XnorCore::ColorHsva operator*(XnorCore::ColorHsva color, float_t alphaFactor);
 
+#ifndef SWIG
 template <>
 struct std::formatter<XnorCore::ColorRgb>
 {
@@ -546,6 +547,6 @@ typename FmtContext::iterator std::formatter<XnorCore::ColorHsva>::format(XnorCo
 
     return std::ranges::copy(std::move(out).str(), ctx.out()).out;
 }
-
+#endif
 
 #include "utils/color.inl"

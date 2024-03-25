@@ -17,18 +17,23 @@ struct Material
 
 layout (std140, binding = 4) uniform MaterialDataUniform
 {
-    vec3 AlbedoColor;
+    vec3 albedoColor;
     bool hasAlbedoMap;
-    bool hasMetallicMap;
-    bool hasRoughnessMap;
-    bool hasNormalMap;
-    bool hasAmbiantOcclusionMap;
 
-    float metallic;
-    float roughness;
-    float reflectance;
+    vec3 emissiveColor;
     float emissive;
+
+    bool hasMetallicMap;
+    float metallic;
+
+    bool hasRoughnessMap;
+    float roughness;
+
+    bool hasAmbiantOcclusionMap;
     float ambiantOccusion;
+
+    bool hasNormalMap;
+    float reflectance;
 };
 
 in VS_OUT {
@@ -53,7 +58,7 @@ void main()
 
     if (hasAlbedoMap == false)
     {
-        gAlbedoSpec.rgb = AlbedoColor;
+        gAlbedoSpec.rgb = albedoColor;
     }
     else
     {

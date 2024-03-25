@@ -27,9 +27,10 @@ public:
 	
 	void Update() override;
 
-private:
+	// TODO temp
 	static constexpr const char_t* SerializedScenePath = "assets/scenes/basic_scene.scene.xml";
 	
+private:
 	std::vector<UiWindow*> m_UiWindows;
 
 	void UpdateWindow();

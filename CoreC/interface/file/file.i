@@ -1,4 +1,4 @@
-%module Core
+%module CoreC
 
 %rename(GetFileType) XnorCore::File::GetType;
 

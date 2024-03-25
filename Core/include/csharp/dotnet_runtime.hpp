@@ -17,7 +17,9 @@ public:
 
     XNOR_ENGINE static void Shutdown();
 
-    XNOR_ENGINE static bool_t LoadAssembly(const std::string& filename);
+    XNOR_ENGINE static bool_t LoadAssembly(const std::string& name);
+
+    XNOR_ENGINE static DotnetAssembly* GetAssembly(const std::string& name);
 
     XNOR_ENGINE static void UnloadAllAssemblies(bool_t reloadContext = false);
 
@@ -26,6 +28,9 @@ public:
     XNOR_ENGINE static bool_t GetInitialized();
 
 private:
+    static inline constexpr int DotnetMinVersionMajor = 8;
+    static inline constexpr int DotnetMinVersionMinor = 0;
+    
     static Coral::HostSettings m_Settings;
     
     static inline Coral::HostInstance m_Runtime;
@@ -35,6 +40,10 @@ private:
     static inline bool_t m_Initialized = false;
 
     static inline std::vector<DotnetAssembly*> m_LoadedAssemblies;
+
+    static bool CheckDotnetInstalled();
+
+    static bool CheckDotnetVersion();
 
     static void CoralMessageCallback(std::string_view message, Coral::MessageLevel level);
     

@@ -1360,6 +1360,8 @@ void Rhi::BindMaterial(const Material& material)
 	materialData.hasAmbiantOcclusionMap =  static_cast<int32_t>(material.ambiantOcclusionTexture.IsValid());
 	
 	materialData.albedoColor = static_cast<Vector3>(material.albedoColor);
+	materialData.emissiveColor = static_cast<Vector3>(material.emissiveColor);
+	
 	materialData.metallic = material.metallic;
 	materialData.roughness = material.roughness;
 	materialData.reflectance = material.reflectance;

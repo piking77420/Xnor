@@ -522,16 +522,21 @@ struct MaterialData
 {
 	Vector3 albedoColor;
 	int32_t hasAlbedoMap;
-	int32_t hasMetallicMap;
-	int32_t hasRoughnessMap;
-	int32_t hasNormalMap;
-	int32_t hasAmbiantOcclusionMap;
 
-	float_t metallic = 0.f;
-	float_t roughness = 0.f;
-	float_t reflectance = 0.f;
+	Vector3 emissiveColor;
 	float_t emissive = 0.f;
+	
+	int32_t hasMetallicMap;
+	float_t metallic = 0.f;
+
+	int32_t hasRoughnessMap;
+	float_t roughness = 0.f;
+
+	int32_t hasAmbiantOcclusionMap;
 	float_t ambiantOccusion = 0.f;
+
+	int32_t hasNormalMap;
+	float_t reflectance = 0.f;
 };
 
 /// @brief The type of GBuffer.

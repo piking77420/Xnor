@@ -71,7 +71,7 @@ inline Pointer<Shader> ResourceManager::Get<Shader>(const std::string& name)
         if (Contains(ReservedShaderPrefix + name))
             return GetNoCheck<Shader>(ReservedShaderPrefix + name);
         
-        Logger::LogError("Attempt to get an unknown resource: {}", name);
+        Logger::LogError("Attempt to get an unknown shader: {}", name);
         return nullptr;
     }
 

@@ -1,4 +1,4 @@
-%module Core
+%module CoreC
 
 %typemap(cscode) XnorCore::Entity
 %{

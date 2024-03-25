@@ -16,11 +16,8 @@ void Skybox::Initialize()
 {
     m_SkyBoxParser.InitResource();
 
-    if (cubeMap != nullptr)
-    {
-        delete cubeMap;
-    }
-    
+    delete cubeMap;
+
     CreateCubeMapInfo createCubeMapInfo =
     {
         .datas = nullptr,

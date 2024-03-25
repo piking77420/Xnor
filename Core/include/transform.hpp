@@ -28,28 +28,67 @@ public:
 	const Vector3& GetPosition() const;
 	
 	/// @brief Sets the position of this Transform.
-	Vector3& SetPosition();
+	void SetPosition(const Vector3& newPosition);
+	
+	/// @brief Sets the X position of this Transform.
+	void SetPositionX(float_t newPositionX);
+	
+	/// @brief Sets the Y position of this Transform.
+	void SetPositionY(float_t newPositionY);
+	
+	/// @brief Sets the Z position of this Transform.
+	void SetPositionZ(float_t newPositionZ);
 
 	/// @brief Returns the rotation of this Transform in euler angles.
 	[[nodiscard]]
 	const Vector3& GetRotationEulerAngle() const;
 
 	/// @brief Sets the rotation of this Transform in euler angles.
-	Vector3& SetRotationEulerAngle();
+	void SetRotationEulerAngle(const Vector3& newRotationEulerAngle);
+
+	/// @brief Sets the X rotation of this Transform in euler angles.
+	void SetRotationEulerAngleX(float_t newRotationEulerAngleX);
+
+	/// @brief Sets the Y rotation of this Transform in euler angles.
+	void SetRotationEulerAngleY(float_t newRotationEulerAngleY);
+
+	/// @brief Sets the Z rotation of this Transform in euler angles.
+	void SetRotationEulerAngleZ(float_t newRotationEulerAngleZ);
 
 	/// @brief Returns the rotation of this Transform.
 	[[nodiscard]]
 	const Quaternion& GetRotation() const;
 
 	/// @brief Sets the rotation of this Transform.
-	Quaternion& SetRotation();
+	void SetRotation(const Quaternion& newRotation);
+
+	/// @brief Sets the X rotation of this Transform.
+	void SetRotationX(float_t newRotationX);
+
+	/// @brief Sets the Y rotation of this Transform.
+	void SetRotationY(float_t newRotationY);
+
+	/// @brief Sets the Z rotation of this Transform.
+	void SetRotationZ(float_t newRotationZ);
+
+	/// @brief Sets the W rotation of this Transform.
+	void SetRotationW(float_t newRotationW);
 
 	/// @brief Returns the scale of this Transform.
 	[[nodiscard]]
 	const Vector3& GetScale() const;
 
 	/// @brief Sets the scale of this Transform.
-	Vector3& SetScale();
+	void SetScale(const Vector3& newScale);
+
+	/// @brief Sets the X scale of this Transform.
+	void SetScaleX(float_t newScaleX);
+
+	/// @brief Sets the Y scale of this Transform.
+	void SetScaleY(float_t newScaleY);
+
+	/// @brief Sets the Z scale of this Transform.
+	void SetScaleZ(float_t newScaleZ);
 
 	/// @brief Returns whether at least one of this Transform's field was changed last frame.
 	bool_t GetChanged() const;

@@ -24,11 +24,11 @@ private:
     constexpr static inline uint32_t MaxMinMapLevel = 5;
 
 public:
-
     XNOR_ENGINE Skybox() = default;
 
     XNOR_ENGINE ~Skybox();
 
+    DEFAULT_COPY_MOVE_OPERATIONS(Skybox)
 
     XNOR_ENGINE void Initialize();
     

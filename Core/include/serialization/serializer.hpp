@@ -136,6 +136,9 @@ private:
     static void DeserializeXnorPointer(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 
     template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DeserializeEnum(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
+
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
     static void DeserializeSimpleType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 
     template <typename ReflectT, typename MemberT, typename DescriptorT>

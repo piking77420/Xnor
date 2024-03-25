@@ -145,7 +145,6 @@ private:
 	
 	std::array<Pointer<File>, ShaderPipeline::Count> m_Files;
 	std::array<ShaderCode, ShaderPipeline::Count> m_Code;
-
+	
 };
-
 END_XNOR_CORE

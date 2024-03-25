@@ -54,7 +54,7 @@ void LightManager::BeginFrame(const Scene& scene)
 		{
 			.color = static_cast<Vector3>(pointLight->color),
 			.intensity = pointLight->intensity,
-			.position = static_cast<Vector3>(pointLight->entity->transform.worldMatrix[3]),
+			.position = static_cast<Vector3>(pointLight->GetEntity()->transform.worldMatrix[3]),
 			.radius = 30.f * sqrt(pointLight->intensity),
 		};
 	}
@@ -63,14 +63,14 @@ void LightManager::BeginFrame(const Scene& scene)
 	for (size_t i = 0 ; i < nbrOfSpotLight ; i++)
 	{
 		const SpotLight* spotLight = spotLights[i];
-		const Matrix matrix = Matrix::Trs(Vector3(0.f), spotLight->entity->transform.GetRotation().Normalized(), Vector3(1.f));
+		const Matrix matrix = Matrix::Trs(Vector3(0.f), spotLight->GetEntity()->transform.GetRotation().Normalized(), Vector3(1.f));
 		const Vector4 direction = matrix * -Vector4::UnitY();
 		
 		gpuLightData.spotLightData[i] =
 		{
 			.color = static_cast<Vector3>(spotLight->color),
 			.intensity = spotLight->intensity,
-			.position = static_cast<Vector3>(spotLight->entity->transform.worldMatrix[3]),
+			.position = static_cast<Vector3>(spotLight->GetEntity()->transform.worldMatrix[3]),
 			.cutOff = std::cos(spotLight->cutOff * Calc::Deg2Rad),
 			.direction = { direction.x, direction.y, direction.z },
 			.outerCutOff = std::cos(spotLight->outerCutOff * Calc::Deg2Rad),
@@ -82,7 +82,7 @@ void LightManager::BeginFrame(const Scene& scene)
 	if (nbrOfDirectionalLight != 0)
 	for (size_t i = 0 ; i < MaxDirectionalLights ; i++)
 	{
-		const Matrix matrix = Matrix::Trs(Vector3(0.f), directionalLights[i]->entity->transform.GetRotation(), Vector3(1.f));
+		const Matrix matrix = Matrix::Trs(Vector3(0.f), directionalLights[i]->GetEntity()->transform.GetRotation(), Vector3(1.f));
 		const Vector4 direction = matrix * Vector4::UnitY(); 
 		
 		gpuLightData.directionalData[i] =
@@ -98,9 +98,6 @@ void LightManager::BeginFrame(const Scene& scene)
 
 void LightManager::EndFrame(const Scene&)
 {
-	pointLights.clear();
-	spotLights.clear();
-	directionalLights.clear();
 }
 
 void LightManager::DrawLightGizmo(const Camera& camera, const Scene& scene) const
@@ -117,36 +114,36 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 	for (const PointLight* const pointLight : pointLights)
 	{
 		GizmoLight gizmoLight = {
-			.pos = pointLight->entity->transform.GetPosition(),
+			.pos = pointLight->GetEntity()->transform.GetPosition(),
 			.light = pointLight,
 			.type = RenderingLight::PointLight,
 		};
 		
-		const float_t distance = (camera.position - pointLight->entity->transform.GetPosition()).SquaredLength();
+		const float_t distance = (camera.position - pointLight->GetEntity()->transform.GetPosition()).SquaredLength();
 		sortedLight.emplace(distance, gizmoLight);
 	}
 	
 	for (const SpotLight* const spotLight : spotLights)
 	{
 		GizmoLight gizmoLight = {
-			.pos = spotLight->entity->transform.GetPosition(),
+			.pos = spotLight->GetEntity()->transform.GetPosition(),
 			.light = spotLight,
 			.type = RenderingLight::SpothLight
 		};
 		
-		const float_t distance = (camera.position - spotLight->entity->transform.GetPosition()).SquaredLength();
+		const float_t distance = (camera.position - spotLight->GetEntity()->transform.GetPosition()).SquaredLength();
 		sortedLight.emplace(distance, gizmoLight);
 	}
 	
 	for (const DirectionalLight* const dirLight : directionalLights)
 	{
 		GizmoLight gizmoLight = {
-			.pos = dirLight->entity->transform.GetPosition(),
+			.pos = dirLight->GetEntity()->transform.GetPosition(),
 			.light = dirLight,
 			.type = RenderingLight::DirLight
 		};
 		
-		const float_t distance = (camera.position - dirLight->entity->transform.GetPosition()).SquaredLength();
+		const float_t distance = (camera.position - dirLight->GetEntity()->transform.GetPosition()).SquaredLength();
 		sortedLight.emplace(distance, gizmoLight);
 	}
 	
@@ -165,7 +162,7 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 		modelData.model = (scale * Matrix::LookAt(it->second.pos, camera.position, Vector3::UnitY())).Inverted();
 		modelData.normalInvertMatrix = Matrix::Identity();
 		// +1 to avoid the black color of the attachement be a valid index  
-		modelData.meshRenderIndex = scene.GetEntityIndex(it->second.light->entity) + 1;
+		modelData.meshRenderIndex = scene.GetEntityIndex(it->second.light->GetEntity()) + 1;
 		
 		switch (it->second.type)
 		{

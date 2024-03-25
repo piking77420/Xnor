@@ -46,6 +46,7 @@ private:
 
 END_XNOR_CORE
 
+#ifndef SWIG
 template <>
 struct std::hash<XnorCore::Guid>
 {
@@ -67,7 +68,6 @@ struct std::hash<XnorCore::Guid>
     }
 };
 
-#ifndef SWIG
 /// @brief @c std::formatter template specialization for the XnorCore::Guid type.
 template <>
 struct std::formatter<XnorCore::Guid>

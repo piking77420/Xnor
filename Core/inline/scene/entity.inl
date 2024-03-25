@@ -70,7 +70,22 @@ void Entity::RemoveComponent()
 }
 
 template <Concepts::ComponentT T>
-bool_t Entity::TryGetComponent(T** output)
+bool_t Entity::TryGetComponent(T** const output)
+{
+    for (int i = 0; i < m_Components.GetSize(); i++)
+    {
+        if (dynamic_cast<T*>(m_Components[i]))
+        {
+            *output = reinterpret_cast<T*>(m_Components[i]);
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+template <Concepts::ComponentT T>
+bool_t Entity::TryGetComponent(const T** const output) const
 {
     for (int i = 0; i < m_Components.GetSize(); i++)
     {

@@ -446,6 +446,7 @@
     <ClCompile Include="src\serialization\serializer.cpp" />
     <ClCompile Include="src\transform.cpp" />
     <ClCompile Include="src\utils\color.cpp" />
+    <ClCompile Include="src\utils\file_system_watcher.cpp" />
     <ClCompile Include="src\utils\formatter.cpp" />
     <ClCompile Include="src\utils\list.cpp" />
     <ClCompile Include="src\utils\logger.cpp" />
@@ -617,7 +618,6 @@
     <ClInclude Include="include\core.hpp" />
     <ClInclude Include="include\csharp\dotnet_assembly.hpp" />
     <ClInclude Include="include\csharp\dotnet_runtime.hpp" />
-    <ClInclude Include="include\csharp\dotnet_type.hpp" />
     <ClInclude Include="include\csharp\dotnet_utils.hpp" />
     <ClInclude Include="include\file\directory.hpp" />
     <ClInclude Include="include\file\entry.hpp" />
@@ -670,6 +670,7 @@
     <ClInclude Include="include\utils\color.hpp" />
     <ClInclude Include="include\utils\concepts.hpp" />
     <ClInclude Include="include\utils\event.hpp" />
+    <ClInclude Include="include\utils\file_system_watcher.hpp" />
     <ClInclude Include="include\utils\formatter.hpp" />
     <ClInclude Include="include\utils\list.hpp" />
     <ClInclude Include="include\utils\logger.hpp" />
@@ -706,7 +707,6 @@
     <ClInclude Include="inline\utils\reference_counter.inl" />
     <ClInclude Include="inline\utils\ts_queue.inl" />
     <ClInclude Include="inline\utils\utils.inl" />
-    <ClInclude Include="src\csharp\dotnet_type.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="externals\include\assimp\.editorconfig" />
