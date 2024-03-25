@@ -8,15 +8,6 @@
 
 BEGIN_XNOR_CORE
 
-class Component;
-
-namespace Concepts
-{
-    /// @brief Concept that forces a type to be a child of Component
-    template <class T>
-    concept ComponentT = Meta::IsBaseOf<Component, T>;
-}
-
 class Entity;
 class Transform;
 
