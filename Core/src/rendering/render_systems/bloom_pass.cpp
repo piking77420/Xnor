@@ -13,10 +13,11 @@ void BloomPass::Init()
     
     m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
     // Downsample
-    m_DownSample = ResourceManager::Get<Shader>("down_sample");
+    m_DownSample = ResourceManager::Get<ComputeShader>("down_sample");
     m_DownSample->CreateInRhi();
     m_DownSample->Use();
-    m_DownSample->SetInt("srcTexture", 0);
+    m_DownSample->SetInt("currentMip", 0);
+    m_DownSample->SetInt("nextMip", 1);
     m_DownSample->Unuse();
 
     // Upsample
@@ -57,7 +58,7 @@ void BloomPass::UpSampling(const BloomRenderTarget& bloomRenderTarget) const
         const BloomRenderTarget::BloomMip& nextMip = mipchain[i - 1];
 
         const Vector2 mipSize =  { std::floor(nextMip.sizef.x),std::floor(nextMip.sizef.y) };
-        m_UpSample->SetVec2("u_texel_size",Vector2(1.0f) / mipSize);
+        m_UpSample->SetVec2("uTexelSize",Vector2(1.0f) / mipSize);
         
         // Source
         mip.texture->BindTexture(0);
@@ -79,25 +80,17 @@ void BloomPass::DownSampling(const BloomRenderTarget& bloomRenderTarget) const
     
     bloomRenderTarget.thresholdTexture->BindTexture(0);
     const Vector2 textureSizef = { static_cast<float_t>(bloomRenderTarget.thresholdTexture->GetSize().x), static_cast<float_t>(bloomRenderTarget.thresholdTexture->GetSize().y) } ;
-    m_DownSample->SetVec2("srcResolution",textureSizef);
+    
     for (const BloomRenderTarget::BloomMip& bloomMip : bloomRenderTarget.mipChain)
     {
-        bloomRenderTarget.frameBuffer->AttachTexture(*bloomMip.texture, Attachment::Color00, 0);
-        const RenderPassBeginInfo renderPassBeginInfo =
-        {
-            .frameBuffer =  bloomRenderTarget.frameBuffer,
-            .renderAreaOffset = { 0,0 },
-            .renderAreaExtent = bloomMip.texture->GetSize(),
-            .clearBufferFlags = BufferFlag::None,
-        };
+        m_DownSample->BindImage(1, *bloomMip.texture, 0, false, 0, ImageAccess::ReadWrite);
+        const Vector2 mipSize =  { std::floor(bloomMip.sizef.x),std::floor(bloomMip.sizef.y) };
+        m_DownSample->SetVec2("uTexelSize",Vector2(1.0f) / mipSize);
         
-        bloomRenderTarget.renderPass.BeginRenderPass(renderPassBeginInfo);
-        Rhi::DrawModel(m_Quad->GetId());
-         bloomRenderTarget.renderPass.EndRenderPass();
+        m_DownSample->DispatchCompute(static_cast<uint32_t>(std::ceil(mipSize.x/ 8.f)), static_cast<uint32_t>(std::ceil(mipSize.y/ 8.f)) ,1);  
+        m_DownSample->SetMemoryBarrier(GpuMemoryBarrier::AllBarrierBits);
         
-        m_DownSample->SetVec2("srcResolution", bloomMip.sizef);
         bloomMip.texture->BindTexture(0);
-     
     }
     
     bloomRenderTarget.thresholdTexture->UnbindTexture(0);

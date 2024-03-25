@@ -10,7 +10,7 @@
 layout (local_size_x = GroupSize, local_size_y = GroupSize) in;
 layout(rgba32f, binding = 1) uniform image2D nextMip;
 
-uniform vec2  u_texel_size;
+uniform vec2  uTexelSize;
 uniform int   u_mip_level;
 uniform float bloom_intensity;
 uniform sampler2D currentMip;
@@ -42,8 +42,8 @@ void main()
     // The first (TILE_PIXEL_COUNT - GROUP_THREAD_COUNT) threads load at most 2 texel values
     for (int i = int(gl_LocalInvocationIndex); i < TILE_PIXEL_COUNT; i += GROUP_THREAD_COUNT)
     {
-        vec2 uv        = (base_index + 0.5) * u_texel_size;
-        vec2 uv_offset = vec2(i % TILE_SIZE, i / TILE_SIZE) * u_texel_size;
+        vec2 uv        = (base_index + 0.5) * uTexelSize;
+        vec2 uv_offset = vec2(i % TILE_SIZE, i / TILE_SIZE) * uTexelSize;
         
         vec4 color = texture(currentMip, (uv + uv_offset));
         store_lds(i, color);

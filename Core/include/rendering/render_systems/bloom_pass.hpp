@@ -13,10 +13,9 @@ class BloomPass
 {
 private:
     static inline Pointer<Model> m_Quad = nullptr;
-    static inline Pointer<Shader> m_DownSample = nullptr;
+    static inline Pointer<ComputeShader> m_DownSample = nullptr;
     static inline Pointer<ComputeShader> m_UpSample = nullptr;
     static inline Pointer<ComputeShader> m_ThresholdFilter = nullptr;
-    static inline Pointer<Shader> m_TestShaderCompute = nullptr;
     static inline constexpr TextureInternalFormat::TextureInternalFormat BloomTextureFormat = TextureInternalFormat::TextureInternalFormat::Rgba32F;
     
 public:
