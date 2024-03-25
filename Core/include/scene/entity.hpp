@@ -7,6 +7,7 @@
 #include "reflection/reflection.hpp"
 #include "resource/model.hpp"
 #include "scene/component.hpp"
+#include "utils/concepts.hpp"
 #include "utils/guid.hpp"
 #include "utils/list.hpp"
 

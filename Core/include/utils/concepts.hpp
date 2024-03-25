@@ -2,7 +2,6 @@
 
 #include "core.hpp"
 
-#include "resource/resource.hpp"
 #include "utils/meta_programming.hpp"
 
 /// @file concepts.hpp
@@ -10,7 +9,9 @@
 
 BEGIN_XNOR_CORE
 
+class Resource;
 class Entry;
+class Component;
 
 /// @namespace Concepts
 /// @brief Contains useful general-use concepts.
@@ -23,6 +24,10 @@ namespace Concepts
     /// @brief A class satisfies the EntryT concept if it is derived of Entry.
     template <class T>
     concept EntryT = Meta::IsBaseOf<Entry, T>;
+    
+    /// @brief Concept that forces a type to be a child of Component
+    template <class T>
+    concept ComponentT = Meta::IsBaseOf<Component, T>;
 
     /// @brief The Formattable concept requires a type to be formattable.
     ///
@@ -43,9 +48,15 @@ namespace Concepts
     template <class T>
     concept FunctionT = std::is_function_v<T>;
 
+    template <typename T>
+    concept ConvertibleToT = std::convertible_to<T>;
+
     /// @brief Concept that forces a type to be a color, e.g. one of: ColorRgb, ColorRgba, Colorf or ColorHsv
     template <class T>
-    concept ColorT = Meta::IsAny<ColorRgb, ColorRgba, Colorf, ColorHsva>;
+    concept ColorT = Meta::IsAny<T, ColorRgb, ColorRgba, Colorf, ColorHsva>;
+
+    template <typename T>
+    concept DurationT = Meta::IsAny<T, std::chrono::hours, std::chrono::minutes, std::chrono::seconds, std::chrono::milliseconds, std::chrono::nanoseconds>;
 }
 
 END_XNOR_CORE

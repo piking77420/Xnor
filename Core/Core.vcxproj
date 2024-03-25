@@ -513,6 +513,7 @@
     <ClInclude Include="include\serialization\serializer.hpp" />
     <ClInclude Include="include\utils\color.hpp" />
     <ClInclude Include="include\utils\concepts.hpp" />
+    <ClInclude Include="include\utils\coroutine.hpp" />
     <ClInclude Include="include\utils\event.hpp" />
     <ClInclude Include="include\utils\file_system_watcher.hpp" />
     <ClInclude Include="include\utils\formatter.hpp" />
@@ -544,6 +545,7 @@
     <ClInclude Include="inline\scene\scene.inl" />
     <ClInclude Include="inline\serialization\serializer.inl" />
     <ClInclude Include="inline\utils\color.inl" />
+    <ClInclude Include="inline\utils\coroutine.inl" />
     <ClInclude Include="inline\utils\event.inl" />
     <ClInclude Include="inline\utils\list.inl" />
     <ClInclude Include="inline\utils\logger.inl" />
