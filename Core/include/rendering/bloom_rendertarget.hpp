@@ -1,7 +1,9 @@
 #pragma once
 
 #include "core.hpp"
+#include "render_pass.hpp"
 #include "resource/texture.hpp"
+#include "frame_buffer.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -16,6 +18,12 @@ public:
         XnorCore::Texture* texture {nullptr};
         Vector2 sizef;
     };
+
+    std::vector<BloomMip> mipChain;
+    Texture* thresholdTexture = nullptr;
+
+    FrameBuffer* frameBuffer = nullptr;
+    RenderPass renderPass;
     
     DEFAULT_COPY_MOVE_OPERATIONS(BloomRenderTarget)
 
@@ -29,9 +37,7 @@ public:
 
     XNOR_ENGINE void Resize(Vector2i viewportSize);
 
-private:
-    std::vector<BloomMip> m_MipChain;
-    Texture* m_ThresholdTexture = nullptr;
+    XNOR_ENGINE Texture* GetBloomedTexture() const;
 
     XNOR_ENGINE void CreateBloomMip(Vector2i viewportSize);
 

@@ -9,7 +9,7 @@ uniform sampler2D bloomBlur;
 const float gamma = 3.60;
 const float exposure = 1.f;
 
-vec3 gammaCorrect(vec3 color)
+vec3 GammaCorrect(vec3 color)
 {
     return pow(color, vec3(1.0/gamma));
 }
@@ -25,9 +25,9 @@ mat3 ACESInputMat =
 // ODT_SAT => XYZ => D60_2_D65 => sRGB
 mat3 ACESOutputMat =
 {
-{ 1.60475, -0.10208, -0.00327},
-{-0.53108,  1.10813, -0.07276},
-{-0.07367, -0.00605,  1.07602 }
+    { 1.60475, -0.10208, -0.00327},
+    {-0.53108,  1.10813, -0.07276},
+    {-0.07367, -0.00605,  1.07602 }
 };
 
 vec3 RRTAndODTFit(vec3 v)
@@ -39,7 +39,7 @@ vec3 RRTAndODTFit(vec3 v)
 void main()
 {
 	vec4 bloomColor = texture(bloomBlur,texCoords);
-	vec4 hdrImage = texture(beforeToneMappedImage,texCoords) + bloomColor;
+	vec4 hdrImage = mix(texture(beforeToneMappedImage,texCoords),bloomColor,0.08f) ;
 
     vec4 x = exposure * hdrImage;
 
@@ -47,7 +47,7 @@ void main()
     color = RRTAndODTFit(color);
     color = ACESOutputMat * color;
 
-    color = gammaCorrect(color);
+    color = GammaCorrect(color);
     color = clamp(color, 0.0, 1.0);
 
     fragColor = vec4(color, 1.0);

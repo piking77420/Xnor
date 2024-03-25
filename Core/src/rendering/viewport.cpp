@@ -17,7 +17,7 @@ void Viewport::Init(Vector2i initViewportSize)
         }
     };
     // Init Rendering
-    frameBuffer = new FrameBuffer(viewPortSize);
+    frameBuffer = new FrameBuffer();
     m_Image = new Texture(TextureInternalFormat::Rgba32F, viewPortSize, TextureFormat::Rgb);
     // Set Up renderPass
     const RenderPass renderPass(attachementsType);

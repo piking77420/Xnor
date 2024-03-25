@@ -12,8 +12,3 @@ void PostprocessRendertarget::Destroy()
 {
     bloomRenderTarget.Destroy();
 }
-
-void PostprocessRendertarget::Resize(Vector2i viewPortsize)
-{
-    bloomRenderTarget.Resize(viewPortsize);
-}

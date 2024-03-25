@@ -7,6 +7,7 @@ void ViewportData::Init(Vector2i windowSize)
     depthAtttachment = new Texture(TextureInternalFormat::DepthComponent32FStencil8, windowSize);
     InitForward(windowSize);
     InitDeffered(windowSize);
+    postprocessRendertarget.Init(windowSize);
 }
 
 void ViewportData::Destroy()
@@ -22,11 +23,12 @@ void ViewportData::Destroy()
 
     delete colorAttachment;
     delete depthAtttachment;
+    postprocessRendertarget.Destroy();
 }
 
 void ViewportData::InitForward(Vector2i windowSize)
 {
-    renderBuffer = new FrameBuffer(windowSize);
+    renderBuffer = new FrameBuffer();
     colorAttachment = new Texture(TextureInternalFormat::Rgba32F, windowSize, TextureFormat::Rgba);
 
     const std::vector<RenderTargetInfo> attachementsType =
@@ -48,7 +50,7 @@ void ViewportData::InitForward(Vector2i windowSize)
 
 void ViewportData::InitDeffered(Vector2i windowSize)
 {
-    gframeBuffer = new FrameBuffer(windowSize);
+    gframeBuffer = new FrameBuffer();
     positionAtttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);
     normalAttachement = new Texture(TextureInternalFormat::Rgb16F, windowSize);
     albedoAttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);

@@ -11,11 +11,8 @@ public:
     XNOR_ENGINE void Init(Vector2i viewPortsize);
 
     XNOR_ENGINE void Destroy();
-
-    XNOR_ENGINE void Resize(Vector2i viewPortsize);
     
     BloomRenderTarget bloomRenderTarget;
-private:
 };
 
 END_XNOR_CORE

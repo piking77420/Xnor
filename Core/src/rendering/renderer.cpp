@@ -16,7 +16,7 @@ void Renderer::Initialize()
 	InitResources();
 	m_SkyboxRenderer.InitializeResources();
 	m_LightManager.InitResources();
-
+	m_PostProcessPass.Init();
 	Rhi::PrepareUniform();
 }
 

@@ -28,7 +28,7 @@ public:
 
     PostprocessRendertarget postprocessRendertarget;
     
-    bool_t usePostProcess = false;
+    bool_t usePostProcess = true;
     
     ViewportData() = default;
 

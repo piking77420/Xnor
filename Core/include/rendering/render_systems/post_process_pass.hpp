@@ -20,8 +20,6 @@ public:
     XNOR_ENGINE void Compute(const Texture& textureToCompute, const Texture& postProcessedTexture,const PostprocessRendertarget& postprocessRendertarget) const;
 
 private:
-    XNOR_ENGINE void HandleResize(Vector2i size);
-    
     FrameBuffer* m_FrameBuffer = nullptr;
     ToneMapping m_ToneMapping;
     BloomPass m_BloomPass;

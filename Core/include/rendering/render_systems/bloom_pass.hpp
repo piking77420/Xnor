@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "core.hpp"
+#include "rendering/bloom_rendertarget.hpp"
 #include "rendering/frame_buffer.hpp"
 #include "rendering/render_pass.hpp"
 #include "resource/compute_shader.hpp"
@@ -14,7 +15,7 @@ private:
     static inline Pointer<Model> m_Quad = nullptr;
     static inline Pointer<Shader> m_DownSample = nullptr;
     static inline Pointer<ComputeShader> m_UpSample = nullptr;
-    static inline Pointer<Shader> m_TresholdFilter = nullptr;
+    static inline Pointer<Shader> m_ThresholdFilter = nullptr;
     static inline Pointer<Shader> m_TestShaderCompute = nullptr;
     static inline constexpr TextureInternalFormat::TextureInternalFormat BloomTextureFormat = TextureInternalFormat::TextureInternalFormat::Rgba32F;
     
@@ -24,37 +25,18 @@ public:
     XNOR_ENGINE BloomPass() = default;
 
     XNOR_ENGINE ~BloomPass() = default;
-    
-    XNOR_ENGINE void Init(uint32_t bloomMips);
-    
-    XNOR_ENGINE void ComputeBloom(const Texture& textureWithoutBloom);
 
-    XNOR_ENGINE Texture* GetBloomTexture() const;
-
+    void Init();
+    
+    XNOR_ENGINE void ComputeBloom(const Texture& imageWithoutBloom, const BloomRenderTarget& bloomRenderTarget) const;
 private:
-    struct BloomMip
-    {
-        Texture* texture {nullptr};
-        Vector2 sizef;
-    };
-    
-    FrameBuffer* m_FrameBuffer = nullptr;
-    RenderPass m_RenderPass;
-    std::vector<BloomMip> m_MipChain;
-    Texture* m_ThresholdTexture = nullptr;
-
-    uint32_t m_BloomMips{};
-
     float_t m_FilterRadius = 0.005f;
-
-
-    XNOR_ENGINE void UpSampling();
     
-    XNOR_ENGINE void DownSampling();
-
-    XNOR_ENGINE void HandleBlooMip(Vector2i currentViewPortSize);
-
-    XNOR_ENGINE void ThresholdFilter(const Texture& textureToCompute) const;
+    XNOR_ENGINE void UpSampling(const BloomRenderTarget& bloomRenderTarget) const;
+    
+    XNOR_ENGINE void DownSampling(const BloomRenderTarget& bloomRenderTarget) const;
+    
+    XNOR_ENGINE void ThresholdFilter(const Texture& imageWithoutBloom, const BloomRenderTarget& bloomRenderTarget) const;
 
 
 };

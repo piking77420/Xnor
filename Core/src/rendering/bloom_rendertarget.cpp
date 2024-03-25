@@ -17,14 +17,18 @@ BloomRenderTarget::~BloomRenderTarget()
 void BloomRenderTarget::Initialize(const Vector2i viewportSize)
 {
     CreateBloomMip(viewportSize);
+    thresholdTexture = new Texture(TextureInternalFormat::Rgba32F, viewportSize);
+    frameBuffer = new FrameBuffer();
 }
 
 void BloomRenderTarget::Destroy()
 {
-    for (const BloomMip& mip : m_MipChain)
+    for (const BloomMip& mip : mipChain)
         delete mip.texture;
+    mipChain.clear();
 
-    delete m_ThresholdTexture;
+    delete thresholdTexture;
+    delete frameBuffer;
 }
 
 void BloomRenderTarget::Resize(const Vector2i viewportSize)
@@ -33,18 +37,24 @@ void BloomRenderTarget::Resize(const Vector2i viewportSize)
     Initialize(viewportSize);
 }
 
+Texture* BloomRenderTarget::GetBloomedTexture() const
+{
+    return mipChain[0].texture;
+}
+
 void BloomRenderTarget::CreateBloomMip(const Vector2i viewportSize)
 {
-     
+    mipChain.resize(BloomMipNumber);
+    
     Vector2 mimSizeF = { static_cast<float_t>(viewportSize.x) , static_cast<float_t>(viewportSize.y) };
     Vector2i mimSize = { static_cast<int32_t>(viewportSize.x) , static_cast<int32_t>(viewportSize.y) };
 
-    for (size_t i = 0; i < m_MipChain.size(); i++)
+    for (size_t i = 0; i < mipChain.size(); i++)
     {
         mimSizeF *= 0.5f;
         mimSize.x /= 2;
         mimSize.y /= 2;
-        m_MipChain[i].sizef = mimSizeF;
+        mipChain[i].sizef = mimSizeF;
         
         const TextureCreateInfo createInfo =
         {
@@ -57,6 +67,6 @@ void BloomRenderTarget::CreateBloomMip(const Vector2i viewportSize)
             .dataType = DataType::Float
         };
         
-        m_MipChain[i].texture = new Texture(createInfo);
+        mipChain[i].texture = new Texture(createInfo);
     }
 }

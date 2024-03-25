@@ -115,7 +115,7 @@ void SkyBoxParser::PreComputeBrdf(const Vector2i environementMapSize, const Text
 
 void SkyBoxParser::Compute(const Texture& equirectangularMap, const Cubemap& cubemap, const Pointer<Shader>& shader)
 {
-    IsFrameBufferValid(cubemap.GetSize());
+    OnResize(cubemap.GetSize());
 
     Matrix projection;
     Matrix::Perspective(90.f * Calc::Deg2Rad, 1.0f, 0.1f, 10.f, &projection);
@@ -133,7 +133,7 @@ void SkyBoxParser::Compute(const Texture& equirectangularMap, const Cubemap& cub
         {
             .frameBuffer = m_FrameBuffer,
             .renderAreaOffset = { 0,0 },
-            .renderAreaExtent = m_FrameBuffer->GetSize(),
+            .renderAreaExtent = m_TextureDepth->GetSize(),
             .clearBufferFlags = static_cast<decltype(renderPassBeginInfo.clearBufferFlags)>(BufferFlag::ColorBit | BufferFlag::DepthBit)
         };
 
@@ -180,15 +180,15 @@ void SkyBoxParser::InitResource()
 
     m_PreComputeBrdr = ResourceManager::Get<Shader>("precompute_brdf");
     m_PreComputeBrdr->CreateInRhi();
+
+    m_FrameBuffer = new FrameBuffer();
 }
 
-void SkyBoxParser::IsFrameBufferValid(const Vector2i size)
+void SkyBoxParser::OnResize(const Vector2i size)
 {
-    if (m_FrameBuffer == nullptr || m_FrameBuffer->GetSize() != size)
+    if (m_TextureDepth == nullptr || m_TextureDepth->GetSize() != size)
     {
-        delete m_FrameBuffer;
         delete m_TextureDepth;
-        m_FrameBuffer = new FrameBuffer(size);
         m_TextureDepth = new Texture(TextureInternalFormat::DepthComponent32, size);
         m_TextureDepth->CreateInRhi();
         m_FrameBuffer->AttachTexture(*m_TextureDepth,Attachment::Depth);
