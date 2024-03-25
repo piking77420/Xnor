@@ -1,5 +1,7 @@
 #pragma once
 
+#include <filesystem>
+
 #include "Core.hpp"
 #include "MessageLevel.hpp"
 #include "Assembly.hpp"
