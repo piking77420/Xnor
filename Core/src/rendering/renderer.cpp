@@ -14,10 +14,9 @@ void Renderer::Initialize()
 	Rhi::SetClearColor(clearColor);
 
 	InitResources();
-	m_ToneMapping.InitializeResources();
 	m_SkyboxRenderer.InitializeResources();
 	m_LightManager.InitResources();
-
+	m_PostProcessPass.Init();
 	Rhi::PrepareUniform();
 }
 
@@ -45,18 +44,8 @@ void Renderer::RenderViewport(const Viewport& viewport,
 	DefferedRendering(meshrenderers,scene.skybox,viewportData,viewport.viewPortSize);
 	ForwardPass(meshrenderers, scene.skybox, viewport, viewport.viewPortSize, viewport.isEditor);
 	
-	const RenderPassBeginInfo renderPassBeginInfo =
-	{
-		.frameBuffer = viewport.frameBuffer,
-		.renderAreaOffset = { 0, 0,},
-		.renderAreaExtent = viewport.viewPortSize,
-		.clearBufferFlags = static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit),
-		.clearColor = clearColor
-	};
-
-	viewport.colorPass.BeginRenderPass(renderPassBeginInfo);
-	m_ToneMapping.ComputeToneMaping(*viewport.viewportData.colorAttachment,m_Quad);
-	viewport.colorPass.EndRenderPass();
+	if (viewportData.usePostProcess)
+	m_PostProcessPass.Compute(*viewport.viewportData.colorAttachment , *viewport.GetImage(), viewportData.postprocessRendertarget);
 }
 
 void Renderer::RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass,
@@ -118,8 +107,9 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	viewportData.normalAttachement->BindTexture(Gbuffer::Normal);
 	viewportData.albedoAttachment->BindTexture(Gbuffer::Albedo);
 	viewportData.metallicRougnessReflectance->BindTexture(Gbuffer::MetallicRoughessReflectance);
-	viewportData.emissiveAmbiantOcclusion->BindTexture(Gbuffer::EmissiveAmbiantOcclusion);
-	
+	viewportData.ambiantOcclusion->BindTexture(Gbuffer::AmbiantOcclusion);
+	viewportData.emissive->BindTexture(Gbuffer::Emissivive);
+
 	skybox.irradianceMap->BindTexture(10);
 	skybox.prefilterMap->BindTexture(11);
 	skybox.precomputeBrdfTexture->BindTexture(12);
@@ -127,7 +117,8 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	Rhi::DrawModel(m_Quad->GetId());
 	m_GBufferShaderLit->Unuse();
 	Rhi::DepthTest(true);
-
+	
+	viewportData.colorPass.EndRenderPass();
 }
 
 void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox, const Viewport& viewport, const Vector2i viewportSize, const bool_t isEditor) const
@@ -313,7 +304,8 @@ void Renderer::InitResources()
 	m_GBufferShaderLit->SetInt("gNormal", Gbuffer::Normal);
 	m_GBufferShaderLit->SetInt("gAlbedoSpec", Gbuffer::Albedo);
 	m_GBufferShaderLit->SetInt("gMetallicRoughessReflectance", Gbuffer::MetallicRoughessReflectance);
-	m_GBufferShaderLit->SetInt("gEmissiveAmbiantOcclusion", Gbuffer::EmissiveAmbiantOcclusion);
+	m_GBufferShaderLit->SetInt("gAmbiantOcclusion", Gbuffer::AmbiantOcclusion);
+	m_GBufferShaderLit->SetInt("gEmissive", Gbuffer::Emissivive);
 
 	m_GBufferShaderLit->SetInt("irradianceMap", 10);
 	m_GBufferShaderLit->SetInt("prefilterMap", 11);

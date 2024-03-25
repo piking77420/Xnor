@@ -7,9 +7,9 @@
 #include "viewport.hpp"
 #include "render_systems/light_manager.hpp"
 #include "render_systems/skybox_renderer.hpp"
-#include "render_systems/tone_mapping.hpp"
 #include "resource/model.hpp"
 #include "world/world.hpp"
+#include "render_systems/post_process_pass.hpp"
 
 /// @file renderer.hpp
 /// @brief Defines the XnorCore::Renderer class
@@ -59,9 +59,8 @@ public:
     XNOR_ENGINE void SwapBuffers();
 private:
     LightManager m_LightManager;
-    ToneMapping m_ToneMapping;
     SkyboxRenderer m_SkyboxRenderer;
-    
+    PostProcessPass m_PostProcessPass;
     
     Pointer<Shader> m_GBufferShader;
     Pointer<Shader> m_GBufferShaderLit;

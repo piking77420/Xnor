@@ -4,7 +4,8 @@ layout (location = 0) out vec3 gPosition;
 layout (location = 1) out vec3 gNormal;
 layout (location = 2) out vec4 gAlbedoSpec;
 layout (location = 3) out vec3 gMetallicRoughessReflectance;
-layout (location = 4) out vec2 gEmissiveAmbiantOcclusion;
+layout (location = 4) out vec2 gAmbiantOcclusion;
+layout (location = 5) out vec4 gEmissive;
 
 struct Material
 {
@@ -17,18 +18,23 @@ struct Material
 
 layout (std140, binding = 4) uniform MaterialDataUniform
 {
-    vec3 AlbedoColor;
+    vec3 albedoColor;
     bool hasAlbedoMap;
-    bool hasMetallicMap;
-    bool hasRoughnessMap;
-    bool hasNormalMap;
-    bool hasAmbiantOcclusionMap;
 
-    float metallic;
-    float roughness;
-    float reflectance;
+    vec3 emissiveColor;
     float emissive;
+
+    bool hasMetallicMap;
+    float metallic;
+
+    bool hasRoughnessMap;
+    float roughness;
+
+    bool hasAmbiantOcclusionMap;
     float ambiantOccusion;
+
+    bool hasNormalMap;
+    float reflectance;
 };
 
 in VS_OUT {
@@ -53,7 +59,7 @@ void main()
 
     if (hasAlbedoMap == false)
     {
-        gAlbedoSpec.rgb = AlbedoColor;
+        gAlbedoSpec.rgb = albedoColor;
     }
     else
     {
@@ -102,5 +108,6 @@ void main()
     }
 
     gMetallicRoughessReflectance = vec3(gMetallicRoughessReflectance.r, gMetallicRoughessReflectance.g, reflectance);
-    gEmissiveAmbiantOcclusion = vec2(emissive, currentOcclusion);
+    gAmbiantOcclusion = vec2(ambiantOccusion,0);
+    gEmissive = vec4(emissiveColor,emissive);
 }

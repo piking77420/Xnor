@@ -114,7 +114,7 @@ void DotnetRuntime::ReloadAllAssemblies()
 {
     std::vector<std::string> assemblies;
     std::ranges::transform(m_LoadedAssemblies, std::back_inserter(assemblies), [](const decltype(m_LoadedAssemblies)::value_type& loadedAssembly) { return loadedAssembly->GetName(); });
-    UnloadAllAssemblies();
+    UnloadAllAssemblies(true);
     
     for (auto&& assembly : assemblies)
         LoadAssembly(assembly);

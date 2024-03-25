@@ -334,7 +334,6 @@ void Editor::Update()
 
 	CreateTestScene();
 	Window::Show();
-	
 	while (!Window::ShouldClose())
 	{
 		Time::Update();

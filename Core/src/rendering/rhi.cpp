@@ -32,7 +32,10 @@ void Rhi::BeginRenderPassInternal(const RenderPassBeginInfo& beginInfo)
 {
 	Rhi::BindFrameBuffer(beginInfo.frameBuffer->GetId());
 	Rhi::SetClearColor(beginInfo.clearColor);
-	Rhi::ClearBuffer(beginInfo.clearBufferFlags);
+	
+	if (beginInfo.clearBufferFlags != BufferFlag::None)
+		Rhi::ClearBuffer(beginInfo.clearBufferFlags);
+	
 	Rhi::SetViewport(beginInfo.renderAreaOffset,beginInfo.renderAreaExtent);
 }
 
@@ -158,9 +161,16 @@ uint32_t Rhi::CreateShaders(const std::vector<ShaderCode>& shaderCodes, const Sh
 
 		CheckCompilationError(shaderId, GetShaderTypeToString(code.type));
 		glAttachShader(programId, shaderId);
+		
 	}
-	
 	glLinkProgram(programId);
+
+	for (size_t i = 0; i < shaderIds.size(); i++)
+	{
+		if (glIsShader(shaderIds[i]))
+			glDeleteShader(shaderIds[i]);
+	}
+		
 	CheckCompilationError(programId, "PROGRAM");
 
 	ShaderInternal shaderInternal;
@@ -187,24 +197,19 @@ void Rhi::UseShader(const uint32_t shaderId)
 	{
 		const uint32_t srcValue = GetBlendValueOpengl(shaderInternal.blendFunction.sValue);
 		const uint32_t destValue = GetBlendValueOpengl(shaderInternal.blendFunction.dValue);
+		const uint32_t blendEquation = BlendEquationToOpengl(shaderInternal.blendFunction.blendEquation);
+		glEnable(GL_BLEND);
 		glBlendFunc(srcValue, destValue);
+		glBlendEquation(blendEquation);
+		Rhi::m_Blending = true;
 	}
-	else
-	{
-		const uint32_t srcValue = GetBlendValueOpengl(BlendValue::One);
-		const uint32_t destValue = GetBlendValueOpengl(BlendValue::Zero);
-		glBlendFunc(srcValue, destValue);
-	}
-
+	
 	if (shaderInternal.cullInfo.enableCullFace)
 	{
 		glEnable(GL_CULL_FACE);
 		glCullFace(CullFaceToOpenglCullFace(shaderInternal.cullInfo.cullFace));
 		glFrontFace(FrontFaceToOpenglFrontFace(shaderInternal.cullInfo.frontFace));
-	}
-	else
-	{
-		glDisable(GL_CULL_FACE);
+		Rhi::m_Cullface = true;
 	}
 	
 	glUseProgram(shaderId);
@@ -212,6 +217,19 @@ void Rhi::UseShader(const uint32_t shaderId)
 
 void Rhi::UnuseShader()
 {
+	if (m_Blending)
+	{
+		glDisable(GL_BLEND);
+		m_Blending = false;
+	}
+
+	if (m_Cullface)
+	{
+		glDisable(GL_CULL_FACE);
+		Rhi::m_Cullface = false;
+	}
+	
+	
 	glUseProgram(0);
 }
 
@@ -232,7 +250,11 @@ void Rhi::SetUniform(const UniformType::UniformType uniformType, const void* con
 		case UniformType::Float:
 			glUniform1f(uniformLocation, *static_cast<const GLfloat*>(data));
 			break;
-			
+
+		case UniformType::Vec2:
+			glUniform2fv(uniformLocation, 1, static_cast<const GLfloat*>(data));
+			break;
+
 		case UniformType::Vec3:
 			glUniform3fv(uniformLocation, 1, static_cast<const GLfloat*>(data));
 			break;
@@ -471,6 +493,86 @@ uint32_t Rhi::CubeMapFacesToOpengl(CubeMapFace cubeMapFace)
 	return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 }
 
+uint32_t Rhi::MemoryBarrierToOpengl(GpuMemoryBarrier memoryBarrier)
+{
+	uint32_t memoryBarrierOpengl = 0;
+		
+	if (memoryBarrier & AllBarrierBits)
+	{
+		memoryBarrierOpengl |= GL_ALL_BARRIER_BITS;
+		return memoryBarrierOpengl; 
+	}  
+	
+	if (memoryBarrier & VertexAttribArrayBarrierBit)
+			memoryBarrierOpengl |= GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT;
+		
+	if (memoryBarrier & ElementArrayBarrierBit)
+			memoryBarrierOpengl |= GL_ELEMENT_ARRAY_BARRIER_BIT;
+
+				
+	if (memoryBarrier & UniformBarrierBit)
+		memoryBarrierOpengl |= GL_UNIFORM_BARRIER_BIT;
+	
+	if (memoryBarrier & TextureFetchBarrierBit)
+		memoryBarrierOpengl |= GL_TEXTURE_FETCH_BARRIER_BIT;
+	
+	if (memoryBarrier & ShaderImageAccessBarrierBit)
+		memoryBarrierOpengl |= GL_SHADER_IMAGE_ACCESS_BARRIER_BIT;
+	
+	if (memoryBarrier & CommandBarrierBit)
+		memoryBarrierOpengl |= GL_COMMAND_BARRIER_BIT;
+
+	if (memoryBarrier & PixelBufferBarrierBit)
+		memoryBarrierOpengl |= GL_PIXEL_BUFFER_BARRIER_BIT;
+	
+	if (memoryBarrier & TextureUpdateBarrierBit)
+		memoryBarrierOpengl |= GL_TEXTURE_UPDATE_BARRIER_BIT;
+
+	if (memoryBarrier & BufferUpdateBarrierBit)
+		memoryBarrierOpengl |= GL_BUFFER_UPDATE_BARRIER_BIT;
+
+	if (memoryBarrier & ClientMappedBufferBarrierBit)
+		memoryBarrierOpengl |= GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT;
+
+	if (memoryBarrier & FramebufferBarrierBit)
+		memoryBarrierOpengl |= GL_FRAMEBUFFER_BARRIER_BIT;
+
+	if (memoryBarrier & TransformFeedbackBarrierBit)
+		memoryBarrierOpengl |= GL_TRANSFORM_FEEDBACK_BARRIER_BIT;
+	
+	if (memoryBarrier & AtomicCounterBarrierBit)
+		memoryBarrierOpengl |= GL_ATOMIC_COUNTER_BARRIER_BIT;
+
+	if (memoryBarrier & ShaderStorageBarrierBit)
+		memoryBarrierOpengl |= GL_SHADER_STORAGE_BARRIER_BIT;
+	
+	if (memoryBarrier & QueryBufferBarrierBit)
+		memoryBarrierOpengl |= GL_QUERY_BUFFER_BARRIER_BIT;
+	
+
+	
+	
+	Logger::LogError("Undefined MemoryBarrier");
+	return memoryBarrierOpengl;
+}
+
+uint32_t Rhi::GetImageAccessOpengl(ImageAccess imageAcess)
+{
+	switch (imageAcess)
+	{
+		case ImageAccess::ReadOnly: 
+		return GL_READ_ONLY;
+		
+		case ImageAccess::WriteOnly: 
+		return GL_WRITE_ONLY;
+		
+		case ImageAccess::ReadWrite: 
+		return GL_READ_WRITE ;
+	}
+
+	return GL_READ_WRITE ;
+}
+
 uint32_t Rhi::FrontFaceToOpenglFrontFace(FrontFace::FrontFace frontFace)
 {
 	switch (frontFace)
@@ -536,6 +638,28 @@ uint32_t Rhi::GetOpengDepthEnum(const DepthFunction::DepthFunction depthFunction
 	return GL_LESS;
 }
 
+uint32_t Rhi::BlendEquationToOpengl(BlendEquation::BlendEquation blendEquation)
+{
+	switch (blendEquation)
+	{
+		case BlendEquation::Add:
+			return GL_FUNC_ADD;
+			
+		case BlendEquation::Sub:
+			return GL_FUNC_SUBTRACT;
+			
+		case BlendEquation::ReverSub:
+			return GL_FUNC_REVERSE_SUBTRACT;
+			
+		case BlendEquation::Min:
+			return GL_MIN;
+			
+		case BlendEquation::Max:
+			return GL_MAX;
+	}
+	return GL_FUNC_ADD;
+}
+
 uint32_t Rhi::GetOpenglTextureWrapper(const TextureWrapping::TextureWrapping textureWrapping)
 {
 	switch (textureWrapping)
@@ -576,11 +700,10 @@ uint32_t Rhi::CreateTexture2D(const TextureCreateInfo& textureCreateInfo)
 	const GLint openglTextureWrapper = static_cast<GLint>(GetOpenglTextureWrapper(textureCreateInfo.wrapping));
 	
 	AllocTexture2D(textureId, textureCreateInfo);
-	glGenerateTextureMipmap(textureId);
 
 	glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
 	glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
-	if(textureCreateInfo.filtering == TextureFiltering::Linear)
+	if(textureCreateInfo.filtering == TextureFiltering::LinearMimMapLinear)
 	{
 		glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	}
@@ -595,6 +718,8 @@ uint32_t Rhi::CreateTexture2D(const TextureCreateInfo& textureCreateInfo)
 		glTextureSubImage2D(textureId, 0, 0, 0, static_cast<GLsizei>(textureCreateInfo.size.x), static_cast<GLsizei>(textureCreateInfo.size.y),
 			GetOpenGlTextureFormat(textureCreateInfo.format), GetOpenglDataType(textureCreateInfo.dataType), textureCreateInfo.data);
 	}
+	glGenerateTextureMipmap(textureId);
+
 	
 	return textureId;
 }
@@ -752,7 +877,7 @@ void Rhi::UnbindFrameBuffer()
 void Rhi::AttachTextureToFrameBuffer(const uint32_t bufferId, const Attachment::Attachment attachment, const uint32_t textureId, const uint32_t level)
 {
 	const GLenum attachementOpengl = AttachementToOpenglAttachement(attachment);
-	glNamedFramebufferTexture(bufferId, attachementOpengl ,textureId,level);
+	glNamedFramebufferTexture(bufferId, attachementOpengl, textureId, level);
 	
 	if (attachment != Attachment::Depth && attachment != Attachment::DepthAndStencil && attachment != Attachment::Stencil)
 	{
@@ -829,9 +954,6 @@ std::string Rhi::GetShaderTypeToString(const ShaderType::ShaderType shaderType)
 
 		case ShaderType::Compute:
 			return "COMPUTE_SHADER";
-		
-		case ShaderType::Count:
-			break;
 	}
 	
 	throw std::invalid_argument("Invalid shader type");
@@ -927,6 +1049,11 @@ uint32_t Rhi::GetOpenglInternalFormat(const TextureInternalFormat::TextureIntern
 		case TextureInternalFormat::Srgb:
 			return GL_SRGB8;
 		
+		case TextureInternalFormat::R11FG11FB10F:
+			return GL_R11F_G11F_B10F;
+		case TextureInternalFormat::Rgba32F:
+			return GL_RGBA32F;
+		
 		case TextureInternalFormat::DepthComponent16:
 			return GL_DEPTH_COMPONENT16;
 		
@@ -944,6 +1071,7 @@ uint32_t Rhi::GetOpenglInternalFormat(const TextureInternalFormat::TextureIntern
 
 		case TextureInternalFormat::DepthComponent32FStencil8:
 			return GL_DEPTH32F_STENCIL8;
+		default: ;
 	}
 
 	Logger::LogError("Texture InternalFormat not supported, defaulting to RGB");
@@ -970,6 +1098,25 @@ uint32_t Rhi::GetOpenGlTextureFormat(const TextureFormat::TextureFormat textureF
 	}
 	
 	return GL_RGB;
+}
+
+void Rhi::LogComputeShaderInfo()
+{
+	int32_t work_grp_cnt[3];
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &work_grp_cnt[0]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &work_grp_cnt[1]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &work_grp_cnt[2]);
+	Logger::LogDebug("Max work groups per compute shader x: {} y: {} x: {}", work_grp_cnt[0], work_grp_cnt[1], work_grp_cnt[2]);
+	
+	int32_t work_grp_size[3];
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &work_grp_size[0]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, &work_grp_size[1]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, &work_grp_size[2]);
+	Logger::LogDebug("Max work group sizes  x: {} y: {} x: {}", work_grp_size[0], work_grp_size[1], work_grp_size[2]); 
+
+	int32_t work_grp_inv;
+	glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &work_grp_inv);
+	Logger::LogDebug("Max invocations count per work group: {} ",work_grp_inv);
 }
 
 void Rhi::IsShaderValid(const uint32_t shaderId)
@@ -1126,7 +1273,6 @@ void Rhi::Initialize()
 {
 	gladLoadGL();
 	DepthTest(true);
-	glEnable(GL_BLEND);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);  
@@ -1136,6 +1282,7 @@ void Rhi::Initialize()
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 
 	glDebugMessageCallback(reinterpret_cast<GLDEBUGPROC>(OpenglDebugCallBack), nullptr);
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+	LogComputeShaderInfo();
 #endif
 }
 
@@ -1213,6 +1360,8 @@ void Rhi::BindMaterial(const Material& material)
 	materialData.hasAmbiantOcclusionMap =  static_cast<int32_t>(material.ambiantOcclusionTexture.IsValid());
 	
 	materialData.albedoColor = static_cast<Vector3>(material.albedoColor);
+	materialData.emissiveColor = static_cast<Vector3>(material.emissiveColor);
+	
 	materialData.metallic = material.metallic;
 	materialData.roughness = material.roughness;
 	materialData.reflectance = material.reflectance;
@@ -1264,4 +1413,31 @@ void Rhi::GetCubeMapViewMatrices(std::array<Matrix, 6>* viewsMatricies)
 		Matrix::LookAt(Vector3(),-Vector3::UnitZ(),-Vector3::UnitY()), // CubeMapNegativeZ
 	};
 
+}
+
+void Rhi::DispactCompute(const uint32_t numberOfGroupX, const uint32_t numberOfGroupY, const uint32_t numberOfGroupZ)
+{
+	glDispatchCompute(numberOfGroupX, numberOfGroupY, numberOfGroupZ);
+}
+
+void Rhi::SetGpuMemoryBarrier(const GpuMemoryBarrier memoryBarrier)
+{
+	glMemoryBarrier(MemoryBarrierToOpengl(memoryBarrier));
+}
+
+void Rhi::BindImageTexture(
+	const uint32_t unit,
+	const uint32_t texture,
+	const uint32_t level,
+	const bool_t layered,
+	const uint32_t layer,
+	const ImageAccess imageAcess,
+	const TextureInternalFormat::TextureInternalFormat textureInternalFormat
+)
+{
+	const GLenum access = GetImageAccessOpengl(imageAcess);
+	const  GLenum textureFormatInternal = GetOpenglInternalFormat(textureInternalFormat);
+
+	
+	glBindImageTexture(unit, texture, level, static_cast<GLenum>(layered), layer, access, textureFormatInternal);
 }

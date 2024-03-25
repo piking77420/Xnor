@@ -20,7 +20,9 @@ FileSystemWatcher::FileSystemWatcher(const std::string& path)
         m_IsDirectory = true;
 
     if (FileManager::Contains(fPath))
+    {
         m_Entry = FileManager::Get<Entry>(fPath);
+    }
     else
     {
         if (m_IsDirectory)

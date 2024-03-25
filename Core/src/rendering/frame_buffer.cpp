@@ -9,12 +9,6 @@ FrameBuffer::FrameBuffer()
 	m_Id = Rhi::CreateFrameBuffer();
 }
 
-FrameBuffer::FrameBuffer(const Vector2i size)
-	: m_FrameBufferSize(size)
-{
-	m_Id = Rhi::CreateFrameBuffer();
-}
-
 FrameBuffer::~FrameBuffer()
 {
 	Rhi::DestroyFrameBuffer(m_Id);
@@ -48,10 +42,6 @@ void FrameBuffer::GetPixelFromAttachment(
 	Rhi::UnbindFrameBuffer();
 }
 
-Vector2i FrameBuffer::GetSize() const
-{
-	return m_FrameBufferSize;
-}
 
 uint32_t FrameBuffer::GetId() const
 {

@@ -43,7 +43,7 @@ private:
     Texture* m_TextureDepth = nullptr;
     Texture* m_Color = nullptr;
     
-    XNOR_ENGINE void IsFrameBufferValid(Vector2i size);
+    XNOR_ENGINE void OnResize(Vector2i size);
     
     XNOR_ENGINE void Compute(const Texture& equirectangularMap, const Cubemap& cubemap, const Pointer<Shader>& shader);
 };

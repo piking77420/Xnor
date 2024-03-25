@@ -92,7 +92,15 @@ BEGIN_ENUM(ShaderType)
 	Fragment,
 	Geometry,
 	Compute,
+}
+END_ENUM
 
+BEGIN_ENUM(ShaderPipeline)
+{
+	Vertex,
+	Fragment,
+	Geometry,
+	
 	Count
 }
 END_ENUM
@@ -105,7 +113,7 @@ struct ShaderCode
 	/// @brief Raw code length
 	int32_t codeLength = 0;
 	/// @brief Shader type
-	ShaderType::ShaderType type = ShaderType::Count;
+	ShaderType::ShaderType type;
 };
 
 /// @brief %Texture wrapping, determines how a point will be sampled if it's outside of the texture
@@ -178,6 +186,8 @@ BEGIN_ENUM(TextureInternalFormat)
 	R32F,
 	R32Uint,
 	Srgb,
+	R11FG11FB10F,
+	Rgba32F,
 	DepthComponent16,
 	DepthComponent24,
 	DepthComponent32,
@@ -340,6 +350,8 @@ BEGIN_ENUM(UniformType)
 	/// @brief Float
 	Float,
 	/// @brief Vector3
+	Vec2,
+	/// @brief Vector3
 	Vec3,
 	/// @brief Vector4
 	Vec4,
@@ -406,13 +418,25 @@ BEGIN_ENUM(BlendValue)
 }
 END_ENUM
 
+BEGIN_ENUM(BlendEquation)
+{
+	Add,
+	Sub,
+	ReverSub,
+	Min,
+	Max,
+}
+END_ENUM
+
 /// @brief Blend function for Shader
 struct BlendFunction
 {
 	bool_t isBlending = false;
-	BlendValue::BlendValue sValue;
-	BlendValue::BlendValue dValue;
+	BlendValue::BlendValue sValue = BlendValue::One;
+	BlendValue::BlendValue dValue = BlendValue::Zero;
+	BlendEquation::BlendEquation blendEquation = BlendEquation::Add;
 };
+
 
 /// @brief Shader creation info
 struct ShaderCreateInfo
@@ -498,16 +522,21 @@ struct MaterialData
 {
 	Vector3 albedoColor;
 	int32_t hasAlbedoMap;
-	int32_t hasMetallicMap;
-	int32_t hasRoughnessMap;
-	int32_t hasNormalMap;
-	int32_t hasAmbiantOcclusionMap;
 
-	float_t metallic = 0.f;
-	float_t roughness = 0.f;
-	float_t reflectance = 0.f;
+	Vector3 emissiveColor;
 	float_t emissive = 0.f;
+	
+	int32_t hasMetallicMap;
+	float_t metallic = 0.f;
+
+	int32_t hasRoughnessMap;
+	float_t roughness = 0.f;
+
+	int32_t hasAmbiantOcclusionMap;
 	float_t ambiantOccusion = 0.f;
+
+	int32_t hasNormalMap;
+	float_t reflectance = 0.f;
 };
 
 /// @brief The type of GBuffer.
@@ -517,7 +546,8 @@ BEGIN_ENUM(Gbuffer)
 	Normal,
 	Albedo,
 	MetallicRoughessReflectance,
-	EmissiveAmbiantOcclusion,
+	AmbiantOcclusion,
+	Emissivive,
 };
 END_ENUM
 
@@ -567,6 +597,34 @@ enum class CubeMapFace
 	CubeMapNegativeZ,
 
 	Size
+};
+
+
+enum GpuMemoryBarrier
+{
+	VertexAttribArrayBarrierBit = 1 << 0,
+	ElementArrayBarrierBit = 1 << 1,
+	UniformBarrierBit = 1 << 2,
+	TextureFetchBarrierBit = 1 << 3,
+	ShaderImageAccessBarrierBit = 1 << 4,
+	CommandBarrierBit = 1 << 5,
+	PixelBufferBarrierBit = 1 << 6,
+	TextureUpdateBarrierBit = 1 << 7,
+	BufferUpdateBarrierBit = 1 << 8,
+	ClientMappedBufferBarrierBit = 1 << 9,
+	FramebufferBarrierBit = 1 << 10,
+	TransformFeedbackBarrierBit = 1 << 11,
+	AtomicCounterBarrierBit = 1 << 12,
+	ShaderStorageBarrierBit = 1 << 13,
+	QueryBufferBarrierBit = 1 << 14,
+	AllBarrierBits = 1 << 15
+};
+
+enum class ImageAccess
+{
+	ReadOnly,
+	WriteOnly,
+	ReadWrite,
 };
 
 END_XNOR_CORE

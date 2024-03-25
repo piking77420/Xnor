@@ -204,6 +204,14 @@ public:
 	XNOR_ENGINE static void DepthTest(bool value);
 	
 	XNOR_ENGINE static void GetCubeMapViewMatrices(std::array<Matrix,6>* viewsMatricies);
+	
+	XNOR_ENGINE static void DispactCompute(uint32_t numberOfGroupX,uint32_t numberOfGroupY, uint32_t numberOfGroupZ);
+	
+	XNOR_ENGINE static void SetGpuMemoryBarrier(GpuMemoryBarrier memoryBarrier);
+
+	XNOR_ENGINE static void BindImageTexture(uint32_t unit, uint32_t texture, uint32_t level, bool_t layered,uint32_t layer,
+		ImageAccess imageAcess, TextureInternalFormat::TextureInternalFormat textureInternalFormat);
+
 private:
 	struct ModelInternal
 	{
@@ -228,6 +236,8 @@ private:
 	XNOR_ENGINE static inline std::unordered_map<uint32_t, ShaderInternal> m_ShaderMap;
 	XNOR_ENGINE static inline std::unordered_map<uint32_t, ModelInternal> m_ModelMap;
 
+	XNOR_ENGINE static void LogComputeShaderInfo();
+	
 	XNOR_ENGINE static void IsShaderValid(uint32_t shaderId);
 	
 	XNOR_ENGINE static int32_t GetUniformInMap(uint32_t shaderId, const char_t* uniformKey);
@@ -240,6 +250,7 @@ private:
 
 	// Enum to OpenglEnum
 	XNOR_ENGINE static uint32_t GetOpengDepthEnum(DepthFunction::DepthFunction depthFunction);
+	XNOR_ENGINE static uint32_t BlendEquationToOpengl(BlendEquation::BlendEquation blendEquation);
 	XNOR_ENGINE static uint32_t GetOpenglShaderType(ShaderType::ShaderType shaderType);
 	XNOR_ENGINE static std::string GetShaderTypeToString(ShaderType::ShaderType shaderType);
 	XNOR_ENGINE static uint32_t GetOpenglTextureType(TextureType::TextureType textureType);
@@ -251,7 +262,9 @@ private:
 	XNOR_ENGINE static uint32_t GetOpenglBufferBit(BufferFlag::BufferFlag flag);
 	XNOR_ENGINE static uint32_t AttachementToOpenglAttachement(Attachment::Attachment attachment);
 	XNOR_ENGINE static uint32_t CubeMapFacesToOpengl(CubeMapFace cubeMapFace);
-	
+	XNOR_ENGINE static uint32_t MemoryBarrierToOpengl(GpuMemoryBarrier memoryBarrier);
+	XNOR_ENGINE static uint32_t GetImageAccessOpengl(ImageAccess imageAcess);
+
 	XNOR_ENGINE static uint32_t FrontFaceToOpenglFrontFace(FrontFace::FrontFace frontFace);
 	XNOR_ENGINE static uint32_t CullFaceToOpenglCullFace(CullFace::CullFace cullFace);
 
@@ -270,6 +283,10 @@ private:
 	XNOR_ENGINE static inline UniformBuffer* m_ModelUniform;
 	XNOR_ENGINE static inline UniformBuffer* m_LightUniform;
 	XNOR_ENGINE static inline UniformBuffer* m_MaterialUniform;
+
+	XNOR_ENGINE static inline bool_t m_Blending = false;
+	XNOR_ENGINE static inline bool_t m_Cullface = false;
+
 };
 
 END_XNOR_CORE

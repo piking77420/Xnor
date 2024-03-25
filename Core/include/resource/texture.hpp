@@ -62,9 +62,10 @@ public:
     XNOR_ENGINE explicit Texture(const TextureCreateInfo& createInfo);
 
     /// @brief Creates a texture using a format and a size
-    /// @param textureFormat Format
+    /// @param textureInternalFormat Format inside the FrameBuffer
     /// @param size Size
-    XNOR_ENGINE Texture(TextureInternalFormat::TextureInternalFormat textureFormat, Vector2i size);
+    /// @param textureFormat The memory format
+    XNOR_ENGINE Texture(TextureInternalFormat::TextureInternalFormat textureInternalFormat, Vector2i size , const TextureFormat::TextureFormat textureFormat = TextureFormat::TextureFormat::Rgb );
     
     XNOR_ENGINE ~Texture() override;
 

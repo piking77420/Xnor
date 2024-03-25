@@ -15,12 +15,8 @@ class RenderPass;
 class FrameBuffer
 {
 public:
-	XNOR_ENGINE FrameBuffer();
-
-	/// @brief Creates a framebuffer with a specified size
-	/// @param size Size
-	XNOR_ENGINE explicit FrameBuffer(Vector2i size);
-
+	XNOR_ENGINE explicit FrameBuffer();
+	
 	XNOR_ENGINE ~FrameBuffer();
 
 	DEFAULT_COPY_MOVE_OPERATIONS(FrameBuffer)
@@ -36,17 +32,12 @@ public:
 	
 	XNOR_ENGINE void GetPixelFromAttachment(uint32_t attachmentIndex, Vector2i position,
 		TextureFormat::TextureFormat textureFormat, DataType::DataType dataType, void* output) const;
-
-	/// @brief Gets the size of the framebuffer
-	/// @return Size
-	XNOR_ENGINE	Vector2i GetSize() const;
 	
 	/// @brief Gets the id of the framebuffer
 	/// @return Framebuffer id
 	XNOR_ENGINE uint32_t GetId() const;
 	
 private:
-	Vector2i m_FrameBufferSize = Window::GetSize();
 	uint32_t m_Id = 0;
 };
 

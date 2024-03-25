@@ -37,10 +37,11 @@ public:
     Pointer<Texture> roughnessTexture;
     /// @brief Normal map
     Pointer<Texture> normalTexture;
-
+    
     Pointer<Texture> ambiantOcclusionTexture;
 
     Colorf albedoColor;
+    Colorf emissiveColor;
     float_t metallic = 0.f;
     float_t roughness = 0.f;
     float_t reflectance = 0.f;
@@ -55,10 +56,11 @@ REFL_AUTO(
     type(XnorCore::Material),
     field(materialType),
     field(albedoColor),
+    field(emissiveColor),
     field(metallic, XnorCore::Reflection::Range(0.f, 1.f)),
     field(roughness, XnorCore::Reflection::Range(0.f, 1.f)),
     field(reflectance, XnorCore::Reflection::Range(0.f, 1.f)),
-    field(emissive, XnorCore::Reflection::Range(0.f, 1.f)),
+    field(emissive, XnorCore::Reflection::Range(0.f, 100.f)),
     field(ambientOcclusion, XnorCore::Reflection::Range(0.f, 1.f)),
     field(albedoTexture),
     field(metallicTexture),

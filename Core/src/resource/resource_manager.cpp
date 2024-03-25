@@ -4,6 +4,7 @@
 #include <execution>
 
 #include "file/file_manager.hpp"
+#include "resource/compute_shader.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
 #include "resource/texture.hpp"
@@ -42,8 +43,7 @@ void ResourceManager::LoadAll()
     {
         if (std::ranges::find(Shader::VertexFileExtensions, file->GetExtension()) != Shader::VertexFileExtensions.end() ||
             std::ranges::find(Shader::FragmentFileExtensions, file->GetExtension()) != Shader::FragmentFileExtensions.end() ||
-            std::ranges::find(Shader::GeometryFileExtensions, file->GetExtension()) != Shader::GeometryFileExtensions.end() ||
-            std::ranges::find(Shader::ComputeFileExtensions, file->GetExtension()) != Shader::ComputeFileExtensions.end())
+            std::ranges::find(Shader::GeometryFileExtensions, file->GetExtension()) != Shader::GeometryFileExtensions.end())
         {
             Pointer<Shader> shader;
 
@@ -55,6 +55,19 @@ void ResourceManager::LoadAll()
                 shader = Add<Shader>(filenameNoExtension);
         
             shader->Load(file);
+        }
+        else if (std::ranges::find(ComputeShader::ComputeFileExtensions, file->GetExtension()) != ComputeShader::ComputeFileExtensions.end())
+        {
+            Pointer<ComputeShader> computeShader;
+
+            // We use an underscore before the name to make sure it isn't used elsewhere
+            const std::string&& filenameNoExtension = ReservedShaderPrefix + file->GetNameNoExtension();
+            if (Contains(filenameNoExtension))
+                computeShader = Get<ComputeShader>(filenameNoExtension);
+            else
+                computeShader = Add<ComputeShader>(filenameNoExtension);
+        
+            computeShader->Load(file);
         }
         else
         {
