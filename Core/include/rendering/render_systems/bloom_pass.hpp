@@ -11,13 +11,7 @@
 BEGIN_XNOR_CORE
 class BloomPass
 {
-private:
-    static inline Pointer<Model> m_Quad = nullptr;
-    static inline Pointer<ComputeShader> m_DownSample = nullptr;
-    static inline Pointer<ComputeShader> m_UpSample = nullptr;
-    static inline Pointer<ComputeShader> m_ThresholdFilter = nullptr;
     static inline constexpr TextureInternalFormat::TextureInternalFormat BloomTextureFormat = TextureInternalFormat::TextureInternalFormat::Rgba32F;
-    
 public:
     DEFAULT_COPY_MOVE_OPERATIONS(BloomPass)
 
@@ -29,7 +23,10 @@ public:
     
     XNOR_ENGINE void ComputeBloom(const Texture& imageWithoutBloom, const BloomRenderTarget& bloomRenderTarget) const;
 private:
-    float_t m_FilterRadius = 0.005f;
+    Pointer<Model> m_Quad = nullptr;
+    Pointer<ComputeShader> m_DownSample = nullptr;
+    Pointer<ComputeShader> m_UpSample = nullptr;
+    Pointer<ComputeShader> m_ThresholdFilter = nullptr;
     
     XNOR_ENGINE void UpSampling(const BloomRenderTarget& bloomRenderTarget) const;
     

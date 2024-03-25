@@ -7298,6 +7298,18 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_XnorfCore_Guid_OperatorEq___(void * j
 }
 
 
+SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_Guid_FromString___(char * jarg1) {
+  void * jresult ;
+  char_t *arg1 = (char_t *) 0 ;
+  XnorCore::Guid result;
+  
+  arg1 = (char_t *)jarg1; 
+  result = XnorCore::Guid::FromString((char const *)arg1);
+  jresult = new XnorCore::Guid(result); 
+  return jresult;
+}
+
+
 SWIGEXPORT const char * SWIGSTDCALL CSharp_XnorfCore_Guid_ToString___(void * jarg1) {
   const char * jresult ;
   XnorCore::Guid *arg1 = (XnorCore::Guid *) 0 ;
@@ -7529,6 +7541,20 @@ SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Resource_SetName___(void * jarg1, c
   }
   (&arg2)->assign(jarg2); 
   (arg1)->SetName(arg2);
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Resource_SetGuid___(void * jarg1, void * jarg2) {
+  XnorCore::Resource *arg1 = (XnorCore::Resource *) 0 ;
+  XnorCore::Guid *arg2 = 0 ;
+  
+  arg1 = (XnorCore::Resource *)jarg1; 
+  arg2 = (XnorCore::Guid *)jarg2;
+  if (!arg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "XnorCore::Guid const & is null", 0);
+    return ;
+  } 
+  (arg1)->SetGuid((XnorCore::Guid const &)*arg2);
 }
 
 
@@ -8916,6 +8942,28 @@ SWIGEXPORT int SWIGSTDCALL CSharp_XnorfCore_BlendFunction_dValue_get___(void * j
   
   arg1 = (XnorCore::BlendFunction *)jarg1; 
   result = (XnorCore::BlendValue::BlendValue) ((arg1)->dValue);
+  jresult = (int)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_BlendFunction_blendEquation_set___(void * jarg1, int jarg2) {
+  XnorCore::BlendFunction *arg1 = (XnorCore::BlendFunction *) 0 ;
+  XnorCore::BlendEquation::BlendEquation arg2 ;
+  
+  arg1 = (XnorCore::BlendFunction *)jarg1; 
+  arg2 = (XnorCore::BlendEquation::BlendEquation)jarg2; 
+  if (arg1) (arg1)->blendEquation = arg2;
+}
+
+
+SWIGEXPORT int SWIGSTDCALL CSharp_XnorfCore_BlendFunction_blendEquation_get___(void * jarg1) {
+  int jresult ;
+  XnorCore::BlendFunction *arg1 = (XnorCore::BlendFunction *) 0 ;
+  XnorCore::BlendEquation::BlendEquation result;
+  
+  arg1 = (XnorCore::BlendFunction *)jarg1; 
+  result = (XnorCore::BlendEquation::BlendEquation) ((arg1)->blendEquation);
   jresult = (int)result; 
   return jresult;
 }
@@ -10349,8 +10397,23 @@ SWIGEXPORT char * SWIGSTDCALL CSharp_XnorfCore_ResourceManager_ReservedShaderPre
 }
 
 
+SWIGEXPORT char * SWIGSTDCALL CSharp_XnorfCore_ResourceManager_GuidMapFilePath_get___() {
+  char * jresult ;
+  char *result = 0 ;
+  
+  result = (char *)XnorCore::ResourceManager::GuidMapFilePath;
+  jresult = SWIG_csharp_string_callback((const char *)result); 
+  return jresult;
+}
+
+
 SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_ResourceManager_LoadAll___() {
   XnorCore::ResourceManager::LoadAll();
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_ResourceManager_LoadGuidMap___() {
+  XnorCore::ResourceManager::LoadGuidMap();
 }
 
 
@@ -10474,20 +10537,10 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_Shader_GeometryFileExtensions_get
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_Shader_ComputeFileExtensions_get___() {
-  void * jresult ;
-  std::array< char_t const *,2 > *result = 0 ;
-  
-  result = (std::array< char_t const *,2 > *)&XnorCore::Shader::ComputeFileExtensions;
-  jresult = (void *)result; 
-  return jresult;
-}
-
-
 SWIGEXPORT int SWIGSTDCALL CSharp_XnorfCore_Shader_FileExtensionToType___(const char * jarg1) {
   int jresult ;
   std::string *arg1 = 0 ;
-  XnorCore::ShaderType::ShaderType result;
+  XnorCore::ShaderPipeline::ShaderPipeline result;
   
   if (!jarg1) {
     SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
@@ -10495,7 +10548,7 @@ SWIGEXPORT int SWIGSTDCALL CSharp_XnorfCore_Shader_FileExtensionToType___(const 
   }
   std::string arg1_str(jarg1);
   arg1 = &arg1_str; 
-  result = (XnorCore::ShaderType::ShaderType)XnorCore::Shader::FileExtensionToType((std::string const &)*arg1);
+  result = (XnorCore::ShaderPipeline::ShaderPipeline)XnorCore::Shader::FileExtensionToType((std::string const &)*arg1);
   jresult = (int)result; 
   return jresult;
 }
@@ -10566,13 +10619,13 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_XnorfCore_Shader_Load__SWIG_2___(void
   XnorCore::Shader *arg1 = (XnorCore::Shader *) 0 ;
   char_t *arg2 = (char_t *) 0 ;
   int64_t arg3 ;
-  XnorCore::ShaderType::ShaderType arg4 ;
+  XnorCore::ShaderPipeline::ShaderPipeline arg4 ;
   bool_t result;
   
   arg1 = (XnorCore::Shader *)jarg1; 
   arg2 = (char_t *)jarg2; 
   arg3 = (int64_t)jarg3; 
-  arg4 = (XnorCore::ShaderType::ShaderType)jarg4; 
+  arg4 = (XnorCore::ShaderPipeline::ShaderPipeline)jarg4; 
   result = (bool_t)(arg1)->Load((char_t const *)arg2,arg3,arg4);
   jresult = result; 
   return jresult;
@@ -10659,6 +10712,27 @@ SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Shader_SetFloat___(void * jarg1, co
   arg2 = &arg2_str; 
   arg3 = (float_t)jarg3; 
   ((XnorCore::Shader const *)arg1)->SetFloat((std::string const &)*arg2,arg3);
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Shader_SetVec2___(void * jarg1, const char * jarg2, void * jarg3) {
+  XnorCore::Shader *arg1 = (XnorCore::Shader *) 0 ;
+  std::string *arg2 = 0 ;
+  Vector2 *arg3 = 0 ;
+  
+  arg1 = (XnorCore::Shader *)jarg1; 
+  if (!jarg2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
+    return ;
+  }
+  std::string arg2_str(jarg2);
+  arg2 = &arg2_str; 
+  arg3 = (Vector2 *)jarg3;
+  if (!arg3) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "Vector2 const & is null", 0);
+    return ;
+  } 
+  ((XnorCore::Shader const *)arg1)->SetVec2((std::string const &)*arg2,(Vector2 const &)*arg3);
 }
 
 
@@ -10861,6 +10935,24 @@ SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_delete_Texture_LoadOptions___(void 
 }
 
 
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_Texture_defaultLoadOptions_set___(void * jarg1) {
+  XnorCore::Texture::LoadOptions *arg1 = (XnorCore::Texture::LoadOptions *) 0 ;
+  
+  arg1 = (XnorCore::Texture::LoadOptions *)jarg1; 
+  XnorCore::Texture::defaultLoadOptions = *arg1;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_Texture_defaultLoadOptions_get___() {
+  void * jresult ;
+  XnorCore::Texture::LoadOptions *result = 0 ;
+  
+  result = (XnorCore::Texture::LoadOptions *)&XnorCore::Texture::defaultLoadOptions;
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
 SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_Texture_FileExtensions_get___() {
   void * jresult ;
   std::array< char_t const *,11 > *result = 0 ;
@@ -10953,7 +11045,29 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_new_Texture__SWIG_2___(void * jar
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_new_Texture__SWIG_3___(int jarg1, void * jarg2) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_new_Texture__SWIG_3___(int jarg1, void * jarg2, int jarg3) {
+  void * jresult ;
+  XnorCore::TextureInternalFormat::TextureInternalFormat arg1 ;
+  Vector2i arg2 ;
+  XnorCore::TextureFormat::TextureFormat arg3 ;
+  Vector2i *argp2 ;
+  XnorCore::Texture *result = 0 ;
+  
+  arg1 = (XnorCore::TextureInternalFormat::TextureInternalFormat)jarg1; 
+  argp2 = (Vector2i *)jarg2; 
+  if (!argp2) {
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "Attempt to dereference null Vector2i", 0);
+    return 0;
+  }
+  arg2 = *argp2; 
+  arg3 = (XnorCore::TextureFormat::TextureFormat)jarg3; 
+  result = (XnorCore::Texture *)new XnorCore::Texture(arg1,arg2,arg3);
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_new_Texture__SWIG_4___(int jarg1, void * jarg2) {
   void * jresult ;
   XnorCore::TextureInternalFormat::TextureInternalFormat arg1 ;
   Vector2i arg2 ;
@@ -13896,6 +14010,24 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_XnorfCore_ComponentList_GetTypeSize__
   result = ((XnorCore::List< XnorCore::Component * > const *)arg1)->GetTypeSize();
   jresult = (unsigned int)result; 
   return jresult;
+}
+
+
+SWIGEXPORT void * SWIGSTDCALL CSharp_XnorfCore_new_Entity___() {
+  void * jresult ;
+  XnorCore::Entity *result = 0 ;
+  
+  result = (XnorCore::Entity *)new XnorCore::Entity();
+  jresult = (void *)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT void SWIGSTDCALL CSharp_XnorfCore_delete_Entity___(void * jarg1) {
+  XnorCore::Entity *arg1 = (XnorCore::Entity *) 0 ;
+  
+  arg1 = (XnorCore::Entity *)jarg1; 
+  delete arg1;
 }
 
 

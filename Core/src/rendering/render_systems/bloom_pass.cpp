@@ -1,6 +1,5 @@
 ﻿#include "rendering/render_systems/bloom_pass.hpp"
 
-#include "input/keyboard_input.hpp"
 #include "rendering/rhi.hpp"
 #include "resource/resource_manager.hpp"
 
@@ -67,7 +66,7 @@ void BloomPass::UpSampling(const BloomRenderTarget& bloomRenderTarget) const
 
         m_UpSample->DispatchCompute(static_cast<uint32_t>(std::ceil(mipSize.x/ 8.f)), static_cast<uint32_t>(std::ceil(mipSize.y/ 8.f)) ,1);  
 
-        m_UpSample->SetMemoryBarrier(GpuMemoryBarrier::AllBarrierBits);
+        m_UpSample->SetMemoryBarrier(AllBarrierBits);
     }
     
     m_UpSample->Unuse();
@@ -77,9 +76,7 @@ void BloomPass::UpSampling(const BloomRenderTarget& bloomRenderTarget) const
 void BloomPass::DownSampling(const BloomRenderTarget& bloomRenderTarget) const
 {
     m_DownSample->Use();
-    
     bloomRenderTarget.thresholdTexture->BindTexture(0);
-    const Vector2 textureSizef = { static_cast<float_t>(bloomRenderTarget.thresholdTexture->GetSize().x), static_cast<float_t>(bloomRenderTarget.thresholdTexture->GetSize().y) } ;
     
     for (const BloomRenderTarget::BloomMip& bloomMip : bloomRenderTarget.mipChain)
     {
@@ -88,7 +85,7 @@ void BloomPass::DownSampling(const BloomRenderTarget& bloomRenderTarget) const
         m_DownSample->SetVec2("uTexelSize",Vector2(1.0f) / mipSize);
         
         m_DownSample->DispatchCompute(static_cast<uint32_t>(std::ceil(mipSize.x/ 8.f)), static_cast<uint32_t>(std::ceil(mipSize.y/ 8.f)) ,1);  
-        m_DownSample->SetMemoryBarrier(GpuMemoryBarrier::AllBarrierBits);
+        m_DownSample->SetMemoryBarrier(AllBarrierBits);
         
         bloomMip.texture->BindTexture(0);
     }
@@ -105,9 +102,9 @@ void BloomPass::ThresholdFilter(const Texture& imageWithoutBloom, const BloomRen
     m_ThresholdFilter->Use();
     
     m_UpSample->BindImage(0, imageWithoutBloom, 0, false, 0, ImageAccess::ReadWrite);
-    m_UpSample->BindImage(1,*bloomRenderTarget.thresholdTexture, 0, false, 0, ImageAccess::ReadWrite);
+    m_UpSample->BindImage(1, thresholdTexture, 0, false, 0, ImageAccess::ReadWrite);
 
-    m_ThresholdFilter->DispatchCompute(static_cast<uint32_t>(std::ceil(viewportSize.x/ 8.f)), static_cast<uint32_t>(std::ceil(viewportSize.y/ 8.f)) ,1);  
-    m_ThresholdFilter->SetMemoryBarrier(GpuMemoryBarrier::AllBarrierBits);
+    m_ThresholdFilter->DispatchCompute(static_cast<uint32_t>(std::ceil(static_cast<float_t>(viewportSize.x) / 8.f)), static_cast<uint32_t>(std::ceil(static_cast<float_t>(viewportSize.y) / 8.f)) ,1);  
+    m_ThresholdFilter->SetMemoryBarrier(AllBarrierBits);
     m_ThresholdFilter->Unuse();
 }

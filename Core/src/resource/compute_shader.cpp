@@ -98,7 +98,7 @@ void ComputeShader::Unuse() const
     Rhi::UnuseShader();
 }
 
-void ComputeShader::DispatchCompute(uint32_t numberOfGroupX, uint32_t numberOfGroupY, uint32_t numberOfGroupZ)
+void ComputeShader::DispatchCompute(uint32_t numberOfGroupX, uint32_t numberOfGroupY, uint32_t numberOfGroupZ) const
 {
     Rhi::DispactCompute(numberOfGroupX, numberOfGroupY, numberOfGroupZ);
 }
@@ -110,12 +110,12 @@ void ComputeShader::BindImage(
     const bool_t layered,
     const uint32_t layer,
     const ImageAccess imageAcess
-)
+) const
 {
-    Rhi::BindImageTexture(unit,texture.GetId(),level,layered,layer,ImageAccess::ReadWrite, texture.GetInternalFormat());
+    Rhi::BindImageTexture(unit,texture.GetId(),level, layered, layer, imageAcess, texture.GetInternalFormat());
 }
 
-void ComputeShader::SetMemoryBarrier(GpuMemoryBarrier memoryBarrier)
+void ComputeShader::SetMemoryBarrier(GpuMemoryBarrier memoryBarrier) const
 {
     Rhi::SetGpuMemoryBarrier(memoryBarrier);
 }

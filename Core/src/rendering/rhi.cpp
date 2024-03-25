@@ -495,60 +495,65 @@ uint32_t Rhi::CubeMapFacesToOpengl(CubeMapFace cubeMapFace)
 
 uint32_t Rhi::MemoryBarrierToOpengl(GpuMemoryBarrier memoryBarrier)
 {
-	switch (memoryBarrier)
+	uint32_t memoryBarrierOpengl = 0;
+		
+	if (memoryBarrier & AllBarrierBits)
 	{
-		case GpuMemoryBarrier::VertexAttribArrayBarrierBit: 
-			return GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT;
+		memoryBarrierOpengl |= GL_ALL_BARRIER_BITS;
+		return memoryBarrierOpengl; 
+	}  
+	
+	if (memoryBarrier & VertexAttribArrayBarrierBit)
+			memoryBarrierOpengl |= GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT;
 		
-		case GpuMemoryBarrier::ElementArrayBarrierBit: 
-			return GL_ELEMENT_ARRAY_BARRIER_BIT;
-		
-		case GpuMemoryBarrier::UniformBarrierBit: 
-			return GL_UNIFORM_BARRIER_BIT;
-		
-		case GpuMemoryBarrier::TextureFetchBarrierBit: 
-			return GL_TEXTURE_FETCH_BARRIER_BIT	;
-		
-		case GpuMemoryBarrier::ShaderImageAccessBarrierBit: 
-			return GL_SHADER_IMAGE_ACCESS_BARRIER_BIT;
-		
-		case GpuMemoryBarrier::CommandBarrierBit: 
-			return GL_COMMAND_BARRIER_BIT;
-		
-		case GpuMemoryBarrier::PixelBufferBarrierBit: 
-			return GL_PIXEL_BUFFER_BARRIER_BIT;
-		
-		case GpuMemoryBarrier::TextureUpdateBarrierBit: 
-			return GL_TEXTURE_UPDATE_BARRIER_BIT;
-		
-		case GpuMemoryBarrier::BufferUpdateBarrierBit: 
-			return GL_BUFFER_UPDATE_BARRIER_BIT;
-		
-		case GpuMemoryBarrier::ClientMappedBufferBarrierBit: 
-			return GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT;
-		
-		case GpuMemoryBarrier::FramebufferBarrierBit: 
-			return GL_FRAMEBUFFER_BARRIER_BIT;
-		
-		case GpuMemoryBarrier::TransformFeedbackBarrierBit: 
-			return GL_TRANSFORM_FEEDBACK_BARRIER_BIT;
-		
-		case GpuMemoryBarrier::AtomicCounterBarrierBit: 
-			return GL_ATOMIC_COUNTER_BARRIER_BIT;
-		
-		case GpuMemoryBarrier::ShaderStorageBarrierBit: 
-			return GL_SHADER_STORAGE_BARRIER_BIT;
-		
-		case GpuMemoryBarrier::QueryBufferBarrierBit: 
-			return GL_QUERY_BUFFER_BARRIER_BIT;
+	if (memoryBarrier & ElementArrayBarrierBit)
+			memoryBarrierOpengl |= GL_ELEMENT_ARRAY_BARRIER_BIT;
 
-		case GpuMemoryBarrier::AllBarrierBits:
-			return GL_ALL_BARRIER_BITS;
-		
-	}
+				
+	if (memoryBarrier & UniformBarrierBit)
+		memoryBarrierOpengl |= GL_UNIFORM_BARRIER_BIT;
+	
+	if (memoryBarrier & TextureFetchBarrierBit)
+		memoryBarrierOpengl |= GL_TEXTURE_FETCH_BARRIER_BIT;
+	
+	if (memoryBarrier & ShaderImageAccessBarrierBit)
+		memoryBarrierOpengl |= GL_SHADER_IMAGE_ACCESS_BARRIER_BIT;
+	
+	if (memoryBarrier & CommandBarrierBit)
+		memoryBarrierOpengl |= GL_COMMAND_BARRIER_BIT;
 
+	if (memoryBarrier & PixelBufferBarrierBit)
+		memoryBarrierOpengl |= GL_PIXEL_BUFFER_BARRIER_BIT;
+	
+	if (memoryBarrier & TextureUpdateBarrierBit)
+		memoryBarrierOpengl |= GL_TEXTURE_UPDATE_BARRIER_BIT;
+
+	if (memoryBarrier & BufferUpdateBarrierBit)
+		memoryBarrierOpengl |= GL_BUFFER_UPDATE_BARRIER_BIT;
+
+	if (memoryBarrier & ClientMappedBufferBarrierBit)
+		memoryBarrierOpengl |= GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT;
+
+	if (memoryBarrier & FramebufferBarrierBit)
+		memoryBarrierOpengl |= GL_FRAMEBUFFER_BARRIER_BIT;
+
+	if (memoryBarrier & TransformFeedbackBarrierBit)
+		memoryBarrierOpengl |= GL_TRANSFORM_FEEDBACK_BARRIER_BIT;
+	
+	if (memoryBarrier & AtomicCounterBarrierBit)
+		memoryBarrierOpengl |= GL_ATOMIC_COUNTER_BARRIER_BIT;
+
+	if (memoryBarrier & ShaderStorageBarrierBit)
+		memoryBarrierOpengl |= GL_SHADER_STORAGE_BARRIER_BIT;
+	
+	if (memoryBarrier & QueryBufferBarrierBit)
+		memoryBarrierOpengl |= GL_QUERY_BUFFER_BARRIER_BIT;
+	
+
+	
+	
 	Logger::LogError("Undefined MemoryBarrier");
-	return 0;
+	return memoryBarrierOpengl;
 }
 
 uint32_t Rhi::GetImageAccessOpengl(ImageAccess imageAcess)

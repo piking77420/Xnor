@@ -103,11 +103,11 @@ public:
 	/// @brief Unbinds the shader
 	XNOR_ENGINE void Unuse() const;
 
-	XNOR_ENGINE void DispatchCompute(uint32_t numberOfGroupX, uint32_t numberOfGroupY, uint32_t numberOfGroupZ);
+	XNOR_ENGINE void DispatchCompute(uint32_t numberOfGroupX, uint32_t numberOfGroupY, uint32_t numberOfGroupZ) const;
 
-	XNOR_ENGINE void BindImage(uint32_t unit, const XnorCore::Texture& texture, const uint32_t level, const bool_t layered, const uint32_t layer, const ImageAccess imageAcess);
+	XNOR_ENGINE void BindImage(uint32_t unit, const XnorCore::Texture& texture, const uint32_t level, const bool_t layered, const uint32_t layer, const ImageAccess imageAcess) const;
 
-	XNOR_ENGINE void SetMemoryBarrier(GpuMemoryBarrier memoryBarrier);
+	XNOR_ENGINE void SetMemoryBarrier(GpuMemoryBarrier memoryBarrier) const;
 
 private:
 	uint32_t m_Id = 0;

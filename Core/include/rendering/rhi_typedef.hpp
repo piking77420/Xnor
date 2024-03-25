@@ -594,24 +594,24 @@ enum class CubeMapFace
 };
 
 
-enum class GpuMemoryBarrier
+enum GpuMemoryBarrier
 {
-	VertexAttribArrayBarrierBit,
-	ElementArrayBarrierBit,
-	UniformBarrierBit,
-	TextureFetchBarrierBit,
-	ShaderImageAccessBarrierBit,
-	CommandBarrierBit,
-	PixelBufferBarrierBit,
-	TextureUpdateBarrierBit,
-	BufferUpdateBarrierBit,
-	ClientMappedBufferBarrierBit,
-	FramebufferBarrierBit,
-	TransformFeedbackBarrierBit,
-	AtomicCounterBarrierBit,
-	ShaderStorageBarrierBit,
-	QueryBufferBarrierBit,
-	AllBarrierBits
+	VertexAttribArrayBarrierBit = 1 << 0,
+	ElementArrayBarrierBit = 1 << 1,
+	UniformBarrierBit = 1 << 2,
+	TextureFetchBarrierBit = 1 << 3,
+	ShaderImageAccessBarrierBit = 1 << 4,
+	CommandBarrierBit = 1 << 5,
+	PixelBufferBarrierBit = 1 << 6,
+	TextureUpdateBarrierBit = 1 << 7,
+	BufferUpdateBarrierBit = 1 << 8,
+	ClientMappedBufferBarrierBit = 1 << 9,
+	FramebufferBarrierBit = 1 << 10,
+	TransformFeedbackBarrierBit = 1 << 11,
+	AtomicCounterBarrierBit = 1 << 12,
+	ShaderStorageBarrierBit = 1 << 13,
+	QueryBufferBarrierBit = 1 << 14,
+	AllBarrierBits = 1 << 15
 };
 
 enum class ImageAccess
