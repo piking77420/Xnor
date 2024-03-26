@@ -160,6 +160,7 @@ uint32_t PhysicsWorld::CreateConvexHull(
 
 void PhysicsWorld::DestroyBody(const uint32_t bodyId)
 {
+    m_BodyInterface->RemoveBody(JPH::BodyID(bodyId));
     m_BodyInterface->DestroyBody(JPH::BodyID(bodyId));
     m_BodyMap.erase(m_BodyMap.find(bodyId));
 }
@@ -206,7 +207,12 @@ void PhysicsWorld::SetRotation(const uint32_t bodyId, const Quaternion& rotation
 
 Collider* PhysicsWorld::GetColliderFromId(const uint32_t bodyId)
 {
-    return m_BodyMap.find(bodyId)->second;
+    const auto&& it = m_BodyMap.find(bodyId);
+
+    if (it == m_BodyMap.end())
+        return nullptr;
+
+    return it->second;
 }
 
 bool_t PhysicsWorld::IsBodyActive(const uint32_t bodyId)

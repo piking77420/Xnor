@@ -107,6 +107,9 @@ void ContactListenerImpl::OnContactRemoved(const JPH::SubShapeIDPair& inSubShape
     Collider* const c1 = PhysicsWorld::GetColliderFromId(bodyId1);
     Collider* const c2 = PhysicsWorld::GetColliderFromId(bodyId2);
 
+    if (c1 == nullptr || c2 == nullptr)
+        return;
+    
     if (c1->IsTrigger() && !c2->IsTrigger())
     {
         // Body 1 is the trigger, so body 2 entered in it
