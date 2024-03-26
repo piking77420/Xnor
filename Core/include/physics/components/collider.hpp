@@ -7,7 +7,6 @@
 
 BEGIN_XNOR_CORE
 
-
 class Collider : public Component
 {
     REFLECTABLE_IMPL(Collider)

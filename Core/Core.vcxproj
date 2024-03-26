@@ -248,6 +248,7 @@
     <ClCompile Include="src\input\time.cpp" />
     <ClCompile Include="src\physics\body_activation_listener.cpp" />
     <ClCompile Include="src\physics\broad_phase_layer_interface.cpp" />
+    <ClCompile Include="src\physics\components\capsule_collider.cpp" />
     <ClCompile Include="src\physics\components\collider.cpp" />
     <ClCompile Include="src\physics\components\mesh_collider.cpp" />
     <ClCompile Include="src\physics\components\sphere_collider.cpp" />
@@ -1073,6 +1074,7 @@
     <ClInclude Include="include\physics\body_activation_listener.hpp" />
     <ClInclude Include="include\physics\broad_phase_layer_interface.hpp" />
     <ClInclude Include="include\physics\components\box_collider.hpp" />
+    <ClInclude Include="include\physics\components\capsule_collider.hpp" />
     <ClInclude Include="include\physics\components\collider.hpp" />
     <ClInclude Include="include\physics\components\mesh_collider.hpp" />
     <ClInclude Include="include\physics\components\sphere_collider.hpp" />

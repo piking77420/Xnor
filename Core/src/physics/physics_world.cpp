@@ -11,6 +11,7 @@
 #include "utils/logger.hpp"
 #include "Jolt/Physics/Collision/Shape/SphereShape.h"
 #include "jolt/Physics/Body/BodyCreationSettings.h"
+#include "Jolt/Physics/Collision/Shape/CapsuleShape.h"
 #include "Jolt/Physics/Collision/Shape/ConvexHullShape.h"
 
 using namespace XnorCore;
@@ -128,6 +129,31 @@ uint32_t PhysicsWorld::CreateBox(Collider* const c, const Vector3& position, con
     return CreateBody(c, settings, isTrigger, isStatic);
 }
 
+uint32_t PhysicsWorld::CreateCapsule(
+    Collider* const c,
+    const Vector3& position,
+    const Quaternion& rotation,
+    const Vector3& scale,
+    const bool_t isTrigger,
+    const bool_t isStatic,
+    const float_t height,
+    const float_t radius
+)
+{
+    JPH::CapsuleShapeSettings capsuleSettings(height, radius);
+    const JPH::ShapeSettings::ShapeResult result = capsuleSettings.Create();
+    if (!result.IsValid())
+    {
+        Logger::LogError("[Physics] - Couldn't create the capsule shape");
+        return JPH::BodyID::cInvalidBodyID;
+    }
+    
+    JPH::BodyCreationSettings settings(result.Get(), JPH::RVec3Arg(position.x, position.y, position.z),
+        JPH::Quat(rotation.X(), rotation.Y(), rotation.Z(), rotation.W()), JPH::EMotionType::Dynamic, Layers::MOVING);
+
+    return CreateBody(c, settings, isTrigger, isStatic);
+}
+
 uint32_t PhysicsWorld::CreateConvexHull(
     Collider* c,
     const Vector3& position,
@@ -148,7 +174,7 @@ uint32_t PhysicsWorld::CreateConvexHull(
     const JPH::ShapeSettings::ShapeResult result = hullSettings.Create();
     if (!result.IsValid())
     {
-        Logger::LogError("Physics - Couldn't create the convex hull shape");
+        Logger::LogError("[Physics] - Couldn't create the convex hull shape");
         return JPH::BodyID::cInvalidBodyID;
     }
     

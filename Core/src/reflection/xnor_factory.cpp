@@ -1,6 +1,7 @@
 #include "reflection/xnor_factory.hpp"
 
 #include "physics/components/box_collider.hpp"
+#include "physics/components/capsule_collider.hpp"
 #include "physics/components/collider.hpp"
 #include "physics/components/sphere_collider.hpp"
 #include "rendering/light/directional_light.hpp"
@@ -93,6 +94,7 @@ void XnorFactory::RegisterTypes()
     RegisterFactoryType<Collider>();
     RegisterFactoryType<BoxCollider>();
     RegisterFactoryType<SphereCollider>();
+    RegisterFactoryType<CapsuleCollider>();
 }
 
 std::string XnorFactory::GetTypeName(const size_t hash)

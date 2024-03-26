@@ -17,7 +17,8 @@
 #include "rendering/vertex.hpp"
 
 BEGIN_XNOR_CORE
-    class PhysicsWorld
+
+class PhysicsWorld
 {
     STATIC_CLASS(PhysicsWorld)
 
@@ -32,6 +33,11 @@ public:
     XNOR_ENGINE static uint32_t CreateSphere(Collider* c, const Vector3& position, float_t radius, bool_t isTrigger, bool_t isStatic);
     [[nodiscard]]
     XNOR_ENGINE static uint32_t CreateBox(Collider* c, const Vector3& position, const Quaternion& rotation, const Vector3& scale, bool_t isTrigger, bool_t isStatic);
+    [[nodiscard]]
+    XNOR_ENGINE static uint32_t CreateCapsule(Collider* c, const Vector3& position, const Quaternion& rotation, const Vector3& scale, bool_t isTrigger, bool_t isStatic, const
+                                              float_t height,
+                                              const float_t radius
+    );
     [[nodiscard]]
     XNOR_ENGINE static uint32_t CreateConvexHull(Collider* c, const Vector3& position, const Quaternion& rotation, const Vector3& scale, const std::vector<Vertex>& vertices, bool_t isTrigger, bool_t isStatic);
 
