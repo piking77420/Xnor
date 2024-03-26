@@ -1,5 +1,6 @@
 #include "physics/components/collider.hpp"
 
+#include "input/input.hpp"
 #include "physics/physics_world.hpp"
 #include "scene/entity.hpp"
 #include "serialization/serializer.hpp"

@@ -10,7 +10,18 @@ using namespace XnorCore;
 
 void SphereCollider::Begin()
 {
-    m_BodyId = PhysicsWorld::CreateSphere(this, entity->transform.GetPosition(), m_Radius, m_IsTrigger, m_IsStatic);
+    const Transform& t = entity->transform;
+
+    const PhysicsWorld::BodyCreationInfo info = {
+        .collider = this,
+        .position = t.GetPosition(),
+        .rotation = t.GetRotation(),
+        .scaling = t.GetScale(),
+        .isTrigger = m_IsTrigger,
+        .isStatic = m_IsStatic
+    };
+
+    m_BodyId = PhysicsWorld::CreateSphere(info, m_Radius);
 }
 
 void SphereCollider::Update()

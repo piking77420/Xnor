@@ -25,6 +25,18 @@ namespace Layers
     static constexpr JPH::ObjectLayer NUM_LAYERS = 2;
 };
 
+[[nodiscard]]
+static JPH::Vec3Arg ToJph(const Vector3& in)
+{
+    return JPH::RVec3Arg(in.x, in.y, in.z);
+}
+
+[[nodiscard]]
+static JPH::QuatArg ToJph(const Quaternion& in)
+{
+    return JPH::QuatArg(in.X(), in.Y(), in.Z(), in.W());
+}
+
 void PhysicsWorld::Initialize()
 {
     // Register allocation hook
@@ -50,7 +62,7 @@ void PhysicsWorld::Initialize()
     // you would implement the JobSystem interface yourself and let Jolt Physics run on top
     // of your own job scheduler. JobSystemThreadPool is an example implementation.
     m_JobSystem = new JPH::JobSystemThreadPool(JPH::cMaxPhysicsJobs, JPH::cMaxPhysicsBarriers, static_cast<int32_t>(std::thread::hardware_concurrency()) - 1);
-    
+
     // This is the max amount of rigid bodies that you can add to the physics system. If you try to add more you'll get an error.
     // Note: This value is low because this is a simple test. For a real project use something in the order of 65536.
     constexpr JPH::uint maxBodies = 1024;
@@ -114,60 +126,42 @@ void PhysicsWorld::SetGravity(const Vector3& gravity)
     m_PhysicsSystem->SetGravity(JPH::Vec3Arg(gravity.x, gravity.y, gravity.z));
 }
 
-uint32_t PhysicsWorld::CreateSphere(Collider* const c, const Vector3& position, const float_t radius, const bool_t isTrigger, const bool_t isStatic)
+uint32_t PhysicsWorld::CreateSphere(const BodyCreationInfo& info, const float_t radius)
 {
-    JPH::BodyCreationSettings settings(new JPH::SphereShape(radius), JPH::RVec3Arg(position.x, position.y, position.z), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, Layers::MOVING);
+    JPH::BodyCreationSettings settings(new JPH::SphereShape(radius), ToJph(info.position), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, Layers::MOVING);
 
-    return CreateBody(c, settings, isTrigger, isStatic);
+    return CreateBody(info, settings);
 }
 
-uint32_t PhysicsWorld::CreateBox(Collider* const c, const Vector3& position, const Quaternion& rotation, const Vector3& scale, const bool_t isTrigger, const bool_t isStatic)
+uint32_t PhysicsWorld::CreateBox(const BodyCreationInfo& info)
 {
-    JPH::BodyCreationSettings settings(new JPH::BoxShape(JPH::Vec3Arg(scale.x, scale.y, scale.z)), JPH::RVec3Arg(position.x, position.y, position.z),
-        JPH::Quat(rotation.X(), rotation.Y(), rotation.Z(), rotation.W()), JPH::EMotionType::Dynamic, Layers::MOVING);
+    JPH::BodyCreationSettings settings(new JPH::BoxShape(ToJph(info.scaling)), ToJph(info.position), ToJph(info.rotation), JPH::EMotionType::Dynamic, Layers::MOVING);
 
-    return CreateBody(c, settings, isTrigger, isStatic);
+    return CreateBody(info, settings);
 }
 
-uint32_t PhysicsWorld::CreateCapsule(
-    Collider* const c,
-    const Vector3& position,
-    const Quaternion& rotation,
-    [[maybe_unused]] const Vector3& scale,
-    const bool_t isTrigger,
-    const bool_t isStatic,
-    const float_t height,
-    const float_t radius
-)
+uint32_t PhysicsWorld::CreateCapsule(const BodyCreationInfo& info, float_t height, float_t radius)
 {
-    JPH::CapsuleShapeSettings capsuleSettings(height, radius);
+    const JPH::CapsuleShapeSettings capsuleSettings(height, radius);
     const JPH::ShapeSettings::ShapeResult result = capsuleSettings.Create();
+
     if (!result.IsValid())
     {
         Logger::LogError("[Physics] - Couldn't create the capsule shape");
         return JPH::BodyID::cInvalidBodyID;
     }
     
-    JPH::BodyCreationSettings settings(result.Get(), JPH::RVec3Arg(position.x, position.y, position.z),
-        JPH::Quat(rotation.X(), rotation.Y(), rotation.Z(), rotation.W()), JPH::EMotionType::Dynamic, Layers::MOVING);
+    JPH::BodyCreationSettings settings(result.Get(), ToJph(info.position), ToJph(info.rotation), JPH::EMotionType::Dynamic, Layers::MOVING);
 
-    return CreateBody(c, settings, isTrigger, isStatic);
+    return CreateBody(info, settings);
 }
 
-uint32_t PhysicsWorld::CreateConvexHull(
-    Collider* c,
-    const Vector3& position,
-    const Quaternion& rotation,
-    [[maybe_unused]] const Vector3& scale, // TODO apply scale
-    const std::vector<Vertex>& vertices,
-    const bool_t isTrigger,
-    const bool_t isStatic
-)
+uint32_t PhysicsWorld::CreateConvexHull(const BodyCreationInfo& info, const std::vector<Vertex>& vertices)
 {
     std::vector<JPH::Vec3> positions(vertices.size());
 
     for (size_t i = 0; i < vertices.size(); i++)
-        positions[i] = JPH::Vec3(vertices[i].position.x, vertices[i].position.y, vertices[i].position.z);
+        positions[i] = ToJph(vertices[i].position);
     
     JPH::ConvexHullShapeSettings hullSettings(positions.data(), static_cast<int32_t>(positions.size()), JPH::cDefaultConvexRadius);
 
@@ -178,10 +172,9 @@ uint32_t PhysicsWorld::CreateConvexHull(
         return JPH::BodyID::cInvalidBodyID;
     }
     
-    JPH::BodyCreationSettings settings(result.Get(), JPH::RVec3Arg(position.x, position.y, position.z),
-        JPH::Quat(rotation.X(), rotation.Y(), rotation.Z(), rotation.W()), JPH::EMotionType::Dynamic, Layers::MOVING);
+    JPH::BodyCreationSettings settings(result.Get(), ToJph(info.position), ToJph(info.rotation), JPH::EMotionType::Dynamic, Layers::MOVING);
 
-    return CreateBody(c, settings, isTrigger, isStatic);
+    return CreateBody(info, settings);
 }
 
 void PhysicsWorld::DestroyBody(const uint32_t bodyId)
@@ -231,6 +224,31 @@ void PhysicsWorld::SetRotation(const uint32_t bodyId, const Quaternion& rotation
     m_BodyInterface->SetRotation(JPH::BodyID(bodyId), JPH::QuatArg(rotation.X(), rotation.Y(), rotation.Z(), rotation.W()), JPH::EActivation::DontActivate);
 }
 
+void PhysicsWorld::AddForce(const uint32_t bodyId, const Vector3& force)
+{
+    m_BodyInterface->AddForce(JPH::BodyID(bodyId), ToJph(force));
+}
+
+void PhysicsWorld::AddForce(const uint32_t bodyId, const Vector3& force, const Vector3& point)
+{
+    m_BodyInterface->AddForce(JPH::BodyID(bodyId), ToJph(force), ToJph(point));
+}
+
+void PhysicsWorld::AddImpulse(const uint32_t bodyId, const Vector3& impulse)
+{
+    m_BodyInterface->AddImpulse(JPH::BodyID(bodyId), ToJph(impulse));
+}
+
+void PhysicsWorld::AddImpulse(const uint32_t bodyId, const Vector3& impulse, const Vector3& point)
+{
+    m_BodyInterface->AddImpulse(JPH::BodyID(bodyId), ToJph(impulse), ToJph(point));
+}
+
+void PhysicsWorld::AddTorque(const uint32_t bodyId, const Vector3& torque)
+{
+    m_BodyInterface->AddTorque(JPH::BodyID(bodyId), ToJph(torque));
+}
+
 Collider* PhysicsWorld::GetColliderFromId(const uint32_t bodyId)
 {
     const auto&& it = m_BodyMap.find(bodyId);
@@ -260,17 +278,17 @@ void PhysicsWorld::TraceImpl(const char_t* format, ...)
     Logger::LogInfo("{}", buf);
 }
 
-uint32_t PhysicsWorld::CreateBody(Collider* const c, JPH::BodyCreationSettings& settings, const bool_t isTrigger, const bool_t isStatic)
+uint32_t PhysicsWorld::CreateBody(const BodyCreationInfo& info, JPH::BodyCreationSettings& settings)
 {
-    settings.mIsSensor = isTrigger;
-    if (isTrigger || isStatic)
+    settings.mIsSensor = info.isTrigger;
+    if (info.isTrigger || info.isStatic)
         settings.mMotionType = JPH::EMotionType::Static;
 
     settings.mAllowSleeping = false;
 
     const uint32_t bodyId = m_BodyInterface->CreateAndAddBody(settings, JPH::EActivation::Activate).GetIndexAndSequenceNumber();
 
-    m_BodyMap.emplace(bodyId, c);
+    m_BodyMap.emplace(bodyId, info.collider);
     
     return bodyId;
 }

@@ -7,22 +7,20 @@
 
 using namespace XnorCore;
 
-
 void BoxCollider::Begin()
 {
     const Transform& t = entity->transform;
-    /*const Matrix trs = Matrix::Trs(m_Center, m_Rotation, m_Size);
-    Matrix result = t.worldMatrix * trs;
 
-    Vector3 position;
-    Quaternion q;
-    Vector3 s;
-    Vector3 skew;
-    Vector4 p;
-    result.Decompose(&position, &q, &s, &skew, &p);
-    m_BodyId = PhysicsWorld::CreateBox(position, q, s);*/
+    const PhysicsWorld::BodyCreationInfo info = {
+        .collider = this,
+        .position = t.GetPosition(),
+        .rotation = t.GetRotation(),
+        .scaling = t.GetScale(),
+        .isTrigger = m_IsTrigger,
+        .isStatic = m_IsStatic
+    };
 
-    m_BodyId = PhysicsWorld::CreateBox(this, t.GetPosition(), t.GetRotation(), t.GetScale(), m_IsTrigger, m_IsStatic);
+    m_BodyId = PhysicsWorld::CreateBox(info);
 }
 
 void BoxCollider::Update()

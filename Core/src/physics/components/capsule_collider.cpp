@@ -10,7 +10,16 @@ void CapsuleCollider::Begin()
 {
     const Transform& t = entity->transform;
 
-    m_BodyId = PhysicsWorld::CreateCapsule(this, t.GetPosition(), t.GetRotation(), t.GetScale(), m_IsTrigger, m_IsStatic, m_Height, m_Radius);
+    const PhysicsWorld::BodyCreationInfo info = {
+        .collider = this,
+        .position = t.GetPosition(),
+        .rotation = t.GetRotation(),
+        .scaling = t.GetScale(),
+        .isTrigger = m_IsTrigger,
+        .isStatic = m_IsStatic
+    };
+
+    m_BodyId = PhysicsWorld::CreateCapsule(info, m_Height, m_Radius);
 }
 
 void CapsuleCollider::Update()

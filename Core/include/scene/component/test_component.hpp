@@ -56,7 +56,7 @@ private:
     float_t m_Array[5] = { 0, 1, 2.5, 6, 8 };
     TestEnum m_Enum = static_cast<TestEnum>(One | Sixteen);
 
-    std::string m_String = "Hello"; 
+    std::string m_String = "Hello";
 
     int32_t m_ConstTest = 0;
     static inline int32_t m_StaticTest1 = 5;

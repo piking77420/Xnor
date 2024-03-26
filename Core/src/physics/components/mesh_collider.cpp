@@ -19,7 +19,17 @@ void MeshCollider::Begin()
     }
 
     const Transform& t = entity->transform;
-    m_BodyId = PhysicsWorld::CreateConvexHull(this, t.GetPosition(), t.GetRotation(), t.GetScale(), renderer->model->GetVertices(), m_IsTrigger, m_IsStatic);
+
+    const PhysicsWorld::BodyCreationInfo info = {
+        .collider = this,
+        .position = t.GetPosition(),
+        .rotation = t.GetRotation(),
+        .scaling = t.GetScale(),
+        .isTrigger = m_IsTrigger,
+        .isStatic = m_IsStatic
+    };
+
+    m_BodyId = PhysicsWorld::CreateConvexHull(info, renderer->model->GetVertices());
 }
 
 void MeshCollider::Update()

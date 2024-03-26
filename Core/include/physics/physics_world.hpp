@@ -23,6 +23,18 @@ class PhysicsWorld
     STATIC_CLASS(PhysicsWorld)
 
 public:
+    struct BodyCreationInfo
+    {
+        Collider* collider = nullptr;
+        
+        Vector3 position;
+        Quaternion rotation;
+        Vector3 scaling;
+
+        bool_t isTrigger{};
+        bool_t isStatic{};
+    };
+    
     XNOR_ENGINE static void Initialize();
     XNOR_ENGINE static void Destroy();
     XNOR_ENGINE static void Update(float_t deltaTime);
@@ -30,16 +42,13 @@ public:
     XNOR_ENGINE static void SetGravity(const Vector3& gravity);
 
     [[nodiscard]]
-    XNOR_ENGINE static uint32_t CreateSphere(Collider* c, const Vector3& position, float_t radius, bool_t isTrigger, bool_t isStatic);
+    XNOR_ENGINE static uint32_t CreateSphere(const BodyCreationInfo& info, float_t radius);
     [[nodiscard]]
-    XNOR_ENGINE static uint32_t CreateBox(Collider* c, const Vector3& position, const Quaternion& rotation, const Vector3& scale, bool_t isTrigger, bool_t isStatic);
+    XNOR_ENGINE static uint32_t CreateBox(const BodyCreationInfo& info);
     [[nodiscard]]
-    XNOR_ENGINE static uint32_t CreateCapsule(Collider* c, const Vector3& position, const Quaternion& rotation, const Vector3& scale, bool_t isTrigger, bool_t isStatic, const
-                                              float_t height,
-                                              const float_t radius
-    );
+    XNOR_ENGINE static uint32_t CreateCapsule(const BodyCreationInfo& info, float_t height, float_t radius);
     [[nodiscard]]
-    XNOR_ENGINE static uint32_t CreateConvexHull(Collider* c, const Vector3& position, const Quaternion& rotation, const Vector3& scale, const std::vector<Vertex>& vertices, bool_t isTrigger, bool_t isStatic);
+    XNOR_ENGINE static uint32_t CreateConvexHull(const BodyCreationInfo& info, const std::vector<Vertex>& vertices);
 
     XNOR_ENGINE static void DestroyBody(uint32_t bodyId);
 
@@ -53,6 +62,12 @@ public:
     XNOR_ENGINE static void SetPosition(uint32_t bodyId, const Vector3& position);
     XNOR_ENGINE static void SetRotation(uint32_t bodyId, const Quaternion& rotation);
 
+    XNOR_ENGINE static void AddForce(uint32_t bodyId, const Vector3& force);
+    XNOR_ENGINE static void AddForce(uint32_t bodyId, const Vector3& force, const Vector3& point);
+    XNOR_ENGINE static void AddImpulse(uint32_t bodyId, const Vector3& impulse);
+    XNOR_ENGINE static void AddImpulse(uint32_t bodyId, const Vector3& impulse, const Vector3& point);
+    XNOR_ENGINE static void AddTorque(uint32_t bodyId, const Vector3& torque);
+
     [[nodiscard]]
     XNOR_ENGINE static Collider* GetColliderFromId(uint32_t bodyId);
 
@@ -60,7 +75,7 @@ private:
     XNOR_ENGINE static void TraceImpl(const char_t* format, ...);
 
     [[nodiscard]]
-    XNOR_ENGINE static uint32_t CreateBody(Collider* c, JPH::BodyCreationSettings& settings, bool_t isTrigger, bool_t isStatic);
+    XNOR_ENGINE static uint32_t CreateBody(const BodyCreationInfo& info, JPH::BodyCreationSettings& settings);
 
     static inline std::unordered_map<uint32_t, Collider*> m_BodyMap;
 
