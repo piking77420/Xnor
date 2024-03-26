@@ -17,6 +17,11 @@ BEGIN_XNOR_CORE
 /// @brief Encapsulates a GPU shader
 class Shader : public Resource
 {
+private:
+	ShaderPipeline::ShaderPipeline ShaderTypeToShaderPipeline(ShaderType::ShaderType shaderType);
+
+	ShaderType::ShaderType ShaderPipelineToShaderType(ShaderPipeline::ShaderPipeline shaderPipeline);
+
 public:
 	/// @brief Allowed extensions for vertex shaders
 	XNOR_ENGINE static inline constexpr std::array<const char_t*, 3> VertexFileExtensions
@@ -40,20 +45,13 @@ public:
 		".geom",
 		".geometry"
 	};
-
-	/// @brief Allowed extensions for compute shaders
-	XNOR_ENGINE static inline constexpr std::array<const char_t*, 2> ComputeFileExtensions
-	{
-		".comp",
-		".compute"
-	};
-
+	
 	/// @brief Gets the shader type via a file extension
 	/// @param extension File extension
 	/// @return @ref ShaderType type
 	/// @throw std::invalid_argument If the extension isn't valid
 	[[nodiscard]]
-	static ShaderType FileExtensionToType(const std::string& extension);
+	XNOR_ENGINE static ShaderPipeline::ShaderPipeline FileExtensionToType(const std::string& extension);
 
 	using Resource::Resource;
 
@@ -68,7 +66,7 @@ public:
 	/// @param buffer Raw data
 	/// @param length Raw data length
 	/// @param type Shader type
-	XNOR_ENGINE bool_t Load(const char_t* buffer, int64_t length, ShaderType type);
+	XNOR_ENGINE bool_t Load(const char_t* buffer, int64_t length, ShaderPipeline::ShaderPipeline type);
 
 	/// @brief Creates the shader in the @ref Rhi
 	XNOR_ENGINE void CreateInRhi() override;
@@ -97,11 +95,16 @@ public:
 	/// @param value Value
 	XNOR_ENGINE void SetFloat(const std::string& keyName, float_t value) const;
 
+	/// @brief Sets a @ref Vector2 (2 float, 64 bits) variable in a shader
+	/// @param keyName Variable name
+	/// @param value Value
+	XNOR_ENGINE void SetVec2(const std::string& keyName, const Vector2& value) const;
+	
 	/// @brief Sets a @ref Vector3 (3 float, 96 bits) variable in a shader
 	/// @param keyName Variable name
 	/// @param value Value
 	XNOR_ENGINE void SetVec3(const std::string& keyName, const Vector3& value) const;
-
+	
 	/// @brief Sets a @ref Vector4 (4 float, 128 bits) variable in a shader
 	/// @param keyName Variable name
 	/// @param value Value
@@ -125,26 +128,23 @@ public:
 
 	/// @brief Sets a specialized depth function for the shader, should only be called it before @ref CreateInRhi
 	/// @param depthFunction Depth function
-	void SetDepthFunction(DepthFunction depthFunction);
+	XNOR_ENGINE void SetDepthFunction(DepthFunction::DepthFunction depthFunction);
 	
 	/// @brief Sets a specialized blend function for the shader, should only be called it before @ref CreateInRhi
 	/// @param blendFunction Blend function
-	void SetBlendFunction(const BlendFunction& blendFunction);
+	XNOR_ENGINE void SetBlendFunction(const BlendFunction& blendFunction);
+
+	XNOR_ENGINE void SetFaceCullingInfo(const ShaderProgramCullInfo& shaderProgramCullInfo);
 
 private:
 	uint32_t m_Id = 0;
 	
-	DepthFunction m_DepthFunction = DepthFunction::Less;
-	BlendFunction m_BlendFunction =
-	{
-		.isBlending = false,
-		.sValue = BlendValue::One,
-		.dValue = BlendValue::Zero
-	};
-		
-
-	std::array<Pointer<File>, static_cast<size_t>(ShaderType::Count)> m_Files;
-	std::array<ShaderCode, static_cast<size_t>(ShaderType::Count)> m_Code;
+	DepthFunction::DepthFunction m_DepthFunction = DepthFunction::Less;
+	ShaderProgramCullInfo m_ShaderProgramCullInfo;
+	BlendFunction m_BlendFunction;
+	
+	std::array<Pointer<File>, ShaderPipeline::Count> m_Files;
+	std::array<ShaderCode, ShaderPipeline::Count> m_Code;
+	
 };
-
 END_XNOR_CORE

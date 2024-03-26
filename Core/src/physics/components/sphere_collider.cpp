@@ -7,7 +7,6 @@
 
 using namespace XnorCore;
 
-REFLECTABLE_IMPL_CPP(SphereCollider)
 
 void SphereCollider::Begin()
 {

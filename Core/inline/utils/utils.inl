@@ -36,7 +36,7 @@ constexpr ImVec4 Utils::ToImCol(const Colorf& color)
     return ImVec4(color.r, color.g, color.b, color.a);
 }
 
-constexpr ImVec4 Utils::ToImCol(const ColorHsv color)
+constexpr ImVec4 Utils::ToImCol(const ColorHsva color)
 {
     const Colorf c = static_cast<Colorf>(static_cast<ColorRgb>(color));
     return ImVec4(c.r, c.g, c.b, c.a);
@@ -55,6 +55,30 @@ constexpr std::string Utils::RemoveNamespaces(const std::string& str)
         return str;
 
     return str.substr(pos + 1);
+}
+
+constexpr const char_t* Utils::RemoveNamespaces(const char_t* const str)
+{
+    const char_t* s = str;
+    size_t l = 0;
+    
+    while (*s++)
+        l++;
+
+    while (s != str)
+    {
+        if (*s == ':')
+            return s + 1;
+
+        s--;
+    }
+
+    return str;
+}
+
+constexpr float_t Utils::RemapValue(const float_t oldValue, const Vector2 oldRange, const Vector2 newRange)
+{
+    return (((oldValue - oldRange.x) * (newRange.y - newRange.x)) / (oldRange.y - oldRange.x)) + newRange.x;
 }
 
 template <typename T>

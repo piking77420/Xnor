@@ -29,8 +29,6 @@ public:
     /// @brief The type of the List<T>, refers to T
     using Type = T;
 
-    DELETE_COPY_MOVE_OPERATIONS(List)
-
     /// @brief Creates an empty list with a capacity of 0
     explicit List();
 
@@ -45,11 +43,13 @@ public:
     /// @param defaultValue Default value
     explicit List(size_t size, const T& defaultValue);
 
+#ifndef SWIG
     /// @brief Creates a list with the specified size, and fills it with the provided values
     /// 
     /// @param size List size
     /// @param values Provided values
     explicit List(size_t size, const T values[]);
+#endif
 
     /// @brief Creates a list with the specified values
     /// 
@@ -75,10 +75,12 @@ public:
     /// @param element Element
     void Add(const T& element);
     
+#ifndef SWIG
     /// @brief Adds a specified element to the end of the list
     /// 
     /// @param element Element
     void Add(T&& element);
+#endif
 
     /// @brief Adds a range of elements to the end of the list
     /// 
@@ -99,10 +101,12 @@ public:
     /// @param value Value
     void Fill(const T& value);
 
+#ifndef SWIG
     /// @brief Fills the list with a specified value
     /// 
     /// @param value Value
     void Fill(T&& value);
+#endif
 
     /// @brief Constructs a new element and adds it to the end of the list
     /// 
@@ -124,11 +128,13 @@ public:
     /// @param index Index
     void Insert(const T& element, size_t index);
 
+#ifndef SWIG
     /// @brief Inserts an element in the list at the given position
     /// 
     /// @param element Element
     /// @param index Index
     void Insert(T&& element, size_t index);
+#endif
 
     /// @brief Inserts an zeroed element in the list at the given position
     /// 
@@ -216,6 +222,7 @@ public:
     [[nodiscard]]
     size_t GetTypeSize() const;
 
+#ifndef SWIG
     /// @brief Gets an element of the list at a specified index
     /// 
     /// @param index Index
@@ -231,6 +238,7 @@ public:
     /// 
     /// @throw invalid_argument If index >= list size
     const T& operator[](size_t index) const;
+#endif
 
 #ifndef UNIT_TEST
 private:

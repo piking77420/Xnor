@@ -1,19 +1,34 @@
 #include "transform.hpp"
-#include "serialization/serializer.hpp"
 
 using namespace XnorCore;
-
-REFLECTABLE_IMPL_CPP(Transform)
 
 const Vector3& Transform::GetPosition() const
 {
     return m_Position;
 }
 
-Vector3& Transform::SetPosition()
+void Transform::SetPosition(const Vector3& newPosition)
 {
     m_Changed = true;
-    return m_Position;
+    m_Position = newPosition;
+}
+
+void Transform::SetPositionX(const float_t newPositionX)
+{
+    m_Changed = true;
+    m_Position.x = newPositionX;
+}
+
+void Transform::SetPositionY(const float_t newPositionY)
+{
+    m_Changed = true;
+    m_Position.y = newPositionY;
+}
+
+void Transform::SetPositionZ(const float_t newPositionZ)
+{
+    m_Changed = true;
+    m_Position.z = newPositionZ;
 }
 
 const Vector3& Transform::GetRotationEulerAngle() const
@@ -21,10 +36,28 @@ const Vector3& Transform::GetRotationEulerAngle() const
     return m_EulerRotation;
 }
 
-Vector3& Transform::SetRotationEulerAngle()
+void Transform::SetRotationEulerAngle(const Vector3& newRotationEulerAngle)
 {
     m_Changed = true;
-    return m_EulerRotation;
+    m_EulerRotation = newRotationEulerAngle;
+}
+
+void Transform::SetRotationEulerAngleX(const float_t newRotationEulerAngleX)
+{
+    m_Changed = true;
+    m_EulerRotation.x = newRotationEulerAngleX;
+}
+
+void Transform::SetRotationEulerAngleY(const float_t newRotationEulerAngleY)
+{
+    m_Changed = true;
+    m_EulerRotation.y = newRotationEulerAngleY;
+}
+
+void Transform::SetRotationEulerAngleZ(const float_t newRotationEulerAngleZ)
+{
+    m_Changed = true;
+    m_EulerRotation.z = newRotationEulerAngleZ;
 }
 
 const Quaternion& Transform::GetRotation() const
@@ -32,10 +65,34 @@ const Quaternion& Transform::GetRotation() const
     return m_Rotation;
 }
 
-Quaternion& Transform::SetRotation()
+void Transform::SetRotation(const Quaternion& newRotation)
 {
     m_Changed = true;
-    return m_Rotation;
+    m_Rotation = newRotation;
+}
+
+void Transform::SetRotationX(const float_t newRotationX)
+{
+    m_Changed = true;
+    m_Rotation.X() = newRotationX;
+}
+
+void Transform::SetRotationY(const float_t newRotationY)
+{
+    m_Changed = true;
+    m_Rotation.Y() = newRotationY;
+}
+
+void Transform::SetRotationZ(const float_t newRotationZ)
+{
+    m_Changed = true;
+    m_Rotation.Z() = newRotationZ;
+}
+
+void Transform::SetRotationW(const float_t newRotationW)
+{
+    m_Changed = true;
+    m_Rotation.W() = newRotationW;
 }
 
 const Vector3& Transform::GetScale() const
@@ -43,10 +100,28 @@ const Vector3& Transform::GetScale() const
     return m_Scale;
 }
 
-Vector3& Transform::SetScale()
+void Transform::SetScale(const Vector3& newScale)
 {
     m_Changed = true;
-    return m_Scale;
+    m_Scale = newScale;
+}
+
+void Transform::SetScaleX(const float_t newScaleX)
+{
+    m_Changed = true;
+    m_Scale.x = newScaleX;
+}
+
+void Transform::SetScaleY(const float_t newScaleY)
+{
+    m_Changed = true;
+    m_Scale.y = newScaleY;
+}
+
+void Transform::SetScaleZ(const float_t newScaleZ)
+{
+    m_Changed = true;
+    m_Scale.z = newScaleZ;
 }
 
 bool_t Transform::GetChanged() const

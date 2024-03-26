@@ -7,11 +7,11 @@ using namespace XnorCore;
 
 void World::Begin()
 {
-    scene.Begin();
+    scene->Begin();
 }
 
 void World::Update()
 {
     PhysicsWorld::Update(Time::GetDeltaTime());
-    scene.Update();
+    scene->Update();
 }

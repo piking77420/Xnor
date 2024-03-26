@@ -321,11 +321,13 @@ public:
     [[nodiscard]]
     constexpr const float_t* Raw() const noexcept;
 
+#ifndef SWIG
     /// @brief Gets a pointer to the first value of this Matrix.
     /// 
     /// @returns A pointer to the first value of this Matrix.
     [[nodiscard]]
     constexpr float_t* Raw() noexcept;
+#endif
 
 	/// @brief Uses the @c std::cout stream to print the values of this matrix in a square-like shape, e.g. by using newlines to make it easier to read.
 	void DebugPrint() const noexcept;
@@ -389,6 +391,7 @@ public:
 	[[nodiscard]]
 	constexpr float_t At(size_t row, size_t col) const;
     
+#ifndef SWIG
 	/// @brief Retrieves this matrix's col at position @c [col, row].
 	/// 
 	/// @param row The index of the col to get.
@@ -396,6 +399,7 @@ public:
 	/// @returns The value at position @c [col, row].
 	[[nodiscard]]
 	constexpr float_t& At(size_t row, size_t col);
+#endif
 
     /// @brief Retrieves this matrix's column vector at position @c col.
     /// 
@@ -407,6 +411,7 @@ public:
     [[nodiscard]]
     constexpr Vector4 operator[](size_t col) const;
 
+#ifndef SWIG
     /// @brief Retrieves this matrix's column vector at position @c col.
     /// 
     ///	If you want to get a value of this matrix, consider using <see cref="At(size_t, size_t)"/>
@@ -416,6 +421,7 @@ public:
     /// @returns The column vector at index @c col.
     [[nodiscard]]
     constexpr Vector4& operator[](size_t col);
+#endif
     
     /// @brief Converts this Matrix to a Matrix3 by cropping its last row and column.
     [[nodiscard]]
@@ -925,6 +931,7 @@ constexpr Matrix operator*(const Matrix& m1, const Matrix& m2) noexcept
 	);
 }
 
+#ifndef SWIG
 /// @brief Adds two @ref Matrix "Matrices" according to @ref operator+(const Matrix&, const Matrix&), placing the result in @p m1.
 constexpr Matrix& operator+=(Matrix& m1, const Matrix& m2) noexcept { return m1 = m1 + m2; }
 
@@ -934,14 +941,9 @@ constexpr Matrix& operator-=(Matrix& m1, const Matrix& m2) noexcept { return m1 
 /// @brief Multiplies a Matrix by a @p scalar according to @ref operator*(const Matrix&, const float_t), placing the result in @p m.
 constexpr Matrix& operator*=(Matrix& m, const float_t scalar) noexcept { return m = m * scalar; }
 
-/// @brief Multiplies a Matrix by a Vector3 according to @ref operator*(const Matrix&, const Vector3&), placing the result in @p m.
-constexpr Vector3& operator*=(const Matrix& m, Vector3& v) noexcept { return v = m * v; }
-
-/// @brief Multiplies a Matrix by a Vector4 according to @ref operator*(const Matrix&, const Vector4&), placing the result in @p m.
-constexpr Vector4 &operator*=(const Matrix& m, Vector4& v) noexcept { return v = m * v; }
-
 /// @brief Multiplies two @ref Matrix "Matrices" according to @ref operator*(const Matrix&, const Matrix&), placing the result in @p m1.
 constexpr Matrix& operator*=(Matrix& m1, const Matrix& m2) noexcept { return m1 = m1 * m2; }
+#endif
 
 /// @brief	Checks if two Matrices are considered equal using @c Calc::Equals.
 [[nodiscard]]

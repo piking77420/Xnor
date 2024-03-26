@@ -12,12 +12,10 @@
 #include <Maths/vector2.hpp>
 #include <Maths/vector3.hpp>
 
+#include "core.hpp"
 #include "utils/color.hpp"
 #include "utils/list.hpp"
 #include "utils/pointer.hpp"
-#include "utils/poly_ptr.hpp"
-
-#include "core.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -67,6 +65,16 @@ namespace Meta
     /// @tparam T Type
     template <typename T>
     constexpr bool_t IsFloatingPoint = std::is_floating_point_v<T>;
+
+    /// @brief Checks whether @c T is an abstract class
+    /// @tparam T Type
+    template <typename T>
+    constexpr bool_t IsAbstract = std::is_abstract_v<T>;
+
+    /// @brief Checks whether @c T is default constructible (has a public constructor, with no parameters)
+    /// @tparam T Type
+    template <typename T>
+    constexpr bool_t IsDefaultConstructible = std::is_default_constructible_v<T>;
 
     /// @brief Removes the array specification from @c T
     ///
@@ -119,14 +127,6 @@ namespace Meta
     /// @private
     template <typename T>
     constexpr bool_t IsXnorList<List<T>> = true;
-
-    /// @brief Checks whether the type is a @ref PolyPtr
-    template <typename>
-    constexpr bool_t IsPolyPtr = false;
-
-    /// @private
-    template <typename T>
-    constexpr bool_t IsPolyPtr<PolyPtr<T>> = true;
 
     /// @brief Checks whether the type is a @ref Pointer
     template <typename>
@@ -192,7 +192,7 @@ namespace Meta
     /// 
     /// @tparam T Type
     template <typename T>
-    constexpr bool_t IsColorType = IsAny<T, Colorf, ColorRgb, ColorHsv, ColorRgba>;
+    constexpr bool_t IsColorType = IsAny<T, Colorf, ColorRgb, ColorHsva, ColorRgba>;
 }
 
 END_XNOR_CORE;

@@ -22,7 +22,7 @@ PickingStrategy::~PickingStrategy()
 
 void PickingStrategy::ResizeHandle(Vector2i newSize)
 {
-    if(frameBuffer->GetSize() != newSize)
+    if(m_ColorAttachment->GetSize() != newSize)
     {
         DestroyRendering();
         InitRendering(newSize);
@@ -48,8 +48,8 @@ bool PickingStrategy::GetEntityFromScreen(
     {
         .frameBuffer = frameBuffer,
         .renderAreaOffset = { 0, 0 },
-        .renderAreaExtent = frameBuffer->GetSize(),
-        .clearBufferFlags = static_cast<XnorCore::BufferFlag>(XnorCore::BufferFlag::BufferFlagColorBit | XnorCore::BufferFlag::BufferFlagDepthBit),
+        .renderAreaExtent = m_ColorAttachment->GetSize(),
+        .clearBufferFlags = static_cast<XnorCore::BufferFlag::BufferFlag>(XnorCore::BufferFlag::ColorBit | XnorCore::BufferFlag::DepthBit),
         .clearColor = Vector4(0.f)
     };
     m_Editor->renderer.RenderNonShaded(pointOfView,beginInfo,m_ColorPass,m_PickingShader,scene,true);
@@ -90,7 +90,7 @@ void PickingStrategy::DestroyRendering() const
 
 void PickingStrategy::InitRendering(const Vector2i size)
 {
-    frameBuffer = new XnorCore::FrameBuffer(size);
+    frameBuffer = new XnorCore::FrameBuffer();
     m_ColorAttachment = new XnorCore::Texture(XnorCore::TextureInternalFormat::R32F,size);
     m_DepthAttachement = new XnorCore::Texture(XnorCore::TextureInternalFormat::DepthComponent16,size);
 
@@ -106,6 +106,6 @@ void PickingStrategy::InitRendering(const Vector2i size)
 
     m_ColorPass = XnorCore::RenderPass(attachementsType);
     const std::vector<const XnorCore::Texture*> targets = { m_ColorAttachment, m_DepthAttachement };
-    frameBuffer->Create(m_ColorPass,targets);
+    frameBuffer->AttachTextures(m_ColorPass,targets);
 
 }

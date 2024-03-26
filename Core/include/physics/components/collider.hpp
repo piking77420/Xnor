@@ -7,9 +7,10 @@
 
 BEGIN_XNOR_CORE
 
+
 class Collider : public Component
 {
-    REFLECTABLE_IMPL_MINIMAL(Collider)
+    REFLECTABLE_IMPL(Collider)
 
 public:
     enum ColliderConstraints : size_t

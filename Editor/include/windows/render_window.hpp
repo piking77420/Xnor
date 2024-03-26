@@ -23,7 +23,7 @@ public:
     void OnApplicationRendering() override;
 
 protected:
-    XnorCore::Viewport* m_Viewport;
+    XnorCore::Viewport* m_Viewport = nullptr;
 };
 
 END_XNOR_EDITOR

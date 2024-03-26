@@ -22,7 +22,11 @@ bool_t Directory::Load()
             
             if (is_directory(entryPath))
             {
-                Pointer<Directory> directory = FileManager::LoadDirectory(entryPath);
+                Pointer<Directory> directory;
+                if (FileManager::Contains(entryPath))
+                    directory = FileManager::Get(entryPath);
+                else
+                    directory = FileManager::LoadDirectory(entryPath);
                 m_ChildDirectories.push_back(directory);
                 m_ChildEntries.push_back(static_cast<Pointer<Entry>>(directory));
                 continue;
@@ -49,6 +53,11 @@ void Directory::Unload()
     m_ChildFiles.clear();
     m_ChildDirectories.clear();
     m_Loaded = false;
+}
+
+void Directory::OpenInExplorer() const
+{
+    Utils::OpenInExplorer(m_Path, false);
 }
 
 const std::vector<Pointer<Entry>>& Directory::GetChildEntries() const

@@ -7,7 +7,6 @@
 
 using namespace XnorCore;
 
-REFLECTABLE_IMPL_CPP(BoxCollider)
 
 void BoxCollider::Begin()
 {

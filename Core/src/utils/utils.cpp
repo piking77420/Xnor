@@ -60,6 +60,17 @@ std::string Utils::HumanizeString(const std::string& str)
     return result;
 }
 
+std::string Utils::HumanizeVariableName(const std::string& str)
+{
+    std::string result = str;
+
+    if (result[0] == 'm' && result[1] == '_')
+        result = result.substr(2);
+
+    return result;
+   // return HumanizeString(result);
+}
+
 float_t Utils::NormalizeAngle(float_t angle)
 {
     while (angle > Calc::PiOver2)
@@ -114,21 +125,6 @@ Vector3 Utils::GetQuaternionEulerAngles(const Quaternion& rot)
     return NormalizeAngles(v);
 }
 
-void Utils::OpenInExplorer(const Entry& entry)
-{
-    OpenInExplorer(entry.GetPath());
-}
-
-void Utils::OpenInExplorer(const Directory& directory)
-{
-    OpenInExplorer(directory.GetPath(), false);
-}
-
-void Utils::OpenInExplorer(const File& file)
-{
-    OpenInExplorer(file.GetPath(), true);
-}
-
 void Utils::OpenInExplorer(const std::filesystem::path& path)
 {
     OpenInExplorer(path, !is_directory(path));
@@ -143,11 +139,6 @@ void Utils::OpenInExplorer(const std::filesystem::path& path, const bool_t isFil
     
     command += '"' + absolute(path).string() + '"';
     std::system(command.c_str());  // NOLINT(concurrency-mt-unsafe)
-}
-
-void Utils::OpenFile(const File& file)
-{
-    OpenFile(file.GetPath());
 }
 
 void Utils::OpenFile(const std::filesystem::path& filepath)

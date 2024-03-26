@@ -1,14 +1,17 @@
 #pragma once
 
 #include "core.hpp"
-#include "resource/resource.hpp"
 
-#include "scene/component.hpp"
+#include "utils/meta_programming.hpp"
 
 /// @file concepts.hpp
 /// @brief Defines the XnorCore::Concepts namespace which contains useful concepts used in the engine.
 
 BEGIN_XNOR_CORE
+
+class Resource;
+class Entry;
+class Component;
 
 /// @namespace Concepts
 /// @brief Contains useful general-use concepts.
@@ -39,11 +42,21 @@ namespace Concepts
 
     /// @brief A class satisfies the ExceptionT concept if it is derived of Exception.
     template<typename T>
-    concept ExceptionT = std::is_base_of_v<std::exception, T>;
+    concept ExceptionT = Meta::IsBaseOf<std::exception, T>;
 
     /// @brief Concept that forces a type to be a function
     template <class T>
     concept FunctionT = std::is_function_v<T>;
+
+    template <typename T>
+    concept ConvertibleToT = std::convertible_to<T>;
+
+    /// @brief Concept that forces a type to be a color, e.g. one of: ColorRgb, ColorRgba, Colorf or ColorHsv
+    template <class T>
+    concept ColorT = Meta::IsAny<T, ColorRgb, ColorRgba, Colorf, ColorHsva>;
+
+    template <typename T>
+    concept DurationT = Meta::IsAny<T, std::chrono::hours, std::chrono::minutes, std::chrono::seconds, std::chrono::milliseconds, std::chrono::nanoseconds>;
 }
 
 END_XNOR_CORE

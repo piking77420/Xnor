@@ -1,19 +1,14 @@
 ﻿#include "scene/entity.hpp"
 
 #include "scene/component.hpp"
-#include "scene/scene.hpp"
 #include "serialization/serializer.hpp"
-#include "..\..\include\world\scene_graph.hpp"
+#include "utils/logger.hpp"
+#include "world/scene_graph.hpp"
 
 using namespace XnorCore;
 
 Entity::Entity(const Guid& entiyId)
     : m_EntityId(entiyId)
-{
-}
-
-Entity::Entity()
-    : m_EntityId(Guid::New())
 {
 }
 
@@ -39,6 +34,12 @@ void Entity::Update()
     {
         m_Components[i]->Update();
     }
+}
+
+void Entity::AddComponent(Component* const component)
+{
+    component->entity = this;
+    m_Components.Add(component);
 }
 
 const Guid& Entity::GetGuid() const
@@ -71,7 +72,7 @@ bool_t Entity::HasChildren() const
     return GetChildCount() != 0;
 }
 
-bool_t Entity::IsAParentOf(const Entity* child) const
+bool_t Entity::IsParentOf(const Entity* child) const
 {
     const Entity* e = child->m_Parent;
 

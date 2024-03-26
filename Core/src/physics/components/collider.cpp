@@ -6,7 +6,6 @@
 
 using namespace XnorCore;
 
-REFLECTABLE_IMPL_CPP(Collider)
 
 Collider::Collider()
 {
@@ -28,12 +27,12 @@ void Collider::Update()
     if (PhysicsWorld::IsBodyActive(m_BodyId))
     {
         if (!(constraints & ConstraintPosition))
-            entity->transform.SetPosition() = PhysicsWorld::GetBodyPosition(m_BodyId);
+            entity->transform.SetPosition(PhysicsWorld::GetBodyPosition(m_BodyId));
         else
             PhysicsWorld::SetPosition(m_BodyId, entity->transform.GetPosition());
             
         if (!(constraints & ConstraintRotation))
-            entity->transform.SetRotationEulerAngle() = Quaternion::ToEuler(PhysicsWorld::GetBodyRotation(m_BodyId));
+            entity->transform.SetRotationEulerAngle(Quaternion::ToEuler(PhysicsWorld::GetBodyRotation(m_BodyId)));
         else
             PhysicsWorld::SetRotation(m_BodyId, entity->transform.GetRotation());
     }

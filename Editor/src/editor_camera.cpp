@@ -6,6 +6,7 @@
 #include "editor.hpp"
 #include "input/time.hpp"
 #include "scene/component/mesh_renderer.hpp"
+#include "utils/utils.hpp"
 
 using namespace XnorEditor;
 
@@ -42,7 +43,6 @@ void EditorCamera::CameraOnRightClick()
     {
         XnorCore::Window::SetCursorHidden(false);
     }
-
 }
 
 void EditorCamera::EditorCameraRotation()
@@ -68,7 +68,6 @@ void EditorCamera::EditorCameraRotation()
 
 void EditorCamera::EditorCameraMovement()
 {
-    
     const float_t cameraSpeed = m_CameraSpeed;
 
     Vector3 addVector;
@@ -151,6 +150,7 @@ void EditorCamera::GoToObject()
 {
     if (!m_EditorRef->data.gotoObject)
         return;
+    
     const XnorCore::Entity& currentEntiy = *m_EditorRef->data.selectedEntity;
     const Vector3 pos = static_cast<Vector3>(currentEntiy.transform.worldMatrix[3]);
     m_EditorRefCamera->LookAt(static_cast<Vector3>(currentEntiy.transform.worldMatrix[3]));

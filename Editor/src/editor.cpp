@@ -6,6 +6,7 @@
 #include <ImGui/imgui_internal.h>
 #include <ImguiGizmo/ImGuizmo.h>
 
+#include "csharp/dotnet_runtime.hpp"
 #include "file/file_manager.hpp"
 #include "input/time.hpp"
 #include "physics/components/box_collider.hpp"
@@ -36,7 +37,12 @@ void Editor::CheckWindowResize()
 
 Editor::Editor()
 {
-	const XnorCore::Pointer<XnorCore::File> logoFile = XnorCore::FileManager::Get("assets_internal/editor/logo.png");
+	XnorCore::Texture::defaultLoadOptions = { .flipVertically = false };
+	XnorCore::FileManager::LoadDirectory("assets_internal/editor");
+	XnorCore::ResourceManager::LoadAll();
+	
+	const XnorCore::Pointer<XnorCore::File> logoFile = XnorCore::FileManager::Get("assets_internal/editor/ui/logo.png");
+	
 	XnorCore::Pointer<XnorCore::Texture> logo = XnorCore::ResourceManager::Get<XnorCore::Texture>(logoFile);
 	logo->loadData.desiredChannels = 4;
 	logo->Reload(logoFile);
@@ -59,6 +65,8 @@ Editor::Editor()
 
 	SetupImGuiStyle();
 	CreateDefaultWindows();
+
+	XnorCore::World::scene = new XnorCore::Scene();
 }
 
 Editor::~Editor()
@@ -227,95 +235,54 @@ void Editor::SetupImGuiStyle() const
 void Editor::CreateTestScene()
 {
 	using namespace XnorCore;
-	
-	// init Scene //
-	Entity& ent1 = *World::scene.CreateEntity("VikingRoom");
-	MeshRenderer* meshRenderer = ent1.AddComponent<MeshRenderer>();
-	ent1.transform.SetPosition() = { 0.f, 3.f, 0.f };
-	
-	meshRenderer->model = ResourceManager::Get<Model>(FileManager::Get("assets/models/viking_room.obj"));
-	Pointer<File>&& vikingRoomTexture = FileManager::Get("assets/textures/viking_room.png");
-	meshRenderer->material.albedo = ResourceManager::Get<Texture>(vikingRoomTexture);
-	meshRenderer->material.albedo->loadData.flipVertically = true;
-	meshRenderer->material.albedo->Unload();
-	meshRenderer->material.albedo->Load(vikingRoomTexture);
-	meshRenderer->material.albedo->CreateInRhi();
-	ent1.AddComponent<MeshCollider>();
 
-	Entity& ent2 = *World::scene.CreateEntity("DirectionalLight");
-	DirectionalLight* dirlight = ent2.AddComponent<DirectionalLight>();
-	dirlight->intensity = 0.2f;
-	dirlight->color = Colorf(1.f, 1.f, 1.f);
-
-	Entity& pointLightentity = *World::scene.CreateEntity("PointLight");
-	PointLight* pointLight = pointLightentity.AddComponent<PointLight>();
-	pointLight->color = { 7.7f, 0.f, 3.f };
-	pointLightentity.AddComponent<TestComponent>();
-	pointLightentity.transform.SetPosition() = { 0.f, 2.f, -2.f };
-	
-	Entity& ent3 = *World::scene.CreateEntity("Plane");
-	meshRenderer = ent3.AddComponent<MeshRenderer>();
-	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
-	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/wood.jpg");
-	ent3.transform.SetScale() = { 10.f, 0.1f, 10.f };
-	ent3.transform.SetPosition() -= { 0.f, -0.2f, 0.f };
-	ent3.AddComponent<BoxCollider>();
-	
-	Entity& ent4 = *World::scene.CreateEntity("Cube");
-	ent4.transform.SetPosition() = { 0.f, 5.f, 0.f };
-	meshRenderer = ent4.AddComponent<MeshRenderer>();
-	meshRenderer->model = ResourceManager::Get<Model>("assets/models/cube.obj");
-	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/diamond_block.jpg");
-	ent4.AddComponent<BoxCollider>();
-	
-	Entity& ent5 = *World::scene.CreateEntity("Sphere1");
-	ent5.transform.SetPosition() = { 1.5f, 2.f, 0.f };
-	meshRenderer = ent5.AddComponent<MeshRenderer>();
-	meshRenderer->model = ResourceManager::Get<Model>("assets/models/sphere.obj");
-	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/diamond_block.jpg");
-	ent5.AddComponent<SphereCollider>();
-	
-	Entity& ent6 = *World::scene.CreateEntity("Sphere2");
-	ent6.transform.SetPosition() = { -1.5f, 2.f, 0.f };
-	meshRenderer = ent6.AddComponent<MeshRenderer>();
-	meshRenderer->model = ResourceManager::Get<Model>("assets/models/sphere.obj");
-	meshRenderer->material.albedo = ResourceManager::Get<Texture>("assets/textures/diamond_block.jpg");
-	ent6.AddComponent<SphereCollider>();
-
-	const std::array<std::string, 6> testCubeMap
-	{
-		"assets/skybox/right.jpg",
-		"assets/skybox/left.jpg",
-		"assets/skybox/top.jpg",
-		"assets/skybox/bottom.jpg",
-		"assets/skybox/front.jpg",
-		"assets/skybox/back.jpg"
-	};
-	World::scene.skybox.LoadCubeMap(testCubeMap);
+	// Init SkyBox
+	World::scene->skybox.Initialize();
+	Pointer<Texture> texture = ResourceManager::Get<Texture>("assets/textures/puresky.hdr");
+	texture->loadData.flipVertically = true;
+	texture->Reload();
+	World::scene->skybox.LoadFromHdrTexture(texture);
 }
 
-void Editor::MenuBar() const
+void Editor::MenuBar()
 {
 	if (ImGui::BeginMainMenuBar())
 	{	
 		if (ImGui::BeginMenu("File"))
 		{
+			std::string path;
+			if (data.currentScene == nullptr)
+			{
+				if (!std::filesystem::exists("assets/scenes"))
+					std::filesystem::create_directories("assets/scenes");
+				path = SerializedScenePath;
+			}
+			else
+			{
+				path = data.currentScene->GetPathString();
+			}
+
+			std::vector<XnorCore::TestComponent*> v;
+			XnorCore::World::scene->GetAllComponentOfType<XnorCore::TestComponent>(&v);
+
 			if (ImGui::MenuItem("Save"))
 			{
-				std::string path;
-				if (data.currentScene == nullptr)
-				{
-					if (!std::filesystem::exists("assets/scenes"))
-						std::filesystem::create_directories("assets/scenes");
-					path = SerializedScenePath;
-				}
-				else
-				{
-					path = data.currentScene->GetPathString();
-				}
 				XnorCore::Serializer::StartSerialization(path);
-				XnorCore::World::scene.Serialize();
+				XnorCore::Serializer::Serialize<XnorCore::Scene, true>(XnorCore::World::scene);
+				// XnorCore::Serializer::Serialize<XnorCore::TestComponent, true>(v[0]);
 				XnorCore::Serializer::EndSerialization();
+			}
+
+			if (ImGui::MenuItem("Load"))
+			{
+				XnorCore::Serializer::StartDeserialization(path);
+				data.selectedEntity = nullptr;
+				delete XnorCore::World::scene;
+				XnorCore::World::scene = new XnorCore::Scene();
+				// Possible memory leak?
+				XnorCore::Serializer::Deserialize<XnorCore::Scene, true>(XnorCore::World::scene);
+				// XnorCore::Serializer::Deserialize<XnorCore::TestComponent, true>(v[0]);
+				XnorCore::Serializer::EndDeserialization();
 			}
 			
 			ImGui::EndMenu();
@@ -327,19 +294,26 @@ void Editor::MenuBar() const
 
 void Editor::UpdateWindow()
 {
-	for (UiWindow* w : m_UiWindows)
+	for (UiWindow* const w : m_UiWindows)
 	{
-		ImGui::Begin(w->GetName(),nullptr,w->windowFlags);
+		ImGui::Begin(w->GetName(), nullptr, w->windowFlags);
 		w->FetchInfo();
 		w->Display();
 		ImGui::End();
 	}
-	
+
+	// TEMPORARY
+	ImGui::Begin("Debug");
+	if (ImGui::Button("Create C# TestScript entity"))
+		XnorCore::DotnetRuntime::GetAssembly("Game")->ProcessTypes();
+	if (ImGui::Button("Reload C# Assemblies"))
+		XnorCore::DotnetRuntime::ReloadAllAssemblies();
+	ImGui::End();
 }
 
 void Editor::OnRenderingWindow()
 {
-	for (UiWindow* w : m_UiWindows)
+	for (UiWindow* const w : m_UiWindows)
 	{
 		w->OnApplicationRendering();
 	}
@@ -362,7 +336,6 @@ void Editor::Update()
 
 	CreateTestScene();
 	Window::Show();
-	
 	while (!Window::ShouldClose())
 	{
 		Time::Update();
@@ -371,11 +344,12 @@ void Editor::Update()
 		BeginFrame();
 		CheckWindowResize();
 		
-		renderer.BeginFrame(World::scene);
+		renderer.BeginFrame(*World::scene);
 		UpdateWindow();
 		WorldBehaviours();
 		OnRenderingWindow();
-		renderer.EndFrame(World::scene);
+		
+		renderer.EndFrame(*World::scene);
 
 		Input::Update();
 		EndFrame();
@@ -396,7 +370,7 @@ void Editor::EndFrame()
 
 void Editor::WorldBehaviours()
 {
-	XnorCore::SceneGraph::Update(XnorCore::World::scene.GetEntities());
+	XnorCore::SceneGraph::Update(XnorCore::World::scene->GetEntities());
 	
 	if (XnorCore::World::isPlaying)
 	{

@@ -5,7 +5,7 @@
 #include "ImGui/imgui_stdlib.h"
 #include "resource/resource_manager.hpp"
 
-#define ASSETS_PATH "assets_internal/editor/content_browser/"
+#define ASSETS_PATH "assets_internal/editor/ui/content_browser/"
 
 using namespace XnorEditor;
 
@@ -254,7 +254,7 @@ void ContentBrowser::DisplayEntry(
         {
             if (file)
             {
-                XnorCore::Utils::OpenFile(*file);
+                file->OpenFile();
             }
             else
             {
@@ -281,10 +281,10 @@ void ContentBrowser::ContextMenu(XnorCore::Pointer<XnorCore::Entry> entry, const
     {
         XnorCore::Pointer<XnorCore::File>&& file = XnorCore::Utils::DynamicPointerCast<XnorCore::File>(entry);
         if (file && ImGui::Selectable("Open"))
-            XnorCore::Utils::OpenFile(*file);
+            file->OpenFile();
 
         if (ImGui::Selectable("Open in explorer"))
-            XnorCore::Utils::OpenInExplorer(*entry);
+            entry->OpenInExplorer();
 
         if (ImGui::Selectable("Rename"))
         {

@@ -49,6 +49,12 @@ public:
     /// @brief Unloads the contents of this File.
     XNOR_ENGINE void Unload() override;
 
+    /// @brief Opens this File in the file explorer
+    XNOR_ENGINE void OpenInExplorer() const override;
+
+    /// @brief Opens this File on the user's computer using the default software for its file extension
+    XNOR_ENGINE void OpenFile() const;
+
     /// @brief Returns the Type of this File.
     XNOR_ENGINE Type GetType() const;
 
@@ -61,12 +67,12 @@ public:
     XNOR_ENGINE std::string GetExtension() const;
 
     /// @brief Returns a @c const pointer to the raw loaded data.
-    template<typename T = char_t>
+    template <typename T = char_t>
     [[nodiscard]]
     const T* GetData() const;
 
     /// @brief Returns a pointer to the raw loaded data.
-    template<typename T = char_t>
+    template <typename T = char_t>
     [[nodiscard]]
     T* GetData();
 

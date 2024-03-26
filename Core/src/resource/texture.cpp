@@ -16,8 +16,8 @@ Texture::Texture(const TextureCreateInfo& createInfo)
     m_LoadedInRhi = true;
 }
 
-Texture::Texture(const TextureInternalFormat textureFormat, const Vector2i size)
-    : m_Size(size), m_TextureInternalFormat(textureFormat)
+Texture::Texture(const TextureInternalFormat::TextureInternalFormat textureInternalFormat, const Vector2i size , const TextureFormat::TextureFormat textureFormat)
+    : m_Size(size), m_TextureInternalFormat(textureInternalFormat) , m_TextureFormat(textureFormat)
 {
     const TextureCreateInfo createInfo
     {
@@ -25,9 +25,10 @@ Texture::Texture(const TextureInternalFormat textureFormat, const Vector2i size)
         .size = size,
         .filtering = m_TextureFiltering,
         .wrapping = m_TextureWrapping,
-        .format = m_TextureFormat,
+        .format = textureFormat,
         .internalFormat = m_TextureInternalFormat
     };
+    
 
     m_Id = Rhi::CreateTexture2D(createInfo);
     m_LoadedInRhi = true;
@@ -45,7 +46,16 @@ Texture::~Texture()
 bool Texture::Load(const uint8_t* buffer, const int64_t length)
 {
     stbi_set_flip_vertically_on_load(loadData.flipVertically);
-    m_Data = stbi_load_from_memory(buffer, static_cast<int32_t>(length), &m_Size.x, &m_Size.y, &m_DataChannels, loadData.desiredChannels);
+    
+    if (std::filesystem::path(m_Name).extension() == ".hdr")
+    {
+        m_Data = reinterpret_cast<decltype(m_Data)>(stbi_loadf_from_memory(buffer, static_cast<int32_t>(length), &m_Size.x, &m_Size.y, &m_DataChannels, loadData.desiredChannels));
+    }
+    else
+    {
+        m_Data = stbi_load_from_memory(buffer, static_cast<int32_t>(length), &m_Size.x, &m_Size.y, &m_DataChannels, loadData.desiredChannels);
+    }
+    
     m_TextureFormat = Rhi::GetTextureFormatFromChannels(m_DataChannels);
     m_Loaded = true;
     return true;
@@ -53,7 +63,7 @@ bool Texture::Load(const uint8_t* buffer, const int64_t length)
 
 void Texture::CreateInRhi()
 {
-    const TextureCreateInfo createInfo
+    TextureCreateInfo createInfo
     {
         .data = m_Data,
         .size = m_Size,
@@ -63,6 +73,15 @@ void Texture::CreateInRhi()
         .internalFormat = m_TextureInternalFormat,
         .dataType = DataType::UnsignedByte
     };
+
+    if (std::filesystem::path(m_Name).extension() == ".hdr")
+    {
+        createInfo.filtering = TextureFiltering::Linear;
+        createInfo.wrapping = TextureWrapping::ClampToEdge;
+        createInfo.internalFormat = TextureInternalFormat::Rgb16F;
+        createInfo.format = TextureFormat::Rgb;
+        createInfo.dataType = DataType::Float;
+    }
     
     m_Id = Rhi::CreateTexture2D(createInfo);
     
@@ -115,22 +134,22 @@ uint32_t Texture::GetId() const
     return m_Id;
 }
 
-TextureFiltering Texture::GetTextureFiltering() const
+TextureFiltering::TextureFiltering Texture::GetTextureFiltering() const
 {
     return m_TextureFiltering;
 }
 
-TextureWrapping Texture::GetTextureWrapping() const
+TextureWrapping::TextureWrapping Texture::GetTextureWrapping() const
 {
     return m_TextureWrapping;
 }
 
-TextureInternalFormat Texture::GetInternalFormat() const
+TextureInternalFormat::TextureInternalFormat Texture::GetInternalFormat() const
 {
     return m_TextureInternalFormat;
 }
 
-TextureFormat Texture::GetTextureFormat() const
+TextureFormat::TextureFormat Texture::GetTextureFormat() const
 {
     return m_TextureFormat;
 }

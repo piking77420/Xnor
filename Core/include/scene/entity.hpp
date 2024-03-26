@@ -2,14 +2,14 @@
 
 #include <vector>
 
-#include "component.hpp"
 #include "core.hpp"
 #include "transform.hpp"
+#include "reflection/reflection.hpp"
 #include "resource/model.hpp"
+#include "scene/component.hpp"
+#include "utils/concepts.hpp"
 #include "utils/guid.hpp"
 #include "utils/list.hpp"
-#include "utils/poly_ptr.hpp"
-#include "utils/serializable.hpp"
 
 /// @file entity.hpp
 /// @brief Defines the XnorCore::Entity class.
@@ -17,11 +17,16 @@
 BEGIN_XNOR_CORE
 
 /// @brief Represents an object of the engine, behaviors can be attached to it via a list of Component
-class Entity : public Serializable
+class Entity
 {
-    REFLECTABLE_IMPL_H(Entity)
+    REFLECTABLE_IMPL(Entity)
 
 public:
+    XNOR_ENGINE Entity() = default;
+    XNOR_ENGINE ~Entity();
+
+    DEFAULT_COPY_MOVE_OPERATIONS(Entity)
+    
     /// @brief Transform of the entity
     Transform transform;
     /// @brief Name of the entity
@@ -32,6 +37,8 @@ public:
     /// @return Created component
     template <Concepts::ComponentT T>
     T* AddComponent();
+
+    XNOR_ENGINE void AddComponent(Component* component);
 
     /// @brief Gets a specified Component
     /// @tparam T Component type
@@ -66,6 +73,14 @@ public:
     template <Concepts::ComponentT T>
     [[nodiscard]]
     bool_t TryGetComponent(T** output);
+
+    /// @brief Tries to get a component
+    /// @tparam T Component type
+    /// @param output Found Component
+    /// @return Whether the Component exists
+    template <Concepts::ComponentT T>
+    [[nodiscard]]
+    bool_t TryGetComponent(const T** output) const;
 
     /// @brief Removes a specified Component
     /// @tparam T Component type
@@ -107,7 +122,7 @@ public:
     /// @param child Child entity
     /// @return If this is any parent of child
     [[nodiscard]]
-    XNOR_ENGINE bool_t IsAParentOf(const Entity* child) const;
+    XNOR_ENGINE bool_t IsParentOf(const Entity* child) const;
 
     /// @brief Sets the parent of the entity
     /// @param parent New parent, use @c nullptr to orphan it
@@ -131,18 +146,18 @@ public:
     /// @param entity Other
     /// @return Equals
     XNOR_ENGINE bool_t operator==(const Entity& entity) const;
+
+#ifdef SWIG_ONLY
+    const List<Component*>& GetComponents() const;
+#endif
     
 private:
     XNOR_ENGINE explicit Entity(const Guid& entiyId);
-
-    XNOR_ENGINE Entity();
-
-    XNOR_ENGINE ~Entity() override;
     
     Entity* m_Parent = nullptr;
     List<Entity*> m_Children;
     
-    Guid m_EntityId;
+    Guid m_EntityId = Guid::New();
 
     List<Component*> m_Components;
 

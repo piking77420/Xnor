@@ -26,6 +26,8 @@ public:
         bool_t flipVertically = false;
     };
 
+    XNOR_ENGINE static inline LoadOptions defaultLoadOptions;
+
     /// @brief Allowed extensions for texture files
     XNOR_ENGINE static inline constexpr std::array<const char_t*, 11> FileExtensions
     {
@@ -45,7 +47,7 @@ public:
     /// @brief Options to use when loading this Texture.
     ///
     /// This doesn't affect an already-loaded Texture. If necessary, change these settings and then call Texture::Reload for the changes to take effect.
-    LoadOptions loadData;
+    LoadOptions loadData = defaultLoadOptions;
     
     // Same constructor from base class
     using Resource::Resource;
@@ -60,9 +62,10 @@ public:
     XNOR_ENGINE explicit Texture(const TextureCreateInfo& createInfo);
 
     /// @brief Creates a texture using a format and a size
-    /// @param textureFormat Format
+    /// @param textureInternalFormat Format inside the FrameBuffer
     /// @param size Size
-    XNOR_ENGINE Texture(TextureInternalFormat textureFormat, Vector2i size);
+    /// @param textureFormat The memory format
+    XNOR_ENGINE Texture(TextureInternalFormat::TextureInternalFormat textureInternalFormat, Vector2i size , const TextureFormat::TextureFormat textureFormat = TextureFormat::TextureFormat::Rgb );
     
     XNOR_ENGINE ~Texture() override;
 
@@ -118,30 +121,30 @@ public:
 
     /// @brief Gets the filtering option
     /// @return Filtering
-    XNOR_ENGINE TextureFiltering GetTextureFiltering() const;
+    XNOR_ENGINE TextureFiltering::TextureFiltering GetTextureFiltering() const;
 
     /// @brief Gets the wrapping option
     /// @return Wrapping option
-    XNOR_ENGINE TextureWrapping GetTextureWrapping() const;
+    XNOR_ENGINE TextureWrapping::TextureWrapping GetTextureWrapping() const;
     
     /// @brief Gets the internal format
     /// @return Internal format
-    XNOR_ENGINE TextureInternalFormat GetInternalFormat() const;
+    XNOR_ENGINE TextureInternalFormat::TextureInternalFormat GetInternalFormat() const;
 
     /// @brief Gets the format
     /// @return Format
-    XNOR_ENGINE TextureFormat GetTextureFormat() const;
+    XNOR_ENGINE TextureFormat::TextureFormat GetTextureFormat() const;
 
 private:
     uint8_t* m_Data = nullptr;
     Vector2i m_Size;
     int32_t m_DataChannels = 0;
     uint32_t m_Id = 0;
-
-    TextureFiltering m_TextureFiltering = TextureFiltering::Nearest;
-    TextureWrapping m_TextureWrapping = TextureWrapping::Repeat;
-    TextureInternalFormat m_TextureInternalFormat = TextureInternalFormat::Rgba8;
-    TextureFormat m_TextureFormat = TextureFormat::Rgb;
+    
+    TextureFiltering::TextureFiltering m_TextureFiltering = TextureFiltering::Nearest;
+    TextureWrapping::TextureWrapping m_TextureWrapping = TextureWrapping::Repeat;
+    TextureInternalFormat::TextureInternalFormat m_TextureInternalFormat = TextureInternalFormat::Rgba8;
+    TextureFormat::TextureFormat m_TextureFormat = TextureFormat::Rgb;
 };
 
 END_XNOR_CORE

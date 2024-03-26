@@ -8,7 +8,7 @@ BEGIN_XNOR_CORE
 
 class MeshCollider : public Collider
 {
-    REFLECTABLE_IMPL_MINIMAL(MeshCollider)
+    REFLECTABLE_IMPL(MeshCollider)
 
 public:
     XNOR_ENGINE MeshCollider() = default; 

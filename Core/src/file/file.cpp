@@ -3,6 +3,8 @@
 #include <fstream>
 #include <ranges>
 
+
+#include "resource/compute_shader.hpp"
 #include "resource/font.hpp"
 #include "resource/model.hpp"
 #include "resource/resource.hpp"
@@ -55,6 +57,16 @@ void File::Unload()
     m_Size = 0;
     
     m_Loaded = false;
+}
+
+void File::OpenInExplorer() const
+{
+    Utils::OpenInExplorer(m_Path, true);
+}
+
+void File::OpenFile() const
+{
+    Utils::OpenFile(m_Path);
 }
 
 File::Type File::GetType() const
@@ -111,6 +123,6 @@ void File::UpdateUtilityValues()
         m_Type = Type::FragmentShader;
     if (Utils::StringArrayContains(Shader::GeometryFileExtensions, m_Extension))
         m_Type = Type::GeometryShader;
-    if (Utils::StringArrayContains(Shader::ComputeFileExtensions, m_Extension))
+    if (Utils::StringArrayContains(ComputeShader::ComputeFileExtensions, m_Extension))
         m_Type = Type::ComputeShader;
 }

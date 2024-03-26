@@ -1,5 +1,5 @@
 ﻿#include "windows/editor_window.hpp"
-
+#include "utils/utils.hpp"
 
 using namespace XnorEditor;
 
@@ -84,9 +84,8 @@ bool EditorWindow::EditTransform()
 
 void EditorWindow::SelectEntityOnScreen()
 {
-    if (ImGui::IsMouseClicked(0))
+    if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
     {
-        
         const Vector2 mousepos = XnorCore::Utils::FromImVec(ImGui::GetMousePos());
         Vector2i mouseposI = {static_cast<int32_t>(mousepos.x), static_cast<int32_t>(mousepos.y)};
         mouseposI -= m_Position;
@@ -98,7 +97,7 @@ void EditorWindow::SelectEntityOnScreen()
         }
 
         XnorCore::Entity* ptr = nullptr;
-        if (m_PickingStrategy.GetEntityFromScreen(mouseposI, XnorCore::World::scene, m_Editor->data.editorCam, &ptr))
+        if (m_PickingStrategy.GetEntityFromScreen(mouseposI, *XnorCore::World::scene, m_Editor->data.editorCam, &ptr))
         {
             m_Editor->data.selectedEntity = ptr;
             return;

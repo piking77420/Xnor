@@ -38,29 +38,38 @@ public:
     /// @brief Unloads the contents of this Directory.
     XNOR_ENGINE void Unload() override;
 
+    /// @brief Opens this Directory in the file explorer
+    XNOR_ENGINE void OpenInExplorer() const override;
+
     /// @brief Returns all the child @ref Entry "Entries" of this Directory.
     [[nodiscard]]
     XNOR_ENGINE const std::vector<Pointer<Entry>>& GetChildEntries() const;
 
+#ifndef SWIG
     /// @brief Returns all the child @ref Entry "Entries" of this Directory.
     [[nodiscard]]
     XNOR_ENGINE std::vector<Pointer<Entry>>& GetChildEntries();
+#endif
     
     /// @brief Returns all the child @ref File "Files" of this Directory.
     [[nodiscard]]
     XNOR_ENGINE const std::vector<Pointer<File>>& GetChildFiles() const;
     
+#ifndef SWIG
     /// @brief Returns all the child @ref File "Files" of this Directory.
     [[nodiscard]]
     XNOR_ENGINE std::vector<Pointer<File>>& GetChildFiles();
+#endif
     
     /// @brief Returns all the child @ref Directory "Directories" of this Directory.
     [[nodiscard]]
     XNOR_ENGINE const std::vector<Pointer<Directory>>& GetChildDirectories() const;
     
+#ifndef SWIG
     /// @brief Returns all the child @ref Directory "Directories" of this Directory.
     [[nodiscard]]
     XNOR_ENGINE std::vector<Pointer<Directory>>& GetChildDirectories();
+#endif
 
     /// @brief Sets the name of this Directory.
     ///

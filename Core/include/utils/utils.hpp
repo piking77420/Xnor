@@ -49,6 +49,7 @@ namespace Utils
     /// @param ptr Polymorphic pointer
     /// @return Hash
     template <typename T>
+    [[nodiscard]]
     size_t GetTypeHash(const T* ptr);
 
     /// @brief Horizontally aligns the cursor of ImGui to be centered around a specific portion of the available space
@@ -84,7 +85,7 @@ namespace Utils
     /// @param color ColorHsv to convert
     /// @return ImVec4 representation
     [[nodiscard]]
-    XNOR_ENGINE constexpr ImVec4 ToImCol(ColorHsv color);
+    XNOR_ENGINE constexpr ImVec4 ToImCol(ColorHsva color);
 
     /// @brief Converts an ImVec4 to a @ref Colorf
     /// @param color ImVec4 to convert
@@ -102,6 +103,16 @@ namespace Utils
     [[nodiscard]]
     XNOR_ENGINE std::string HumanizeString(const std::string& str);
 
+    /// @brief Humanizes the provided variable name
+    /// 
+    /// The process converts a m_PascalCase styled word to a humanized version that puts spaces between each words and adds an uppercase at the very beginning, it also removes the m_ prefix
+    ///
+    /// e.g. m_ShouldChange will become Should Change
+    /// @param str String to humanize
+    /// @return Result
+    [[nodiscard]]
+    XNOR_ENGINE std::string HumanizeVariableName(const std::string& str);
+
     /// @brief Removes the namespaces indicators from the provided string
     ///
     /// e.g. XnorCore::MyClass will become MyClass
@@ -110,6 +121,20 @@ namespace Utils
     /// @return Result
     [[nodiscard]]
     XNOR_ENGINE constexpr std::string RemoveNamespaces(const std::string& str);
+
+#ifndef SWIG
+    /// @brief Removes the namespaces indicators from the provided string
+    ///
+    /// e.g. XnorCore::MyClass will become MyClass
+    /// 
+    /// @param str String to modify
+    /// @return Result
+    [[nodiscard]]
+    XNOR_ENGINE constexpr const char_t* RemoveNamespaces(const char_t* str);
+#endif
+
+    [[nodiscard]]
+    XNOR_ENGINE constexpr float_t RemapValue(float_t oldValue, Vector2 oldRange, Vector2 newRange); 
 
     /// @brief Normalizes an angle (clamps its value between 0 and 2 * PI)
     /// @param angle Angle to normalize
@@ -140,18 +165,6 @@ namespace Utils
     [[nodiscard]]
     Pointer<T> DynamicPointerCast(const Pointer<U>& value);
 
-    /// @brief Opens the specified entry in the file explorer
-    /// @param entry Entry
-    XNOR_ENGINE void OpenInExplorer(const Entry& entry);
-
-    /// @brief Opens the specified directory in the file explorer
-    /// @param directory Directory
-    XNOR_ENGINE void OpenInExplorer(const Directory& directory);
-
-    /// @brief Opens the specified file in the file explorer
-    /// @param file File
-    XNOR_ENGINE void OpenInExplorer(const File& file);
-
     /// @brief Opens the specified path in the file explorer
     /// @param path File system path
     XNOR_ENGINE void OpenInExplorer(const std::filesystem::path& path);
@@ -160,10 +173,6 @@ namespace Utils
     /// @param path File system path
     /// @param isFile Whether path is a file or a directory
     XNOR_ENGINE void OpenInExplorer(const std::filesystem::path& path, bool_t isFile);
-
-    /// @brief Opens the specified file on the user's computer
-    /// @param file File
-    XNOR_ENGINE void OpenFile(const File& file);
 
     /// @brief Opens the specified file on the user's computer
     /// @param filepath File system path

@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "light.hpp"
+#include "rendering/light/light.hpp"
 
 /// @file directional_light.hpp
 /// @brief Defines the XnorCore::DirectionalLight class
@@ -10,11 +10,10 @@ BEGIN_XNOR_CORE
 /// @brief Handles a directional light
 class DirectionalLight : public Light
 {
-    REFLECTABLE_IMPL_MINIMAL(DirectionalLight)
+    REFLECTABLE_IMPL(DirectionalLight)
 
 public:
     XNOR_ENGINE DirectionalLight() = default;
-    
     XNOR_ENGINE ~DirectionalLight() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(DirectionalLight)

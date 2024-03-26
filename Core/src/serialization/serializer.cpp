@@ -1,6 +1,6 @@
 #include "serialization/serializer.hpp"
 
-#include "Maths/vector2i.hpp"
+#include "reflection/factory.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -12,10 +12,49 @@ void Serializer::OpenFileToWrite(const std::string& filePath)
     m_XmlDoc = CreateXML(1, "utf-16", error);
 }
 
+void Serializer::OpenFileToRead(const std::string& filePath)
+{
+    std::string error;
+    m_CurrentFilePath = filePath;
+    m_File = OpenXMLFile(filePath, error);
+
+    if (!m_File)
+    {
+        Logger::LogError("Failed to open an XML file for reading : {}", filePath);
+        return;
+    }
+
+    m_XmlDoc = CreateXMLFromFile(m_File, error);
+}
+
+void Serializer::SerializeObjectUsingFactory(void* obj, const size_t hash)
+{
+    std::string error;
+    
+    XMLAttributte* const attribute = CreateAttribute(m_XmlDoc, "typeName", Factory::GetTypeName(hash), error);
+    AddAttributeToElement(m_ElementsStack.top(), attribute, error);
+    Factory::SerializeObject(obj, hash);
+}
+
+void Serializer::DeserializeObjectUsingFactory(void* obj, size_t hash)
+{
+    Factory::DeserializeObject(obj, hash);
+}
+
+void* Serializer::CreateObjectUsingFactory(const std::string& name)
+{
+    return Factory::CreateObject(name);
+}
+
 void Serializer::StartSerialization(const std::string& filePath)
 {
-    m_CurrentFilePath = filePath;
     OpenFileToWrite(filePath);
+}
+
+void Serializer::StartDeserialization(const std::string& filePath)
+{
+    OpenFileToRead(filePath);
+    m_GuidEntityMap.clear();
 }
 
 void Serializer::EndSerialization()
@@ -27,6 +66,14 @@ void Serializer::EndSerialization()
 
     DisposeXMLObject(m_XmlDoc);
     m_CurrentFilePath = "";
+}
+
+void Serializer::EndDeserialization()
+{
+    DisposeXMLObject(m_XmlDoc);
+    DisposeXMLFile(m_File);
+    m_CurrentFilePath = "";
+    m_GuidEntityMap.clear();
 }
 
 void Serializer::BeginRootElement(const std::string& elementName, const std::string& elementValue)
@@ -101,18 +148,44 @@ void Serializer::AddElementToDoc()
     }
 }
 
-void Serializer::FetchAttributeInternal(const std::string& attributeName, const std::string& attributeValue)
+void Serializer::ReadElement(const std::string& name)
 {
     std::string error;
-    XMLAttributte* attribute = CreateAttribute(m_XmlDoc, attributeName, attributeValue, error);
+    XMLElement* elem;
 
-    if (!attribute)
+    if (m_ElementsStack.empty())
     {
-        Logger::LogError(error);
+        elem = FirstOrDefaultElement(m_XmlDoc, name, error);
+    }
+    else
+    {
+        elem = FirstOrDefaultElement(m_ElementsStack.top(), name, error);
     }
 
-    if (!AddAttributeToElement(m_ElementsStack.top(), attribute, error))
+    if (!elem)
     {
-        Logger::LogError(error);
+        Logger::LogError("Failed to read an element : {} : {}", name, error);
+        return;
     }
+
+    m_ElementsStack.push(elem);
+}
+
+const char_t* Serializer::ReadElementValue(const std::string& name)
+{
+    const XMLElement* const elem = m_ElementsStack.top();
+    const XMLElement* const vElem = elem->first_node(name.c_str());
+
+    if (!vElem)
+    {
+        Logger::LogInfo("Couldn't find element named : {}", name);
+        return nullptr;
+    }
+
+    return vElem->value();
+}
+
+void Serializer::FinishReadElement()
+{
+    m_ElementsStack.pop();
 }

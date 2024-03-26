@@ -1,8 +1,10 @@
 ﻿#include "resource/resource_manager.hpp"
 
 #include <array>
+#include <execution>
 
 #include "file/file_manager.hpp"
+#include "resource/compute_shader.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
 #include "resource/texture.hpp"
@@ -11,29 +13,37 @@ using namespace XnorCore;
 
 void ResourceManager::LoadAll()
 {
-    Logger::LogDebug("Loading all resources from FileManager");
+    Logger::LogInfo("Loading all resources from FileManager");
 
     auto&& start = std::chrono::system_clock::now();
 
     std::vector<Pointer<File>> files;
-    FileManager::FindAll<File>(&files);
+    FileManager::FindAll<File>([](Pointer<File> file) { return file->GetResource() == nullptr; }, &files);
 
     const size_t oldResourceCount = m_Resources.size();
 
+    std::for_each(
+        std::execution::par,
+        files.begin(),
+        files.end(),
+        [](auto&& file) -> void
+        {
+            if (std::ranges::find(Texture::FileExtensions, file->GetExtension()) != Texture::FileExtensions.end())
+            {
+                Load<Texture>(file, false);
+            }
+            else if (std::ranges::find(Model::FileExtensions, file->GetExtension()) != Model::FileExtensions.end())
+            {
+                Load<Model>(file, false);
+            }
+        }
+    );
+
     for (auto&& file : files)
     {
-        if (std::ranges::find(Texture::FileExtensions, file->GetExtension()) != Texture::FileExtensions.end())
-        {
-            Load<Texture>(file);
-        }
-        else if (std::ranges::find(Model::FileExtensions, file->GetExtension()) != Model::FileExtensions.end())
-        {
-            Load<Model>(file);
-        }
-        else if (std::ranges::find(Shader::VertexFileExtensions, file->GetExtension()) != Shader::VertexFileExtensions.end() ||
+        if (std::ranges::find(Shader::VertexFileExtensions, file->GetExtension()) != Shader::VertexFileExtensions.end() ||
             std::ranges::find(Shader::FragmentFileExtensions, file->GetExtension()) != Shader::FragmentFileExtensions.end() ||
-            std::ranges::find(Shader::GeometryFileExtensions, file->GetExtension()) != Shader::GeometryFileExtensions.end() ||
-            std::ranges::find(Shader::ComputeFileExtensions, file->GetExtension()) != Shader::ComputeFileExtensions.end())
+            std::ranges::find(Shader::GeometryFileExtensions, file->GetExtension()) != Shader::GeometryFileExtensions.end())
         {
             Pointer<Shader> shader;
 
@@ -43,17 +53,72 @@ void ResourceManager::LoadAll()
                 shader = Get<Shader>(filenameNoExtension);
             else
                 shader = Add<Shader>(filenameNoExtension);
-            
+        
             shader->Load(file);
+        }
+        else if (std::ranges::find(ComputeShader::ComputeFileExtensions, file->GetExtension()) != ComputeShader::ComputeFileExtensions.end())
+        {
+            Pointer<ComputeShader> computeShader;
+
+            // We use an underscore before the name to make sure it isn't used elsewhere
+            const std::string&& filenameNoExtension = ReservedShaderPrefix + file->GetNameNoExtension();
+            if (Contains(filenameNoExtension))
+                computeShader = Get<ComputeShader>(filenameNoExtension);
+            else
+                computeShader = Add<ComputeShader>(filenameNoExtension);
+        
+            computeShader->Load(file);
+        }
+        else
+        {
+            if (Contains(file))
+                Get(file)->CreateInRhi();
         }
     }
 
-    Logger::LogDebug(
+    Logger::LogInfo(
         "Successfully loaded {} files in {} resources. Took {}",
         files.size(),
         m_Resources.size() - oldResourceCount,
         std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start)
     );
+}
+
+void ResourceManager::LoadGuidMap()
+{
+    const Pointer<File> guidMap = FileManager::Get(GuidMapFilePath);
+    const char_t* const dataRaw = guidMap.Get()->GetData();
+    const size_t dataSize = guidMap.Get()->GetSize();
+
+    std::string data = std::string(dataRaw);
+
+    size_t position = 0; // TODO Fix loop bavure
+    while (position < dataSize)
+    {
+        const size_t guidPos = data.find_first_of(';');
+
+        const std::string resourceName = data.substr(0, guidPos);
+        const Guid guid = Guid::FromString(&data[guidPos + 1]);
+
+        const size_t backslashPos = data.find_first_of('\n');
+        position += backslashPos;
+
+        data = data.substr(backslashPos + 1);
+
+        auto&& it = m_Resources.find(resourceName);
+
+        if (it == m_Resources.end())
+        {
+            //Logger::LogInfo("Resource in the guid map wasn't found : {}", resourceName);
+        }
+        else
+        {
+            it->second->SetGuid(guid);
+            m_GuidMap.emplace(guid, it->second);
+        }
+
+        //Logger::LogInfo("{} ; {}", resourceName, static_cast<std::string>(guid));
+    }
 }
 
 bool ResourceManager::Contains(const std::string& name)
@@ -108,7 +173,7 @@ void ResourceManager::Unload(const std::string& name)
 
 void ResourceManager::UnloadAll()
 {
-    Logger::LogDebug("Unloading all resources ({})", m_Resources.size());
+    Logger::LogInfo("Unloading all resources ({})", m_Resources.size());
 
     auto&& start = std::chrono::system_clock::now();
     
@@ -125,5 +190,5 @@ void ResourceManager::UnloadAll()
     // Smart pointers are deleted automatically, we only need to clear the container
     m_Resources.clear();
     
-    Logger::LogDebug("ResourceManager unload successful. Took {}", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start));
+    Logger::LogInfo("ResourceManager unload successful. Took {}", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start));
 }

@@ -1,12 +1,13 @@
 #include "physics/components/mesh_collider.hpp"
 
+#include <utils/logger.hpp>
+
 #include "physics/physics_world.hpp"
 #include "scene/entity.hpp"
 #include "scene/component/mesh_renderer.hpp"
 
 using namespace XnorCore;
 
-REFLECTABLE_IMPL_CPP(MeshCollider)
 
 void MeshCollider::Begin()
 {

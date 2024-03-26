@@ -75,11 +75,13 @@ public:
 	[[nodiscard]]
 	constexpr const int32_t* Raw() const noexcept;
 
+#ifndef SWIG
 	/// @brief 	Gets a pointer to the first component of this vector.
 	/// 
 	/// @returns A pointer to the first component of this vector.
 	[[nodiscard]]
 	constexpr int32_t* Raw() noexcept;
+#endif
 
 	/// @brief Returns the length of the vector.
 	[[nodiscard]]
@@ -108,7 +110,8 @@ public:
 	/// @returns The value of the component at index i.
 	[[nodiscard]]
 	constexpr int32_t operator[](size_t i) const;
-	
+
+#ifndef SWIG
 	/// @brief 	Retrieves this vector's component at index i.
 	/// 
 	/// @param i The index of the component to get. It would be 0 for x, 1 for y, etc...
@@ -116,6 +119,7 @@ public:
 	/// @returns The value of the component at index i.
 	[[nodiscard]]
 	constexpr int32_t& operator[](size_t i);
+#endif
 
     /// @brief Converts this Vector2i to a Vector2.
     explicit operator Vector2() const;
@@ -207,6 +211,7 @@ constexpr Vector2 operator/(const Vector2i a, const Vector2i b) noexcept { retur
 [[nodiscard]]
 constexpr Vector2 operator/(const Vector2i v, const float_t factor) noexcept { return Vector2(static_cast<float_t>(v.x) / factor, static_cast<float_t>(v.y) / factor); }
 
+#ifndef SWIG
 /// @brief Adds two Vector2i according to @ref operator+(const Vector2i, const Vector2i), placing the result in @p a.
 constexpr Vector2i& operator+=(Vector2i& a, const Vector2i b) noexcept { return a = a + b; }
 
@@ -218,6 +223,7 @@ constexpr Vector2i& operator*=(Vector2i& a, const Vector2i b) noexcept { return 
 
 /// @brief Multiplies a Vector2i by a @p factor according to @ref operator*(const Vector2i, const int32_t), placing the result in @p v.
 constexpr Vector2i& operator*=(Vector2i& v, const int32_t factor) noexcept { return v = v * factor; }
+#endif
 
 /// @brief Checks if two Vector2i are considered equal using @c Calc::Equals.
 [[nodiscard]]

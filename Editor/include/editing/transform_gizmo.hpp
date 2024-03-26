@@ -6,10 +6,11 @@
 #include "Maths/matrix.hpp"
 
 #include <ImGui/imgui.h>
-#include<ImguiGizmo/ImGuizmo.h>
+#include <ImguiGizmo/ImGuizmo.h>
 
 #include "transform.hpp"
 #include "rendering/camera.hpp"
+#include "scene/entity.hpp"
 
 BEGIN_XNOR_EDITOR
 
@@ -33,6 +34,7 @@ public:
     ImGuizmo::OPERATION currentGizmoOperation = ImGuizmo::TRANSLATE;
     
     ImGuizmo::MODE currentGizmoMode = ImGuizmo::WORLD;
+
 private:
     Matrix m_View;
     Matrix m_Projection;
@@ -42,7 +44,6 @@ private:
     Vector3 m_SnapScale = Vector3(1.f);
 
     void UserInput();
-    
 };
 
 END_XNOR_EDITOR

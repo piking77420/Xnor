@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <stdexcept>
+#include <mutex>
 #include <utility>
 #include <vector>
 
@@ -58,6 +58,8 @@ private:
     T* m_Pointer = nullptr;
 
     std::vector<Pointer<T>*> m_WeakReferenceOwners;
+
+    std::mutex m_Mutex;
 };
 
 END_XNOR_CORE

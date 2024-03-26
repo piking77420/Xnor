@@ -8,7 +8,7 @@ BEGIN_XNOR_CORE
 
 class BoxCollider : public Collider
 {
-    REFLECTABLE_IMPL_MINIMAL(BoxCollider)
+    REFLECTABLE_IMPL(BoxCollider)
 
 public:
     XNOR_ENGINE BoxCollider() = default; 

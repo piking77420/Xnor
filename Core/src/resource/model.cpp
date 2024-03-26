@@ -50,6 +50,9 @@ bool_t Model::Load(const aiMesh& loadedData)
         vert.position = Vector3(&loadedData.mVertices[i].x);
         vert.normal = Vector3(&loadedData.mNormals[i].x);
         vert.textureCoord = Vector2(&loadedData.mTextureCoords[0][i].x);
+        
+
+        
         vert.tangent = Vector3(&loadedData.mBitangents[i].x);
         vert.bitangent = Vector3::Cross(vert.normal,vert.tangent);
     }

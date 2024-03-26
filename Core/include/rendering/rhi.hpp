@@ -28,7 +28,7 @@ public:
 	/// @brief Sets the polygon mode
 	/// @param face Polygon face
 	/// @param mode Polygon mode
-	XNOR_ENGINE static void SetPolygonMode(PolygonFace face, PolygonMode mode);
+	XNOR_ENGINE static void SetPolygonMode(PolygonFace::PolygonFace face, PolygonMode::PolygonMode mode);
 	
 	/// @brief Sets the viewport mode
 	/// @param screenSize Screen size
@@ -87,7 +87,7 @@ public:
 	/// @param data Pointer to data
 	/// @param shaderId Shader id
 	/// @param uniformKey Uniform variable name
-	XNOR_ENGINE static void SetUniform(UniformType uniformType, const void* data, uint32_t shaderId, const char_t* uniformKey);
+	XNOR_ENGINE static void SetUniform(UniformType::UniformType uniformType, const void* data, uint32_t shaderId, const char_t* uniformKey);
 	
 	// Texture
 
@@ -112,13 +112,14 @@ public:
 	/// @return textureId Texture id
 	XNOR_ENGINE static uint32_t CreateCubeMap(const CreateCubeMapInfo& createCubeMapInfo);
 
-	// FrameBuffer
 
+	XNOR_ENGINE static uint32_t CreateFrameBuffer();
+	
 	/// @brief Create a framebuffer
 	/// @param renderPass Associated @ref RenderPass
 	/// @param attachments @ref Texture attachments
 	/// @return Framebuffer id
-	XNOR_ENGINE static uint32_t CreateFrameBuffer(const RenderPass& renderPass, const std::vector<const Texture*>& attachments);
+	XNOR_ENGINE static void AttachsTextureToFrameBuffer(const RenderPass& renderPass, const FrameBuffer& frameBuffer, const std::vector<const Texture*>& attachments);
 
 	/// @brief Destroys a framebuffer
 	/// @param frameBufferId Framebuffer id
@@ -134,7 +135,7 @@ public:
 	/// @param bufferFlag Target attachment
 	/// @param textureFiltering Interpolation to be applied
 	XNOR_ENGINE static void BlitFrameBuffer(uint32_t readBuffer, uint32_t targetBuffer, Vector2i srcTopLeft, Vector2i srcBottomRight,
-		Vector2i targetTopLeft, Vector2i targetBottomRight, BufferFlag bufferFlag, TextureFiltering textureFiltering);
+		Vector2i targetTopLeft, Vector2i targetBottomRight, BufferFlag::BufferFlag bufferFlag, TextureFiltering::TextureFiltering textureFiltering);
 
 	/// @brief Binds a framebuffer
 	/// @param frameBufferId Framebuffer id
@@ -143,13 +144,17 @@ public:
 	/// @brief Unbinds a framebuffer
 	XNOR_ENGINE static void UnbindFrameBuffer();
 
+	XNOR_ENGINE static void AttachTextureToFrameBuffer(uint32_t bufferId, Attachment::Attachment attachment,uint32_t textureId,uint32_t level);
+
+	XNOR_ENGINE static void AttachTextureToFrameBuffer(uint32_t bufferId, Attachment::Attachment attachment, CubeMapFace cubeMapFace,uint32_t textureId,uint32_t level);	
+	
 	/// @brief Reads a single pixel of an attachment
 	/// @param attachmentIndex Attachment index
 	/// @param position Pixel position
 	/// @param textureFormat Texture format
 	/// @param textureInternalFormat Texture internal format
 	/// @param output Output pointer
-	XNOR_ENGINE static void GetPixelFromAttachement(uint32_t attachmentIndex, Vector2i position, TextureFormat textureFormat, DataType dataType, void* output);
+	XNOR_ENGINE static void GetPixelFromAttachement(uint32_t attachmentIndex, Vector2i position, TextureFormat::TextureFormat textureFormat, DataType::DataType dataType, void* output);
 
 	/// @brief Swaps the front and back buffer
 	XNOR_ENGINE static void SwapBuffers();
@@ -169,7 +174,7 @@ public:
 
 	/// @brief Clear the corresponding Buffers
 	/// @param bufferFlag BufferFlag
-	XNOR_ENGINE static void ClearBuffer(BufferFlag bufferFlag);
+	XNOR_ENGINE static void ClearBuffer(BufferFlag::BufferFlag bufferFlag);
 	
 	/// @brief Updates the model @ref UniformBuffer
 	/// @param modelUniformData Data
@@ -194,9 +199,19 @@ public:
 	/// @brief Gets the texture format based on the number of color channels
 	/// @param channels Color channels
 	/// @return Texture format
-	XNOR_ENGINE static TextureFormat GetTextureFormatFromChannels(uint32_t channels);
+	XNOR_ENGINE static TextureFormat::TextureFormat GetTextureFormatFromChannels(uint32_t channels);
 
 	XNOR_ENGINE static void DepthTest(bool value);
+	
+	XNOR_ENGINE static void GetCubeMapViewMatrices(std::array<Matrix,6>* viewsMatricies);
+	
+	XNOR_ENGINE static void DispactCompute(uint32_t numberOfGroupX,uint32_t numberOfGroupY, uint32_t numberOfGroupZ);
+	
+	XNOR_ENGINE static void SetGpuMemoryBarrier(GpuMemoryBarrier memoryBarrier);
+
+	XNOR_ENGINE static void BindImageTexture(uint32_t unit, uint32_t texture, uint32_t level, bool_t layered,uint32_t layer,
+		ImageAccess imageAcess, TextureInternalFormat::TextureInternalFormat textureInternalFormat);
+
 private:
 	struct ModelInternal
 	{
@@ -210,8 +225,9 @@ private:
 	
 	struct ShaderInternal
 	{
-		DepthFunction depthFunction{};
+		DepthFunction::DepthFunction depthFunction{};
 		BlendFunction blendFunction;
+		ShaderProgramCullInfo cullInfo;
 		std::map<std::string, uint32_t> uniformMap;
 	};
 
@@ -220,27 +236,37 @@ private:
 	XNOR_ENGINE static inline std::unordered_map<uint32_t, ShaderInternal> m_ShaderMap;
 	XNOR_ENGINE static inline std::unordered_map<uint32_t, ModelInternal> m_ModelMap;
 
+	XNOR_ENGINE static void LogComputeShaderInfo();
+	
 	XNOR_ENGINE static void IsShaderValid(uint32_t shaderId);
 	
 	XNOR_ENGINE static int32_t GetUniformInMap(uint32_t shaderId, const char_t* uniformKey);
 
-	XNOR_ENGINE static uint32_t GetOpenglDataType(DataType dataType);
+	XNOR_ENGINE static uint32_t GetOpenglDataType(DataType::DataType dataType);
 
 	// Texture 
 	XNOR_ENGINE static void AllocTexture2D(uint32_t textureId, const TextureCreateInfo& textureCreateInfo);
-	XNOR_ENGINE static uint32_t CreateTexture(TextureType textureType);
+	XNOR_ENGINE static uint32_t CreateTexture(TextureType::TextureType textureType);
 
 	// Enum to OpenglEnum
-	XNOR_ENGINE static uint32_t GetOpengDepthEnum(DepthFunction depthFunction);
-	XNOR_ENGINE static uint32_t GetOpenglShaderType(ShaderType shaderType);
-	XNOR_ENGINE static std::string GetShaderTypeToString(ShaderType shaderType);
-	XNOR_ENGINE static uint32_t GetOpenglTextureType(TextureType textureType);
-	XNOR_ENGINE static uint32_t GetOpenglInternalFormat(TextureInternalFormat textureFormat);
-	XNOR_ENGINE static uint32_t GetOpenGlTextureFormat(TextureFormat textureFormat);
-	XNOR_ENGINE static uint32_t GetOpenglTextureWrapper(TextureWrapping textureWrapping);
-	XNOR_ENGINE static uint32_t GetOpenglTextureFilter(TextureFiltering textureFiltering);
-	XNOR_ENGINE static uint32_t GetBlendValueOpengl(BlendValue blendFunction);
-	XNOR_ENGINE static uint32_t GetOpenglBufferBit(BufferFlag flag);
+	XNOR_ENGINE static uint32_t GetOpengDepthEnum(DepthFunction::DepthFunction depthFunction);
+	XNOR_ENGINE static uint32_t BlendEquationToOpengl(BlendEquation::BlendEquation blendEquation);
+	XNOR_ENGINE static uint32_t GetOpenglShaderType(ShaderType::ShaderType shaderType);
+	XNOR_ENGINE static std::string GetShaderTypeToString(ShaderType::ShaderType shaderType);
+	XNOR_ENGINE static uint32_t GetOpenglTextureType(TextureType::TextureType textureType);
+	XNOR_ENGINE static uint32_t GetOpenglInternalFormat(TextureInternalFormat::TextureInternalFormat textureFormat);
+	XNOR_ENGINE static uint32_t GetOpenGlTextureFormat(TextureFormat::TextureFormat textureFormat);
+	XNOR_ENGINE static uint32_t GetOpenglTextureWrapper(TextureWrapping::TextureWrapping textureWrapping);
+	XNOR_ENGINE static uint32_t GetOpenglTextureFilter(TextureFiltering::TextureFiltering textureFiltering);
+	XNOR_ENGINE static uint32_t GetBlendValueOpengl(BlendValue::BlendValue blendFunction);
+	XNOR_ENGINE static uint32_t GetOpenglBufferBit(BufferFlag::BufferFlag flag);
+	XNOR_ENGINE static uint32_t AttachementToOpenglAttachement(Attachment::Attachment attachment);
+	XNOR_ENGINE static uint32_t CubeMapFacesToOpengl(CubeMapFace cubeMapFace);
+	XNOR_ENGINE static uint32_t MemoryBarrierToOpengl(GpuMemoryBarrier memoryBarrier);
+	XNOR_ENGINE static uint32_t GetImageAccessOpengl(ImageAccess imageAcess);
+
+	XNOR_ENGINE static uint32_t FrontFaceToOpenglFrontFace(FrontFace::FrontFace frontFace);
+	XNOR_ENGINE static uint32_t CullFaceToOpenglCullFace(CullFace::CullFace cullFace);
 
 	XNOR_ENGINE static void OpenglDebugCallBack(
 		uint32_t source,
@@ -257,6 +283,10 @@ private:
 	XNOR_ENGINE static inline UniformBuffer* m_ModelUniform;
 	XNOR_ENGINE static inline UniformBuffer* m_LightUniform;
 	XNOR_ENGINE static inline UniformBuffer* m_MaterialUniform;
+
+	XNOR_ENGINE static inline bool_t m_Blending = false;
+	XNOR_ENGINE static inline bool_t m_Cullface = false;
+
 };
 
 END_XNOR_CORE

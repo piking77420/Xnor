@@ -14,17 +14,16 @@ void Renderer::Initialize()
 	Rhi::SetClearColor(clearColor);
 
 	InitResources();
-	m_ToneMapping.InitializeResources();
 	m_SkyboxRenderer.InitializeResources();
 	m_LightManager.InitResources();
-
+	m_PostProcessPass.Init();
 	Rhi::PrepareUniform();
 }
 
 void Renderer::BeginFrame(const Scene& scene)
 {
 	m_LightManager.BeginFrame(scene);
-	Rhi::ClearBuffer(static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit));
+	Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
 }
 
 void Renderer::EndFrame(const Scene& scene)
@@ -42,26 +41,15 @@ void Renderer::RenderViewport(const Viewport& viewport,
 
 	const ViewportData& viewportData = viewport.viewportData;
 
-	DefferedRendering(meshrenderers,viewportData,viewport.viewPortSize);
+	DefferedRendering(meshrenderers,scene.skybox,viewportData,viewport.viewPortSize);
 	ForwardPass(meshrenderers, scene.skybox, viewport, viewport.viewPortSize, viewport.isEditor);
 	
-	const RenderPassBeginInfo renderPassBeginInfo =
-	{
-		.frameBuffer = viewport.frameBuffer,
-		.renderAreaOffset = { 0, 0,},
-		.renderAreaExtent = viewport.viewPortSize,
-		.clearBufferFlags = static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit),
-		.clearColor = clearColor
-	};
-
-	viewport.colorPass.BeginRenderPass(renderPassBeginInfo);
-	m_ToneMapping.ComputeToneMaping(*viewport.viewportData.colorAttachment,m_Quad);
-	viewport.colorPass.EndRenderPass();
+	if (viewportData.usePostProcess)
+	m_PostProcessPass.Compute(*viewport.viewportData.colorAttachment , *viewport.GetImage(), viewportData.postprocessRendertarget);
 }
 
 void Renderer::RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass,
-	const Pointer<Shader>& shadertoUse
-	,const Scene& scene,bool_t drawEditorUi
+	const Pointer<Shader>& shadertoUse, const Scene& scene,	const bool_t drawEditorUi
 ) const
 {
 	std::vector<const MeshRenderer*> meshrenderers;
@@ -83,14 +71,15 @@ void Renderer::SwapBuffers()
 	Rhi::SwapBuffers();
 }
 
-void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRenderers,const ViewportData& viewportData,const Vector2i viewportSize) const 
+void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRenderers,
+	const Skybox& skybox,const ViewportData& viewportData,const Vector2i viewportSize) const 
 {
 	const RenderPassBeginInfo renderPassBeginInfo =
 	{
 		.frameBuffer = viewportData.gframeBuffer,
 		.renderAreaOffset = { 0, 0,},
 		.renderAreaExtent = viewportSize,
-		.clearBufferFlags = static_cast<BufferFlag>(BufferFlagColorBit | BufferFlagDepthBit),
+		.clearBufferFlags = static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit),
 		.clearColor = clearColor
 	};
 	
@@ -105,35 +94,43 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 		.frameBuffer = viewportData.renderBuffer,
 		.renderAreaOffset = { 0, 0 },
 		.renderAreaExtent = viewportSize,
-		.clearBufferFlags = static_cast<BufferFlag>(BufferFlagColorBit),
+		.clearBufferFlags = BufferFlag::ColorBit,
 		.clearColor = clearColor
 	};
 
 	Rhi::DepthTest(false);
 	viewportData.colorPass.BeginRenderPass(renderPassBeginInfoLit);
 	m_GBufferShaderLit->Use();
-	// Set Shader Info
-	viewportData.positionAtttachment->BindTexture(GbufferPosition);
-	viewportData.normalAttachement->BindTexture(GbufferNormal);
-	viewportData.albedoAttachment->BindTexture(GbufferAlbedo);
-	Rhi::DrawQuad(m_Quad->GetId());
+	
+	// Set G buffer Shader Info
+	viewportData.positionAtttachment->BindTexture(Gbuffer::Position);
+	viewportData.normalAttachement->BindTexture(Gbuffer::Normal);
+	viewportData.albedoAttachment->BindTexture(Gbuffer::Albedo);
+	viewportData.metallicRougnessReflectance->BindTexture(Gbuffer::MetallicRoughessReflectance);
+	viewportData.ambiantOcclusion->BindTexture(Gbuffer::AmbiantOcclusion);
+	viewportData.emissive->BindTexture(Gbuffer::Emissivive);
+
+	skybox.irradianceMap->BindTexture(10);
+	skybox.prefilterMap->BindTexture(11);
+	skybox.precomputeBrdfTexture->BindTexture(12);
+
+	Rhi::DrawModel(m_Quad->GetId());
 	m_GBufferShaderLit->Unuse();
 	Rhi::DepthTest(true);
-
+	
+	viewportData.colorPass.EndRenderPass();
 }
 
-void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers,Skybox& skybox, const Viewport& Viewport,
-	Vector2i viewportSize, bool isEditor) const
+void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox, const Viewport& viewport, const Vector2i viewportSize, const bool_t isEditor) const
 {
-
-	const ViewportData& viewportData = Viewport.viewportData;
+	const ViewportData& viewportData = viewport.viewportData;
 	
 	const RenderPassBeginInfo renderPassBeginInfoLit =
 	{
 		.frameBuffer = viewportData.renderBuffer,
 		.renderAreaOffset = { 0, 0,},
 		.renderAreaExtent = viewportSize,
-		.clearBufferFlags = static_cast<BufferFlag>(BufferFlagNone),
+		.clearBufferFlags = BufferFlag::None,
 		.clearColor = clearColor
 	};
 
@@ -151,7 +148,7 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
 
 	if (isEditor)
 	{
-		m_LightManager.DrawLightGizmo(*Viewport.camera,World::scene);
+		m_LightManager.DrawLightGizmo(*viewport.camera, *World::scene);
 	}
 	viewportData.colorPass.EndRenderPass();
 }
@@ -172,11 +169,11 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 		if (!meshRenderer->drawModelAabb)
 			continue;
 
-		const Transform& transform =  meshRenderer->entity->transform;
+		const Transform& transform =  meshRenderer->GetEntity()->transform;
 		const Model::Aabb&& modelAabb = meshRenderer->model->GetAabb();
 
 		const Vector3&& aabbSize = (modelAabb.max - modelAabb.min) * 0.5f;
-		const Vector3&& center  = (modelAabb.max + modelAabb.min) * 0.5f;
+		const Vector3&& center = (modelAabb.max + modelAabb.min) * 0.5f;
 
 		const Matrix&& trsAabb = Matrix::Trs(center, Quaternion::Identity(), aabbSize);
 		modelData.model = transform.worldMatrix * trsAabb;
@@ -200,10 +197,10 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		if (meshRenderer->material.materialType != materialType)
 			continue;
 		
-		Transform& transform = meshRenderer->entity->transform;
+		const Transform& transform = meshRenderer->GetEntity()->transform;
 		ModelUniformData modelData;
 		modelData.model = transform.worldMatrix;
-		modelData.meshRenderIndex = reinterpret_cast<uint64_t>(meshRenderers[i]->entity);
+		modelData.meshRenderIndex = reinterpret_cast<uint64_t>(meshRenderers[i]->GetEntity());
 		
 		try
 		{
@@ -216,11 +213,20 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		
 		Rhi::UpdateModelUniform(modelData);
 
-		if (meshRenderer->material.albedo.IsValid())
-			meshRenderer->material.albedo->BindTexture(0);
+		if (meshRenderer->material.albedoTexture.IsValid())
+			meshRenderer->material.albedoTexture->BindTexture(MaterialTextureEnum::Albedo);
+		
+		if (meshRenderer->material.metallicTexture.IsValid())
+			meshRenderer->material.metallicTexture->BindTexture(MaterialTextureEnum::Metallic);
 
-		if (meshRenderer->material.normalMap.IsValid())
-			meshRenderer->material.normalMap->BindTexture(1);
+		if (meshRenderer->material.roughnessTexture.IsValid())
+			meshRenderer->material.roughnessTexture->BindTexture(MaterialTextureEnum::Roughness);
+
+		if (meshRenderer->material.normalTexture.IsValid())
+			meshRenderer->material.normalTexture->BindTexture(MaterialTextureEnum::Normal);
+
+		if (meshRenderer->material.ambiantOcclusionTexture.IsValid())
+			meshRenderer->material.ambiantOcclusionTexture->BindTexture(MaterialTextureEnum::AmbiantOcclusion);
 
 		if (meshRenderer->model.IsValid())
 		{
@@ -228,10 +234,9 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 			Rhi::DrawModel(meshRenderer->model->GetId());
 		}
 	}
-
 }
 
-void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRenderers,const Scene& scene) const
+void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRenderers, const Scene& scene) const
 {
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 
@@ -239,12 +244,11 @@ void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRe
 	{
 		const MeshRenderer* meshRenderer =  meshRenderers[i];
 		
-		Transform& transform = meshRenderer->entity->transform;
+		const Transform& transform = meshRenderer->GetEntity()->transform;
 		ModelUniformData modelData;
 		modelData.model = transform.worldMatrix;
-		// +1 to avoid the black color of the attachement be a valid index  
-		modelData.meshRenderIndex = scene.GetEntityIndex(meshRenderer->entity) + 1;
-
+		// +1 to avoid the black color of the attachment be a valid index  
+		modelData.meshRenderIndex = scene.GetEntityIndex(meshRenderer->GetEntity()) + 1;
 		
 		try
 		{
@@ -257,12 +261,21 @@ void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRe
 		
 		Rhi::UpdateModelUniform(modelData);
 
-		if (meshRenderer->material.albedo.IsValid())
-			meshRenderer->material.albedo->BindTexture(0);
+		if (meshRenderer->material.albedoTexture.IsValid())
+			meshRenderer->material.albedoTexture->BindTexture(MaterialTextureEnum::Albedo);
+		
+		if (meshRenderer->material.metallicTexture.IsValid())
+			meshRenderer->material.metallicTexture->BindTexture(MaterialTextureEnum::Metallic);
 
-		if (meshRenderer->material.normalMap.IsValid())
-			meshRenderer->material.normalMap->BindTexture(1);
+		if (meshRenderer->material.roughnessTexture.IsValid())
+			meshRenderer->material.roughnessTexture->BindTexture(MaterialTextureEnum::Roughness);
 
+		if (meshRenderer->material.normalTexture.IsValid())
+			meshRenderer->material.normalTexture->BindTexture(MaterialTextureEnum::Normal);
+
+		if (meshRenderer->material.ambiantOcclusionTexture.IsValid())
+			meshRenderer->material.ambiantOcclusionTexture->BindTexture(MaterialTextureEnum::AmbiantOcclusion);
+		
 		if (meshRenderer->model.IsValid())
 		{
 			Rhi::BindMaterial(meshRenderer->material);
@@ -286,17 +299,29 @@ void Renderer::InitResources()
 	m_GBufferShaderLit = ResourceManager::Get<Shader>("deferred_opaque");
 	m_GBufferShaderLit->CreateInRhi();
 	m_GBufferShaderLit->Use();
-	m_GBufferShaderLit->SetInt("gPosition", GbufferPosition);
-	m_GBufferShaderLit->SetInt("gNormal", GbufferNormal);
-	m_GBufferShaderLit->SetInt("gAlbedoSpec", GbufferAlbedo);
+	
+	m_GBufferShaderLit->SetInt("gPosition", Gbuffer::Position);
+	m_GBufferShaderLit->SetInt("gNormal", Gbuffer::Normal);
+	m_GBufferShaderLit->SetInt("gAlbedoSpec", Gbuffer::Albedo);
+	m_GBufferShaderLit->SetInt("gMetallicRoughessReflectance", Gbuffer::MetallicRoughessReflectance);
+	m_GBufferShaderLit->SetInt("gAmbiantOcclusion", Gbuffer::AmbiantOcclusion);
+	m_GBufferShaderLit->SetInt("gEmissive", Gbuffer::Emissivive);
+
+	m_GBufferShaderLit->SetInt("irradianceMap", 10);
+	m_GBufferShaderLit->SetInt("prefilterMap", 11);
+	m_GBufferShaderLit->SetInt("brdfLUT", 12);
 	m_GBufferShaderLit->Unuse();
 	
 	m_GBufferShader = ResourceManager::Get<Shader>("gbuffer");
+	m_GBufferShader->SetFaceCullingInfo({true,CullFace::Front,FrontFace::CCW});
 	m_GBufferShader->CreateInRhi();
 	// Init diffuse Texture for gbuffer
 	m_GBufferShader->Use();
-	m_GBufferShader->SetInt("material.albedo", 0);
-	m_GBufferShader->SetInt("material.normalMap", 1);
+	m_GBufferShader->SetInt("material.albedoMap", MaterialTextureEnum::Albedo);
+	m_GBufferShader->SetInt("material.metallicMap", MaterialTextureEnum::Metallic);
+	m_GBufferShader->SetInt("material.roughnessMap", MaterialTextureEnum::Roughness);
+	m_GBufferShader->SetInt("material.normalMap", MaterialTextureEnum::Normal);
+	m_GBufferShader->SetInt("material.ambiantOcclusionMap", MaterialTextureEnum::AmbiantOcclusion);
 	m_GBufferShader->Unuse();
 	// End deferred
 

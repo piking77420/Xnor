@@ -2,6 +2,7 @@
 
 #include <ranges>
 
+#include "resource/compute_shader.hpp"
 #include "resource/shader.hpp"
 
 BEGIN_XNOR_CORE
@@ -27,7 +28,7 @@ Pointer<T> ResourceManager::Add(const Pointer<File>& file)
 }
 
 template <Concepts::ResourceT T>
-Pointer<T> ResourceManager::Load(const Pointer<File>& file)
+Pointer<T> ResourceManager::Load(const Pointer<File>& file, bool_t loadInRhi)
 {
     Logger::LogDebug("Loading resource {}", file->GetPath());
 
@@ -47,7 +48,7 @@ Pointer<T> ResourceManager::Load(const Pointer<File>& file)
         return resource;
     }
 
-    return LoadNoCheck<T>(file);
+    return LoadNoCheck<T>(file, loadInRhi);
 }
 
 template <Concepts::ResourceT T>
@@ -70,17 +71,44 @@ inline Pointer<Shader> ResourceManager::Get<Shader>(const std::string& name)
         if (Contains(ReservedShaderPrefix + name))
             return GetNoCheck<Shader>(ReservedShaderPrefix + name);
         
-        Logger::LogError("Attempt to get an unknown resource: {}", name);
+        Logger::LogError("Attempt to get an unknown shader: {}", name);
         return nullptr;
     }
 
     return GetNoCheck<Shader>(name);
 }
 
+template <>
+inline Pointer<ComputeShader> ResourceManager::Get<ComputeShader>(const std::string& name)
+{
+    if (!Contains(name))
+    {
+        if (Contains(ReservedShaderPrefix + name))
+            return GetNoCheck<ComputeShader>(ReservedShaderPrefix + name);
+        
+        Logger::LogError("Attempt to get an unknown resource: {}", name);
+        return nullptr;
+    }
+
+    return GetNoCheck<ComputeShader>(name);
+}
+
+
 template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::Get(const Pointer<File>& file)
 {
     return Get<T>(file->GetPathString());
+}
+
+template <Concepts::ResourceT T>
+Pointer<T> ResourceManager::Get(const Guid& guid)
+{
+    auto&& it = m_GuidMap.find(guid);
+
+    if (it == m_GuidMap.end())
+        return nullptr;
+
+    return Utils::DynamicPointerCast<T>(it->second);
 }
 
 template <Concepts::ResourceT T>
@@ -112,9 +140,10 @@ Pointer<T> ResourceManager::Find(std::function<bool_t(Pointer<T>)>&& predicate)
     for (const auto& val : m_Resources | std::views::values)
     {
         Pointer<Resource> resource = val;
-        
-        if (Utils::DynamicPointerCast<T>(resource) && predicate(resource))
-            return resource;
+
+        Pointer<T> r = Utils::DynamicPointerCast<T>(val);
+        if (r && predicate(r))
+            return r;
     }
 
     return nullptr;
@@ -185,7 +214,7 @@ void ResourceManager::Unload(const Pointer<T>& resource)
 template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::AddNoCheck(std::string name)
 {
-    Pointer<T> resource(std::forward<std::string>(name));
+    Pointer<T> resource = Pointer<T>::Create(std::forward<std::string>(name));
 
     // We cannot reuse the variable 'name' here in case it was moved inside the Resource constructor
     m_Resources[resource->GetName()] = static_cast<Pointer<Resource>>(resource.CreateStrongReference());
@@ -197,9 +226,9 @@ Pointer<T> ResourceManager::AddNoCheck(std::string name)
 }
 
 template <Concepts::ResourceT T>
-Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file)
+Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file, const bool_t loadInRhi)
 {
-    Pointer<T> resource(file->GetPathString());
+    Pointer<T> resource = Pointer<T>::Create(file->GetPathString());
 
     m_Resources[resource->GetName()] = static_cast<Pointer<Resource>>(resource.CreateStrongReference());
 
@@ -210,7 +239,8 @@ Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file)
 
     file->m_Resource = std::move(Pointer<Resource>(resource, false));
 
-    resource->CreateInRhi();
+    if (loadInRhi)
+        resource->CreateInRhi();
 
     return resource;
 }

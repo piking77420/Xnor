@@ -8,7 +8,7 @@
 BEGIN_XNOR_CORE
 
 /// @brief %List of mouse buttons
-enum class MouseButton
+BEGIN_ENUM(MouseButton)
 {
     /// @brief Left click
     Left,
@@ -31,9 +31,10 @@ enum class MouseButton
     
     Count
 };
+END_ENUM
 
 /// @brief %List of mouse button states
-enum class MouseButtonStatus : uint8_t
+BEGIN_ENUM(MouseButtonStatus)
 {
     /// @brief Pressed
     Pressed,
@@ -43,6 +44,7 @@ enum class MouseButtonStatus : uint8_t
     Release,
     
     Count
-};
+}
+END_ENUM
 
 END_XNOR_CORE

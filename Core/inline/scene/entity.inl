@@ -5,11 +5,9 @@ BEGIN_XNOR_CORE
 template <Concepts::ComponentT T>
 T* Entity::AddComponent()
 {
-    m_Components.Add();
-    
     T* newT = new T;
     newT->entity = this;
-    m_Components[m_Components.GetSize() - 1] = newT;
+    m_Components.Add(newT);
 
     return newT;
 }
@@ -72,7 +70,7 @@ void Entity::RemoveComponent()
 }
 
 template <Concepts::ComponentT T>
-bool_t Entity::TryGetComponent(T** output)
+bool_t Entity::TryGetComponent(T** const output)
 {
     for (int i = 0; i < m_Components.GetSize(); i++)
     {
@@ -85,5 +83,27 @@ bool_t Entity::TryGetComponent(T** output)
     
     return false;
 }
+
+template <Concepts::ComponentT T>
+bool_t Entity::TryGetComponent(const T** const output) const
+{
+    for (int i = 0; i < m_Components.GetSize(); i++)
+    {
+        if (dynamic_cast<T*>(m_Components[i]))
+        {
+            *output = reinterpret_cast<T*>(m_Components[i]);
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+#ifdef SWIG_ONLY
+const List<Component*>& Entity::GetComponents() const
+{
+    return m_Components;
+}
+#endif
 
 END_XNOR_CORE

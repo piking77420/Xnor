@@ -8,7 +8,7 @@ BEGIN_XNOR_CORE
 
 class SphereCollider : public Collider
 {
-    REFLECTABLE_IMPL_MINIMAL(SphereCollider)
+    REFLECTABLE_IMPL(SphereCollider)
 
 public:
     XNOR_ENGINE SphereCollider() = default; 

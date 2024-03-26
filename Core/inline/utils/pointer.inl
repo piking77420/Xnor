@@ -3,6 +3,19 @@
 BEGIN_XNOR_CORE
 
 template <typename T>
+template <typename... Args>
+Pointer<T> Pointer<T>::Create(Args&&... args)  // NOLINT(cppcoreguidelines-missing-std-forward)
+{
+    return Pointer(new ReferenceCounter<T>(std::forward<Args>(args)...), true);
+}
+
+template <typename T>
+Pointer<T> Pointer<T>::Create(Construct)
+{
+    return Pointer(new ReferenceCounter<T>, true);
+}
+
+template <typename T>
 Pointer<T>::Pointer(const Pointer& other, const bool_t strongReference)
     : m_ReferenceCounter(other.m_ReferenceCounter)
     , m_IsStrongReference(strongReference)
@@ -35,13 +48,6 @@ Pointer<T>::Pointer(Pointer&& other) noexcept
 
 template <typename T>
 Pointer<T>::Pointer(nullptr_t)
-{
-}
-
-template <typename T>
-Pointer<T>::Pointer(Construct)
-    : m_ReferenceCounter(new ReferenceCounter<T>)
-    , m_IsStrongReference(true)
 {
 }
 
@@ -83,14 +89,6 @@ Pointer<T>::Pointer(Pointer<U>&& other) noexcept  // NOLINT(cppcoreguidelines-rv
     }
     
     other.Reset();
-}
-
-template <typename T>
-template <typename... Args>
-Pointer<T>::Pointer(Args&&... args) // NOLINT(cppcoreguidelines-missing-std-forward)
-    : m_ReferenceCounter(new ReferenceCounter<T>(std::forward<Args>(args)...))
-    , m_IsStrongReference(true)
-{
 }
 
 template <typename T>
@@ -237,10 +235,20 @@ template <typename T>
 const T& Pointer<T>::operator*() const { return *m_ReferenceCounter->GetPointer(); }
 
 template <typename T>
-T* Pointer<T>::operator->() { return m_ReferenceCounter->GetPointer(); }
+T* Pointer<T>::operator->()
+{
+    if (!m_ReferenceCounter)
+        throw std::runtime_error("Cannot dereference a null Pointer");
+    return m_ReferenceCounter->GetPointer();
+}
 
 template <typename T>
-const T* Pointer<T>::operator->() const { return m_ReferenceCounter->GetPointer(); }
+const T* Pointer<T>::operator->() const
+{
+    if (!m_ReferenceCounter)
+        throw std::runtime_error("Cannot dereference a null Pointer");
+    return m_ReferenceCounter->GetPointer();
+}
 
 template <typename T>
 bool_t Pointer<T>::IsValid() const { return m_ReferenceCounter != nullptr; }
@@ -279,6 +287,13 @@ void Pointer<T>::Reset()
 
 template <typename T>
 const ReferenceCounter<T>* Pointer<T>::GetReferenceCounter() const { return m_ReferenceCounter; }
+
+template <typename T>
+Pointer<T>::Pointer(ReferenceCounter<T>*&& referenceCounter, const bool_t strongReference)  // NOLINT(cppcoreguidelines-rvalue-reference-param-not-moved)
+    : m_ReferenceCounter(std::move(referenceCounter))
+    , m_IsStrongReference(strongReference)
+{
+}
 
 template <typename T>
 void Pointer<T>::SetReferenceCounter(ReferenceCounter<T>* newReferenceCounter)

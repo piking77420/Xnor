@@ -15,7 +15,7 @@ BEGIN_XNOR_CORE
 
 /// @brief Used to default-construct the value of a Pointer.
 /// 
-/// @see Pointer::Pointer(Construct)
+/// @see Pointer::Create(Construct)
 struct Construct {};
 
 /// @brief Custom XNOR smart pointer.
@@ -27,12 +27,12 @@ struct Construct {};
 /// by being both a strong and a weak shared pointer.
 ///
 /// ### Usage
-/// The simplest way to create a Pointer to wrap your type is by using the forwarding variadic template constructor
+/// The simplest way to create a Pointer to wrap your type is by using the forwarding variadic template function
 /// which allows you to do the following:
 /// @code
 /// struct Type { int i; explicit Type(int i) : i(i) {} };
 ///
-/// Pointer<Type> ptr(7);
+/// Pointer<Type> ptr = Pointer<Type>::Create(7);
 /// @endcode
 /// ... and 7 will be forwarded as a parameter to the @c Type(int) constructor.
 ///
@@ -42,7 +42,7 @@ struct Construct {};
 /// Pointer<Type> ptr;
 ///
 /// // 2 - Default initialize the wrapped value: this effectively calls the wrapped type's default constructor
-/// Pointer<Type> ptr(Construct{}); // or Construct()
+/// Pointer<Type> ptr = Pointer<Type>::Create(Construct{}); // or Construct()
 ///
 /// // 3 - Manually set the Pointer to nullptr: this is actually the same as default initializing it
 /// Pointer<Type> ptr = nullptr;
@@ -56,7 +56,7 @@ struct Construct {};
 /// Pointer::ToStrongReference(), or by creating a copy using @ref Pointer::Pointer(const Pointer&, bool) "the copy constructor"
 /// and giving a @c true value to the second argument.
 ///
-/// @todo Reference variadic-template constructor
+/// @todo Reference variadic-template function
 ///
 /// @tparam T The type to point to. Most of the time, this shouldn't be a pointer type.
 /// 
@@ -69,6 +69,23 @@ class Pointer
 public:
     /// @brief The type of ReferenceCounter, and therefore of raw pointer this Pointer is holding.
     using Type = T;
+
+    /// @brief Creates a Pointer, calling @c new with @p T and forwarding all given arguments to its constructor.
+    template <typename... Args>
+    static Pointer Create(Args&&... args);
+
+    /// @brief Creates a @ref Pointer with a default-initialized value.
+    ///
+    /// The parameter is actually ignored in this call, and is only used to differentiate between a call to
+    /// @ref Pointer::Pointer() "the default constructor" and this one. We need this specific constructor
+    /// because the C++ language doesn't allow us to call a template constructor with empty template
+    /// parameters without template deduction.
+    /// 
+    /// This means that you can actually call this constructor like this:
+    /// @code
+    /// Pointer<Type> ptr(Construct{});
+    /// @endcode
+    static Pointer Create(Construct);
     
     /// @brief Creates an empty @ref Pointer without a reference counter and pointing to @c nullptr.
     Pointer() = default;
@@ -83,19 +100,6 @@ public:
     /// @brief Creates a Pointer from a @c nullptr.
     Pointer(nullptr_t);
 
-    /// @brief Creates a @ref Pointer with a default-initialized value.
-    ///
-    /// The parameter is actually ignored in this call, and is only used to differentiate between a call to
-    /// @ref Pointer::Pointer() "the default constructor" and this one. We need this specific constructor
-    /// because the C++ language doesn't allow us to call a template constructor with empty template
-    /// parameters without template deduction.
-    /// 
-    /// This means that you can actually call this constructor like this:
-    /// @code
-    /// Pointer<Type> ptr(Construct{});
-    /// @endcode
-    explicit Pointer(Construct);
-
     /// @brief Creates a copy of an existing Pointer of a different Type, specifying whether it is a strong reference.
     ///
     /// @tparam U The type of the existing Pointer. This type must be convertible to Type.
@@ -109,10 +113,6 @@ public:
     /// @brief Creates a Pointer by moving the value of another one of a different Type.
     template <typename U>
     explicit Pointer(Pointer<U>&& other) noexcept;
-
-    /// @brief Creates a Pointer, calling @c new with @p T and forwarding all given arguments to its constructor.
-    template <typename... Args>
-    explicit Pointer(Args&&... args);
 
     /// @brief Destroys this Pointer, deallocating any memory if this is the last strong reference.
     virtual ~Pointer();
@@ -222,6 +222,8 @@ private:
 
     bool_t m_IsStrongReference = false;
 
+    explicit Pointer(ReferenceCounter<T>*&& referenceCounter, bool_t strongReference);
+
     void SetReferenceCounter(ReferenceCounter<T>* newReferenceCounter);
 
     void CheckReferenceCounterValid();
@@ -231,6 +233,7 @@ END_XNOR_CORE
 
 #include "utils/pointer.inl"
 
+#ifndef SWIG
 /// @brief @c std::formatter template specialization for the XnorCore::Pointer type.
 template <typename T>
 struct std::formatter<XnorCore::Pointer<T>>  // NOLINT(cert-dcl58-cpp)
@@ -274,3 +277,4 @@ struct std::hash<XnorCore::Pointer<T>>  // NOLINT(cert-dcl58-cpp)
         return h1 ^ (h2 << 1);
     }
 };
+#endif

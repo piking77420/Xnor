@@ -1,5 +1,4 @@
 #version 460 core
-#extension GL_NV_gpu_shader5 : require
 
 out vec4 FragColor;
 
@@ -12,5 +11,5 @@ uniform sampler2D uiTexture;
 
 void main()
 {
-	FragColor = vec4(texture(uiTexture, fs_in.texCoords));
+    FragColor = vec4(texture(uiTexture, fs_in.texCoords));
 }

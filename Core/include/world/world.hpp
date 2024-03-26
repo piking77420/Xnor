@@ -28,8 +28,7 @@ public:
     XNOR_ENGINE static inline bool_t hasStarted = false;
 
     /// @brief The currently loaded scene in the world
-    XNOR_ENGINE static inline Scene scene;
-    
+    XNOR_ENGINE static inline Scene* scene;
 };
 
 END_XNOR_CORE
