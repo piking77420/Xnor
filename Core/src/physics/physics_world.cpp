@@ -11,8 +11,10 @@
 #include "utils/logger.hpp"
 #include "Jolt/Physics/Collision/Shape/SphereShape.h"
 #include "jolt/Physics/Body/BodyCreationSettings.h"
+#include "Jolt/Physics/Collision/CastResult.h"
 #include "Jolt/Physics/Collision/Shape/CapsuleShape.h"
 #include "Jolt/Physics/Collision/Shape/ConvexHullShape.h"
+#include "jolt/Physics/Collision/RayCast.h"
 
 using namespace XnorCore;
 
@@ -35,6 +37,11 @@ static JPH::Vec3Arg ToJph(const Vector3& in)
 static JPH::QuatArg ToJph(const Quaternion& in)
 {
     return JPH::QuatArg(in.X(), in.Y(), in.Z(), in.W());
+}
+
+static Vector3 FromJph(const JPH::Vec3& in)
+{
+    return Vector3(in.GetX(), in.GetY(), in.GetZ());
 }
 
 void PhysicsWorld::Initialize()
@@ -196,7 +203,7 @@ Vector3 PhysicsWorld::GetBodyPosition(const uint32_t bodyId)
 
     const JPH::RVec3 position = m_BodyInterface->GetCenterOfMassPosition(id);
 
-    return Vector3(position.GetX(), position.GetY(), position.GetZ());
+    return FromJph(position);
 }
 
 Quaternion PhysicsWorld::GetBodyRotation(uint32_t bodyId)
@@ -285,6 +292,28 @@ Collider* PhysicsWorld::GetColliderFromId(const uint32_t bodyId)
         return nullptr;
 
     return it->second;
+}
+
+bool_t PhysicsWorld::Raycast(const Vector3& position, const Vector3& direction, const float_t length, RaycastResult& result)
+{
+    const JPH::RRayCast ray = JPH::RRayCast(ToJph(position), ToJph(direction.Normalized() * length));
+    JPH::RayCastResult jphResult;
+
+    const bool_t hit = m_PhysicsSystem->GetNarrowPhaseQuery().CastRay(ray, jphResult);
+
+    const JPH::BodyLockRead lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(jphResult.mBodyID));
+
+    if (!lock.Succeeded())
+        return hit;
+
+    const JPH::Body& body = lock.GetBody();
+
+    result.hitBody = GetColliderFromId(jphResult.mBodyID.GetIndexAndSequenceNumber());
+    result.point = FromJph(ray.GetPointOnRay(jphResult.mFraction));
+    result.normal = FromJph(body.GetWorldSpaceSurfaceNormal(jphResult.mSubShapeID2, ray.GetPointOnRay(jphResult.mFraction)));
+    result.distance = length * jphResult.mFraction;
+    
+    return hit;
 }
 
 bool_t PhysicsWorld::IsBodyActive(const uint32_t bodyId)

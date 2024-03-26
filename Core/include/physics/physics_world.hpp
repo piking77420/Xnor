@@ -34,6 +34,14 @@ public:
         bool_t isTrigger{};
         bool_t isStatic{};
     };
+
+    struct RaycastResult
+    {
+        Collider* hitBody = nullptr;
+        Vector3 point;
+        Vector3 normal;
+        float_t distance{};
+    };
     
     XNOR_ENGINE static void Initialize();
     XNOR_ENGINE static void Destroy();
@@ -70,6 +78,8 @@ public:
 
     [[nodiscard]]
     XNOR_ENGINE static Collider* GetColliderFromId(uint32_t bodyId);
+
+    XNOR_ENGINE static bool_t Raycast(const Vector3& position, const Vector3& direction, float_t length, RaycastResult& result);
 
 private:
     XNOR_ENGINE static void TraceImpl(const char_t* format, ...);

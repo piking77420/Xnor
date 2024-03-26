@@ -47,7 +47,7 @@ protected:
     bool_t m_IsStatic = false;
     bool_t m_IsTrigger = false;
     bool_t m_IsActive = false;
-    float_t m_Force;
+    float_t m_Force = 1.f;
 };
 
 END_XNOR_CORE
