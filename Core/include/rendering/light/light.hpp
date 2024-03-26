@@ -21,6 +21,8 @@ public:
     /// @brief Intensity of the light
     float_t intensity = 1.f;
 
+    bool_t castShadow = true;
+
     XNOR_ENGINE Light() = default;
     XNOR_ENGINE ~Light() override = default;
 
@@ -31,5 +33,6 @@ END_XNOR_CORE
 
 REFL_AUTO(type(XnorCore::Light, bases<XnorCore::Component>),
     field(color),
-    field(intensity)
+    field(intensity),
+    field(castShadow)
 )

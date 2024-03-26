@@ -22,7 +22,7 @@ void Renderer::Initialize()
 
 void Renderer::BeginFrame(const Scene& scene)
 {
-	m_LightManager.BeginFrame(scene);
+	m_LightManager.BeginFrame(scene, *this);
 	Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
 }
 
@@ -54,15 +54,17 @@ void Renderer::RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& r
 {
 	std::vector<const MeshRenderer*> meshrenderers;
 	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderers);
+	BindCamera(camera,renderPassBeginInfo.renderAreaOffset + renderPassBeginInfo.renderAreaExtent);
+
 	
 	renderPass.BeginRenderPass(renderPassBeginInfo);
-	shadertoUse->Use();
-	DrawAllMeshRenders(meshrenderers, scene);
+	DrawAllMeshRendersNonShaded(meshrenderers, scene);
+	
 	if (drawEditorUi)
 	{
 		m_LightManager.DrawLightGizmoWithShader(camera, scene, shadertoUse);
 	}
-	shadertoUse->Unuse();
+	
 	renderPass.EndRenderPass();
 }
 
@@ -109,10 +111,25 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	viewportData.metallicRougnessReflectance->BindTexture(Gbuffer::MetallicRoughessReflectance);
 	viewportData.ambiantOcclusion->BindTexture(Gbuffer::AmbiantOcclusion);
 	viewportData.emissive->BindTexture(Gbuffer::Emissivive);
+	if (!m_LightManager.directionalLights.empty())
+	{
+		m_LightManager.directionalShadowMaps[0].depthTexture->BindTexture(10);
+		Camera cam;
+		cam.isOrthoGraphic = true;
+		cam.position = m_LightManager.directionalLights[0]->entity->transform.GetPosition();
+		cam.LookAt({0,0,0});
+		cam.front = -cam.front;
+		
+		cam.near = 1.0f;
+		cam.far = 15.5f;
+		Matrix m;
+		cam.GetVp({1024,1024},&m);
+		m_GBufferShaderLit->SetMat4("lightSpaceMatrix",m);
+	}
 
-	skybox.irradianceMap->BindTexture(10);
-	skybox.prefilterMap->BindTexture(11);
-	skybox.precomputeBrdfTexture->BindTexture(12);
+	skybox.irradianceMap->BindTexture(12);
+	skybox.prefilterMap->BindTexture(13);
+	skybox.precomputeBrdfTexture->BindTexture(14);
 
 	Rhi::DrawModel(m_Quad->GetId());
 	m_GBufferShaderLit->Unuse();
@@ -284,6 +301,43 @@ void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRe
 	}
 }
 
+void Renderer::DrawAllMeshRendersNonShaded(
+	const std::vector<const MeshRenderer*>& meshRenderers,
+	const Scene& scene
+) const
+{
+	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
+
+	for (uint32_t i = 0; i < meshRenderers.size(); i++)
+	{
+		const MeshRenderer* meshRenderer =  meshRenderers[i];
+		
+		const Transform& transform = meshRenderer->GetEntity()->transform;
+		ModelUniformData modelData;
+		modelData.model = transform.worldMatrix;
+		// +1 to avoid the black color of the attachment be a valid index  
+		modelData.meshRenderIndex = scene.GetEntityIndex(meshRenderer->GetEntity()) + 1;
+		
+		try
+		{
+			modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
+		}
+		catch (const std::invalid_argument&)
+		{
+			modelData.normalInvertMatrix = Matrix::Identity();
+		}
+		
+		Rhi::UpdateModelUniform(modelData);
+		
+		if (meshRenderer->model.IsValid())
+		{
+			Rhi::BindMaterial(meshRenderer->material);
+			Rhi::DrawModel(meshRenderer->model->GetId());
+		}
+	}
+}
+
+
 void Renderer::BindCamera(const Camera& camera,const Vector2i screenSize) const
 {
 	CameraUniformData cam;
@@ -306,10 +360,11 @@ void Renderer::InitResources()
 	m_GBufferShaderLit->SetInt("gMetallicRoughessReflectance", Gbuffer::MetallicRoughessReflectance);
 	m_GBufferShaderLit->SetInt("gAmbiantOcclusion", Gbuffer::AmbiantOcclusion);
 	m_GBufferShaderLit->SetInt("gEmissive", Gbuffer::Emissivive);
+	m_GBufferShaderLit->SetInt("shadowMap", 10);
 
-	m_GBufferShaderLit->SetInt("irradianceMap", 10);
-	m_GBufferShaderLit->SetInt("prefilterMap", 11);
-	m_GBufferShaderLit->SetInt("brdfLUT", 12);
+	m_GBufferShaderLit->SetInt("irradianceMap", 12);
+	m_GBufferShaderLit->SetInt("prefilterMap", 13);
+	m_GBufferShaderLit->SetInt("brdfLUT", 14);
 	m_GBufferShaderLit->Unuse();
 	
 	m_GBufferShader = ResourceManager::Get<Shader>("gbuffer");

@@ -5,8 +5,17 @@
 #include "resource/resource_manager.hpp"
 #include "scene/entity.hpp"
 #include "utils/logger.hpp"
+#include "rendering/renderer.hpp"
 
 using namespace XnorCore;
+
+LightManager::~LightManager()
+{
+	for (const DirectionalShadowMap directionalShadowMap : directionalShadowMaps)
+	{
+		delete directionalShadowMap.depthTexture;
+	}
+}
 
 void LightManager::InitResources()
 {
@@ -25,15 +34,125 @@ void LightManager::InitResources()
 	m_EditorUi->CreateInRhi();
 	m_EditorUi->SetInt("uiTexture",0);
 	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
+	
+	InitShadow();
 }
 
-void LightManager::BeginFrame(const Scene& scene)
+void LightManager::BeginFrame(const Scene& scene, const Renderer& renderer)
 {
 	scene.GetAllComponentOfType<PointLight>(&pointLights);
 	scene.GetAllComponentOfType<SpotLight>(&spotLights);
 	scene.GetAllComponentOfType<DirectionalLight>(&directionalLights);
+	FecthLightInfo();
+	ComputeShadow(scene, renderer);
+   
+}
+
+void LightManager::EndFrame(const Scene&)
+{
+}
+
+void LightManager::DrawLightGizmo(const Camera& camera, const Scene& scene)
+{
+	scene.GetAllComponentOfType<PointLight>(&pointLights);
+	scene.GetAllComponentOfType<SpotLight>(&spotLights);
+	scene.GetAllComponentOfType<DirectionalLight>(&directionalLights);
+	DrawLightGizmoWithShader(camera, scene, m_EditorUi);
+}
+
+void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& scene,const Pointer<Shader>& shader) const
+{
+	shader->Use();
 	
-    if (directionalLights.size() > MaxDirectionalLights)
+	std::map<float_t, GizmoLight> sortedLight;
+	
+	for (const PointLight* const pointLight : pointLights)
+	{
+		if (pointLight == nullptr)
+			continue;
+		
+		GizmoLight gizmoLight = {
+			.pos = pointLight->GetEntity()->transform.GetPosition(),
+			.light = pointLight,
+			.type = RenderingLight::PointLight,
+		};
+		
+		const float_t distance = (camera.position - pointLight->GetEntity()->transform.GetPosition()).SquaredLength();
+		sortedLight.emplace(distance, gizmoLight);
+	}
+	
+	for (const SpotLight* const spotLight : spotLights)
+	{
+		if (spotLight == nullptr)
+			continue;
+		
+		GizmoLight gizmoLight = {
+			.pos = spotLight->GetEntity()->transform.GetPosition(),
+			.light = spotLight,
+			.type = RenderingLight::SpothLight
+		};
+		
+		const float_t distance = (camera.position - spotLight->GetEntity()->transform.GetPosition()).SquaredLength();
+		sortedLight.emplace(distance, gizmoLight);
+	}
+	
+	for (const DirectionalLight* const dirLight : directionalLights)
+	{
+		if (dirLight == nullptr)
+			continue;
+		
+		GizmoLight gizmoLight = {
+			.pos = dirLight->GetEntity()->transform.GetPosition(),
+			.light = dirLight,
+			.type = RenderingLight::DirLight
+		};
+		
+		const float_t distance = (camera.position - dirLight->GetEntity()->transform.GetPosition()).SquaredLength();
+		sortedLight.emplace(distance, gizmoLight);
+	}
+	
+	
+	for (decltype(sortedLight)::reverse_iterator it = sortedLight.rbegin(); it != sortedLight.rend(); it++)
+	{
+		ModelUniformData modelData;
+		float_t scaleScalar = m_ScaleFactor;
+
+		float_t distance = (it->second.pos - camera.position).SquaredLength();
+		if (distance < m_MinDistance * m_MinDistance)
+			scaleScalar = scaleScalar * (1.f / distance) * (1.f / distance);
+
+		scaleScalar = std::clamp(scaleScalar, m_MaxScalarFactor, m_MinScalarFactor);
+		Matrix scale = Matrix::Scaling(Vector3(scaleScalar));
+		modelData.model = (scale * Matrix::LookAt(it->second.pos, camera.position, Vector3::UnitY())).Inverted();
+		modelData.normalInvertMatrix = Matrix::Identity();
+		// +1 to avoid the black color of the attachement be a valid index  
+		modelData.meshRenderIndex = scene.GetEntityIndex(it->second.light->GetEntity()) + 1;
+		
+		switch (it->second.type)
+		{
+			case RenderingLight::PointLight:
+				m_PointLightTexture->BindTexture(0);
+				break;
+			
+			case RenderingLight::SpothLight:
+				m_SpotLightTexture->BindTexture(0);
+				break;
+			
+			case RenderingLight::DirLight:
+				m_DirLightTexture->BindTexture(0);
+				break;
+		}
+		
+		Rhi::UpdateModelUniform(modelData);
+		Rhi::DrawModel(m_Quad->GetId());
+	}
+
+	shader->Unuse();
+}
+
+void LightManager::FecthLightInfo()
+{
+	 if (directionalLights.size() > MaxDirectionalLights)
 		Logger::LogWarning("You cannot have more than 1 directional light in the scene");
 
 	GpuLightData gpuLightData
@@ -82,9 +201,10 @@ void LightManager::BeginFrame(const Scene& scene)
 	if (nbrOfDirectionalLight != 0)
 	for (size_t i = 0 ; i < MaxDirectionalLights ; i++)
 	{
-		const Matrix matrix = Matrix::Trs(Vector3(0.f), directionalLights[i]->GetEntity()->transform.GetRotation(), Vector3(1.f));
-		const Vector4 direction = matrix * Vector4::UnitY(); 
-		
+		//const Matrix matrix = Matrix::Trs(Vector3(0.f), m_DirectionalLights[i]->GetEntity()->transform.GetRotation(), Vector3(1.f));
+		//const Vector4 direction = matrix * Vector4::UnitY(); 
+		const Vector3 direction = directionalLights[i]->GetLightDirection(); 
+
 		gpuLightData.directionalData[i] =
 		{
 			.color = static_cast<Vector3>(directionalLights[i]->color),
@@ -96,92 +216,60 @@ void LightManager::BeginFrame(const Scene& scene)
 	Rhi::UpdateLight(gpuLightData);
 }
 
-void LightManager::EndFrame(const Scene&)
+void LightManager::ComputeShadow(const Scene& scene, const Renderer& renderer)
 {
+	for (size_t i = 0; i < directionalLights.size(); i++)
+	{
+		if (!directionalLights[i]->castShadow)
+			continue;
+
+		const DirectionalShadowMap& shadowMap = directionalShadowMaps[i];
+		Camera cam;
+		cam.isOrthoGraphic = true;
+		cam.position = directionalLights[i]->entity->transform.GetPosition();
+		cam.LookAt(cam.position + directionalLights[i]->GetLightDirection());
+		cam.front = -cam.front;
+		cam.near = 1.0f;
+		cam.far = 15.5f;
+
+		m_ShadowFrameBuffer->AttachTexture(*shadowMap.depthTexture, Attachment::Depth, 0);
+
+		RenderPassBeginInfo renderPassBeginInfo = {
+			.frameBuffer = m_ShadowFrameBuffer,
+			.renderAreaOffset = { 0,0 },
+			.renderAreaExtent = shadowMap.depthTexture->GetSize() ,
+			.clearBufferFlags = BufferFlag::DepthBit,
+			.clearColor = Vector4(0.f)
+		};
+		m_ShadowMapShader->Use();
+		renderer.RenderNonShaded(cam, renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, scene, false);
+		m_ShadowMapShader->Unuse();
+	}
+
+	
 }
 
-void LightManager::DrawLightGizmo(const Camera& camera, const Scene& scene) const
+void LightManager::InitShadow()
 {
-	DrawLightGizmoWithShader(camera,scene,m_EditorUi);
-}
-
-void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& scene,const Pointer<Shader>& shader) const
-{
-	shader->Use();
+	m_ShadowMapShader = ResourceManager::Get<Shader>("depth_shader");
+	m_ShadowMapShader->SetFaceCullingInfo({ true, CullFace::Front, FrontFace::CCW });
+	m_ShadowMapShader->CreateInRhi();
 	
-	std::map<float_t, GizmoLight> sortedLight;
-	
-	for (const PointLight* const pointLight : pointLights)
+	for (DirectionalShadowMap& directionalShadowMap : directionalShadowMaps)
 	{
-		GizmoLight gizmoLight = {
-			.pos = pointLight->GetEntity()->transform.GetPosition(),
-			.light = pointLight,
-			.type = RenderingLight::PointLight,
-		};
+		TextureCreateInfo textureCreateInfo =
+			{
+			.data = nullptr,
+			.size = DirectionalShadowMapSize,
+			.filtering = TextureFiltering::Nearest,
+			.wrapping = TextureWrapping::TextureWrapping::ClampToBorder,
+			.format = TextureFormat::DepthComponent,
+			.internalFormat = ShadowDepthTextureInternalFormat,
+			.dataType = DataType::Float
+			};
 		
-		const float_t distance = (camera.position - pointLight->GetEntity()->transform.GetPosition()).SquaredLength();
-		sortedLight.emplace(distance, gizmoLight);
+		directionalShadowMap.depthTexture = new Texture(textureCreateInfo);
 	}
-	
-	for (const SpotLight* const spotLight : spotLights)
-	{
-		GizmoLight gizmoLight = {
-			.pos = spotLight->GetEntity()->transform.GetPosition(),
-			.light = spotLight,
-			.type = RenderingLight::SpothLight
-		};
-		
-		const float_t distance = (camera.position - spotLight->GetEntity()->transform.GetPosition()).SquaredLength();
-		sortedLight.emplace(distance, gizmoLight);
-	}
-	
-	for (const DirectionalLight* const dirLight : directionalLights)
-	{
-		GizmoLight gizmoLight = {
-			.pos = dirLight->GetEntity()->transform.GetPosition(),
-			.light = dirLight,
-			.type = RenderingLight::DirLight
-		};
-		
-		const float_t distance = (camera.position - dirLight->GetEntity()->transform.GetPosition()).SquaredLength();
-		sortedLight.emplace(distance, gizmoLight);
-	}
-	
-	
-	for (decltype(sortedLight)::reverse_iterator it = sortedLight.rbegin(); it != sortedLight.rend(); it++)
-	{
-		ModelUniformData modelData;
-		float_t scaleScalar = m_ScaleFactor;
-
-		float_t distance = (it->second.pos - camera.position).SquaredLength();
-		if (distance < m_MinDistance * m_MinDistance)
-			scaleScalar = scaleScalar * (1.f / distance) * (1.f / distance);
-
-		scaleScalar = std::clamp(scaleScalar, m_MaxScalarFactor, m_MinScalarFactor);
-		Matrix scale = Matrix::Scaling(Vector3(scaleScalar));
-		modelData.model = (scale * Matrix::LookAt(it->second.pos, camera.position, Vector3::UnitY())).Inverted();
-		modelData.normalInvertMatrix = Matrix::Identity();
-		// +1 to avoid the black color of the attachement be a valid index  
-		modelData.meshRenderIndex = scene.GetEntityIndex(it->second.light->GetEntity()) + 1;
-		
-		switch (it->second.type)
-		{
-			case RenderingLight::PointLight:
-				m_PointLightTexture->BindTexture(0);
-				break;
-			
-			case RenderingLight::SpothLight:
-				m_SpotLightTexture->BindTexture(0);
-				break;
-			
-			case RenderingLight::DirLight:
-				m_DirLightTexture->BindTexture(0);
-				break;
-		}
-		
-		Rhi::UpdateModelUniform(modelData);
-		Rhi::DrawModel(m_Quad->GetId());
-	}
-
-	shader->Unuse();
+	m_ShadowFrameBuffer = new FrameBuffer;
+	Rhi::SetFrameBufferDraw(m_ShadowFrameBuffer->GetId(),false);
 }

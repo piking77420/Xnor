@@ -16,6 +16,8 @@ public:
     XNOR_ENGINE DirectionalLight() = default;
     XNOR_ENGINE ~DirectionalLight() override = default;
 
+    Vector3 GetLightDirection() const; 
+
     DEFAULT_COPY_MOVE_OPERATIONS(DirectionalLight)
 };
 

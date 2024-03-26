@@ -43,7 +43,7 @@ layout (std140, binding = 4) uniform MaterialDataUniform
 
 out VS_OUT
 {
-    vec3 fragPos;
+    vec4 fragPos;
     vec3 normal;
     vec2 texCoords;
 
@@ -58,11 +58,11 @@ out VS_OUT
 
 void main()
 {
-    vec4 pos = model * vec4(aPos, 1.0);
-    vs_out.fragPos = vec3(pos);
     vs_out.texCoords = aTexCoords;
-    gl_Position =  projection * view * model * vec4(aPos, 1.0);
-
+    
+    vs_out.fragPos = model * vec4(aPos, 1.0);
+    gl_Position = projection * view * vs_out.fragPos ;
+    
     vs_out.roughness = roughness;
     vs_out.metallic = metallic;
     vs_out.reflectance = reflectance;

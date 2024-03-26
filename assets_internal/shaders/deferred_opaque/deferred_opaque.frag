@@ -64,6 +64,46 @@ uniform sampler2D brdfLUT;
 
 in vec2 texCoords;
 
+uniform sampler2D shadowMap;
+uniform mat4 lightSpaceMatrix;
+
+float ShadowCalculation(vec4 fragPosLightSpace, vec3 n, vec3 l)
+{
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(shadowMap, projCoords.xy).r;
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
+    // calculate bias (based on depth map resolution and slope)
+    vec3 normal = normalize(n);
+    vec3 lightDir = normalize(l);
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    // check whether current frag pos is in shadow
+    // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+    // PCF
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
+        }
+    }
+    shadow /= 9.0;
+
+    // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
+    if(projCoords.z > 1.0)
+    shadow = 0.0;
+
+    return shadow;
+}
+
+
 //https://de45xmedrsdbp.cloudfront.net/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
 // reparameterization of α = Roughness^2
 float SpecularD(float NoH,float a)
@@ -246,8 +286,12 @@ void main()
     vec3 kD = vec3(1.0) - kS;
     kD *= 1.0 - metallic;
     float NdotL = max(dot(n, l), 0.0);
-    Lo += (kD * albedo * InvPI + specular) * radiance * NdotL;
     
+    Lo += (kD * albedo * InvPI + specular) * radiance * NdotL;
+    vec4 fragPosVec4 = texture(gPosition, texCoords);
+    float shadow = ShadowCalculation(lightSpaceMatrix * fragPosVec4,n,l);
+    Lo *= (1.0-shadow);
+            
     Lo += ComputePointLight(albedo, fragPos, v, n, roughness, metallic, F0);
     Lo += ComputeSpotLight(albedo, fragPos, v, n, roughness, metallic, F0);
 

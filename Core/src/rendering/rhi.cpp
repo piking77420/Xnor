@@ -701,8 +701,16 @@ uint32_t Rhi::CreateTexture2D(const TextureCreateInfo& textureCreateInfo)
 	
 	AllocTexture2D(textureId, textureCreateInfo);
 
+	
 	glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
 	glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
+	if (textureCreateInfo.wrapping == TextureWrapping::ClampToBorder)
+	{
+		const float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		glTextureParameterfv(textureId, GL_TEXTURE_BORDER_COLOR, borderColor);  
+	}
+
+	
 	if(textureCreateInfo.filtering == TextureFiltering::LinearMimMapLinear)
 	{
 		glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -902,6 +910,11 @@ void Rhi::AttachTextureToFrameBuffer(
 	}
 }
 
+void Rhi::SetFrameBufferDraw(uint32_t frameBufferid, bool_t value)
+{
+	glNamedFramebufferDrawBuffer(frameBufferid,value);
+	glNamedFramebufferReadBuffer(frameBufferid,value);
+}
 
 
 void Rhi::GetPixelFromAttachement(const uint32_t attachmentIndex, const Vector2i position, const TextureFormat::TextureFormat textureFormat, const DataType::DataType dataType, void* const output)
@@ -1094,7 +1107,9 @@ uint32_t Rhi::GetOpenGlTextureFormat(const TextureFormat::TextureFormat textureF
 	
 		case TextureFormat::Rgba:
 			return GL_RGBA;
-	
+
+		case TextureFormat::DepthComponent:
+			return GL_DEPTH_COMPONENT;
 	}
 	
 	return GL_RGB;

@@ -31,6 +31,8 @@ public:
 	/// @brief Field of view
 	float_t fov = 90.f;
 
+	bool_t isOrthoGraphic = false;
+
 	/// @brief Computes the projection @ref Matrix of the camera
 	/// @param screenSize Screen size
 	/// @param matrix Result matrix

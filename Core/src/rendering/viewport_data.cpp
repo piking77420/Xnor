@@ -52,7 +52,7 @@ void ViewportData::InitForward(Vector2i windowSize)
 void ViewportData::InitDeffered(Vector2i windowSize)
 {
     gframeBuffer = new FrameBuffer();
-    positionAtttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);
+    positionAtttachment = new Texture(TextureInternalFormat::Rgba16F, windowSize);
     normalAttachement = new Texture(TextureInternalFormat::Rgb16F, windowSize);
     albedoAttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);
     metallicRougnessReflectance = new Texture(TextureInternalFormat::Rgb16F,windowSize);

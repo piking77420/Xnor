@@ -146,8 +146,10 @@ public:
 
 	XNOR_ENGINE static void AttachTextureToFrameBuffer(uint32_t bufferId, Attachment::Attachment attachment,uint32_t textureId,uint32_t level);
 
-	XNOR_ENGINE static void AttachTextureToFrameBuffer(uint32_t bufferId, Attachment::Attachment attachment, CubeMapFace cubeMapFace,uint32_t textureId,uint32_t level);	
+	XNOR_ENGINE static void AttachTextureToFrameBuffer(uint32_t bufferId, Attachment::Attachment attachment, CubeMapFace cubeMapFace,uint32_t textureId,uint32_t level);
 	
+	XNOR_ENGINE static void SetFrameBufferDraw(uint32_t frameBufferid,bool_t value);
+
 	/// @brief Reads a single pixel of an attachment
 	/// @param attachmentIndex Attachment index
 	/// @param position Pixel position

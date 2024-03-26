@@ -58,9 +58,9 @@ public:
     /// @brief Swaps the front and back buffer
     XNOR_ENGINE void SwapBuffers();
 private:
-    LightManager m_LightManager;
-    SkyboxRenderer m_SkyboxRenderer;
-    PostProcessPass m_PostProcessPass;
+    mutable LightManager m_LightManager;
+    mutable SkyboxRenderer m_SkyboxRenderer;
+    mutable PostProcessPass m_PostProcessPass;
     
     Pointer<Shader> m_GBufferShader;
     Pointer<Shader> m_GBufferShaderLit;
@@ -80,6 +80,8 @@ private:
     
     XNOR_ENGINE void DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRenderers,const Scene& scene) const;
     
+    XNOR_ENGINE void DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*>& meshRenderers,const Scene& scene) const;
+
     XNOR_ENGINE void DefferedRendering(const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox, const ViewportData& viewportData, Vector2i viewportSize) const;
     
     XNOR_ENGINE void ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox,

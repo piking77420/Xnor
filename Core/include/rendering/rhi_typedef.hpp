@@ -6,11 +6,11 @@
 #include "core.hpp"
 #include "utils/color.hpp"
 
+
 /// @file rhi_typedef.hpp
 /// @brief Defines various types and enumerations needed by XnorCore::Rhi.
 
 BEGIN_XNOR_CORE
-
 class FrameBuffer;
 
 /// @brief Maximum amount of spot lights that can exists in a same scene
@@ -213,6 +213,7 @@ BEGIN_ENUM(TextureFormat)
 	RedGreen,
 	Rgb,
 	Rgba,
+	DepthComponent
 }
 END_ENUM
 
@@ -460,6 +461,8 @@ struct PointLightData
 	Vector3 position;
 	/// @brief Radius
 	float_t radius{};
+	/// @brief CastShadow
+	//int32_t castShadow = 0;
 };
 
 /// @brief Spot light UniformBuffer data
@@ -477,6 +480,9 @@ struct SpotLightData
 	Vector3 direction;
 	/// @brief Outer cut-off
 	float_t outerCutOff{};
+	
+	/// @brief CastShadow
+	//int32_t castShadow = 0; 
 };
 
 /// @brief Directional light UniformBuffer data
@@ -488,7 +494,11 @@ struct DirectionalLightData
 	float_t intensity{};
 	/// @brief Direction
 	Vector3 direction;
+	
+	/// @brief CastShadow
+	//int32_t castShadow = 0;
 };
+
 
 /// @brief Light UniformBuffer data
 struct GpuLightData
@@ -509,6 +519,7 @@ struct GpuLightData
 	/// @brief Directional light data
 	DirectionalLightData directionalData[MaxDirectionalLights];
 };
+
 
 /// @brief Shadow mapping UniformBuffer data
 struct ShadowMappingData
