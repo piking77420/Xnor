@@ -1,11 +1,11 @@
 ﻿#include "reflection/type_renderer.hpp"
-#include "reflection/factory.hpp"
+#include "reflection/xnor_factory.hpp"
 
 using namespace XnorCore;
 
 void TypeRenderer::DisplayObjectUsingFactory(void* const obj, const size_t hash)
 {
-    Factory::DisplayObject(obj, hash);
+    XnorFactory::DisplayObject(obj, hash);
 }
 
 Component* TypeRenderer::FilterComponent(ImGuiTextFilter& filter)
@@ -20,13 +20,13 @@ Component* TypeRenderer::FilterComponent(ImGuiTextFilter& filter)
     Component* c = nullptr;
     
     std::vector<std::string> names;
-    Factory::FindAllChildClasses<Component>(&names);
+    XnorFactory::FindAllChildClasses<Component>(&names);
 
     for (size_t i = 0; i < names.size(); i++)
     {
         if (filter.PassFilter(names[i].c_str()) && ImGui::Selectable(names[i].c_str()))
         {
-            c = static_cast<Component*>(Factory::CreateObject(names[i]));
+            c = static_cast<Component*>(XnorFactory::CreateObject(names[i]));
             break;
         }
     }

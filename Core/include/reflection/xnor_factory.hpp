@@ -6,9 +6,9 @@
 
 BEGIN_XNOR_CORE
 
-class Factory
+class XnorFactory
 {
-    STATIC_CLASS(Factory)
+    STATIC_CLASS(XnorFactory)
 
     struct FactoryTypeInfo
     {
@@ -51,4 +51,4 @@ private:
 
 END_XNOR_CORE
 
-#include "reflection/factory.inl"
+#include "reflection/xnor_factory.inl"

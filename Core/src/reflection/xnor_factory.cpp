@@ -1,5 +1,8 @@
-#include "reflection/factory.hpp"
+#include "reflection/xnor_factory.hpp"
 
+#include "physics/components/box_collider.hpp"
+#include "physics/components/collider.hpp"
+#include "physics/components/sphere_collider.hpp"
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/light.hpp"
 #include "rendering/light/point_light.hpp"
@@ -10,7 +13,7 @@
 
 using namespace XnorCore;
 
-inline void* Factory::CreateObject(const size_t hash)
+inline void* XnorFactory::CreateObject(const size_t hash)
 {
     auto&& it = m_FactoryMapHash.find(hash);
 
@@ -23,7 +26,7 @@ inline void* Factory::CreateObject(const size_t hash)
     return it->second.createFunc();
 }
 
-inline void* Factory::CreateObject(const std::string& name)
+inline void* XnorFactory::CreateObject(const std::string& name)
 {
     auto&& it = m_FactoryMapName.find(name);
 
@@ -36,7 +39,7 @@ inline void* Factory::CreateObject(const std::string& name)
     return it->second.createFunc();
 }
 
-inline void Factory::DisplayObject(void* const obj, const size_t hash)
+inline void XnorFactory::DisplayObject(void* const obj, const size_t hash)
 {
     auto&& it = m_FactoryMapHash.find(hash);
 
@@ -49,7 +52,7 @@ inline void Factory::DisplayObject(void* const obj, const size_t hash)
     it->second.displayFunc(obj);
 }
 
-void Factory::SerializeObject(void* obj, size_t hash)
+void XnorFactory::SerializeObject(void* obj, size_t hash)
 {
     auto&& it = m_FactoryMapHash.find(hash);
 
@@ -62,7 +65,7 @@ void Factory::SerializeObject(void* obj, size_t hash)
     it->second.serializeFunc(obj);
 }
 
-void Factory::DeserializeObject(void* obj, size_t hash)
+void XnorFactory::DeserializeObject(void* obj, size_t hash)
 {
     auto&& it = m_FactoryMapHash.find(hash);
 
@@ -75,7 +78,7 @@ void Factory::DeserializeObject(void* obj, size_t hash)
     it->second.deserializeFunc(obj);
 }
 
-void Factory::RegisterTypes()
+void XnorFactory::RegisterTypes()
 {
     // Manually registering the types is sub-optimal, however, it's the best way I've found so far
     // It'll probably stay this way for the classes internal to Core, and as for the user scripts generated from the editor, a solution will be found at a later date probably
@@ -87,9 +90,12 @@ void Factory::RegisterTypes()
     RegisterFactoryType<PointLight>();
     RegisterFactoryType<SpotLight>();
     RegisterFactoryType<ScriptComponent>();
+    RegisterFactoryType<Collider>();
+    RegisterFactoryType<BoxCollider>();
+    RegisterFactoryType<SphereCollider>();
 }
 
-std::string Factory::GetTypeName(const size_t hash)
+std::string XnorFactory::GetTypeName(const size_t hash)
 {
     auto&& it = m_FactoryMapHash.find(hash);
  
@@ -102,7 +108,7 @@ std::string Factory::GetTypeName(const size_t hash)
      return it->second.name;
 }
 
-void Factory::Print()
+void XnorFactory::Print()
 {
     Logger::LogInfo("Number of types : {}", m_FactoryMapHash.size());
     for (auto& val : m_FactoryMapHash | std::views::values)

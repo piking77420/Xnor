@@ -253,7 +253,7 @@
     <ClCompile Include="src\physics\components\sphere_collider.cpp" />
     <ClCompile Include="src\physics\contact_listener.cpp" />
     <ClCompile Include="src\physics\physics_world.cpp" />
-    <ClCompile Include="src\reflection\factory.cpp">
+    <ClCompile Include="src\reflection\xnor_factory.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <Optimization>Disabled</Optimization>
@@ -1080,7 +1080,7 @@
     <ClInclude Include="include\physics\data\collision_data.hpp" />
     <ClInclude Include="include\physics\layers.hpp" />
     <ClInclude Include="include\physics\physics_world.hpp" />
-    <ClInclude Include="include\reflection\factory.hpp" />
+    <ClInclude Include="include\reflection\xnor_factory.hpp" />
     <ClInclude Include="include\reflection\reflection.hpp" />
     <ClInclude Include="include\reflection\type_renderer.hpp" />
     <ClInclude Include="include\rendering\bloom_rendertarget.hpp" />
@@ -1144,7 +1144,7 @@
     <ClInclude Include="inline\file\file_manager.inl" />
     <ClInclude Include="inline\input\input.inl" />
     <ClInclude Include="inline\input\time.inl" />
-    <ClInclude Include="inline\reflection\factory.inl" />
+    <ClInclude Include="inline\reflection\xnor_factory.inl" />
     <ClInclude Include="inline\reflection\reflection.inl" />
     <ClInclude Include="inline\reflection\type_renderer.inl" />
     <ClInclude Include="inline\resource\resource_manager.inl" />

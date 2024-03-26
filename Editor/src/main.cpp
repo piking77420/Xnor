@@ -1,5 +1,5 @@
 #include "editor.hpp"
-#include "reflection//factory.hpp"
+#include "reflection/xnor_factory.hpp"
 #include "utils/coroutine.hpp"
 #include "utils/logger.hpp"
 
@@ -30,9 +30,9 @@ int main(int, char**)
 	using namespace XnorEditor;
 
 	Logger::OpenDefaultFile();
+	XnorFactory::RegisterTypes();
 
 	PhysicsWorld::Initialize();
-	// PhysicsWorld::CreateSphere(Vector3(5.f, 4.f, 3.f), 1.f);
 
 	FileManager::LoadDirectory("assets_internal");
 	FileManager::LoadDirectory("assets");

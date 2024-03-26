@@ -9,7 +9,7 @@
 BEGIN_XNOR_CORE
 
 template <typename T>
-constexpr void Factory::RegisterFactoryType()
+constexpr void XnorFactory::RegisterFactoryType()
 {
     // ReSharper disable once CppTooWideScope
     constexpr bool_t isConstructible = !Meta::IsAbstract<T> && Meta::IsDefaultConstructible<T>;
@@ -45,7 +45,7 @@ constexpr void Factory::RegisterFactoryType()
     m_FactoryMapName.emplace(humanizedName, info);
 }
 
-inline bool_t Factory::IsChildOf(const size_t typeHash, const size_t parentHash)
+inline bool_t XnorFactory::IsChildOf(const size_t typeHash, const size_t parentHash)
 {
     auto&& it = m_FactoryMapHash.find(typeHash);
 
@@ -72,7 +72,7 @@ inline bool_t Factory::IsChildOf(const size_t typeHash, const size_t parentHash)
 }
 
 template <typename T>
-void Factory::FindAllChildClasses(std::vector<std::string>* names)
+void XnorFactory::FindAllChildClasses(std::vector<std::string>* names)
 {
     const size_t hash = Utils::GetTypeHash<T>();
 

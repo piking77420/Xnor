@@ -1,6 +1,6 @@
 #include "serialization/serializer.hpp"
 
-#include "reflection/factory.hpp"
+#include "reflection/xnor_factory.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -31,19 +31,19 @@ void Serializer::SerializeObjectUsingFactory(void* obj, const size_t hash)
 {
     std::string error;
     
-    XMLAttributte* const attribute = CreateAttribute(m_XmlDoc, "typeName", Factory::GetTypeName(hash), error);
+    XMLAttributte* const attribute = CreateAttribute(m_XmlDoc, "typeName", XnorFactory::GetTypeName(hash), error);
     AddAttributeToElement(m_ElementsStack.top(), attribute, error);
-    Factory::SerializeObject(obj, hash);
+    XnorFactory::SerializeObject(obj, hash);
 }
 
-void Serializer::DeserializeObjectUsingFactory(void* obj, size_t hash)
+void Serializer::DeserializeObjectUsingFactory(void* obj, const size_t hash)
 {
-    Factory::DeserializeObject(obj, hash);
+    XnorFactory::DeserializeObject(obj, hash);
 }
 
 void* Serializer::CreateObjectUsingFactory(const std::string& name)
 {
-    return Factory::CreateObject(name);
+    return XnorFactory::CreateObject(name);
 }
 
 void Serializer::StartSerialization(const std::string& filePath)

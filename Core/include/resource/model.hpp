@@ -125,9 +125,12 @@ public:
     /// @return Aabb bounding box
     XNOR_ENGINE Aabb GetAabb() const;
 
+#ifndef SWIG
     /// @brief Gets the vertices of the model
     /// @return Vertices
+    [[nodiscard]]
     const std::vector<Vertex>& GetVertices() const;
+#endif
     
 private:
     XNOR_ENGINE void ComputeAabb(const aiAABB& assimpAabb);
