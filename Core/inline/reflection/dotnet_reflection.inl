@@ -2,20 +2,34 @@
 #pragma once
 
 #include "csharp/dotnet_runtime.hpp"
-#include "scene/component/script_component.hpp"
+#include "reflection/type_renderer.hpp"
+#include "serialization/serializer.hpp"
 
 BEGIN_XNOR_CORE
 
 template <typename T>
 void DotnetReflection::RegisterBaseType(const std::string& typeName)
 {
-    constexpr bool_t isScript = Meta::IsBaseOf<ScriptComponent, T>;
-    
     DotnetTypeInfo info = {
         .createFunc = []() -> Coral::ManagedObject { return {}; },
         .displayFunc = [](void* const obj, const char_t* const name) -> void { DisplaySimpleType<T>(static_cast<T*>(obj), name); },
         .serializeFunc = [](const void* const) -> void {},
         .deserializeFunc = [](void* const) -> void {},
+        .name = typeName,
+        .isScriptType = false
+    };
+
+    m_DotnetMap.emplace(typeName, info);
+}
+
+template <typename T>
+void DotnetReflection::RegisterCoreType(const std::string& typeName)
+{
+    DotnetTypeInfo info = {
+        .createFunc = []() -> Coral::ManagedObject { return {}; },
+        .displayFunc = [](void* const, const char_t* const name) -> void { ImGui::Text("%s", name); },
+        .serializeFunc = [](void* const) -> void { },
+        .deserializeFunc = [](void* const) -> void { },
         .name = typeName,
         .isScriptType = false
     };

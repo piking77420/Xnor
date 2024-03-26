@@ -4,6 +4,7 @@
 
 #include "resource/resource_manager.hpp"
 #include "scene/entity.hpp"
+#include "scene/component/script_component.hpp"
 
 /// @file type_renderer.hpp
 /// @brief Defines the TypeRenderer
@@ -140,6 +141,10 @@ private:
     /// @param obj Object pointer
     /// @param hash Object hash
     XNOR_ENGINE static void DisplayObjectUsingFactory(void* obj, size_t hash);
+
+    /// @brief Displays a C# dotnet object
+    /// @param script Script component
+    XNOR_ENGINE static void DisplayDotnetObject(ScriptComponent* script);
     
     // TODO maybe move elsewhere
     template <Concepts::ResourceT T>

@@ -13,7 +13,7 @@ void DotnetReflection::PrintTypes()
     const Coral::ManagedAssembly* const coreAssembly = DotnetAssembly::xnorCoreAssembly->GetCoralAssembly();
     const Coral::ManagedAssembly* const gameAssembly = DotnetRuntime::GetAssembly("Game")->GetCoralAssembly();
 
-    RegisterNativeTypes();
+    RegisterAllTypes();
 
     const Coral::Type& scriptComponentType = coreAssembly->GetType(DotnetAssembly::XnorCoreNamespace + ".ScriptComponent");
 
@@ -48,7 +48,7 @@ void DotnetReflection::RegisterScriptType(const std::string& typeName)
     m_DotnetMap.emplace(typeName, info);
 }
 
-void DotnetReflection::RegisterNativeTypes()
+void DotnetReflection::RegisterAllTypes()
 {
     RegisterBaseType<bool_t>("System.Boolean");
     RegisterBaseType<uint8_t>("System.Byte");
@@ -72,6 +72,8 @@ void DotnetReflection::RegisterNativeTypes()
     RegisterBaseType<Vector2>(DotnetAssembly::XnorCoreNamespace + ".Vector2");
     RegisterBaseType<Vector3>(DotnetAssembly::XnorCoreNamespace + ".Vector3");
     RegisterBaseType<Vector4>(DotnetAssembly::XnorCoreNamespace + ".Vector4");
+
+    RegisterCoreType<Light>(DotnetAssembly::XnorCoreNamespace + ".Light");
 }
 
 void DotnetReflection::DisplayType(void* obj, const char_t* const name, const std::string& typeName)
@@ -95,7 +97,7 @@ void DotnetReflection::DisplayType(ScriptComponent* const script)
     {
         const std::string fieldName = field.GetName();
         const std::string typeName = field.GetType().GetFullName();
-        
+
         DisplayType(obj.GetFieldPointer<void>(fieldName), fieldName.c_str(), typeName);
     }
 }

@@ -8,7 +8,8 @@
 #include "scene/component/script_component.hpp"
 
 BEGIN_XNOR_CORE
-    class DotnetReflection
+
+class DotnetReflection
 {
     STATIC_CLASS(DotnetReflection)
 
@@ -28,13 +29,15 @@ public:
 
     template <typename T>
     static void RegisterBaseType(const std::string& typeName);
+    template <typename T>
+    static void RegisterCoreType(const std::string& typeName);
 
     template <typename T>
     static void DisplaySimpleType(T* obj, const char_t* name);
 
     static void RegisterScriptType(const std::string& typeName);
     
-    static void RegisterNativeTypes();
+    static void RegisterAllTypes();
 
     static void DisplayType(void* obj, const char_t* name, const std::string& typeName);
     XNOR_ENGINE static void DisplayType(ScriptComponent* script);

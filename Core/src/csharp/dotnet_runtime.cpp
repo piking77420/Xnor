@@ -5,16 +5,17 @@
 #include "file/file.hpp"
 
 #include "application.hpp"
+#include "reflection/dotnet_reflection.hpp"
 
 // We need to include Window.h here but it must be the last include as it breaks everything otherwise
 #undef APIENTRY
-#include <Windows.h>
-
-#include "reflection/dotnet_reflection.hpp"
+#define XMLDocument XMLDocument_dont_care
+#include <windows.h>
+#undef XMLDocument
 
 using namespace XnorCore;
 
-constexpr const char* AlcName = "XNOR Coral AssemblyLoadContext";
+constexpr const char_t* AlcName = "XNOR Coral AssemblyLoadContext";
 
 Coral::HostSettings DotnetRuntime::m_Settings =
 {

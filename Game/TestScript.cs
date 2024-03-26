@@ -49,7 +49,7 @@ namespace Game
         public override void Begin()
         {
             Logger.LogTempDebug("Bobby began acting!");
-            
+
             color = (ColorHsva) ColorRgb.Red();
         }
 

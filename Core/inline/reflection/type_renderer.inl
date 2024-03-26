@@ -4,7 +4,6 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_stdlib.h"
 #include "magic_enum/magic_enum_all.hpp"
-#include "reflection/dotnet_reflection.hpp"
 #include "scene/component/script_component.hpp"
 #include "utils/utils.hpp"
 #include "world/world.hpp"
@@ -350,7 +349,7 @@ void TypeRenderer::DisplayRawPointer(const Metadata<ReflectT, MemberT, Descripto
         {
             if (ImGui::CollapsingHeader(metadata.name))
             {
-                DotnetReflection::DisplayType(reinterpret_cast<ScriptComponent*>(*metadata.obj));
+                DisplayDotnetObject(reinterpret_cast<ScriptComponent*>(*metadata.obj));
             }
         }
     }

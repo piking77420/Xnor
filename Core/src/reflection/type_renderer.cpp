@@ -1,4 +1,6 @@
 ﻿#include "reflection/type_renderer.hpp"
+
+#include "reflection/dotnet_reflection.hpp"
 #include "reflection/factory.hpp"
 
 using namespace XnorCore;
@@ -6,6 +8,11 @@ using namespace XnorCore;
 void TypeRenderer::DisplayObjectUsingFactory(void* const obj, const size_t hash)
 {
     Factory::DisplayObject(obj, hash);
+}
+
+void TypeRenderer::DisplayDotnetObject(ScriptComponent* script)
+{
+    DotnetReflection::DisplayType(script);
 }
 
 Component* TypeRenderer::FilterComponent(ImGuiTextFilter& filter)
