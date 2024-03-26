@@ -24,7 +24,9 @@ void Collider::Begin()
 
 void Collider::Update()
 {
-    if (PhysicsWorld::IsBodyActive(m_BodyId))
+    m_IsActive = PhysicsWorld::IsBodyActive(m_BodyId);
+
+    if (m_IsActive)
     {
         if (!(constraints & ConstraintPosition))
             entity->transform.SetPosition(PhysicsWorld::GetBodyPosition(m_BodyId));

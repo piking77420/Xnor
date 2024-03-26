@@ -457,6 +457,7 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
 
         constexpr bool_t isConst = !member.is_writable;
         constexpr bool_t hidden = Reflection::HasAttribute<Reflection::HideInInspector, T>();
+        constexpr bool_t readOnly = Reflection::HasAttribute<Reflection::ReadOnly, T>();
         constexpr bool_t display = [&](const bool_t isStatic) -> bool_t
         {
             if constexpr (IsStatic)
@@ -474,7 +475,7 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
 
         if constexpr (!hidden && display)
         {
-            ImGui::BeginDisabled(isConst);
+            ImGui::BeginDisabled(isConst || readOnly);
             
             if constexpr (notifyChange)
             {

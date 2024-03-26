@@ -133,7 +133,7 @@ uint32_t PhysicsWorld::CreateCapsule(
     Collider* const c,
     const Vector3& position,
     const Quaternion& rotation,
-    const Vector3& scale,
+    [[maybe_unused]] const Vector3& scale,
     const bool_t isTrigger,
     const bool_t isStatic,
     const float_t height,

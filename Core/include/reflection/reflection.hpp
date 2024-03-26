@@ -117,6 +117,11 @@ namespace Reflection
 
         constexpr explicit GridPlotting(const float_t min, const float_t max) : minimum(min), maximum(max) {}
     };
+
+    /// @brief Display a field as read only
+    struct ReadOnly : FieldAttribute
+    {
+    };
     
     /// @brief Gets the type info of a class
     /// @tparam ReflectT Type

@@ -46,6 +46,7 @@ protected:
 
     bool_t m_IsStatic = false;
     bool_t m_IsTrigger = false;
+    bool_t m_IsActive = false;
 };
 
 END_XNOR_CORE
@@ -53,5 +54,6 @@ END_XNOR_CORE
 REFL_AUTO(type(XnorCore::Collider, bases<XnorCore::Component>),
     field(constraints, XnorCore::Reflection::EnumFlags()),
     field(m_IsStatic),
-    field(m_IsTrigger)
+    field(m_IsTrigger),
+    field(m_IsActive, XnorCore::Reflection::ReadOnly())
 )
