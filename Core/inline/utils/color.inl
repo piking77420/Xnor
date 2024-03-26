@@ -46,7 +46,7 @@ constexpr ColorRgb::operator ColorHsva() const
     {
         hsv.s = 0xFF * delta / maxVal;
         if (r == maxVal)
-            hsv.h = 0 + HueAngle * (g - b) / delta;
+            hsv.h = HueAngle * (g - b) / delta;
         else if (g == maxVal)
             hsv.h = HueAngle * 2 - 1 + HueAngle * (b - r) / delta;
         else

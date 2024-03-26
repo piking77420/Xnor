@@ -50,7 +50,7 @@ namespace Game
         {
             Logger.LogTempDebug("Bobby began acting!");
 
-            color = (ColorHsva) ColorRgb.Red();
+            color = (ColorHsva) ColorRgb.Red;
         }
 
         public override void Update()
@@ -61,7 +61,7 @@ namespace Game
                 return;
             }
             
-            color.h += intensity;
+            color.H += intensity;
 
             light.color = (Colorf) color;
             light.intensity = 200f;

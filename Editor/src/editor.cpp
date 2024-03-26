@@ -304,6 +304,8 @@ void Editor::UpdateWindow()
 	ImGui::Begin("Debug");
 	if (ImGui::Button("Create C# TestScript entity"))
 		XnorCore::DotnetRuntime::GetAssembly("Game")->ProcessTypes();
+	if (ImGui::Button("Build C# Project"))
+		XnorCore::DotnetRuntime::BuildGameProject();
 	if (ImGui::Button("Reload C# Assemblies"))
 		XnorCore::DotnetRuntime::ReloadAllAssemblies();
 	ImGui::End();

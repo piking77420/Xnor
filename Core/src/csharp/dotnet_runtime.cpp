@@ -67,7 +67,7 @@ void DotnetRuntime::Shutdown()
 
 bool_t DotnetRuntime::LoadAssembly(const std::string& name)
 {
-    const std::filesystem::path&& filepath = Application::executablePath.parent_path().string() + static_cast<char_t>(std::filesystem::path::preferred_separator) + name + ".dll";
+    const std::filesystem::path&& filepath = Application::executablePath.parent_path() / (name + ".dll");
     
     Logger::LogInfo("Loading .NET assembly {}", filepath.filename());
 
@@ -119,6 +119,26 @@ void DotnetRuntime::ReloadAllAssemblies()
     
     for (auto&& assembly : assemblies)
         LoadAssembly(assembly);
+}
+
+bool_t DotnetRuntime::BuildGameProject()
+{
+    constexpr const char* gameProjectLocation = "Game";
+    
+    const std::filesystem::path gameProjectDirectory = gameProjectLocation;
+
+    if (!exists(gameProjectDirectory))
+        return false;
+
+    if (!is_directory(gameProjectDirectory))
+        return false;
+
+    if (!exists(gameProjectDirectory / "Game.csproj"))
+        return false;
+
+    std::system(("start dotnet build " + absolute(gameProjectDirectory).string()).c_str());  // NOLINT(concurrency-mt-unsafe)
+
+    return true;
 }
 
 bool_t DotnetRuntime::GetInitialized()
