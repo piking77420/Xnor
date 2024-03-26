@@ -27,6 +27,9 @@ void Collider::Update()
 {
     m_IsActive = PhysicsWorld::IsBodyActive(m_BodyId);
 
+    if (!m_IsStatic)
+        PhysicsWorld::AddForce(m_BodyId, Vector3::UnitY() * m_Force);
+
     if (m_IsActive)
     {
         if (!(constraints & ConstraintPosition))

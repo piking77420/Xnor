@@ -226,22 +226,50 @@ void PhysicsWorld::SetRotation(const uint32_t bodyId, const Quaternion& rotation
 
 void PhysicsWorld::AddForce(const uint32_t bodyId, const Vector3& force)
 {
-    m_BodyInterface->AddForce(JPH::BodyID(bodyId), ToJph(force));
+    const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
+
+    if (!lock.Succeeded())
+        return;
+
+    JPH::Body& body = lock.GetBody();
+
+    body.AddForce(ToJph(force) / body.GetMotionProperties()->GetInverseMass());
 }
 
 void PhysicsWorld::AddForce(const uint32_t bodyId, const Vector3& force, const Vector3& point)
 {
-    m_BodyInterface->AddForce(JPH::BodyID(bodyId), ToJph(force), ToJph(point));
+    const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
+
+    if (!lock.Succeeded())
+        return;
+
+    JPH::Body& body = lock.GetBody();
+
+    body.AddForce(ToJph(force) / body.GetMotionProperties()->GetInverseMass(), ToJph(point));
 }
 
 void PhysicsWorld::AddImpulse(const uint32_t bodyId, const Vector3& impulse)
 {
-    m_BodyInterface->AddImpulse(JPH::BodyID(bodyId), ToJph(impulse));
+    const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
+
+    if (!lock.Succeeded())
+        return;
+
+    JPH::Body& body = lock.GetBody();
+
+    body.AddImpulse(ToJph(impulse) * body.GetMotionProperties()->GetInverseMass());
 }
 
 void PhysicsWorld::AddImpulse(const uint32_t bodyId, const Vector3& impulse, const Vector3& point)
 {
-    m_BodyInterface->AddImpulse(JPH::BodyID(bodyId), ToJph(impulse), ToJph(point));
+    const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
+
+    if (!lock.Succeeded())
+        return;
+
+    JPH::Body& body = lock.GetBody();
+
+    body.AddImpulse(ToJph(impulse) * body.GetMotionProperties()->GetInverseMass(), ToJph(point));
 }
 
 void PhysicsWorld::AddTorque(const uint32_t bodyId, const Vector3& torque)
