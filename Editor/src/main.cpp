@@ -32,9 +32,6 @@ int main(int, char**)
 	Logger::OpenDefaultFile();
 	XnorFactory::RegisterTypes();
 
-	FileManager::LoadDirectory("assets_internal");
-	FileManager::LoadDirectory("assets");
-
 	Editor editor;
 
 	editor.Update();
