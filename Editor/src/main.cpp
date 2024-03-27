@@ -32,16 +32,12 @@ int main(int, char**)
 	Logger::OpenDefaultFile();
 	XnorFactory::RegisterTypes();
 
-	PhysicsWorld::Initialize();
-
 	FileManager::LoadDirectory("assets_internal");
 	FileManager::LoadDirectory("assets");
 
 	Editor editor;
 
 	editor.Update();
-
-	PhysicsWorld::Destroy();
 
 	return EXIT_SUCCESS;
 }

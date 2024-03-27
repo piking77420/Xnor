@@ -202,7 +202,7 @@ Vector3 PhysicsWorld::GetBodyPosition(const uint32_t bodyId)
 
     if (!IsBodyActive(bodyId))
     {
-        Logger::LogWarning("Physics - Trying to get the position of an inactive body : {}", bodyId);
+        Logger::LogWarning("[Physics] - Trying to get the position of an inactive body : {}", bodyId);
         return Vector3::Zero();
     }
 
@@ -217,7 +217,7 @@ Quaternion PhysicsWorld::GetBodyRotation(uint32_t bodyId)
 
     if (!IsBodyActive(bodyId))
     {
-        Logger::LogWarning("Physics - Trying to get the rotation of an inactive body : {}", bodyId);
+        Logger::LogWarning("[Physics] - Trying to get the rotation of an inactive body : {}", bodyId);
         return Quaternion::Identity();
     }
 
