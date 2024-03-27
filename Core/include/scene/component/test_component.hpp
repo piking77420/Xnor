@@ -13,10 +13,10 @@ BEGIN_XNOR_CORE
 class TestComponent : public Component
 {
     REFLECTABLE_IMPL(TestComponent)
-    
+
 public:
     DEFAULT_COPY_MOVE_OPERATIONS(TestComponent)
-    
+
     XNOR_ENGINE void Begin() override;
 
     XNOR_ENGINE void Update() override;
@@ -28,13 +28,13 @@ private:
     Light* m_Light = nullptr;
 
     ColorHsva m_Color;
-    
+
     float_t m_RotationSpeed = 1.0f;
-    
+
     float_t m_Radius = 1.0f;
 
     float_t m_CurrentAngle = 0.f;
-    
+
     Vector3 m_BasePosition;
 
     bool_t m_Rotate = true;
@@ -47,5 +47,6 @@ REFL_AUTO(
     field(m_Rotate),
     field(m_CurrentAngle, XnorCore::Reflection::NotSerializable()),
     field(m_RotationSpeed),
-    field(m_Radius)
+    field(m_Radius),
+    field(m_TestStruct)
 );

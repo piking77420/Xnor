@@ -260,57 +260,61 @@ void Serializer::SerializeEnum(const Metadata<ReflectT, MemberT, DescriptorT>& m
 template <typename ReflectT, typename MemberT, typename DescriptorT>
 void Serializer::DeserializeSimpleType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
+    const char_t* const value = ReadElementValue(metadata.name);
+
+    if (value == nullptr)
+        return;
+
     if constexpr (Meta::IsSame<MemberT, bool_t>)
     {
-        const char_t* const v = ReadElementValue(metadata.name);
-        if (std::strcmp(v, "true") == 0)
+        if (std::strcmp(value, "true") == 0)
             *metadata.obj = true;
         else
             *metadata.obj = false;
     }
     else if constexpr (Meta::IsIntegral<MemberT>)
     {
-        *metadata.obj = std::atoi(ReadElementValue(metadata.name));
+        *metadata.obj = std::atoi(value);
     }
     else if constexpr (Meta::IsFloatingPoint<MemberT>)
     {
-        *metadata.obj = std::stof(ReadElementValue(metadata.name));
+        *metadata.obj = std::stof(value);
     }
     else if constexpr (Meta::IsSame<MemberT, Vector2i>)
     {
-        sscanf_s(ReadElementValue(metadata.name), "%d ; %d", &metadata.obj->x, &metadata.obj->y);
+        sscanf_s(value, "%d ; %d", &metadata.obj->x, &metadata.obj->y);
     }
     else if constexpr (Meta::IsSame<MemberT, Vector2>)
     {
-        sscanf_s(ReadElementValue(metadata.name), "%f ; %f", &metadata.obj->x, &metadata.obj->y);
+        sscanf_s(value, "%f ; %f", &metadata.obj->x, &metadata.obj->y);
     }
     else if constexpr (Meta::IsSame<MemberT, Vector3>)
     {
-        sscanf_s(ReadElementValue(metadata.name), "%f ; %f ; %f", &metadata.obj->x, &metadata.obj->y, &metadata.obj->z);
+        sscanf_s(value, "%f ; %f ; %f", &metadata.obj->x, &metadata.obj->y, &metadata.obj->z);
     }
     else if constexpr (Meta::IsSame<MemberT, Vector4>)
     {
-        sscanf_s(ReadElementValue(metadata.name), "%f ; %f ; %f ; %f", &metadata.obj->x, &metadata.obj->y, &metadata.obj->z, &metadata.obj->w);
+        sscanf_s(value, "%f ; %f ; %f ; %f", &metadata.obj->x, &metadata.obj->y, &metadata.obj->z, &metadata.obj->w);
     }
     else if constexpr (Meta::IsSame<MemberT, Quaternion>)
     {
-        sscanf_s(ReadElementValue(metadata.name), "%f ; %f ; %f ; %f", &metadata.obj->X(), &metadata.obj->Y(), &metadata.obj->Z(), &metadata.obj->W());
+        sscanf_s(value, "%f ; %f ; %f ; %f", &metadata.obj->X(), &metadata.obj->Y(), &metadata.obj->Z(), &metadata.obj->W());
     }
     else if constexpr (Meta::IsSame<MemberT, ColorRgb>)
     {
-        sscanf_s(ReadElementValue(metadata.name), "%hhu ; %hhu ; %hhu", &metadata.obj->r, &metadata.obj->g, &metadata.obj->b);
+        sscanf_s(value, "%hhu ; %hhu ; %hhu", &metadata.obj->r, &metadata.obj->g, &metadata.obj->b);
     }
     else if constexpr (Meta::IsSame<MemberT, ColorRgba>)
     {
-        sscanf_s(ReadElementValue(metadata.name), "%hhu ; %hhu ; %hhu ; %hhu", &metadata.obj->r, &metadata.obj->g, &metadata.obj->b, &metadata.obj->a);
+        sscanf_s(value, "%hhu ; %hhu ; %hhu ; %hhu", &metadata.obj->r, &metadata.obj->g, &metadata.obj->b, &metadata.obj->a);
     }
     else if constexpr (Meta::IsSame<MemberT, Colorf>)
     {
-        sscanf_s(ReadElementValue(metadata.name), "%f ; %f ; %f ; %f", &metadata.obj->r, &metadata.obj->g, &metadata.obj->b, &metadata.obj->a);
+        sscanf_s(value, "%f ; %f ; %f ; %f", &metadata.obj->r, &metadata.obj->g, &metadata.obj->b, &metadata.obj->a);
     }
     else if constexpr (Meta::IsSame<MemberT, ColorHsva>)
     {
-        sscanf_s(ReadElementValue(metadata.name), "%hhu ; %hhu ; %hhu ; %hhu", &metadata.obj->h, &metadata.obj->s, &metadata.obj->v, &metadata.obj->a);
+        sscanf_s(value, "%hhu ; %hhu ; %hhu ; %hhu", &metadata.obj->h, &metadata.obj->s, &metadata.obj->v, &metadata.obj->a);
     }
     else if constexpr (Meta::IsEnum<MemberT>)
     {
@@ -318,7 +322,7 @@ void Serializer::DeserializeSimpleType(const Metadata<ReflectT, MemberT, Descrip
     }
     else if constexpr (Meta::IsSame<MemberT, std::string>)
     {
-        *metadata.obj = std::string(ReadElementValue(metadata.name));
+        *metadata.obj = std::string(value);
     }
     else if constexpr (Meta::IsPointer<MemberT>)
     {
@@ -330,8 +334,6 @@ void Serializer::DeserializeSimpleType(const Metadata<ReflectT, MemberT, Descrip
     }
     else if constexpr (Meta::IsSame<MemberT, Guid>)
     {
-        const char_t* const value = ReadElementValue(metadata.name);
-
         *metadata.obj = Guid::FromString(value);
     }
     else
@@ -479,7 +481,7 @@ void Serializer::DeserializeListType(const Metadata<ReflectT, MemberT, Descripto
         }
 
         const std::string index = std::to_string(i);
-        Metadata<ReflectT, ListT, DescriptorT> metadataArray = {
+        const Metadata<ReflectT, ListT, DescriptorT> metadataArray = {
             .topLevelObj = metadata.topLevelObj,
             .name = index.c_str(),
             .obj = &(*metadata.obj)[i]

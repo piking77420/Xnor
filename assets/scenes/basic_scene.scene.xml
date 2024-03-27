@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Scene>
+	<m_Entities>
+		<0>
+			<name>Directional</name>
+			<m_EntityId>73C3991F-64C8-43BE-BA-FB-8F-9C-A2-38-C9-75</m_EntityId>
+			<transform>
+				<m_Position>0 ; 0 ; 0</m_Position>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="DirectionalLight">
+					<color>1 ; 1 ; 1 ; 1</color>
+					<intensity>1</intensity>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</0>
+		<1>
+			<name>Plane</name>
+			<m_EntityId>DC36B839-E893-481D-B6-28-93-7E-24-FC-F4-C</m_EntityId>
+			<transform>
+				<m_Position>0 ; -2 ; 0</m_Position>
+				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_Scale>10 ; 1 ; 10</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="MeshRenderer">
+					<model>99097F3B-B578-4C0B-A2-64-E1-51-5A-41-BA-A</model>
+					<material>
+						<materialType>Opaque</materialType>
+						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
+						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
+						<metallic>0</metallic>
+						<roughness>0</roughness>
+						<reflectance>0</reflectance>
+						<emissive>0</emissive>
+						<ambientOcclusion>0</ambientOcclusion>
+						<albedoTexture>5880DD9A-CFA7-4B8E-AE-20-A0-F0-D9-B9-9D-3C</albedoTexture>
+						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
+						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
+						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
+						<ambiantOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambiantOcclusionTexture>
+					</material>
+					<drawModelAabb>false</drawModelAabb>
+				</0>
+				<1 typeName="BoxCollider">
+					<m_Center>0 ; 0 ; 0</m_Center>
+					<m_Size>1 ; 1 ; 1</m_Size>
+					<constraints/>
+					<m_IsStatic>true</m_IsStatic>
+					<m_IsTrigger>false</m_IsTrigger>
+					<m_IsActive>false</m_IsActive>
+				</1>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</1>
+		<2>
+			<name>Sphere</name>
+			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
+			<transform>
+				<m_Position>0 ; 2 ; 3</m_Position>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="MeshRenderer">
+					<model>29075914-46D0-4C58-B8-37-A9-2A-1F-15-91-D1</model>
+					<material>
+						<materialType>Opaque</materialType>
+						<albedoColor>0 ; 1 ; 1 ; 1</albedoColor>
+						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
+						<metallic>0</metallic>
+						<roughness>0</roughness>
+						<reflectance>0</reflectance>
+						<emissive>0</emissive>
+						<ambientOcclusion>0</ambientOcclusion>
+						<albedoTexture>0-0-0-0-0-0-0-0-0-0-0</albedoTexture>
+						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
+						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
+						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
+						<ambiantOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambiantOcclusionTexture>
+					</material>
+					<drawModelAabb>false</drawModelAabb>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</2>
+		<3>
+			<name>VikingRoom</name>
+			<m_EntityId>4ADC5FEE-A8B5-44AD-91-EF-AD-A3-F4-10-D8-72</m_EntityId>
+			<transform>
+				<m_Position>0 ; 1 ; 0</m_Position>
+				<m_EulerRotation>-1.5707964 ; 0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="MeshRenderer">
+					<model>7D4A901C-2429-4A7D-B2-98-A0-92-E4-79-B4-BE</model>
+					<material>
+						<materialType>Opaque</materialType>
+						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
+						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
+						<metallic>0</metallic>
+						<roughness>0</roughness>
+						<reflectance>0</reflectance>
+						<emissive>0</emissive>
+						<ambientOcclusion>0</ambientOcclusion>
+						<albedoTexture>E01B5F33-4744-4694-92-4-19-7E-C7-F2-98-A1</albedoTexture>
+						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
+						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
+						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
+						<ambiantOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambiantOcclusionTexture>
+					</material>
+					<drawModelAabb>false</drawModelAabb>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</3>
+		<4>
+			<name>PointLight</name>
+			<m_EntityId>A284C848-DC61-4853-A4-48-15-9D-CE-5D-73-BD</m_EntityId>
+			<transform>
+				<m_Position>2 ; 3 ; 2</m_Position>
+				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="PointLight">
+					<color>1 ; 1 ; 1 ; 1</color>
+					<intensity>1</intensity>
+				</0>
+				<1 typeName="TestComponent">
+					<m_Rotate>true</m_Rotate>
+					<m_RotationSpeed>1</m_RotationSpeed>
+					<m_Radius>1</m_Radius>
+				</1>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</4>
+		<5>
+			<name>SpotLight</name>
+			<m_EntityId>8B8B51F5-90F0-405B-BE-3C-56-93-F2-7-34-F2</m_EntityId>
+			<transform>
+				<m_Position>-2 ; 3 ; -2</m_Position>
+				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="SpotLight">
+					<cutOff>12.5</cutOff>
+					<outerCutOff>15</outerCutOff>
+					<color>1 ; 1 ; 1 ; 1</color>
+					<intensity>1</intensity>
+				</0>
+				<1 typeName="TestComponent">
+					<m_Rotate>true</m_Rotate>
+					<m_RotationSpeed>1</m_RotationSpeed>
+					<m_Radius>1</m_Radius>
+				</1>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</5>
+		<6>
+			<name>Capsule</name>
+			<m_EntityId>3843FD98-4FF2-4459-98-DA-67-D9-98-57-38-14</m_EntityId>
+			<transform>
+				<m_Position>0 ; 4 ; 0</m_Position>
+				<m_EulerRotation>0.69813174 ; -0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="CapsuleCollider">
+					<m_Height>1</m_Height>
+					<m_Radius>1</m_Radius>
+					<constraints/>
+					<m_IsStatic>false</m_IsStatic>
+					<m_IsTrigger>false</m_IsTrigger>
+					<m_IsActive>false</m_IsActive>
+				</0>
+				<1 typeName="TestComponentPhysics"/>
+				<2 typeName="MeshRenderer">
+					<model>29075914-46D0-4C58-B8-37-A9-2A-1F-15-91-D1</model>
+					<material>
+						<materialType>Opaque</materialType>
+						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
+						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
+						<metallic>0</metallic>
+						<roughness>0</roughness>
+						<reflectance>0</reflectance>
+						<emissive>0</emissive>
+						<ambientOcclusion>0</ambientOcclusion>
+						<albedoTexture>7587E9E6-C775-4518-93-22-41-74-BC-95-DD-3D</albedoTexture>
+						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
+						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
+						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
+						<ambiantOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambiantOcclusionTexture>
+					</material>
+					<drawModelAabb>false</drawModelAabb>
+				</2>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</6>
+	</m_Entities>
+</Scene>
+
