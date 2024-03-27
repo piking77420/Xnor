@@ -111,26 +111,26 @@ float ShadowCalculationSpolight(vec4 fragPosLightSpace, vec3 n, vec3 l,int index
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float closestDepth = texture(SpotLightShadowArray, vec3(projCoords.x,projCoords.y, index)).r;
+    float closestDepth = texture(SpotLightShadowArray, vec3(projCoords.xy, index)).r;
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // calculate bias (based on depth map resolution and slope)
     vec3 normal = normalize(n);
     vec3 lightDir = normalize(l);
-    float bias = max(0.00025f  * (1.0 - dot(normal, lightDir)), 0.000005f);
+    float bias = max(0.00025 * (1.0 - dot(normal, lightDir)), 0.000005);
     // check whether current frag pos is in shadow
     float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
     // PCF
     vec2 texelSize = 1.0 / textureSize(SpotLightShadowArray, index).xy;
     float totalSamples = 0.0;
     float shadowedSamples = 0.0;
-    
+
     for(int x = -1; x <= 1; ++x)
     {
         for(int y = -1; y <= 1; ++y)
         {
             vec2 texel =  projCoords.xy + vec2(x, y) * texelSize;
-            vec3 texelVec3 = vec3(texel.x, texel.y, index);
+            vec3 texelVec3 = vec3(texel.xy, index);
 
             float pcfDepth = texture(SpotLightShadowArray, texelVec3).r;
             totalSamples += 1.0;
@@ -142,7 +142,7 @@ float ShadowCalculationSpolight(vec4 fragPosLightSpace, vec3 n, vec3 l,int index
     // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
     if (projCoords.z > 1.0)
     shadow = 0.0;
-
+    
     return shadow;
 }
 
@@ -192,16 +192,17 @@ vec3 ComputeIbl(float roughness,vec3 kD, float ao,vec3 albedo, vec3 N , vec3 R ,
     return ambient;
 }
 
-vec3 ComputeSpotLight(vec3 baseColor,vec3 fragPos,vec3 v, vec3 n, float roughness, float metallic, vec3 f0)
+vec3 ComputeSpotLight(vec3 baseColor,vec4 fragPos,vec3 v, vec3 n, float roughness, float metallic, vec3 f0)
 {
-    vec3 outLo = vec3(0.f); 
-    
+    vec3 outLo = vec3(0.f);
+    vec3 fragposVec3 = vec3(fragPos.x, fragPos.y, fragPos.z);
+
     for (int i = 0; i < nbrOfSpotLight; i++)
     {
         SpotLightData light = spotLightData[i];
-        float distance = length(light.position - fragPos);
+        float distance = length(light.position - fragposVec3);
         
-        vec3 l = normalize(vec3(light.position - fragPos));
+        vec3 l = normalize(vec3(light.position - fragposVec3));
         vec3 h = normalize(v + l);
 
         float theta = dot(l, normalize(-light.direction));
@@ -234,8 +235,7 @@ vec3 ComputeSpotLight(vec3 baseColor,vec3 fragPos,vec3 v, vec3 n, float roughnes
         
         if (light.isCastShadow) 
         {
-            vec4 fragposVec4 = vec4(fragPos,1.0f);
-            float shadow = ShadowCalculationSpolight(light.lightSpaceMatrix * fragposVec4, n, l, i);
+            float shadow = ShadowCalculationSpolight(light.lightSpaceMatrix * fragPos, n, l, i);
             Lo *= (1.0-shadow);
         }
    
@@ -295,6 +295,8 @@ vec3 ComputePointLight(vec3 baseColor,vec3 fragPos,vec3 v, vec3 n, float roughne
 void main()
 {
     vec3 fragPos = texture(gPosition, texCoords).rgb;
+    vec4 fragPosVec4 = texture(gPosition, texCoords);
+
     vec3 normal = texture(gNormal, texCoords).rgb;
     vec3 albedo =  pow(texture(gAlbedoSpec, texCoords).rgb,vec3(2.2));
     
@@ -344,7 +346,6 @@ void main()
     float NdotL = max(dot(n, l), 0.0);
     
     Lo += (kD * albedo * InvPI + specular) * radiance * NdotL;
-    vec4 fragPosVec4 = texture(gPosition, texCoords);
     
     
     if (directionalData.isDirlightCastShadow)
@@ -354,7 +355,7 @@ void main()
     }
 
     Lo += ComputePointLight(albedo, fragPos, v, n, roughness, metallic, F0);
-    Lo += ComputeSpotLight(albedo, fragPos, v, n, roughness, metallic, F0);
+    Lo += ComputeSpotLight(albedo, fragPosVec4, v, n, roughness, metallic, F0);
 
 
     vec3 ambient = ComputeIbl(roughness, kD, ambientOcclusion, albedo, n, r, v, f);

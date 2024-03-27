@@ -33,7 +33,7 @@ void ReferenceCounter<T>::IncWeak(Pointer<T>* weakReferenceOwner)
     m_WeakReferenceOwners.push_back(weakReferenceOwner);
 }
 
-template <typename T>
+template <typename T>   
 bool ReferenceCounter<T>::DecStrong()
 {
     if (m_Strong == 0 || --m_Strong == 0)
