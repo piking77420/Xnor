@@ -68,7 +68,7 @@ std::string Utils::HumanizeVariableName(const std::string& str)
         result = result.substr(2);
 
     return result;
-   // return HumanizeString(result);
+    // return HumanizeString(result);
 }
 
 float_t Utils::NormalizeAngle(float_t angle)

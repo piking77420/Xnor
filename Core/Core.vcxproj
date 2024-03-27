@@ -237,6 +237,7 @@
     <ClCompile Include="externals\src\RapidXMLSTD.cpp" />
     <ClCompile Include="externals\src\stb\stb_image.c" />
     <ClCompile Include="externals\src\ttf\ttfParser.cpp" />
+    <ClInclude Include="include\scene\component\test_component_physics.hpp" />
     <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\csharp\dotnet_assembly.cpp" />
     <ClCompile Include="src\csharp\dotnet_runtime.cpp" />
@@ -584,6 +585,7 @@
     <ClCompile Include="src\scene\component\mesh_renderer.cpp" />
     <ClCompile Include="src\scene\component\script_component.cpp" />
     <ClCompile Include="src\scene\component\test_component.cpp" />
+    <ClCompile Include="src\scene\component\test_component_physics.cpp" />
     <ClCompile Include="src\scene\entity.cpp" />
     <ClCompile Include="src\scene\scene.cpp" />
     <ClCompile Include="src\screen.cpp" />

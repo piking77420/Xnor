@@ -44,6 +44,11 @@ static Vector3 FromJph(const JPH::Vec3& in)
     return Vector3(in.GetX(), in.GetY(), in.GetZ());
 }
 
+static Quaternion FromJph(const JPH::Quat& in)
+{
+    return Quaternion(in.GetX(), in.GetY(), in.GetZ(), in.GetW());
+}
+
 void PhysicsWorld::Initialize()
 {
     // Register allocation hook
@@ -218,7 +223,7 @@ Quaternion PhysicsWorld::GetBodyRotation(uint32_t bodyId)
 
     const JPH::Quat rotation = m_BodyInterface->GetRotation(id);
 
-    return Quaternion(rotation.GetX(), rotation.GetY(), rotation.GetZ(), rotation.GetW());
+    return FromJph(rotation);
 }
 
 void PhysicsWorld::SetPosition(const uint32_t bodyId, const Vector3& position)

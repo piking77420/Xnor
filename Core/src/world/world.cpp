@@ -12,6 +12,8 @@ void World::Begin()
 
 void World::Update()
 {
-    PhysicsWorld::Update(Time::GetDeltaTime());
     scene->Update();
+    scene->PrePhysics();
+    PhysicsWorld::Update(Time::GetDeltaTime());
+    scene->PostPhysics();
 }

@@ -40,19 +40,19 @@ void ContactListenerImpl::OnContactAdded(
     if (inBody1.IsSensor() && !inBody2.IsSensor())
     {
         // Body 1 is the trigger, so body 2 entered in it
-        c1->onTriggerEnter.Invoke(c2, data);
+        c1->onTriggerEnter.Invoke(c1, c2, data);
     }
     else if (!inBody1.IsSensor() && inBody2.IsSensor())
     {
         // Body 2 is the trigger, so body 1 entered in it
-        c2->onTriggerEnter.Invoke(c1, data);
+        c2->onTriggerEnter.Invoke(c2, c1, data);
     }
     else if (!inBody1.IsSensor() && !inBody2.IsSensor())
     {
         // Both body aren't triggers, so it's a normal collision
         // We call the events of both of them unlike the triggers
-        c1->onCollisionEnter.Invoke(c2, data);
-        c2->onCollisionEnter.Invoke(c1, data);
+        c1->onCollisionEnter.Invoke(c1, c2, data);
+        c2->onCollisionEnter.Invoke(c2, c1, data);
     }
     else
     {
@@ -80,19 +80,19 @@ void ContactListenerImpl::OnContactPersisted(
     if (inBody1.IsSensor() && !inBody2.IsSensor())
     {
         // Body 1 is the trigger, so body 2 entered in it
-        c1->onTriggerStay.Invoke(c2, data);
+        c1->onTriggerStay.Invoke(c1, c2, data);
     }
     else if (!inBody1.IsSensor() && inBody2.IsSensor())
     {
         // Body 2 is the trigger, so body 1 entered in it
-        c2->onTriggerStay.Invoke(c1, data);
+        c2->onTriggerStay.Invoke(c2, c1, data);
     }
     else if (!inBody1.IsSensor() && !inBody2.IsSensor())
     {
         // Both body aren't triggers, so it's a normal collision
         // We call the events of both of them unlike the triggers
-        c1->onCollisionStay.Invoke(c2, data);
-        c2->onCollisionStay.Invoke(c1, data);
+        c1->onCollisionStay.Invoke(c1, c2, data);
+        c2->onCollisionStay.Invoke(c2, c1, data);
     }
     else
     {
@@ -113,11 +113,11 @@ void ContactListenerImpl::OnContactRemoved(const JPH::SubShapeIDPair& inSubShape
     if (c1->IsTrigger() && !c2->IsTrigger())
     {
         // Body 1 is the trigger, so body 2 entered in it
-        c1->onTriggerExit.Invoke(c2);
+        c1->onTriggerExit.Invoke(c1, c2);
     }
     else if (!c1->IsTrigger() && c2->IsTrigger())
     {
         // Body 2 is the trigger, so body 1 entered in it
-        c2->onTriggerExit.Invoke(c1);
+        c2->onTriggerExit.Invoke(c2, c1);
     }
 }

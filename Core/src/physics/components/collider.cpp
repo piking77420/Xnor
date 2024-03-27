@@ -24,20 +24,29 @@ void Collider::Begin()
 
 void Collider::Update()
 {
-    m_IsActive = PhysicsWorld::IsBodyActive(m_BodyId);
+}
 
+void Collider::PrePhysics()
+{
     if (m_IsActive)
     {
-        if (!(constraints & ConstraintPosition))
-            entity->transform.SetPosition(PhysicsWorld::GetBodyPosition(m_BodyId));
-        else
-            PhysicsWorld::SetPosition(m_BodyId, entity->transform.GetPosition());
-            
-        if (!(constraints & ConstraintRotation))
-            entity->transform.SetRotationEulerAngle(Quaternion::ToEuler(PhysicsWorld::GetBodyRotation(m_BodyId)));
-        else
-            PhysicsWorld::SetRotation(m_BodyId, entity->transform.GetRotation());
+        PhysicsWorld::SetPosition(m_BodyId, entity->transform.GetPosition());
+        PhysicsWorld::SetRotation(m_BodyId, entity->transform.GetRotation());
     }
+}
+
+void Collider::PostPhysics()
+{
+    m_IsActive = PhysicsWorld::IsBodyActive(m_BodyId);
+
+    if (!m_IsActive)
+        return;
+        
+    if (!(constraints & ConstraintPosition))
+        entity->transform.SetPosition(PhysicsWorld::GetBodyPosition(m_BodyId));
+
+    if (!(constraints & ConstraintRotation))
+        entity->transform.SetRotationEulerAngle(Quaternion::ToEuler(PhysicsWorld::GetBodyRotation(m_BodyId)));
 }
 
 bool_t Collider::IsTrigger() const
@@ -47,33 +56,33 @@ bool_t Collider::IsTrigger() const
 
 void Collider::AddDebugEvents()
 {
-    onTriggerEnter += [&](const Collider* const other, const CollisionData& data) -> void
+    onTriggerEnter += [](const Collider* const self, const Collider* const other, const CollisionData& data) -> void
     {
-        Logger::LogDebug("OnTriggerEnter between {} and {} ; Normal : {} ; Pen depth : {}", entity->name, other->entity->name, data.normal, data.penetrationDepth);
+        Logger::LogDebug("OnTriggerEnter between {} and {} ; Normal : {} ; Pen depth : {}", self->entity->name, other->entity->name, data.normal, data.penetrationDepth);
     };
     
-    onTriggerStay += [&](const Collider* const other, const CollisionData& data) -> void
+    onTriggerStay += [](const Collider* const self, const Collider* const other, const CollisionData& data) -> void
     {
-        Logger::LogDebug("OnTriggerStay between {} and {} ; Normal : {} ; Pen depth : {}", entity->name, other->entity->name, data.normal, data.penetrationDepth);
+        Logger::LogDebug("OnTriggerStay between {} and {} ; Normal : {} ; Pen depth : {}", self->entity->name, other->entity->name, data.normal, data.penetrationDepth);
     };
 
-    onTriggerExit += [&](const Collider* const other) -> void
+    onTriggerExit += [](const Collider* const self, const Collider* const other) -> void
     {
-        Logger::LogDebug("OnTriggerExit between {} and {}", entity->name, other->entity->name);
+        Logger::LogDebug("OnTriggerExit between {} and {}", self->entity->name, other->entity->name);
     };
 
-    onCollisionEnter += [&](const Collider* const other, const CollisionData& data) -> void
+    onCollisionEnter += [](const Collider* const self, const Collider* const other, const CollisionData& data) -> void
     {
-        Logger::LogDebug("OnCollisionEnter between {} and {} ; Normal : {} ; Pen depth : {}", entity->name, other->entity->name, data.normal, data.penetrationDepth);
+        Logger::LogDebug("OnCollisionEnter between {} and {} ; Normal : {} ; Pen depth : {}", self->entity->name, other->entity->name, data.normal, data.penetrationDepth);
     };
 
-    onCollisionStay += [&](const Collider* const other, const CollisionData& data) -> void
+    onCollisionStay += [](const Collider* const self, const Collider* const other, const CollisionData& data) -> void
     {
-        Logger::LogDebug("OnCollisionStay between {} and {} ; Normal : {} ; Pen depth : {}", entity->name, other->entity->name, data.normal, data.penetrationDepth);
+        Logger::LogDebug("OnCollisionStay between {} and {} ; Normal : {} ; Pen depth : {}", self->entity->name, other->entity->name, data.normal, data.penetrationDepth);
     };
 
-    onCollisionExit += [&](const Collider* const other) -> void
+    onCollisionExit += [](const Collider* const self, const Collider* const other) -> void
     {
-        Logger::LogDebug("OnCollisionExit between {} and {}", entity->name, other->entity->name);
+        Logger::LogDebug("OnCollisionExit between {} and {}", self->entity->name, other->entity->name);
     };
 }

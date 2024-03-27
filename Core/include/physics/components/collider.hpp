@@ -26,16 +26,18 @@ public:
 
     XNOR_ENGINE void Begin() override;
     XNOR_ENGINE void Update() override;
+    XNOR_ENGINE void PrePhysics() override;
+    XNOR_ENGINE void PostPhysics() override;
 
     [[nodiscard]]
     XNOR_ENGINE bool_t IsTrigger() const;
 
-    Event<Collider*, const CollisionData&> onTriggerEnter;
-    Event<Collider*, const CollisionData&> onTriggerStay;
-    Event<Collider*> onTriggerExit;
-    Event<Collider*, const CollisionData&> onCollisionEnter;
-    Event<Collider*, const CollisionData&> onCollisionStay;
-    Event<Collider*> onCollisionExit;
+    Event<Collider*, Collider*, const CollisionData&> onTriggerEnter;
+    Event<Collider*, Collider*, const CollisionData&> onTriggerStay;
+    Event<Collider*, Collider*> onTriggerExit;
+    Event<Collider*, Collider*, const CollisionData&> onCollisionEnter;
+    Event<Collider*, Collider*, const CollisionData&> onCollisionStay;
+    Event<Collider*, Collider*> onCollisionExit;
 
     ColliderConstraints constraints = ConstraintNone;
 

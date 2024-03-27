@@ -24,12 +24,19 @@ public:
     DEFAULT_COPY_MOVE_OPERATIONS(Component)
 
     /// @brief Begins the component
-    virtual void Begin();
+    virtual void Begin() {}
 
     /// @brief Updates the component
-    virtual void Update();
+    virtual void Update() {}
+
+    /// @brief Called before the physics update
+    virtual void PrePhysics() {}
+
+    /// @brief Called after the physics update
+    virtual void PostPhysics() {}
 
     /// @brief Get the Entity on which this Component is attached
+    [[nodiscard]]
     const Entity* GetEntity() const;
 
 #ifndef SWIG

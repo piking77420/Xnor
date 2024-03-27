@@ -11,6 +11,7 @@
 #include "scene/component/mesh_renderer.hpp"
 #include "scene/component/script_component.hpp"
 #include "scene/component/test_component.hpp"
+#include "scene/component/test_component_physics.hpp"
 
 using namespace XnorCore;
 
@@ -95,6 +96,7 @@ void XnorFactory::RegisterTypes()
     RegisterFactoryType<BoxCollider>();
     RegisterFactoryType<SphereCollider>();
     RegisterFactoryType<CapsuleCollider>();
+    RegisterFactoryType<TestComponentPhysics>();
 }
 
 std::string XnorFactory::GetTypeName(const size_t hash)
