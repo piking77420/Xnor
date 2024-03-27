@@ -2,6 +2,18 @@ namespace Xnor.Core
 {
     public struct Colorf(float r, float g, float b, float a = 1f)
     {
+        public static readonly Colorf White = new(1f, 1f, 1f);
+        public static readonly Colorf Gray = new(0.5f, 0.5f, 0.5f);
+        public static readonly Colorf Black = new(0, 0, 0);
+        
+        public static readonly Colorf Red = new(1f, 0, 0);
+        public static readonly Colorf Green = new(0, 1f, 0);
+        public static readonly Colorf Blue = new(0, 0, 1f);
+        
+        public static readonly Colorf Yellow = new(1f, 1f, 0);
+        public static readonly Colorf Cyan = new(0, 1f, 1f);
+        public static readonly Colorf Magenta = new(1f, 0, 1f);
+        
         public static Colorf operator +(Colorf a, Colorf b) => new(MathF.Min(a.R + b.R, 1f), MathF.Min(a.G + b.G, 1f), MathF.Min(a.B + b.B, 1f), MathF.Min(a.A + b.A, 1f));
 
         public static Colorf operator *(Colorf a, Colorf b) => new(MathF.Min(a.R * b.R, 1f), MathF.Min(a.G * b.G, 1f), MathF.Min(a.B * b.B, 1f), MathF.Min(a.A * b.A, 1f));

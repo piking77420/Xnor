@@ -45,26 +45,32 @@ namespace Game
             Logger.LogTempDebug("Bobby was constructed!");
             intensity = 1;
         }
+
+        ~TestScript()
+        {
+            Logger.LogTempDebug("Bobby was destructed!");
+        }
         
         public override void Begin()
         {
             Logger.LogTempDebug("Bobby began acting!");
 
-            color = (ColorHsva) ColorRgb.Red;
+            color = ColorHsva.Red;
         }
 
         public override void Update()
         {
             if (light == null)
             {
-                light = GetComponent<PointLight>();
-                return;
+                if (!TryGetComponent(out PointLight pointLight))
+                    return;
+
+                light = pointLight;
             }
             
             color.H += intensity;
 
             light.color = (Colorf) color;
-            light.intensity = 200f;
 
             transform.SetPositionX(MathF.Cos(Time.GetTotalTime()) * 2f);
             transform.SetPositionZ(MathF.Sin(Time.GetTotalTime()) * 2f);

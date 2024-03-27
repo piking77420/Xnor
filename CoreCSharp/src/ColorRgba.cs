@@ -2,6 +2,18 @@ namespace Xnor.Core
 {
     public struct ColorRgba(byte r, byte g, byte b, byte a = byte.MaxValue)
     {
+        public static readonly ColorRgba White = new(byte.MaxValue, byte.MaxValue, byte.MaxValue);
+        public static readonly ColorRgba Gray = new(byte.MaxValue / 2, byte.MaxValue / 2, byte.MaxValue / 2);
+        public static readonly ColorRgba Black = new(0, 0, 0);
+        
+        public static readonly ColorRgba Red = new(byte.MaxValue, 0, 0);
+        public static readonly ColorRgba Green = new(0, byte.MaxValue, 0);
+        public static readonly ColorRgba Blue = new(0, 0, byte.MaxValue);
+        
+        public static readonly ColorRgba Yellow = new(byte.MaxValue, byte.MaxValue, 0);
+        public static readonly ColorRgba Cyan = new(0, byte.MaxValue, byte.MaxValue);
+        public static readonly ColorRgba Magenta = new(byte.MaxValue, 0, byte.MaxValue);
+        
         public static ColorRgba operator +(ColorRgba a, ColorRgba b)
         {
             // Prevent overflow
@@ -57,11 +69,11 @@ namespace Xnor.Core
             {
                 hsv.S = (byte) (byte.MaxValue * delta / maxVal);
                 if (color.R == maxVal)
-                    hsv.H = (byte) (ColorHsva.HueAngle * (color.G - color.B) / delta);
+                    hsv.H = (byte) (ColorHsva.HueCircleOver6 * (color.G - color.B) / delta);
                 else if (color.G == maxVal)
-                    hsv.H = (byte) (ColorHsva.HueAngle * 2 - 1 + ColorHsva.HueAngle * (color.B - color.R) / delta);
+                    hsv.H = (byte) (ColorHsva.HueCircleOver3 - 1 + ColorHsva.HueCircleOver6 * (color.B - color.R) / delta);
                 else
-                    hsv.H = (byte) (ColorHsva.HueAngle * 4 - 1 + ColorHsva.HueAngle * (color.R - color.G) / delta);
+                    hsv.H = (byte) (ColorHsva.HueCircleOver6 * 4 - 1 + ColorHsva.HueCircleOver6 * (color.R - color.G) / delta);
             }
             return hsv;
         }

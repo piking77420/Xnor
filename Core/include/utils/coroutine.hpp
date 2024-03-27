@@ -8,25 +8,30 @@
 
 BEGIN_XNOR_CORE
 
-/// @brief Wrapper around [C++20 Coroutines](https://en.cppreference.com/w/cpp/language/coroutines).
-/// @tparam AwaitT 
-template <Concepts::DurationT AwaitT = std::chrono::milliseconds>
+// Everything named using the snake_case convention in this file is required by C++20 coroutines: https://en.cppreference.com/w/cpp/language/coroutines
+
+/// @brief Wrapper around C++20 Coroutines.
+/// @see <a href="https://en.cppreference.com/w/cpp/language/coroutines">C++20 Coroutines</a>
 class Coroutine
 {
+public:
+    using AwaitType = std::chrono::milliseconds;
+    
+private:
     struct Awaitable
     {
-        template<Concepts::ConvertibleToT<AwaitT> From>
-        bool_t await_ready(From&& from);
+        AwaitType duration;
+        
+        bool_t await_ready(const AwaitType& from);
 
         bool_t await_suspend(std::coroutine_handle<> h);
 
         void await_resume();
     };
     
-    // Required by C++20 coroutines: https://en.cppreference.com/w/cpp/language/coroutines
     struct promise_type
     {
-        AwaitT awaitValue;
+        AwaitType awaitValue;
         
         std::exception_ptr exception;
  
@@ -40,8 +45,7 @@ class Coroutine
 
         void return_void();
 
-        template<Concepts::DurationT OtherDurationT>
-        Awaitable await_transform(OtherDurationT&& duration);
+        Awaitable await_transform(const AwaitType& duration);
 
         void return_value();
     };
@@ -62,5 +66,3 @@ private:
 };
 
 END_XNOR_CORE
-
-#include "utils/coroutine.inl"

@@ -93,6 +93,7 @@ void DotnetReflection::DisplayType(ScriptComponent* const script)
 {
     Coral::ManagedObject& obj = script->GetManagedObject();
 
+    ImGui::PushID(script);
     for (Coral::FieldInfo& field : obj.GetType().GetFields())
     {
         const std::string fieldName = field.GetName();
@@ -100,4 +101,5 @@ void DotnetReflection::DisplayType(ScriptComponent* const script)
 
         DisplayType(obj.GetFieldPointer<void>(fieldName), fieldName.c_str(), typeName);
     }
+    ImGui::PopID();
 }
