@@ -32,6 +32,8 @@ public:
     [[nodiscard]]
     XNOR_ENGINE bool_t IsTrigger() const;
 
+    XNOR_ENGINE void AddForce(const Vector3& force) const;
+
     Event<Collider*, Collider*, const CollisionData&> onTriggerEnter;
     Event<Collider*, Collider*, const CollisionData&> onTriggerStay;
     Event<Collider*, Collider*> onTriggerExit;

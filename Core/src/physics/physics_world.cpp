@@ -131,6 +131,7 @@ void PhysicsWorld::Destroy()
 void PhysicsWorld::Update(const float_t deltaTime)
 {
     m_PhysicsSystem->Update(deltaTime, 1, m_Allocator, m_JobSystem);
+    m_ContactListener.ProcessEvents();
 }
 
 void PhysicsWorld::SetGravity(const Vector3& gravity)

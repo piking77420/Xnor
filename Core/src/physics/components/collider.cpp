@@ -54,6 +54,11 @@ bool_t Collider::IsTrigger() const
     return m_IsTrigger;
 }
 
+void Collider::AddForce(const Vector3& force) const
+{
+    PhysicsWorld::AddForce(m_BodyId, force);
+}
+
 void Collider::AddDebugEvents()
 {
     onTriggerEnter += [](const Collider* const self, const Collider* const other, const CollisionData& data) -> void

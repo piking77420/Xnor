@@ -1,7 +1,9 @@
 #include "scene/component/test_component_physics.hpp"
 
 #include "input/input.hpp"
+#include "physics/components/collider.hpp"
 #include "scene/entity.hpp"
+#include "utils/logger.hpp"
 
 using namespace XnorCore;
 

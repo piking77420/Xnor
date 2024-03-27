@@ -21,4 +21,4 @@ public:
 
 END_XNOR_CORE
 
-REFL_AUTO(type(XnorCore::TestComponentPhysics, bases<XnorCore::Component>))
+REFL_AUTO(type(XnorCore::TestComponentPhysics, bases<XnorCore::Component>));

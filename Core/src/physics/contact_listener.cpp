@@ -7,6 +7,49 @@
 
 using namespace XnorCore;
 
+void ContactListenerImpl::ProcessEvents()
+{
+    for (size_t i = 0; i < EventCount; i++)
+    {
+        for (size_t j = 0; j < m_Events[i].size(); j++)
+        {
+            const EventInfo& info = m_Events[i][j];
+
+            switch (i)
+            {
+                case TriggerEnter:
+                    info.self->onTriggerEnter.Invoke(info.self, info.other, info.data);
+                    break;
+
+                case TriggerStay:
+                    info.self->onTriggerStay.Invoke(info.self, info.other, info.data);
+                    break;
+
+                case TriggerExit:
+                    info.self->onTriggerExit.Invoke(info.self, info.other);
+                    break;
+
+                case CollisionEnter:
+                    info.self->onCollisionEnter.Invoke(info.self, info.other, info.data);
+                    break;
+
+                case CollisionStay:
+                    info.self->onCollisionStay.Invoke(info.self, info.other, info.data);
+                    break;
+
+                case CollisionExit:
+                    info.self->onCollisionExit.Invoke(info.self, info.other);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+
+    for (size_t i = 0; i < EventCount; i++)
+        m_Events[i].clear();
+}
 
 JPH::ValidateResult ContactListenerImpl::OnContactValidate(
     [[maybe_unused]] const JPH::Body& inBody1,
@@ -40,19 +83,19 @@ void ContactListenerImpl::OnContactAdded(
     if (inBody1.IsSensor() && !inBody2.IsSensor())
     {
         // Body 1 is the trigger, so body 2 entered in it
-        c1->onTriggerEnter.Invoke(c1, c2, data);
+        m_Events[TriggerEnter].emplace_back(c1, c2, data);
     }
     else if (!inBody1.IsSensor() && inBody2.IsSensor())
     {
         // Body 2 is the trigger, so body 1 entered in it
-        c2->onTriggerEnter.Invoke(c2, c1, data);
+        m_Events[TriggerEnter].emplace_back(c2, c1, data);
     }
     else if (!inBody1.IsSensor() && !inBody2.IsSensor())
     {
         // Both body aren't triggers, so it's a normal collision
         // We call the events of both of them unlike the triggers
-        c1->onCollisionEnter.Invoke(c1, c2, data);
-        c2->onCollisionEnter.Invoke(c2, c1, data);
+        m_Events[CollisionEnter].emplace_back(c1, c2, data);
+        m_Events[CollisionEnter].emplace_back(c2, c1, data);
     }
     else
     {
@@ -80,19 +123,19 @@ void ContactListenerImpl::OnContactPersisted(
     if (inBody1.IsSensor() && !inBody2.IsSensor())
     {
         // Body 1 is the trigger, so body 2 entered in it
-        c1->onTriggerStay.Invoke(c1, c2, data);
+        m_Events[TriggerStay].emplace_back(c1, c2, data);
     }
     else if (!inBody1.IsSensor() && inBody2.IsSensor())
     {
         // Body 2 is the trigger, so body 1 entered in it
-        c2->onTriggerStay.Invoke(c2, c1, data);
+        m_Events[TriggerStay].emplace_back(c2, c1, data);
     }
     else if (!inBody1.IsSensor() && !inBody2.IsSensor())
     {
         // Both body aren't triggers, so it's a normal collision
         // We call the events of both of them unlike the triggers
-        c1->onCollisionStay.Invoke(c1, c2, data);
-        c2->onCollisionStay.Invoke(c2, c1, data);
+        m_Events[CollisionStay].emplace_back(c1, c2, data);
+        m_Events[CollisionStay].emplace_back(c2, c1, data);
     }
     else
     {
@@ -104,20 +147,30 @@ void ContactListenerImpl::OnContactRemoved(const JPH::SubShapeIDPair& inSubShape
 {
     const uint32_t bodyId1 = inSubShapePair.GetBody1ID().GetIndexAndSequenceNumber();
     const uint32_t bodyId2 = inSubShapePair.GetBody2ID().GetIndexAndSequenceNumber();
+
     Collider* const c1 = PhysicsWorld::GetColliderFromId(bodyId1);
     Collider* const c2 = PhysicsWorld::GetColliderFromId(bodyId2);
 
+    constexpr CollisionData data;
+    
     if (c1 == nullptr || c2 == nullptr)
         return;
     
     if (c1->IsTrigger() && !c2->IsTrigger())
     {
         // Body 1 is the trigger, so body 2 entered in it
-        c1->onTriggerExit.Invoke(c1, c2);
+        m_Events[TriggerExit].emplace_back(c1, c2, data);
     }
     else if (!c1->IsTrigger() && c2->IsTrigger())
     {
         // Body 2 is the trigger, so body 1 entered in it
-        c2->onTriggerExit.Invoke(c2, c1);
+        m_Events[TriggerExit].emplace_back(c2, c1, data);
+    }
+    else if (!c1->IsTrigger() && !c2->IsTrigger())
+    {
+        // Both body aren't triggers, so it's a normal collision
+        // We call the events of both of them unlike the triggers
+        m_Events[CollisionExit].emplace_back(c1, c2, data);
+        m_Events[CollisionExit].emplace_back(c2, c1, data);
     }
 }
