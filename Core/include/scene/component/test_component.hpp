@@ -47,6 +47,5 @@ REFL_AUTO(
     field(m_Rotate),
     field(m_CurrentAngle, XnorCore::Reflection::NotSerializable()),
     field(m_RotationSpeed),
-    field(m_Radius),
-    field(m_TestStruct)
+    field(m_Radius)
 );
