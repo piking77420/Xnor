@@ -23,6 +23,7 @@ class LightManager
 {
 private:
     static constexpr Vector2i DirectionalShadowMapSize = { 1024, 1024 };
+    static constexpr Vector2i SpotLightShadowMapSize = { 1024, 1024 };
     static constexpr TextureInternalFormat::TextureInternalFormat ShadowDepthTextureInternalFormat = TextureInternalFormat::DepthComponent32F;
     
 public:
@@ -45,6 +46,9 @@ public:
     XNOR_ENGINE void DrawLightGizmo(const Camera& camera, const Scene& scene);
 
     XNOR_ENGINE void DrawLightGizmoWithShader(const Camera& camera, const Scene& scene,const Pointer<Shader>& shader) const;
+    
+    XNOR_ENGINE void BindShadowMap() const;
+
 
     std::vector<const PointLight*> pointLights;
     std::vector<const SpotLight*> spotLights;
@@ -65,7 +69,8 @@ private:
         const Light* light = nullptr;
         RenderingLight type;
     };
-    
+
+    GpuLightData* m_GpuLightData = nullptr;
 
     Pointer<Texture> m_PointLightTexture;
     Pointer<Texture> m_DirLightTexture;
@@ -83,6 +88,8 @@ private:
 
     RenderPass m_ShadowRenderPass;
     FrameBuffer* m_ShadowFrameBuffer {nullptr};
+
+    Texture* m_ShadowMapTextureArray = nullptr;
     
     XNOR_ENGINE void FecthLightInfo();
 

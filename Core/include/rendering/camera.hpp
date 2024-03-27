@@ -31,6 +31,10 @@ public:
 	/// @brief Field of view
 	float_t fov = 90.f;
 
+	Vector2 leftRight = { -10.f, 10.f};
+
+	Vector2 bottomtop = { -10.f, 10.f};
+
 	bool_t isOrthoGraphic = false;
 
 	/// @brief Computes the projection @ref Matrix of the camera

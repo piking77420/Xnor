@@ -284,8 +284,14 @@ struct RenderTargetInfo
 /// @brief Texture creation info
 struct TextureCreateInfo
 {
+	TextureType::TextureType textureType = TextureType::Texture2D;
+	
 	/// @brief Data
-	void* data = nullptr;
+	std::vector<void*> datas;
+	/// @brief nbr mipmap
+	uint32_t mipMaplevel = 1;
+	/// @brief nbr of texture level 
+	uint32_t depth = 1;
 	/// @brief Size
 	Vector2i size = Vector2i::Zero();
 	/// @brief Filtering
@@ -298,25 +304,9 @@ struct TextureCreateInfo
 	TextureInternalFormat::TextureInternalFormat internalFormat{};
 	/// @brief Data type
 	DataType::DataType dataType = DataType::UnsignedByte;
-};
-
-/// @brief Cube map creation info
-struct CreateCubeMapInfo
-{
-	/// @brief Data
-	const std::array<void*, 6>* datas = nullptr;
-	/// @brief Size
-	Vector2i size = Vector2i::Zero();
-	/// @brief Filtering
-	TextureFiltering::TextureFiltering filtering{};
-	/// @brief Wrapping
-	TextureWrapping::TextureWrapping wrapping{};
-	/// @brief Format
-	TextureFormat::TextureFormat format{};
-	/// @brief Internal format
-	TextureInternalFormat::TextureInternalFormat internalFormat{};
-	/// @brief Data type
-	DataType::DataType dataType = DataType::UnsignedByte;
+	/// @brief Border values 
+	float_t borderColor[4] = { 1.f, 1.f, 1.f, 1.f };
+	
 };
 
 /// @brief Camera UniformBuffer data
@@ -496,7 +486,9 @@ struct DirectionalLightData
 	Vector3 direction;
 	
 	/// @brief CastShadow
-	//int32_t castShadow = 0;
+	int32_t isDirlightCastShadow = 0;
+
+	Matrix lightSpaceMatrix;
 };
 
 

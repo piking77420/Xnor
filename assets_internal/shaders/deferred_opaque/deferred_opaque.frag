@@ -30,6 +30,8 @@ struct DirectionalData
     vec3 color;
     float intensity;
     vec3 direction;
+    bool isDirlightCastShadow;
+    mat4 lightSpaceMatrix;
 };
 
 layout (std140, binding = 0) uniform CameraUniform
@@ -64,8 +66,7 @@ uniform sampler2D brdfLUT;
 
 in vec2 texCoords;
 
-uniform sampler2D shadowMap;
-uniform mat4 lightSpaceMatrix;
+uniform sampler2D dirLightShadowMap;
 
 float ShadowCalculation(vec4 fragPosLightSpace, vec3 n, vec3 l)
 {
@@ -74,7 +75,7 @@ float ShadowCalculation(vec4 fragPosLightSpace, vec3 n, vec3 l)
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float closestDepth = texture(shadowMap, projCoords.xy).r;
+    float closestDepth = texture(dirLightShadowMap, projCoords.xy).r;
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // calculate bias (based on depth map resolution and slope)
@@ -82,15 +83,14 @@ float ShadowCalculation(vec4 fragPosLightSpace, vec3 n, vec3 l)
     vec3 lightDir = normalize(l);
     float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
     // check whether current frag pos is in shadow
-    // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
     // PCF
-    float shadow = 0.0;
-    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    vec2 texelSize = 1.0 / textureSize(dirLightShadowMap, 0);
     for(int x = -1; x <= 1; ++x)
     {
         for(int y = -1; y <= 1; ++y)
         {
-            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+            float pcfDepth = texture(dirLightShadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
             shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
         }
     }
@@ -195,7 +195,7 @@ vec3 ComputePointLight(vec3 baseColor,vec3 fragPos,vec3 v, vec3 n, float roughne
 {
     vec3 outLo = vec3(0.f);
 
-    for (int i = 0; i < nbrOfSpotLight; i++)
+    for (int i = 0; i < nbrOfPointLight; i++)
     {
         PointLightData light = pointLightData[i];
         float distance = length(light.position - fragPos);
@@ -289,9 +289,14 @@ void main()
     
     Lo += (kD * albedo * InvPI + specular) * radiance * NdotL;
     vec4 fragPosVec4 = texture(gPosition, texCoords);
-    float shadow = ShadowCalculation(lightSpaceMatrix * fragPosVec4,n,l);
-    Lo *= (1.0-shadow);
-            
+    
+    
+    if (directionalData.isDirlightCastShadow)
+    {
+        float shadow = ShadowCalculation(directionalData.lightSpaceMatrix * fragPosVec4,n,l);
+        Lo *= (1.0-shadow);
+    }
+
     Lo += ComputePointLight(albedo, fragPos, v, n, roughness, metallic, F0);
     Lo += ComputeSpotLight(albedo, fragPos, v, n, roughness, metallic, F0);
 

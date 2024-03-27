@@ -27,6 +27,8 @@ struct DirectionalData
     vec3 color;
     float intensity;
     vec3 direction;
+    bool isDirlightCastShadow;
+    mat4 lightSpaceMatrix;
 };
 
 layout (std140, binding = 0) uniform CameraUniform

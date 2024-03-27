@@ -58,7 +58,6 @@ void BloomRenderTarget::CreateBloomMip(const Vector2i viewportSize)
         
         const TextureCreateInfo createInfo =
         {
-            .data = nullptr,
             .size = { static_cast<int32_t>(mimSizeF.x), static_cast<int32_t>(mimSizeF.y) },
             .filtering = TextureFiltering::Linear,
             .wrapping = TextureWrapping::ClampToEdge,

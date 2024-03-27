@@ -20,7 +20,7 @@ public:
     /// @param cubeMapsTextures Texture file names
     XNOR_ENGINE explicit Cubemap(const std::array<std::string, 6>& cubeMapsTextures);
     
-    XNOR_ENGINE explicit Cubemap(const CreateCubeMapInfo& createCubeMapInfo);
+    XNOR_ENGINE explicit Cubemap(const TextureCreateInfo& textureCreateInfo);
     
     /// @brief Creates the Cubemap in the Rhi
     XNOR_ENGINE void CreateInRhi() override;
@@ -49,7 +49,7 @@ public:
     
 private:
     uint32_t m_Id = 0;
-    std::array<void*, 6> m_Images =
+    std::vector<void*> m_Images =
     {
         nullptr,
         nullptr,

@@ -15,12 +15,16 @@ Skybox::~Skybox()
 void Skybox::Initialize()
 {
     m_SkyBoxParser.InitResource();
-
     delete cubeMap;
-
-    CreateCubeMapInfo createCubeMapInfo =
+    delete cubeMap;
+    delete irradianceMap;
+    delete prefilterMap;
+    delete precomputeBrdfTexture;
+    
+    TextureCreateInfo createCubeMapInfo =
     {
-        .datas = nullptr,
+        .textureType = TextureType::TextureCubeMap,
+        .mipMaplevel = 0,
         .size = EnvironementCubeMapSize,
         .filtering = TextureFiltering::Linear,
         .wrapping = TextureWrapping::ClampToEdge,
@@ -29,29 +33,17 @@ void Skybox::Initialize()
         .dataType = DataType::Float
     };
     cubeMap = new Cubemap(createCubeMapInfo);
-
     
     createCubeMapInfo.size = IradianceCubeSize;
     irradianceMap = new Cubemap(createCubeMapInfo);
-
-    createCubeMapInfo = 
-    {
-        .datas = nullptr,
-        .size = IradianceCubeSize,
-        .filtering = TextureFiltering::Linear,
-        .wrapping = TextureWrapping::ClampToEdge,
-        .format = TextureFormat::Rgb,
-        .internalFormat = TextureInternalFormat::Rgb16F,
-        .dataType = DataType::Float
-    };
-
+    
     createCubeMapInfo.size = PrefilterMapSize;
     createCubeMapInfo.filtering = TextureFiltering::LinearMimMapLinear;
     prefilterMap = new Cubemap(createCubeMapInfo);
 
-    constexpr TextureCreateInfo precomputeBrdf =
+    const TextureCreateInfo precomputeBrdf =
     {
-        .data = nullptr,
+        .textureType = TextureType::Texture2D,
         .size = EnvironementCubeMapSize,
         .filtering = TextureFiltering::Linear,
         .wrapping = TextureWrapping::ClampToEdge,
@@ -59,7 +51,6 @@ void Skybox::Initialize()
         .internalFormat = TextureInternalFormat::Rg16F,
         .dataType = DataType::Float
     };
-    
     precomputeBrdfTexture = new Texture(precomputeBrdf);
 }
 

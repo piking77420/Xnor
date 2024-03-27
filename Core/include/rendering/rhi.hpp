@@ -89,12 +89,8 @@ public:
 	/// @param uniformKey Uniform variable name
 	XNOR_ENGINE static void SetUniform(UniformType::UniformType uniformType, const void* data, uint32_t shaderId, const char_t* uniformKey);
 	
-	// Texture
-
-	/// @brief Creates a 2D texture
-	/// @param textureCreateInfo Texture create info
-	/// @return Texture id
-	XNOR_ENGINE static uint32_t CreateTexture2D(const TextureCreateInfo& textureCreateInfo);
+	
+	XNOR_ENGINE static uint32_t CreateTexture(const TextureCreateInfo& textureCreateInfo);
 	
 	/// @brief Destroys a texture
 	/// @param textureId Texture id
@@ -105,14 +101,7 @@ public:
 	/// @param textureId Texture id
 	XNOR_ENGINE static void BindTexture(uint32_t unit, uint32_t textureId);
 
-	// CubeMap
-
-	/// @brief Creates a cubemap 
-	/// @param createCubeMapInfo Cubemap create info
-	/// @return textureId Texture id
-	XNOR_ENGINE static uint32_t CreateCubeMap(const CreateCubeMapInfo& createCubeMapInfo);
-
-
+	
 	XNOR_ENGINE static uint32_t CreateFrameBuffer();
 	
 	/// @brief Create a framebuffer
@@ -214,6 +203,7 @@ public:
 	XNOR_ENGINE static void BindImageTexture(uint32_t unit, uint32_t texture, uint32_t level, bool_t layered,uint32_t layer,
 		ImageAccess imageAcess, TextureInternalFormat::TextureInternalFormat textureInternalFormat);
 
+
 private:
 	struct ModelInternal
 	{
@@ -233,6 +223,15 @@ private:
 		std::map<std::string, uint32_t> uniformMap;
 	};
 
+	XNOR_ENGINE static inline UniformBuffer* m_CameraUniform;
+	XNOR_ENGINE static inline UniformBuffer* m_LightShadowMappingUniform;
+	XNOR_ENGINE static inline UniformBuffer* m_ModelUniform;
+	XNOR_ENGINE static inline UniformBuffer* m_LightUniform;
+	XNOR_ENGINE static inline UniformBuffer* m_MaterialUniform;
+
+	XNOR_ENGINE static inline bool_t m_Blending = false;
+	XNOR_ENGINE static inline bool_t m_Cullface = false;
+	
 	static constexpr int32_t NullUniformLocation = -1;
 	
 	XNOR_ENGINE static inline std::unordered_map<uint32_t, ShaderInternal> m_ShaderMap;
@@ -247,8 +246,7 @@ private:
 	XNOR_ENGINE static uint32_t GetOpenglDataType(DataType::DataType dataType);
 
 	// Texture 
-	XNOR_ENGINE static void AllocTexture2D(uint32_t textureId, const TextureCreateInfo& textureCreateInfo);
-	XNOR_ENGINE static uint32_t CreateTexture(TextureType::TextureType textureType);
+	XNOR_ENGINE static uint32_t CreateTextureId(TextureType::TextureType textureType);
 
 	// Enum to OpenglEnum
 	XNOR_ENGINE static uint32_t GetOpengDepthEnum(DepthFunction::DepthFunction depthFunction);
@@ -280,15 +278,11 @@ private:
 		const void* userParam
 	);
 	
-	XNOR_ENGINE static inline UniformBuffer* m_CameraUniform;
-	XNOR_ENGINE static inline UniformBuffer* m_LightShadowMappingUniform;
-	XNOR_ENGINE static inline UniformBuffer* m_ModelUniform;
-	XNOR_ENGINE static inline UniformBuffer* m_LightUniform;
-	XNOR_ENGINE static inline UniformBuffer* m_MaterialUniform;
+	XNOR_ENGINE static void ComputeTextureFiltering(TextureType::TextureType textureType, uint32_t textureID,  const TextureCreateInfo& textureCreateInfo);
+	XNOR_ENGINE static void ComputeTextureWrapping(TextureType::TextureType textureType, uint32_t textureID, const TextureCreateInfo& textureCreateInfo);
+	XNOR_ENGINE static void AllocTexture(TextureType::TextureType textureType, uint32_t textureID, const TextureCreateInfo& textureCreateInfo);
 
-	XNOR_ENGINE static inline bool_t m_Blending = false;
-	XNOR_ENGINE static inline bool_t m_Cullface = false;
-
+	XNOR_ENGINE static bool IsDataValid(const std::vector<void*>& data,size_t wantedSize = 1);
 };
 
 END_XNOR_CORE

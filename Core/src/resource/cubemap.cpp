@@ -10,9 +10,10 @@ using namespace XnorCore;
 
 void Cubemap::CreateInRhi()
 {
-    const CreateCubeMapInfo createInfo
+    const TextureCreateInfo createInfo
     {
-        .datas = &m_Images,
+        .textureType = TextureType::TextureCubeMap,
+        .datas = m_Images,
         .size = m_CubemapSize,
         .filtering = TextureFiltering::Linear,
         .wrapping = TextureWrapping::ClampToEdge,
@@ -21,7 +22,7 @@ void Cubemap::CreateInRhi()
         .dataType = DataType::UnsignedByte
     };
 
-    m_Id = Rhi::CreateCubeMap(createInfo);
+    m_Id = Rhi::CreateTexture(createInfo);
     m_LoadedInRhi = true;
 }
 
@@ -48,10 +49,10 @@ Cubemap::Cubemap(const std::array<std::string, 6>& cubeMapsTextures)
     m_Loaded = true;
 }
 
-Cubemap::Cubemap(const CreateCubeMapInfo& createCubeMapInfo) : m_CubemapSize(createCubeMapInfo.size),
-m_TextureFiltering(createCubeMapInfo.filtering),m_TextureWrapping(createCubeMapInfo.wrapping), m_TextureInternalFormat(createCubeMapInfo.internalFormat)
+Cubemap::Cubemap(const TextureCreateInfo& textureCreateInfo) : m_CubemapSize(textureCreateInfo.size),
+m_TextureFiltering(textureCreateInfo.filtering),m_TextureWrapping(textureCreateInfo.wrapping), m_TextureInternalFormat(textureCreateInfo.internalFormat)
 {
-    m_Id = Rhi::CreateCubeMap(createCubeMapInfo);
+    m_Id = Rhi::CreateTexture(textureCreateInfo);
     m_LoadedInRhi = true;
 }
 

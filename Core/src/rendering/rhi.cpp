@@ -273,7 +273,7 @@ void Rhi::SetUniform(const UniformType::UniformType uniformType, const void* con
 	}
 }
 
-uint32_t Rhi::CreateTexture(const TextureType::TextureType textureType)
+uint32_t Rhi::CreateTextureId(const TextureType::TextureType textureType)
 {
 	uint32_t textureId = 0;
 	glCreateTextures(GetOpenglTextureType(textureType), 1, &textureId);
@@ -683,54 +683,242 @@ uint32_t Rhi::GetOpenglTextureWrapper(const TextureWrapping::TextureWrapping tex
 	return GL_REPEAT;
 }
 
-void Rhi::AllocTexture2D(const uint32_t textureId, const TextureCreateInfo& textureCreateInfo)
+void Rhi::ComputeTextureFiltering(TextureType::TextureType textureType, const uint32_t textureID , const TextureCreateInfo& textureCreateInfo)
 {
-	glTextureStorage2D(textureId, 1,
-		GetOpenglInternalFormat(textureCreateInfo.internalFormat),
-		static_cast<GLsizei>(textureCreateInfo.size.x),
-		static_cast<GLsizei>(textureCreateInfo.size.y)
-	);
-}
-
-uint32_t Rhi::CreateTexture2D(const TextureCreateInfo& textureCreateInfo)
-{
-	const uint32_t textureId = CreateTexture(TextureType::Texture2D);
-
 	const GLint openglTextureFilter = static_cast<GLint>(GetOpenglTextureFilter(textureCreateInfo.filtering));
-	const GLint openglTextureWrapper = static_cast<GLint>(GetOpenglTextureWrapper(textureCreateInfo.wrapping));
 	
-	AllocTexture2D(textureId, textureCreateInfo);
+	switch (textureType)
+	{
+		case TextureType::Texture1D:
+			Logger::LogError("Uniplemented behaviours");
+			break;
+
+		case TextureType::Texture2DArray:
+		case TextureType::Texture2D:
+			if(textureCreateInfo.filtering == TextureFiltering::LinearMimMapLinear)
+			{
+				glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			}
+			else
+			{
+				glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
+			}
+			glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
+			break;
+		 
+		case TextureType::Texture3D:
+			Logger::LogError("Uniplemented behaviours");
+			break;
+		 
+		case TextureType::Texture1DArray:
+			Logger::LogError("Uniplemented behaviours");
+			break;
+		
+		case TextureType::TextureRectangle:
+			Logger::LogError("Uniplemented behaviours");
+			break;
+		 
+		case TextureType::TextureCubeMap:
+			if (openglTextureFilter == TextureFiltering::LinearMimMapLinear)
+			{
+				glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+				glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			}
+			else
+			{
+				glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
+				glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
+			}
+			break;
+		 
+		case TextureType::TextureCubeMapArray:
+			Logger::LogError("Uniplemented behaviours");
+			break;
+		 
+		case TextureType::TextureBuffer:
+			Logger::LogError("Uniplemented behaviours");
+			break;
+		 
+		case TextureType::Texture2DMultisample:
+			Logger::LogError("Uniplemented behaviours");
+			break;
+		 
+		case TextureType::Texture2DMultisampleArray:
+			Logger::LogError("Uniplemented behaviours");
+			break;
+		 
+	}
 
 	
-	glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
-	glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
-	if (textureCreateInfo.wrapping == TextureWrapping::ClampToBorder)
-	{
-		const float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		glTextureParameterfv(textureId, GL_TEXTURE_BORDER_COLOR, borderColor);  
-	}
-
 	
-	if(textureCreateInfo.filtering == TextureFiltering::LinearMimMapLinear)
-	{
-		glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	}
-	else
-	{
-		glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
-	}
-	glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
-	
-	if (textureCreateInfo.data != nullptr)
-	{
-		glTextureSubImage2D(textureId, 0, 0, 0, static_cast<GLsizei>(textureCreateInfo.size.x), static_cast<GLsizei>(textureCreateInfo.size.y),
-			GetOpenGlTextureFormat(textureCreateInfo.format), GetOpenglDataType(textureCreateInfo.dataType), textureCreateInfo.data);
-	}
-	glGenerateTextureMipmap(textureId);
-
-	
-	return textureId;
 }
+
+void Rhi::ComputeTextureWrapping(TextureType::TextureType textureType, const uint32_t textureID , const TextureCreateInfo& textureCreateInfo)
+{
+	const GLint openglTextureWrapper = static_cast<GLint>(GetOpenglTextureWrapper(textureCreateInfo.wrapping));
+
+	switch (textureType)
+	{
+		case TextureType::Texture1D:
+			Logger::LogError("Uniplemented behaviours");
+		break;
+
+		case TextureType::Texture2DArray:
+		case TextureType::Texture2D:
+			glTextureParameteri(textureID, GL_TEXTURE_WRAP_S, openglTextureWrapper);
+		    glTextureParameteri(textureID, GL_TEXTURE_WRAP_T, openglTextureWrapper);
+			if (textureCreateInfo.wrapping == TextureWrapping::ClampToBorder)
+			{
+				glTextureParameterfv(textureID, GL_TEXTURE_BORDER_COLOR, textureCreateInfo.borderColor);  
+			}
+		break;
+		
+		case TextureType::Texture3D:
+			Logger::LogError("Uniplemented behaviours");
+		break;
+		
+		case TextureType::Texture1DArray:
+			Logger::LogError("Uniplemented behaviours");
+		break;
+		
+		case TextureType::TextureRectangle:
+			Logger::LogError("Uniplemented behaviours");
+		break;
+		
+		case TextureType::TextureCubeMap:
+			glTextureParameteri(textureID, GL_TEXTURE_WRAP_S, openglTextureWrapper);
+			glTextureParameteri(textureID, GL_TEXTURE_WRAP_T, openglTextureWrapper);
+			glTextureParameteri(textureID, GL_TEXTURE_WRAP_R, openglTextureWrapper);
+		
+		break;
+		
+		case TextureType::TextureCubeMapArray:
+		 
+		break;
+		
+		case TextureType::TextureBuffer:
+			Logger::LogError("Uniplemented behaviours");
+		break;
+		
+		case TextureType::Texture2DMultisample:
+			Logger::LogError("Uniplemented behaviours");
+		break;
+		
+		case TextureType::Texture2DMultisampleArray:
+			Logger::LogError("Uniplemented behaviours");
+		break;
+		
+		default: ;
+	}
+	
+	
+}
+
+void Rhi::AllocTexture(
+	TextureType::TextureType textureType,
+	const uint32_t textureID,
+	const TextureCreateInfo& textureCreateInfo
+)
+{
+	const GLenum internalFormat = GetOpenglInternalFormat(textureCreateInfo.internalFormat);
+	const GLenum textureFormat = GetOpenGlTextureFormat(textureCreateInfo.format);
+	const GLsizei width = static_cast<GLsizei>(textureCreateInfo.size.x);
+	const GLsizei height = static_cast<GLsizei>(textureCreateInfo.size.y);
+	const GLsizei level = static_cast<int32_t>(textureCreateInfo.mipMaplevel);
+	const GLsizei depth = static_cast<int32_t>(textureCreateInfo.depth);
+
+	switch (textureType)
+	{
+		case TextureType::Texture1D:
+			Logger::LogError("Uniplemented behaviours");
+			break;
+		
+		case TextureType::Texture2D:
+			
+			glTextureStorage2D(textureID,level,internalFormat,width,height);
+		
+			if (IsDataValid(textureCreateInfo.datas))
+			{
+				glTextureSubImage2D(textureID, 0, 0, 0, width, height,
+				GetOpenGlTextureFormat(textureCreateInfo.format), GetOpenglDataType(textureCreateInfo.dataType),
+				textureCreateInfo.datas.at(0));
+			}
+		
+			break;
+		
+		case TextureType::Texture3D:
+			Logger::LogError("Uniplemented behaviours");
+			break;
+		
+		case TextureType::Texture1DArray:
+			Logger::LogError("Uniplemented behaviours");
+			break;
+		
+		case TextureType::Texture2DArray:
+			
+			glTextureStorage3D(textureID, level, internalFormat, width, height, depth);
+		
+			if (IsDataValid(textureCreateInfo.datas))
+			glTextureSubImage3D(textureID, 0, 0, 0, 0, width, height, depth, internalFormat, textureFormat, textureCreateInfo.datas.at(0));
+		
+			break;
+		case TextureType::TextureRectangle:
+			Logger::LogError("Uniplemented behaviours");
+			break;
+		case TextureType::TextureCubeMap:
+			
+			glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+			if (IsDataValid(textureCreateInfo.datas,6))
+			{
+				for (size_t i = 0; i < textureCreateInfo.datas.size(); i++)
+				{
+					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), textureCreateInfo.mipMaplevel, internalFormat,
+						width, height, 0, textureFormat, GetOpenglDataType(textureCreateInfo.dataType), textureCreateInfo.datas.at(i));
+				}
+			}
+			else
+			{
+				for (size_t i = 0; i < 6; i++)
+				{
+					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), textureCreateInfo.mipMaplevel, internalFormat,
+						width, height, 0, textureFormat, GetOpenglDataType(textureCreateInfo.dataType),nullptr);
+				}
+			}
+			glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+			break;
+		
+		case TextureType::TextureCubeMapArray:
+			Logger::LogError("Uniplemented behaviours");
+			break;
+		case TextureType::TextureBuffer:
+			Logger::LogError("Uniplemented behaviours");
+			break;
+		case TextureType::Texture2DMultisample:
+			Logger::LogError("Uniplemented behaviours");
+			break;
+		case TextureType::Texture2DMultisampleArray:
+			Logger::LogError("Uniplemented behaviours");
+			break;
+		default: ;
+	}
+}
+
+bool Rhi::IsDataValid(const std::vector<void*>& data, const size_t wantedSize)
+{
+	if (data.empty())
+		return false;
+	
+	if (data.size() < wantedSize)
+		return false;
+	
+	for (size_t i = 0; i < wantedSize;i++)
+	{
+		if(data.at(i) == nullptr)
+			return false;
+	}
+	return true;
+}
+
 
 void Rhi::DestroyTexture(const uint32_t textureId)
 {
@@ -740,55 +928,6 @@ void Rhi::DestroyTexture(const uint32_t textureId)
 void Rhi::BindTexture(const uint32_t unit, const uint32_t textureId)
 {
 	glBindTextureUnit(unit, textureId);
-}
-
-uint32_t Rhi::CreateCubeMap(const CreateCubeMapInfo& createCubeMapInfo)
-{
-	const uint32_t textureId = CreateTexture(TextureType::TextureCubeMap);
-	const GLint openglTextureFilter =  static_cast<GLint>(GetOpenglTextureFilter(createCubeMapInfo.filtering));
-	const GLint openglTextureWrapper =  static_cast<GLint>(GetOpenglTextureWrapper(createCubeMapInfo.wrapping));
-
-	if (createCubeMapInfo.filtering == TextureFiltering::LinearMimMapLinear)
-	{
-		glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	}
-	else
-	{
-		glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
-		glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
-	}
-	
-	glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
-	glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
-	glTextureParameteri(textureId, GL_TEXTURE_WRAP_R, openglTextureWrapper);
-
-	glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
-	
-	const GLsizei width = createCubeMapInfo.size.x;
-	const GLsizei height = createCubeMapInfo.size.y;
-
-	if(createCubeMapInfo.datas != nullptr)
-	{
-		for (size_t i = 0; i < createCubeMapInfo.datas->size(); i++)
-		{
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), 0, static_cast<GLint>(GetOpenglInternalFormat(createCubeMapInfo.internalFormat)),
-				width, height, 0, GetOpenGlTextureFormat(createCubeMapInfo.format), GetOpenglDataType(createCubeMapInfo.dataType), createCubeMapInfo.datas->at(i));
-		}
-	}
-	else
-	{
-		for (size_t i = 0; i < 6; i++)
-		{
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), 0, static_cast<GLint>(GetOpenglInternalFormat(createCubeMapInfo.internalFormat)),
-				width, height, 0, GetOpenGlTextureFormat(createCubeMapInfo.format), GetOpenglDataType(createCubeMapInfo.dataType), nullptr);
-		}
-	}
-	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-	
-	glGenerateTextureMipmap(textureId);
-
-	return textureId;
 }
 
 uint32_t Rhi::CreateFrameBuffer()
@@ -1284,6 +1423,7 @@ void Rhi::OpenglDebugCallBack(const uint32_t source, const uint32_t type, const 
     }
 }
 
+
 void Rhi::Initialize()
 {
 	gladLoadGL();
@@ -1455,4 +1595,14 @@ void Rhi::BindImageTexture(
 
 	
 	glBindImageTexture(unit, texture, level, static_cast<GLenum>(layered), layer, access, textureFormatInternal);
+}
+
+uint32_t Rhi::CreateTexture(const TextureCreateInfo& textureCreateInfo)
+{
+	const uint32_t textureId = CreateTextureId(textureCreateInfo.textureType);
+	AllocTexture(textureCreateInfo.textureType, textureId, textureCreateInfo);
+	ComputeTextureFiltering(textureCreateInfo.textureType, textureId, textureCreateInfo);
+	ComputeTextureWrapping(textureCreateInfo.textureType, textureId, textureCreateInfo);
+	glGenerateTextureMipmap(textureId);
+	return textureId;
 }

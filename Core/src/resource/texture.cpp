@@ -6,13 +6,15 @@
 
 using namespace XnorCore;
 
-Texture::Texture(const TextureCreateInfo& createInfo)
-    : m_Data(static_cast<uint8_t*>(createInfo.data))
-    , m_Size(createInfo.size)
+Texture::Texture(const TextureCreateInfo& createInfo) :
+    m_Size(createInfo.size)
     , m_TextureFiltering(createInfo.filtering), m_TextureWrapping(createInfo.wrapping)
     , m_TextureInternalFormat(createInfo.internalFormat)
 {
-    m_Id = Rhi::CreateTexture2D(createInfo);
+    if (!createInfo.datas.empty())
+    m_Data = static_cast<uint8_t*>(createInfo.datas.at(0));
+    
+    m_Id = Rhi::CreateTexture(createInfo);
     m_LoadedInRhi = true;
 }
 
@@ -21,7 +23,7 @@ Texture::Texture(const TextureInternalFormat::TextureInternalFormat textureInter
 {
     const TextureCreateInfo createInfo
     {
-        .data = nullptr,
+        .textureType = TextureType::Texture2D,
         .size = size,
         .filtering = m_TextureFiltering,
         .wrapping = m_TextureWrapping,
@@ -30,7 +32,7 @@ Texture::Texture(const TextureInternalFormat::TextureInternalFormat textureInter
     };
     
 
-    m_Id = Rhi::CreateTexture2D(createInfo);
+    m_Id = Rhi::CreateTexture(createInfo);
     m_LoadedInRhi = true;
 }
 
@@ -63,9 +65,9 @@ bool Texture::Load(const uint8_t* buffer, const int64_t length)
 
 void Texture::CreateInRhi()
 {
+    
     TextureCreateInfo createInfo
     {
-        .data = m_Data,
         .size = m_Size,
         .filtering = m_TextureFiltering,
         .wrapping = m_TextureWrapping,
@@ -73,6 +75,7 @@ void Texture::CreateInRhi()
         .internalFormat = m_TextureInternalFormat,
         .dataType = DataType::UnsignedByte
     };
+    createInfo.datas.push_back(m_Data);
 
     if (std::filesystem::path(m_Name).extension() == ".hdr")
     {
@@ -83,7 +86,7 @@ void Texture::CreateInRhi()
         createInfo.dataType = DataType::Float;
     }
     
-    m_Id = Rhi::CreateTexture2D(createInfo);
+    m_Id = Rhi::CreateTexture(createInfo);
     
     m_LoadedInRhi = true;
 }

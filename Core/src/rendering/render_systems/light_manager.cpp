@@ -15,10 +15,13 @@ LightManager::~LightManager()
 	{
 		delete directionalShadowMap.depthTexture;
 	}
+	delete m_GpuLightData;
 }
 
 void LightManager::InitResources()
 {
+	m_GpuLightData = new GpuLightData();
+	
 	m_DirLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/gizmos/dirlight_icon.png");
 	m_PointLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/gizmos/point_light.png");
 	m_SpotLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/gizmos/spot_light.png");
@@ -45,7 +48,8 @@ void LightManager::BeginFrame(const Scene& scene, const Renderer& renderer)
 	scene.GetAllComponentOfType<DirectionalLight>(&directionalLights);
 	FecthLightInfo();
 	ComputeShadow(scene, renderer);
-   
+	Rhi::UpdateLight(*m_GpuLightData);
+
 }
 
 void LightManager::EndFrame(const Scene&)
@@ -150,26 +154,35 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 	shader->Unuse();
 }
 
+void LightManager::BindShadowMap() const
+{
+	for (uint32_t i = 0; i < directionalLights.size(); i++)
+	{
+		if (!directionalLights[i]->castShadow)
+			continue;
+
+		directionalShadowMaps[i].depthTexture->BindTexture(10);
+	}
+}
+
 void LightManager::FecthLightInfo()
 {
 	 if (directionalLights.size() > MaxDirectionalLights)
 		Logger::LogWarning("You cannot have more than 1 directional light in the scene");
-
-	GpuLightData gpuLightData
-	{
-		.nbrOfPointLight = static_cast<uint32_t>(pointLights.size()),
-		.nbrOfSpotLight = static_cast<uint32_t>(spotLights.size())
-	};
-
+	
 	const size_t nbrOfpointLight = std::clamp<size_t>(pointLights.size(), 0, MaxPointLights);
 	const size_t nbrOfSpotLight = std::clamp<size_t>(spotLights.size(), 0, MaxSpotLights);
 	const size_t nbrOfDirectionalLight = std::clamp<size_t>(directionalLights.size(), 0, MaxSpotLights);
 
+	m_GpuLightData->nbrOfPointLight = static_cast<uint32_t>(nbrOfpointLight);
+	m_GpuLightData->nbrOfSpotLight = static_cast<uint32_t>(nbrOfSpotLight);
+
+	
 	for (size_t i = 0; i < nbrOfpointLight; i++)
 	{
 		const PointLight* pointLight = pointLights[i];
 		
-		gpuLightData.pointLightData[i] =
+		m_GpuLightData->pointLightData[i] =
 		{
 			.color = static_cast<Vector3>(pointLight->color),
 			.intensity = pointLight->intensity,
@@ -177,15 +190,13 @@ void LightManager::FecthLightInfo()
 			.radius = 30.f * sqrt(pointLight->intensity),
 		};
 	}
-	gpuLightData.nbrOfPointLight = static_cast<uint32_t>(nbrOfpointLight);
-
 	for (size_t i = 0 ; i < nbrOfSpotLight ; i++)
 	{
 		const SpotLight* spotLight = spotLights[i];
 		const Matrix matrix = Matrix::Trs(Vector3(0.f), spotLight->GetEntity()->transform.GetRotation().Normalized(), Vector3(1.f));
 		const Vector4 direction = matrix * -Vector4::UnitY();
 		
-		gpuLightData.spotLightData[i] =
+		m_GpuLightData->spotLightData[i] =
 		{
 			.color = static_cast<Vector3>(spotLight->color),
 			.intensity = spotLight->intensity,
@@ -196,7 +207,7 @@ void LightManager::FecthLightInfo()
 		};
 	}
 	
-	gpuLightData.nbrOfSpotLight = static_cast<uint32_t>(nbrOfSpotLight);
+	m_GpuLightData->nbrOfSpotLight = static_cast<uint32_t>(nbrOfSpotLight);
 
 	if (nbrOfDirectionalLight != 0)
 	for (size_t i = 0 ; i < MaxDirectionalLights ; i++)
@@ -205,7 +216,7 @@ void LightManager::FecthLightInfo()
 		//const Vector4 direction = matrix * Vector4::UnitY(); 
 		const Vector3 direction = directionalLights[i]->GetLightDirection(); 
 
-		gpuLightData.directionalData[i] =
+		m_GpuLightData->directionalData[i] =
 		{
 			.color = static_cast<Vector3>(directionalLights[i]->color),
 			.intensity = directionalLights[i]->intensity,	
@@ -213,34 +224,41 @@ void LightManager::FecthLightInfo()
 		};
 	}
 
-	Rhi::UpdateLight(gpuLightData);
 }
 
 void LightManager::ComputeShadow(const Scene& scene, const Renderer& renderer)
 {
+	
 	for (size_t i = 0; i < directionalLights.size(); i++)
 	{
+		m_GpuLightData->directionalData->isDirlightCastShadow = directionalLights[i]->castShadow;
+		
 		if (!directionalLights[i]->castShadow)
 			continue;
 
 		const DirectionalShadowMap& shadowMap = directionalShadowMaps[i];
 		Camera cam;
+		
 		cam.isOrthoGraphic = true;
 		cam.position = directionalLights[i]->entity->transform.GetPosition();
 		cam.LookAt(cam.position + directionalLights[i]->GetLightDirection());
-		cam.front = -cam.front;
-		cam.near = 1.0f;
-		cam.far = 15.5f;
-
+		cam.near = directionalLights[i]->near;
+		cam.far = directionalLights[i]->far;
+		cam.leftRight = directionalLights[i]->leftRight;
+		cam.bottomtop = directionalLights[i]->bottomtop;
+		cam.GetVp(shadowMap.depthTexture->GetSize(), &m_GpuLightData->directionalData->lightSpaceMatrix);
+		
+		
 		m_ShadowFrameBuffer->AttachTexture(*shadowMap.depthTexture, Attachment::Depth, 0);
-
-		RenderPassBeginInfo renderPassBeginInfo = {
+		RenderPassBeginInfo renderPassBeginInfo =
+		{
 			.frameBuffer = m_ShadowFrameBuffer,
 			.renderAreaOffset = { 0,0 },
 			.renderAreaExtent = shadowMap.depthTexture->GetSize() ,
 			.clearBufferFlags = BufferFlag::DepthBit,
 			.clearColor = Vector4(0.f)
 		};
+		
 		m_ShadowMapShader->Use();
 		renderer.RenderNonShaded(cam, renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, scene, false);
 		m_ShadowMapShader->Unuse();
@@ -254,22 +272,24 @@ void LightManager::InitShadow()
 	m_ShadowMapShader = ResourceManager::Get<Shader>("depth_shader");
 	m_ShadowMapShader->SetFaceCullingInfo({ true, CullFace::Front, FrontFace::CCW });
 	m_ShadowMapShader->CreateInRhi();
+
+	const TextureCreateInfo textureCreateInfo =
+	{
+		.size = DirectionalShadowMapSize,
+		.filtering = TextureFiltering::Nearest,
+		.wrapping = TextureWrapping::TextureWrapping::ClampToBorder,
+		.format = TextureFormat::DepthComponent,
+		.internalFormat = ShadowDepthTextureInternalFormat,
+		.dataType = DataType::Float
+	};
 	
 	for (DirectionalShadowMap& directionalShadowMap : directionalShadowMaps)
 	{
-		TextureCreateInfo textureCreateInfo =
-			{
-			.data = nullptr,
-			.size = DirectionalShadowMapSize,
-			.filtering = TextureFiltering::Nearest,
-			.wrapping = TextureWrapping::TextureWrapping::ClampToBorder,
-			.format = TextureFormat::DepthComponent,
-			.internalFormat = ShadowDepthTextureInternalFormat,
-			.dataType = DataType::Float
-			};
-		
 		directionalShadowMap.depthTexture = new Texture(textureCreateInfo);
 	}
+
+	
 	m_ShadowFrameBuffer = new FrameBuffer;
 	Rhi::SetFrameBufferDraw(m_ShadowFrameBuffer->GetId(),false);
+	
 }

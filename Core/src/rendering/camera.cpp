@@ -12,9 +12,7 @@ void Camera::GetProjection(const Vector2i screenSize, Matrix* const matrix) cons
 		Matrix::Perspective(fov * Calc::Deg2Rad, ratio, near, far, matrix);
 		return;
 	}
-	const Vector2 screenSizef = { static_cast<float_t>(screenSize.x) ,  static_cast<float_t>(screenSize.y) };
-
-	Matrix::Orthographic(-10, 10, -10, 10, near ,far, matrix);
+	Matrix::Orthographic(leftRight.x, leftRight.y, bottomtop.x, bottomtop.y, near ,far, matrix);
 }
 
 void Camera::GetView(Matrix* const matrix) const

@@ -101,6 +101,7 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	};
 
 	Rhi::DepthTest(false);
+	
 	viewportData.colorPass.BeginRenderPass(renderPassBeginInfoLit);
 	m_GBufferShaderLit->Use();
 	
@@ -111,29 +112,25 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	viewportData.metallicRougnessReflectance->BindTexture(Gbuffer::MetallicRoughessReflectance);
 	viewportData.ambiantOcclusion->BindTexture(Gbuffer::AmbiantOcclusion);
 	viewportData.emissive->BindTexture(Gbuffer::Emissivive);
-	if (!m_LightManager.directionalLights.empty())
-	{
-		m_LightManager.directionalShadowMaps[0].depthTexture->BindTexture(10);
-		Camera cam;
-		cam.isOrthoGraphic = true;
-		cam.position = m_LightManager.directionalLights[0]->entity->transform.GetPosition();
-		cam.LookAt({0,0,0});
-		cam.front = -cam.front;
-		
-		cam.near = 1.0f;
-		cam.far = 15.5f;
-		Matrix m;
-		cam.GetVp({1024,1024},&m);
-		m_GBufferShaderLit->SetMat4("lightSpaceMatrix",m);
-	}
-
 	skybox.irradianceMap->BindTexture(12);
 	skybox.prefilterMap->BindTexture(13);
 	skybox.precomputeBrdfTexture->BindTexture(14);
-
+	m_LightManager.BindShadowMap();
+	
 	Rhi::DrawModel(m_Quad->GetId());
 	m_GBufferShaderLit->Unuse();
 	Rhi::DepthTest(true);
+
+	
+	skybox.irradianceMap->UnBindTexture(12);
+	skybox.prefilterMap->UnBindTexture(13);
+	skybox.precomputeBrdfTexture->UnbindTexture(14);
+	viewportData.positionAtttachment->UnbindTexture(Gbuffer::Position);
+	viewportData.normalAttachement->UnbindTexture(Gbuffer::Normal);
+	viewportData.albedoAttachment->UnbindTexture(Gbuffer::Albedo);
+	viewportData.metallicRougnessReflectance->UnbindTexture(Gbuffer::MetallicRoughessReflectance);
+	viewportData.ambiantOcclusion->UnbindTexture(Gbuffer::AmbiantOcclusion);
+	viewportData.emissive->UnbindTexture(Gbuffer::Emissivive);
 	
 	viewportData.colorPass.EndRenderPass();
 }
@@ -351,6 +348,7 @@ void Renderer::InitResources()
 {
 	// Deferred 
 	m_GBufferShaderLit = ResourceManager::Get<Shader>("deferred_opaque");
+	
 	m_GBufferShaderLit->CreateInRhi();
 	m_GBufferShaderLit->Use();
 	
@@ -360,7 +358,7 @@ void Renderer::InitResources()
 	m_GBufferShaderLit->SetInt("gMetallicRoughessReflectance", Gbuffer::MetallicRoughessReflectance);
 	m_GBufferShaderLit->SetInt("gAmbiantOcclusion", Gbuffer::AmbiantOcclusion);
 	m_GBufferShaderLit->SetInt("gEmissive", Gbuffer::Emissivive);
-	m_GBufferShaderLit->SetInt("shadowMap", 10);
+	m_GBufferShaderLit->SetInt("dirLightShadowMap", 10);
 
 	m_GBufferShaderLit->SetInt("irradianceMap", 12);
 	m_GBufferShaderLit->SetInt("prefilterMap", 13);
