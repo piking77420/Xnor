@@ -1,5 +1,4 @@
 #version 460 core
-#extension GL_NV_uniform_buffer_std430_layout : enable
 
 const int MaxSpotLight = 100;
 const int MaxPointLight = 100;
@@ -38,7 +37,7 @@ layout (std140, binding = 0) uniform CameraUniform
     vec3 cameraPos;
 };
 
-layout (std430, binding = 2) uniform LightData
+layout (std140, binding = 2) uniform LightData
 {
     int nbrOfPointLight;
     int nbrOfSpotLight;

@@ -1,5 +1,4 @@
 #version 460 core
-#extension GL_NV_uniform_buffer_std430_layout : enable
 
 out vec4 FragColor;
 
@@ -37,7 +36,7 @@ struct DirectionalData
     mat4 lightSpaceMatrix;
 };
 
-layout (std430, binding = 2) uniform LightData
+layout (std140, binding = 2) uniform LightData
 {
     int nbrOfPointLight;
     int nbrOfSpotLight;
@@ -111,38 +110,32 @@ float ShadowCalculationSpolight(vec4 fragPosLightSpace, vec3 n, vec3 l,int index
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float closestDepth = texture(SpotLightShadowArray, vec3(projCoords.xy, index)).r;
+    float closestDepth = texture(SpotLightShadowArray, vec3(projCoords.x, projCoords.y, index)).r;
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // calculate bias (based on depth map resolution and slope)
     vec3 normal = normalize(n);
     vec3 lightDir = normalize(l);
-    float bias = max(0.00025 * (1.0 - dot(normal, lightDir)), 0.000005);
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
     // check whether current frag pos is in shadow
-    float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
     // PCF
-    vec2 texelSize = 1.0 / textureSize(SpotLightShadowArray, index).xy;
-    float totalSamples = 0.0;
-    float shadowedSamples = 0.0;
-
+    vec2 texelSize = 1.0 / textureSize(SpotLightShadowArray, 0).xy;
     for(int x = -1; x <= 1; ++x)
     {
         for(int y = -1; y <= 1; ++y)
         {
-            vec2 texel =  projCoords.xy + vec2(x, y) * texelSize;
-            vec3 texelVec3 = vec3(texel.xy, index);
-
-            float pcfDepth = texture(SpotLightShadowArray, texelVec3).r;
-            totalSamples += 1.0;
-            shadowedSamples += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+            vec2 texel = projCoords.xy + vec2(x, y) * texelSize;
+            float pcfDepth = texture(SpotLightShadowArray, vec3(texel,index)).r;
+            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
         }
     }
-    shadow = shadowedSamples / totalSamples;
+    shadow /= 9.0;
 
     // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
-    if (projCoords.z > 1.0)
+    if(projCoords.z > 1.0)
     shadow = 0.0;
-    
+
     return shadow;
 }
 

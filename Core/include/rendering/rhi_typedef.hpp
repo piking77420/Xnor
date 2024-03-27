@@ -495,7 +495,7 @@ struct alignas(16) DirectionalLightData
 
 
 /// @brief Light UniformBuffer data
-struct alignas(16) GpuLightData
+struct GpuLightData
 {
 	/// @brief Number of active point lights
 	uint32_t nbrOfPointLight{};
