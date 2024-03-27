@@ -49,6 +49,7 @@ void* Serializer::CreateObjectUsingFactory(const std::string& name)
 void Serializer::StartSerialization(const std::string& filePath)
 {
     OpenFileToWrite(filePath);
+    m_StaticClassesPared.clear();
 }
 
 void Serializer::StartDeserialization(const std::string& filePath)
@@ -66,6 +67,7 @@ void Serializer::EndSerialization()
 
     DisposeXMLObject(m_XmlDoc);
     m_CurrentFilePath = "";
+    m_StaticClassesPared.clear();
 }
 
 void Serializer::EndDeserialization()
@@ -108,7 +110,7 @@ void Serializer::BeginXmlElement(const std::string& elementName, const std::stri
         Logger::LogError(error);
         throw std::runtime_error("Failed to create element");
     }
-    
+
     m_ElementsStack.push(element);
 }
 
@@ -126,9 +128,9 @@ void Serializer::EndXmlElement()
     }
     else
     {
-        XMLElement* child = m_ElementsStack.top();
+        XMLElement* const child = m_ElementsStack.top();
         m_ElementsStack.pop();
-        XMLElement* parent = m_ElementsStack.top();
+        XMLElement* const parent = m_ElementsStack.top();
         
         if (!AddElementToElement(parent, child, error))
         {

@@ -136,6 +136,14 @@
 					<intensity>1</intensity>
 				</0>
 				<1 typeName="TestComponent">
+					<TestComponent>
+						<m_StaticTest>100</m_StaticTest>
+						<m_StaticTransform>
+							<m_Position>0 ; 0 ; 0</m_Position>
+							<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+							<m_Scale>1 ; 1 ; 1</m_Scale>
+						</m_StaticTransform>
+					</TestComponent>
 					<m_Rotate>true</m_Rotate>
 					<m_RotationSpeed>1</m_RotationSpeed>
 					<m_Radius>1</m_Radius>

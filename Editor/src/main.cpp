@@ -30,7 +30,7 @@ int main(int, char**)
 	using namespace XnorEditor;
 
 	Logger::OpenDefaultFile();
-	XnorFactory::RegisterTypes();
+	XnorFactory::RegisterAllTypes();
 
 	Editor editor;
 

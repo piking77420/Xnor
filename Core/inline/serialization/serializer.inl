@@ -16,7 +16,8 @@
 #include "world/world.hpp"
 
 BEGIN_XNOR_CORE
-    template <typename T>
+
+template <typename T>
 void Serializer::AddSimpleValue(const std::string& attributeName, const T& value)
 {
     if constexpr (Meta::IsAny<T, std::string, const char_t*>)
@@ -35,59 +36,53 @@ void Serializer::AddSimpleValue(const std::string& attributeName, const T& value
 template <typename ReflectT, bool_t IsRoot>
 void Serializer::Serialize(const ReflectT* const obj)
 {
-    // TODO static variables
-
     constexpr TypeDescriptor<ReflectT> desc = Reflection::GetTypeInfo<ReflectT>();
 
     const std::string typeName = Utils::RemoveNamespaces(desc.name.c_str());
 
     if constexpr (IsRoot)
         BeginRootElement(typeName.c_str(), "");
-    // else
-        // BeginXmlElement(typeName.c_str(), "");
 
-    refl::util::for_each(desc.members, [&]<typename T>(const T)
+    SerializeStaticFields<ReflectT>();
+    
+    refl::util::for_each(desc.members, [&]<typename DescriptorT>(const DescriptorT)
     {
-        constexpr bool_t dontSerialize = Reflection::HasAttribute<Reflection::NotSerializable, T>();
-        constexpr bool_t isStatic = T::is_static;
-            
+        constexpr bool_t dontSerialize = Reflection::HasAttribute<Reflection::NotSerializable, DescriptorT>();
+        constexpr bool_t isStatic = DescriptorT::is_static;
+
         if constexpr (!dontSerialize && !isStatic)
         {
-            using MemberT = Meta::RemoveConstSpecifier<typename T::value_type>;
-            constexpr const char_t* const name = T::name.c_str();
+            using MemberT = Meta::RemoveConstSpecifier<typename DescriptorT::value_type>;
+            constexpr const char_t* const name = DescriptorT::name.c_str();
 
-            Metadata<ReflectT, MemberT, T> metadata = {
+            Metadata<ReflectT, MemberT, DescriptorT> metadata = {
                 .topLevelObj = const_cast<ReflectT*>(obj),
                 .name = name,
-                .obj = const_cast<MemberT*>(&T::get(obj))
+                .obj = const_cast<MemberT*>(&DescriptorT::get(obj))
             };
 
             if constexpr (Meta::IsArray<MemberT>)
             {
-                SerializeArrayType<ReflectT, MemberT, T>(metadata);
+                SerializeArrayType<ReflectT, MemberT, DescriptorT>(metadata);
             }
             else if constexpr (Meta::IsXnorList<MemberT>)
             {
-                SerializeListType<ReflectT, MemberT, T>(metadata);
+                SerializeListType<ReflectT, MemberT, DescriptorT>(metadata);
             }
             else
             {
-                SerializeSimpleType<ReflectT, MemberT, T>(metadata);
+                SerializeSimpleType<ReflectT, MemberT, DescriptorT>(metadata);
             }
         }
     });
 
     if constexpr (IsRoot)
         EndRootElement();
-    // else
-       // EndXmlElement();
 }
 
 template <typename ReflectT, bool_t IsRoot>
 void Serializer::Deserialize(ReflectT* const obj)
-{
-    // TODO static variables
-    
+{    
     constexpr TypeDescriptor<ReflectT> desc = Reflection::GetTypeInfo<ReflectT>();
 
     constexpr const char_t* const typeName = desc.name.c_str();
@@ -96,33 +91,35 @@ void Serializer::Deserialize(ReflectT* const obj)
     if constexpr (IsRoot)
         ReadElement(humanizedTypeName);
 
-    refl::util::for_each(desc.members, [&]<typename T>(const T)
+    DeserializeStaticFields<ReflectT>();
+
+    refl::util::for_each(desc.members, [&]<typename DescriptorT>(const DescriptorT)
     {
-        constexpr bool_t dontSerialize = Reflection::HasAttribute<Reflection::NotSerializable, T>();
-        constexpr bool_t isStatic = T::is_static;
+        constexpr bool_t dontSerialize = Reflection::HasAttribute<Reflection::NotSerializable, DescriptorT>();
+        constexpr bool_t isStatic = DescriptorT::is_static;
 
         if constexpr (!dontSerialize && !isStatic)
         {
-            using MemberT = Meta::RemoveConstSpecifier<typename T::value_type>;
-            constexpr const char_t* const name = T::name.c_str();
+            using MemberT = Meta::RemoveConstSpecifier<typename DescriptorT::value_type>;
+            constexpr const char_t* const name = DescriptorT::name.c_str();
 
-            Metadata<ReflectT, MemberT, T> metadata = {
+            Metadata<ReflectT, MemberT, DescriptorT> metadata = {
                 .topLevelObj = const_cast<ReflectT*>(obj),
                 .name = name,
-                .obj = const_cast<MemberT*>(&T::get(obj))
+                .obj = const_cast<MemberT*>(&DescriptorT::get(obj))
             };
 
             if constexpr (Meta::IsArray<MemberT>)
             {
-                DeserializeArrayType<ReflectT, MemberT, T>(metadata);
+                DeserializeArrayType<ReflectT, MemberT, DescriptorT>(metadata);
             }
             else if constexpr (Meta::IsXnorList<MemberT>)
             {
-                DeserializeListType<ReflectT, MemberT, T>(metadata);
+                DeserializeListType<ReflectT, MemberT, DescriptorT>(metadata);
             }
             else
             {
-                DeserializeSimpleType<ReflectT, MemberT, T>(metadata);
+                DeserializeSimpleType<ReflectT, MemberT, DescriptorT>(metadata);
             }
         }
     });
@@ -136,6 +133,101 @@ void Serializer::Deserialize(ReflectT* const obj)
             *it.second = World::scene->GetEntityById(it.first);
         }
     }
+}
+
+template <typename ReflectT>
+void Serializer::SerializeStaticFields()
+{
+    const size_t hash = Utils::GetTypeHash<ReflectT>();
+    const auto r = std::ranges::find(m_StaticClassesPared, hash);
+    if (r != m_StaticClassesPared.end())
+        return;
+
+    constexpr TypeDescriptor<ReflectT> desc = Reflection::GetTypeInfo<ReflectT>();
+    const std::string humanizedName = Utils::RemoveNamespaces(desc.name.c_str());
+    const char_t* const typeName = humanizedName.c_str();
+
+    bool_t hasStatic = false;
+
+    refl::util::for_each(desc.members, [&]<typename DescriptorT>(const DescriptorT)
+    {
+        if constexpr (DescriptorT::is_static)
+        {
+            if (!hasStatic)
+            {
+                BeginXmlElement(typeName, "Static");
+                m_StaticClassesPared.push_back(hash);
+                hasStatic = true;
+            }
+
+            using MemberT = Meta::RemoveConstSpecifier<typename DescriptorT::value_type>;
+            constexpr const char_t* const name = DescriptorT::name.c_str();
+
+            constexpr Metadata<ReflectT, MemberT, DescriptorT> metadata = {
+                .topLevelObj = nullptr,
+                .name = name,
+                .obj = const_cast<MemberT*>(&DescriptorT::get())
+            };
+
+            if constexpr (Meta::IsArray<MemberT>)
+            {
+                SerializeArrayType<ReflectT, MemberT, DescriptorT>(metadata);
+            }
+            else if constexpr (Meta::IsXnorList<MemberT>)
+            {
+                SerializeListType<ReflectT, MemberT, DescriptorT>(metadata);
+            }
+            else
+            {
+                SerializeSimpleType<ReflectT, MemberT, DescriptorT>(metadata);
+            }
+        }
+    });
+
+    if (hasStatic)
+        EndXmlElement();
+}
+
+template <typename ReflectT>
+void Serializer::DeserializeStaticFields()
+{
+    constexpr TypeDescriptor<ReflectT> desc = Reflection::GetTypeInfo<ReflectT>();
+    const std::string humanizedName = Utils::RemoveNamespaces(desc.name.c_str());
+
+    if (ReadElementValue(humanizedName) == nullptr)
+        return;
+
+    ReadElement(humanizedName);
+
+    refl::util::for_each(desc.members, [&]<typename DescriptorT>(const DescriptorT)
+    {
+        if constexpr (DescriptorT::is_static)
+        {
+            using MemberT = Meta::RemoveConstSpecifier<typename DescriptorT::value_type>;
+            constexpr const char_t* const name = DescriptorT::name.c_str();
+
+            constexpr Metadata<ReflectT, MemberT, DescriptorT> metadata = {
+                .topLevelObj = nullptr,
+                .name = name,
+                .obj = const_cast<MemberT*>(&DescriptorT::get())
+            };
+
+            if constexpr (Meta::IsArray<MemberT>)
+            {
+                DeserializeArrayType<ReflectT, MemberT, DescriptorT>(metadata);
+            }
+            else if constexpr (Meta::IsXnorList<MemberT>)
+            {
+                DeserializeListType<ReflectT, MemberT, DescriptorT>(metadata);
+            }
+            else
+            {
+                DeserializeSimpleType<ReflectT, MemberT, DescriptorT>(metadata);
+            }
+        }
+    });
+
+    FinishReadElement();
 }
 
 template <typename ReflectT, typename MemberT, typename DescriptorT>
@@ -165,7 +257,7 @@ void Serializer::SerializeSimpleType(const Metadata<ReflectT, MemberT, Descripto
         else
         {
             if (*metadata.obj == nullptr)
-                AddSimpleValue(metadata.name, static_cast<std::string>(Guid()));
+                AddSimpleValue(metadata.name, static_cast<std::string>(Guid::Empty()));
             else
                 AddSimpleValue(metadata.name, static_cast<std::string>((*metadata.obj)->GetGuid()));
         }
@@ -173,7 +265,7 @@ void Serializer::SerializeSimpleType(const Metadata<ReflectT, MemberT, Descripto
     else if constexpr (Meta::IsXnorPointer<MemberT>)
     {
         if (*metadata.obj == nullptr)
-            AddSimpleValue(metadata.name, Guid());
+            AddSimpleValue(metadata.name, Guid::Empty());
         else
             AddSimpleValue(metadata.name, static_cast<std::string>((*metadata.obj)->GetGuid()));
     }
@@ -366,7 +458,7 @@ void Serializer::DeserializePointer(const Metadata<ReflectT, MemberT, Descriptor
     else if constexpr (Meta::IsSame<PtrT, Entity>)
     {
         const Guid guid = Guid::FromString(ReadElementValue(metadata.name));
-        if (guid == Guid())
+        if (guid == Guid::Empty())
             *metadata.obj = nullptr;
         else
             m_GuidEntityMap.emplace(guid, metadata.obj);
@@ -381,7 +473,7 @@ void Serializer::DeserializeXnorPointer(const Metadata<ReflectT, MemberT, Descri
     const char_t* const value = ReadElementValue(metadata.name);
     const Guid guid = Guid::FromString(value);
 
-    if (guid == Guid())
+    if (guid == Guid::Empty())
     {
         *metadata.obj = nullptr;
         return;

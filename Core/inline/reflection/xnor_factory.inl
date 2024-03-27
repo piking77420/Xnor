@@ -6,10 +6,12 @@
 
 #include <unordered_map>
 
+#include "scene/component/script_component.hpp"
+
 BEGIN_XNOR_CORE
 
 template <typename T>
-constexpr void XnorFactory::RegisterFactoryType()
+void XnorFactory::RegisterType()
 {
     // ReSharper disable once CppTooWideScope
     constexpr bool_t isConstructible = !Meta::IsAbstract<T> && Meta::IsDefaultConstructible<T>;
@@ -18,9 +20,9 @@ constexpr void XnorFactory::RegisterFactoryType()
     if (m_FactoryMapHash.contains(hash))
         return;
 
-    constexpr TypeDescriptor<T> desc = Reflection::GetTypeInfo<T>();
+    using DescriptorT = decltype(Reflection::GetTypeInfo<T>());
 
-    const constexpr char_t* const name = desc.name.c_str();
+    constexpr const char_t* const name = DescriptorT::name.c_str();
     const std::string humanizedName = Utils::RemoveNamespaces(std::string(name));
     
     FactoryTypeInfo info = {
@@ -36,7 +38,7 @@ constexpr void XnorFactory::RegisterFactoryType()
     else
         info.createFunc = []() -> void* { return nullptr; };
 
-    refl::util::for_each(refl::util::reflect_types(desc.declared_bases), [&]<typename ParentT>(const ParentT)
+    refl::util::for_each(refl::util::reflect_types(DescriptorT::declared_bases), [&]<typename ParentT>(const ParentT)
     {
         info.parentClasses.push_back(Utils::GetTypeHash<typename ParentT::type>());
     });

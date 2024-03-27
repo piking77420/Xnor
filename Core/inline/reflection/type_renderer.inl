@@ -447,31 +447,34 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
     bool_t hasStatic = false;
 
     // Loop over each reflected member
-    refl::util::for_each(desc.members, [&]<typename T>(const T member)
+    refl::util::for_each(desc.members, [&]<typename DescriptorT>(const DescriptorT)
     {
         // Get member type
-        using MemberT = Meta::RemoveConstSpecifier<typename T::value_type>;
+        using MemberT = Meta::RemoveConstSpecifier<typename DescriptorT::value_type>;
 
         // Shorthand for the notify change attribute
         using NotifyChangeT = Reflection::NotifyChange<ReflectT>;
 
-        constexpr bool_t isConst = !member.is_writable;
-        constexpr bool_t hidden = Reflection::HasAttribute<Reflection::HideInInspector, T>();
-        constexpr bool_t readOnly = Reflection::HasAttribute<Reflection::ReadOnly, T>();
-        constexpr bool_t display = [&](const bool_t isStatic) -> bool_t
-        {
-            if constexpr (IsStatic)
-                return isStatic;
-            else
-                return !isStatic;
-        }(member.is_static);
+        constexpr bool_t isConst = !DescriptorT::is_writable;
+        constexpr bool_t hidden = Reflection::HasAttribute<Reflection::HideInInspector, DescriptorT>();
+        constexpr bool_t readOnly = Reflection::HasAttribute<Reflection::ReadOnly, DescriptorT>();
 
-        if constexpr (IsStatic && member.is_static)
+        // We want to display static fields when IsStatic is true, and member fields when IsStatic is false
+        // Hence the binary operations
+        // Truth table :
+        // IsStatic | is_static | !is_static | Result
+        // 0        | 0         | 1          | 1
+        // 0        | 1         | 0          | 0
+        // 1        | 0         | 1          | 1
+        // 1        | 1         | 0          | 0
+        constexpr bool_t display = IsStatic ^ !DescriptorT::is_static;
+
+        if constexpr (IsStatic && DescriptorT::is_static)
         {
             hasStatic = true;
         }
 
-        constexpr bool_t notifyChange = Reflection::HasAttribute<NotifyChangeT, T>();
+        constexpr bool_t notifyChange = Reflection::HasAttribute<NotifyChangeT, DescriptorT>();
 
         if constexpr (!hidden && display)
         {
@@ -480,25 +483,25 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
             if constexpr (notifyChange)
             {
                 // Need to notify if a change happened, so keep the old value
-                const MemberT oldValue = member.get(obj);
+                const MemberT oldValue = DescriptorT::get(obj);
 
                 // Display object
-                DisplayObjectInternal<ReflectT, MemberT, T>(obj);
+                DisplayObjectInternal<ReflectT, MemberT, DescriptorT>(obj);
 
                 // Get the new value
-                const MemberT newValue = member.get(obj);
+                const MemberT newValue = DescriptorT::get(obj);
 
                 if (newValue != oldValue)
                 {
                     // Value was changed, set the pointer to true
-                    const auto notify = Reflection::GetAttribute<NotifyChangeT, T>();
+                    constexpr NotifyChangeT notify = Reflection::GetAttribute<NotifyChangeT, DescriptorT>();
                     obj->*notify.pointer = true;
                 }
             }
             else
             {
                 // Don't need to notify, simply display the object
-                DisplayObjectInternal<ReflectT, MemberT, T>(obj);
+                DisplayObjectInternal<ReflectT, MemberT, DescriptorT>(obj);
             }
 
             ImGui::EndDisabled();

@@ -54,7 +54,7 @@ inline void XnorFactory::DisplayObject(void* const obj, const size_t hash)
     it->second.displayFunc(obj);
 }
 
-void XnorFactory::SerializeObject(void* obj, size_t hash)
+void XnorFactory::SerializeObject(void* const obj, const size_t hash)
 {
     auto&& it = m_FactoryMapHash.find(hash);
 
@@ -67,7 +67,7 @@ void XnorFactory::SerializeObject(void* obj, size_t hash)
     it->second.serializeFunc(obj);
 }
 
-void XnorFactory::DeserializeObject(void* obj, size_t hash)
+void XnorFactory::DeserializeObject(void* const obj, const size_t hash)
 {
     auto&& it = m_FactoryMapHash.find(hash);
 
@@ -80,23 +80,23 @@ void XnorFactory::DeserializeObject(void* obj, size_t hash)
     it->second.deserializeFunc(obj);
 }
 
-void XnorFactory::RegisterTypes()
+void XnorFactory::RegisterAllTypes()
 {
     // Manually registering the types is sub-optimal, however, it's the best way I've found so far
     // It'll probably stay this way for the classes internal to Core, and as for the user scripts generated from the editor, a solution will be found at a later date probably
     
-    RegisterFactoryType<MeshRenderer>();
-    RegisterFactoryType<Light>();
-    RegisterFactoryType<DirectionalLight>();
-    RegisterFactoryType<TestComponent>();
-    RegisterFactoryType<PointLight>();
-    RegisterFactoryType<SpotLight>();
-    RegisterFactoryType<ScriptComponent>();
-    RegisterFactoryType<Collider>();
-    RegisterFactoryType<BoxCollider>();
-    RegisterFactoryType<SphereCollider>();
-    RegisterFactoryType<CapsuleCollider>();
-    RegisterFactoryType<TestComponentPhysics>();
+    RegisterType<MeshRenderer>();
+    RegisterType<Light>();
+    RegisterType<DirectionalLight>();
+    RegisterType<TestComponent>();
+    RegisterType<PointLight>();
+    RegisterType<SpotLight>();
+    RegisterType<ScriptComponent>();
+    RegisterType<Collider>();
+    RegisterType<BoxCollider>();
+    RegisterType<SphereCollider>();
+    RegisterType<CapsuleCollider>();
+    RegisterType<TestComponentPhysics>();
 }
 
 std::string XnorFactory::GetTypeName(const size_t hash)
