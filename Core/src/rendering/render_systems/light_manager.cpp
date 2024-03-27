@@ -16,6 +16,7 @@ LightManager::~LightManager()
 		delete directionalShadowMap.depthTexture;
 	}
 	delete m_GpuLightData;
+	delete m_ShadowMapTextureArray;
 }
 
 void LightManager::InitResources()
@@ -161,8 +162,10 @@ void LightManager::BindShadowMap() const
 		if (!directionalLights[i]->castShadow)
 			continue;
 
-		directionalShadowMaps[i].depthTexture->BindTexture(10);
+		directionalShadowMaps[i].depthTexture->BindTexture(ShadowTextureBinding::Directional);
 	}
+
+	m_ShadowMapTextureArray->BindTexture(ShadowTextureBinding::SpotLight);
 }
 
 void LightManager::FecthLightInfo()
@@ -193,8 +196,6 @@ void LightManager::FecthLightInfo()
 	for (size_t i = 0 ; i < nbrOfSpotLight ; i++)
 	{
 		const SpotLight* spotLight = spotLights[i];
-		const Matrix matrix = Matrix::Trs(Vector3(0.f), spotLight->GetEntity()->transform.GetRotation().Normalized(), Vector3(1.f));
-		const Vector4 direction = matrix * -Vector4::UnitY();
 		
 		m_GpuLightData->spotLightData[i] =
 		{
@@ -202,8 +203,9 @@ void LightManager::FecthLightInfo()
 			.intensity = spotLight->intensity,
 			.position = static_cast<Vector3>(spotLight->GetEntity()->transform.worldMatrix[3]),
 			.cutOff = std::cos(spotLight->cutOff * Calc::Deg2Rad),
-			.direction = { direction.x, direction.y, direction.z },
+			.direction = spotLight->GetLightDirection(),
 			.outerCutOff = std::cos(spotLight->outerCutOff * Calc::Deg2Rad),
+			.isDirlightCastShadow = spotLight->castShadow,
 		};
 	}
 	
@@ -212,8 +214,6 @@ void LightManager::FecthLightInfo()
 	if (nbrOfDirectionalLight != 0)
 	for (size_t i = 0 ; i < MaxDirectionalLights ; i++)
 	{
-		//const Matrix matrix = Matrix::Trs(Vector3(0.f), m_DirectionalLights[i]->GetEntity()->transform.GetRotation(), Vector3(1.f));
-		//const Vector4 direction = matrix * Vector4::UnitY(); 
 		const Vector3 direction = directionalLights[i]->GetLightDirection(); 
 
 		m_GpuLightData->directionalData[i] =
@@ -228,7 +228,8 @@ void LightManager::FecthLightInfo()
 
 void LightManager::ComputeShadow(const Scene& scene, const Renderer& renderer)
 {
-	
+	m_ShadowMapShader->Use();
+
 	for (size_t i = 0; i < directionalLights.size(); i++)
 	{
 		m_GpuLightData->directionalData->isDirlightCastShadow = directionalLights[i]->castShadow;
@@ -248,7 +249,6 @@ void LightManager::ComputeShadow(const Scene& scene, const Renderer& renderer)
 		cam.bottomtop = directionalLights[i]->bottomtop;
 		cam.GetVp(shadowMap.depthTexture->GetSize(), &m_GpuLightData->directionalData->lightSpaceMatrix);
 		
-		
 		m_ShadowFrameBuffer->AttachTexture(*shadowMap.depthTexture, Attachment::Depth, 0);
 		RenderPassBeginInfo renderPassBeginInfo =
 		{
@@ -264,7 +264,31 @@ void LightManager::ComputeShadow(const Scene& scene, const Renderer& renderer)
 		m_ShadowMapShader->Unuse();
 	}
 
-	
+	for (size_t i = 0; i < spotLights.size(); i++)
+	{
+		Camera cam;
+		cam.position = spotLights[i]->entity->transform.GetPosition();
+		cam.LookAt(cam.position + spotLights[i]->GetLightDirection());
+		cam.near = spotLights[i]->near;
+		cam.far = spotLights[i]->far;
+		cam.GetVp(SpotLightShadowMapSize, &m_GpuLightData->spotLightData[i].lightSpaceMatrix);
+
+		//m_ShadowFrameBuffer->AttachTexture(*m_ShadowMapTextureArray, Attachment::Depth, static_cast<uint32_t>(i));
+		Rhi::AttachTextureToFrameBufferLayer(m_ShadowFrameBuffer->GetId(), Attachment::Depth, m_ShadowMapTextureArray->GetId(),0,i);
+		RenderPassBeginInfo renderPassBeginInfo =
+		{
+			.frameBuffer = m_ShadowFrameBuffer,
+			.renderAreaOffset = { 0,0 },
+			.renderAreaExtent = SpotLightShadowMapSize ,
+			.clearBufferFlags = BufferFlag::DepthBit,
+			.clearColor = Vector4(0.f)
+		};
+		
+		renderer.RenderNonShaded(cam, renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, scene, false);
+	}
+
+	m_ShadowMapShader->Unuse();
+
 }
 
 void LightManager::InitShadow()
@@ -288,6 +312,20 @@ void LightManager::InitShadow()
 		directionalShadowMap.depthTexture = new Texture(textureCreateInfo);
 	}
 
+	const TextureCreateInfo spothLightShadowArray =
+		{
+			.textureType = TextureType::Texture2DArray
+			, .mipMaplevel = 1
+			, .depth = MaxSpotLights
+			, .size = SpotLightShadowMapSize
+			, .filtering = TextureFiltering::Nearest
+			, .wrapping = TextureWrapping::TextureWrapping::ClampToBorder
+			, .format = TextureFormat::DepthComponent
+			, .internalFormat =  ShadowDepthTextureInternalFormat
+			, .dataType =  DataType::Float
+	};
+
+	m_ShadowMapTextureArray = new Texture(spothLightShadowArray);
 	
 	m_ShadowFrameBuffer = new FrameBuffer;
 	Rhi::SetFrameBufferDraw(m_ShadowFrameBuffer->GetId(),false);

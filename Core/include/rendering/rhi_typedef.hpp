@@ -441,7 +441,7 @@ struct ShaderCreateInfo
 };
 
 /// @brief Point light UniformBuffer data
-struct PointLightData
+struct alignas(16) PointLightData
 {
 	/// @brief Color
 	Vector3 color;
@@ -456,7 +456,7 @@ struct PointLightData
 };
 
 /// @brief Spot light UniformBuffer data
-struct SpotLightData
+struct alignas(16) SpotLightData
 {
 	/// @brief Color
 	Vector3 color;
@@ -472,11 +472,13 @@ struct SpotLightData
 	float_t outerCutOff{};
 	
 	/// @brief CastShadow
-	//int32_t castShadow = 0; 
+	int32_t isDirlightCastShadow = 0;
+
+	Matrix lightSpaceMatrix;
 };
 
 /// @brief Directional light UniformBuffer data
-struct DirectionalLightData
+struct alignas(16) DirectionalLightData
 {
 	/// @brief Color
 	Vector3 color;
@@ -493,31 +495,19 @@ struct DirectionalLightData
 
 
 /// @brief Light UniformBuffer data
-struct GpuLightData
+struct alignas(16) GpuLightData
 {
 	/// @brief Number of active point lights
 	uint32_t nbrOfPointLight{};
 	/// @brief Number of active spot lights
 	uint32_t nbrOfSpotLight{};
-	/// @brief Padding for alignment
-	uint32_t padding1{};
-	/// @brief Padding for alignment
-	uint32_t padding2{};
-
+	
 	/// @brief Point light data
 	PointLightData pointLightData[MaxPointLights];
 	/// @brief Spot light data
 	SpotLightData spotLightData[MaxSpotLights];
 	/// @brief Directional light data
 	DirectionalLightData directionalData[MaxDirectionalLights];
-};
-
-
-/// @brief Shadow mapping UniformBuffer data
-struct ShadowMappingData
-{
-	Matrix lightSpaceMatrix;
-	Matrix model;
 };
 
 /// @brief Material UniformBuffer data
@@ -551,6 +541,15 @@ BEGIN_ENUM(Gbuffer)
 	MetallicRoughessReflectance,
 	AmbiantOcclusion,
 	Emissivive,
+};
+END_ENUM
+
+/// @brief The type of GBuffer.
+BEGIN_ENUM(ShadowTextureBinding)
+{
+	Directional = 15,
+	PointLight = 16,
+	SpotLight = 17
 };
 END_ENUM
 

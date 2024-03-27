@@ -133,7 +133,10 @@ public:
 	/// @brief Unbinds a framebuffer
 	XNOR_ENGINE static void UnbindFrameBuffer();
 
+	XNOR_ENGINE static void AttachTextureToFrameBufferLayer(uint32_t bufferId, Attachment::Attachment attachment,uint32_t textureId,uint32_t level, uint32_t layer);
+
 	XNOR_ENGINE static void AttachTextureToFrameBuffer(uint32_t bufferId, Attachment::Attachment attachment,uint32_t textureId,uint32_t level);
+
 
 	XNOR_ENGINE static void AttachTextureToFrameBuffer(uint32_t bufferId, Attachment::Attachment attachment, CubeMapFace cubeMapFace,uint32_t textureId,uint32_t level);
 	
@@ -179,10 +182,6 @@ public:
 	/// @param lightData Data
 	XNOR_ENGINE static void UpdateLight(const GpuLightData& lightData);
 	
-	/// @brief Updates the shadow mapping @ref UniformBuffer
-	/// @param shadowMappingData Data
-	XNOR_ENGINE static void UpdateShadowMappingData(const ShadowMappingData& shadowMappingData);
-
 	/// @brief Binds a @ref Material
 	/// @param material Material
 	XNOR_ENGINE static void BindMaterial(const Material& material);
@@ -224,7 +223,6 @@ private:
 	};
 
 	XNOR_ENGINE static inline UniformBuffer* m_CameraUniform;
-	XNOR_ENGINE static inline UniformBuffer* m_LightShadowMappingUniform;
 	XNOR_ENGINE static inline UniformBuffer* m_ModelUniform;
 	XNOR_ENGINE static inline UniformBuffer* m_LightUniform;
 	XNOR_ENGINE static inline UniformBuffer* m_MaterialUniform;

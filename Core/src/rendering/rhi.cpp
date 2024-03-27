@@ -1021,10 +1021,16 @@ void Rhi::UnbindFrameBuffer()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void Rhi::AttachTextureToFrameBufferLayer(const uint32_t bufferId, const Attachment::Attachment attachment, const uint32_t textureId, const uint32_t level, const uint32_t layer)
+{
+	const GLenum attachementOpengl = AttachementToOpenglAttachement(attachment);
+	glNamedFramebufferTextureLayer(bufferId, attachementOpengl, textureId, static_cast<GLsizei>(level), static_cast<GLint>(layer));
+}
+
 void Rhi::AttachTextureToFrameBuffer(const uint32_t bufferId, const Attachment::Attachment attachment, const uint32_t textureId, const uint32_t level)
 {
 	const GLenum attachementOpengl = AttachementToOpenglAttachement(attachment);
-	glNamedFramebufferTexture(bufferId, attachementOpengl, textureId, level);
+	glNamedFramebufferTexture(bufferId, attachementOpengl, textureId, static_cast<GLsizei>(level));
 	
 	if (attachment != Attachment::Depth && attachment != Attachment::DepthAndStencil && attachment != Attachment::Stencil)
 	{
@@ -1041,7 +1047,7 @@ void Rhi::AttachTextureToFrameBuffer(
 )
 {
 	const GLenum attachement =  AttachementToOpenglAttachement(attachment);
-	glNamedFramebufferTextureLayer(bufferId,attachement,textureId,level, static_cast<GLint>(cubeMapFace));
+	glNamedFramebufferTextureLayer(bufferId,attachement, textureId, static_cast<GLsizei>(level), static_cast<GLint>(cubeMapFace));
 	
 	if (attachment != Attachment::Depth && attachment != Attachment::DepthAndStencil && attachment != Attachment::Stencil)
 	{
@@ -1452,7 +1458,6 @@ void Rhi::Shutdown()
 	delete m_CameraUniform;
 	delete m_ModelUniform;
 	delete m_LightUniform;
-	delete m_LightShadowMappingUniform;
 	delete m_MaterialUniform;
 }
 
@@ -1469,11 +1474,7 @@ void Rhi::PrepareUniform()
 	m_LightUniform = new UniformBuffer;
 	m_LightUniform->Allocate(sizeof(GpuLightData), nullptr);
 	m_LightUniform->Bind(2);
-
-	m_LightShadowMappingUniform = new UniformBuffer;
-	m_LightShadowMappingUniform->Allocate(sizeof(ShadowMappingData), nullptr);
-	m_LightUniform->Bind(3);
-
+	
 	m_MaterialUniform = new UniformBuffer;
 	m_MaterialUniform->Allocate(sizeof(MaterialData),nullptr);
 	m_MaterialUniform->Bind(4);
@@ -1527,10 +1528,6 @@ void Rhi::BindMaterial(const Material& material)
 	m_MaterialUniform->Update(size, 0, &materialData);
 }
 
-void Rhi::UpdateShadowMappingData(const ShadowMappingData& shadowMappingData)
-{
-	m_LightShadowMappingUniform->Update(sizeof(ShadowMappingData), 0, &shadowMappingData);
-}
 
 TextureFormat::TextureFormat Rhi::GetTextureFormatFromChannels(const uint32_t channels)
 {

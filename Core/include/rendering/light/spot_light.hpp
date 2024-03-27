@@ -17,6 +17,12 @@ public:
     float_t cutOff = 12.5f;
     /// @brief Outer cut-off	
     float_t outerCutOff = 15.f;
+
+    float_t near = 0.1f;
+
+    float_t far = 1000.f;
+
+    Vector3 GetLightDirection() const;
     
     XNOR_ENGINE SpotLight() = default;
     XNOR_ENGINE ~SpotLight() override = default;

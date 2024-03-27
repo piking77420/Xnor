@@ -358,11 +358,13 @@ void Renderer::InitResources()
 	m_GBufferShaderLit->SetInt("gMetallicRoughessReflectance", Gbuffer::MetallicRoughessReflectance);
 	m_GBufferShaderLit->SetInt("gAmbiantOcclusion", Gbuffer::AmbiantOcclusion);
 	m_GBufferShaderLit->SetInt("gEmissive", Gbuffer::Emissivive);
-	m_GBufferShaderLit->SetInt("dirLightShadowMap", 10);
 
 	m_GBufferShaderLit->SetInt("irradianceMap", 12);
 	m_GBufferShaderLit->SetInt("prefilterMap", 13);
 	m_GBufferShaderLit->SetInt("brdfLUT", 14);
+	m_GBufferShaderLit->SetInt("dirLightShadowMap", ShadowTextureBinding::Directional);
+	m_GBufferShaderLit->SetInt("SpotLightShadowArray", ShadowTextureBinding::SpotLight);
+
 	m_GBufferShaderLit->Unuse();
 	
 	m_GBufferShader = ResourceManager::Get<Shader>("gbuffer");
