@@ -243,7 +243,7 @@ void TypeRenderer::DisplayXnorPointer(const Metadata<ReflectT, MemberT, Descript
         if (ImGui::Button("+"))
         {
             // Set current object as the filter target
-            Filters::BeginResourceFilter(&metadata.obj);
+            Filters::BeginResourceFilter();
         }
 
         // Check if the filter should be displayed
@@ -303,7 +303,7 @@ void TypeRenderer::DisplayRawPointer(const Metadata<ReflectT, MemberT, Descripto
         if (ImGui::Button("+"))
         {
             // Set current object as the filter target
-            Filters::BeginEntityFilter(metadata.obj);
+            Filters::BeginEntityFilter();
         }
 
         // Check if the filter should be displayed
@@ -637,7 +637,7 @@ void TypeRenderer::DisplayList(const Metadata<ReflectT, MemberT, DescriptorT>& m
             if constexpr (isComponentList)
             {
                 // Set the target for the component filter
-                Filters::BeginComponentFilter(metadata.obj);
+                Filters::BeginComponentFilter();
             }
             else
             {

@@ -7,9 +7,6 @@ BEGIN_XNOR_CORE
 template <Concepts::ResourceT T>
 Pointer<T> Filters::FilterResources(Pointer<T>* const target)
 {
-    if (target == m_ResourceFilterTarget)
-        ImGui::OpenPopup("Resource");
-
     if (!ImGui::BeginPopupModal("Resource"))
         return nullptr;
 
@@ -39,8 +36,11 @@ Pointer<T> Filters::FilterResources(Pointer<T>* const target)
     if (r != nullptr)
     {
         *target = r;
-        m_ResourceFilterTarget = nullptr;
+        ImGui::CloseCurrentPopup();
     }
+
+    if (ImGui::IsKeyPressed(ImGuiKey_Escape))
+        ImGui::CloseCurrentPopup();
     
     ImGui::EndPopup();
     return r;

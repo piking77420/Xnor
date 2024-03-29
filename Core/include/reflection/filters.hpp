@@ -19,14 +19,11 @@ public:
     XNOR_ENGINE static Component* FilterComponent(List<Component*>* target);
     XNOR_ENGINE static Component* FilterComponent(Component** target);
 
-    XNOR_ENGINE static void BeginResourceFilter(const void* target);
-    XNOR_ENGINE static void BeginEntityFilter(const void* target);
-    XNOR_ENGINE static void BeginComponentFilter(const void* target);
+    XNOR_ENGINE static void BeginResourceFilter();
+    XNOR_ENGINE static void BeginEntityFilter();
+    XNOR_ENGINE static void BeginComponentFilter();
 
 private:
-    static inline const void* m_ResourceFilterTarget = nullptr;
-    static inline const void* m_EntityFilterTarget = nullptr;
-    static inline const void* m_ComponentFilterTarget = nullptr;
     static inline ImGuiTextFilter m_TextFilter;
 };
 

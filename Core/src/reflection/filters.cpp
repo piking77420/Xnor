@@ -7,9 +7,6 @@ using namespace XnorCore;
 
 Entity* Filters::FilterEntity(Entity** target)
 {
-    if (target == m_EntityFilterTarget)
-        ImGui::OpenPopup("Entity");
-
     if (!ImGui::BeginPopupModal("Entity"))
         return nullptr;
 
@@ -30,8 +27,11 @@ Entity* Filters::FilterEntity(Entity** target)
     if (e != nullptr)
     {
         *target = e;
-        m_EntityFilterTarget = nullptr;
+        ImGui::CloseCurrentPopup();
     }
+
+    if (ImGui::IsKeyPressed(ImGuiKey_Escape))
+        ImGui::CloseCurrentPopup();
     
     ImGui::EndPopup();
     return e;
@@ -39,11 +39,6 @@ Entity* Filters::FilterEntity(Entity** target)
 
 Component* Filters::FilterComponent(List<Component*>* target)
 {
-    if (target == m_ComponentFilterTarget)
-    {
-        ImGui::OpenPopup("Component");
-    }
-
     if (!ImGui::BeginPopupModal("Component"))
         return nullptr;
 
@@ -66,8 +61,11 @@ Component* Filters::FilterComponent(List<Component*>* target)
     if (c != nullptr)
     {
         target->Add(c);
-        m_ComponentFilterTarget = nullptr;
+        ImGui::CloseCurrentPopup();
     }
+
+    if (ImGui::IsKeyPressed(ImGuiKey_Escape))
+        ImGui::CloseCurrentPopup();
     
     ImGui::EndPopup();
     return c;
@@ -75,9 +73,6 @@ Component* Filters::FilterComponent(List<Component*>* target)
 
 Component* Filters::FilterComponent(Component** target)
 {
-    if (target == m_ComponentFilterTarget)
-        ImGui::OpenPopup("Component");
-
     if (!ImGui::BeginPopupModal("Component"))
         return nullptr;
 
@@ -100,27 +95,26 @@ Component* Filters::FilterComponent(Component** target)
     if (c != nullptr)
     {
         *target = c;
-        m_ComponentFilterTarget = nullptr;
     }
 
     ImGui::EndPopup();
     return c;
 }
 
-void Filters::BeginResourceFilter(const void* const target)
+void Filters::BeginResourceFilter()
 {
-    m_ResourceFilterTarget = target;
     m_TextFilter.Clear();
+    ImGui::OpenPopup("Resource");
 }
 
-void Filters::BeginEntityFilter(const void* const target)
+void Filters::BeginEntityFilter()
 {
-    m_EntityFilterTarget = target;
     m_TextFilter.Clear();
+    ImGui::OpenPopup("Entity");
 }
 
-void Filters::BeginComponentFilter(const void* const target)
+void Filters::BeginComponentFilter()
 {
-    m_ComponentFilterTarget = target;
     m_TextFilter.Clear();
+    ImGui::OpenPopup("Component");
 }
