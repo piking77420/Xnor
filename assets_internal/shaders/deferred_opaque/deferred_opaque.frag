@@ -103,22 +103,22 @@ float ShadowCalculation(vec4 fragPosLightSpace, vec3 n, vec3 l)
     return shadow;
 }
 
-float ShadowCalculationSpolight(vec4 fragPosLightSpace, vec3 n, vec3 l,int index)
+float ShadowCalculationSpolight(vec4 fragPosLightSpace, vec3 n, vec3 l, int index)
 {
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float closestDepth = texture(SpotLightShadowArray, vec3(projCoords.x, projCoords.y, index)).r;
+    float closestDepth = texture(SpotLightShadowArray, vec3(projCoords.xy, index)).r; // Corrected indexing
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // calculate bias (based on depth map resolution and slope)
     vec3 normal = normalize(n);
     vec3 lightDir = normalize(l);
-    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.00005);
     // check whether current frag pos is in shadow
-    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+    float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
     // PCF
     vec2 texelSize = 1.0 / textureSize(SpotLightShadowArray, 0).xy;
     for(int x = -1; x <= 1; ++x)
@@ -126,8 +126,8 @@ float ShadowCalculationSpolight(vec4 fragPosLightSpace, vec3 n, vec3 l,int index
         for(int y = -1; y <= 1; ++y)
         {
             vec2 texel = projCoords.xy + vec2(x, y) * texelSize;
-            float pcfDepth = texture(SpotLightShadowArray, vec3(texel,index)).r;
-            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
+            float pcfDepth = texture(SpotLightShadowArray, vec3(texel, index)).r; // Corrected indexing
+            shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
         }
     }
     shadow /= 9.0;
@@ -135,7 +135,7 @@ float ShadowCalculationSpolight(vec4 fragPosLightSpace, vec3 n, vec3 l,int index
     // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
     if(projCoords.z > 1.0)
     shadow = 0.0;
-
+    
     return shadow;
 }
 
@@ -185,6 +185,7 @@ vec3 ComputeIbl(float roughness,vec3 kD, float ao,vec3 albedo, vec3 N , vec3 R ,
     return ambient;
 }
 
+
 vec3 ComputeSpotLight(vec3 baseColor,vec4 fragPos,vec3 v, vec3 n, float roughness, float metallic, vec3 f0)
 {
     vec3 outLo = vec3(0.f);
@@ -229,10 +230,8 @@ vec3 ComputeSpotLight(vec3 baseColor,vec4 fragPos,vec3 v, vec3 n, float roughnes
         if (light.isCastShadow) 
         {
             float shadow = ShadowCalculationSpolight(light.lightSpaceMatrix * fragPos, n, l, i);
-            Lo *= (1.0-shadow);
+            Lo *= ( 1.0 - shadow );
         }
-   
-        
         outLo += Lo;
     }
     
@@ -338,21 +337,20 @@ void main()
     kD *= 1.0 - metallic;
     float NdotL = max(dot(n, l), 0.0);
     
-    Lo += (kD * albedo * InvPI + specular) * radiance * NdotL;
-    
-    
+    vec3 LoDir = (kD * albedo * InvPI + specular) * radiance * NdotL;
     if (directionalData.isDirlightCastShadow)
     {
         float shadow = ShadowCalculation(directionalData.lightSpaceMatrix * fragPosVec4,n,l);
-        Lo *= (1.0-shadow);
+        LoDir *= (1.0-shadow);
     }
-
+    
+    Lo += LoDir;
+    
     Lo += ComputePointLight(albedo, fragPos, v, n, roughness, metallic, F0);
     Lo += ComputeSpotLight(albedo, fragPosVec4, v, n, roughness, metallic, F0);
-
-
+    
     vec3 ambient = ComputeIbl(roughness, kD, ambientOcclusion, albedo, n, r, v, f);
     vec3 color = Lo + ambient + (emissiveColor * emissive);
-    
+
     FragColor = vec4(color, 1);
 }

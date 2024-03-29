@@ -474,6 +474,10 @@ struct alignas(16) SpotLightData
 	/// @brief CastShadow
 	int32_t isDirlightCastShadow = 0;
 
+	/// @brief Cringe padding even with alignas(16) skill issue
+	float_t padding[3];
+	
+	/// @brief LightSpaceMatrix for shadowMapping
 	Matrix lightSpaceMatrix;
 };
 
@@ -495,7 +499,7 @@ struct alignas(16) DirectionalLightData
 
 
 /// @brief Light UniformBuffer data
-struct GpuLightData
+struct alignas(16) GpuLightData
 {
 	/// @brief Number of active point lights
 	uint32_t nbrOfPointLight{};

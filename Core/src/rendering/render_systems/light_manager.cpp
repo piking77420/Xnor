@@ -266,12 +266,19 @@ void LightManager::ComputeShadow(const Scene& scene, const Renderer& renderer)
 
 	for (size_t i = 0; i < spotLights.size(); i++)
 	{
+		if (!spotLights[i]->castShadow)
+			return;
+		
 		Camera cam;
 		cam.position = spotLights[i]->entity->transform.GetPosition();
 		cam.LookAt(cam.position + spotLights[i]->GetLightDirection());
 		cam.near = spotLights[i]->near;
 		cam.far = spotLights[i]->far;
-		cam.GetVp(SpotLightShadowMapSize, &m_GpuLightData->spotLightData[i].lightSpaceMatrix);
+
+		Matrix matrix;
+		cam.GetVp(SpotLightShadowMapSize, &matrix);
+
+		m_GpuLightData->spotLightData[i].lightSpaceMatrix = matrix;
 
 		//m_ShadowFrameBuffer->AttachTexture(*m_ShadowMapTextureArray, Attachment::Depth, static_cast<uint32_t>(i));
 		Rhi::AttachTextureToFrameBufferLayer(m_ShadowFrameBuffer->GetId(), Attachment::Depth, m_ShadowMapTextureArray->GetId(),0,i);

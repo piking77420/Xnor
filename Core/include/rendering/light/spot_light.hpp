@@ -20,7 +20,7 @@ public:
 
     float_t near = 0.1f;
 
-    float_t far = 1000.f;
+    float_t far = 100.f;
 
     Vector3 GetLightDirection() const;
     
