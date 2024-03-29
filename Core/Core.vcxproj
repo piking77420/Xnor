@@ -237,6 +237,7 @@
     <ClCompile Include="externals\src\RapidXMLSTD.cpp" />
     <ClCompile Include="externals\src\stb\stb_image.c" />
     <ClCompile Include="externals\src\ttf\ttfParser.cpp" />
+    <ClInclude Include="include\reflection\filters.hpp" />
     <ClInclude Include="include\scene\component\test_component_physics.hpp" />
     <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\csharp\dotnet_assembly.cpp" />
@@ -255,6 +256,7 @@
     <ClCompile Include="src\physics\components\sphere_collider.cpp" />
     <ClCompile Include="src\physics\contact_listener.cpp" />
     <ClCompile Include="src\physics\physics_world.cpp" />
+    <ClCompile Include="src\reflection\filters.cpp" />
     <ClCompile Include="src\reflection\xnor_factory.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -1148,6 +1150,7 @@
     <ClInclude Include="inline\file\file_manager.inl" />
     <ClInclude Include="inline\input\input.inl" />
     <ClInclude Include="inline\input\time.inl" />
+    <ClInclude Include="inline\reflection\filters.inl" />
     <ClInclude Include="inline\reflection\xnor_factory.inl" />
     <ClInclude Include="inline\reflection\reflection.inl" />
     <ClInclude Include="inline\reflection\type_renderer.inl" />

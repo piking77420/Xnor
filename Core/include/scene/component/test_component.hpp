@@ -40,6 +40,8 @@ private:
 
     bool_t m_Rotate = true;
 
+    Entity* m_TestEntity = nullptr;
+
     static inline int32_t m_StaticTest = 1;
     static inline Transform m_StaticTransform {};
 };
@@ -53,5 +55,6 @@ REFL_AUTO(
     field(m_RotationSpeed),
     field(m_Radius),
     field(m_StaticTest),
-    field(m_StaticTransform)
+    field(m_StaticTransform),
+    field(m_TestEntity)
 );
