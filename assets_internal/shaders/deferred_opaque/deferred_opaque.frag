@@ -345,7 +345,6 @@ void main()
     }
     
     Lo += LoDir;
-    
     Lo += ComputePointLight(albedo, fragPos, v, n, roughness, metallic, F0);
     Lo += ComputeSpotLight(albedo, fragPosVec4, v, n, roughness, metallic, F0);
     

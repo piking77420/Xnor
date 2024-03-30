@@ -259,9 +259,8 @@ void LightManager::ComputeShadow(const Scene& scene, const Renderer& renderer)
 			.clearColor = Vector4(0.f)
 		};
 		
-		m_ShadowMapShader->Use();
+		
 		renderer.RenderNonShaded(cam, renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, scene, false);
-		m_ShadowMapShader->Unuse();
 	}
 
 	for (size_t i = 0; i < spotLights.size(); i++)
