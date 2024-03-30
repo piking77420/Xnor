@@ -24,6 +24,8 @@ class LightManager
 private:
     static constexpr Vector2i DirectionalShadowMapSize = { 1024, 1024 };
     static constexpr Vector2i SpotLightShadowMapSize = { 1024, 1024 };
+    static constexpr Vector2i PointLightLightShadowMapSize = { 1024, 1024 };
+
     static constexpr TextureInternalFormat::TextureInternalFormat ShadowDepthTextureInternalFormat = TextureInternalFormat::DepthComponent32F;
     
 public:
@@ -95,6 +97,12 @@ private:
 
     XNOR_ENGINE void ComputeShadow(const Scene& scene, const Renderer& renderer);
 
+    XNOR_ENGINE void ComputeShadowDirLight(const Scene& scene, const Renderer& renderer);
+
+    XNOR_ENGINE void ComputeShadowSpotLight(const Scene& scene, const Renderer& renderer);
+
+    XNOR_ENGINE void ComputeShadowPointLight(const Scene& scene, const Renderer& renderer);
+    
     XNOR_ENGINE void InitShadow();
 };
 

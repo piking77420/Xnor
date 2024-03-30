@@ -205,7 +205,7 @@ void LightManager::FecthLightInfo()
 			.cutOff = std::cos(spotLight->cutOff * Calc::Deg2Rad),
 			.direction = spotLight->GetLightDirection(),
 			.outerCutOff = std::cos(spotLight->outerCutOff * Calc::Deg2Rad),
-			.isDirlightCastShadow = spotLight->castShadow,
+			.isCastingShadow = spotLight->castShadow,
 		};
 	}
 	
@@ -229,10 +229,18 @@ void LightManager::FecthLightInfo()
 void LightManager::ComputeShadow(const Scene& scene, const Renderer& renderer)
 {
 	m_ShadowMapShader->Use();
+	ComputeShadowDirLight(scene, renderer);
+	ComputeShadowSpotLight(scene, renderer);
+	m_ShadowMapShader->Unuse();
+	ComputeShadowPointLight(scene, renderer);
 
+}
+
+void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& renderer)
+{
 	for (size_t i = 0; i < directionalLights.size(); i++)
 	{
-		m_GpuLightData->directionalData->isDirlightCastShadow = directionalLights[i]->castShadow;
+		m_GpuLightData->directionalData->isDirlightCastingShadow = directionalLights[i]->castShadow;
 		
 		if (!directionalLights[i]->castShadow)
 			continue;
@@ -262,7 +270,10 @@ void LightManager::ComputeShadow(const Scene& scene, const Renderer& renderer)
 		
 		renderer.RenderNonShaded(cam, renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, scene, false);
 	}
+}
 
+void LightManager::ComputeShadowSpotLight(const Scene& scene, const Renderer& renderer)
+{
 	for (size_t i = 0; i < spotLights.size(); i++)
 	{
 		if (!spotLights[i]->castShadow)
@@ -279,7 +290,6 @@ void LightManager::ComputeShadow(const Scene& scene, const Renderer& renderer)
 
 		m_GpuLightData->spotLightData[i].lightSpaceMatrix = matrix;
 
-		//m_ShadowFrameBuffer->AttachTexture(*m_ShadowMapTextureArray, Attachment::Depth, static_cast<uint32_t>(i));
 		Rhi::AttachTextureToFrameBufferLayer(m_ShadowFrameBuffer->GetId(), Attachment::Depth, m_ShadowMapTextureArray->GetId(),0,i);
 		RenderPassBeginInfo renderPassBeginInfo =
 		{
@@ -293,8 +303,54 @@ void LightManager::ComputeShadow(const Scene& scene, const Renderer& renderer)
 		renderer.RenderNonShaded(cam, renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, scene, false);
 	}
 
-	m_ShadowMapShader->Unuse();
+}
 
+void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& renderer)
+{
+	std::array<Matrix, 6> vpMatricies;
+	Camera cam;
+
+	for (uint32_t i = 0; i < pointLights.size(); i++)
+	{
+		const Vector3 pos = static_cast<Vector3>(pointLights[i]->entity->transform.worldMatrix[3]);
+		Vector3 at;
+		Vector3 up;
+		
+		switch (i)
+		{
+			case 0:
+				at = pos - Vector3::UnitX();
+				up = -Vector3::UnitY();
+				break;
+			case 1:
+				at = pos + Vector3::UnitX();
+				up = -Vector3::UnitY();
+				break;
+			case 2:
+				at = pos - Vector3::UnitY();
+				up = -Vector3::UnitZ();
+				break;
+			case 3:
+				at = pos + Vector3::UnitY();
+				up = Vector3::UnitZ();
+				break;
+			case 4:
+				at = pos + Vector3::UnitZ();
+				up = -Vector3::UnitY();
+				break;
+			case 5:
+				at = pos - Vector3::UnitZ();
+				up = -Vector3::UnitY();
+				break;
+			
+		}
+
+		//renderer.RenderNonShaded()
+
+	}
+	
+
+	
 }
 
 void LightManager::InitShadow()

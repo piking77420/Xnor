@@ -452,7 +452,7 @@ struct alignas(16) PointLightData
 	/// @brief Radius
 	float_t radius{};
 	/// @brief CastShadow
-	//int32_t castShadow = 0;
+	int32_t isCastingShadow = 0;
 };
 
 /// @brief Spot light UniformBuffer data
@@ -472,7 +472,7 @@ struct alignas(16) SpotLightData
 	float_t outerCutOff{};
 	
 	/// @brief CastShadow
-	int32_t isDirlightCastShadow = 0;
+	int32_t isCastingShadow = 0;
 
 	/// @brief Cringe padding even with alignas(16) skill issue
 	float_t padding[3];
@@ -492,7 +492,7 @@ struct alignas(16) DirectionalLightData
 	Vector3 direction;
 	
 	/// @brief CastShadow
-	int32_t isDirlightCastShadow = 0;
+	int32_t isDirlightCastingShadow = 0;
 
 	Matrix lightSpaceMatrix;
 };
@@ -512,6 +512,8 @@ struct alignas(16) GpuLightData
 	SpotLightData spotLightData[MaxSpotLights];
 	/// @brief Directional light data
 	DirectionalLightData directionalData[MaxDirectionalLights];
+
+	Matrix pointLightMatrix[6];
 };
 
 /// @brief Material UniformBuffer data
