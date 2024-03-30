@@ -1,40 +1,57 @@
 #include "pch.hpp"
 
-template <typename T, typename U>
-bool Compare(const T& a, const U& b)
+TEST(Color, ConversionRgbaHsva)
 {
-    return a == b;
-}
-
-TEST(Color, ColorRgbToHsv)
-{
-    constexpr ColorRgb from = ColorRgb::Magenta();
-    constexpr ColorHsva to = static_cast<ColorHsva>(from);
-
-    if (Compare(to, ColorHsva::Magenta()))
     {
-        
+        constexpr ColorRgba rgba = ColorRgba::Magenta();
+        constexpr ColorHsva hsva = ColorHsva::Magenta();
+
+        EXPECT_EQ(static_cast<ColorHsva>(rgba), hsva);
+        EXPECT_EQ(static_cast<ColorRgba>(hsva), rgba);
     }
-    
-    EXPECT_EQ(to, ColorHsva::Magenta());
+    {
+        constexpr ColorRgba rgba = ColorRgba::Gray();
+        constexpr ColorHsva hsva = ColorHsva::Gray();
+
+        EXPECT_EQ(static_cast<ColorHsva>(rgba), hsva);
+        EXPECT_EQ(static_cast<ColorRgba>(hsva), rgba);
+    }
 }
 
-TEST(Color, ColorRgbEquality)
+TEST(Color, ConversionRgbaf)
+{
+    {
+        constexpr ColorRgba rgba = ColorRgba::Magenta();
+        constexpr Colorf f = Colorf::Magenta();
+
+        EXPECT_EQ(static_cast<Colorf>(rgba), f);
+        EXPECT_EQ(static_cast<ColorRgba>(f), rgba);
+    }
+    {
+        constexpr ColorRgba rgba = ColorRgba::Gray();
+        constexpr Colorf f = Colorf::Gray();
+
+        EXPECT_EQ(static_cast<Colorf>(rgba), f);
+        EXPECT_EQ(static_cast<ColorRgba>(f), rgba);
+    }
+}
+
+TEST(Color, EqualityRgb)
 {
     EXPECT_EQ(ColorRgb::Cyan(), ColorRgb::Cyan());
 }
 
-TEST(Color, ColorRgbaEquality)
+TEST(Color, EqualityRgba)
 {
     EXPECT_EQ(ColorRgba::Cyan(), ColorRgba::Cyan());
 }
 
-TEST(Color, ColorfEquality)
+TEST(Color, Equalityf)
 {
     EXPECT_EQ(Colorf::Cyan(), Colorf::Cyan());
 }
 
-TEST(Color, ColorHsvaEquality)
+TEST(Color, EqualityHsva)
 {
     EXPECT_EQ(ColorHsva::Cyan(), ColorHsva::Cyan());
 }

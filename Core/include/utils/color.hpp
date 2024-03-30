@@ -383,126 +383,126 @@ struct XNOR_ENGINE ColorHsva
     constexpr explicit operator Colorf() const;
 };
 
-END_XNOR_CORE
-
 /// @brief Adds 2 ColorRgb, caps at the max value of the components and doesn't allow overflow
 /// @param c1 A
 /// @param c2 B
 /// @return A + B
 [[nodiscard]]
-constexpr XnorCore::ColorRgb operator+(XnorCore::ColorRgb c1, XnorCore::ColorRgb c2);
+constexpr ColorRgb operator+(ColorRgb c1, ColorRgb c2);
 
 /// @brief Multiplies 2 ColorRgb, caps at the max value of the components and doesn't allow overflow
 /// @param c1 A
 /// @param c2 B
 /// @return A * B
 [[nodiscard]]
-constexpr XnorCore::ColorRgb operator*(XnorCore::ColorRgb c1, XnorCore::ColorRgb c2);
+constexpr ColorRgb operator*(ColorRgb c1, ColorRgb c2);
 
 /// @brief Compares 2 ColorRgb component-wise
 /// @param c1 A
 /// @param c2 B
 /// @return A == B
 [[nodiscard]]
-constexpr bool_t operator==(XnorCore::ColorRgb c1, XnorCore::ColorRgb c2);
+constexpr bool_t operator==(ColorRgb c1, ColorRgb c2);
 
 /// @brief Compares 2 ColorRgb component-wise
 /// @param c1 A
 /// @param c2 B
 /// @return A != B
 [[nodiscard]]
-constexpr bool_t operator!=(XnorCore::ColorRgb c1, XnorCore::ColorRgb c2);
+constexpr bool_t operator!=(ColorRgb c1, ColorRgb c2);
 
 /// @brief Adds 2 ColorRgba, caps at the max value of the components and doesn't allow overflow
 /// @param c1 A
 /// @param c2 B
 /// @return A + B
 [[nodiscard]]
-constexpr XnorCore::ColorRgba operator+(XnorCore::ColorRgba c1, XnorCore::ColorRgba c2);
+constexpr ColorRgba operator+(ColorRgba c1, ColorRgba c2);
 
 /// @brief Multiplies 2 ColorRgba, caps at the max value of the components and doesn't allow overflow
 /// @param c1 A
 /// @param c2 B
 /// @return A + B
 [[nodiscard]]
-constexpr XnorCore::ColorRgba operator*(XnorCore::ColorRgba c1, XnorCore::ColorRgba c2);
+constexpr ColorRgba operator*(ColorRgba c1, ColorRgba c2);
 
 /// @brief Multiplies the alpha component of a ColorRgba
 /// @param color Color
 /// @param alphaFactor Alpha factor
 /// @return Color.a * alphaFactor
 [[nodiscard]]
-constexpr XnorCore::ColorRgba operator*(XnorCore::ColorRgba color, float_t alphaFactor);
+constexpr ColorRgba operator*(ColorRgba color, float_t alphaFactor);
 
 /// @brief Compares 2 ColorRgba component-wise
 /// @param c1 A
 /// @param c2 B
 /// @return A == B
 [[nodiscard]]
-constexpr bool_t operator==(XnorCore::ColorRgba c1, XnorCore::ColorRgba c2);
+constexpr bool_t operator==(ColorRgba c1, ColorRgba c2);
 
 /// @brief Compares 2 ColorRgba component-wise
 /// @param c1 A
 /// @param c2 B
 /// @return A != B
 [[nodiscard]]
-constexpr bool_t operator!=(XnorCore::ColorRgba c1, XnorCore::ColorRgba c2);
+constexpr bool_t operator!=(ColorRgba c1, ColorRgba c2);
 
 /// @brief Adds 2 Colorf, caps at @c 1.f
 /// @param c1 A
 /// @param c2 B
 /// @return A + B
 [[nodiscard]]
-constexpr XnorCore::Colorf operator+(const XnorCore::Colorf& c1, const XnorCore::Colorf& c2);
+constexpr Colorf operator+(const Colorf& c1, const Colorf& c2);
 
 /// @brief Multiplies 2 Colorf
 /// @param c1 A
 /// @param c2 B
 /// @return A * B
 [[nodiscard]]
-constexpr XnorCore::Colorf operator*(const XnorCore::Colorf& c1, const XnorCore::Colorf& c2);
+constexpr Colorf operator*(const Colorf& c1, const Colorf& c2);
 
 /// @brief Multiplies the alpha component of a Colorf
 /// @param color Color
 /// @param alphaFactor Alpha factor
 /// @return Color.a * alphaFactor
 [[nodiscard]]
-constexpr XnorCore::Colorf operator*(XnorCore::Colorf color, float_t alphaFactor);
+constexpr Colorf operator*(Colorf color, float_t alphaFactor);
 
 /// @brief Compares 2 Colorf component-wise
 /// @param c1 A
 /// @param c2 B
 /// @return A == B
 [[nodiscard]]
-constexpr bool_t operator==(const XnorCore::Colorf& c1, const XnorCore::Colorf& c2);
+constexpr bool_t operator==(const Colorf& c1, const Colorf& c2);
 
 /// @brief Compares 2 Colorf component-wise
 /// @param c1 A
 /// @param c2 B
 /// @return A != B
 [[nodiscard]]
-constexpr bool_t operator!=(const XnorCore::Colorf& c1, const XnorCore::Colorf& c2);
+constexpr bool_t operator!=(const Colorf& c1, const Colorf& c2);
 
 /// @brief Multiplies the alpha component of a ColorHsva
 /// @param color Color
 /// @param alphaFactor Alpha factor
 /// @return Color.a * alphaFactor
 [[nodiscard]]
-constexpr XnorCore::ColorHsva operator*(XnorCore::ColorHsva color, float_t alphaFactor);
+constexpr ColorHsva operator*(ColorHsva color, float_t alphaFactor);
 
 /// @brief Compares 2 ColorHsva component-wise
 /// @param c1 A
 /// @param c2 B
 /// @return A == B
 [[nodiscard]]
-constexpr bool_t operator==(XnorCore::ColorHsva c1, XnorCore::ColorHsva c2);
+constexpr bool_t operator==(ColorHsva c1, ColorHsva c2);
 
 /// @brief Compares 2 ColorHsva component-wise
 /// @param c1 A
 /// @param c2 B
 /// @return A != B
 [[nodiscard]]
-constexpr bool_t operator!=(XnorCore::ColorHsva c1, XnorCore::ColorHsva c2);
+constexpr bool_t operator!=(ColorHsva c1, ColorHsva c2);
+
+END_XNOR_CORE
 
 #ifndef SWIG
 template <>
