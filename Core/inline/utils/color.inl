@@ -19,13 +19,15 @@ constexpr ColorRgb ColorRgb::Blue() { return ColorRgb(0x00, 0x00, 0xFF); }
 
 constexpr ColorRgb ColorRgb::Yellow() { return ColorRgb(0xFF, 0xFF, 0x00); }
 
-constexpr ColorRgb ColorRgb::Cyan() { return ColorRgb(0x00, 0xFF, 0xFF); }
+constexpr ColorRgb ColorRgb::LightBlue() { return ColorRgb(0x00, 0xFF, 0xFF); }
 
 constexpr ColorRgb ColorRgb::Magenta() { return ColorRgb(0xFF, 0x00, 0xFF); }
 
 static constexpr uint8_t HueCircle = 255;
-static constexpr float_t HueCircleOver3 = 1.f / 3.f * HueCircle;
-static constexpr float_t HueCircleOver6 = 1.f / 6.f * HueCircle;
+static constexpr float_t HueCircleOver3 = HueCircle / 3.f;
+static constexpr float_t HueCircleOver6 = HueCircle / 6.f;
+static constexpr uint8_t HueCircleOver6Rounded = static_cast<uint8_t>(Calc::Round(HueCircleOver6)); // 255 / 6 = 42.5, rounded to 43 here
+static constexpr uint8_t HueCircleOver3Rounded = static_cast<uint8_t>(Calc::Round(HueCircleOver3)); // 255 / 3 = 85
 
 constexpr ColorRgb::operator ColorRgba() const { return ColorRgba(r, g, b); }
 
@@ -47,7 +49,7 @@ constexpr ColorRgba ColorRgba::Blue() { return ColorRgba(0x00, 0x00, 0xFF); }
 
 constexpr ColorRgba ColorRgba::Yellow() { return ColorRgba(0xFF, 0xFF, 0x00); }
 
-constexpr ColorRgba ColorRgba::Cyan() { return ColorRgba(0x00, 0xFF, 0xFF); }
+constexpr ColorRgba ColorRgba::LightBlue() { return ColorRgba(0x00, 0xFF, 0xFF); }
 
 constexpr ColorRgba ColorRgba::Magenta() { return ColorRgba(0xFF, 0x00, 0xFF); }
 
@@ -61,7 +63,7 @@ constexpr ColorRgba::operator ColorHsva() const
     hsv.v = maxVal;
     const uint8_t delta = maxVal - minVal;
     
-    if (delta == 0)
+    if (delta == 0) // Black
     {
         hsv.h = 0;
         hsv.s = 0;
@@ -69,13 +71,15 @@ constexpr ColorRgba::operator ColorHsva() const
     else
     {
         hsv.s = 0xFF * delta / maxVal;
-        const float_t deltaf = 1.f / static_cast<float_t>(delta);
         if (r == maxVal)
-            hsv.h = static_cast<uint8_t>(HueCircleOver6 * static_cast<float_t>(g - b) * deltaf);
+            hsv.h = HueCircleOver3Rounded * 0 + HueCircleOver6Rounded * (g - b) / (delta - 1);
         else if (g == maxVal)
-            hsv.h = static_cast<uint8_t>(HueCircleOver6 * (2.f * static_cast<float_t>(b - r) * deltaf));
+            hsv.h = HueCircleOver3Rounded * 1 + HueCircleOver6Rounded * (b - r) / (delta - 1);
         else
-            hsv.h = static_cast<uint8_t>(HueCircleOver6 * (4.f * static_cast<float_t>(b - r) * deltaf));
+            hsv.h = HueCircleOver3Rounded * 2 + HueCircleOver6Rounded * (b - r) / (delta - 1);
+
+        if (hsv.h == 0xFF)
+            hsv.h = 0;
     }
     return hsv;
 }
@@ -96,7 +100,7 @@ constexpr Colorf Colorf::Blue() { return Colorf(0.f, 0.f, 1.f); }
 
 constexpr Colorf Colorf::Yellow() { return Colorf(1.f, 1.f, 0.f); }
 
-constexpr Colorf Colorf::Cyan() { return Colorf(0.f, 1.f, 1.f); }
+constexpr Colorf Colorf::LightBlue() { return Colorf(0.f, 1.f, 1.f); }
 
 constexpr Colorf Colorf::Magenta() { return Colorf(1.f, 0.f, 1.f); }
 
@@ -118,25 +122,23 @@ constexpr ColorHsva ColorHsva::Black() { return ColorHsva(0x00, 0x00, 0x00); }
 
 constexpr ColorHsva ColorHsva::Red() { return ColorHsva(0x00, 0xFF, 0xFF); }
 
-constexpr ColorHsva ColorHsva::Green() { return ColorHsva(static_cast<uint8_t>(HueCircleOver3), 0xFF, 0xFF); }
+constexpr ColorHsva ColorHsva::Green() { return ColorHsva(HueCircleOver3Rounded, 0xFF, 0xFF); }
 
-constexpr ColorHsva ColorHsva::Blue() { return ColorHsva(static_cast<uint8_t>(HueCircleOver3 * 2), 0xFF, 0xFF); }
+constexpr ColorHsva ColorHsva::Blue() { return ColorHsva(HueCircleOver3Rounded * 2, 0xFF, 0xFF); }
 
-constexpr ColorHsva ColorHsva::Yellow() { return ColorHsva(static_cast<uint8_t>(HueCircleOver6), 0xFF, 0xFF); }
+constexpr ColorHsva ColorHsva::Yellow() { return ColorHsva(HueCircleOver6Rounded, 0xFF, 0xFF); }
 
-constexpr ColorHsva ColorHsva::Cyan() { return ColorHsva(static_cast<uint8_t>(HueCircleOver6 * 3), 0xFF, 0xFF); }
+constexpr ColorHsva ColorHsva::LightBlue() { return ColorHsva(HueCircleOver6Rounded * 3, 0xFF, 0xFF); }
 
-constexpr ColorHsva ColorHsva::Magenta() { return ColorHsva(static_cast<uint8_t>(HueCircleOver6 * 5), 0xFF, 0xFF); }
+constexpr ColorHsva ColorHsva::Magenta() { return ColorHsva(HueCircleOver6Rounded * 5, 0xFF, 0xFF); }
 
 constexpr ColorHsva::operator ColorRgba() const
 {
     if (s == 0) // Gray
         return { v, v, v, a };
-
-    constexpr uint8_t hueCircleOver6Rounded = 43; // 255 / 6 = 42.5, rounded to 43 here
     
-    const uint8_t hi = h / hueCircleOver6Rounded;
-    const uint8_t f = h % hueCircleOver6Rounded * 6;
+    const uint8_t hi = static_cast<uint8_t>(static_cast<float_t>(h) / HueCircleOver6);
+    const uint8_t f = static_cast<uint8_t>(Calc::Modulo(h, HueCircleOver6)) * 6;
     const uint8_t p = (v * (0xFF - s) + 0x7F) / 0xFF;
     const uint8_t q = (v * (0xFF - (s * f + 0x7F) / 0xFF) + 0x7F) / 0xFF;
     const uint8_t t = (v * (0xFF - (s * (0xFF - f) + 0x7F) / 0xFF) + 0x7F) / 0xFF;

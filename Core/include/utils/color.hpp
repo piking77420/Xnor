@@ -61,7 +61,7 @@ struct XNOR_ENGINE ColorRgb
     /// @brief Constant for cyan
     /// @return Color
     [[nodiscard]]
-    static constexpr ColorRgb Cyan();
+    static constexpr ColorRgb LightBlue();
     
     /// @brief Constant for magenta
     /// @return Color
@@ -150,7 +150,7 @@ struct XNOR_ENGINE ColorRgba
     /// @brief Constant for cyan
     /// @return Color
     [[nodiscard]]
-    static constexpr ColorRgba Cyan();
+    static constexpr ColorRgba LightBlue();
     
     /// @brief Constant for magenta
     /// @return Color
@@ -242,7 +242,7 @@ struct XNOR_ENGINE Colorf
     /// @brief Constant for cyan
     /// @return Color
     [[nodiscard]]
-    static constexpr Colorf Cyan();
+    static constexpr Colorf LightBlue();
     
     /// @brief Constant for magenta
     /// @return Color
@@ -335,7 +335,7 @@ struct XNOR_ENGINE ColorHsva
     /// @brief Constant for cyan
     /// @return Color
     [[nodiscard]]
-    static constexpr ColorHsva Cyan();
+    static constexpr ColorHsva LightBlue();
     
     /// @brief Constant for magenta
     /// @return Color
