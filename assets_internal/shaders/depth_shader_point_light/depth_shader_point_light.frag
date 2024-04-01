@@ -3,7 +3,7 @@ layout (location = 0) out float PixelLigthDistance;
 
 
 in vec3 WorldPos;
-in vec3 CameraPos;
+uniform vec3 CameraPos;
 
 void main()
 {

@@ -154,6 +154,24 @@ float ShadowCalculationSpolight(vec4 fragPosLightSpace, vec3 n, vec3 l, int inde
 }
 
 
+float ShadowCalculationPointLight(vec3 LightToPixel,int index)
+{
+    float Distance = length(LightToPixel);
+    LightToPixel.y = -LightToPixel.y;
+    
+    float sampledDistance = texture(pointLightCubemapArrayPixelDistance,vec4(LightToPixel,index)).r;
+    
+    float bias = 0.15f;
+    if (sampledDistance + bias < Distance)
+       return 1.0f;
+    else
+        return 0.0f; 
+    
+    return 0.0f;
+}
+
+
+
 
 
 //https://de45xmedrsdbp.cloudfront.net/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
@@ -227,7 +245,7 @@ vec3 ComputeSpotLight(vec3 baseColor,vec4 fragPos,vec3 v, vec3 n, float roughnes
 
         float ndf = SpecularD(NoH, roughness * roughness );
         float g =  SpecularG(l, v, h, n, roughness);
-        vec3 f = SpecularF(VoH,f0,roughness);
+        vec3 f = SpecularF(VoH, f0, roughness);
 
         vec3 numerator = ndf * g * f;
         float denominator = 4.0 * max(dot(n, v), 0.0) * max(dot(n, l), 0.0) + 0.0001;
@@ -289,7 +307,14 @@ vec3 ComputePointLight(vec3 baseColor,vec3 fragPos,vec3 v, vec3 n, float roughne
 
         
         NdotL = max(dot(n, l), 0.0);
-        outLo += (kD * baseColor * InvPI + specular) * radiance * NdotL;
+        vec3 Lo = (kD * baseColor * InvPI + specular) * radiance * NdotL;
+
+        if (light.isCastShadow)
+        {
+            float shadow = ShadowCalculationPointLight(fragPos - light.position,i);
+            Lo *= ( 1.0 - shadow );
+        }
+        outLo += Lo;
     }
 
     return outLo;

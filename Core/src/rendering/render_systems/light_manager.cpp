@@ -199,6 +199,7 @@ void LightManager::FecthLightInfo()
 			.intensity = pointLight->intensity,
 			.position = static_cast<Vector3>(pointLight->GetEntity()->transform.worldMatrix[3]),
 			.radius = 30.f * sqrt(pointLight->intensity),
+			.isCastingShadow = pointLight[i].castShadow
 		};
 	}
 	for (size_t i = 0 ; i < nbrOfSpotLight ; i++)
@@ -328,6 +329,7 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 			continue;
 		
 		const Vector3 pos = static_cast<Vector3>(pointLights[i]->entity->transform.worldMatrix[3]);
+		m_ShadowMapShaderPointLight->SetVec3("CameraPos",pos);
 		Vector3 front;
 		Vector3 up;
 		
@@ -337,23 +339,23 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 			{
 			case 0:
 				front = -Vector3::UnitX();
-				up = -Vector3::UnitY();
+				up = Vector3::UnitY();
 				break;
 			case 1:
 				front = Vector3::UnitX();
-				up = -Vector3::UnitY();
+				up = Vector3::UnitY();
 				break;
 			case 2:
-				front = -Vector3::UnitY();
+				front = Vector3::UnitY();
 				up = -Vector3::UnitZ();
 				break;
 			case 3:
-				front = Vector3::UnitY();
+				front = -Vector3::UnitY();
 				up = Vector3::UnitZ();
 				break;
 			case 4:
 				front = Vector3::UnitZ();
-				up = -Vector3::UnitY();
+				up = Vector3::UnitY();
 				break;
 			case 5:
 				front = -Vector3::UnitZ();
@@ -362,11 +364,10 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 			
 			}
 			cam.position  = pos;
-			cam.front = front;
+		 	cam.front = front;
 			cam.up = up;
 
-			Rhi::AttachTextureToFrameBufferLayer(m_ShadowFrameBuffer->GetId(), Attachment::Color00, m_PointLightShadowMapCubemapArrayPixelDistance->GetId(),0 ,static_cast<uint32_t>(i + k * 6));
-			Rhi::SetFrameBufferDraw(m_ShadowFrameBuffer->GetId(),true);
+			Rhi::AttachTextureToFrameBufferLayer(m_ShadowFrameBuffer->GetId(), Attachment::Color00, m_PointLightShadowMapCubemapArrayPixelDistance->GetId(),0 ,static_cast<uint32_t>(k));
 			
 			RenderPassBeginInfo renderPassBeginInfo =
 			{
@@ -429,7 +430,6 @@ void LightManager::InitShadow()
 	};
 
 	m_SpotLightShadowMapTextureArray = new Texture(spothLightShadowArray);
-	Rhi::SetFrameBufferDraw(m_ShadowFrameBuffer->GetId(),false);
 
 	const TextureCreateInfo pointLightDepthBufferCreateInfo =
 	{

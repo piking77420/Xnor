@@ -20,6 +20,8 @@ out vec3 CameraPos;
 
 void main()
 {
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
+    vec4 Pos4 =  vec4(aPos, 1.0);
+    gl_Position = projection * view * model * Pos4;
     CameraPos = cameraPos;
+    WorldPos =  (model * Pos4).xyz;
 }

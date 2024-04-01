@@ -884,7 +884,6 @@ void Rhi::AllocTexture(
 		
 		case TextureType::TextureCubeMapArray:
 			glTextureStorage3D(textureID, level, internalFormat, width, height, depth * 6);
-
 			break;
 		case TextureType::TextureBuffer:
 			Logger::LogError("Uniplemented behaviours");
@@ -1051,10 +1050,10 @@ void Rhi::AttachTextureToFrameBuffer(
 	}
 }
 
-void Rhi::SetFrameBufferDraw(uint32_t frameBufferid, bool_t value)
+void Rhi::SetFrameBufferDraw(uint32_t frameBufferid, uint32_t value)
 {
-	glNamedFramebufferDrawBuffer(frameBufferid,value);
 	glNamedFramebufferReadBuffer(frameBufferid,value);
+	glNamedFramebufferDrawBuffer(frameBufferid,value);
 }
 
 
