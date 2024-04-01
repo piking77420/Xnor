@@ -67,8 +67,20 @@ uniform samplerCube prefilterMap;
 uniform sampler2D brdfLUT;
 
 uniform sampler2D dirLightShadowMap;
-uniform sampler2DArray SpotLightShadowArray;
+uniform sampler2DArray spotLightShadowArray;
+
+uniform samplerCubeArray pointLightCubemapArrayPixelDistance;
+
 in vec2 texCoords;
+
+vec3 gridSamplingDisk[20] = vec3[]
+(
+    vec3(1, 1,  1), vec3( 1, -1,  1), vec3(-1, -1,  1), vec3(-1, 1,  1),
+    vec3(1, 1, -1), vec3( 1, -1, -1), vec3(-1, -1, -1), vec3(-1, 1, -1),
+    vec3(1, 1,  0), vec3( 1, -1,  0), vec3(-1, -1,  0), vec3(-1, 1,  0),
+    vec3(1, 0,  1), vec3(-1,  0,  1), vec3( 1,  0, -1), vec3(-1, 0, -1),
+    vec3(0, 1,  1), vec3( 0, -1,  1), vec3( 0, -1, -1), vec3( 0, 1, -1)
+);
 
 float ShadowCalculation(vec4 fragPosLightSpace, vec3 n, vec3 l)
 {
@@ -112,7 +124,7 @@ float ShadowCalculationSpolight(vec4 fragPosLightSpace, vec3 n, vec3 l, int inde
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float closestDepth = texture(SpotLightShadowArray, vec3(projCoords.xy, index)).r; // Corrected indexing
+    float closestDepth = texture(spotLightShadowArray, vec3(projCoords.xy, index)).r; // Corrected indexing
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // calculate bias (based on depth map resolution and slope)
@@ -122,13 +134,13 @@ float ShadowCalculationSpolight(vec4 fragPosLightSpace, vec3 n, vec3 l, int inde
     // check whether current frag pos is in shadow
     float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
     // PCF
-    vec2 texelSize = 1.0 / textureSize(SpotLightShadowArray, 0).xy;
+    vec2 texelSize = 1.0 / textureSize(spotLightShadowArray, 0).xy;
     for(int x = -1; x <= 1; ++x)
     {
         for(int y = -1; y <= 1; ++y)
         {
             vec2 texel = projCoords.xy + vec2(x, y) * texelSize;
-            float pcfDepth = texture(SpotLightShadowArray, vec3(texel, index)).r; // Corrected indexing
+            float pcfDepth = texture(spotLightShadowArray, vec3(texel, index)).r; // Corrected indexing
             shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
         }
     }

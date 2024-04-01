@@ -183,7 +183,7 @@ BEGIN_ENUM(TextureInternalFormat)
 	Rg16F,
 	Rgb16F,
 	Rgba16F,
-	R32F,
+	R32f,
 	R32Uint,
 	Srgb,
 	R11FG11FB10F,
@@ -554,8 +554,8 @@ END_ENUM
 BEGIN_ENUM(ShadowTextureBinding)
 {
 	Directional = 15,
-	PointLight = 16,
-	SpotLight = 17
+	SpotLight = 16,
+	PointLightCubemapArrayPixelDistance = 17,
 };
 END_ENUM
 

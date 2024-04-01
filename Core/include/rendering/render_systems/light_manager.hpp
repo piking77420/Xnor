@@ -77,21 +77,25 @@ private:
     Pointer<Texture> m_PointLightTexture;
     Pointer<Texture> m_DirLightTexture;
     Pointer<Texture> m_SpotLightTexture;
-
-    Pointer<Shader> m_EditorUi;
-    Pointer<Model> m_Quad;
-
+    
     Pointer<Shader> m_ShadowMapShader;
+    Pointer<Shader> m_ShadowMapShaderPointLight;
 
     float_t m_ScaleFactor = 2.f;
     float_t m_MinDistance = 1.f;
     float_t m_MinScalarFactor = 10.f;
     float_t m_MaxScalarFactor = m_ScaleFactor;
-
+    Pointer<Shader> m_EditorUi;
+    Pointer<Model> m_Quad;
+    
     RenderPass m_ShadowRenderPass;
     FrameBuffer* m_ShadowFrameBuffer {nullptr};
+    
+    Texture* m_SpotLightShadowMapTextureArray = nullptr;
+    
+    Texture* m_PointLightShadowMapCubemapArrayPixelDistance = nullptr;
+    Texture* m_DepthBufferForPointLightPass = nullptr;
 
-    Texture* m_ShadowMapTextureArray = nullptr;
     
     XNOR_ENGINE void FecthLightInfo();
 

@@ -91,7 +91,7 @@ void PickingStrategy::DestroyRendering() const
 void PickingStrategy::InitRendering(const Vector2i size)
 {
     frameBuffer = new XnorCore::FrameBuffer();
-    m_ColorAttachment = new XnorCore::Texture(XnorCore::TextureInternalFormat::R32F,size);
+    m_ColorAttachment = new XnorCore::Texture(XnorCore::TextureInternalFormat::R32f,size);
     m_DepthAttachement = new XnorCore::Texture(XnorCore::TextureInternalFormat::DepthComponent16,size);
 
     const std::vector<XnorCore::RenderTargetInfo> attachementsType =

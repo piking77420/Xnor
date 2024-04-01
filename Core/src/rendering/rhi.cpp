@@ -717,7 +717,9 @@ void Rhi::ComputeTextureFiltering(TextureType::TextureType textureType, const ui
 		case TextureType::TextureRectangle:
 			Logger::LogError("Uniplemented behaviours");
 			break;
-		 
+
+
+		case TextureType::TextureCubeMapArray:
 		case TextureType::TextureCubeMap:
 			if (openglTextureFilter == TextureFiltering::LinearMimMapLinear)
 			{
@@ -730,11 +732,7 @@ void Rhi::ComputeTextureFiltering(TextureType::TextureType textureType, const ui
 				glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
 			}
 			break;
-		 
-		case TextureType::TextureCubeMapArray:
-			Logger::LogError("Uniplemented behaviours");
-			break;
-		 
+	
 		case TextureType::TextureBuffer:
 			Logger::LogError("Uniplemented behaviours");
 			break;
@@ -784,16 +782,13 @@ void Rhi::ComputeTextureWrapping(TextureType::TextureType textureType, const uin
 		case TextureType::TextureRectangle:
 			Logger::LogError("Uniplemented behaviours");
 		break;
-		
+
+		case TextureType::TextureCubeMapArray:
 		case TextureType::TextureCubeMap:
 			glTextureParameteri(textureID, GL_TEXTURE_WRAP_S, openglTextureWrapper);
 			glTextureParameteri(textureID, GL_TEXTURE_WRAP_T, openglTextureWrapper);
 			glTextureParameteri(textureID, GL_TEXTURE_WRAP_R, openglTextureWrapper);
 		
-		break;
-		
-		case TextureType::TextureCubeMapArray:
-		 
 		break;
 		
 		case TextureType::TextureBuffer:
@@ -888,7 +883,8 @@ void Rhi::AllocTexture(
 			break;
 		
 		case TextureType::TextureCubeMapArray:
-			Logger::LogError("Uniplemented behaviours");
+			glTextureStorage3D(textureID, level, internalFormat, width, height, depth * 6);
+
 			break;
 		case TextureType::TextureBuffer:
 			Logger::LogError("Uniplemented behaviours");
@@ -1198,7 +1194,7 @@ uint32_t Rhi::GetOpenglInternalFormat(const TextureInternalFormat::TextureIntern
 		case TextureInternalFormat::Rgba16F:
 			return GL_RGBA16F;
 
-		case TextureInternalFormat::R32F:
+		case TextureInternalFormat::R32f:
 			return GL_R32F;
 		
 		case TextureInternalFormat::R32Uint:

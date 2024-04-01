@@ -363,7 +363,8 @@ void Renderer::InitResources()
 	m_GBufferShaderLit->SetInt("prefilterMap", 13);
 	m_GBufferShaderLit->SetInt("brdfLUT", 14);
 	m_GBufferShaderLit->SetInt("dirLightShadowMap", ShadowTextureBinding::Directional);
-	m_GBufferShaderLit->SetInt("SpotLightShadowArray", ShadowTextureBinding::SpotLight);
+	m_GBufferShaderLit->SetInt("spotLightShadowArray", ShadowTextureBinding::SpotLight);
+	m_GBufferShaderLit->SetInt("pointLightCubemapArrayPixelDistance", ShadowTextureBinding::PointLightCubemapArrayPixelDistance);
 
 	m_GBufferShaderLit->Unuse();
 	

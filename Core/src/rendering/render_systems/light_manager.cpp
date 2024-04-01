@@ -1,5 +1,7 @@
 ﻿#include "rendering/render_systems/light_manager.hpp"
 
+#include <iostream>
+
 #include "rendering/rhi.hpp"
 #include "rendering/rhi_typedef.hpp"
 #include "resource/resource_manager.hpp"
@@ -16,7 +18,9 @@ LightManager::~LightManager()
 		delete directionalShadowMap.depthTexture;
 	}
 	delete m_GpuLightData;
-	delete m_ShadowMapTextureArray;
+	delete m_SpotLightShadowMapTextureArray;
+	delete m_PointLightShadowMapCubemapArrayPixelDistance;
+	delete m_DepthBufferForPointLightPass;
 }
 
 void LightManager::InitResources()
@@ -44,9 +48,11 @@ void LightManager::InitResources()
 
 void LightManager::BeginFrame(const Scene& scene, const Renderer& renderer)
 {
+	
 	scene.GetAllComponentOfType<PointLight>(&pointLights);
 	scene.GetAllComponentOfType<SpotLight>(&spotLights);
 	scene.GetAllComponentOfType<DirectionalLight>(&directionalLights);
+
 	FecthLightInfo();
 	ComputeShadow(scene, renderer);
 	Rhi::UpdateLight(*m_GpuLightData);
@@ -67,6 +73,7 @@ void LightManager::DrawLightGizmo(const Camera& camera, const Scene& scene)
 
 void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& scene,const Pointer<Shader>& shader) const
 {
+	
 	shader->Use();
 	
 	std::map<float_t, GizmoLight> sortedLight;
@@ -165,7 +172,8 @@ void LightManager::BindShadowMap() const
 		directionalShadowMaps[i].depthTexture->BindTexture(ShadowTextureBinding::Directional);
 	}
 
-	m_ShadowMapTextureArray->BindTexture(ShadowTextureBinding::SpotLight);
+	m_SpotLightShadowMapTextureArray->BindTexture(ShadowTextureBinding::SpotLight);
+	m_PointLightShadowMapCubemapArrayPixelDistance->BindTexture(ShadowTextureBinding::PointLightCubemapArrayPixelDistance);
 }
 
 void LightManager::FecthLightInfo()
@@ -232,8 +240,10 @@ void LightManager::ComputeShadow(const Scene& scene, const Renderer& renderer)
 	ComputeShadowDirLight(scene, renderer);
 	ComputeShadowSpotLight(scene, renderer);
 	m_ShadowMapShader->Unuse();
+	
+	m_ShadowMapShaderPointLight->Use();
 	ComputeShadowPointLight(scene, renderer);
-
+	m_ShadowMapShaderPointLight->Unuse();
 }
 
 void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& renderer)
@@ -290,7 +300,8 @@ void LightManager::ComputeShadowSpotLight(const Scene& scene, const Renderer& re
 
 		m_GpuLightData->spotLightData[i].lightSpaceMatrix = matrix;
 
-		Rhi::AttachTextureToFrameBufferLayer(m_ShadowFrameBuffer->GetId(), Attachment::Depth, m_ShadowMapTextureArray->GetId(),0,i);
+		Rhi::AttachTextureToFrameBufferLayer(m_ShadowFrameBuffer->GetId(), Attachment::Depth, m_SpotLightShadowMapTextureArray->GetId(),0,i);
+		
 		RenderPassBeginInfo renderPassBeginInfo =
 		{
 			.frameBuffer = m_ShadowFrameBuffer,
@@ -307,45 +318,69 @@ void LightManager::ComputeShadowSpotLight(const Scene& scene, const Renderer& re
 
 void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& renderer)
 {
-	std::array<Matrix, 6> vpMatricies;
 	Camera cam;
+	Rhi::AttachTextureToFrameBuffer(m_ShadowFrameBuffer->GetId(), Attachment::Depth, m_DepthBufferForPointLightPass->GetId(),0 );
 
-	for (uint32_t i = 0; i < pointLights.size(); i++)
+
+	for (size_t i = 0; i < pointLights.size(); i++)
 	{
+		if (!pointLights[i]->castShadow)
+			continue;
+		
 		const Vector3 pos = static_cast<Vector3>(pointLights[i]->entity->transform.worldMatrix[3]);
-		Vector3 at;
+		Vector3 front;
 		Vector3 up;
 		
-		switch (i)
+		for (size_t k = 0; k < 6; k++)
 		{
+			switch (k)
+			{
 			case 0:
-				at = pos - Vector3::UnitX();
+				front = -Vector3::UnitX();
 				up = -Vector3::UnitY();
 				break;
 			case 1:
-				at = pos + Vector3::UnitX();
+				front = Vector3::UnitX();
 				up = -Vector3::UnitY();
 				break;
 			case 2:
-				at = pos - Vector3::UnitY();
+				front = -Vector3::UnitY();
 				up = -Vector3::UnitZ();
 				break;
 			case 3:
-				at = pos + Vector3::UnitY();
+				front = Vector3::UnitY();
 				up = Vector3::UnitZ();
 				break;
 			case 4:
-				at = pos + Vector3::UnitZ();
+				front = Vector3::UnitZ();
 				up = -Vector3::UnitY();
 				break;
 			case 5:
-				at = pos - Vector3::UnitZ();
+				front = -Vector3::UnitZ();
 				up = -Vector3::UnitY();
 				break;
 			
-		}
+			}
+			cam.position  = pos;
+			cam.front = front;
+			cam.up = up;
 
-		//renderer.RenderNonShaded()
+			Rhi::AttachTextureToFrameBufferLayer(m_ShadowFrameBuffer->GetId(), Attachment::Color00, m_PointLightShadowMapCubemapArrayPixelDistance->GetId(),0 ,static_cast<uint32_t>(i + k * 6));
+			Rhi::SetFrameBufferDraw(m_ShadowFrameBuffer->GetId(),true);
+			
+			RenderPassBeginInfo renderPassBeginInfo =
+			{
+				.frameBuffer = m_ShadowFrameBuffer,
+				.renderAreaOffset = { 0,0 },
+				.renderAreaExtent = SpotLightShadowMapSize ,
+				.clearBufferFlags = static_cast<BufferFlag::BufferFlag>(BufferFlag::DepthBit | BufferFlag::ColorBit),
+				.clearColor = Vector4(std::numeric_limits<float_t>::max())
+			};
+		
+			renderer.RenderNonShaded(cam, renderPassBeginInfo, m_ShadowRenderPass, m_ShadowMapShader, scene, false);
+		}
+		
+
 
 	}
 	
@@ -355,9 +390,15 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 
 void LightManager::InitShadow()
 {
+	m_ShadowFrameBuffer = new FrameBuffer;
+	
 	m_ShadowMapShader = ResourceManager::Get<Shader>("depth_shader");
 	m_ShadowMapShader->SetFaceCullingInfo({ true, CullFace::Front, FrontFace::CCW });
 	m_ShadowMapShader->CreateInRhi();
+
+	m_ShadowMapShaderPointLight = ResourceManager::Get<Shader>("depth_shader_point_light");
+	m_ShadowMapShaderPointLight->SetFaceCullingInfo({ true, CullFace::Front, FrontFace::CCW });
+	m_ShadowMapShaderPointLight->CreateInRhi();
 
 	const TextureCreateInfo textureCreateInfo =
 	{
@@ -387,9 +428,36 @@ void LightManager::InitShadow()
 			, .dataType =  DataType::Float
 	};
 
-	m_ShadowMapTextureArray = new Texture(spothLightShadowArray);
-	
-	m_ShadowFrameBuffer = new FrameBuffer;
+	m_SpotLightShadowMapTextureArray = new Texture(spothLightShadowArray);
 	Rhi::SetFrameBufferDraw(m_ShadowFrameBuffer->GetId(),false);
-	
+
+	const TextureCreateInfo pointLightDepthBufferCreateInfo =
+	{
+		.textureType = TextureType::Texture2D
+		, .mipMaplevel = 1
+		, .depth = MaxPointLights
+		, .size = PointLightLightShadowMapSize
+		, .filtering = TextureFiltering::Linear
+		, .wrapping = TextureWrapping::TextureWrapping::ClampToEdge
+		, .format = TextureFormat::DepthComponent
+		, .internalFormat =  ShadowDepthTextureInternalFormat
+		, .dataType =  DataType::Float
+	};
+	m_DepthBufferForPointLightPass = new Texture(pointLightDepthBufferCreateInfo);
+
+	const TextureCreateInfo pointLightCubeMapArrayWorldSpaceInfo =
+	{
+		.textureType = TextureType::TextureCubeMapArray
+		, .mipMaplevel = 1
+		, .depth = MaxPointLights
+		, .size = PointLightLightShadowMapSize
+		, .filtering = TextureFiltering::Linear
+		, .wrapping = TextureWrapping::TextureWrapping::ClampToEdge
+		, .format = TextureFormat::Red
+		, .internalFormat =  TextureInternalFormat::R32f
+		, .dataType =  DataType::Float
+	};
+
+	m_PointLightShadowMapCubemapArrayPixelDistance = new Texture(pointLightCubeMapArrayWorldSpaceInfo);
+
 }
