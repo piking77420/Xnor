@@ -91,13 +91,11 @@ public:
 	[[nodiscard]]
 	constexpr const float_t* Raw() const noexcept;
 
-#ifndef SWIG
 	/// @brief Gets a pointer to the first component of this vector.
 	/// 
 	/// @returns A pointer to the first component of this vector.
 	[[nodiscard]]
 	constexpr float_t* Raw() noexcept;
-#endif
 
 	/// @brief Returns the length of the vector.
 	[[nodiscard]]
@@ -155,7 +153,6 @@ public:
 	[[nodiscard]]
 	constexpr float_t operator[](size_t i) const;
 
-#ifndef SWIG
 	/// @brief Retrieves this vector's component at index i.
 	/// 
 	/// @param i The index of the component to get. It would be 0 for x, 1 for y, etc...
@@ -163,7 +160,6 @@ public:
 	/// @returns The value of the component at index i.
 	[[nodiscard]]
 	constexpr float_t& operator[](size_t i);
-#endif
 	
     /// @brief Converts this Vector4 to a Vector2.
 	explicit operator Vector2() const noexcept;
@@ -265,7 +261,6 @@ constexpr Vector4 operator/(const Vector4& a, const Vector4& b) noexcept { retur
 [[nodiscard]]
 constexpr Vector4 operator/(const Vector4& v, const float_t factor) noexcept { const float_t invFactor = 1.f / factor; return Vector4(v.x * invFactor, v.y * invFactor, v.z * invFactor, v.w * invFactor); }
 
-#ifndef SWIG
 /// @brief Adds two Vector4 according to @ref operator+(const Vector4&, const Vector4&), placing the result in @p a.
 constexpr Vector4& operator+=(Vector4& a, const Vector4& b) noexcept { return a = a + b; }
 
@@ -283,7 +278,6 @@ constexpr Vector4 &operator/=(Vector4 &a, const Vector4& b) noexcept { return a 
 
 /// @brief Divides a Vector4 by a @p factor according to @ref operator/(const Vector4&, const float_t), placing the result in @p v.
 constexpr Vector4& operator/=(Vector4& v, const float_t factor) noexcept { return v = v / factor; }
-#endif
 
 /// @brief Checks if two Vector4 are considered equal using <code>Calc::Equals</code>.
 [[nodiscard]]

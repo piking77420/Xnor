@@ -61,7 +61,7 @@ struct XNOR_ENGINE ColorRgb
     /// @brief Constant for cyan
     /// @return Color
     [[nodiscard]]
-    static constexpr ColorRgb Cyan();
+    static constexpr ColorRgb LightBlue();
     
     /// @brief Constant for magenta
     /// @return Color
@@ -150,7 +150,7 @@ struct XNOR_ENGINE ColorRgba
     /// @brief Constant for cyan
     /// @return Color
     [[nodiscard]]
-    static constexpr ColorRgba Cyan();
+    static constexpr ColorRgba LightBlue();
     
     /// @brief Constant for magenta
     /// @return Color
@@ -242,7 +242,7 @@ struct XNOR_ENGINE Colorf
     /// @brief Constant for cyan
     /// @return Color
     [[nodiscard]]
-    static constexpr Colorf Cyan();
+    static constexpr Colorf LightBlue();
     
     /// @brief Constant for magenta
     /// @return Color
@@ -294,26 +294,64 @@ struct XNOR_ENGINE Colorf
 
 /// @brief The ColorHsva struct represents a color in HSVA color space.
 ///
-/// It uses values from 0 to 255 (0xFF). The default alpha value is 255.
+/// It uses values from 0 to 1. The default alpha value is 1.
 struct XNOR_ENGINE ColorHsva
 {
+    /// @brief Constant for white
+    /// @return Color
+    [[nodiscard]]
+    static constexpr ColorHsva White();
+    
+    /// @brief Constant for gray
+    /// @return Color
+    [[nodiscard]]
+    static constexpr ColorHsva Gray();
+    
+    /// @brief Constant for black
+    /// @return Color
+    [[nodiscard]]
+    static constexpr ColorHsva Black();
+    
+    /// @brief Constant for red
+    /// @return Color
+    [[nodiscard]]
+    static constexpr ColorHsva Red();
+    
+    /// @brief Constant for green
+    /// @return Color
+    [[nodiscard]]
+    static constexpr ColorHsva Green();
+    
+    /// @brief Constant for blue
+    /// @return Color
+    [[nodiscard]]
+    static constexpr ColorHsva Blue();
+    
+    /// @brief Constant for yellow
+    /// @return Color
+    [[nodiscard]]
+    static constexpr ColorHsva Yellow();
+    
+    /// @brief Constant for cyan
+    /// @return Color
+    [[nodiscard]]
+    static constexpr ColorHsva LightBlue();
+    
+    /// @brief Constant for magenta
+    /// @return Color
+    [[nodiscard]]
+    static constexpr ColorHsva Magenta();
+    
     /// @brief Hue component
-    uint8_t h = 0;
+    float_t h = 0;
     /// @brief Saturation component
-    uint8_t s = 0;
+    float_t s = 0;
     /// @brief Value component
-    uint8_t v = 0;
+    float_t v = 0;
     /// @brief Alpha component
-    uint8_t a = 0xFF;
+    float_t a = 1.f;
 
     ColorHsva() = default;
-
-    /// @brief Constructs a color using a 32 bit HSVA constant
-    /// 
-    /// @param hsva H S V A, with each component taking 8 bits and in this order
-    [[nodiscard]]
-    constexpr explicit ColorHsva(const uint32_t hsva)
-        : h(static_cast<uint8_t>(hsva >> 24)), s(static_cast<uint8_t>(hsva >> 16)), v(static_cast<uint8_t>(hsva >> 8)), a(static_cast<uint8_t>(hsva)) {}
 
     /// @brief Constructs a color with each specified component
     /// 
@@ -322,7 +360,7 @@ struct XNOR_ENGINE ColorHsva
     /// @param v Value component
     /// @param a Alpha component
     [[nodiscard]]
-    constexpr ColorHsva(const uint8_t h, const uint8_t s, const uint8_t v, const uint8_t a = 0xFF)
+    constexpr ColorHsva(const float_t h, const float_t s, const float_t v, const float_t a = 1.f)
     : h(h), s(s), v(v), a(a) {}
 
     /// @brief Converts the ColorHsv to a ColorRgb
@@ -338,70 +376,126 @@ struct XNOR_ENGINE ColorHsva
     constexpr explicit operator Colorf() const;
 };
 
-END_XNOR_CORE
-
 /// @brief Adds 2 ColorRgb, caps at the max value of the components and doesn't allow overflow
 /// @param c1 A
 /// @param c2 B
 /// @return A + B
 [[nodiscard]]
-constexpr XnorCore::ColorRgb operator+(XnorCore::ColorRgb c1, XnorCore::ColorRgb c2);
+constexpr ColorRgb operator+(ColorRgb c1, ColorRgb c2);
 
 /// @brief Multiplies 2 ColorRgb, caps at the max value of the components and doesn't allow overflow
 /// @param c1 A
 /// @param c2 B
 /// @return A * B
 [[nodiscard]]
-constexpr XnorCore::ColorRgb operator*(XnorCore::ColorRgb c1, XnorCore::ColorRgb c2);
+constexpr ColorRgb operator*(ColorRgb c1, ColorRgb c2);
+
+/// @brief Compares 2 ColorRgb component-wise
+/// @param c1 A
+/// @param c2 B
+/// @return A == B
+[[nodiscard]]
+constexpr bool_t operator==(ColorRgb c1, ColorRgb c2);
+
+/// @brief Compares 2 ColorRgb component-wise
+/// @param c1 A
+/// @param c2 B
+/// @return A != B
+[[nodiscard]]
+constexpr bool_t operator!=(ColorRgb c1, ColorRgb c2);
 
 /// @brief Adds 2 ColorRgba, caps at the max value of the components and doesn't allow overflow
 /// @param c1 A
 /// @param c2 B
 /// @return A + B
 [[nodiscard]]
-constexpr XnorCore::ColorRgba operator+(XnorCore::ColorRgba c1, XnorCore::ColorRgba c2);
+constexpr ColorRgba operator+(ColorRgba c1, ColorRgba c2);
 
 /// @brief Multiplies 2 ColorRgba, caps at the max value of the components and doesn't allow overflow
 /// @param c1 A
 /// @param c2 B
 /// @return A + B
 [[nodiscard]]
-constexpr XnorCore::ColorRgba operator*(XnorCore::ColorRgba c1, XnorCore::ColorRgba c2);
+constexpr ColorRgba operator*(ColorRgba c1, ColorRgba c2);
 
 /// @brief Multiplies the alpha component of a ColorRgba
 /// @param color Color
 /// @param alphaFactor Alpha factor
 /// @return Color.a * alphaFactor
 [[nodiscard]]
-constexpr XnorCore::ColorRgba operator*(XnorCore::ColorRgba color, float_t alphaFactor);
+constexpr ColorRgba operator*(ColorRgba color, float_t alphaFactor);
+
+/// @brief Compares 2 ColorRgba component-wise
+/// @param c1 A
+/// @param c2 B
+/// @return A == B
+[[nodiscard]]
+constexpr bool_t operator==(ColorRgba c1, ColorRgba c2);
+
+/// @brief Compares 2 ColorRgba component-wise
+/// @param c1 A
+/// @param c2 B
+/// @return A != B
+[[nodiscard]]
+constexpr bool_t operator!=(ColorRgba c1, ColorRgba c2);
 
 /// @brief Adds 2 Colorf, caps at @c 1.f
 /// @param c1 A
 /// @param c2 B
 /// @return A + B
 [[nodiscard]]
-constexpr XnorCore::Colorf operator+(const XnorCore::Colorf& c1, const XnorCore::Colorf& c2);
+constexpr Colorf operator+(const Colorf& c1, const Colorf& c2);
 
 /// @brief Multiplies 2 Colorf
 /// @param c1 A
 /// @param c2 B
 /// @return A * B
 [[nodiscard]]
-constexpr XnorCore::Colorf operator*(const XnorCore::Colorf& c1, const XnorCore::Colorf& c2);
+constexpr Colorf operator*(const Colorf& c1, const Colorf& c2);
 
 /// @brief Multiplies the alpha component of a Colorf
 /// @param color Color
 /// @param alphaFactor Alpha factor
 /// @return Color.a * alphaFactor
 [[nodiscard]]
-constexpr XnorCore::Colorf operator*(XnorCore::Colorf color, float_t alphaFactor);
+constexpr Colorf operator*(Colorf color, float_t alphaFactor);
+
+/// @brief Compares 2 Colorf component-wise
+/// @param c1 A
+/// @param c2 B
+/// @return A == B
+[[nodiscard]]
+constexpr bool_t operator==(const Colorf& c1, const Colorf& c2);
+
+/// @brief Compares 2 Colorf component-wise
+/// @param c1 A
+/// @param c2 B
+/// @return A != B
+[[nodiscard]]
+constexpr bool_t operator!=(const Colorf& c1, const Colorf& c2);
 
 /// @brief Multiplies the alpha component of a ColorHsva
 /// @param color Color
 /// @param alphaFactor Alpha factor
 /// @return Color.a * alphaFactor
 [[nodiscard]]
-constexpr XnorCore::ColorHsva operator*(XnorCore::ColorHsva color, float_t alphaFactor);
+constexpr ColorHsva operator*(const ColorHsva& color, float_t alphaFactor);
+
+/// @brief Compares 2 ColorHsva component-wise
+/// @param c1 A
+/// @param c2 B
+/// @return A == B
+[[nodiscard]]
+constexpr bool_t operator==(const ColorHsva& c1, const ColorHsva& c2);
+
+/// @brief Compares 2 ColorHsva component-wise
+/// @param c1 A
+/// @param c2 B
+/// @return A != B
+[[nodiscard]]
+constexpr bool_t operator!=(const ColorHsva& c1, const ColorHsva& c2);
+
+END_XNOR_CORE
 
 #ifndef SWIG
 template <>

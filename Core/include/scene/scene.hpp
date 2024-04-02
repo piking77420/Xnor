@@ -44,6 +44,12 @@ public:
     /// @brief Updates the scene
     XNOR_ENGINE void Update();
 
+    /// @brief Called before the physics update
+    XNOR_ENGINE void PrePhysics();
+
+    /// @brief Called after the physics update
+    XNOR_ENGINE void PostPhysics();
+
     /// @brief Tries to find an entity in the scene via a Guid
     /// @param xnorGuid Guid
     /// @return Entity, can be @c nullptr

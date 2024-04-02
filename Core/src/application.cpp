@@ -1,18 +1,19 @@
 ﻿#include "application.hpp"
 
+#include "screen.hpp"
+#include "csharp/dotnet_runtime.hpp"
+#include "file/file_manager.hpp"
+#include "input/input.hpp"
+#include "physics/physics_world.hpp"
+#include "rendering/rhi.hpp"
+#include "resource/resource_manager.hpp"
+
 // We need windows.h for GetModuleFileNameA
 #undef APIENTRY
 // ReSharper disable once CppInconsistentNaming
 #define XMLDocument XMLDocument_dont_care
 #include <windows.h>
 #undef XMLDocument
-
-#include "screen.hpp"
-#include "csharp/dotnet_runtime.hpp"
-#include "file/file_manager.hpp"
-#include "input/input.hpp"
-#include "rendering/rhi.hpp"
-#include "resource/resource_manager.hpp"
 
 using namespace XnorCore;
 
@@ -38,6 +39,7 @@ Application::Application()
 	
     renderer.Initialize();
 	
+	PhysicsWorld::Initialize();
     Input::Initialize();
     Screen::Initialize();
 
@@ -53,6 +55,8 @@ Application::~Application()
 	delete World::scene;
 	
 	DotnetRuntime::Shutdown();
+
+	PhysicsWorld::Destroy();
 	
     ResourceManager::UnloadAll();
 	Rhi::Shutdown();

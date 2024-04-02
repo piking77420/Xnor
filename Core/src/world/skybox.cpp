@@ -1,8 +1,6 @@
 #include "world/skybox.hpp"
 
-
 using namespace XnorCore;
-
 
 Skybox::~Skybox()
 {

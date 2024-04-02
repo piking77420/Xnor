@@ -52,7 +52,7 @@ T* Entity::GetComponent()
         if (dynamic_cast<T*>(m_Components[i]))
             return reinterpret_cast<T*>(m_Components[i]);
     }
-    
+
     return nullptr;
 }
 

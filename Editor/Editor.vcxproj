@@ -60,10 +60,10 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;MATH_TOOLBOX_DLL_IMPORT;MATH_DEFINE_FORMATTER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;MATH_TOOLBOX_DLL_IMPORT;MATH_DEFINE_FORMATTER;JPH_SHARED_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>include;externals\include;..\Core\include;..\Core\externals\include;..\Core\inline;inline</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;externals\include;..\Core\include;..\Core\externals\include;..\Core\inline;inline;..\Core\externals\inline</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -87,10 +87,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;MATH_TOOLBOX_DLL_IMPORT;MATH_DEFINE_FORMATTER;%(PreprocessorDefinitions);GLFW_DLL</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;MATH_TOOLBOX_DLL_IMPORT;MATH_DEFINE_FORMATTER;JPH_SHARED_LIBRARY;%(PreprocessorDefinitions);GLFW_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>include;externals\include;..\Core\include;..\Core\externals\include;..\Core\inline;inline</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;externals\include;..\Core\include;..\Core\externals\include;..\Core\inline;inline;..\Core\externals\inline</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>

@@ -54,9 +54,6 @@ namespace Concepts
     /// @brief Concept that forces a type to be a color, e.g. one of: ColorRgb, ColorRgba, Colorf or ColorHsv
     template <class T>
     concept ColorT = Meta::IsAny<T, ColorRgb, ColorRgba, Colorf, ColorHsva>;
-
-    template <typename T>
-    concept DurationT = Meta::IsAny<T, std::chrono::hours, std::chrono::minutes, std::chrono::seconds, std::chrono::milliseconds, std::chrono::nanoseconds>;
 }
 
 END_XNOR_CORE

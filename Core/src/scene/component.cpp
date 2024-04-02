@@ -6,14 +6,6 @@ using namespace XnorCore;
 
 Component::~Component() = default;
 
-void Component::Begin()
-{
-}
-
-void Component::Update()
-{
-}
-
 const Entity* Component::GetEntity() const
 {
     return entity;

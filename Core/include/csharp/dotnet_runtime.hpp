@@ -25,6 +25,8 @@ public:
 
     XNOR_ENGINE static void ReloadAllAssemblies();
 
+    XNOR_ENGINE static bool_t BuildGameProject();
+
     XNOR_ENGINE static bool_t GetInitialized();
 
 private:

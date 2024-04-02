@@ -4,6 +4,7 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_stdlib.h"
 #include "magic_enum/magic_enum_all.hpp"
+#include "reflection/filters.hpp"
 #include "utils/utils.hpp"
 #include "world/world.hpp"
 
@@ -242,22 +243,11 @@ void TypeRenderer::DisplayXnorPointer(const Metadata<ReflectT, MemberT, Descript
         if (ImGui::Button("+"))
         {
             // Set current object as the filter target
-            m_ResourceFilterTarget = static_cast<void*>(metadata.obj);
-            m_TextFilter.Clear();
+            Filters::BeginResourceFilter();
         }
 
         // Check if the filter should be displayed
-        if (m_ResourceFilterTarget == static_cast<void*>(metadata.obj))
-        {
-            Pointer<PtrT> res = FilterResources<PtrT>(m_TextFilter);
-            if (res)
-            {
-                // Set value
-                *metadata.obj = res;
-                // Remove target
-                m_ResourceFilterTarget = nullptr;
-            }
-        }
+        Filters::FilterResources<PtrT>(metadata.obj);
     }
 
     ImGui::PopID();
@@ -313,22 +303,11 @@ void TypeRenderer::DisplayRawPointer(const Metadata<ReflectT, MemberT, Descripto
         if (ImGui::Button("+"))
         {
             // Set current object as the filter target
-            m_EntityFilterTarget = static_cast<void*>(metadata.obj);
-            m_TextFilter.Clear();
+            Filters::BeginEntityFilter();
         }
 
         // Check if the filter should be displayed
-        if (m_EntityFilterTarget == static_cast<void*>(metadata.obj))
-        {
-            Entity* e = FilterEntity(m_TextFilter);
-            if (e)
-            {
-                // Set value
-                *metadata.obj = e;
-                // Remove target
-                m_EntityFilterTarget = nullptr;
-            }
-        }
+        Filters::FilterEntity(metadata.obj);
     }
     else if constexpr (Meta::IsSame<TypeT, Component>)
     {
@@ -447,57 +426,61 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
     bool_t hasStatic = false;
 
     // Loop over each reflected member
-    refl::util::for_each(desc.members, [&]<typename T>(const T member)
+    refl::util::for_each(desc.members, [&]<typename DescriptorT>(const DescriptorT)
     {
         // Get member type
-        using MemberT = Meta::RemoveConstSpecifier<typename T::value_type>;
+        using MemberT = Meta::RemoveConstSpecifier<typename DescriptorT::value_type>;
 
         // Shorthand for the notify change attribute
         using NotifyChangeT = Reflection::NotifyChange<ReflectT>;
 
-        constexpr bool_t isConst = !member.is_writable;
-        constexpr bool_t hidden = Reflection::HasAttribute<Reflection::HideInInspector, T>();
-        constexpr bool_t display = [&](const bool_t isStatic) -> bool_t
-        {
-            if constexpr (IsStatic)
-                return isStatic;
-            else
-                return !isStatic;
-        }(member.is_static);
+        constexpr bool_t isConst = !DescriptorT::is_writable;
+        constexpr bool_t hidden = Reflection::HasAttribute<Reflection::HideInInspector, DescriptorT>();
+        constexpr bool_t readOnly = Reflection::HasAttribute<Reflection::ReadOnly, DescriptorT>();
 
-        if constexpr (IsStatic && member.is_static)
+        // We want to display static fields when IsStatic is true, and member fields when IsStatic is false
+        // Hence the binary operations
+        // Truth table :
+        // IsStatic | is_static | !is_static | Result
+        // 0        | 0         | 1          | 1
+        // 0        | 1         | 0          | 0
+        // 1        | 0         | 1          | 1
+        // 1        | 1         | 0          | 0
+        constexpr bool_t display = IsStatic ^ !DescriptorT::is_static;
+
+        if constexpr (IsStatic && DescriptorT::is_static)
         {
             hasStatic = true;
         }
 
-        constexpr bool_t notifyChange = Reflection::HasAttribute<NotifyChangeT, T>();
+        constexpr bool_t notifyChange = Reflection::HasAttribute<NotifyChangeT, DescriptorT>();
 
         if constexpr (!hidden && display)
         {
-            ImGui::BeginDisabled(isConst);
+            ImGui::BeginDisabled(isConst || readOnly);
             
             if constexpr (notifyChange)
             {
                 // Need to notify if a change happened, so keep the old value
-                const MemberT oldValue = member.get(obj);
+                const MemberT oldValue = DescriptorT::get(obj);
 
                 // Display object
-                DisplayObjectInternal<ReflectT, MemberT, T>(obj);
+                DisplayObjectInternal<ReflectT, MemberT, DescriptorT>(obj);
 
                 // Get the new value
-                const MemberT newValue = member.get(obj);
+                const MemberT newValue = DescriptorT::get(obj);
 
                 if (newValue != oldValue)
                 {
                     // Value was changed, set the pointer to true
-                    const auto notify = Reflection::GetAttribute<NotifyChangeT, T>();
+                    constexpr NotifyChangeT notify = Reflection::GetAttribute<NotifyChangeT, DescriptorT>();
                     obj->*notify.pointer = true;
                 }
             }
             else
             {
                 // Don't need to notify, simply display the object
-                DisplayObjectInternal<ReflectT, MemberT, T>(obj);
+                DisplayObjectInternal<ReflectT, MemberT, DescriptorT>(obj);
             }
 
             ImGui::EndDisabled();
@@ -654,8 +637,7 @@ void TypeRenderer::DisplayList(const Metadata<ReflectT, MemberT, DescriptorT>& m
             if constexpr (isComponentList)
             {
                 // Set the target for the component filter
-                m_ComponentFilterTarget = static_cast<void*>(metadata.obj);
-                m_TextFilter.Clear();         
+                Filters::BeginComponentFilter();
             }
             else
             {
@@ -722,17 +704,10 @@ void TypeRenderer::DisplayList(const Metadata<ReflectT, MemberT, DescriptorT>& m
         // Only a component list needs a filter
         if constexpr (isComponentList)
         {
-            // Check if the filter should be displayed
-            if (m_ComponentFilterTarget == static_cast<void*>(metadata.obj))
+            Component* const c = Filters::FilterComponent(metadata.obj);
+            if (c != nullptr)
             {
-                Component* const c = FilterComponent(m_TextFilter);
-                if (c)
-                {
-                    metadata.obj->Add(c);
-                    // Set entity pointer
-                    c->entity = metadata.topLevelObj;
-                    m_ComponentFilterTarget = nullptr;
-                }
+                c->entity = metadata.topLevelObj;
             }
         }
     }
@@ -748,66 +723,6 @@ void TypeRenderer::CheckDisplayTooltip(const Metadata<ReflectT, MemberT, Descrip
         // Set tooltip        
         ImGui::SetItemTooltip("%s", Reflection::GetAttribute<Reflection::Tooltip, DescriptorT>().text);
     }
-}
-
-template <Concepts::ResourceT T>
-Pointer<T> TypeRenderer::FilterResources(ImGuiTextFilter& filter)
-{
-    ImGui::OpenPopup("Resource");
-
-    if (!ImGui::BeginPopupModal("Resource"))
-        return nullptr;
-
-    filter.Draw();
-    std::vector<Pointer<T>> resources = ResourceManager::FindAll<T>(
-        [&](const Pointer<T> r) -> bool_t
-        {
-            const std::string& name = r->GetName();
-
-            if (name.starts_with("assets_internal"))
-                return false;
-
-            return filter.PassFilter(name.c_str());
-        }
-    );
-
-    Pointer<T> r = nullptr;
-    for (const Pointer<T>& res : resources)
-    {
-        if (ImGui::Selectable(res->GetName().c_str()))
-        {
-            r = res;
-            break;
-        }
-    }
-    
-    ImGui::EndPopup();
-    return r;
-}
-
-inline Entity* TypeRenderer::FilterEntity(ImGuiTextFilter& filter)
-{
-    ImGui::OpenPopup("Entity");
-
-    if (!ImGui::BeginPopupModal("Entity"))
-        return nullptr;
-
-    filter.Draw();
-    const List<Entity*>& entities = World::scene->GetEntities();
-
-    Entity* e = nullptr;
-    for (size_t i = 0; i < entities.GetSize(); i++)
-    {
-        const char_t* const name = entities[i]->name.c_str();
-        if (filter.PassFilter(name) && ImGui::Selectable(name))
-        {
-            e = entities[i];
-            break;
-        }
-    }
-    
-    ImGui::EndPopup();
-    return e;
 }
 
 END_XNOR_CORE

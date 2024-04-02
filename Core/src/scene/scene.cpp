@@ -20,6 +20,22 @@ void Scene::Update()
     }
 }
 
+void Scene::PrePhysics()
+{
+    for (size_t i = 0; i < m_Entities.GetSize(); i++)
+    {
+        m_Entities[i]->PrePhysics();
+    }
+}
+
+void Scene::PostPhysics()
+{
+    for (size_t i = 0; i < m_Entities.GetSize(); i++)
+    {
+        m_Entities[i]->PostPhysics();
+    }
+}
+
 Entity* Scene::GetEntityById(const Guid& xnorGuid)
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)

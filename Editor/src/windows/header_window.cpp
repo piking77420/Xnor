@@ -78,6 +78,7 @@ void HeaderWindow::DisplayOnPlay()
         {
             if (!std::filesystem::exists("assets/scenes"))
                 std::filesystem::create_directories("assets/scenes");
+
             path = Editor::SerializedScenePath;
         }
         else
@@ -85,13 +86,12 @@ void HeaderWindow::DisplayOnPlay()
             path = m_Editor->data.currentScene->GetPathString();
         }
 
-        XnorCore::Serializer::StartDeserialization(path);
         m_Editor->data.selectedEntity = nullptr;
         delete XnorCore::World::scene;
         XnorCore::World::scene = new XnorCore::Scene();
-        // Possible memory leak?
+
+        XnorCore::Serializer::StartDeserialization(path);
         XnorCore::Serializer::Deserialize<XnorCore::Scene, true>(XnorCore::World::scene);
-        // XnorCore::Serializer::Deserialize<XnorCore::TestComponent, true>(v[0]);
         XnorCore::Serializer::EndDeserialization();
 
         XnorCore::World::isPlaying = false;

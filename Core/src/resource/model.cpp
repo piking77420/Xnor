@@ -108,12 +108,17 @@ void Model::Unload()
 
 uint32_t Model::GetId() const
 {
-    return  m_ModelId;
+    return m_ModelId;
 }
 
 Model::Aabb Model::GetAabb() const
 {
     return m_Aabb;
+}
+
+const std::vector<Vertex>& Model::GetVertices() const
+{
+    return m_Vertices;
 }
 
 void Model::ComputeAabb(const aiAABB& assimpAabb)

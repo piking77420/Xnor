@@ -36,6 +36,22 @@ void Entity::Update()
     }
 }
 
+void Entity::PrePhysics()
+{
+    for (size_t i = 0; i < m_Components.GetSize(); i++)
+    {
+        m_Components[i]->PrePhysics();
+    }
+}
+
+void Entity::PostPhysics()
+{
+    for (size_t i = 0; i < m_Components.GetSize(); i++)
+    {
+        m_Components[i]->PostPhysics();
+    }
+}
+
 void Entity::AddComponent(Component* const component)
 {
     component->entity = this;

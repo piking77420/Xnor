@@ -719,7 +719,6 @@ docs
 !*.vcxproj.user
 
 imgui.ini
-assets/scenes/*
 
 !SWIG/**
 

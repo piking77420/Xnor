@@ -18,6 +18,8 @@ class XNOR_ENGINE Guid final
 public:
     constexpr Guid() = default;
 
+    static constexpr Guid Empty() { return Guid(); };
+    
     /// @brief Creates a new @ref Guid
     /// @return New guid
     static Guid New();

@@ -9,6 +9,9 @@
 #include "csharp/dotnet_runtime.hpp"
 #include "file/file_manager.hpp"
 #include "input/time.hpp"
+#include "physics/components/box_collider.hpp"
+#include "physics/components/mesh_collider.hpp"
+#include "physics/components/sphere_collider.hpp"
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
 #include "resource/resource_manager.hpp"
@@ -24,7 +27,6 @@
 #include "windows/render_window.hpp"
 #include "world/scene_graph.hpp"
 #include "world/world.hpp"
-
 
 using namespace XnorEditor;
 
@@ -304,6 +306,8 @@ void Editor::UpdateWindow()
 	ImGui::Begin("Debug");
 	if (ImGui::Button("Create C# TestScript entity"))
 		XnorCore::DotnetRuntime::GetAssembly("Game")->ProcessTypes();
+	if (ImGui::Button("Build C# Project"))
+		XnorCore::DotnetRuntime::BuildGameProject();
 	if (ImGui::Button("Reload C# Assemblies"))
 		XnorCore::DotnetRuntime::ReloadAllAssemblies();
 	ImGui::End();

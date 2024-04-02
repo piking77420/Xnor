@@ -2,8 +2,6 @@
 
 #include "Core.hpp"
 
-#include <functional>
-
 namespace Coral {
 
 	class String
