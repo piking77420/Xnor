@@ -294,7 +294,7 @@ struct XNOR_ENGINE Colorf
 
 /// @brief The ColorHsva struct represents a color in HSVA color space.
 ///
-/// It uses values from 0 to 255 (0xFF). The default alpha value is 255.
+/// It uses values from 0 to 1. The default alpha value is 1.
 struct XNOR_ENGINE ColorHsva
 {
     /// @brief Constant for white
@@ -343,22 +343,15 @@ struct XNOR_ENGINE ColorHsva
     static constexpr ColorHsva Magenta();
     
     /// @brief Hue component
-    uint8_t h = 0;
+    float_t h = 0;
     /// @brief Saturation component
-    uint8_t s = 0;
+    float_t s = 0;
     /// @brief Value component
-    uint8_t v = 0;
+    float_t v = 0;
     /// @brief Alpha component
-    uint8_t a = 0xFF;
+    float_t a = 1.f;
 
     ColorHsva() = default;
-
-    /// @brief Constructs a color using a 32 bit HSVA constant
-    /// 
-    /// @param hsva H S V A, with each component taking 8 bits and in this order
-    [[nodiscard]]
-    constexpr explicit ColorHsva(const uint32_t hsva)
-        : h(static_cast<uint8_t>(hsva >> 24)), s(static_cast<uint8_t>(hsva >> 16)), v(static_cast<uint8_t>(hsva >> 8)), a(static_cast<uint8_t>(hsva)) {}
 
     /// @brief Constructs a color with each specified component
     /// 
@@ -367,7 +360,7 @@ struct XNOR_ENGINE ColorHsva
     /// @param v Value component
     /// @param a Alpha component
     [[nodiscard]]
-    constexpr ColorHsva(const uint8_t h, const uint8_t s, const uint8_t v, const uint8_t a = 0xFF)
+    constexpr ColorHsva(const float_t h, const float_t s, const float_t v, const float_t a = 1.f)
     : h(h), s(s), v(v), a(a) {}
 
     /// @brief Converts the ColorHsv to a ColorRgb
@@ -486,21 +479,21 @@ constexpr bool_t operator!=(const Colorf& c1, const Colorf& c2);
 /// @param alphaFactor Alpha factor
 /// @return Color.a * alphaFactor
 [[nodiscard]]
-constexpr ColorHsva operator*(ColorHsva color, float_t alphaFactor);
+constexpr ColorHsva operator*(const ColorHsva& color, float_t alphaFactor);
 
 /// @brief Compares 2 ColorHsva component-wise
 /// @param c1 A
 /// @param c2 B
 /// @return A == B
 [[nodiscard]]
-constexpr bool_t operator==(ColorHsva c1, ColorHsva c2);
+constexpr bool_t operator==(const ColorHsva& c1, const ColorHsva& c2);
 
 /// @brief Compares 2 ColorHsva component-wise
 /// @param c1 A
 /// @param c2 B
 /// @return A != B
 [[nodiscard]]
-constexpr bool_t operator!=(ColorHsva c1, ColorHsva c2);
+constexpr bool_t operator!=(const ColorHsva& c1, const ColorHsva& c2);
 
 END_XNOR_CORE
 

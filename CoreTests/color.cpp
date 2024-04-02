@@ -45,8 +45,15 @@ TEST(Color, ConversionRgbaHsva)
         EXPECT_EQ(static_cast<ColorRgba>(hsva), rgba);
     }
     {
-        constexpr ColorRgba rgba = ColorRgba::Gray();
-        constexpr ColorHsva hsva = ColorHsva::Gray();
+        constexpr ColorRgba rgba = ColorRgba::Black();
+        constexpr ColorHsva hsva = ColorHsva::Black();
+
+        EXPECT_EQ(static_cast<ColorHsva>(rgba), hsva);
+        EXPECT_EQ(static_cast<ColorRgba>(hsva), rgba);
+    }
+    {
+        constexpr ColorRgba rgba = ColorRgba::White();
+        constexpr ColorHsva hsva = ColorHsva::White();
 
         EXPECT_EQ(static_cast<ColorHsva>(rgba), hsva);
         EXPECT_EQ(static_cast<ColorRgba>(hsva), rgba);
@@ -98,8 +105,23 @@ TEST(Color, ConversionRgbaf)
         EXPECT_EQ(static_cast<ColorRgba>(f), rgba);
     }
     {
+        constexpr ColorRgba rgba = ColorRgba::Black();
+        constexpr Colorf f = Colorf::Black();
+
+        EXPECT_EQ(static_cast<Colorf>(rgba), f);
+        EXPECT_EQ(static_cast<ColorRgba>(f), rgba);
+    }
+    {
         constexpr ColorRgba rgba = ColorRgba::Gray();
         constexpr Colorf f = Colorf::Gray();
+
+        // This cannot be true as gray is defined with 0.5f with floats and 127 with bytes, so a rounding error occurs here
+        EXPECT_NE(static_cast<Colorf>(rgba), f);
+        EXPECT_NE(static_cast<ColorRgba>(f), rgba);
+    }
+    {
+        constexpr ColorRgba rgba = ColorRgba::White();
+        constexpr Colorf f = Colorf::White();
 
         EXPECT_EQ(static_cast<Colorf>(rgba), f);
         EXPECT_EQ(static_cast<ColorRgba>(f), rgba);

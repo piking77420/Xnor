@@ -30,10 +30,6 @@ namespace Xnor.Core
 
         public static Quaternion operator/(Quaternion a, float scalar) => new(a.Imaginary / scalar, a.Real / scalar);
 
-        public static bool operator==(Quaternion a, Quaternion b) => a.Equals(b);
-
-        public static bool operator!=(Quaternion a, Quaternion b) => !a.Equals(b);
-
         public static explicit operator Vector3(Quaternion q) => q.Imaginary;
 
         public static explicit operator Vector4(Quaternion q) => new(q.X, q.Y, q.Z, q.W);
@@ -51,16 +47,15 @@ namespace Xnor.Core
         public Quaternion(float xyzw) : this(new(xyzw), xyzw) { }
 
         public Quaternion(float x, float y, float z, float w) : this(new(x, y, z), w) { }
+    
+        public bool Equals(Quaternion other) => Imaginary == other.Imaginary && CoreC.Equals(Real, other.Real);
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(Quaternion)) return false;
-
-            Quaternion other = (Quaternion) obj;
-            return Imaginary == other.Imaginary && CoreC.Equals(Real, other.Real);
-        }
+        public override bool Equals(object obj) => obj is Quaternion other && Equals(other);
 
         public override int GetHashCode() => HashCode.Combine(Imaginary, Real);
+
+        public static bool operator ==(Quaternion left, Quaternion right) => left.Equals(right);
+
+        public static bool operator !=(Quaternion left, Quaternion right) => !left.Equals(right);
     }
 }

@@ -11,7 +11,7 @@ namespace Xnor.Core
         public static readonly ColorRgb Blue = new(0, 0, byte.MaxValue);
         
         public static readonly ColorRgb Yellow = new(byte.MaxValue, byte.MaxValue, 0);
-        public static readonly ColorRgb Cyan = new(0, byte.MaxValue, byte.MaxValue);
+        public static readonly ColorRgb LightBlue = new(0, byte.MaxValue, byte.MaxValue);
         public static readonly ColorRgb Magenta = new(byte.MaxValue, 0, byte.MaxValue);
         
         public static ColorRgb operator +(ColorRgb a, ColorRgb b)
@@ -55,5 +55,7 @@ namespace Xnor.Core
         public ColorRgb() : this(0, 0, 0) { }
 
         public ColorRgb(byte rgb) : this(rgb, rgb, rgb) { }
+
+        public override string ToString() => $"R: {R}, G: {G}, B: {B}";
     }
 }

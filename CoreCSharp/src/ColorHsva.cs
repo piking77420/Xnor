@@ -1,34 +1,39 @@
 namespace Xnor.Core
 {
-    public struct ColorHsva(byte h, byte s, byte v, byte a = byte.MaxValue)
+    public struct ColorHsva(float h, float s, float v, float a = 1f)
     {
-        public const byte HueCircle = byte.MaxValue;
-        public const float HueCircleOver3 = 1f / 3f * HueCircle;
-        public const float HueCircleOver6 = 1f / 6f * HueCircle;
+        public const float HueCircle = 1f;
+        public const float HueCircleOver3 = HueCircle / 3f;
+        public const float HueCircleOver6 = HueCircle / 6f;
         
-        public static readonly ColorHsva White = new(0, 0, byte.MaxValue);
-        public static readonly ColorHsva Gray = new(0, 0, byte.MaxValue / 2);
+        public static readonly ColorHsva White = new(0, 0, 1f);
+        public static readonly ColorHsva Gray = new(0, 0, 0.5f);
         public static readonly ColorHsva Black = new(0, 0, 0);
         
-        public static readonly ColorHsva Red = new(0, byte.MaxValue, byte.MaxValue);
-        public static readonly ColorHsva Green = new((byte) HueCircleOver3, byte.MaxValue, byte.MaxValue);
-        public static readonly ColorHsva Blue = new((byte) (HueCircleOver3 * 2), byte.MaxValue, byte.MaxValue);
+        public static readonly ColorHsva Red = new(0, 1f, 1f);
+        public static readonly ColorHsva Green = new(HueCircleOver3, 1f, 1f);
+        public static readonly ColorHsva Blue = new(HueCircleOver3 * 2f, 1f, 1f);
         
-        public static readonly ColorHsva Yellow = new((byte) HueCircleOver6, byte.MaxValue, byte.MaxValue);
-        public static readonly ColorHsva Cyan = new((byte) (HueCircleOver6 * 3), byte.MaxValue, byte.MaxValue);
-        public static readonly ColorHsva Magenta = new((byte) (HueCircleOver6 * 5), byte.MaxValue, byte.MaxValue);
+        public static readonly ColorHsva Yellow = new(HueCircleOver6, 1f, 1f);
+        public static readonly ColorHsva LightBlue = new(HueCircleOver3 + HueCircleOver6, 1f, 1f);
+        public static readonly ColorHsva Magenta = new(HueCircleOver3 * 2f + HueCircleOver6, 1f, 1f);
 
-        public static ColorHsva operator *(ColorHsva color, float alphaFactor) => new(color.H, color.S, color.V, (byte) MathF.Min(color.A * alphaFactor, byte.MaxValue));
+        public static ColorHsva operator *(ColorHsva color, float alphaFactor) => new(color.H, color.S, color.V, Math.Clamp(color.A * alphaFactor, 0f, 1f));
 
         public static explicit operator ColorRgb(ColorHsva color) => (ColorRgb) (ColorRgba) color;
 
-        public static explicit operator ColorRgba(ColorHsva color)
+        public static explicit operator ColorRgba(ColorHsva color) => (ColorRgba) (Colorf) color;
+
+        public static explicit operator Colorf(ColorHsva color)
         {
+            if (CoreC.IsZero(color.S)) // Grayscale
+                return new(color.V, color.V, color.V, color.A);
+
             byte hi = (byte) (color.H / HueCircleOver6);
-            byte f = (byte) (color.H % HueCircleOver6 * 6);
-            byte p = (byte) ((color.V * (byte.MaxValue - color.S) + sbyte.MaxValue) / byte.MaxValue);
-            byte q = (byte) ((color.V * (byte.MaxValue - (color.S * f + sbyte.MaxValue) / byte.MaxValue) + sbyte.MaxValue) / byte.MaxValue);
-            byte t = (byte) ((color.V * (byte.MaxValue - (color.S * (byte.MaxValue - f) + sbyte.MaxValue) / byte.MaxValue) + sbyte.MaxValue) / byte.MaxValue);
+            float f = CoreC.Modulo(color.H, HueCircleOver6) * 6f;
+            float p = color.V * (1f - color.S);
+            float q = color.V * (1f - color.S * f);
+            float t = color.V * (1f - color.S * (1f - f));
 
             return hi switch
             {
@@ -41,13 +46,23 @@ namespace Xnor.Core
             };
         }
 
-        public static explicit operator Colorf(ColorHsva color) => (Colorf) (ColorRgba) color;
-        
-        public byte H = h;
-        public byte S = s;
-        public byte V = v;
-        public byte A = a;
+        public float H = h;
+        public float S = s;
+        public float V = v;
+        public float A = a;
 
         public ColorHsva() : this(0, 0, 0) { }
+        
+        public override string ToString() => $"H: {H}, S: {S}, V: {V}, A: {A}";
+    
+        public bool Equals(ColorHsva other) => CoreC.Equals(H, other.H) && CoreC.Equals(S, other.S) && CoreC.Equals(V, other.V) && CoreC.Equals(A, other.A);
+
+        public override bool Equals(object obj) => obj is ColorHsva other && Equals(other);
+
+        public override int GetHashCode() => HashCode.Combine(H, S, V, A);
+
+        public static bool operator ==(ColorHsva left, ColorHsva right) => left.Equals(right);
+
+        public static bool operator !=(ColorHsva left, ColorHsva right) => !left.Equals(right);
     }
 }

@@ -99,7 +99,11 @@ void DotnetReflection::DisplayType(ScriptComponent* const script)
         const std::string fieldName = field.GetName();
         const std::string typeName = field.GetType().GetFullName();
 
-        DisplayType(obj.GetFieldPointer<void>(fieldName), fieldName.c_str(), typeName);
+        void* const ptr = obj.GetFieldPointer<void>(fieldName);
+
+        ImGui::PushID(ptr);
+        DisplayType(ptr, fieldName.c_str(), typeName);
+        ImGui::PopID();
     }
     ImGui::PopID();
 }

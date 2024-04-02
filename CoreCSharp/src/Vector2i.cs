@@ -22,10 +22,6 @@ namespace Xnor.Core
 
         public static Vector2i operator*(int scalar, Vector2i b) => b * scalar;
 
-        public static bool operator==(Vector2i a, Vector2i b) => a.Equals(b);
-
-        public static bool operator!=(Vector2i a, Vector2i b) => !(a == b);
-
         public static explicit operator Vector2(Vector2i v) => new(v.X, v.Y);
 
         public static explicit operator Vector3(Vector2i v) => new(v.X, v.Y, 0f);
@@ -38,16 +34,15 @@ namespace Xnor.Core
         public Vector2i() : this(0, 0) { }
 
         public Vector2i(int xy) : this(xy, xy) { }
+    
+        public bool Equals(Vector2i other) => X == other.X && Y == other.Y;
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(Vector2i)) return false;
-            
-            Vector2i other = (Vector2i) obj;
-            return CoreC.Equals(X, other.X) && CoreC.Equals(Y, other.Y);
-        }
+        public override bool Equals(object obj) => obj is Vector2i other && Equals(other);
 
         public override int GetHashCode() => HashCode.Combine(X, Y);
+
+        public static bool operator ==(Vector2i left, Vector2i right) => left.Equals(right);
+
+        public static bool operator !=(Vector2i left, Vector2i right) => !left.Equals(right);
     }
 }

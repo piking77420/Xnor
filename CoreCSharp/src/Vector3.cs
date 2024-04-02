@@ -28,10 +28,6 @@ namespace Xnor.Core
 
         public static Vector3 operator/(Vector3 a, float scalar) => new(a.X / scalar, a.Y / scalar, a.Z / scalar);
 
-        public static bool operator==(Vector3 a, Vector3 b) => a.Equals(b);
-
-        public static bool operator!=(Vector3 a, Vector3 b) => !(a == b);
-
         public static explicit operator Vector2(Vector3 v) => new(v.X, v.Y);
 
         public static explicit operator Vector4(Vector3 v) => new(v.X, v.Y, 0f, 1f);
@@ -43,16 +39,15 @@ namespace Xnor.Core
         public Vector3() : this(0f, 0f, 0f) { }
 
         public Vector3(float xyz) : this(xyz, xyz, xyz) { }
+    
+        public bool Equals(Vector3 other) => CoreC.Equals(X, other.X) && CoreC.Equals(Y, other.Y) && CoreC.Equals(Z, other.Z);
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(Vector3)) return false;
-            
-            Vector3 other = (Vector3) obj;
-            return CoreC.Equals(X, other.X) && CoreC.Equals(Y, other.Y);
-        }
+        public override bool Equals(object obj) => obj is Vector3 other && Equals(other);
 
-        public override int GetHashCode() => HashCode.Combine(X, Y);
+        public override int GetHashCode() => HashCode.Combine(X, Y, Z);
+
+        public static bool operator ==(Vector3 left, Vector3 right) => left.Equals(right);
+
+        public static bool operator !=(Vector3 left, Vector3 right) => !left.Equals(right);
     }
 }

@@ -3,14 +3,14 @@ namespace Game
     public class TestScript : ScriptComponent
     {
         private ColorHsva color;
-        private byte intensity;
+        private float intensity;
 
         private Light light;
 
         public TestScript()
         {
             Logger.LogTempDebug("Bobby was constructed!");
-            intensity = 1;
+            intensity = 1f / 360f;
         }
 
         ~TestScript()
@@ -36,6 +36,8 @@ namespace Game
             }
             
             color.H += intensity;
+            if (color.H >= 1f)
+                color.H = 0f;
 
             light.color = (Colorf) color;
 
