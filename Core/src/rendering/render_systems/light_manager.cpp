@@ -322,7 +322,6 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 	Camera cam;
 	Rhi::AttachTextureToFrameBuffer(m_ShadowFrameBuffer->GetId(), Attachment::Depth, m_DepthBufferForPointLightPass->GetId(),0 );
 
-
 	for (size_t i = 0; i < pointLights.size(); i++)
 	{
 		if (!pointLights[i]->castShadow)
@@ -333,6 +332,7 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 		Vector3 front;
 		Vector3 up;
 		
+		// Render fo each face of a the CubeMap
 		for (size_t k = 0; k < 6; k++)
 		{
 			switch (k)
@@ -367,7 +367,8 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 		 	cam.front = front;
 			cam.up = up;
 
-			Rhi::AttachTextureToFrameBufferLayer(m_ShadowFrameBuffer->GetId(), Attachment::Color00, m_PointLightShadowMapCubemapArrayPixelDistance->GetId(),0 ,static_cast<uint32_t>(k));
+			const uint32_t currentFace = static_cast<uint32_t>(k + (i * 6));
+			Rhi::AttachTextureToFrameBufferLayer(m_ShadowFrameBuffer->GetId(), Attachment::Color00, m_PointLightShadowMapCubemapArrayPixelDistance->GetId(),0 ,currentFace);
 			
 			RenderPassBeginInfo renderPassBeginInfo =
 			{
@@ -382,10 +383,7 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 		}
 		
 
-
 	}
-	
-
 	
 }
 
