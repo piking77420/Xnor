@@ -46,7 +46,7 @@ public:
 };
 
 /// Filter class to test if two objects can collide based on their object layer. Used while finding collision pairs.
-class JPH_EXPORT ObjectLayerPairFilter : public NonCopyable
+class ObjectLayerPairFilter : public NonCopyable
 {
 public:
 	/// Destructor

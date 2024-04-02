@@ -8,31 +8,6 @@
 
 BEGIN_XNOR_CORE
 
-<<<<<<< Updated upstream
-/// @brief Wrapper around [C++20 Coroutines](https://en.cppreference.com/w/cpp/language/coroutines).
-/// @tparam AwaitT 
-template <Concepts::DurationT AwaitT = std::chrono::milliseconds>
-class Coroutine
-{
-    struct Awaitable
-    {
-        template<Concepts::ConvertibleToT<AwaitT> From>
-        bool_t await_ready(From&& from);
-
-        bool_t await_suspend(std::coroutine_handle<> h);
-
-        void await_resume();
-    };
-    
-    // Required by C++20 coroutines: https://en.cppreference.com/w/cpp/language/coroutines
-    struct promise_type
-    {
-        AwaitT awaitValue;
-        
-        std::exception_ptr exception;
- 
-        Coroutine get_return_object();
-=======
 // Everything named using the snake_case convention in this file is required by C++20 coroutines: https://en.cppreference.com/w/cpp/language/coroutines
 
 /// @brief Wrapper around C++20 Coroutines.
@@ -47,7 +22,6 @@ public:
     struct promise_type
     {
         AwaitType awaitValue;
->>>>>>> Stashed changes
 
         /// @brief Returns the object that will be returns to the caller of a CoroutineFunc
         XNOR_ENGINE Coroutine get_return_object();
@@ -61,13 +35,8 @@ public:
         /// @brief Logs the exception and rethrows it
         XNOR_ENGINE void unhandled_exception();
 
-<<<<<<< Updated upstream
-        template<Concepts::DurationT OtherDurationT>
-        Awaitable await_transform(OtherDurationT&& duration);
-=======
         /// @brief Called when @c co_return is used in a Coroutine body
         XNOR_ENGINE void return_void();
->>>>>>> Stashed changes
 
         /// @brief Converts a AwaitType value to an Awaitable. Called when @c co_await is used with an AwaitType value.
         XNOR_ENGINE Awaitable await_transform(const AwaitType& duration);

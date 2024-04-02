@@ -252,4 +252,4 @@ static_assert(is_trivial<Quat>(), "Is supposed to be a trivial type!");
 
 JPH_NAMESPACE_END
 
-#include "jolt/Math/Quat.inl"
+#include "Quat.inl"
