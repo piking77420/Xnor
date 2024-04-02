@@ -7,6 +7,7 @@
 #include "utils/color.hpp"
 
 
+
 /// @file rhi_typedef.hpp
 /// @brief Defines various types and enumerations needed by XnorCore::Rhi.
 
@@ -440,6 +441,10 @@ struct ShaderCreateInfo
 	ShaderProgramCullInfo shaderProgramCullInfo;
 };
 
+// Remove Warning From alignas(16)
+#pragma warning( push )
+#pragma warning( disable : 4324)
+
 /// @brief Point light UniformBuffer data
 struct alignas(16) PointLightData
 {
@@ -512,9 +517,10 @@ struct alignas(16) GpuLightData
 	SpotLightData spotLightData[MaxSpotLights];
 	/// @brief Directional light data
 	DirectionalLightData directionalData[MaxDirectionalLights];
-
-	Matrix pointLightMatrix[6];
 };
+
+#pragma warning( pop ) 
+
 
 /// @brief Material UniformBuffer data
 struct MaterialData

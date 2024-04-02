@@ -299,7 +299,7 @@ void LightManager::ComputeShadowSpotLight(const Scene& scene, const Renderer& re
 
 		m_GpuLightData->spotLightData[i].lightSpaceMatrix = matrix;
 
-		Rhi::AttachTextureToFrameBufferLayer(m_ShadowFrameBuffer->GetId(), Attachment::Depth, m_SpotLightShadowMapTextureArray->GetId(),0,i);
+		Rhi::AttachTextureToFrameBufferLayer(m_ShadowFrameBuffer->GetId(), Attachment::Depth, m_SpotLightShadowMapTextureArray->GetId(),0,static_cast<uint32_t>(i));
 		
 		RenderPassBeginInfo renderPassBeginInfo =
 		{

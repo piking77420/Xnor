@@ -5,14 +5,15 @@
 			<name>Directional</name>
 			<m_EntityId>73C3991F-64C8-43BE-BA-FB-8F-9C-A2-38-C9-75</m_EntityId>
 			<transform>
-				<m_Position>0 ; 0 ; 0</m_Position>
-				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1 ; 1</m_Scale>
+				<m_Position>0 ; 1 ; 0</m_Position>
+				<m_EulerRotation>0.07414048 ; -0.07402368 ; -0.7875441</m_EulerRotation>
+				<m_Scale>0.9999999 ; 0.99999934 ; 0.9999999</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="DirectionalLight">
 					<color>1 ; 1 ; 1 ; 1</color>
-					<intensity>1</intensity>
+					<intensity>4.5</intensity>
+					<castShadow>true</castShadow>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -62,7 +63,7 @@
 			<name>Sphere</name>
 			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
 			<transform>
-				<m_Position>0 ; 2 ; 3</m_Position>
+				<m_Position>-4 ; 2 ; 0</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
@@ -71,17 +72,17 @@
 					<model>29075914-46D0-4C58-B8-37-A9-2A-1F-15-91-D1</model>
 					<material>
 						<materialType>Opaque</materialType>
-						<albedoColor>0 ; 1 ; 1 ; 1</albedoColor>
-						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
+						<albedoColor>1 ; 1 ; 1 ; 1</albedoColor>
+						<emissiveColor>0.867052 ; 0.867052 ; 0.867052 ; 1</emissiveColor>
 						<metallic>0</metallic>
 						<roughness>0</roughness>
 						<reflectance>0</reflectance>
 						<emissive>0</emissive>
 						<ambientOcclusion>0</ambientOcclusion>
-						<albedoTexture>0-0-0-0-0-0-0-0-0-0-0</albedoTexture>
-						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
-						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
-						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
+						<albedoTexture>D4DE5A31-2DD4-4EA2-A0-44-48-D2-C9-99-71-8B</albedoTexture>
+						<metallicTexture>92C273FA-1E2D-43AA-B8-CF-AE-D0-15-6F-57-87</metallicTexture>
+						<roughnessTexture>D951D7C1-D2F0-4849-86-EF-1-74-A-42-66-C9</roughnessTexture>
+						<normalTexture>D951D7C1-D2F0-4849-86-EF-1-74-A-42-66-C9</normalTexture>
 						<ambiantOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambiantOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
@@ -100,7 +101,7 @@
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">
-					<model>7D4A901C-2429-4A7D-B2-98-A0-92-E4-79-B4-BE</model>
+					<model>0-0-0-0-0-0-0-0-0-0-0</model>
 					<material>
 						<materialType>Opaque</materialType>
 						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
@@ -126,14 +127,15 @@
 			<name>PointLight</name>
 			<m_EntityId>A284C848-DC61-4853-A4-48-15-9D-CE-5D-73-BD</m_EntityId>
 			<transform>
-				<m_Position>2 ; 3 ; 2</m_Position>
-				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_Position>4 ; 3 ; 6</m_Position>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="PointLight">
 					<color>1 ; 1 ; 1 ; 1</color>
 					<intensity>1</intensity>
+					<castShadow>true</castShadow>
 				</0>
 				<1 typeName="TestComponent">
 					<TestComponent>
@@ -147,6 +149,7 @@
 					<m_Rotate>true</m_Rotate>
 					<m_RotationSpeed>1</m_RotationSpeed>
 					<m_Radius>1</m_Radius>
+					<m_TestEntity>0-0-0-0-0-0-0-0-0-0-0</m_TestEntity>
 				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -156,21 +159,23 @@
 			<name>SpotLight</name>
 			<m_EntityId>8B8B51F5-90F0-405B-BE-3C-56-93-F2-7-34-F2</m_EntityId>
 			<transform>
-				<m_Position>-2 ; 3 ; -2</m_Position>
-				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1 ; 1</m_Scale>
+				<m_Position>0 ; 8 ; -5</m_Position>
+				<m_EulerRotation>2.3046567 ; -0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1.0000837 ; 1.0000837</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="SpotLight">
 					<cutOff>12.5</cutOff>
 					<outerCutOff>15</outerCutOff>
 					<color>1 ; 1 ; 1 ; 1</color>
-					<intensity>1</intensity>
+					<intensity>1000</intensity>
+					<castShadow>true</castShadow>
 				</0>
 				<1 typeName="TestComponent">
 					<m_Rotate>true</m_Rotate>
 					<m_RotationSpeed>1</m_RotationSpeed>
 					<m_Radius>1</m_Radius>
+					<m_TestEntity>0-0-0-0-0-0-0-0-0-0-0</m_TestEntity>
 				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>

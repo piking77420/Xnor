@@ -44,7 +44,6 @@ layout (std140, binding = 2) uniform LightData
     PointLightData pointLightData[MaxPointLight];
     SpotLightData spotLightData[MaxSpotLight];
     DirectionalData directionalData;
-    mat4 pointLightMatrix[6];
 };
 layout (std140, binding = 0) uniform CameraUniform
 {
