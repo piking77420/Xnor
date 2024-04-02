@@ -49,7 +49,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY;JPH_BUILD_SHARED_LIBRARY</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;include;inline;externals\inline</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -59,10 +59,13 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);$(ProjectDir)externals\libs\lib\Common;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp.lib;zlibstatic.lib;toolbox.lib;%(AdditionalDependencies);Coral.Native.lib</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp.lib;zlibstatic.lib;toolbox.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib</AdditionalDependencies>
       <AdditionalOptions>/WHOLEARCHIVE:toolbox.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
-    <PostBuildEvent />
+    <PostBuildEvent>
+      <Command>xcopy externals\libs\dll\Common\* $(OutDir) &amp; xcopy externals\libs\dll\Debug\* $(OutDir)</Command>
+      <Message>Copy external DLL files</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -70,7 +73,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY;JPH_BUILD_SHARED_LIBRARY</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;include;inline;externals\inline</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -82,10 +85,13 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);$(ProjectDir)externals\libs\lib\Common;%(AdditionalLibraryDirectories);$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp.lib;zlibstatic.lib;toolbox.lib;%(AdditionalDependencies);Coral.Native.lib</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp.lib;zlibstatic.lib;toolbox.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib</AdditionalDependencies>
       <AdditionalOptions>/WHOLEARCHIVE:toolbox.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
-    <PostBuildEvent />
+    <PostBuildEvent>
+      <Command>xcopy externals\libs\dll\Common\* $(OutDir) &amp; xcopy externals\libs\dll\Release\* $(OutDir)</Command>
+      <Message>Copy external DLL files</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="externals\src\glad.c" />
@@ -98,142 +104,6 @@
     <ClCompile Include="externals\src\ImGui\imgui_stdlib.cpp" />
     <ClCompile Include="externals\src\ImGui\imgui_tables.cpp" />
     <ClCompile Include="externals\src\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="externals\src\jolt\AABBTree\AABBTreeBuilder.cpp" />
-    <ClCompile Include="externals\src\jolt\Core\Factory.cpp" />
-    <ClCompile Include="externals\src\jolt\Core\IssueReporting.cpp" />
-    <ClCompile Include="externals\src\jolt\Core\JobSystemSingleThreaded.cpp" />
-    <ClCompile Include="externals\src\jolt\Core\JobSystemThreadPool.cpp" />
-    <ClCompile Include="externals\src\jolt\Core\JobSystemWithBarrier.cpp" />
-    <ClCompile Include="externals\src\jolt\Core\JoltColor.cpp" />
-    <ClCompile Include="externals\src\jolt\Core\LinearCurve.cpp" />
-    <ClCompile Include="externals\src\jolt\Core\Memory.cpp" />
-    <ClCompile Include="externals\src\jolt\Core\Profiler.cpp" />
-    <ClCompile Include="externals\src\jolt\Core\RTTI.cpp" />
-    <ClCompile Include="externals\src\jolt\Core\Semaphore.cpp" />
-    <ClCompile Include="externals\src\jolt\Core\StringTools.cpp" />
-    <ClCompile Include="externals\src\jolt\Core\TickCounter.cpp" />
-    <ClCompile Include="externals\src\jolt\Geometry\ConvexHullBuilder.cpp" />
-    <ClCompile Include="externals\src\jolt\Geometry\ConvexHullBuilder2D.cpp" />
-    <ClCompile Include="externals\src\jolt\Geometry\Indexify.cpp" />
-    <ClCompile Include="externals\src\jolt\Geometry\OrientedBox.cpp" />
-    <ClCompile Include="externals\src\jolt\Math\Vec3.cpp" />
-    <ClCompile Include="externals\src\jolt\ObjectStream\ObjectStream.cpp" />
-    <ClCompile Include="externals\src\jolt\ObjectStream\ObjectStreamBinaryIn.cpp" />
-    <ClCompile Include="externals\src\jolt\ObjectStream\ObjectStreamBinaryOut.cpp" />
-    <ClCompile Include="externals\src\jolt\ObjectStream\ObjectStreamIn.cpp" />
-    <ClCompile Include="externals\src\jolt\ObjectStream\ObjectStreamOut.cpp" />
-    <ClCompile Include="externals\src\jolt\ObjectStream\ObjectStreamTextIn.cpp" />
-    <ClCompile Include="externals\src\jolt\ObjectStream\ObjectStreamTextOut.cpp" />
-    <ClCompile Include="externals\src\jolt\ObjectStream\SerializableObject.cpp" />
-    <ClCompile Include="externals\src\jolt\ObjectStream\TypeDeclarations.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Body\Body.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Body\BodyAccess.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Body\BodyCreationSettings.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Body\BodyInterface.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Body\BodyManager.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Body\MassProperties.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Body\MotionProperties.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Character\Character.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Character\CharacterBase.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Character\CharacterVirtual.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\BroadPhase\BroadPhase.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\BroadPhase\BroadPhaseBruteForce.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\BroadPhase\BroadPhaseQuadTree.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\BroadPhase\QuadTree.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\CastConvexVsTriangles.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\CastSphereVsTriangles.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\CollideConvexVsTriangles.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\CollideSphereVsTriangles.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\CollisionDispatch.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\CollisionGroup.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\EstimateCollisionResponse.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\GroupFilter.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\GroupFilterTable.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\ManifoldBetweenTwoFaces.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\NarrowPhaseQuery.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\NarrowPhaseStats.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\PhysicsMaterial.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\PhysicsMaterialSimple.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\Shape\BoxShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\Shape\CapsuleShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\Shape\CompoundShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\Shape\ConvexHullShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\Shape\ConvexShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\Shape\CylinderShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\Shape\DecoratedShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\Shape\HeightFieldShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\Shape\MeshShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\Shape\MutableCompoundShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\Shape\OffsetCenterOfMassShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\Shape\RotatedTranslatedShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\Shape\ScaledShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\Shape\Shape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\Shape\SphereShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\Shape\StaticCompoundShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\Shape\TaperedCapsuleShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\Shape\TriangleShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Collision\TransformedShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\ConeConstraint.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\Constraint.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\ConstraintManager.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\ContactConstraintManager.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\DistanceConstraint.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\FixedConstraint.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\GearConstraint.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\HingeConstraint.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\MotorSettings.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\PathConstraint.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\PathConstraintPath.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\PathConstraintPathHermite.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\PointConstraint.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\PulleyConstraint.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\RackAndPinionConstraint.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\SixDOFConstraint.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\SliderConstraint.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\SpringSettings.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\SwingTwistConstraint.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Constraint\TwoBodyConstraint.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\DeterminismLog.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\IslandBuilder.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\LargeIslandSplitter.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\PhysicsLock.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\PhysicsScene.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\PhysicsSystem.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\PhysicsUpdateContext.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Ragdoll\Ragdoll.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Softbody\SoftBodyCreationSettings.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Softbody\SoftBodyMotionProperties.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Softbody\SoftBodyShape.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Softbody\SoftBodySharedSettings.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\StateRecorderImpl.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Vehicle\MotorcycleController.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Vehicle\TrackedVehicleController.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Vehicle\VehicleAntiRollBar.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Vehicle\VehicleCollisionTester.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Vehicle\VehicleConstraint.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Vehicle\VehicleController.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Vehicle\VehicleDifferential.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Vehicle\VehicleEngine.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Vehicle\VehicleTrack.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Vehicle\VehicleTransmission.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Vehicle\Wheel.cpp" />
-    <ClCompile Include="externals\src\jolt\Physics\Vehicle\WheeledVehicleController.cpp" />
-    <ClCompile Include="externals\src\jolt\RegisterTypes.cpp" />
-    <ClCompile Include="externals\src\jolt\Renderer\DebugRenderer.cpp" />
-    <ClCompile Include="externals\src\jolt\Renderer\DebugRendererPlayback.cpp" />
-    <ClCompile Include="externals\src\jolt\Renderer\DebugRendererRecorder.cpp" />
-    <ClCompile Include="externals\src\jolt\Skeleton\SkeletalAnimation.cpp" />
-    <ClCompile Include="externals\src\jolt\Skeleton\Skeleton.cpp" />
-    <ClCompile Include="externals\src\jolt\Skeleton\SkeletonMapper.cpp" />
-    <ClCompile Include="externals\src\jolt\Skeleton\SkeletonPose.cpp" />
-    <ClCompile Include="externals\src\jolt\TriangleGrouper\TriangleGrouperClosestCentroid.cpp" />
-    <ClCompile Include="externals\src\jolt\TriangleGrouper\TriangleGrouperMorton.cpp" />
-    <ClCompile Include="externals\src\jolt\TriangleSplitter\TriangleSplitter.cpp" />
-    <ClCompile Include="externals\src\jolt\TriangleSplitter\TriangleSplitterBinning.cpp" />
-    <ClCompile Include="externals\src\jolt\TriangleSplitter\TriangleSplitterFixedLeafSize.cpp" />
-    <ClCompile Include="externals\src\jolt\TriangleSplitter\TriangleSplitterLongestAxis.cpp" />
-    <ClCompile Include="externals\src\jolt\TriangleSplitter\TriangleSplitterMean.cpp" />
-    <ClCompile Include="externals\src\jolt\TriangleSplitter\TriangleSplitterMorton.cpp" />
     <ClCompile Include="externals\src\RapidXMLSTD.cpp" />
     <ClCompile Include="externals\src\stb\stb_image.c" />
     <ClCompile Include="externals\src\ttf\ttfParser.cpp" />
@@ -1050,15 +920,6 @@
     <ClInclude Include="externals\inline\jolt\Math\Vec3.inl" />
     <ClInclude Include="externals\inline\jolt\Math\Vec4.inl" />
     <ClInclude Include="externals\inline\jolt\Math\Vec8.inl" />
-    <ClInclude Include="externals\src\jolt\Math\DMat44.inl" />
-    <ClInclude Include="externals\src\jolt\Math\DVec3.inl" />
-    <ClInclude Include="externals\src\jolt\Math\Mat44.inl" />
-    <ClInclude Include="externals\src\jolt\Math\Quat.inl" />
-    <ClInclude Include="externals\src\jolt\Math\UVec4.inl" />
-    <ClInclude Include="externals\src\jolt\Math\UVec8.inl" />
-    <ClInclude Include="externals\src\jolt\Math\Vec3.inl" />
-    <ClInclude Include="externals\src\jolt\Math\Vec4.inl" />
-    <ClInclude Include="externals\src\jolt\Math\Vec8.inl" />
     <ClInclude Include="include\application.hpp" />
     <ClInclude Include="include\core.hpp" />
     <ClInclude Include="include\csharp\dotnet_assembly.hpp" />

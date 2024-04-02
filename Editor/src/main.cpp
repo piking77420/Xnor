@@ -13,17 +13,6 @@ extern "C"
 	_declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
 
-/*using CoroutineT = XnorCore::Coroutine<>;
-
-CoroutineT WaitRoutine()
-{
-	using namespace std::chrono_literals;
-	
-	co_await 700ms;
-
-	co_return;
-}*/
-
 int main(int, char**)
 {
 	using namespace XnorCore;
