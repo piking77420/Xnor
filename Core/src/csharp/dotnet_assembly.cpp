@@ -1,5 +1,6 @@
 ﻿#include "csharp/dotnet_assembly.hpp"
 
+#include "reflection/dotnet_reflection.hpp"
 #include "scene/component/script_component.hpp"
 #include "utils/logger.hpp"
 #include "world/world.hpp"
@@ -15,7 +16,7 @@ DotnetAssembly::DotnetAssembly(std::string filepath)
 bool_t DotnetAssembly::Load(Coral::AssemblyLoadContext& alc)
 {
     m_Assembly = &alc.LoadAssembly(m_Filepath);
-    
+
     switch (m_Assembly->GetLoadStatus())
     {
         case Coral::AssemblyLoadStatus::Success:

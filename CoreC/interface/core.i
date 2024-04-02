@@ -42,6 +42,39 @@ typedef float float_t;
 
 %ignore operator<<;
 
+// These structs are used to copy data between C++ and C# value types
+%{
+struct Data4
+{
+    char data[4];
+};
+
+struct Data8
+{
+    char data[8];
+};
+
+struct Data12
+{
+    char data[12];
+};
+
+struct Data16
+{
+    char data[16];
+};
+
+struct Data36
+{
+    char data[36];
+};
+
+struct Data64
+{
+    char data[64];
+};
+%}
+
 %include "toolbox.i"
 
 %include "core.hpp"

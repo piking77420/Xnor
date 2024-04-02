@@ -65,6 +65,14 @@ namespace Coral {
 			return result;
 		}
 
+		template<typename TReturnPointer>
+		TReturnPointer* GetFieldPointer(std::string_view InFieldName)
+		{
+			TReturnPointer* result = nullptr;
+			GetFieldPointerRaw(InFieldName, (void**) &result);
+			return result;
+		}
+
 		template<typename TValue>
 		void SetPropertyValue(std::string_view InPropertyName, TValue InValue)
 		{
@@ -81,6 +89,7 @@ namespace Coral {
 
 		void SetFieldValueRaw(std::string_view InFieldName, void* InValue) const;
 		void GetFieldValueRaw(std::string_view InFieldName, void* OutValue) const;
+		void GetFieldPointerRaw(std::string_view InFieldName, void** OutPointer) const;
 		void SetPropertyValueRaw(std::string_view InPropertyName, void* InValue) const;
 		void GetPropertyValueRaw(std::string_view InPropertyName, void* OutValue) const;
 

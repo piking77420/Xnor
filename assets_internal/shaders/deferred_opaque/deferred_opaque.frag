@@ -111,7 +111,7 @@ vec3 ComputeSpotLight(vec3 baseColor,vec3 fragPos,vec3 v, vec3 n, float roughnes
 {
     vec3 outLo = vec3(0.f); 
     
-    for (int i = 0; i < nbrOfPointLight; i++)
+    for (int i = 0; i < nbrOfSpotLight; i++)
     {
         SpotLightData light = spotLightData[i];
         float distance = length(light.position - fragPos);
@@ -155,7 +155,7 @@ vec3 ComputePointLight(vec3 baseColor,vec3 fragPos,vec3 v, vec3 n, float roughne
 {
     vec3 outLo = vec3(0.f);
 
-    for (int i = 0; i < nbrOfSpotLight; i++)
+    for (int i = 0; i < nbrOfPointLight; i++)
     {
         PointLightData light = pointLightData[i];
         float distance = length(light.position - fragPos);

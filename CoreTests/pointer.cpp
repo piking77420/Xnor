@@ -2,7 +2,7 @@
 
 TEST(Pointer, Basics)
 {
-    const Pointer<int> ptr(0);
+    const Pointer<int> ptr = Pointer<int>::Create(0);
 
     EXPECT_EQ(ptr.GetReferenceCounter()->GetStrong(), 1);
     EXPECT_EQ(ptr.GetReferenceCounter()->GetWeak(), 0);
