@@ -153,29 +153,29 @@ float ShadowCalculationSpolight(vec4 fragPosLightSpace, vec3 n, vec3 l, int inde
     return shadow;
 }
 
-
-float ShadowCalculationPointLight(vec3 LightToPixel,int index)
+float ShadowCalculationPointLight(vec3 LightToPixel, vec3 fragPos, int index)
 {
-    float Distance = length(LightToPixel);
+    float currentDistance = length(LightToPixel);
     LightToPixel.y = -LightToPixel.y;
     
-    float sampledDistance = texture(pointLightCubemapArrayPixelDistance, vec4(LightToPixel.x, LightToPixel.y, LightToPixel.z , index)).r;
+    float shadow = 0.0;
+    float bias = 0.15;
+    int samples = 20;
+    float viewDistance = length(cameraPos - fragPos);
+    float diskRadius = 0.05;
     
-    float bias = 0.015f;
-
-
-    if (sampledDistance + bias < Distance)
-       return 1.0f;
-    else
-        return 0.0f;
-
-    return sampledDistance;
-
+    for(int i = 0; i < samples; ++i)
+    {
+        vec3 offset = gridSamplingDisk[i] * diskRadius;
+        float distance = texture(pointLightCubemapArrayPixelDistance, vec4(LightToPixel.x + offset.x, LightToPixel.y + offset.y, LightToPixel.z + offset.z , index)).r;
+        
+        if(distance + bias < currentDistance)
+        shadow += 1.0;
+    }
+    shadow /= float(samples);
+    
+    return shadow;
 }
-
-
-
-
 
 //https://de45xmedrsdbp.cloudfront.net/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
 // reparameterization of α = Roughness^2
@@ -314,7 +314,7 @@ vec3 ComputePointLight(vec3 baseColor,vec3 fragPos,vec3 v, vec3 n, float roughne
 
         if (light.isCastShadow)
         {
-            float shadow = ShadowCalculationPointLight(fragPos - light.position, i);
+            float shadow = ShadowCalculationPointLight(fragPos - light.position, fragPos, i);
             Lo *= ( 1.0 - shadow );
         }
         outLo += Lo;

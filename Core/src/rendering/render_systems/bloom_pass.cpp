@@ -7,9 +7,6 @@ using namespace XnorCore;
 
 void BloomPass::Init()
 {
-    if (m_Quad != nullptr && m_DownSample != nullptr && m_UpSample != nullptr)
-       return; 
-    
     m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
     // Downsample
     m_DownSample = ResourceManager::Get<ComputeShader>("down_sample");
@@ -84,7 +81,7 @@ void BloomPass::DownSampling(const BloomRenderTarget& bloomRenderTarget) const
         const Vector2 mipSize =  { std::floor(bloomMip.sizef.x),std::floor(bloomMip.sizef.y) };
         m_DownSample->SetVec2("uTexelSize",Vector2(1.0f) / mipSize);
         
-        m_DownSample->DispatchCompute(static_cast<uint32_t>(std::ceil(mipSize.x/ 8.f)), static_cast<uint32_t>(std::ceil(mipSize.y/ 8.f)) ,1);  
+        m_DownSample->DispatchCompute(static_cast<uint32_t>(std::ceil(mipSize.x/ ComputeShaderDispactValue)), static_cast<uint32_t>(std::ceil(mipSize.y/ ComputeShaderDispactValue)) ,1);  
         m_DownSample->SetMemoryBarrier(AllBarrierBits);
         
         bloomMip.texture->BindTexture(0);

@@ -12,6 +12,7 @@ BEGIN_XNOR_CORE
 class BloomPass
 {
     static inline constexpr TextureInternalFormat::TextureInternalFormat BloomTextureFormat = TextureInternalFormat::TextureInternalFormat::Rgba32F;
+    static inline constexpr float_t ComputeShaderDispactValue = 8;
 public:
     DEFAULT_COPY_MOVE_OPERATIONS(BloomPass)
 
@@ -19,7 +20,7 @@ public:
 
     XNOR_ENGINE ~BloomPass() = default;
 
-    void Init();
+    XNOR_ENGINE void Init();
     
     XNOR_ENGINE void ComputeBloom(const Texture& imageWithoutBloom, const BloomRenderTarget& bloomRenderTarget) const;
 private:

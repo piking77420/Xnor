@@ -6,7 +6,6 @@
 #include "rendering/light/spot_light.hpp"
 #include "rendering/camera.hpp"
 #include "rendering/frame_buffer.hpp"
-#include "rendering/light/directional_shadowmap.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
 #include "resource/texture.hpp"
@@ -52,10 +51,7 @@ public:
     XNOR_ENGINE void BindShadowMap() const;
 
 
-    std::vector<const PointLight*> pointLights;
-    std::vector<const SpotLight*> spotLights;
-    std::vector<const DirectionalLight*> directionalLights;
-    std::array<DirectionalShadowMap,MaxDirectionalLights> directionalShadowMaps;
+   
 
 private:
     enum class RenderingLight
@@ -95,6 +91,11 @@ private:
     
     Texture* m_PointLightShadowMapCubemapArrayPixelDistance = nullptr;
     Texture* m_DepthBufferForPointLightPass = nullptr;
+    Texture* m_DirectionalShadowMaps = nullptr;
+
+    std::vector<const PointLight*> m_PointLights;
+    std::vector<const SpotLight*> m_SpotLights;
+    std::vector<const DirectionalLight*> m_DirectionalLights;
 
     
     XNOR_ENGINE void FecthLightInfo();

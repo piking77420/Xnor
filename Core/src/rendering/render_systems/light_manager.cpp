@@ -13,10 +13,8 @@ using namespace XnorCore;
 
 LightManager::~LightManager()
 {
-	for (const DirectionalShadowMap directionalShadowMap : directionalShadowMaps)
-	{
-		delete directionalShadowMap.depthTexture;
-	}
+	
+	delete m_DirectionalShadowMaps;
 	delete m_GpuLightData;
 	delete m_SpotLightShadowMapTextureArray;
 	delete m_PointLightShadowMapCubemapArrayPixelDistance;
@@ -49,9 +47,9 @@ void LightManager::InitResources()
 void LightManager::BeginFrame(const Scene& scene, const Renderer& renderer)
 {
 	
-	scene.GetAllComponentOfType<PointLight>(&pointLights);
-	scene.GetAllComponentOfType<SpotLight>(&spotLights);
-	scene.GetAllComponentOfType<DirectionalLight>(&directionalLights);
+	scene.GetAllComponentOfType<PointLight>(&m_PointLights);
+	scene.GetAllComponentOfType<SpotLight>(&m_SpotLights);
+	scene.GetAllComponentOfType<DirectionalLight>(&m_DirectionalLights);
 
 	FecthLightInfo();
 	ComputeShadow(scene, renderer);
@@ -65,9 +63,9 @@ void LightManager::EndFrame(const Scene&)
 
 void LightManager::DrawLightGizmo(const Camera& camera, const Scene& scene)
 {
-	scene.GetAllComponentOfType<PointLight>(&pointLights);
-	scene.GetAllComponentOfType<SpotLight>(&spotLights);
-	scene.GetAllComponentOfType<DirectionalLight>(&directionalLights);
+	scene.GetAllComponentOfType<PointLight>(&m_PointLights);
+	scene.GetAllComponentOfType<SpotLight>(&m_SpotLights);
+	scene.GetAllComponentOfType<DirectionalLight>(&m_DirectionalLights);
 	DrawLightGizmoWithShader(camera, scene, m_EditorUi);
 }
 
@@ -78,7 +76,7 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 	
 	std::map<float_t, GizmoLight> sortedLight;
 	
-	for (const PointLight* const pointLight : pointLights)
+	for (const PointLight* const pointLight : m_PointLights)
 	{
 		if (pointLight == nullptr)
 			continue;
@@ -93,7 +91,7 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 		sortedLight.emplace(distance, gizmoLight);
 	}
 	
-	for (const SpotLight* const spotLight : spotLights)
+	for (const SpotLight* const spotLight : m_SpotLights)
 	{
 		if (spotLight == nullptr)
 			continue;
@@ -108,7 +106,7 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 		sortedLight.emplace(distance, gizmoLight);
 	}
 	
-	for (const DirectionalLight* const dirLight : directionalLights)
+	for (const DirectionalLight* const dirLight : m_DirectionalLights)
 	{
 		if (dirLight == nullptr)
 			continue;
@@ -164,12 +162,12 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 
 void LightManager::BindShadowMap() const
 {
-	for (uint32_t i = 0; i < directionalLights.size(); i++)
+	for (uint32_t i = 0; i < m_DirectionalLights.size(); i++)
 	{
-		if (!directionalLights[i]->castShadow)
+		if (!m_DirectionalLights[i]->castShadow)
 			continue;
 
-		directionalShadowMaps[i].depthTexture->BindTexture(ShadowTextureBinding::Directional);
+		m_DirectionalShadowMaps->BindTexture(ShadowTextureBinding::Directional);
 	}
 
 	m_SpotLightShadowMapTextureArray->BindTexture(ShadowTextureBinding::SpotLight);
@@ -178,12 +176,12 @@ void LightManager::BindShadowMap() const
 
 void LightManager::FecthLightInfo()
 {
-	 if (directionalLights.size() > MaxDirectionalLights)
+	 if (m_DirectionalLights.size() > MaxDirectionalLights)
 		Logger::LogWarning("You cannot have more than 1 directional light in the scene");
 	
-	const size_t nbrOfpointLight = std::clamp<size_t>(pointLights.size(), 0, MaxPointLights);
-	const size_t nbrOfSpotLight = std::clamp<size_t>(spotLights.size(), 0, MaxSpotLights);
-	const size_t nbrOfDirectionalLight = std::clamp<size_t>(directionalLights.size(), 0, MaxSpotLights);
+	const size_t nbrOfpointLight = std::clamp<size_t>(m_PointLights.size(), 0, MaxPointLights);
+	const size_t nbrOfSpotLight = std::clamp<size_t>(m_SpotLights.size(), 0, MaxSpotLights);
+	const size_t nbrOfDirectionalLight = std::clamp<size_t>(m_DirectionalLights.size(), 0, MaxSpotLights);
 
 	m_GpuLightData->nbrOfPointLight = static_cast<uint32_t>(nbrOfpointLight);
 	m_GpuLightData->nbrOfSpotLight = static_cast<uint32_t>(nbrOfSpotLight);
@@ -191,7 +189,7 @@ void LightManager::FecthLightInfo()
 	
 	for (size_t i = 0; i < nbrOfpointLight; i++)
 	{
-		const PointLight* pointLight = pointLights[i];
+		const PointLight* pointLight = m_PointLights[i];
 		
 		m_GpuLightData->pointLightData[i] =
 		{
@@ -204,7 +202,7 @@ void LightManager::FecthLightInfo()
 	}
 	for (size_t i = 0 ; i < nbrOfSpotLight ; i++)
 	{
-		const SpotLight* spotLight = spotLights[i];
+		const SpotLight* spotLight = m_SpotLights[i];
 		
 		m_GpuLightData->spotLightData[i] =
 		{
@@ -223,12 +221,12 @@ void LightManager::FecthLightInfo()
 	if (nbrOfDirectionalLight != 0)
 	for (size_t i = 0 ; i < MaxDirectionalLights ; i++)
 	{
-		const Vector3 direction = directionalLights[i]->GetLightDirection(); 
+		const Vector3 direction = m_DirectionalLights[i]->GetLightDirection(); 
 
 		m_GpuLightData->directionalData[i] =
 		{
-			.color = static_cast<Vector3>(directionalLights[i]->color),
-			.intensity = directionalLights[i]->intensity,	
+			.color = static_cast<Vector3>(m_DirectionalLights[i]->color),
+			.intensity = m_DirectionalLights[i]->intensity,	
 			.direction = { direction.x, direction.y, direction.z },
 		};
 	}
@@ -249,31 +247,31 @@ void LightManager::ComputeShadow(const Scene& scene, const Renderer& renderer)
 
 void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& renderer)
 {
-	for (size_t i = 0; i < directionalLights.size(); i++)
+	for (size_t i = 0; i < m_DirectionalLights.size(); i++)
 	{
-		m_GpuLightData->directionalData->isDirlightCastingShadow = directionalLights[i]->castShadow;
+		m_GpuLightData->directionalData->isDirlightCastingShadow = m_DirectionalLights[i]->castShadow;
 		
-		if (!directionalLights[i]->castShadow)
+		if (!m_DirectionalLights[i]->castShadow)
 			continue;
 
-		const DirectionalShadowMap& shadowMap = directionalShadowMaps[i];
+		const Texture& shadowMap = *m_DirectionalShadowMaps;
 		Camera cam;
 		
 		cam.isOrthoGraphic = true;
-		cam.position = directionalLights[i]->entity->transform.GetPosition();
-		cam.LookAt(cam.position + directionalLights[i]->GetLightDirection());
-		cam.near = directionalLights[i]->near;
-		cam.far = directionalLights[i]->far;
-		cam.leftRight = directionalLights[i]->leftRight;
-		cam.bottomtop = directionalLights[i]->bottomtop;
-		cam.GetVp(shadowMap.depthTexture->GetSize(), &m_GpuLightData->directionalData->lightSpaceMatrix);
+		cam.position = m_DirectionalLights[i]->entity->transform.GetPosition();
+		cam.LookAt(cam.position + m_DirectionalLights[i]->GetLightDirection());
+		cam.near = m_DirectionalLights[i]->near;
+		cam.far = m_DirectionalLights[i]->far;
+		cam.leftRight = m_DirectionalLights[i]->leftRight;
+		cam.bottomtop = m_DirectionalLights[i]->bottomtop;
+		cam.GetVp(shadowMap.GetSize(), &m_GpuLightData->directionalData->lightSpaceMatrix);
 		
-		m_ShadowFrameBuffer->AttachTexture(*shadowMap.depthTexture, Attachment::Depth, 0);
+		m_ShadowFrameBuffer->AttachTexture(shadowMap, Attachment::Depth, 0);
 		RenderPassBeginInfo renderPassBeginInfo =
 		{
 			.frameBuffer = m_ShadowFrameBuffer,
 			.renderAreaOffset = { 0,0 },
-			.renderAreaExtent = shadowMap.depthTexture->GetSize() ,
+			.renderAreaExtent = shadowMap.GetSize() ,
 			.clearBufferFlags = BufferFlag::DepthBit,
 			.clearColor = Vector4(0.f)
 		};
@@ -285,16 +283,16 @@ void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& ren
 
 void LightManager::ComputeShadowSpotLight(const Scene& scene, const Renderer& renderer)
 {
-	for (size_t i = 0; i < spotLights.size(); i++)
+	for (size_t i = 0; i < m_SpotLights.size(); i++)
 	{
-		if (!spotLights[i]->castShadow)
+		if (!m_SpotLights[i]->castShadow)
 			return;
 		
 		Camera cam;
-		cam.position = spotLights[i]->entity->transform.GetPosition();
-		cam.LookAt(cam.position + spotLights[i]->GetLightDirection());
-		cam.near = spotLights[i]->near;
-		cam.far = spotLights[i]->far;
+		cam.position = m_SpotLights[i]->entity->transform.GetPosition();
+		cam.LookAt(cam.position + m_SpotLights[i]->GetLightDirection());
+		cam.near = m_SpotLights[i]->near;
+		cam.far = m_SpotLights[i]->far;
 
 		Matrix matrix;
 		cam.GetVp(SpotLightShadowMapSize, &matrix);
@@ -322,12 +320,12 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 	Camera cam;
 	m_ShadowFrameBuffer->AttachTexture(*m_DepthBufferForPointLightPass, Attachment::Depth, 0);
 
-	for (size_t i = 0; i < pointLights.size(); i++)
+	for (size_t i = 0; i < m_PointLights.size(); i++)
 	{
-		if (!pointLights[i]->castShadow)
+		if (!m_PointLights[i]->castShadow)
 			continue;
 		
-		const Vector3 pos = static_cast<Vector3>(pointLights[i]->entity->transform.worldMatrix[3]);
+		const Vector3 pos = static_cast<Vector3>(m_PointLights[i]->entity->transform.worldMatrix[3]);
 		Vector3 front;
 		Vector3 up;
 		
@@ -360,7 +358,9 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 				front = Vector3::UnitZ();
 				up = Vector3::UnitY();
 				break;
-			
+			default:
+				Logger::LogError("Unreachable Face of CubeMap shadowMap PointLight !");
+				break;;
 			}
 			cam.position  = pos;
 		 	cam.front = front;
@@ -408,10 +408,8 @@ void LightManager::InitShadow()
 		.dataType = DataType::Float
 	};
 	
-	for (DirectionalShadowMap& directionalShadowMap : directionalShadowMaps)
-	{
-		directionalShadowMap.depthTexture = new Texture(textureCreateInfo);
-	}
+	m_DirectionalShadowMaps = new Texture(textureCreateInfo);
+	
 
 	const TextureCreateInfo spothLightShadowArray =
 		{
