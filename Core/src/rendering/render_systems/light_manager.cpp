@@ -347,19 +347,19 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 				break;
 			case 2:
 				front = Vector3::UnitY();
-				up = -Vector3::UnitZ();
+				up = Vector3::UnitZ();
 				break;
 			case 3:
 				front = -Vector3::UnitY();
-				up = Vector3::UnitZ();
+				up = -Vector3::UnitZ();
 				break;
 			case 4:
-				front = Vector3::UnitZ();
+				front = -Vector3::UnitZ();
 				up = Vector3::UnitY();
 				break;
 			case 5:
-				front = -Vector3::UnitZ();
-				up = -Vector3::UnitY();
+				front = Vector3::UnitZ();
+				up = Vector3::UnitY();
 				break;
 			
 			}

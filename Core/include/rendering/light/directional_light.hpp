@@ -13,17 +13,14 @@ BEGIN_XNOR_CORE
 class DirectionalLight : public Light
 {
     REFLECTABLE_IMPL(DirectionalLight)
-
+private:
+    constexpr static inline Vector2 defaulNearFar = { 1.0f , 7.5f};
 public:
-    float_t near = 1.0f;
-
-    float_t far = 7.5f;
-
     Vector2 leftRight = { -10.f ,10.f };
 
     Vector2 bottomtop = { -10.f ,10.f };
     
-    XNOR_ENGINE DirectionalLight() = default;
+    XNOR_ENGINE DirectionalLight();
     
     XNOR_ENGINE ~DirectionalLight() override = default;
 

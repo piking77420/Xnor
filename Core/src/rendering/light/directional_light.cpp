@@ -5,6 +5,12 @@
 
 using namespace XnorCore;
 
+DirectionalLight::DirectionalLight()
+{
+    near = defaulNearFar.x;
+    far = defaulNearFar.y;
+}
+
 Vector3 DirectionalLight::GetLightDirection() const 
 {
     Matrix&& rot = Matrix(Matrix3(entity->transform.worldMatrix));
