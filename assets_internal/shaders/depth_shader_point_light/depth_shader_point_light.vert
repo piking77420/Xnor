@@ -16,12 +16,10 @@ layout (std140, binding = 1) uniform ModelUniform
 };
 
 out vec3 WorldPos;
-out vec3 CameraPos;
 
 void main()
 {
     vec4 Pos4 =  vec4(aPos, 1.0);
     gl_Position = projection * view * model * Pos4;
-    CameraPos = cameraPos;
     WorldPos =  (model * Pos4).xyz;
 }

@@ -136,8 +136,7 @@ public:
 	XNOR_ENGINE static void AttachTextureToFrameBufferLayer(uint32_t bufferId, Attachment::Attachment attachment,uint32_t textureId,uint32_t level, uint32_t layer);
 
 	XNOR_ENGINE static void AttachTextureToFrameBuffer(uint32_t bufferId, Attachment::Attachment attachment,uint32_t textureId,uint32_t level);
-
-
+	
 	XNOR_ENGINE static void AttachTextureToFrameBuffer(uint32_t bufferId, Attachment::Attachment attachment, CubeMapFace cubeMapFace,uint32_t textureId,uint32_t level);
 	
 	XNOR_ENGINE static void SetFrameBufferDraw(uint32_t frameBufferid, uint32_t value);

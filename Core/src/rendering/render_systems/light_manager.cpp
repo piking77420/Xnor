@@ -320,7 +320,7 @@ void LightManager::ComputeShadowSpotLight(const Scene& scene, const Renderer& re
 void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& renderer)
 {
 	Camera cam;
-	Rhi::AttachTextureToFrameBuffer(m_ShadowFrameBuffer->GetId(), Attachment::Depth, m_DepthBufferForPointLightPass->GetId(),0 );
+	m_ShadowFrameBuffer->AttachTexture(*m_DepthBufferForPointLightPass, Attachment::Depth, 0);
 
 	for (size_t i = 0; i < pointLights.size(); i++)
 	{
@@ -328,7 +328,6 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 			continue;
 		
 		const Vector3 pos = static_cast<Vector3>(pointLights[i]->entity->transform.worldMatrix[3]);
-		m_ShadowMapShaderPointLight->SetVec3("CameraPos",pos);
 		Vector3 front;
 		Vector3 up;
 		
@@ -368,7 +367,7 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 			cam.up = up;
 
 			const uint32_t currentFace = static_cast<uint32_t>(k + (i * 6));
-			Rhi::AttachTextureToFrameBufferLayer(m_ShadowFrameBuffer->GetId(), Attachment::Color00, m_PointLightShadowMapCubemapArrayPixelDistance->GetId(),0 ,currentFace);
+			m_ShadowFrameBuffer->AttachTextureLayer(*m_PointLightShadowMapCubemapArrayPixelDistance, Attachment::Color00,0 ,currentFace);
 			
 			RenderPassBeginInfo renderPassBeginInfo =
 			{

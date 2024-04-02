@@ -1,13 +1,18 @@
 #version 460 core
 layout (location = 0) out float PixelLigthDistance;
 
+layout (std140, binding = 0) uniform CameraUniform
+{
+    mat4 view;
+    mat4 projection;
+    vec3 cameraPos;
+};
 
 in vec3 WorldPos;
-uniform vec3 CameraPos;
 
 void main()
 {
     //gl_FragDepth = gl_FragCoord.z;
-    vec3 pixelToVertex = WorldPos - CameraPos;
+    vec3 pixelToVertex = WorldPos - cameraPos;
     PixelLigthDistance = length(pixelToVertex);
 }

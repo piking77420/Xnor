@@ -29,6 +29,9 @@ public:
 	XNOR_ENGINE void AttachTexture(const Texture& texture, Attachment::Attachment attachment, uint32_t level = 0) const;
 
 	XNOR_ENGINE void AttachTexture(const Cubemap& cubemap, Attachment::Attachment attachment, CubeMapFace cubeMapFace, uint32_t level = 0) const;
+
+	XNOR_ENGINE void AttachTextureLayer(const Texture& texture, Attachment::Attachment attachment,uint32_t level, uint32_t layer) const;
+
 	
 	
 	XNOR_ENGINE void GetPixelFromAttachment(uint32_t attachmentIndex, Vector2i position,
