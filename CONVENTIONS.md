@@ -301,12 +301,12 @@ All class member variables must be `private`, with `public` accessors if needed.
 class Foo
 {
 public:
-    const int& GetI() const { return i; }
-    int& GetI() { return i; }
-    void SetI(int newI) { i = newI; }
+    const int& GetI() const { return m_Value; }
+    int& GetI() { return m_Value; }
+    void SetI(int newValue) { m_Value = newValue; }
 
 private:
-    int i;
+    int m_Value;
 };
 ```
 
@@ -316,11 +316,11 @@ Or
 class Foo
 {
 public:
-    int GetI() const { return i; }
-    void SetI(int newI) { i = newI; }
+    int GetI() const { return m_Value; }
+    void SetI(int newValue) { m_Value = newValue; }
 
 private:
-    int i;
+    int m_Value;
 };
 ```
 
@@ -380,9 +380,9 @@ public:
     static void Bar(int i);
 
 private:
-    static inline const privateStaticConstInt = 1;
+    static inline const m_PrivateStaticConstInt = 1;
 
-    static inline int privateStaticInt = -7;
+    static inline int m_PrivateStaticInt = -7;
 
     static void PrivateBar(int i);
 
@@ -398,7 +398,7 @@ public:
     void FooBar(int i);
 
 private:
-    int privateMember;
+    int m_PrivateMember;
 
     Foo(int i, int j, int k);
 

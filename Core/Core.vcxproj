@@ -63,7 +63,7 @@
       <AdditionalOptions>/WHOLEARCHIVE:toolbox.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y externals\libs\dll\Common\* $(OutDir) &amp; xcopy /Y externals\libs\dll\$(Configuration)\* $(OutDir)</Command>
+      <Command>xcopy /Y "externals\libs\dll\Common\*" "$(OutDir)" &amp; xcopy /Y "externals\libs\dll\$(Configuration)\*" "$(OutDir)"</Command>
       <Message>Copy external DLL files</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -89,7 +89,7 @@
       <AdditionalOptions>/WHOLEARCHIVE:toolbox.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y externals\libs\dll\Common\* $(OutDir) &amp; xcopy /Y externals\libs\dll\$(Configuration)\* $(OutDir)</Command>
+      <Command>xcopy /Y "externals\libs\dll\Common\*" "$(OutDir)" &amp; xcopy /Y "externals\libs\dll\$(Configuration)\*" "$(OutDir)"</Command>
       <Message>Copy external DLL files</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
