@@ -9,12 +9,12 @@
 #include "resource/model.hpp"
 
 BEGIN_XNOR_CORE
-    struct Plane
+struct Plane
 {
     Vector3 normal = Vector3::UnitY();
     float_t distance = 0.f;
 
-    constexpr Plane(Vector3 vec1, Vector3 vec2);
+    Plane(Vector3 vec1, Vector3 vec2);
     
     float_t GetSignedDistanceToPlane(const Vector3& point) const;
 };
@@ -42,9 +42,7 @@ class Frustum
     bool_t IsInFrutum(const Camera& camera, const Model::Aabb& aabb, const XnorCore::Transform& transform) const ;
 
 private:
-
-    bool_t AbbCollidWithPlane(const Plane& plane, const Model::Aabb& aabb, const Vector3& center) const;
-
+    bool_t AABBCollidWithPlane(const Plane& plane, const Model::Aabb& aabb, const Vector3& center) const;
     
     std::array<Plane,5> m_Plane;
 };

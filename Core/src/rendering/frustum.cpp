@@ -29,7 +29,7 @@ void Frustum::UpdateFromCamera(const Camera& camera, const float_t aspect)
 
 }
 
-bool_t Frustum::AbbCollidWithPlane(const Plane& plane, const Model::Aabb& aabb, const Vector3& center) const
+bool_t Frustum::AABBCollidWithPlane(const Plane& plane, const Model::Aabb& aabb, const Vector3& center) const
 {
     const float r = center.x * std::abs(plane.normal.x) +
             center.y * std::abs(plane.normal.y) + center.z * std::abs(plane.normal.z);
@@ -37,18 +37,41 @@ bool_t Frustum::AbbCollidWithPlane(const Plane& plane, const Model::Aabb& aabb, 
     return -r <= plane.GetSignedDistanceToPlane(center);
 }
 
-
-
-bool Frustum::IsInFrutum(const Camera& camera, const Model::Aabb& aabb, const XnorCore::Transform& transform) const
+bool_t Frustum::IsInFrutum(const Camera& camera, const Model::Aabb& aabb, const XnorCore::Transform& transform) const
 {
-    const Vector3 pos = static_cast<Vector3>(transform.worldMatrix[3]);
+    // Get The center of the AABB
+    const Vector3&& center = (aabb.max - aabb.min) * 0.5f;
+    
+    // Get The Vector Between center and the max
+    const Vector3&& extend = center - aabb.max;
+    
+    const Vector3&& right = transform.GetRight() * extend.x;
+    const Vector3&& up = transform.GetUp() * extend.y;
+    const Vector3&& forward = transform.GetForward() * extend.z;
 
+    const float_t newIi = Calc::Abs(Vector3::Dot(Vector3::UnitX(), right)) +
+      Calc::Abs(Vector3::Dot(Vector3::UnitX(), up)) +
+      Calc::Abs(Vector3::Dot(Vector3::UnitX(), forward));
+
+    const float_t newIj = Calc::Abs(Vector3::Dot(Vector3::UnitY(), right)) +
+       Calc::Abs(Vector3::Dot(Vector3::UnitY(), up)) +
+       Calc::Abs(Vector3::Dot(Vector3::UnitY(), forward));
+
+    const float_t newIk = Calc::Abs(Vector3::Dot(Vector3::UnitZ(), right)) +
+       Calc::Abs(Vector3::Dot(Vector3::UnitZ(), up)) +
+       Calc::Abs(Vector3::Dot(Vector3::UnitZ(), forward));
+
+    
     const Model::Aabb obb =
     {
         .min = static_cast<Vector3>(transform.worldMatrix * Vector4(aabb.min.x, aabb.min.y , aabb.min.z, 1.f)),
         .max = static_cast<Vector3>(transform.worldMatrix * Vector4(aabb.max.x, aabb.max.y , aabb.max.z, 1.f)),
     };
 
-    for
     
+    
+    
+    
+
+    return false;
 }
