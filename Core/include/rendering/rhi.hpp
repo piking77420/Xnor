@@ -114,9 +114,9 @@ public:
 	XNOR_ENGINE static uint32_t CreateFrameBuffer();
 	
 	/// @brief Create a framebuffer
-	/// @param renderPass Associated @ref RenderPass
-	/// @param attachments @ref Texture attachments
-	/// @return Framebuffer id
+	/// @param renderPass Associated RenderPass
+	/// @param frameBuffer Framebuffer
+	/// @param attachments Texture attachments
 	XNOR_ENGINE static void AttachsTextureToFrameBuffer(const RenderPass& renderPass, const Framebuffer& frameBuffer, const std::vector<const Texture*>& attachments);
 
 	/// @brief Destroys a framebuffer
@@ -198,19 +198,19 @@ public:
 	/// @param bufferFlag BufferFlag
 	XNOR_ENGINE static void ClearBuffer(BufferFlag::BufferFlag bufferFlag);
 	
-	/// @brief Updates the model @ref UniformBuffer
+	/// @brief Updates the model UniformBuffer
 	/// @param modelUniformData Data
 	XNOR_ENGINE static void UpdateModelUniform(const ModelUniformData& modelUniformData);
 
-	/// @brief Updates the camera @ref UniformBuffer
+	/// @brief Updates the camera UniformBuffer
 	/// @param cameraUniformData Data
 	XNOR_ENGINE static void UpdateCameraUniform(const CameraUniformData& cameraUniformData);
 
-	/// @brief Updates the light @ref UniformBuffer
+	/// @brief Updates the light UniformBuffer
 	/// @param lightData Data
 	XNOR_ENGINE static void UpdateLight(const GpuLightData& lightData);
 	
-	/// @brief Binds a @ref Material
+	/// @brief Binds a Material
 	/// @param material Material
 	XNOR_ENGINE static void BindMaterial(const Material& material);
 

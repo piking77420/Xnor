@@ -136,16 +136,30 @@ namespace XnorCore {}
 using stdstring = std::string;
 #endif
 
+#ifndef DOXYGEN
 #define BEGIN_ENUM(name)    \
     namespace name          \
     {                       \
         enum name
+#else
+#define BEGIN_ENUM(name)    \
+    enum name
+#endif
 
+#ifndef DOXYGEN
 #define END_ENUM    \
         ;           \
     }
+#else
+#define END_ENUM    \
+    ;
+#endif
 
+#ifndef DOXYGEN
 #define ENUM_VALUE(enumName) enumName::enumName
+#else
+#define ENUM_VALUE(enumName) enumName
+#endif
 
 #if defined(SWIG) || defined(SWIG_WRAP)
 #define SWIG_ONLY

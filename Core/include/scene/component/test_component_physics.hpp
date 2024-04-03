@@ -5,6 +5,7 @@
 
 BEGIN_XNOR_CORE
 
+/// @private
 class TestComponentPhysics : public Component
 {
     REFLECTABLE_IMPL(TestComponentPhysics)

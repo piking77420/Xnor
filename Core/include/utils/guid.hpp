@@ -18,7 +18,8 @@ class XNOR_ENGINE Guid final
 public:
     constexpr Guid() = default;
 
-    static constexpr Guid Empty() { return Guid(); };
+    /// @brief Empty guid
+    static constexpr Guid Empty() { return Guid(); }
     
     /// @brief Creates a new @ref Guid
     /// @return New guid
@@ -30,6 +31,9 @@ public:
     [[nodiscard]]
     bool_t operator==(const Guid& other) const;
 
+    /// @brief Parses a Guid from a string
+    /// @param str String
+    /// @returns Guid
     static Guid FromString(const char_t* str);
 
     /// @brief Converts a @ref Guid to a string representation
@@ -48,6 +52,7 @@ private:
 
 END_XNOR_CORE
 
+/// @private
 #ifndef SWIG
 template <>
 struct std::hash<XnorCore::Guid>

@@ -69,25 +69,25 @@ namespace Utils
     [[nodiscard]]
     XNOR_ENGINE constexpr Vector2 FromImVec(ImVec2 v);
 
-    /// @brief Converts a @ref ColorRgb to an ImVec4
+    /// @brief Converts a ColorRgb to an ImVec4
     /// @param color ColorRgb to convert
     /// @return ImVec4 representation
     [[nodiscard]]
     XNOR_ENGINE constexpr ImVec4 ToImCol(ColorRgb color);
 
-    /// @brief Converts a @ref Colorf to an ImVec4
+    /// @brief Converts a Colorf to an ImVec4
     /// @param color Colorf to convert
     /// @return ImVec4 representation
     [[nodiscard]]
     XNOR_ENGINE constexpr ImVec4 ToImCol(const Colorf& color);
 
-    /// @brief Converts a @ref ColorHsv to an ImVec4
+    /// @brief Converts a ColorHsv to an ImVec4
     /// @param color ColorHsv to convert
     /// @return ImVec4 representation
     [[nodiscard]]
     XNOR_ENGINE constexpr ImVec4 ToImCol(ColorHsva color);
 
-    /// @brief Converts an ImVec4 to a @ref Colorf
+    /// @brief Converts an ImVec4 to a Colorf
     /// @param color ImVec4 to convert
     /// @return Colorf representation
     [[nodiscard]]
@@ -133,6 +133,13 @@ namespace Utils
     XNOR_ENGINE constexpr const char_t* RemoveNamespaces(const char_t* str);
 #endif
 
+    /// @brief Remaps a value from one range to another
+    ///
+    /// e.g., the number 5 in the range [0;10] will become .5 if remapped to the range [0;1]
+    /// @param oldValue Value
+    /// @param oldRange Old range
+    /// @param newRange New range
+    /// @return New value
     [[nodiscard]]
     XNOR_ENGINE constexpr float_t RemapValue(float_t oldValue, Vector2 oldRange, Vector2 newRange); 
 
@@ -151,16 +158,16 @@ namespace Utils
     /// @return Euler representation
     XNOR_ENGINE Vector3 GetQuaternionEulerAngles(const Quaternion& rot);
 
-    /// @brief Equivalent of a @c dynamic_cast for @ref Pointer "Pointers".
+    /// @brief Equivalent of a @c dynamic_cast for Pointer "Pointers".
     ///
-    /// This function first checks if the given @ref Pointer is null, and returns null if so.
+    /// This function first checks if the given Pointer is null, and returns null if so.
     /// It then checks if one type is derived from the other, and returns the casted result if so. This actually performs a @c reinterpret_cast under the hood.
-    /// If all other conditions failed, the function returns a null @ref Pointer.
+    /// If all other conditions failed, the function returns a null Pointer.
     /// 
     /// @tparam T The type to dynamically cast to.
     /// @tparam U The type to dynamically cast from.
-    /// @param value The @ref Pointer to cast from.
-    /// @return A null @ref Pointer if the cast failed. Otherwise, the cast result.
+    /// @param value The Pointer to cast from.
+    /// @return A null Pointer if the cast failed. Otherwise, the cast result.
     template <typename T, typename U>
     [[nodiscard]]
     Pointer<T> DynamicPointerCast(const Pointer<U>& value);
@@ -192,6 +199,11 @@ namespace Utils
     [[nodiscard]]
     XNOR_ENGINE bool_t StringEqualsIgnoreCase(const std::string& a, const std::string& b);
 
+    /// @brief Gets the address of a function
+    /// @tparam Ret Function return type
+    /// @tparam Args Function arguments types
+    /// @param f Function
+    /// @return Address
     template <typename Ret, typename... Args>
     [[nodiscard]]
     constexpr size_t FunctionAddress(std::function<Ret(Args...)> f);

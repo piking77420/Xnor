@@ -134,6 +134,8 @@ public:
 	/// @param blendFunction Blend function
 	XNOR_ENGINE void SetBlendFunction(const BlendFunction& blendFunction);
 
+	/// @brief Sets the face culling info of the shader
+	/// @param shaderProgramCullInfo Culling info
 	XNOR_ENGINE void SetFaceCullingInfo(const ShaderProgramCullInfo& shaderProgramCullInfo);
 
 private:
