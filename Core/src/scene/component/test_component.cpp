@@ -25,7 +25,7 @@ void TestComponent::Update()
     GetEntity()->transform.SetPositionX((std::cos(m_CurrentAngle) - std::sin(m_CurrentAngle)) * m_Radius);
     GetEntity()->transform.SetPositionZ((std::cos(m_CurrentAngle) + std::sin(m_CurrentAngle)) * m_Radius);
 
-    m_Color.h++;
+    m_Color.h += 0.01f;
 
     m_Light->color = static_cast<Colorf>(m_Color);
 }

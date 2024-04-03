@@ -470,7 +470,7 @@ struct ShaderCreateInfo
 #pragma warning(disable : 4324)
 
 /// @brief Point light UniformBuffer data
-struct alignas(16) PointLightData
+struct ALIGNAS(16) PointLightData
 {
 	/// @brief Color
 	Vector3 color;
@@ -485,7 +485,7 @@ struct alignas(16) PointLightData
 };
 
 /// @brief Spot light UniformBuffer data
-struct alignas(16) SpotLightData
+struct ALIGNAS(16) SpotLightData
 {
 	/// @brief Color
 	Vector3 color;
@@ -511,7 +511,7 @@ struct alignas(16) SpotLightData
 };
 
 /// @brief Directional light UniformBuffer data
-struct alignas(16) DirectionalLightData
+struct ALIGNAS(16) DirectionalLightData
 {
 	/// @brief Color
 	Vector3 color;
@@ -528,7 +528,7 @@ struct alignas(16) DirectionalLightData
 };
 
 /// @brief Light UniformBuffer data
-struct alignas(16) GpuLightData
+struct ALIGNAS(16) GpuLightData
 {
 	/// @brief Number of active point lights
 	uint32_t nbrOfPointLight{};

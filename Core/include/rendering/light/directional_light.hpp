@@ -31,7 +31,7 @@ public:
     /// @brief Gets the directional light direction
     /// @returns Light direction
     [[nodiscard]]
-    Vector3 GetLightDirection() const;
+    XNOR_ENGINE Vector3 GetLightDirection() const;
 };
 
 END_XNOR_CORE

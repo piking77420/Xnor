@@ -1,6 +1,8 @@
+using System;
+
 namespace Xnor.Core
 {
-    public struct Quaternion(Vector3 imaginary, float real)
+    public struct Quaternion
     {
         public static readonly Vector4 Zero = new();
         
@@ -34,15 +36,19 @@ namespace Xnor.Core
 
         public static explicit operator Vector4(Quaternion q) => new(q.X, q.Y, q.Z, q.W);
         
-        public Vector3 Imaginary = imaginary;
-        public float Real = real;
+        public Vector3 Imaginary;
+        public float Real;
         
         public float X => Imaginary.X;
         public float Y => Imaginary.Y;
         public float Z => Imaginary.Z;
         public float W => Real;
 
-        public Quaternion() : this(Vector3.Zero, 0f) { }
+        public Quaternion(Vector3 imaginary, float real)
+        {
+            Imaginary = imaginary;
+            Real = real;
+        }
 
         public Quaternion(float xyzw) : this(new(xyzw), xyzw) { }
 

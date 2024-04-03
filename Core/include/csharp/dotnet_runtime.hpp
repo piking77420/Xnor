@@ -30,7 +30,7 @@ public:
     XNOR_ENGINE static bool_t GetInitialized();
 
 private:
-    static inline constexpr int DotnetMinVersionMajor = 8;
+    static inline constexpr int DotnetMinVersionMajor = 5;
     static inline constexpr int DotnetMinVersionMinor = 0;
     
     static Coral::HostSettings m_Settings;

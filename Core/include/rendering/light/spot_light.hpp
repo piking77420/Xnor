@@ -26,7 +26,7 @@ public:
     /// @brief Gets the direction of the spot light
     /// @returns Light direction
     [[nodiscard]]
-    Vector3 GetLightDirection() const;
+    XNOR_ENGINE Vector3 GetLightDirection() const;
 };
 
 END_XNOR_CORE

@@ -1,3 +1,6 @@
+using System;
+using Xnor.Core;
+
 namespace Game
 {
     public class TestScript : ScriptComponent
@@ -34,6 +37,10 @@ namespace Game
 
                 light = pointLight;
             }
+            
+            // Dangerous
+            // Only for limit testing
+            //entity.AddComponent(new PointLight());
             
             color.H += intensity;
             if (color.H >= 1f)

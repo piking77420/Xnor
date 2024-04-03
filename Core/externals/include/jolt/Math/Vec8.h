@@ -109,4 +109,4 @@ static_assert(is_trivial<Vec8>(), "Is supposed to be a trivial type!");
 
 JPH_NAMESPACE_END
 
-#include "jolt/Math/Vec8.inl"
+#include "Vec8.inl"

@@ -9,10 +9,11 @@ void Scene::GetAllComponentOfType(std::vector<const ComponentT*>* const componen
     
     for (size_t i = 0; i < m_Entities.GetSize(); i++)
     {
-        const ComponentT* component = m_Entities[i]->GetComponent<ComponentT>();
+        std::vector<ComponentT*> entityComponents;
+        m_Entities[i]->GetComponents<ComponentT>(&entityComponents);
 
-        if (component != nullptr)
-            components->push_back(component);
+        if (!entityComponents.empty())
+            components->insert(components->end(), entityComponents.cbegin(), entityComponents.cend());
     }
 }
 
@@ -20,13 +21,14 @@ template <class ComponentT>
 void Scene::GetAllComponentOfType(std::vector<ComponentT*>* const components)
 {
     components->clear();
-
+    
     for (size_t i = 0; i < m_Entities.GetSize(); i++)
     {
-        ComponentT* component = m_Entities[i]->GetComponent<ComponentT>();
+        std::vector<ComponentT*> entityComponents;
+        m_Entities[i]->GetComponents<ComponentT>(&entityComponents);
 
-        if (component != nullptr)
-            components->push_back(component);
+        if (!entityComponents.empty())
+            components->insert(components->end(), entityComponents.cbegin(), entityComponents.cend());
     }
 }
 

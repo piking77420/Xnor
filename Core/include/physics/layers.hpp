@@ -1,7 +1,9 @@
 #pragma once
 
+#include <Jolt/Jolt.h>
+#include <Jolt/Physics/Collision/ObjectLayer.h>
+
 #include "core.hpp"
-#include "jolt/Physics/Collision/ObjectLayer.h"
 
 BEGIN_XNOR_CORE
 

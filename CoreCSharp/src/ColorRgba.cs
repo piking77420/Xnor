@@ -1,6 +1,8 @@
+using System;
+
 namespace Xnor.Core
 {
-    public struct ColorRgba(byte r, byte g, byte b, byte a = byte.MaxValue)
+    public struct ColorRgba
     {
         public static readonly ColorRgba White = new(byte.MaxValue, byte.MaxValue, byte.MaxValue);
         public static readonly ColorRgba Gray = new(byte.MaxValue / 2, byte.MaxValue / 2, byte.MaxValue / 2);
@@ -54,12 +56,18 @@ namespace Xnor.Core
 
         public static explicit operator Colorf(ColorRgba color) => new(color.R / (float) byte.MaxValue, color.G / (float) byte.MaxValue, color.B / (float) byte.MaxValue, color.A / (float) byte.MaxValue);
         
-        public byte R = r;
-        public byte G = g;
-        public byte B = b;
-        public byte A = a;
+        public byte R;
+        public byte G;
+        public byte B;
+        public byte A;
 
-        public ColorRgba() : this(0, 0, 0) { }
+        public ColorRgba(byte r, byte g, byte b, byte a = byte.MaxValue)
+        {
+            R = r;
+            G = g;
+            B = b;
+            A = a;
+        }
 
         public ColorRgba(byte rgb) : this(rgb, rgb, rgb) { }
         

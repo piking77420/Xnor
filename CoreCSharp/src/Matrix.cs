@@ -1,6 +1,8 @@
+using System;
+
 namespace Xnor.Core
 {
-    public struct Matrix(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33)
+    public struct Matrix
     {
         public static readonly Matrix Identity = new(
             1f, 0f, 0f, 0f,
@@ -93,25 +95,49 @@ namespace Xnor.Core
 
         public static explicit operator Matrix3(Matrix m) => new(m.M00, m.M01, m.M02, m.M10, m.M11, m.M12, m.M20, m.M21, m.M22);
         
-        public float M00 = m00;
-        public float M01 = m01;
-        public float M02 = m02;
-        public float M03 = m03;
+        public float M00;
+        public float M01;
+        public float M02;
+        public float M03;
         
-        public float M10 = m10;
-        public float M11 = m11;
-        public float M12 = m12;
-        public float M13 = m13;
+        public float M10;
+        public float M11;
+        public float M12;
+        public float M13;
         
-        public float M20 = m20;
-        public float M21 = m21;
-        public float M22 = m22;
-        public float M23 = m23;
+        public float M20;
+        public float M21;
+        public float M22;
+        public float M23;
         
-        public float M30 = m30;
-        public float M31 = m31;
-        public float M32 = m32;
-        public float M33 = m33;
+        public float M30;
+        public float M31;
+        public float M32;
+        public float M33;
+
+        public Matrix(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20, float m21, float m22,
+            float m23, float m30, float m31, float m32, float m33)
+        {
+            M00 = m00;
+            M01 = m01;
+            M02 = m02;
+            M03 = m03;
+            
+            M10 = m10;
+            M11 = m11;
+            M12 = m12;
+            M13 = m13;
+            
+            M20 = m20;
+            M21 = m21;
+            M22 = m22;
+            M23 = m23;
+            
+            M30 = m30;
+            M31 = m31;
+            M32 = m32;
+            M33 = m33;
+        }
 
         public override bool Equals(object obj)
         {

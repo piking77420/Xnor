@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 
 namespace Xnor.Core
@@ -12,12 +13,12 @@ namespace Xnor.Core
             if (managedType == null)
                 throw new ArgumentException("Invalid type name", managedTypeName);
             
-            ConstructorInfo ctor = managedType.GetConstructor(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance, [typeof(IntPtr), typeof(bool)]);
+            ConstructorInfo ctor = managedType.GetConstructor(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(IntPtr), typeof(bool) }, null);
             if (ctor == null)
-                throw new Exception("Couldn't find Component constructor");
+                throw new("Couldn't find Component constructor");
 
             return (Component) managedType.Assembly.CreateInstance(managedTypeName, false, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance, null,
-                [item, false], null, null);
+                new object[] { item, false }, null, null);
         }
     }
 }

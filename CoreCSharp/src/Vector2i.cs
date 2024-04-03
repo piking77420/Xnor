@@ -1,6 +1,8 @@
+using System;
+
 namespace Xnor.Core
 {
-    public struct Vector2i(int x, int y)
+    public struct Vector2i
     {
         public static readonly Vector2i Zero = new();
         
@@ -28,10 +30,14 @@ namespace Xnor.Core
 
         public static explicit operator Vector4(Vector2i v) => new(v.X, v.Y, 0f, 1f);
         
-        public int X = x;
-        public int Y = y;
+        public int X;
+        public int Y;
 
-        public Vector2i() : this(0, 0) { }
+        public Vector2i(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
 
         public Vector2i(int xy) : this(xy, xy) { }
     

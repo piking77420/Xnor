@@ -1,3 +1,6 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xnor.Core;
+
 namespace CoreCSharpTests
 {
     [TestClass]

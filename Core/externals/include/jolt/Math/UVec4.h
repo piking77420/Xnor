@@ -217,4 +217,4 @@ static_assert(is_trivial<UVec4>(), "Is supposed to be a trivial type!");
 
 JPH_NAMESPACE_END
 
-#include "jolt/Math/UVec4.inl"
+#include "UVec4.inl"
