@@ -1,6 +1,8 @@
+using System;
+
 namespace Xnor.Core
 {
-    public struct Colorf(float r, float g, float b, float a = 1f)
+    public struct Colorf
     {
         public static readonly Colorf White = new(1f, 1f, 1f);
         public static readonly Colorf Gray = new(0.5f, 0.5f, 0.5f);
@@ -64,12 +66,18 @@ namespace Xnor.Core
 
         public static explicit operator Vector4(Colorf color) => new(color.R, color.G, color.B, color.A);
         
-        public float R = r;
-        public float G = g;
-        public float B = b;
-        public float A = a;
+        public float R;
+        public float G;
+        public float B;
+        public float A;
 
-        public Colorf() : this(0f, 0f, 0f) { }
+        public Colorf(float r, float g, float b, float a = 1f)
+        {
+            R = r;
+            G = g;
+            B = b;
+            A = a;
+        }
 
         public Colorf(float rgb) : this(rgb, rgb, rgb) { }
         

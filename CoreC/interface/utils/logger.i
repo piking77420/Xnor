@@ -16,25 +16,25 @@
 
 %typemap(cscode) XnorCore::Logger
 %{
-    public static void Log(Logger.LogLevel level, [global::System.Diagnostics.CodeAnalysis.StringSyntax(global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.CompositeFormat)] string format, params object[] args)
+    public static void Log(Logger.LogLevel level, string format, params object[] args)
         => LogString(level, string.Format(global::System.Globalization.CultureInfo.CurrentCulture, format, args));
 
     public static void LogTempDebug(string message, [global::System.Runtime.CompilerServices.CallerFilePath] string file = "", [global::System.Runtime.CompilerServices.CallerLineNumber] int line = 0)
         => LogTempDebugString(message, file, line);
 
-    public static void LogDebug([global::System.Diagnostics.CodeAnalysis.StringSyntax(global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.CompositeFormat)] string format, params object[] args)
+    public static void LogDebug(string format, params object[] args)
         => LogDebugString(string.Format(global::System.Globalization.CultureInfo.CurrentCulture, format, args));
 
-    public static void LogInfo([global::System.Diagnostics.CodeAnalysis.StringSyntax(global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.CompositeFormat)] string format, params object[] args)
+    public static void LogInfo(string format, params object[] args)
         => LogInfoString(string.Format(global::System.Globalization.CultureInfo.CurrentCulture, format, args));
 
-    public static void LogWarning([global::System.Diagnostics.CodeAnalysis.StringSyntax(global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.CompositeFormat)] string format, params object[] args)
+    public static void LogWarning(string format, params object[] args)
         => LogWarningString(string.Format(global::System.Globalization.CultureInfo.CurrentCulture, format, args));
 
-    public static void LogError([global::System.Diagnostics.CodeAnalysis.StringSyntax(global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.CompositeFormat)] string format, params object[] args)
+    public static void LogError(string format, params object[] args)
         => LogErrorString(string.Format(global::System.Globalization.CultureInfo.CurrentCulture, format, args));
 
-    public static void LogFatal([global::System.Diagnostics.CodeAnalysis.StringSyntax(global::System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.CompositeFormat)] string format, params object[] args)
+    public static void LogFatal(string format, params object[] args)
         => LogFatalString(string.Format(global::System.Globalization.CultureInfo.CurrentCulture, format, args));
 %}
 

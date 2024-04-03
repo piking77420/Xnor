@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -25,10 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
-    <Using Include="Xnor.Core"/>
-    <Using Include="Xnor.Core.Guid" Alias="Guid"/>
-    <Using Remove="System.IO;System.Linq;System.Net.Http;System.Threading;System.Threading.Tasks"/>
+    <Using Remove="System;System.Collections.Generic;System.IO;System.Linq;System.Net.Http;System.Threading;System.Threading.Tasks" />
   </ItemGroup>
 
   <ItemGroup>

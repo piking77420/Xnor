@@ -1,3 +1,6 @@
+using System;
+using Xnor.Core;
+
 namespace Game
 {
     public class TestScript : ScriptComponent

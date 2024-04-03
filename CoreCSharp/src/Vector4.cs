@@ -1,6 +1,8 @@
+using System;
+
 namespace Xnor.Core
 {
-    public struct Vector4(float x, float y, float z, float w)
+    public struct Vector4
     {
         public static readonly Vector4 Zero = new();
         
@@ -34,12 +36,18 @@ namespace Xnor.Core
 
         public static explicit operator Vector3(Vector4 v) => new(v.X, v.Y, v.Z);
         
-        public float X = x;
-        public float Y = y;
-        public float Z = z;
-        public float W = w;
+        public float X;
+        public float Y;
+        public float Z;
+        public float W;
 
-        public Vector4() : this(0f, 0f, 0f, 0f) { }
+        public Vector4(float x, float y, float z, float w)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+            W = w;
+        }
 
         public Vector4(float xyzw) : this(xyzw, xyzw, xyzw, xyzw) { }
     

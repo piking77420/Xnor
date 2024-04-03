@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <Company>XNOR</Company>
@@ -20,18 +20,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Using Include="Xnor.Core"/>
-    <Using Include="Xnor.Core.Guid" Alias="Guid"/>
-    <Using Remove="System.IO;System.Linq;System.Net.Http;System.Threading;System.Threading.Tasks"/>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\CoreCSharp\CoreCSharp.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="obj\Debug\**" />
     <Compile Remove="obj\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Remove="System;System.Collections.Generic;System.IO;System.Linq;System.Net.Http;System.Threading;System.Threading.Tasks" />
   </ItemGroup>
 
   <ItemGroup>

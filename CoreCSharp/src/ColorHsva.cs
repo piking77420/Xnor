@@ -1,6 +1,8 @@
+using System;
+
 namespace Xnor.Core
 {
-    public struct ColorHsva(float h, float s, float v, float a = 1f)
+    public struct ColorHsva
     {
         public const float HueCircle = 1f;
         public const float HueCircleOver3 = HueCircle / 3f;
@@ -46,12 +48,18 @@ namespace Xnor.Core
             };
         }
 
-        public float H = h;
-        public float S = s;
-        public float V = v;
-        public float A = a;
+        public float H;
+        public float S;
+        public float V;
+        public float A;
 
-        public ColorHsva() : this(0, 0, 0) { }
+        public ColorHsva(float h, float s, float v, float a = 1f)
+        {
+            H = h;
+            S = s;
+            V = v;
+            A = a;
+        }
         
         public override string ToString() => $"H: {H}, S: {S}, V: {V}, A: {A}";
     

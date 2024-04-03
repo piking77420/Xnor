@@ -42,26 +42,26 @@
 	%typemap(out, null="NULL")      TYPE*, TYPE&  %{ $result = $1; %}
 	%typemap(varout, null="NULL")   TYPE*, TYPE&  %{ $result = $1; %}
 	%typemap(memberout, null="NULL")TYPE*, TYPE&  %{ $result = $1; %}
-	%typemap(imtype, out="IntPtr")  TYPE*, TYPE&  %{ ref CSTYPE %}
+	%typemap(imtype, out="nint")  TYPE*, TYPE&  %{ ref CSTYPE %}
 	%typemap(imtype)                TYPE* OUTPUT, TYPE& OUTPUT %{ out CSTYPE %}
-	%typemap(imtype, out="IntPtr")  TYPE[ANY] %{ CSTYPE[] %}
+	%typemap(imtype, out="nint")  TYPE[ANY] %{ CSTYPE[] %}
 	%typemap(cstype, out="CSTYPE")  TYPE*, TYPE&  %{ ref CSTYPE %}
 	%typemap(cstype, out="CSTYPE")  TYPE* OUTPUT, TYPE& OUTPUT %{ out CSTYPE %}
-	%typemap(cstype, out="IntPtr")  TYPE[ANY] %{ CSTYPE[] %}
+	%typemap(cstype, out="nint")  TYPE[ANY] %{ CSTYPE[] %}
 	%typemap(cstype)                const TYPE*, const TYPE&   %{ CSTYPE %}
 	%typemap(csin)                  TYPE*, TYPE&  %{ ref $csinput %}
 	%typemap(csin)                  TYPE* OUTPUT, TYPE& OUTPUT %{ out $csinput %}
 	%typemap(csin)                  const TYPE*, const TYPE&   %{ ref $csinput %}
 	%typemap(csin)                  TYPE[ANY] %{ $csinput %}
 	%typemap(csout, excode=SWIGEXCODE) TYPE*, TYPE& {
-		IntPtr ptr = $imcall;$excode
+		nint ptr = $imcall;$excode
 		CSTYPE ret = (CSTYPE) global::System.Runtime.InteropServices.Marshal.PtrToStructure(ptr, typeof(CSTYPE));
 		return ret;
 	}
 	%typemap(csvarout, excode=SWIGEXCODE2) TYPE*, TYPE&
 	%{
 		get { 
-			IntPtr ptr = $imcall;$excode
+			nint ptr = $imcall;$excode
 			CSTYPE ret = (CSTYPE) global::System.Runtime.InteropServices.Marshal.PtrToStructure(ptr, typeof(CSTYPE));
 			return ret;
 		}
@@ -122,18 +122,18 @@
 			out_temp = *(CTYPE*)&$1; 
 			$result = &out_temp; 
 		%}
-		%typemap(imtype, out="IntPtr")  TYPE          %{ CSTYPE %}
+		%typemap(imtype, out="nint")  TYPE          %{ CSTYPE %}
 		%typemap(cstype)                TYPE          %{ CSTYPE %}
 		%typemap(csin)                  TYPE          %{ $csinput %}
 		%typemap(csout, excode=SWIGEXCODE) TYPE {
-			IntPtr ptr = $imcall;$excode
+			nint ptr = $imcall;$excode
 			CSTYPE ret = (CSTYPE) global::System.Runtime.InteropServices.Marshal.PtrToStructure(ptr, typeof(CSTYPE));
 			return ret;
 		}
 		%typemap(csvarout, excode=SWIGEXCODE2) TYPE
 		%{
 			get {
-				IntPtr ptr = $imcall;$excode
+				nint ptr = $imcall;$excode
 				CSTYPE ret = (CSTYPE) global::System.Runtime.InteropServices.Marshal.PtrToStructure(ptr, typeof(CSTYPE));
 				return ret;
 			}
