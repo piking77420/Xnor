@@ -77,5 +77,3 @@ template <typename... Args>
 using CoroutineFunc = Coroutine(*)(Args...);
 
 END_XNOR_CORE
-
-#include "utils/coroutine.inl"
