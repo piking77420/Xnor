@@ -12,7 +12,7 @@
 /// @brief Defines various types and enumerations needed by XnorCore::Rhi.
 
 BEGIN_XNOR_CORE
-class FrameBuffer;
+class Framebuffer;
 
 /// @brief Maximum amount of spot lights that can exists in a same scene
 static constexpr uint32_t MaxSpotLights = 100;
@@ -31,26 +31,38 @@ BEGIN_ENUM(PolygonMode)
 }
 END_ENUM
 
+/// @brief Cull face mode
 BEGIN_ENUM(CullFace)
 {
+	/// @brief No culling
 	None,
+	/// @brief Cull front faces
 	Front,
+	/// @brief Cull back faces
 	Back,
+	/// @brief Cull both front and back faces
 	FrontAndBack
 }
 END_ENUM
 
+/// @brief Front-face mode
 BEGIN_ENUM(FrontFace)
 {
+	/// @brief Clock-wise
 	CW,
+	/// @brief Counter clock-wise
 	CCW
 }
 END_ENUM
 
+/// @brief Shader program cull info
 struct ShaderProgramCullInfo
 {
-	bool enableCullFace = false; 
+	/// @brief Whether cull face is enabled
+	bool_t enableCullFace = false;
+	/// @brief Cull face mode
 	CullFace::CullFace cullFace = CullFace::Front;
+	/// @brief Front-face mode
 	FrontFace::FrontFace frontFace = FrontFace::CCW;
 };
 
@@ -96,12 +108,17 @@ BEGIN_ENUM(ShaderType)
 }
 END_ENUM
 
+/// @brief Shader pipeline values
 BEGIN_ENUM(ShaderPipeline)
 {
+	/// @brief Vertex shader
 	Vertex,
+	/// @brief Fragment shader
 	Fragment,
+	/// @brief Geometry shader
 	Geometry,
-	
+
+	/// @private
 	Count
 }
 END_ENUM
@@ -168,7 +185,6 @@ BEGIN_ENUM(TextureType)
 }
 END_ENUM
 
-
 /// @brief %Texture internal format
 BEGIN_ENUM(TextureInternalFormat)
 {
@@ -184,7 +200,7 @@ BEGIN_ENUM(TextureInternalFormat)
 	Rg16F,
 	Rgb16F,
 	Rgba16F,
-	R32f,
+	R32F,
 	R32Uint,
 	Srgb,
 	R11FG11FB10F,
@@ -278,9 +294,8 @@ struct RenderTargetInfo
 	/// @brief Attachment
 	Attachment::Attachment attachment;
 
-	bool isDrawingOn = true;
+	bool_t isDrawingOn = true;
 };
-
 
 /// @brief Texture creation info
 struct TextureCreateInfo
@@ -307,7 +322,6 @@ struct TextureCreateInfo
 	DataType::DataType dataType = DataType::UnsignedByte;
 	/// @brief Border values 
 	float_t borderColor[4] = { 1.f, 1.f, 1.f, 1.f };
-	
 };
 
 /// @brief Camera UniformBuffer data
@@ -410,12 +424,18 @@ BEGIN_ENUM(BlendValue)
 }
 END_ENUM
 
+/// @brief Blend equation
 BEGIN_ENUM(BlendEquation)
 {
+	/// @brief A + B
 	Add,
+	/// @brief A - B
 	Sub,
+	/// @brief B - A
 	ReverSub,
+	/// @brief min(A, B)
 	Min,
+	/// @brief max(A, B)
 	Max,
 }
 END_ENUM
@@ -423,12 +443,15 @@ END_ENUM
 /// @brief Blend function for Shader
 struct BlendFunction
 {
+	/// @brief Whether blending is enabled
 	bool_t isBlending = false;
+	/// @brief Source blend constant
 	BlendValue::BlendValue sValue = BlendValue::One;
+	/// @brief Destination blend constant
 	BlendValue::BlendValue dValue = BlendValue::Zero;
+	/// @brief Blend equation
 	BlendEquation::BlendEquation blendEquation = BlendEquation::Add;
 };
-
 
 /// @brief Shader creation info
 struct ShaderCreateInfo
@@ -438,12 +461,13 @@ struct ShaderCreateInfo
 	/// @brief Blend function
 	BlendFunction blendFunction{};
 
+	/// @brief Shader program cull info
 	ShaderProgramCullInfo shaderProgramCullInfo;
 };
 
 // Remove Warning From alignas(16)
-#pragma warning( push )
-#pragma warning( disable : 4324)
+#pragma warning(push)
+#pragma warning(disable : 4324)
 
 /// @brief Point light UniformBuffer data
 struct alignas(16) PointLightData
@@ -499,9 +523,9 @@ struct alignas(16) DirectionalLightData
 	/// @brief CastShadow
 	int32_t isDirlightCastingShadow = 0;
 
+	/// @brief Light space matrix
 	Matrix lightSpaceMatrix;
 };
-
 
 /// @brief Light UniformBuffer data
 struct alignas(16) GpuLightData
@@ -519,28 +543,39 @@ struct alignas(16) GpuLightData
 	DirectionalLightData directionalData[MaxDirectionalLights];
 };
 
-#pragma warning( pop ) 
-
+#pragma warning(pop) // 4324
 
 /// @brief Material UniformBuffer data
 struct MaterialData
 {
+	/// @brief Albedo color
 	Vector3 albedoColor;
+	/// @brief Whether it has an albedo map
 	int32_t hasAlbedoMap;
 
+	/// @brief Emissive color
 	Vector3 emissiveColor;
+	/// @brief Emissive parameter
 	float_t emissive = 0.f;
 	
+	/// @brief Whether it has a metallic map
 	int32_t hasMetallicMap;
+	/// @brief Metallic parameter
 	float_t metallic = 0.f;
 
+	/// @brief Whether it has a roughness map
 	int32_t hasRoughnessMap;
+	/// @brief Roughness parameter
 	float_t roughness = 0.f;
 
-	int32_t hasAmbiantOcclusionMap;
-	float_t ambiantOccusion = 0.f;
+	/// @brief Whether it has an ambient occlusion map
+	int32_t hasAmbientOcclusionMap;
+	/// @brief Ambient occlusion parameter
+	float_t ambientOcclusion = 0.f;
 
+	/// @brief Whether it has a normal map map
 	int32_t hasNormalMap;
+	/// @brief Emissive parameter
 	float_t reflectance = 0.f;
 };
 
@@ -565,6 +600,7 @@ BEGIN_ENUM(ShadowTextureBinding)
 };
 END_ENUM
 
+/// @brief Material texture
 BEGIN_ENUM(MaterialTextureEnum) : int32_t
 {
 	Albedo = 0,
@@ -590,17 +626,20 @@ END_ENUM
 struct RenderPassBeginInfo
 {
 	/// @brief Render pass attached
-	FrameBuffer* frameBuffer = nullptr;
+	Framebuffer* frameBuffer = nullptr;
 	/// @brief Render area position
 	Vector2i renderAreaOffset{};
 	/// @brief Render area size
 	Vector2i renderAreaExtent{};
 
+	/// @brief Clear buffer flags
 	BufferFlag::BufferFlag clearBufferFlags{};
 
-	Vector4 clearColor = Vector4();
+	/// @brief Clear color
+	Vector4 clearColor = Vector4::Zero();
 };
 
+/// @brief Cube map face
 enum class CubeMapFace
 {
 	CubeMapPositiveX,
@@ -613,7 +652,7 @@ enum class CubeMapFace
 	Size
 };
 
-
+/// @brief GPU memory barrier
 enum GpuMemoryBarrier
 {
 	VertexAttribArrayBarrierBit = 1 << 0,
@@ -634,6 +673,7 @@ enum GpuMemoryBarrier
 	AllBarrierBits = 1 << 15
 };
 
+/// @brief GPU image access
 enum class ImageAccess
 {
 	ReadOnly,

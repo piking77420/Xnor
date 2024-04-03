@@ -4,8 +4,12 @@
 #include "scene/component.hpp"
 #include "physics/components/collider.hpp"
 
+/// @file sphere_collider.hpp
+/// @brief Defines the XnorCore::BoxCollider class
+
 BEGIN_XNOR_CORE
 
+/// @brief Sphere collider
 class SphereCollider : public Collider
 {
     REFLECTABLE_IMPL(SphereCollider)
@@ -13,12 +17,14 @@ class SphereCollider : public Collider
 public:
     XNOR_ENGINE SphereCollider() = default; 
     XNOR_ENGINE ~SphereCollider() override = default;
-
-    XNOR_ENGINE void Begin() override;
-    XNOR_ENGINE void Update() override;
     
     DEFAULT_COPY_MOVE_OPERATIONS(SphereCollider)
-    
+
+    /// @brief Begin function
+    XNOR_ENGINE void Begin() override;
+    /// @brief Update function
+    XNOR_ENGINE void Update() override;
+
 private:
     float_t m_Radius = 1.f;
 };

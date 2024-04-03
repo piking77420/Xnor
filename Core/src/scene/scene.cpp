@@ -1,6 +1,9 @@
 ﻿#include "scene/scene.hpp"
+
+#include "resource/resource_manager.hpp"
 #include "scene/entity.hpp"
 #include "utils/logger.hpp"
+#include "world/world.hpp"
 
 using namespace XnorCore;
 

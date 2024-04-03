@@ -31,7 +31,7 @@ private:
     XnorCore::Pointer<XnorCore::Shader> m_PickingShader;
     
     XnorCore::RenderPass m_ColorPass;
-    XnorCore::FrameBuffer* frameBuffer = nullptr;
+    XnorCore::Framebuffer* frameBuffer = nullptr;
 
     XnorCore::Texture* m_ColorAttachment = nullptr;
     XnorCore::Texture* m_DepthAttachement = nullptr;

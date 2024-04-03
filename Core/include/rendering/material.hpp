@@ -8,7 +8,7 @@
 #include "utils/pointer.hpp"
 
 /// @file material.hpp
-/// @brief Defines types related to materials
+/// @brief Defines the XnorCore::Material struct
 
 BEGIN_XNOR_CORE
 
@@ -19,7 +19,7 @@ enum class MaterialType
     Lit
 };
 
-/// @brief Encapsulates a material, which defines how a @ref Model is rendered
+/// @brief Encapsulates a material, which defines how a Model is rendered
 struct Material
 {
     REFLECTABLE_IMPL(Material)
@@ -31,21 +31,29 @@ public:
     MaterialType materialType = MaterialType::Opaque;
     /// @brief Albedo texture
     Pointer<Texture> albedoTexture;
-
+    /// @brief Metallic texture
     Pointer<Texture> metallicTexture;
-
+    /// @brief Roughness texture
     Pointer<Texture> roughnessTexture;
     /// @brief Normal map
     Pointer<Texture> normalTexture;
-    
-    Pointer<Texture> ambiantOcclusionTexture;
+    /// @brief Ambiant occlusion texture
+    Pointer<Texture> ambientOcclusionTexture;
 
+    /// @brief Albedo color
     Colorf albedoColor;
+    /// @brief Emissive color
     Colorf emissiveColor;
+    
+    /// @brief Metallic parameter
     float_t metallic = 0.f;
+    /// @brief Roughness parameter
     float_t roughness = 0.f;
+    /// @brief Reflectance parameter
     float_t reflectance = 0.f;
+    /// @brief Emissive parameter
     float_t emissive = 0.f;
+    /// @brief Ambient occlusion parameter
     float_t ambientOcclusion = 0.f;
 };
 
@@ -66,5 +74,5 @@ REFL_AUTO(
     field(metallicTexture),
     field(roughnessTexture),
     field(normalTexture),
-    field(ambiantOcclusionTexture)
+    field(ambientOcclusionTexture)
 );

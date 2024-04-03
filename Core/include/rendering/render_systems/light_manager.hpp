@@ -15,9 +15,10 @@
 /// @brief Defines the XnorCore::LightManager class.
 
 BEGIN_XNOR_CORE
+
 class Renderer;
 
-    /// @brief Handles rendering lights and their gizmos
+/// @brief Handles rendering lights and their gizmos
 class LightManager
 {
 private:
@@ -38,20 +39,27 @@ public:
     XNOR_ENGINE void InitResources();
 
     /// @brief Computes the internal lights to send to the GPU
+    /// @param scene Concerned scene
+    /// @param renderer Concerned renderer
     XNOR_ENGINE void BeginFrame(const Scene& scene, const Renderer& renderer);
     
     /// @brief End frame
+    /// @param scene Concerned scene
     XNOR_ENGINE void EndFrame(const Scene& scene);
 
     /// @brief Draws the light gizmos
+    /// @param camera Editor camera
+    /// @param scene Concerned scene
     XNOR_ENGINE void DrawLightGizmo(const Camera& camera, const Scene& scene);
 
-    XNOR_ENGINE void DrawLightGizmoWithShader(const Camera& camera, const Scene& scene,const Pointer<Shader>& shader) const;
-    
+    /// @brief Draws the light gizmos using a specified shader
+    /// @param camera Editor camera
+    /// @param scene Concerned scene
+    /// @param shader Shader to use
+    XNOR_ENGINE void DrawLightGizmoWithShader(const Camera& camera, const Scene& scene, const Pointer<Shader>& shader) const;
+
+    /// @brief Binds the shadow map
     XNOR_ENGINE void BindShadowMap() const;
-
-
-   
 
 private:
     enum class RenderingLight
@@ -85,7 +93,7 @@ private:
     Pointer<Model> m_Quad;
     
     RenderPass m_ShadowRenderPass;
-    FrameBuffer* m_ShadowFrameBuffer {nullptr};
+    Framebuffer* m_ShadowFrameBuffer {nullptr};
     
     Texture* m_SpotLightShadowMapTextureArray = nullptr;
     
@@ -96,9 +104,8 @@ private:
     std::vector<const PointLight*> m_PointLights;
     std::vector<const SpotLight*> m_SpotLights;
     std::vector<const DirectionalLight*> m_DirectionalLights;
-
     
-    XNOR_ENGINE void FecthLightInfo();
+    XNOR_ENGINE void FecthLightInfo() const;
 
     XNOR_ENGINE void ComputeShadow(const Scene& scene, const Renderer& renderer);
 

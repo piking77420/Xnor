@@ -8,6 +8,7 @@
 #include "editing/picking_strategy.hpp"
 
 BEGIN_XNOR_EDITOR
+
 class UiWindow;
 class RenderWindow;
 class UserInput;

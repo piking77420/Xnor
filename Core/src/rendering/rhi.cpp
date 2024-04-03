@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 
 #include "window.hpp"
+#include "magic_enum/magic_enum.hpp"
 #include "rendering/render_pass.hpp"
 #include "rendering/frame_buffer.hpp"
 #include "resource/shader.hpp"
@@ -30,18 +31,18 @@ void Rhi::DrawQuad(const uint32_t quadId)
 
 void Rhi::BeginRenderPassInternal(const RenderPassBeginInfo& beginInfo)
 {
-	Rhi::BindFrameBuffer(beginInfo.frameBuffer->GetId());
-	Rhi::SetClearColor(beginInfo.clearColor);
+	BindFrameBuffer(beginInfo.frameBuffer->GetId());
+	SetClearColor(beginInfo.clearColor);
 	
 	if (beginInfo.clearBufferFlags != BufferFlag::None)
-		Rhi::ClearBuffer(beginInfo.clearBufferFlags);
-	
-	Rhi::SetViewport(beginInfo.renderAreaOffset,beginInfo.renderAreaExtent);
+		ClearBuffer(beginInfo.clearBufferFlags);
+
+	SetViewport(beginInfo.renderAreaOffset, beginInfo.renderAreaExtent);
 }
 
 void Rhi::EndRenderPass()
 {
-	Rhi::UnbindFrameBuffer();
+	UnbindFrameBuffer();
 }
 
 uint32_t Rhi::CreateModel(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices)
@@ -153,14 +154,13 @@ uint32_t Rhi::CreateShaders(const std::vector<ShaderCode>& shaderCodes, const Sh
 		if (code.code.empty())
 			continue;
 
-		uint32_t& shaderId = shaderIds[i];
-		shaderId = glCreateShader(GetOpenglShaderType(code.type));
+		shaderIds[i] = glCreateShader(GetOpenglShaderType(code.type));
 		const char_t* data = code.code.c_str();
-		glShaderSource(shaderId, 1, &data, &code.codeLength);
-		glCompileShader(shaderId);
+		glShaderSource(shaderIds[i], 1, &data, &code.codeLength);
+		glCompileShader(shaderIds[i]);
 
-		CheckCompilationError(shaderId, GetShaderTypeToString(code.type));
-		glAttachShader(programId, shaderId);
+		CheckCompilationError(shaderIds[i], GetShaderTypeToString(code.type));
+		glAttachShader(programId, shaderIds[i]);
 		
 	}
 	glLinkProgram(programId);
@@ -201,7 +201,7 @@ void Rhi::UseShader(const uint32_t shaderId)
 		glEnable(GL_BLEND);
 		glBlendFunc(srcValue, destValue);
 		glBlendEquation(blendEquation);
-		Rhi::m_Blending = true;
+		m_Blending = true;
 	}
 	
 	if (shaderInternal.cullInfo.enableCullFace)
@@ -209,7 +209,7 @@ void Rhi::UseShader(const uint32_t shaderId)
 		glEnable(GL_CULL_FACE);
 		glCullFace(CullFaceToOpenglCullFace(shaderInternal.cullInfo.cullFace));
 		glFrontFace(FrontFaceToOpenglFrontFace(shaderInternal.cullInfo.frontFace));
-		Rhi::m_Cullface = true;
+		m_Cullface = true;
 	}
 	
 	glUseProgram(shaderId);
@@ -226,9 +226,8 @@ void Rhi::UnuseShader()
 	if (m_Cullface)
 	{
 		glDisable(GL_CULL_FACE);
-		Rhi::m_Cullface = false;
+		m_Cullface = false;
 	}
-	
 	
 	glUseProgram(0);
 }
@@ -292,6 +291,12 @@ uint32_t Rhi::GetOpenglTextureFilter(const TextureFiltering::TextureFiltering te
 			
 		case TextureFiltering::Nearest:
 			return GL_NEAREST;
+
+		case TextureFiltering::NearestMipmapNearest:
+		case TextureFiltering::LinearMimapNearest:
+		case TextureFiltering::NearestMimapLinear:
+		case TextureFiltering::LinearMimMapLinear:
+			break;
 	}
 
 	return GL_LINEAR;
@@ -363,111 +368,87 @@ uint32_t Rhi::GetOpenglBufferBit(const BufferFlag::BufferFlag flag)
 	return openglBufferBit;
 }
 
-uint32_t Rhi::AttachementToOpenglAttachement(Attachment::Attachment attachment)
+uint32_t Rhi::AttachementToOpenglAttachement(const Attachment::Attachment attachment)
 {
 	switch (attachment)
 	{
 		case Attachment::Color00:
-			
 			return GL_COLOR_ATTACHMENT0;
 			 
 		case Attachment::Color01:
-			
 			return GL_COLOR_ATTACHMENT1;
 			 
 		case Attachment::Color02:
-			
 			return GL_COLOR_ATTACHMENT2;
 			 
 		case Attachment::Color03:
-			
 			return GL_COLOR_ATTACHMENT3;
 			 
 		case Attachment::Color04:
-			
 			return GL_COLOR_ATTACHMENT4;
 			 
 		case Attachment::Color05:
-			
 			return GL_COLOR_ATTACHMENT5;
 			 
 		case Attachment::Color06:
-			
 			return GL_COLOR_ATTACHMENT6;
 			 
 		case Attachment::Color07:
-			
 			return GL_COLOR_ATTACHMENT7;
 			 
 		case Attachment::Color08:
-			
 			return GL_COLOR_ATTACHMENT8;
 			 
 		case Attachment::Color09:
-			 
 			return GL_COLOR_ATTACHMENT9;
 			 
 		case Attachment::Color10:
-			
 			return GL_COLOR_ATTACHMENT10;
 			 
 		case Attachment::Color11:
-			
 			return GL_COLOR_ATTACHMENT11;
 			 
 		case Attachment::Color12:
-			
 			return GL_COLOR_ATTACHMENT12;
 			 
 		case Attachment::Color13:
-			
 			return GL_COLOR_ATTACHMENT13;
 			 
 		case Attachment::Color14:
-			
 			return GL_COLOR_ATTACHMENT14;
 			 
 		case Attachment::Color15:
-			
 			return GL_COLOR_ATTACHMENT15;
 			 
 		case Attachment::Color16:
-			
 			return GL_COLOR_ATTACHMENT16;
 			 
 		case Attachment::Color17:
-			
 			return GL_COLOR_ATTACHMENT17;
 			 
 		case Attachment::Color18:
-			
 			return GL_COLOR_ATTACHMENT18;
 			 
 		case Attachment::Color19:
-			
 			return GL_COLOR_ATTACHMENT19;
 			 
 		case Attachment::Color20:
-			
 			return GL_COLOR_ATTACHMENT20;
 			 
 		case Attachment::Depth:
-			
 			return GL_DEPTH_ATTACHMENT;
 			  
 		case Attachment::Stencil:
-			
 			return GL_STENCIL_ATTACHMENT;
 			 
 		case Attachment::DepthAndStencil:
-			
-			return  GL_DEPTH_STENCIL_ATTACHMENT;
+			return GL_DEPTH_STENCIL_ATTACHMENT;
 	}
 
 	return GL_COLOR_ATTACHMENT0;
 }
 
-uint32_t Rhi::CubeMapFacesToOpengl(CubeMapFace cubeMapFace)
+uint32_t Rhi::CubeMapFacesToOpengl(const CubeMapFace cubeMapFace)
 {
 	switch (cubeMapFace)
 	{
@@ -488,27 +469,28 @@ uint32_t Rhi::CubeMapFacesToOpengl(CubeMapFace cubeMapFace)
 		
 		case CubeMapFace::CubeMapNegativeZ:
 			return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+
+		case CubeMapFace::Size:
+			break;
 	}
 
 	return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 }
 
-uint32_t Rhi::MemoryBarrierToOpengl(GpuMemoryBarrier memoryBarrier)
+uint32_t Rhi::MemoryBarrierToOpengl(const GpuMemoryBarrier memoryBarrier)
 {
 	uint32_t memoryBarrierOpengl = 0;
 		
 	if (memoryBarrier & AllBarrierBits)
 	{
-		memoryBarrierOpengl |= GL_ALL_BARRIER_BITS;
-		return memoryBarrierOpengl; 
-	}  
-	
+		return GL_ALL_BARRIER_BITS; 
+	}
+
 	if (memoryBarrier & VertexAttribArrayBarrierBit)
-			memoryBarrierOpengl |= GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT;
+		memoryBarrierOpengl |= GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT;
 		
 	if (memoryBarrier & ElementArrayBarrierBit)
-			memoryBarrierOpengl |= GL_ELEMENT_ARRAY_BARRIER_BIT;
-
+		memoryBarrierOpengl |= GL_ELEMENT_ARRAY_BARRIER_BIT;
 				
 	if (memoryBarrier & UniformBarrierBit)
 		memoryBarrierOpengl |= GL_UNIFORM_BARRIER_BIT;
@@ -549,36 +531,33 @@ uint32_t Rhi::MemoryBarrierToOpengl(GpuMemoryBarrier memoryBarrier)
 	if (memoryBarrier & QueryBufferBarrierBit)
 		memoryBarrierOpengl |= GL_QUERY_BUFFER_BARRIER_BIT;
 	
-
-	
-	
-	Logger::LogError("Undefined MemoryBarrier");
 	return memoryBarrierOpengl;
 }
 
-uint32_t Rhi::GetImageAccessOpengl(ImageAccess imageAcess)
+uint32_t Rhi::GetImageAccessOpengl(const ImageAccess imageAcess)
 {
 	switch (imageAcess)
 	{
 		case ImageAccess::ReadOnly: 
-		return GL_READ_ONLY;
+			return GL_READ_ONLY;
 		
 		case ImageAccess::WriteOnly: 
-		return GL_WRITE_ONLY;
+			return GL_WRITE_ONLY;
 		
 		case ImageAccess::ReadWrite: 
-		return GL_READ_WRITE ;
+			return GL_READ_WRITE;
 	}
 
-	return GL_READ_WRITE ;
+	return GL_READ_WRITE;
 }
 
-uint32_t Rhi::FrontFaceToOpenglFrontFace(FrontFace::FrontFace frontFace)
+uint32_t Rhi::FrontFaceToOpenglFrontFace(const FrontFace::FrontFace frontFace)
 {
 	switch (frontFace)
 	{
 		case FrontFace::CW:
 			return GL_CW;
+
 		case FrontFace::CCW:
 			return GL_CCW;
 	}
@@ -586,7 +565,7 @@ uint32_t Rhi::FrontFaceToOpenglFrontFace(FrontFace::FrontFace frontFace)
 	return GL_CW;
 }
 
-uint32_t Rhi::CullFaceToOpenglCullFace(CullFace::CullFace cullFace)
+uint32_t Rhi::CullFaceToOpenglCullFace(const CullFace::CullFace cullFace)
 {
 	switch (cullFace)
 	{
@@ -638,7 +617,7 @@ uint32_t Rhi::GetOpengDepthEnum(const DepthFunction::DepthFunction depthFunction
 	return GL_LESS;
 }
 
-uint32_t Rhi::BlendEquationToOpengl(BlendEquation::BlendEquation blendEquation)
+uint32_t Rhi::BlendEquationToOpengl(const BlendEquation::BlendEquation blendEquation)
 {
 	switch (blendEquation)
 	{
@@ -657,6 +636,7 @@ uint32_t Rhi::BlendEquationToOpengl(BlendEquation::BlendEquation blendEquation)
 		case BlendEquation::Max:
 			return GL_MAX;
 	}
+
 	return GL_FUNC_ADD;
 }
 
@@ -683,191 +663,175 @@ uint32_t Rhi::GetOpenglTextureWrapper(const TextureWrapping::TextureWrapping tex
 	return GL_REPEAT;
 }
 
-void Rhi::ComputeTextureFiltering(TextureType::TextureType textureType, const uint32_t textureID , const TextureCreateInfo& textureCreateInfo)
+void Rhi::ComputeTextureFiltering(const TextureType::TextureType textureType, const uint32_t textureId, const TextureCreateInfo& textureCreateInfo)
 {
 	const GLint openglTextureFilter = static_cast<GLint>(GetOpenglTextureFilter(textureCreateInfo.filtering));
 	
 	switch (textureType)
 	{
 		case TextureType::Texture1D:
-			Logger::LogError("Uniplemented behaviours");
+			Logger::LogError("Unimplemented behaviours");
 			break;
 
 		case TextureType::Texture2DArray:
 		case TextureType::Texture2D:
 			if(textureCreateInfo.filtering == TextureFiltering::LinearMimMapLinear)
 			{
-				glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+				glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			}
 			else
 			{
-				glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
+				glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
 			}
-			glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
+			glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
 			break;
 		 
 		case TextureType::Texture3D:
-			Logger::LogError("Uniplemented behaviours");
+			Logger::LogError("Unimplemented behaviours");
 			break;
 		 
 		case TextureType::Texture1DArray:
-			Logger::LogError("Uniplemented behaviours");
+			Logger::LogError("Unimplemented behaviours");
 			break;
 		
 		case TextureType::TextureRectangle:
-			Logger::LogError("Uniplemented behaviours");
+			Logger::LogError("Unimplemented behaviours");
 			break;
-
 
 		case TextureType::TextureCubeMapArray:
 		case TextureType::TextureCubeMap:
 			if (openglTextureFilter == TextureFiltering::LinearMimMapLinear)
 			{
-				glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-				glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+				glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			}
 			else
 			{
-				glTextureParameteri(textureID, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
-				glTextureParameteri(textureID, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
+				glTextureParameteri(textureId, GL_TEXTURE_MIN_FILTER, openglTextureFilter);
+				glTextureParameteri(textureId, GL_TEXTURE_MAG_FILTER, openglTextureFilter);
 			}
 			break;
 	
 		case TextureType::TextureBuffer:
-			Logger::LogError("Uniplemented behaviours");
+			Logger::LogError("Unimplemented behaviours");
 			break;
 		 
 		case TextureType::Texture2DMultisample:
-			Logger::LogError("Uniplemented behaviours");
+			Logger::LogError("Unimplemented behaviours");
 			break;
 		 
 		case TextureType::Texture2DMultisampleArray:
-			Logger::LogError("Uniplemented behaviours");
+			Logger::LogError("Unimplemented behaviours");
 			break;
-		 
 	}
-
-	
-	
 }
 
-void Rhi::ComputeTextureWrapping(TextureType::TextureType textureType, const uint32_t textureID , const TextureCreateInfo& textureCreateInfo)
+void Rhi::ComputeTextureWrapping(const TextureType::TextureType textureType, const uint32_t textureId , const TextureCreateInfo& textureCreateInfo)
 {
 	const GLint openglTextureWrapper = static_cast<GLint>(GetOpenglTextureWrapper(textureCreateInfo.wrapping));
 
 	switch (textureType)
 	{
 		case TextureType::Texture1D:
-			Logger::LogError("Uniplemented behaviours");
-		break;
+			Logger::LogError("Unimplemented behaviours");
+			break;
 
 		case TextureType::Texture2DArray:
 		case TextureType::Texture2D:
-			glTextureParameteri(textureID, GL_TEXTURE_WRAP_S, openglTextureWrapper);
-		    glTextureParameteri(textureID, GL_TEXTURE_WRAP_T, openglTextureWrapper);
+			glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
+		    glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
 			if (textureCreateInfo.wrapping == TextureWrapping::ClampToBorder)
 			{
-				glTextureParameterfv(textureID, GL_TEXTURE_BORDER_COLOR, textureCreateInfo.borderColor);  
+				glTextureParameterfv(textureId, GL_TEXTURE_BORDER_COLOR, textureCreateInfo.borderColor);  
 			}
-		break;
+			break;
 		
 		case TextureType::Texture3D:
-			Logger::LogError("Uniplemented behaviours");
-		break;
+			Logger::LogError("Unimplemented behaviours");
+			break;
 		
 		case TextureType::Texture1DArray:
-			Logger::LogError("Uniplemented behaviours");
-		break;
+			Logger::LogError("Unimplemented behaviours");
+			break;
 		
 		case TextureType::TextureRectangle:
-			Logger::LogError("Uniplemented behaviours");
-		break;
+			Logger::LogError("Unimplemented behaviours");
+			break;
 
 		case TextureType::TextureCubeMapArray:
 		case TextureType::TextureCubeMap:
-			glTextureParameteri(textureID, GL_TEXTURE_WRAP_S, openglTextureWrapper);
-			glTextureParameteri(textureID, GL_TEXTURE_WRAP_T, openglTextureWrapper);
-			glTextureParameteri(textureID, GL_TEXTURE_WRAP_R, openglTextureWrapper);
-		
-		break;
+			glTextureParameteri(textureId, GL_TEXTURE_WRAP_S, openglTextureWrapper);
+			glTextureParameteri(textureId, GL_TEXTURE_WRAP_T, openglTextureWrapper);
+			glTextureParameteri(textureId, GL_TEXTURE_WRAP_R, openglTextureWrapper);
+			break;
 		
 		case TextureType::TextureBuffer:
-			Logger::LogError("Uniplemented behaviours");
-		break;
+			Logger::LogError("Unimplemented behaviours");
+			break;
 		
 		case TextureType::Texture2DMultisample:
-			Logger::LogError("Uniplemented behaviours");
-		break;
+			Logger::LogError("Unimplemented behaviours");
+			break;
 		
 		case TextureType::Texture2DMultisampleArray:
-			Logger::LogError("Uniplemented behaviours");
-		break;
-		
-		default: ;
+			Logger::LogError("Unimplemented behaviours");
+			break;
 	}
-	
-	
 }
 
-void Rhi::AllocTexture(
-	TextureType::TextureType textureType,
-	const uint32_t textureID,
-	const TextureCreateInfo& textureCreateInfo
-)
+void Rhi::AllocTexture(const TextureType::TextureType textureType, const uint32_t textureId, const TextureCreateInfo& textureCreateInfo)
 {
 	const GLenum internalFormat = GetOpenglInternalFormat(textureCreateInfo.internalFormat);
 	const GLenum textureFormat = GetOpenGlTextureFormat(textureCreateInfo.format);
-	const GLsizei width = static_cast<GLsizei>(textureCreateInfo.size.x);
-	const GLsizei height = static_cast<GLsizei>(textureCreateInfo.size.y);
+	const GLsizei width = textureCreateInfo.size.x;
+	const GLsizei height = textureCreateInfo.size.y;
 	const GLsizei level = static_cast<int32_t>(textureCreateInfo.mipMaplevel);
 	const GLsizei depth = static_cast<int32_t>(textureCreateInfo.depth);
 
 	switch (textureType)
 	{
 		case TextureType::Texture1D:
-			Logger::LogError("Uniplemented behaviours");
+			Logger::LogError("Unimplemented behaviours");
 			break;
 		
 		case TextureType::Texture2D:
 			
-			glTextureStorage2D(textureID,level,internalFormat,width,height);
+			glTextureStorage2D(textureId,level,internalFormat,width,height);
 		
 			if (IsDataValid(textureCreateInfo.datas))
 			{
-				glTextureSubImage2D(textureID, 0, 0, 0, width, height,
+				glTextureSubImage2D(textureId, 0, 0, 0, width, height,
 				GetOpenGlTextureFormat(textureCreateInfo.format), GetOpenglDataType(textureCreateInfo.dataType),
 				textureCreateInfo.datas.at(0));
 			}
-		
 			break;
 		
 		case TextureType::Texture3D:
-			Logger::LogError("Uniplemented behaviours");
+			Logger::LogError("Unimplemented behaviours");
 			break;
 		
 		case TextureType::Texture1DArray:
-			Logger::LogError("Uniplemented behaviours");
+			Logger::LogError("Unimplemented behaviours");
 			break;
 		
 		case TextureType::Texture2DArray:
-			
-			glTextureStorage3D(textureID, level, internalFormat, width, height, depth);
+			glTextureStorage3D(textureId, level, internalFormat, width, height, depth);
 		
 			if (IsDataValid(textureCreateInfo.datas))
-			glTextureSubImage3D(textureID, 0, 0, 0, 0, width, height, depth, internalFormat, textureFormat, textureCreateInfo.datas.at(0));
-		
+				glTextureSubImage3D(textureId, 0, 0, 0, 0, width, height, depth, internalFormat, textureFormat, textureCreateInfo.datas.at(0));
 			break;
+
 		case TextureType::TextureRectangle:
-			Logger::LogError("Uniplemented behaviours");
+			Logger::LogError("Unimplemented behaviours");
 			break;
+
 		case TextureType::TextureCubeMap:
-			
-			glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-			if (IsDataValid(textureCreateInfo.datas,6))
+			glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
+			if (IsDataValid(textureCreateInfo.datas, 6))
 			{
 				for (size_t i = 0; i < textureCreateInfo.datas.size(); i++)
 				{
-					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), textureCreateInfo.mipMaplevel, internalFormat,
+					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), static_cast<GLint>(textureCreateInfo.mipMaplevel), static_cast<GLint>(internalFormat),
 						width, height, 0, textureFormat, GetOpenglDataType(textureCreateInfo.dataType), textureCreateInfo.datas.at(i));
 				}
 			}
@@ -875,7 +839,7 @@ void Rhi::AllocTexture(
 			{
 				for (size_t i = 0; i < 6; i++)
 				{
-					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), textureCreateInfo.mipMaplevel, internalFormat,
+					glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + static_cast<GLint>(i), static_cast<GLint>(textureCreateInfo.mipMaplevel), static_cast<GLint>(internalFormat),
 						width, height, 0, textureFormat, GetOpenglDataType(textureCreateInfo.dataType),nullptr);
 				}
 			}
@@ -883,18 +847,20 @@ void Rhi::AllocTexture(
 			break;
 		
 		case TextureType::TextureCubeMapArray:
-			glTextureStorage3D(textureID, level, internalFormat, width, height, depth * 6);
+			glTextureStorage3D(textureId, level, internalFormat, width, height, depth * 6);
 			break;
+
 		case TextureType::TextureBuffer:
-			Logger::LogError("Uniplemented behaviours");
+			Logger::LogError("Unimplemented behaviours");
 			break;
+
 		case TextureType::Texture2DMultisample:
-			Logger::LogError("Uniplemented behaviours");
+			Logger::LogError("Unimplemented behaviours");
 			break;
+
 		case TextureType::Texture2DMultisampleArray:
-			Logger::LogError("Uniplemented behaviours");
+			Logger::LogError("Unimplemented behaviours");
 			break;
-		default: ;
 	}
 }
 
@@ -908,7 +874,7 @@ bool Rhi::IsDataValid(const std::vector<void*>& data, const size_t wantedSize)
 	
 	for (size_t i = 0; i < wantedSize;i++)
 	{
-		if(data.at(i) == nullptr)
+		if (data.at(i) == nullptr)
 			return false;
 	}
 	return true;
@@ -932,7 +898,7 @@ uint32_t Rhi::CreateFrameBuffer()
 	return frameBufferId;
 }
 
-void Rhi::AttachsTextureToFrameBuffer(const RenderPass& renderPass, const FrameBuffer& frameBuffer, const std::vector<const Texture*>& attachments)
+void Rhi::AttachsTextureToFrameBuffer(const RenderPass& renderPass, const Framebuffer& frameBuffer, const std::vector<const Texture*>& attachments)
 {
 	const uint32_t frameBufferId = frameBuffer.GetId();
 	const std::vector<RenderTargetInfo>& renderTargetInfos = renderPass.renderPassAttachments;
@@ -967,9 +933,12 @@ void Rhi::AttachsTextureToFrameBuffer(const RenderPass& renderPass, const FrameB
 			case Attachment::Color20:
 				if (renderTargetInfos[i].isDrawingOn)
 					openglAttachmentsdraw.push_back(openglAttachment);
-				
 				break;
-			
+
+			case Attachment::Depth:
+			case Attachment::Stencil:
+			case Attachment::DepthAndStencil:
+				break;
 		}
 		glNamedFramebufferTexture(frameBufferId,openglAttachment, attachments.at(i)->GetId(), 0);
 	}
@@ -984,16 +953,8 @@ void Rhi::DestroyFrameBuffer(const uint32_t frameBufferId)
 		glDeleteFramebuffers(1, &frameBufferId);
 }
 
-void Rhi::BlitFrameBuffer(
-	const uint32_t readBuffer,
-	const uint32_t targetBuffer,
-	const Vector2i srcTopLeft,
-	const Vector2i srcBottomRight,
-	const Vector2i targetTopLeft,
-	const Vector2i targetBottomRight,
-	const BufferFlag::BufferFlag bufferFlag,
-	const TextureFiltering::TextureFiltering textureFiltering
-)
+void Rhi::BlitFrameBuffer(const uint32_t readBuffer, const uint32_t targetBuffer, const Vector2i srcTopLeft, const Vector2i srcBottomRight, const Vector2i targetTopLeft, const Vector2i targetBottomRight,
+	const BufferFlag::BufferFlag bufferFlag, const TextureFiltering::TextureFiltering textureFiltering)
 {
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, readBuffer);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, targetBuffer);
@@ -1033,15 +994,10 @@ void Rhi::AttachTextureToFrameBuffer(const uint32_t bufferId, const Attachment::
 	}
 }
 
-void Rhi::AttachTextureToFrameBuffer(
-	const uint32_t bufferId,
-	const Attachment::Attachment attachment,
-	const CubeMapFace cubeMapFace,
-	const uint32_t textureId,
-	const uint32_t level
+void Rhi::AttachTextureToFrameBuffer(const uint32_t bufferId, const Attachment::Attachment attachment, const CubeMapFace cubeMapFace, const uint32_t textureId, const uint32_t level
 )
 {
-	const GLenum attachement =  AttachementToOpenglAttachement(attachment);
+	const GLenum attachement = AttachementToOpenglAttachement(attachment);
 	glNamedFramebufferTextureLayer(bufferId,attachement, textureId, static_cast<GLsizei>(level), static_cast<GLint>(cubeMapFace));
 	
 	if (attachment != Attachment::Depth && attachment != Attachment::DepthAndStencil && attachment != Attachment::Stencil)
@@ -1050,12 +1006,11 @@ void Rhi::AttachTextureToFrameBuffer(
 	}
 }
 
-void Rhi::SetFrameBufferDraw(uint32_t frameBufferid, uint32_t value)
+void Rhi::SetFrameBufferDraw(const uint32_t frameBufferid, const uint32_t value)
 {
-	glNamedFramebufferReadBuffer(frameBufferid,value);
-	glNamedFramebufferDrawBuffer(frameBufferid,value);
+	glNamedFramebufferReadBuffer(frameBufferid, value);
+	glNamedFramebufferDrawBuffer(frameBufferid, value);
 }
-
 
 void Rhi::GetPixelFromAttachement(const uint32_t attachmentIndex, const Vector2i position, const TextureFormat::TextureFormat textureFormat, const DataType::DataType dataType, void* const output)
 {
@@ -1073,7 +1028,7 @@ void Rhi::SwapBuffers()
 
 uint32_t Rhi::GetOpenglShaderType(const ShaderType::ShaderType shaderType)
 {
-	switch (shaderType)  // NOLINT(clang-diagnostic-switch-enum)
+	switch (shaderType)
 	{
 		case ShaderType::Vertex:
 			return GL_VERTEX_SHADER;
@@ -1193,7 +1148,7 @@ uint32_t Rhi::GetOpenglInternalFormat(const TextureInternalFormat::TextureIntern
 		case TextureInternalFormat::Rgba16F:
 			return GL_RGBA16F;
 
-		case TextureInternalFormat::R32f:
+		case TextureInternalFormat::R32F:
 			return GL_R32F;
 		
 		case TextureInternalFormat::R32Uint:
@@ -1224,11 +1179,9 @@ uint32_t Rhi::GetOpenglInternalFormat(const TextureInternalFormat::TextureIntern
 
 		case TextureInternalFormat::DepthComponent32FStencil8:
 			return GL_DEPTH32F_STENCIL8;
-		default: ;
 	}
 
 	Logger::LogError("Texture InternalFormat not supported, defaulting to RGB");
-	
 	return GL_RGB;
 }
 
@@ -1257,21 +1210,21 @@ uint32_t Rhi::GetOpenGlTextureFormat(const TextureFormat::TextureFormat textureF
 
 void Rhi::LogComputeShaderInfo()
 {
-	int32_t work_grp_cnt[3];
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &work_grp_cnt[0]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &work_grp_cnt[1]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &work_grp_cnt[2]);
-	Logger::LogDebug("Max work groups per compute shader x: {} y: {} x: {}", work_grp_cnt[0], work_grp_cnt[1], work_grp_cnt[2]);
+	int32_t workGroupCount[3];
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &workGroupCount[0]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &workGroupCount[1]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &workGroupCount[2]);
+	Logger::LogDebug("Max work groups per compute shader x: {} y: {} x: {}", workGroupCount[0], workGroupCount[1], workGroupCount[2]);
 	
-	int32_t work_grp_size[3];
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &work_grp_size[0]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, &work_grp_size[1]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, &work_grp_size[2]);
-	Logger::LogDebug("Max work group sizes  x: {} y: {} x: {}", work_grp_size[0], work_grp_size[1], work_grp_size[2]); 
+	int32_t workGroupSize[3];
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &workGroupSize[0]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, &workGroupSize[1]);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, &workGroupSize[2]);
+	Logger::LogDebug("Max work group sizes  x: {} y: {} x: {}", workGroupSize[0], workGroupSize[1], workGroupSize[2]); 
 
-	int32_t work_grp_inv;
-	glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &work_grp_inv);
-	Logger::LogDebug("Max invocations count per work group: {} ",work_grp_inv);
+	int32_t workGroupInvocation;
+	glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &workGroupInvocation);
+	Logger::LogDebug("Max invocations count per work group: {} ", workGroupInvocation);
 }
 
 void Rhi::IsShaderValid(const uint32_t shaderId)
@@ -1508,7 +1461,7 @@ void Rhi::BindMaterial(const Material& material)
 	materialData.hasMetallicMap =  static_cast<int32_t>(material.metallicTexture.IsValid());
 	materialData.hasRoughnessMap =  static_cast<int32_t>(material.roughnessTexture.IsValid());
 	materialData.hasNormalMap =  static_cast<int32_t>(material.normalTexture.IsValid());
-	materialData.hasAmbiantOcclusionMap =  static_cast<int32_t>(material.ambiantOcclusionTexture.IsValid());
+	materialData.hasAmbientOcclusionMap =  static_cast<int32_t>(material.ambientOcclusionTexture.IsValid());
 	
 	materialData.albedoColor = static_cast<Vector3>(material.albedoColor);
 	materialData.emissiveColor = static_cast<Vector3>(material.emissiveColor);
@@ -1517,12 +1470,11 @@ void Rhi::BindMaterial(const Material& material)
 	materialData.roughness = material.roughness;
 	materialData.reflectance = material.reflectance;
 	materialData.emissive = material.emissive;
-	materialData.ambiantOccusion = material.ambientOcclusion;
+	materialData.ambientOcclusion = material.ambientOcclusion;
 	
 	constexpr size_t size = sizeof(MaterialData);
 	m_MaterialUniform->Update(size, 0, &materialData);
 }
-
 
 TextureFormat::TextureFormat Rhi::GetTextureFormatFromChannels(const uint32_t channels)
 {
@@ -1542,7 +1494,7 @@ TextureFormat::TextureFormat Rhi::GetTextureFormatFromChannels(const uint32_t ch
 	}
 }
 
-void Rhi::DepthTest(bool value)
+void Rhi::DepthTest(const bool_t value)
 {
 	value ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST); 
 }
@@ -1552,17 +1504,16 @@ void Rhi::GetCubeMapViewMatrices(std::array<Matrix, 6>* viewsMatricies)
 {
 	*viewsMatricies =
 	{
-		Matrix::LookAt(Vector3(),-Vector3::UnitX(),-Vector3::UnitY()), // CubeMapPositiveX
-		Matrix::LookAt(Vector3(),Vector3::UnitX(),-Vector3::UnitY()), // CubeMapNegativeX
-		Matrix::LookAt(Vector3(),-Vector3::UnitY(),-Vector3::UnitZ()), // CubeMapPositiveY
-		Matrix::LookAt(Vector3(),Vector3::UnitY(),Vector3::UnitZ()), // CubeMapNegativeY
-		Matrix::LookAt(Vector3(),Vector3::UnitZ(),-Vector3::UnitY()), // CubeMapPositiveZ
-		Matrix::LookAt(Vector3(),-Vector3::UnitZ(),-Vector3::UnitY()), // CubeMapNegativeZ
+		Matrix::LookAt(Vector3(), -Vector3::UnitX(), -Vector3::UnitY()), // CubeMapPositiveX
+		Matrix::LookAt(Vector3(),  Vector3::UnitX(), -Vector3::UnitY()), // CubeMapNegativeX
+		Matrix::LookAt(Vector3(), -Vector3::UnitY(), -Vector3::UnitZ()), // CubeMapPositiveY
+		Matrix::LookAt(Vector3(),  Vector3::UnitY(),  Vector3::UnitZ()), // CubeMapNegativeY
+		Matrix::LookAt(Vector3(),  Vector3::UnitZ(), -Vector3::UnitY()), // CubeMapPositiveZ
+		Matrix::LookAt(Vector3(), -Vector3::UnitZ(), -Vector3::UnitY()), // CubeMapNegativeZ
 	};
-
 }
 
-void Rhi::DispactCompute(const uint32_t numberOfGroupX, const uint32_t numberOfGroupY, const uint32_t numberOfGroupZ)
+void Rhi::DispatchCompute(const uint32_t numberOfGroupX, const uint32_t numberOfGroupY, const uint32_t numberOfGroupZ)
 {
 	glDispatchCompute(numberOfGroupX, numberOfGroupY, numberOfGroupZ);
 }
@@ -1572,21 +1523,12 @@ void Rhi::SetGpuMemoryBarrier(const GpuMemoryBarrier memoryBarrier)
 	glMemoryBarrier(MemoryBarrierToOpengl(memoryBarrier));
 }
 
-void Rhi::BindImageTexture(
-	const uint32_t unit,
-	const uint32_t texture,
-	const uint32_t level,
-	const bool_t layered,
-	const uint32_t layer,
-	const ImageAccess imageAcess,
-	const TextureInternalFormat::TextureInternalFormat textureInternalFormat
-)
+void Rhi::BindImageTexture(const uint32_t unit, const uint32_t texture,	const uint32_t level, const bool_t layered,	const uint32_t layer, const ImageAccess imageAcess,	const TextureInternalFormat::TextureInternalFormat textureInternalFormat)
 {
 	const GLenum access = GetImageAccessOpengl(imageAcess);
-	const  GLenum textureFormatInternal = GetOpenglInternalFormat(textureInternalFormat);
+	const GLenum textureFormatInternal = GetOpenglInternalFormat(textureInternalFormat);
 
-	
-	glBindImageTexture(unit, texture, level, static_cast<GLenum>(layered), layer, access, textureFormatInternal);
+	glBindImageTexture(unit, texture, static_cast<GLint>(level), static_cast<GLboolean>(layered), static_cast<GLint>(layer), access, textureFormatInternal);
 }
 
 uint32_t Rhi::CreateTexture(const TextureCreateInfo& textureCreateInfo)

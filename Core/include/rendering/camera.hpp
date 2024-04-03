@@ -31,11 +31,13 @@ public:
 	/// @brief Field of view
 	float_t fov = 90.f;
 
-	Vector2 leftRight = { -10.f, 10.f};
+	/// @brief Orthographic left/right
+	Vector2 leftRight = { -10.f, 10.f };
+	/// @brief Orthographic bottom/top
+	Vector2 bottomtop = { -10.f, 10.f };
 
-	Vector2 bottomtop = { -10.f, 10.f};
-
-	bool_t isOrthoGraphic = false;
+	/// @brief Whether the camera is orthographic
+	bool_t isOrthographic = false;
 
 	/// @brief Computes the projection @ref Matrix of the camera
 	/// @param screenSize Screen size

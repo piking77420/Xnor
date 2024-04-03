@@ -18,12 +18,15 @@ public:
     /// @brief Outer cut-off	
     float_t outerCutOff = 15.f;
     
-    Vector3 GetLightDirection() const;
-    
     XNOR_ENGINE SpotLight() = default;
     XNOR_ENGINE ~SpotLight() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(SpotLight)
+
+    /// @brief Gets the direction of the spot light
+    /// @returns Light direction
+    [[nodiscard]]
+    Vector3 GetLightDirection() const;
 };
 
 END_XNOR_CORE

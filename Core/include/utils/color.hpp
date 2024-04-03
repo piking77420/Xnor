@@ -498,6 +498,7 @@ constexpr bool_t operator!=(const ColorHsva& c1, const ColorHsva& c2);
 END_XNOR_CORE
 
 #ifndef SWIG
+/// @private
 template <>
 struct std::formatter<XnorCore::ColorRgb>
 {
@@ -511,6 +512,7 @@ private:
     std::string m_Format;
 };
 
+/// @private
 template <class ParseContext>
 constexpr typename ParseContext::iterator std::formatter<XnorCore::ColorRgb, char_t>::parse(ParseContext& ctx)
 {
@@ -524,6 +526,7 @@ constexpr typename ParseContext::iterator std::formatter<XnorCore::ColorRgb, cha
     return it;
 }
 
+/// @private
 template <class FmtContext>
 typename FmtContext::iterator std::formatter<XnorCore::ColorRgb>::format(XnorCore::ColorRgb c, FmtContext &ctx) const
 {
@@ -534,6 +537,7 @@ typename FmtContext::iterator std::formatter<XnorCore::ColorRgb>::format(XnorCor
     return std::ranges::copy(std::move(out).str(), ctx.out()).out;
 }
 
+/// @private
 template <>
 struct std::formatter<XnorCore::ColorRgba>
 {
@@ -547,6 +551,7 @@ private:
     std::string m_Format;
 };
 
+/// @private
 template <class ParseContext>
 constexpr typename ParseContext::iterator std::formatter<XnorCore::ColorRgba, char_t>::parse(ParseContext& ctx)
 {
@@ -560,6 +565,7 @@ constexpr typename ParseContext::iterator std::formatter<XnorCore::ColorRgba, ch
     return it;
 }
 
+/// @private
 template <class FmtContext>
 typename FmtContext::iterator std::formatter<XnorCore::ColorRgba>::format(XnorCore::ColorRgba c, FmtContext &ctx) const
 {
@@ -570,6 +576,7 @@ typename FmtContext::iterator std::formatter<XnorCore::ColorRgba>::format(XnorCo
     return std::ranges::copy(std::move(out).str(), ctx.out()).out;
 }
 
+/// @private
 template <>
 struct std::formatter<XnorCore::Colorf>
 {
@@ -583,6 +590,7 @@ private:
     std::string m_Format;
 };
 
+/// @private
 template <class ParseContext>
 constexpr typename ParseContext::iterator std::formatter<XnorCore::Colorf, char_t>::parse(ParseContext& ctx)
 {
@@ -596,6 +604,7 @@ constexpr typename ParseContext::iterator std::formatter<XnorCore::Colorf, char_
     return it;
 }
 
+/// @private
 template <class FmtContext>
 typename FmtContext::iterator std::formatter<XnorCore::Colorf>::format(XnorCore::Colorf c, FmtContext &ctx) const
 {
@@ -606,6 +615,7 @@ typename FmtContext::iterator std::formatter<XnorCore::Colorf>::format(XnorCore:
     return std::ranges::copy(std::move(out).str(), ctx.out()).out;
 }
 
+/// @private
 template <>
 struct std::formatter<XnorCore::ColorHsva>
 {
@@ -619,6 +629,7 @@ private:
     std::string m_Format;
 };
 
+/// @private
 template <class ParseContext>
 constexpr typename ParseContext::iterator std::formatter<XnorCore::ColorHsva, char_t>::parse(ParseContext& ctx)
 {
@@ -632,6 +643,7 @@ constexpr typename ParseContext::iterator std::formatter<XnorCore::ColorHsva, ch
     return it;
 }
 
+/// @private
 template <class FmtContext>
 typename FmtContext::iterator std::formatter<XnorCore::ColorHsva>::format(XnorCore::ColorHsva c, FmtContext &ctx) const
 {

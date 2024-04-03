@@ -26,7 +26,7 @@ void RenderWindow::OnApplicationRendering()
 {
     if (!m_Viewport->IsValid() || m_Viewport->viewPortSize != m_Size)
     {
-        m_Viewport->OnResize(m_Size);
+        m_Viewport->Resize(m_Size);
     }
     
     m_Editor->renderer.RenderViewport(*m_Viewport, *XnorCore::World::scene);

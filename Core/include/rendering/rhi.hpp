@@ -14,8 +14,6 @@
 /// @file rhi.hpp
 /// Defines the XnorCore::Rhi static class
 
-
-
 BEGIN_XNOR_CORE
 
 /// @brief Stands for Render Hardware Interface, provides a set of functions that interface between the application and the rendering API
@@ -39,8 +37,11 @@ public:
 	/// @param quadId Quad id
 	XNOR_ENGINE static void DrawQuad(uint32_t quadId);
 
+	/// @brief Begins a render pass internally
+	/// beginInfo Render pass begin info
 	XNOR_ENGINE static void BeginRenderPassInternal(const RenderPassBeginInfo& beginInfo);
-	
+
+	/// @brief Ends a render pass
 	XNOR_ENGINE static void EndRenderPass();
 
 	/// @brief Creates a model
@@ -88,8 +89,11 @@ public:
 	/// @param shaderId Shader id
 	/// @param uniformKey Uniform variable name
 	XNOR_ENGINE static void SetUniform(UniformType::UniformType uniformType, const void* data, uint32_t shaderId, const char_t* uniformKey);
-	
-	
+
+	/// @brief Creates a texture
+	/// @brief textureCreateInfo Texture creation info
+	/// @returns Texture id
+	[[nodiscard]]
 	XNOR_ENGINE static uint32_t CreateTexture(const TextureCreateInfo& textureCreateInfo);
 	
 	/// @brief Destroys a texture
@@ -101,14 +105,16 @@ public:
 	/// @param textureId Texture id
 	XNOR_ENGINE static void BindTexture(uint32_t unit, uint32_t textureId);
 
-	
+	/// @brief Creates a framebuffer
+	/// @returns Frame buffer id
+	[[nodiscard]]
 	XNOR_ENGINE static uint32_t CreateFrameBuffer();
 	
 	/// @brief Create a framebuffer
 	/// @param renderPass Associated @ref RenderPass
 	/// @param attachments @ref Texture attachments
 	/// @return Framebuffer id
-	XNOR_ENGINE static void AttachsTextureToFrameBuffer(const RenderPass& renderPass, const FrameBuffer& frameBuffer, const std::vector<const Texture*>& attachments);
+	XNOR_ENGINE static void AttachsTextureToFrameBuffer(const RenderPass& renderPass, const Framebuffer& frameBuffer, const std::vector<const Texture*>& attachments);
 
 	/// @brief Destroys a framebuffer
 	/// @param frameBufferId Framebuffer id
@@ -133,19 +139,39 @@ public:
 	/// @brief Unbinds a framebuffer
 	XNOR_ENGINE static void UnbindFrameBuffer();
 
-	XNOR_ENGINE static void AttachTextureToFrameBufferLayer(uint32_t bufferId, Attachment::Attachment attachment,uint32_t textureId,uint32_t level, uint32_t layer);
+	/// @brief Attach a texture to a frame buffer layer
+	/// @param bufferId Frame buffer id
+	/// @param attachment Attachment
+	/// @param textureId Texture id
+	/// @param level Texture level
+	/// @param layer Frame buffer layer
+	XNOR_ENGINE static void AttachTextureToFrameBufferLayer(uint32_t bufferId, Attachment::Attachment attachment, uint32_t textureId, uint32_t level, uint32_t layer);
 
-	XNOR_ENGINE static void AttachTextureToFrameBuffer(uint32_t bufferId, Attachment::Attachment attachment,uint32_t textureId,uint32_t level);
-	
-	XNOR_ENGINE static void AttachTextureToFrameBuffer(uint32_t bufferId, Attachment::Attachment attachment, CubeMapFace cubeMapFace,uint32_t textureId,uint32_t level);
-	
+	/// @brief Attach a texture to a frame buffer
+	/// @param bufferId Frame buffer id
+	/// @param attachment Attachment
+	/// @param textureId Texture id
+	/// @param level Texture level
+	XNOR_ENGINE static void AttachTextureToFrameBuffer(uint32_t bufferId, Attachment::Attachment attachment, uint32_t textureId, uint32_t level);
+
+	/// @brief Attach a texture from a cubemap to a frame buffer
+	/// @param bufferId Frame buffer id
+	/// @param attachment Attachment
+	/// @param cubeMapFace Cubemap face
+	/// @param textureId Texture id
+	/// @param level Texture level
+	XNOR_ENGINE static void AttachTextureToFrameBuffer(uint32_t bufferId, Attachment::Attachment attachment, CubeMapFace cubeMapFace, uint32_t textureId, uint32_t level);
+
+	/// @brief Sets the target framebuffer for drawing
+	/// @param frameBufferid Frame buffer id
+	/// @param value Value
 	XNOR_ENGINE static void SetFrameBufferDraw(uint32_t frameBufferid, uint32_t value);
 
 	/// @brief Reads a single pixel of an attachment
 	/// @param attachmentIndex Attachment index
 	/// @param position Pixel position
 	/// @param textureFormat Texture format
-	/// @param textureInternalFormat Texture internal format
+	/// @param dataType Data type
 	/// @param output Output pointer
 	XNOR_ENGINE static void GetPixelFromAttachement(uint32_t attachmentIndex, Vector2i position, TextureFormat::TextureFormat textureFormat, DataType::DataType dataType, void* output);
 
@@ -190,17 +216,32 @@ public:
 	/// @return Texture format
 	XNOR_ENGINE static TextureFormat::TextureFormat GetTextureFormatFromChannels(uint32_t channels);
 
-	XNOR_ENGINE static void DepthTest(bool value);
-	
-	XNOR_ENGINE static void GetCubeMapViewMatrices(std::array<Matrix,6>* viewsMatricies);
-	
-	XNOR_ENGINE static void DispactCompute(uint32_t numberOfGroupX,uint32_t numberOfGroupY, uint32_t numberOfGroupZ);
-	
+	/// @brief Enables/disables the depth test
+	/// @param value Value
+	XNOR_ENGINE static void DepthTest(bool_t value);
+
+	/// @brief Gets the cubemap view matrices
+	XNOR_ENGINE static void GetCubeMapViewMatrices(std::array<Matrix, 6>* viewsMatricies);
+
+	/// @brief Dispatch a compute shader
+	/// @param numberOfGroupX Number of groups on the X axis
+	/// @param numberOfGroupY Number of groups on the Y axis
+	/// @param numberOfGroupZ Number of groups on the Z axis
+	XNOR_ENGINE static void DispatchCompute(uint32_t numberOfGroupX, uint32_t numberOfGroupY, uint32_t numberOfGroupZ);
+
+	/// @brief Sets the GPU memory barrier
+	/// @param memoryBarrier Memory barrier
 	XNOR_ENGINE static void SetGpuMemoryBarrier(GpuMemoryBarrier memoryBarrier);
 
-	XNOR_ENGINE static void BindImageTexture(uint32_t unit, uint32_t texture, uint32_t level, bool_t layered,uint32_t layer,
-		ImageAccess imageAcess, TextureInternalFormat::TextureInternalFormat textureInternalFormat);
-
+	/// @brief Binds an image texture
+	/// @param unit Image unit
+	/// @param texture Texture id
+	/// @param level Level
+	/// @param layered Whether it's layered
+	/// @param layer Layer
+	/// @param imageAcess Image access
+	/// @param textureInternalFormat Texture internal format
+	XNOR_ENGINE static void BindImageTexture(uint32_t unit, uint32_t texture, uint32_t level, bool_t layered, uint32_t layer, ImageAccess imageAcess, TextureInternalFormat::TextureInternalFormat textureInternalFormat);
 
 private:
 	struct ModelInternal
@@ -275,9 +316,9 @@ private:
 		const void* userParam
 	);
 	
-	XNOR_ENGINE static void ComputeTextureFiltering(TextureType::TextureType textureType, uint32_t textureID,  const TextureCreateInfo& textureCreateInfo);
-	XNOR_ENGINE static void ComputeTextureWrapping(TextureType::TextureType textureType, uint32_t textureID, const TextureCreateInfo& textureCreateInfo);
-	XNOR_ENGINE static void AllocTexture(TextureType::TextureType textureType, uint32_t textureID, const TextureCreateInfo& textureCreateInfo);
+	XNOR_ENGINE static void ComputeTextureFiltering(TextureType::TextureType textureType, uint32_t textureId,  const TextureCreateInfo& textureCreateInfo);
+	XNOR_ENGINE static void ComputeTextureWrapping(TextureType::TextureType textureType, uint32_t textureId, const TextureCreateInfo& textureCreateInfo);
+	XNOR_ENGINE static void AllocTexture(TextureType::TextureType textureType, uint32_t textureId, const TextureCreateInfo& textureCreateInfo);
 
 	XNOR_ENGINE static bool IsDataValid(const std::vector<void*>& data,size_t wantedSize = 1);
 };

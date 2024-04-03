@@ -15,23 +15,18 @@ void ToneMapping::ComputeToneMaping(const Texture& imageWithoutToneMapping, cons
     bloomTexture.BindTexture(1);
     Rhi::DrawModel(m_Quad->GetId());
     m_Aces->Unuse();
-    
-  
 }
 
 void ToneMapping::InitializeResources()
 {
-    if (m_Aces == nullptr || m_Quad == nullptr)
-    {
-        m_Aces = ResourceManager::Get<Shader>("tone_mapper");
-        m_Aces->CreateInRhi();
-        m_Aces->Use();
-        m_Aces->SetInt("beforeToneMappedImage", ToneMapedTextureBinding);
-        m_Aces->SetInt("bloomBlur",1);
-        m_Aces->Unuse();
+    m_Aces = ResourceManager::Get<Shader>("tone_mapper");
+    m_Aces->CreateInRhi();
+    m_Aces->Use();
+    m_Aces->SetInt("beforeToneMappedImage", ToneMapedTextureBinding);
+    m_Aces->SetInt("bloomBlur", 1);
+    m_Aces->Unuse();
 
-        m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
-    }
+    m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
 }
 
 void ToneMapping::RecompileShader()

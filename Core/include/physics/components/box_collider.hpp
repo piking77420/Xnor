@@ -4,8 +4,12 @@
 #include "scene/component.hpp"
 #include "physics/components/collider.hpp"
 
+/// @file box_collider.hpp
+/// @brief Defines the XnorCore::BoxCollider class
+
 BEGIN_XNOR_CORE
 
+/// @brief Box collider
 class BoxCollider : public Collider
 {
     REFLECTABLE_IMPL(BoxCollider)
@@ -13,11 +17,13 @@ class BoxCollider : public Collider
 public:
     XNOR_ENGINE BoxCollider() = default; 
     XNOR_ENGINE ~BoxCollider() override = default;
-
-    XNOR_ENGINE void Begin() override;
-    XNOR_ENGINE void Update() override;
     
     DEFAULT_COPY_MOVE_OPERATIONS(BoxCollider)
+
+    /// @brief Begin function
+    XNOR_ENGINE void Begin() override;
+    /// @brief Update function
+    XNOR_ENGINE void Update() override;
 
 private:
     Vector3 m_Center = Vector3::Zero();

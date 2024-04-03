@@ -13,7 +13,6 @@ BEGIN_XNOR_CORE
 template <typename T>
 void XnorFactory::RegisterType()
 {
-    // ReSharper disable once CppTooWideScope
     constexpr bool_t isConstructible = !Meta::IsAbstract<T> && Meta::IsDefaultConstructible<T>;
 
     const size_t hash = Utils::GetTypeHash<T>();

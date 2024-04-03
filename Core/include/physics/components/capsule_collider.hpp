@@ -4,8 +4,12 @@
 #include "scene/component.hpp"
 #include "physics/components/collider.hpp"
 
+/// @file capsule_collider.hpp
+/// @brief Defines the XnorCore::CapsuleCollider class
+
 BEGIN_XNOR_CORE
 
+/// @brief Capsule collider
 class CapsuleCollider : public Collider
 {
     REFLECTABLE_IMPL(CapsuleCollider)
@@ -13,12 +17,14 @@ class CapsuleCollider : public Collider
 public:
     XNOR_ENGINE CapsuleCollider() = default; 
     XNOR_ENGINE ~CapsuleCollider() override = default;
-
-    XNOR_ENGINE void Begin() override;
-    XNOR_ENGINE void Update() override;
     
     DEFAULT_COPY_MOVE_OPERATIONS(CapsuleCollider)
-    
+
+    /// @brief Begin function
+    XNOR_ENGINE void Begin() override;
+    /// @brief Update function
+    XNOR_ENGINE void Update() override;
+
 private:
     float_t m_Height = 1.f;
     float_t m_Radius = 1.f;

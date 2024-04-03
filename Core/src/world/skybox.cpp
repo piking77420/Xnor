@@ -12,7 +12,8 @@ Skybox::~Skybox()
 
 void Skybox::Initialize()
 {
-    m_SkyBoxParser.InitResource();
+    m_SkyBoxParser.Init();
+
     delete cubeMap;
     delete cubeMap;
     delete irradianceMap;
@@ -69,7 +70,7 @@ void Skybox::LoadCubeMap(const std::array<std::string, 6>& cubeMapFiles)
 void Skybox::LoadFromHdrTexture(const Pointer<Texture>& hdfFile)
 {
     m_SkyBoxParser.EquirectangularToCubeMapFunc(*hdfFile.Get(), *cubeMap);
-    m_SkyBoxParser.PreComputeBrdf(EnvironementCubeMapSize,*precomputeBrdfTexture);
-    m_SkyBoxParser.ComputeIrradiance(*cubeMap,*irradianceMap, IradianceCubeSize);
-    m_SkyBoxParser.ComputePreFiltering(*cubeMap,*prefilterMap,MaxMinMapLevel);
+    m_SkyBoxParser.PreComputeBrdf(EnvironementCubeMapSize, *precomputeBrdfTexture);
+    m_SkyBoxParser.ComputeIrradiance(*cubeMap, *irradianceMap, IradianceCubeSize);
+    m_SkyBoxParser.ComputePreFiltering(*cubeMap, *prefilterMap, MaxMinMapLevel);
 }

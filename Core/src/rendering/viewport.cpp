@@ -4,10 +4,9 @@
 
 using namespace XnorCore;
 
-
-void Viewport::Init(Vector2i initViewportSize)
+void Viewport::Init(const Vector2i size)
 {
-    viewPortSize = initViewportSize;
+    viewPortSize = size;
 
     using namespace XnorCore;
     const std::vector<RenderTargetInfo> attachementsType =
@@ -16,13 +15,15 @@ void Viewport::Init(Vector2i initViewportSize)
             Attachment::Color00
         }
     };
+
     // Init Rendering
-    frameBuffer = new FrameBuffer();
+    frameBuffer = new Framebuffer();
     m_Image = new Texture(TextureInternalFormat::Rgba32F, viewPortSize, TextureFormat::Rgb);
+
     // Set Up renderPass
     const RenderPass renderPass(attachementsType);
     const std::vector<const Texture*> targets = { m_Image };
-    frameBuffer->AttachTextures(renderPass,targets);
+    frameBuffer->AttachTextures(renderPass, targets);
     
     viewportData.Init(viewPortSize);
 }
@@ -31,10 +32,11 @@ void Viewport::Destroy()
 {
     delete frameBuffer;
     delete m_Image;
+
     viewportData.Destroy();
 }
 
-void Viewport::OnResize(const Vector2i newSize)
+void Viewport::Resize(const Vector2i newSize)
 {
     Destroy();
     Init(newSize);
@@ -47,5 +49,5 @@ Texture* Viewport::GetImage() const
 
 bool_t Viewport::IsValid() const
 {
-    return camera != nullptr &&  frameBuffer != nullptr;  
+    return camera != nullptr && frameBuffer != nullptr;  
 }

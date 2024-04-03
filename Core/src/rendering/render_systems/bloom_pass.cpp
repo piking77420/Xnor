@@ -27,12 +27,10 @@ void BloomPass::Init()
     m_ThresholdFilter = ResourceManager::Get<ComputeShader>("bloom_threshold");
     m_ThresholdFilter->CreateInRhi();
     m_ThresholdFilter->Use();
-    m_ThresholdFilter->SetInt("baseImage",0);
-    m_ThresholdFilter->SetInt("thresholdTexture",1);
+    m_ThresholdFilter->SetInt("baseImage", 0);
+    m_ThresholdFilter->SetInt("thresholdTexture", 1);
     m_ThresholdFilter->Unuse();
-    
 }
-
 
 void BloomPass::ComputeBloom(const Texture& imageWithoutBloom, const BloomRenderTarget& bloomRenderTarget) const
 {
@@ -46,28 +44,27 @@ void BloomPass::UpSampling(const BloomRenderTarget& bloomRenderTarget) const
     const std::vector<BloomRenderTarget::BloomMip>& mipchain = bloomRenderTarget.mipChain;
     
     m_UpSample->Use();
-    m_UpSample->SetFloat("bloom_intensity",  1.f);
+    m_UpSample->SetFloat("bloom_intensity", 1.f);
 
     for (size_t i = mipchain.size() - 1; i > 0; i--)
     {
         const BloomRenderTarget::BloomMip& mip = mipchain[i];
         const BloomRenderTarget::BloomMip& nextMip = mipchain[i - 1];
 
-        const Vector2 mipSize =  { std::floor(nextMip.sizef.x),std::floor(nextMip.sizef.y) };
-        m_UpSample->SetVec2("uTexelSize",Vector2(1.0f) / mipSize);
+        const Vector2 mipSize = { std::floor(nextMip.sizef.x), std::floor(nextMip.sizef.y) };
+        m_UpSample->SetVec2("uTexelSize", Vector2(1.0f) / mipSize);
         
         // Source
         mip.texture->BindTexture(0);
         // Target
         m_UpSample->BindImage(1, *nextMip.texture, 0, false, 0, ImageAccess::ReadWrite);
 
-        m_UpSample->DispatchCompute(static_cast<uint32_t>(std::ceil(mipSize.x/ 8.f)), static_cast<uint32_t>(std::ceil(mipSize.y/ 8.f)) ,1);  
+        m_UpSample->DispatchCompute(static_cast<uint32_t>(std::ceil(mipSize.x / 8.f)), static_cast<uint32_t>(std::ceil(mipSize.y / 8.f)), 1);  
 
         m_UpSample->SetMemoryBarrier(AllBarrierBits);
     }
     
     m_UpSample->Unuse();
-
 }
 
 void BloomPass::DownSampling(const BloomRenderTarget& bloomRenderTarget) const
@@ -78,10 +75,10 @@ void BloomPass::DownSampling(const BloomRenderTarget& bloomRenderTarget) const
     for (const BloomRenderTarget::BloomMip& bloomMip : bloomRenderTarget.mipChain)
     {
         m_DownSample->BindImage(1, *bloomMip.texture, 0, false, 0, ImageAccess::ReadWrite);
-        const Vector2 mipSize =  { std::floor(bloomMip.sizef.x),std::floor(bloomMip.sizef.y) };
-        m_DownSample->SetVec2("uTexelSize",Vector2(1.0f) / mipSize);
+        const Vector2 mipSize = { std::floor(bloomMip.sizef.x), std::floor(bloomMip.sizef.y) };
+        m_DownSample->SetVec2("uTexelSize", Vector2(1.0f) / mipSize);
         
-        m_DownSample->DispatchCompute(static_cast<uint32_t>(std::ceil(mipSize.x/ ComputeShaderDispactValue)), static_cast<uint32_t>(std::ceil(mipSize.y/ ComputeShaderDispactValue)) ,1);  
+        m_DownSample->DispatchCompute(static_cast<uint32_t>(std::ceil(mipSize.x / ComputeShaderDispactValue)), static_cast<uint32_t>(std::ceil(mipSize.y / ComputeShaderDispactValue)), 1);  
         m_DownSample->SetMemoryBarrier(AllBarrierBits);
         
         bloomMip.texture->BindTexture(0);

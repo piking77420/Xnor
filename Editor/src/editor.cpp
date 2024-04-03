@@ -9,13 +9,7 @@
 #include "csharp/dotnet_runtime.hpp"
 #include "file/file_manager.hpp"
 #include "input/time.hpp"
-#include "physics/components/box_collider.hpp"
-#include "physics/components/mesh_collider.hpp"
-#include "physics/components/sphere_collider.hpp"
-#include "rendering/light/directional_light.hpp"
-#include "rendering/light/point_light.hpp"
 #include "resource/resource_manager.hpp"
-#include "scene/component/mesh_renderer.hpp"
 #include "scene/component/test_component.hpp"
 #include "serialization/serializer.hpp"
 #include "windows/content_browser.hpp"
@@ -236,7 +230,7 @@ void Editor::CreateTestScene()
 {
 	using namespace XnorCore;
 
-	// Init SkyBox
+	// TODO Move skybox parser in rhi
 	World::scene->skybox.Initialize();
 	Pointer<Texture> texture = ResourceManager::Get<Texture>("assets/textures/puresky.hdr");
 	texture->loadData.flipVertically = true;

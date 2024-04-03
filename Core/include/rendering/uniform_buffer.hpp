@@ -12,7 +12,6 @@ class UniformBuffer
 {
 public:
     UniformBuffer();
-    
     ~UniformBuffer();
 
     DEFAULT_COPY_MOVE_OPERATIONS(UniformBuffer)

@@ -13,8 +13,12 @@
 #include "rendering/rhi_typedef.hpp"
 #include "resource/resource.hpp"
 
+/// @file compute_shader.hpp
+/// @brief Defines the XnorCore::MeshCollider class
+
 BEGIN_XNOR_CORE
 
+/// @brief Encapsulates a compute shader
 class ComputeShader : public Resource
 {
 public:
@@ -25,16 +29,16 @@ public:
         ".compute"
     };
 
-    
     using Resource::Resource;
 
     using Resource::Load;
 
 	XNOR_ENGINE ComputeShader() = default;
+	XNOR_ENGINE ~ComputeShader() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(ComputeShader)
 
-    	/// @brief Loads a single shader file
+    /// @brief Loads a single shader file
 	/// @param shader File
 	/// @return Whether the load succeeded
 	XNOR_ENGINE bool_t Load(const Pointer<File>& shader) override;
@@ -42,7 +46,6 @@ public:
 	/// @brief Loads raw shader code
 	/// @param buffer Raw data
 	/// @param length Raw data length
-	/// @param type Shader type
 	XNOR_ENGINE bool_t Load(const char_t* buffer, int64_t length);
 
 	/// @brief Creates the shader in the @ref Rhi
@@ -103,10 +106,23 @@ public:
 	/// @brief Unbinds the shader
 	XNOR_ENGINE void Unuse() const;
 
+	/// @brief Dispatch the compute shader
+	/// @param numberOfGroupX Number of groups on the X axis
+	/// @param numberOfGroupY Number of groups on the Y axis
+	/// @param numberOfGroupZ Number of groups on the Z axis
 	XNOR_ENGINE void DispatchCompute(uint32_t numberOfGroupX, uint32_t numberOfGroupY, uint32_t numberOfGroupZ) const;
 
-	XNOR_ENGINE void BindImage(uint32_t unit, const XnorCore::Texture& texture, const uint32_t level, const bool_t layered, const uint32_t layer, const ImageAccess imageAcess) const;
+	/// @brief Binds an image texture
+	/// @param unit Image unit
+	/// @param texture Texture id
+	/// @param level Level
+	/// @param layered Whether it's layered
+	/// @param layer Layer
+	/// @param imageAcess Image access
+	XNOR_ENGINE void BindImage(uint32_t unit, const Texture& texture, uint32_t level, bool_t layered, uint32_t layer, ImageAccess imageAcess) const;
 
+	/// @brief Sets the memory barrier
+	/// @param memoryBarrier Memory barrier
 	XNOR_ENGINE void SetMemoryBarrier(GpuMemoryBarrier memoryBarrier) const;
 
 private:

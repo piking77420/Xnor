@@ -792,10 +792,9 @@
     <ClInclude Include="include\physics\physics_world.hpp" />
     <ClInclude Include="include\reflection\xnor_factory.hpp" />
     <ClInclude Include="include\reflection\dotnet_reflection.hpp" />
-    <ClInclude Include="include\reflection\factory.hpp" />
     <ClInclude Include="include\reflection\reflection.hpp" />
     <ClInclude Include="include\reflection\type_renderer.hpp" />
-    <ClInclude Include="include\rendering\bloom_rendertarget.hpp" />
+    <ClInclude Include="include\rendering\bloom_render_target.hpp" />
     <ClInclude Include="include\rendering\camera.hpp" />
     <ClInclude Include="include\rendering\frame_buffer.hpp" />
     <ClInclude Include="include\rendering\light\directional_light.hpp" />
@@ -803,7 +802,7 @@
     <ClInclude Include="include\rendering\light\point_light.hpp" />
     <ClInclude Include="include\rendering\light\spot_light.hpp" />
     <ClInclude Include="include\rendering\material.hpp" />
-    <ClInclude Include="include\rendering\postprocess_rendertarget.hpp" />
+    <ClInclude Include="include\rendering\post_process_render_target.hpp" />
     <ClInclude Include="include\rendering\renderer.hpp" />
     <ClInclude Include="include\rendering\render_systems\bloom_pass.hpp" />
     <ClInclude Include="include\rendering\render_systems\post_process_pass.hpp" />

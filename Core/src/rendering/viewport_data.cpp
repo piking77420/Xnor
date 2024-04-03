@@ -2,35 +2,36 @@
 
 using namespace XnorCore;
 
-void ViewportData::Init(Vector2i windowSize)
+void ViewportData::Init(const Vector2i size)
 {
-    depthAtttachment = new Texture(TextureInternalFormat::DepthComponent32FStencil8, windowSize);
-    InitForward(windowSize);
-    InitDeffered(windowSize);
-    postprocessRendertarget.Init(windowSize);
+    depthAtttachment = new Texture(TextureInternalFormat::DepthComponent32FStencil8, size);
+    InitForward(size);
+    InitDeffered(size);
+    postprocessRendertarget.Init(size);
 }
 
 void ViewportData::Destroy()
 {
-    delete gframeBuffer;
+    delete gFramebuffer;
     delete renderBuffer;
     
-    delete positionAtttachment;
+    delete positionAttachment;
     delete normalAttachement;
     delete albedoAttachment;
-    delete metallicRougnessReflectance;
+    delete metallicRoughnessReflectance;
     delete ambiantOcclusion;
     delete emissive;
     
     delete colorAttachment;
     delete depthAtttachment;
+
     postprocessRendertarget.Destroy();
 }
 
-void ViewportData::InitForward(Vector2i windowSize)
+void ViewportData::InitForward(const Vector2i size)
 {
-    renderBuffer = new FrameBuffer();
-    colorAttachment = new Texture(TextureInternalFormat::Rgba32F, windowSize, TextureFormat::Rgba);
+    renderBuffer = new Framebuffer();
+    colorAttachment = new Texture(TextureInternalFormat::Rgba32F, size, TextureFormat::Rgba);
 
     const std::vector<RenderTargetInfo> attachementsType =
     {
@@ -49,16 +50,16 @@ void ViewportData::InitForward(Vector2i windowSize)
     renderBuffer->AttachTextures(colorPass, targets);
 }
 
-void ViewportData::InitDeffered(Vector2i windowSize)
+void ViewportData::InitDeffered(const Vector2i size)
 {
-    gframeBuffer = new FrameBuffer();
-    positionAtttachment = new Texture(TextureInternalFormat::Rgba16F, windowSize);
-    normalAttachement = new Texture(TextureInternalFormat::Rgb16F, windowSize);
-    albedoAttachment = new Texture(TextureInternalFormat::Rgb16F, windowSize);
-    metallicRougnessReflectance = new Texture(TextureInternalFormat::Rgb16F,windowSize);
-    ambiantOcclusion = new Texture(TextureInternalFormat::Rg16F,windowSize);
+    gFramebuffer = new Framebuffer();
+    positionAttachment = new Texture(TextureInternalFormat::Rgba16F, size);
+    normalAttachement = new Texture(TextureInternalFormat::Rgb16F, size);
+    albedoAttachment = new Texture(TextureInternalFormat::Rgb16F, size);
+    metallicRoughnessReflectance = new Texture(TextureInternalFormat::Rgb16F, size);
+    ambiantOcclusion = new Texture(TextureInternalFormat::Rg16F, size);
     
-    emissive = new Texture(TextureInternalFormat::Rgba16F,windowSize);
+    emissive = new Texture(TextureInternalFormat::Rgba16F, size);
     
     const std::vector<RenderTargetInfo> attachementsType =
     {
@@ -88,9 +89,9 @@ void ViewportData::InitDeffered(Vector2i windowSize)
     };
 	
     // Set Up renderPass
-    gbufferPass = RenderPass(attachementsType);
+    gBufferPass = RenderPass(attachementsType);
 
-    const std::vector<const Texture*> targets = { positionAtttachment, normalAttachement,
-        albedoAttachment, metallicRougnessReflectance, ambiantOcclusion, emissive, depthAtttachment};
-    gframeBuffer->AttachTextures(gbufferPass, targets);
+    const std::vector<const Texture*> targets = { positionAttachment, normalAttachement,
+        albedoAttachment, metallicRoughnessReflectance, ambiantOcclusion, emissive, depthAtttachment};
+    gFramebuffer->AttachTextures(gBufferPass, targets);
 }

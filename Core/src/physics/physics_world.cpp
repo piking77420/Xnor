@@ -300,7 +300,7 @@ Collider* PhysicsWorld::GetColliderFromId(const uint32_t bodyId)
     return it->second;
 }
 
-bool_t PhysicsWorld::Raycast(const Vector3& position, const Vector3& direction, const float_t length, RaycastResult& result)
+bool_t PhysicsWorld::Raycast(const Vector3& position, const Vector3& direction, const float_t length, RaycastResult* result)
 {
     const JPH::RRayCast ray = JPH::RRayCast(ToJph(position), ToJph(direction.Normalized() * length));
     JPH::RayCastResult jphResult;
@@ -314,10 +314,10 @@ bool_t PhysicsWorld::Raycast(const Vector3& position, const Vector3& direction, 
 
     const JPH::Body& body = lock.GetBody();
 
-    result.hitBody = GetColliderFromId(jphResult.mBodyID.GetIndexAndSequenceNumber());
-    result.point = FromJph(ray.GetPointOnRay(jphResult.mFraction));
-    result.normal = FromJph(body.GetWorldSpaceSurfaceNormal(jphResult.mSubShapeID2, ray.GetPointOnRay(jphResult.mFraction)));
-    result.distance = length * jphResult.mFraction;
+    result->hitBody = GetColliderFromId(jphResult.mBodyID.GetIndexAndSequenceNumber());
+    result->point = FromJph(ray.GetPointOnRay(jphResult.mFraction));
+    result->normal = FromJph(body.GetWorldSpaceSurfaceNormal(jphResult.mSubShapeID2, ray.GetPointOnRay(jphResult.mFraction)));
+    result->distance = length * jphResult.mFraction;
     
     return hit;
 }

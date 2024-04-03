@@ -28,10 +28,7 @@ public:
     /// @brief Clear color
     Vector4 clearColor = Vector4(0.f);
 
-    /// @brief Default constructs a Renderer.
     XNOR_ENGINE Renderer() = default;
-
-    /// @brief Default destructs the Renderer.
     XNOR_ENGINE ~Renderer() = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(Renderer)
@@ -41,22 +38,29 @@ public:
     
     /// @brief Update All the infos of the current frame lights, animation, etc...
     /// @param scene The scene
-    XNOR_ENGINE void BeginFrame(const Scene& scene);
+    XNOR_ENGINE void BeginFrame(const Scene& scene) const;
 
     /// @brief stuff made at the end of the frame
     /// @param scene The scene
-    XNOR_ENGINE void EndFrame(const Scene& scene);
+    XNOR_ENGINE void EndFrame(const Scene& scene) const;
 
-    /// @brief Renders the current scene
-    /// @param rendererContext Renderer context
-    XNOR_ENGINE void RenderViewport(const Viewport& viewport, Scene& scene) const;
+    /// @brief Renders a scene on a viewport
+    /// @param viewport Viewport target
+    /// @param scene Scene to render
+    XNOR_ENGINE void RenderViewport(const Viewport& viewport, const Scene& scene) const;
 
-    XNOR_ENGINE void RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass, const Pointer<Shader>& shadertoUse,
-        const Scene& scene, bool_t drawEditorUi) const;
-
+    /// @brief Renders a scene without shading
+    /// @param camera Camera
+    /// @param renderPassBeginInfo Render pass begin info
+    /// @param renderPass Render pass
+    /// @param shadertoUse Shader to use
+    /// @param scene Scene to render
+    /// @param drawEditorUi Whether to draw the editor only UI
+    XNOR_ENGINE void RenderNonShaded(const Camera& camera, const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass, const Pointer<Shader>& shadertoUse, const Scene& scene, bool_t drawEditorUi) const;
     
-    /// @brief Swaps the front and back buffer
-    XNOR_ENGINE void SwapBuffers();
+    /// @brief Swaps the front and back buffer.
+    XNOR_ENGINE void SwapBuffers() const;
+
 private:
     mutable LightManager m_LightManager;
     mutable SkyboxRenderer m_SkyboxRenderer;
@@ -78,9 +82,9 @@ private:
     
     XNOR_ENGINE void DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers, MaterialType materialType) const;
     
-    XNOR_ENGINE void DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRenderers,const Scene& scene) const;
+    XNOR_ENGINE void DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRenderers, const Scene& scene) const;
     
-    XNOR_ENGINE void DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*>& meshRenderers,const Scene& scene) const;
+    XNOR_ENGINE void DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*>& meshRenderers, const Scene& scene) const;
 
     XNOR_ENGINE void DefferedRendering(const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox, const ViewportData& viewportData, Vector2i viewportSize) const;
     

@@ -16,7 +16,6 @@ class SkyboxRenderer
 {
 public:
     XNOR_ENGINE SkyboxRenderer() = default;
-
     XNOR_ENGINE ~SkyboxRenderer() = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(SkyboxRenderer)

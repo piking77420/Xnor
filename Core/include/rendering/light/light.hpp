@@ -21,10 +21,13 @@ public:
     /// @brief Intensity of the light
     float_t intensity = 1.f;
 
+    /// @brief Whether the light should cast shadows
     bool_t castShadow = true;
 
+    /// @brief Near clipping of the light
     float_t near = 0.1f;
 
+    /// @brief Far clipping of the light
     float_t far = 100.f;
 
     XNOR_ENGINE Light() = default;

@@ -4,8 +4,12 @@
 
 #include <functional>
 
+/// @file xnor_factory.hpp
+/// @brief Defines the XnorCore::XnorFactory class
+
 BEGIN_XNOR_CORE
 
+/// @brief Provides a small RTTI that allows to access type info via a hash code or a class name
 class XnorFactory
 {
     STATIC_CLASS(XnorFactory)
@@ -21,25 +25,55 @@ class XnorFactory
         std::string name;
         std::vector<size_t> parentClasses;
     };
-    
+
 public:
+    /// @brief Registers a type in the factory
+    /// @tparam T Type
     template <typename T>
     static void RegisterType();
 
+    /// @brief Creates an object via a hash code
+    /// @param hash Type hash code
+    /// @returns Created instance (@c nullptr if can't create)
+    [[nodiscard]]
     XNOR_ENGINE static void* CreateObject(size_t hash);
-    XNOR_ENGINE static void* CreateObject(const std::string& name);
+
+    /// @brief Displays an object using the TypeRenderer via a hash code
+    /// @param obj Current object
+    /// @param hash Type hash code
     XNOR_ENGINE static void DisplayObject(void* obj, size_t hash);
 
+    /// @brief Serialize an object via a hash code
+    /// @param obj Current object
+    /// @param hash Type hash code
     XNOR_ENGINE static void SerializeObject(void* obj, size_t hash);
+
+    /// @brief Deserialize an object via a hash code
+    /// @param obj Current object
+    /// @param hash Type hash code
     XNOR_ENGINE static void DeserializeObject(void* obj, size_t hash);
 
-    XNOR_ENGINE static void RegisterAllTypes();
-
+    /// @brief Gets the name of a class via a hash code
+    /// @param hash Type hash code
+    [[nodiscard]]
     XNOR_ENGINE static std::string GetTypeName(size_t hash);
 
+    /// @brief Creates an object via a type name
+    /// @param name Type name
+    /// @returns Created instance (@c nullptr if can't create)
+    [[nodiscard]]
+    XNOR_ENGINE static void* CreateObject(const std::string& name);
+
+    /// @brief Helper function to register all the XnorCore types
+    XNOR_ENGINE static void RegisterAllTypes();
+
+    /// @brief Gets all the child classes registered in the factory of a specified parent type
+    /// @tparam T Parent type
+    /// @param names Output names
     template <typename T>
     static void FindAllChildClasses(std::vector<std::string>* names);
 
+    /// @brief Prints the contents of the factory
     XNOR_ENGINE static void Print();
 
 private:

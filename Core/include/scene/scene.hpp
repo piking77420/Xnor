@@ -15,13 +15,9 @@ BEGIN_XNOR_CORE
 class Scene
 {
     REFLECTABLE_IMPL(Scene)
-    
+
 public:
-    /// @brief Skybox handler
-    XNOR_ENGINE static inline Skybox skybox;
-
     XNOR_ENGINE Scene() = default;
-
     XNOR_ENGINE ~Scene();
 
     DEFAULT_COPY_MOVE_OPERATIONS(Scene)
@@ -79,6 +75,10 @@ public:
 
     [[nodiscard]]
     XNOR_ENGINE uint32_t GetEntityIndex(const Entity* entity) const;
+
+    /// @brief Skybox handler
+    // TODO move to rhi + not static
+    XNOR_ENGINE static inline Skybox skybox;
 
 private:
     List<Entity*> m_Entities;

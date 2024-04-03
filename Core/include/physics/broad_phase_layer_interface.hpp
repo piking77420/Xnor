@@ -8,6 +8,7 @@
 
 BEGIN_XNOR_CORE
 
+/// @private
 class XNOR_ENGINE BroadPhaseLayerInterfaceImpl final : public JPH::BroadPhaseLayerInterface
 {
 public:

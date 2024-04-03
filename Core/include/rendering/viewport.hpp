@@ -7,8 +7,8 @@
 #include "render_systems/tone_mapping.hpp"
 #include "scene/entity.hpp"
 
-/// @file renderer_context.hpp
-/// @brief Defines the XnorCore::RendererContext class.
+/// @file viewport.hpp
+/// @brief Defines the XnorCore::Viewport class.
 
 BEGIN_XNOR_CORE
 
@@ -18,31 +18,42 @@ BEGIN_XNOR_CORE
 class Viewport
 {
 public:
-	
-	
 	/// @brief The Camera used to render a frame.
 	const Camera* camera = nullptr;
 
+	/// @brief Viewport size
 	Vector2i viewPortSize = Window::GetSize();
 
+	/// @brief Color pass
 	RenderPass colorPass;
-	
-	FrameBuffer* frameBuffer = nullptr;
+
+	/// @brief Framebuffer
+	Framebuffer* frameBuffer = nullptr;
 	
 	/// @brief Whether this is used in the editor.
 	bool_t isEditor = false;
-	
+
+	/// @brief Additional viewport data
 	ViewportData viewportData;
 
-	XNOR_ENGINE void Init(Vector2i newSize);
+	/// @brief Initializes a viewport
+	/// @param size Size
+	XNOR_ENGINE void Init(Vector2i size);
 
+	/// @brief Destroys the viewport
 	XNOR_ENGINE void Destroy();
 
-	XNOR_ENGINE void OnResize(Vector2i newSize);
+	/// @brief Resizes the viewport
+	/// @param newSize New size
+	XNOR_ENGINE void Resize(Vector2i newSize);
 	
-	// image to give to renderer
+	/// @brief Gets the internal texture that's rendered to
+	/// @returns Internal image
+	[[nodiscard]]
 	XNOR_ENGINE Texture* GetImage() const;
-	/// @brief Whether the context is valid.
+
+	/// @brief Checks if the viewport is valid
+	/// @returns Whether it's valid
 	[[nodiscard]]
 	XNOR_ENGINE bool_t IsValid() const;
 	

@@ -1,4 +1,4 @@
-#include "rendering/bloom_rendertarget.hpp"
+#include "..\..\include\rendering\bloom_render_target.hpp"
 
 #include "window.hpp"
 
@@ -6,7 +6,7 @@ using namespace XnorCore;
 
 BloomRenderTarget::BloomRenderTarget()
 {
-    Initialize(Window::GetSize());
+    Init(Window::GetSize());
 }
 
 BloomRenderTarget::~BloomRenderTarget()
@@ -14,17 +14,18 @@ BloomRenderTarget::~BloomRenderTarget()
     Destroy();
 }
 
-void BloomRenderTarget::Initialize(const Vector2i viewportSize)
+void BloomRenderTarget::Init(const Vector2i viewportSize)
 {
     CreateBloomMip(viewportSize);
     thresholdTexture = new Texture(TextureInternalFormat::Rgba32F, viewportSize);
-    frameBuffer = new FrameBuffer();
+    frameBuffer = new Framebuffer();
 }
 
 void BloomRenderTarget::Destroy()
 {
     for (const BloomMip& mip : mipChain)
         delete mip.texture;
+
     mipChain.clear();
 
     delete thresholdTexture;
@@ -34,7 +35,7 @@ void BloomRenderTarget::Destroy()
 void BloomRenderTarget::Resize(const Vector2i viewportSize)
 {
     Destroy();
-    Initialize(viewportSize);
+    Init(viewportSize);
 }
 
 Texture* BloomRenderTarget::GetBloomedTexture() const
@@ -46,15 +47,15 @@ void BloomRenderTarget::CreateBloomMip(const Vector2i viewportSize)
 {
     mipChain.resize(BloomMipNumber);
     
-    Vector2 mimSizeF = { static_cast<float_t>(viewportSize.x) , static_cast<float_t>(viewportSize.y) };
-    Vector2i mimSize = { static_cast<int32_t>(viewportSize.x) , static_cast<int32_t>(viewportSize.y) };
+    Vector2 mimSizeF = { static_cast<float_t>(viewportSize.x), static_cast<float_t>(viewportSize.y) };
+    Vector2i mimSize = { static_cast<int32_t>(viewportSize.x), static_cast<int32_t>(viewportSize.y) };
 
-    for (size_t i = 0; i < mipChain.size(); i++)
+    for (BloomMip& mip : mipChain)
     {
         mimSizeF *= 0.5f;
         mimSize.x /= 2;
         mimSize.y /= 2;
-        mipChain[i].sizef = mimSizeF;
+        mip.sizef = mimSizeF;
         
         const TextureCreateInfo createInfo =
         {
@@ -65,7 +66,7 @@ void BloomRenderTarget::CreateBloomMip(const Vector2i viewportSize)
             .internalFormat = BloomTextureFormat,
             .dataType = DataType::Float
         };
-        
-        mipChain[i].texture = new Texture(createInfo);
+
+        mip.texture = new Texture(createInfo);
     }
 }

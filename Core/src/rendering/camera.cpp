@@ -6,7 +6,7 @@ using namespace XnorCore;
 
 void Camera::GetProjection(const Vector2i screenSize, Matrix* const matrix) const
 {
-	if (!isOrthoGraphic)
+	if (!isOrthographic)
 	{
 		const float_t ratio = static_cast<float_t>(screenSize.x) / static_cast<float_t>(screenSize.y);
 		Matrix::Perspective(fov * Calc::Deg2Rad, ratio, near, far, matrix);

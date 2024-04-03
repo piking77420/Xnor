@@ -7,6 +7,7 @@
 
 BEGIN_XNOR_CORE
 
+/// @private
 class ContactListenerImpl : public JPH::ContactListener
 {
 public:

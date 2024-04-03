@@ -1,9 +1,6 @@
 #include "rendering/renderer.hpp"
 
 #include "rendering/rhi.hpp"
-#include "rendering/light/directional_light.hpp"
-#include "rendering/light/point_light.hpp"
-#include "rendering/light/spot_light.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/component/mesh_renderer.hpp"
 
@@ -20,19 +17,18 @@ void Renderer::Initialize()
 	Rhi::PrepareUniform();
 }
 
-void Renderer::BeginFrame(const Scene& scene)
+void Renderer::BeginFrame(const Scene& scene) const
 {
 	m_LightManager.BeginFrame(scene, *this);
 	Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
 }
 
-void Renderer::EndFrame(const Scene& scene)
+void Renderer::EndFrame(const Scene& scene) const
 {
 	m_LightManager.EndFrame(scene);
 }
 
-void Renderer::RenderViewport(const Viewport& viewport,
-	Scene& scene) const
+void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene) const
 {
 	BindCamera(*viewport.camera,viewport.viewPortSize);
 
@@ -41,11 +37,11 @@ void Renderer::RenderViewport(const Viewport& viewport,
 
 	const ViewportData& viewportData = viewport.viewportData;
 
-	DefferedRendering(meshrenderers,scene.skybox,viewportData,viewport.viewPortSize);
+	DefferedRendering(meshrenderers, scene.skybox, viewportData, viewport.viewPortSize);
 	ForwardPass(meshrenderers, scene.skybox, viewport, viewport.viewPortSize, viewport.isEditor);
 	
 	if (viewportData.usePostProcess)
-	m_PostProcessPass.Compute(*viewport.viewportData.colorAttachment , *viewport.GetImage(), viewportData.postprocessRendertarget);
+		m_PostProcessPass.Compute(*viewport.viewportData.colorAttachment , *viewport.GetImage(), viewportData.postprocessRendertarget);
 }
 
 void Renderer::RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass,
@@ -54,8 +50,7 @@ void Renderer::RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& r
 {
 	std::vector<const MeshRenderer*> meshrenderers;
 	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderers);
-	BindCamera(camera,renderPassBeginInfo.renderAreaOffset + renderPassBeginInfo.renderAreaExtent);
-
+	BindCamera(camera, renderPassBeginInfo.renderAreaOffset + renderPassBeginInfo.renderAreaExtent);
 	
 	renderPass.BeginRenderPass(renderPassBeginInfo);
 	DrawAllMeshRendersNonShaded(meshrenderers, scene);
@@ -68,28 +63,27 @@ void Renderer::RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& r
 	renderPass.EndRenderPass();
 }
 
-void Renderer::SwapBuffers()
+void Renderer::SwapBuffers() const
 {
 	Rhi::SwapBuffers();
 }
 
-void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRenderers,
-	const Skybox& skybox,const ViewportData& viewportData,const Vector2i viewportSize) const 
+void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox, const ViewportData& viewportData, const Vector2i viewportSize) const 
 {
 	const RenderPassBeginInfo renderPassBeginInfo =
 	{
-		.frameBuffer = viewportData.gframeBuffer,
-		.renderAreaOffset = { 0, 0,},
+		.frameBuffer = viewportData.gFramebuffer,
+		.renderAreaOffset = { 0, 0 },
 		.renderAreaExtent = viewportSize,
 		.clearBufferFlags = static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit),
 		.clearColor = clearColor
 	};
 	
-	viewportData.gbufferPass.BeginRenderPass(renderPassBeginInfo);
+	viewportData.gBufferPass.BeginRenderPass(renderPassBeginInfo);
 	m_GBufferShader->Use();
 	DrawMeshRendersByType(meshRenderers, MaterialType::Opaque);
 	m_GBufferShader->Unuse();
-	viewportData.gbufferPass.EndRenderPass();
+	viewportData.gBufferPass.EndRenderPass();
 
 	const RenderPassBeginInfo renderPassBeginInfoLit =
 	{
@@ -106,10 +100,10 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	m_GBufferShaderLit->Use();
 	
 	// Set G buffer Shader Info
-	viewportData.positionAtttachment->BindTexture(Gbuffer::Position);
+	viewportData.positionAttachment->BindTexture(Gbuffer::Position);
 	viewportData.normalAttachement->BindTexture(Gbuffer::Normal);
 	viewportData.albedoAttachment->BindTexture(Gbuffer::Albedo);
-	viewportData.metallicRougnessReflectance->BindTexture(Gbuffer::MetallicRoughessReflectance);
+	viewportData.metallicRoughnessReflectance->BindTexture(Gbuffer::MetallicRoughessReflectance);
 	viewportData.ambiantOcclusion->BindTexture(Gbuffer::AmbiantOcclusion);
 	viewportData.emissive->BindTexture(Gbuffer::Emissivive);
 	skybox.irradianceMap->BindTexture(12);
@@ -121,14 +115,13 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	m_GBufferShaderLit->Unuse();
 	Rhi::DepthTest(true);
 
-	
 	skybox.irradianceMap->UnBindTexture(12);
 	skybox.prefilterMap->UnBindTexture(13);
 	skybox.precomputeBrdfTexture->UnbindTexture(14);
-	viewportData.positionAtttachment->UnbindTexture(Gbuffer::Position);
+	viewportData.positionAttachment->UnbindTexture(Gbuffer::Position);
 	viewportData.normalAttachement->UnbindTexture(Gbuffer::Normal);
 	viewportData.albedoAttachment->UnbindTexture(Gbuffer::Albedo);
-	viewportData.metallicRougnessReflectance->UnbindTexture(Gbuffer::MetallicRoughessReflectance);
+	viewportData.metallicRoughnessReflectance->UnbindTexture(Gbuffer::MetallicRoughessReflectance);
 	viewportData.ambiantOcclusion->UnbindTexture(Gbuffer::AmbiantOcclusion);
 	viewportData.emissive->UnbindTexture(Gbuffer::Emissivive);
 	
@@ -142,7 +135,7 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
 	const RenderPassBeginInfo renderPassBeginInfoLit =
 	{
 		.frameBuffer = viewportData.renderBuffer,
-		.renderAreaOffset = { 0, 0,},
+		.renderAreaOffset = { 0, 0 },
 		.renderAreaExtent = viewportSize,
 		.clearBufferFlags = BufferFlag::None,
 		.clearColor = clearColor
@@ -158,12 +151,14 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
 	{
 		DrawAabb(meshRenderers);
 	}
+
 	m_SkyboxRenderer.DrawSkymap(m_Cube,skybox);
 
 	if (isEditor)
 	{
 		m_LightManager.DrawLightGizmo(*viewport.camera, *World::scene);
 	}
+
 	viewportData.colorPass.EndRenderPass();
 }
 
@@ -173,10 +168,8 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Line);
 	ModelUniformData modelData;
 
-	for (uint32_t i = 0; i < meshRenderers.size(); i++)
+	for (const MeshRenderer* const meshRenderer : meshRenderers)
 	{
-		const MeshRenderer* meshRenderer = meshRenderers[i];
-
 		if (!meshRenderer->model.IsValid())
 			continue;
 
@@ -204,17 +197,15 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 {
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 
-	for (uint32_t i = 0; i < meshRenderers.size(); i++)
+	for (const MeshRenderer* const meshRenderer : meshRenderers)
 	{
-		const MeshRenderer* meshRenderer =  meshRenderers[i];
-		
 		if (meshRenderer->material.materialType != materialType)
 			continue;
 		
 		const Transform& transform = meshRenderer->GetEntity()->transform;
 		ModelUniformData modelData;
 		modelData.model = transform.worldMatrix;
-		modelData.meshRenderIndex = reinterpret_cast<uint64_t>(meshRenderers[i]->GetEntity());
+		modelData.meshRenderIndex = reinterpret_cast<uint64_t>(meshRenderer->GetEntity());
 		
 		try
 		{
@@ -239,8 +230,8 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		if (meshRenderer->material.normalTexture.IsValid())
 			meshRenderer->material.normalTexture->BindTexture(MaterialTextureEnum::Normal);
 
-		if (meshRenderer->material.ambiantOcclusionTexture.IsValid())
-			meshRenderer->material.ambiantOcclusionTexture->BindTexture(MaterialTextureEnum::AmbiantOcclusion);
+		if (meshRenderer->material.ambientOcclusionTexture.IsValid())
+			meshRenderer->material.ambientOcclusionTexture->BindTexture(MaterialTextureEnum::AmbiantOcclusion);
 
 		if (meshRenderer->model.IsValid())
 		{
@@ -254,10 +245,8 @@ void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRe
 {
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 
-	for (uint32_t i = 0; i < meshRenderers.size(); i++)
+	for (const MeshRenderer* const meshRenderer : meshRenderers)
 	{
-		const MeshRenderer* meshRenderer =  meshRenderers[i];
-		
 		const Transform& transform = meshRenderer->GetEntity()->transform;
 		ModelUniformData modelData;
 		modelData.model = transform.worldMatrix;
@@ -287,8 +276,8 @@ void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRe
 		if (meshRenderer->material.normalTexture.IsValid())
 			meshRenderer->material.normalTexture->BindTexture(MaterialTextureEnum::Normal);
 
-		if (meshRenderer->material.ambiantOcclusionTexture.IsValid())
-			meshRenderer->material.ambiantOcclusionTexture->BindTexture(MaterialTextureEnum::AmbiantOcclusion);
+		if (meshRenderer->material.ambientOcclusionTexture.IsValid())
+			meshRenderer->material.ambientOcclusionTexture->BindTexture(MaterialTextureEnum::AmbiantOcclusion);
 		
 		if (meshRenderer->model.IsValid())
 		{
@@ -298,17 +287,12 @@ void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRe
 	}
 }
 
-void Renderer::DrawAllMeshRendersNonShaded(
-	const std::vector<const MeshRenderer*>& meshRenderers,
-	const Scene& scene
-) const
+void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*>& meshRenderers, const Scene& scene) const
 {
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 
-	for (uint32_t i = 0; i < meshRenderers.size(); i++)
+	for (const MeshRenderer* const meshRenderer : meshRenderers)
 	{
-		const MeshRenderer* meshRenderer =  meshRenderers[i];
-		
 		const Transform& transform = meshRenderer->GetEntity()->transform;
 		ModelUniformData modelData;
 		modelData.model = transform.worldMatrix;
@@ -333,7 +317,6 @@ void Renderer::DrawAllMeshRendersNonShaded(
 		}
 	}
 }
-
 
 void Renderer::BindCamera(const Camera& camera,const Vector2i screenSize) const
 {
@@ -369,8 +352,17 @@ void Renderer::InitResources()
 	m_GBufferShaderLit->Unuse();
 	
 	m_GBufferShader = ResourceManager::Get<Shader>("gbuffer");
-	m_GBufferShader->SetFaceCullingInfo({true,CullFace::Front,FrontFace::CCW});
+
+	constexpr ShaderProgramCullInfo cullInfo =
+	{
+		.enableCullFace = true,
+		.cullFace = CullFace::Front,
+		.frontFace = FrontFace::CCW
+	};
+
+	m_GBufferShader->SetFaceCullingInfo(cullInfo);
 	m_GBufferShader->CreateInRhi();
+
 	// Init diffuse Texture for gbuffer
 	m_GBufferShader->Use();
 	m_GBufferShader->SetInt("material.albedoMap", MaterialTextureEnum::Albedo);
@@ -400,4 +392,3 @@ void Renderer::InitResources()
 	m_Cube = ResourceManager::Get<Model>("assets/models/cube.obj");
 	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
 }
-

@@ -7,8 +7,8 @@ using namespace XnorCore;
 
 DirectionalLight::DirectionalLight()
 {
-    near = defaulNearFar.x;
-    far = defaulNearFar.y;
+    near = DefaulNearFar.x;
+    far = DefaulNearFar.y;
 }
 
 Vector3 DirectionalLight::GetLightDirection() const 

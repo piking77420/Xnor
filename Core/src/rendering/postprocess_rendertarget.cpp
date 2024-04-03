@@ -1,14 +1,14 @@
-#include "rendering/postprocess_rendertarget.hpp"
+#include "..\..\include\rendering\post_process_render_target.hpp"
 
 using namespace XnorCore;
 
 
-void PostprocessRendertarget::Init(Vector2i viewPortsize)
+void PostProcessRenderTarget::Init(Vector2i viewportSize)
 {
-    bloomRenderTarget.Initialize(viewPortsize);
+    bloomRenderTarget.Init(viewportSize);
 }
 
-void PostprocessRendertarget::Destroy()
+void PostProcessRenderTarget::Destroy()
 {
     bloomRenderTarget.Destroy();
 }

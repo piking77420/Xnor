@@ -91,6 +91,8 @@ namespace Reflection
         T maximum;
 
         /// @brief Creates a range
+        /// @param min Minimum
+        /// @param max Maximum
         constexpr explicit Range(const T& min, const T& max) : minimum(min), maximum(max) {}
     };
 
@@ -101,6 +103,7 @@ namespace Reflection
         const char_t* text;
 
         /// @brief Creates a tooltip from a string literal
+        /// @param t Tooltip text
         constexpr explicit Tooltip(const char_t* const t) : text(t) {}
     };
 
@@ -112,9 +115,14 @@ namespace Reflection
     /// @brief Allows to edit a Vector2 by plotting on a 2D grid
     struct GridPlotting : FieldAttribute
     {
+        /// @brief Minimum value
         float_t minimum;
+        /// @brief Maximum value
         float_t maximum;
 
+        /// @brief Creates a grid plotting from a min/max value
+        /// @param min Minimum
+        /// @param max Maximum
         constexpr explicit GridPlotting(const float_t min, const float_t max) : minimum(min), maximum(max) {}
     };
 

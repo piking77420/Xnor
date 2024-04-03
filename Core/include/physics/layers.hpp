@@ -5,6 +5,7 @@
 
 BEGIN_XNOR_CORE
 
+/// @private
 namespace Layers
 {
     static constexpr JPH::ObjectLayer NON_MOVING = 0;

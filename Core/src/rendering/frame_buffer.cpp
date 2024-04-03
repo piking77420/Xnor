@@ -4,51 +4,44 @@
 
 using namespace XnorCore;
 
-FrameBuffer::FrameBuffer()
+Framebuffer::Framebuffer()
 {
 	m_Id = Rhi::CreateFrameBuffer();
 }
 
-FrameBuffer::~FrameBuffer()
+Framebuffer::~Framebuffer()
 {
 	Rhi::DestroyFrameBuffer(m_Id);
 }
 
-void FrameBuffer::AttachTextures(const RenderPass& renderPass, const std::vector<const Texture*>& attachments) const 
+void Framebuffer::AttachTextures(const RenderPass& renderPass, const std::vector<const Texture*>& attachments) const 
 {
 	Rhi::AttachsTextureToFrameBuffer(renderPass, *this, attachments);
 }
 
-void FrameBuffer::AttachTexture(const Texture& texture, const Attachment::Attachment attachment, const uint32_t level) const
+void Framebuffer::AttachTexture(const Texture& texture, const Attachment::Attachment attachment, const uint32_t level) const
 {
 	Rhi::AttachTextureToFrameBuffer(m_Id, attachment, texture.GetId(), level);
 }
 
-void FrameBuffer::AttachTexture(const Cubemap& cubemap, const Attachment::Attachment attachment, const CubeMapFace cubeMapFace, const uint32_t level) const
+void Framebuffer::AttachTexture(const Cubemap& cubemap, const Attachment::Attachment attachment, const CubeMapFace cubeMapFace, const uint32_t level) const
 {
 	Rhi::AttachTextureToFrameBuffer(m_Id, attachment, cubeMapFace, cubemap.GetId(), level);
 }
 
-void FrameBuffer::AttachTextureLayer(const Texture& texture, Attachment::Attachment attachment,uint32_t level, uint32_t layer) const
+void Framebuffer::AttachTextureLayer(const Texture& texture, const Attachment::Attachment attachment, const uint32_t level, const uint32_t layer) const
 {
-	Rhi::AttachTextureToFrameBufferLayer(m_Id,attachment,texture.GetId(), level,layer);
+	Rhi::AttachTextureToFrameBufferLayer(m_Id,attachment,texture.GetId(), level, layer);
 }
 
-void FrameBuffer::GetPixelFromAttachment(
-	const uint32_t attachmentIndex,
-	const Vector2i position,
-	const TextureFormat::TextureFormat textureFormat,
-	const DataType::DataType dataType,
-	void* output
-) const
+void Framebuffer::GetPixelFromAttachment(const uint32_t attachmentIndex, const Vector2i position, const TextureFormat::TextureFormat textureFormat, const DataType::DataType dataType, void* const output) const
 {
 	Rhi::BindFrameBuffer(m_Id);
 	Rhi::GetPixelFromAttachement(attachmentIndex, position, textureFormat, dataType, output);
 	Rhi::UnbindFrameBuffer();
 }
 
-
-uint32_t FrameBuffer::GetId() const
+uint32_t Framebuffer::GetId() const
 {
 	return m_Id;
 }
