@@ -112,7 +112,7 @@ public:
     
     /// @brief Unbinds the texture
     /// @param index Index
-    XNOR_ENGINE void UnbindTexture(uint32_t index) const;
+    XNOR_ENGINE void UnBindTexture(uint32_t index) const;
 
     /// @brief Gets the texture id
     /// @return Texture id

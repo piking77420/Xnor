@@ -61,6 +61,9 @@ public:
     /// @brief Binds the shadow map
     XNOR_ENGINE void BindShadowMap() const;
 
+    /// @brief Binds the shadow map
+    XNOR_ENGINE void UnBindShadowMap() const;
+
 private:
     enum class RenderingLight
     {

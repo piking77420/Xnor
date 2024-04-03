@@ -64,6 +64,10 @@ public:
     /// @brief Destroys the viewport data
     void Destroy();
 
+    void BindDescriptor() const;
+
+    void UnBindDescriptor() const;
+
 private:
     void InitForward(Vector2i size);
 

@@ -115,6 +115,16 @@ void Scene::DestroyEntityChildren(Entity* const entity)
     entity->m_Children.Clear();
 }
 
+Scene::Scene()
+{
+    // TODO Make menue to selelect skybox
+    skybox.Initialize();
+    Pointer<Texture> texture = ResourceManager::Get<Texture>("assets/textures/puresky.hdr");
+    texture->loadData.flipVertically = true;
+    texture->Reload();
+    skybox.LoadFromHdrTexture(texture);
+}
+
 Scene::~Scene()
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)

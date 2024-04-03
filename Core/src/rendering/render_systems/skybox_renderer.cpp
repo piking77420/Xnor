@@ -12,13 +12,13 @@ void SkyboxRenderer::InitializeResources()
     m_SkyboxDrawerShader->CreateInRhi();
     
     m_SkyboxDrawerShader->Use();
-    m_SkyboxDrawerShader->SetInt("skybox",0);
+    m_SkyboxDrawerShader->SetInt("skybox",SkyBoxAlbedoTextureBindingIndex);
 }
 
 void SkyboxRenderer::DrawSkymap(const Pointer<Model>& cubeModel, const Skybox& skybox) const 
 {
     m_SkyboxDrawerShader->Use();
-    skybox.cubeMap->BindTexture(0);
+    skybox.GetSkyboxAlbedoColor()->BindTexture(SkyBoxAlbedoTextureBindingIndex);
     Rhi::DrawModel(cubeModel->GetId());
     m_SkyboxDrawerShader->Unuse();
 }

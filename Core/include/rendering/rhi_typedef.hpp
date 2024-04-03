@@ -387,6 +387,9 @@ BEGIN_ENUM(DepthFunction)
 	NotEqual,
 	/// @brief >=
 	GreaterEqual,
+
+	/// @brief !Depth
+	Disable
 }
 END_ENUM
 
@@ -579,8 +582,8 @@ struct MaterialData
 	float_t reflectance = 0.f;
 };
 
-/// @brief The type of GBuffer.
-BEGIN_ENUM(Gbuffer)
+/// @brief The type of DefferedDescriptor.
+BEGIN_ENUM(DefferedDescriptor)
 {
 	Position = 4,
 	Normal,
@@ -588,6 +591,10 @@ BEGIN_ENUM(Gbuffer)
 	MetallicRoughessReflectance,
 	AmbiantOcclusion,
 	Emissivive,
+	
+	SkyboxIrradiance = 12,
+	SkyboxPrefilterMap = 13,
+	SkyboxPrecomputeBrdf = 14,
 };
 END_ENUM
 

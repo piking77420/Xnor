@@ -171,6 +171,20 @@ void LightManager::BindShadowMap() const
 	m_PointLightShadowMapCubemapArrayPixelDistance->BindTexture(ShadowTextureBinding::PointLightCubemapArrayPixelDistance);
 }
 
+void LightManager::UnBindShadowMap() const
+{
+	for (const DirectionalLight* const directionalLight : m_DirectionalLights)
+	{
+		if (!directionalLight->castShadow)
+			continue;
+
+		m_DirectionalShadowMaps->UnBindTexture(ShadowTextureBinding::Directional);
+	}
+
+	m_SpotLightShadowMapTextureArray->BindTexture(ShadowTextureBinding::SpotLight);
+	m_PointLightShadowMapCubemapArrayPixelDistance->BindTexture(ShadowTextureBinding::PointLightCubemapArrayPixelDistance);
+}
+
 void LightManager::FecthLightInfo() const
 {
 	 if (m_DirectionalLights.size() > MaxDirectionalLights)

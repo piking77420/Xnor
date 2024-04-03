@@ -14,7 +14,7 @@ void Renderer::Initialize()
 	m_SkyboxRenderer.InitializeResources();
 	m_LightManager.InitResources();
 	m_PostProcessPass.Init();
-	Rhi::PrepareUniform();
+	Rhi::PrepareRendering();
 }
 
 void Renderer::BeginFrame(const Scene& scene) const
@@ -94,38 +94,23 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 		.clearColor = clearColor
 	};
 
-	Rhi::DepthTest(false);
 	
 	viewportData.colorPass.BeginRenderPass(renderPassBeginInfoLit);
 	m_GBufferShaderLit->Use();
 	
 	// Set G buffer Shader Info
-	viewportData.positionAttachment->BindTexture(Gbuffer::Position);
-	viewportData.normalAttachement->BindTexture(Gbuffer::Normal);
-	viewportData.albedoAttachment->BindTexture(Gbuffer::Albedo);
-	viewportData.metallicRoughnessReflectance->BindTexture(Gbuffer::MetallicRoughessReflectance);
-	viewportData.ambiantOcclusion->BindTexture(Gbuffer::AmbiantOcclusion);
-	viewportData.emissive->BindTexture(Gbuffer::Emissivive);
-	skybox.irradianceMap->BindTexture(12);
-	skybox.prefilterMap->BindTexture(13);
-	skybox.precomputeBrdfTexture->BindTexture(14);
+	viewportData.BindDescriptor();
+	skybox.BindDesriptorSet();
 	m_LightManager.BindShadowMap();
 	
 	Rhi::DrawModel(m_Quad->GetId());
-	m_GBufferShaderLit->Unuse();
-	Rhi::DepthTest(true);
-
-	skybox.irradianceMap->UnBindTexture(12);
-	skybox.prefilterMap->UnBindTexture(13);
-	skybox.precomputeBrdfTexture->UnbindTexture(14);
-	viewportData.positionAttachment->UnbindTexture(Gbuffer::Position);
-	viewportData.normalAttachement->UnbindTexture(Gbuffer::Normal);
-	viewportData.albedoAttachment->UnbindTexture(Gbuffer::Albedo);
-	viewportData.metallicRoughnessReflectance->UnbindTexture(Gbuffer::MetallicRoughessReflectance);
-	viewportData.ambiantOcclusion->UnbindTexture(Gbuffer::AmbiantOcclusion);
-	viewportData.emissive->UnbindTexture(Gbuffer::Emissivive);
 	
+	skybox.UnbindDesriptorSet();
+	viewportData.UnBindDescriptor();
 	viewportData.colorPass.EndRenderPass();
+	
+	m_GBufferShaderLit->Unuse();
+
 }
 
 void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox, const Viewport& viewport, const Vector2i viewportSize, const bool_t isEditor) const
@@ -331,20 +316,22 @@ void Renderer::InitResources()
 {
 	// Deferred 
 	m_GBufferShaderLit = ResourceManager::Get<Shader>("deferred_opaque");
+	m_GBufferShaderLit->SetDepthFunction( DepthFunction::DepthFunction::Disable);
 	
 	m_GBufferShaderLit->CreateInRhi();
 	m_GBufferShaderLit->Use();
 	
-	m_GBufferShaderLit->SetInt("gPosition", Gbuffer::Position);
-	m_GBufferShaderLit->SetInt("gNormal", Gbuffer::Normal);
-	m_GBufferShaderLit->SetInt("gAlbedoSpec", Gbuffer::Albedo);
-	m_GBufferShaderLit->SetInt("gMetallicRoughessReflectance", Gbuffer::MetallicRoughessReflectance);
-	m_GBufferShaderLit->SetInt("gAmbiantOcclusion", Gbuffer::AmbiantOcclusion);
-	m_GBufferShaderLit->SetInt("gEmissive", Gbuffer::Emissivive);
+	m_GBufferShaderLit->SetInt("gPosition", DefferedDescriptor::Position);
+	m_GBufferShaderLit->SetInt("gNormal", DefferedDescriptor::Normal);
+	m_GBufferShaderLit->SetInt("gAlbedoSpec", DefferedDescriptor::Albedo);
+	m_GBufferShaderLit->SetInt("gMetallicRoughessReflectance", DefferedDescriptor::MetallicRoughessReflectance);
+	m_GBufferShaderLit->SetInt("gAmbiantOcclusion", DefferedDescriptor::AmbiantOcclusion);
+	m_GBufferShaderLit->SetInt("gEmissive", DefferedDescriptor::Emissivive);
 
-	m_GBufferShaderLit->SetInt("irradianceMap", 12);
-	m_GBufferShaderLit->SetInt("prefilterMap", 13);
-	m_GBufferShaderLit->SetInt("brdfLUT", 14);
+	m_GBufferShaderLit->SetInt("irradianceMap", DefferedDescriptor::SkyboxIrradiance);
+	m_GBufferShaderLit->SetInt("prefilterMap", DefferedDescriptor::SkyboxPrefilterMap);
+	m_GBufferShaderLit->SetInt("brdfLUT", DefferedDescriptor::SkyboxPrecomputeBrdf);
+	
 	m_GBufferShaderLit->SetInt("dirLightShadowMap", ShadowTextureBinding::Directional);
 	m_GBufferShaderLit->SetInt("spotLightShadowArray", ShadowTextureBinding::SpotLight);
 	m_GBufferShaderLit->SetInt("pointLightCubemapArrayPixelDistance", ShadowTextureBinding::PointLightCubemapArrayPixelDistance);

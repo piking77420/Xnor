@@ -9,6 +9,7 @@
 #include "rhi_typedef.hpp"
 #include "uniform_buffer.hpp"
 #include "vertex.hpp"
+#include "render_systems/skybox_parser.hpp"
 #include "resource/model.hpp"
 
 /// @file rhi.hpp
@@ -22,6 +23,8 @@ class Rhi
 	STATIC_CLASS(Rhi)
 	
 public:
+
+	XNOR_ENGINE static inline SkyBoxParser skyBoxParser;
 
 	/// @brief Sets the polygon mode
 	/// @param face Polygon face
@@ -184,8 +187,8 @@ public:
 	/// @brief Shutdowns the Rhi
 	XNOR_ENGINE static void Shutdown();
 
-	/// @brief Prepares the default uniform buffers
-	XNOR_ENGINE static void PrepareUniform();
+	/// @brief Prepares the Render resource
+	XNOR_ENGINE static void PrepareRendering();
 
 	/// @brief Sets the clear color
 	/// @param color Clear color
@@ -269,7 +272,8 @@ private:
 
 	XNOR_ENGINE static inline bool_t m_Blending = false;
 	XNOR_ENGINE static inline bool_t m_Cullface = false;
-	
+	XNOR_ENGINE static inline bool_t m_Depth = true;
+
 	static constexpr int32_t NullUniformLocation = -1;
 	
 	XNOR_ENGINE static inline std::unordered_map<uint32_t, ShaderInternal> m_ShaderMap;
@@ -305,6 +309,10 @@ private:
 
 	XNOR_ENGINE static uint32_t FrontFaceToOpenglFrontFace(FrontFace::FrontFace frontFace);
 	XNOR_ENGINE static uint32_t CullFaceToOpenglCullFace(CullFace::CullFace cullFace);
+
+	/// @brief Set the depth function to the graphic API
+	/// @param depthFunction The current depthFunction to set to the api
+	XNOR_ENGINE static __forceinline void ComputeDepthFunction(DepthFunction::DepthFunction depthFunction);
 
 	XNOR_ENGINE static void OpenglDebugCallBack(
 		uint32_t source,

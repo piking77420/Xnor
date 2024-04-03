@@ -21,6 +21,8 @@ public:
     XNOR_ENGINE explicit Cubemap(const std::array<std::string, 6>& cubeMapsTextures);
     
     XNOR_ENGINE explicit Cubemap(const TextureCreateInfo& textureCreateInfo);
+
+    XNOR_ENGINE ~Cubemap() override;
     
     /// @brief Creates the Cubemap in the Rhi
     XNOR_ENGINE void CreateInRhi() override;

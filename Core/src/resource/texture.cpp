@@ -127,7 +127,7 @@ void Texture::BindTexture(const uint32_t index) const
     Rhi::BindTexture(index, m_Id);
 }
 
-void Texture::UnbindTexture(const uint32_t index) const
+void Texture::UnBindTexture(const uint32_t index) const
 {
     Rhi::BindTexture(index, 0);
 }
