@@ -1,5 +1,6 @@
 #pragma once
 
+#include "physics/components/collider.hpp"
 #include "scene/component.hpp"
 
 BEGIN_XNOR_CORE
@@ -17,8 +18,14 @@ public:
 
     XNOR_ENGINE TestComponentPhysics() = default;
     XNOR_ENGINE ~TestComponentPhysics() override = default;
+
+private:
+    Collider* m_Collider = nullptr;
+    float_t m_JumpForce = 1.f;
 };
 
 END_XNOR_CORE
 
-REFL_AUTO(type(XnorCore::TestComponentPhysics, bases<XnorCore::Component>));
+REFL_AUTO(type(XnorCore::TestComponentPhysics, bases<XnorCore::Component>),
+    field(m_JumpForce)
+);

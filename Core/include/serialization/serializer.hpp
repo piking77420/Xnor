@@ -96,6 +96,8 @@ private:
     XNOR_ENGINE static inline XMLElement* m_RootElement = nullptr;
 
     XNOR_ENGINE static inline std::stack<XMLElement*> m_ElementsStack;
+
+    XNOR_ENGINE static inline std::vector<size_t> m_StaticClassesPared;
     
     XNOR_ENGINE static inline std::unordered_map<Guid, Entity**> m_GuidEntityMap;
 
@@ -113,8 +115,15 @@ private:
 
 
     XNOR_ENGINE static void ReadElement(const std::string& name);
+    [[nodiscard]]
     XNOR_ENGINE static const char_t* ReadElementValue(const std::string& name);
     XNOR_ENGINE static void FinishReadElement();
+
+    template <typename ReflectT>
+    static void SerializeStaticFields();
+
+    template <typename ReflectT>
+    static void DeserializeStaticFields();
 
     template <typename ReflectT, typename MemberT, typename DescriptorT>
     static void SerializeSimpleType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);

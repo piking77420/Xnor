@@ -19,10 +19,7 @@ int main(int, char**)
 	using namespace XnorEditor;
 
 	Logger::OpenDefaultFile();
-	XnorFactory::RegisterTypes();
-
-	FileManager::LoadDirectory("assets_internal");
-	FileManager::LoadDirectory("assets");
+	XnorFactory::RegisterAllTypes();
 
 	Editor editor;
 

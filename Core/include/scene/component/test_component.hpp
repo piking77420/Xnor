@@ -3,6 +3,7 @@
 #include <Maths/vector3.hpp>
 
 #include "core.hpp"
+#include "transform.hpp"
 #include "reflection/reflection.hpp"
 #include "rendering/light/light.hpp"
 #include "scene/component.hpp"
@@ -13,10 +14,10 @@ BEGIN_XNOR_CORE
 class TestComponent : public Component
 {
     REFLECTABLE_IMPL(TestComponent)
-    
+
 public:
     DEFAULT_COPY_MOVE_OPERATIONS(TestComponent)
-    
+
     XNOR_ENGINE void Begin() override;
 
     XNOR_ENGINE void Update() override;
@@ -28,16 +29,21 @@ private:
     Light* m_Light = nullptr;
 
     ColorHsva m_Color;
-    
+
     float_t m_RotationSpeed = 1.0f;
-    
+
     float_t m_Radius = 1.0f;
 
     float_t m_CurrentAngle = 0.f;
-    
+
     Vector3 m_BasePosition;
 
     bool_t m_Rotate = true;
+
+    Entity* m_TestEntity = nullptr;
+
+    static inline int32_t m_StaticTest = 1;
+    static inline Transform m_StaticTransform {};
 };
 
 END_XNOR_CORE
@@ -47,5 +53,8 @@ REFL_AUTO(
     field(m_Rotate),
     field(m_CurrentAngle, XnorCore::Reflection::NotSerializable()),
     field(m_RotationSpeed),
-    field(m_Radius)
+    field(m_Radius),
+    field(m_StaticTest),
+    field(m_StaticTransform),
+    field(m_TestEntity)
 );

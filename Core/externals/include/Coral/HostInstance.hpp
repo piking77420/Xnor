@@ -1,12 +1,13 @@
 #pragma once
 
+#include <filesystem>
+
 #include "Core.hpp"
 #include "MessageLevel.hpp"
 #include "Assembly.hpp"
 #include "ManagedObject.hpp"
 
 #include <functional>
-#include <filesystem>
 
 namespace Coral {
 

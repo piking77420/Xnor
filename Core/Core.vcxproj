@@ -107,6 +107,7 @@
     <ClCompile Include="externals\src\RapidXMLSTD.cpp" />
     <ClCompile Include="externals\src\stb\stb_image.c" />
     <ClCompile Include="externals\src\ttf\ttfParser.cpp" />
+    <ClInclude Include="include\reflection\filters.hpp" />
     <ClInclude Include="include\scene\component\test_component_physics.hpp" />
     <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\csharp\dotnet_assembly.cpp" />
@@ -117,6 +118,7 @@
     <ClCompile Include="src\input\input.cpp" />
     <ClCompile Include="src\input\gamepad_input.cpp" />
     <ClCompile Include="src\input\time.cpp" />
+    <ClCompile Include="src\reflection\dotnet_reflection.cpp" />
     <ClCompile Include="src\physics\body_activation_listener.cpp" />
     <ClCompile Include="src\physics\broad_phase_layer_interface.cpp" />
     <ClCompile Include="src\physics\components\capsule_collider.cpp" />
@@ -126,6 +128,7 @@
     <ClCompile Include="src\physics\contact_listener.cpp" />
     <ClCompile Include="src\physics\physics_world.cpp" />
     <ClCompile Include="src\reflection\xnor_factory.cpp" />
+    <ClCompile Include="src\reflection\filters.cpp" />
     <ClCompile Include="src\reflection\type_renderer.cpp" />
     <ClCompile Include="src\rendering\bloom_rendertarget.cpp" />
     <ClCompile Include="src\rendering\light\directional_light.cpp" />
@@ -169,14 +172,9 @@
     <ClCompile Include="src\screen.cpp" />
     <ClCompile Include="src\serialization\serializer.cpp" />
     <ClCompile Include="src\transform.cpp" />
-    <ClCompile Include="src\utils\color.cpp" />
+    <ClCompile Include="src\utils\coroutine.cpp" />
     <ClCompile Include="src\utils\file_system_watcher.cpp" />
-    <ClCompile Include="src\utils\formatter.cpp" />
-    <ClCompile Include="src\utils\list.cpp" />
     <ClCompile Include="src\utils\logger.cpp" />
-    <ClCompile Include="src\utils\meta_programming.cpp" />
-    <ClCompile Include="src\utils\pointer.cpp" />
-    <ClCompile Include="src\utils\reference_counter.cpp" />
     <ClCompile Include="src\utils\utils.cpp" />
     <ClCompile Include="src\window.cpp" />
     <ClCompile Include="src\rendering\vertex.cpp" />
@@ -645,6 +643,8 @@
     <ClInclude Include="include\physics\layers.hpp" />
     <ClInclude Include="include\physics\physics_world.hpp" />
     <ClInclude Include="include\reflection\xnor_factory.hpp" />
+    <ClInclude Include="include\reflection\dotnet_reflection.hpp" />
+    <ClInclude Include="include\reflection\factory.hpp" />
     <ClInclude Include="include\reflection\reflection.hpp" />
     <ClInclude Include="include\reflection\type_renderer.hpp" />
     <ClInclude Include="include\rendering\bloom_rendertarget.hpp" />
@@ -708,6 +708,7 @@
     <ClInclude Include="inline\file\file_manager.inl" />
     <ClInclude Include="inline\input\input.inl" />
     <ClInclude Include="inline\input\time.inl" />
+    <ClInclude Include="inline\reflection\filters.inl" />
     <ClInclude Include="inline\reflection\xnor_factory.inl" />
     <ClInclude Include="inline\reflection\reflection.inl" />
     <ClInclude Include="inline\reflection\type_renderer.inl" />
@@ -732,6 +733,7 @@
     <Content Include="externals\include\jolt\Physics\Collision\Shape\TaperedCapsuleShape.gliffy" />
     <Content Include="include\rendering\rhi_typedef.hpp" />
     <Content Include="include\utils\meta_programming.hpp" />
+    <ClInclude Include="inline\reflection\dotnet_reflection.inl" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="externals\include\jolt\Jolt.natvis" />

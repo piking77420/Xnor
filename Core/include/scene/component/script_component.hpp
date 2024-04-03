@@ -26,6 +26,8 @@ public:
     XNOR_ENGINE void Begin() override;
 
     XNOR_ENGINE void Update() override;
+
+    XNOR_ENGINE Coral::ManagedObject& GetManagedObject();
     
 private:
     Coral::ManagedObject m_ManagedObject;

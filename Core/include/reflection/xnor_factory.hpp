@@ -24,7 +24,7 @@ class XnorFactory
     
 public:
     template <typename T>
-    static constexpr void RegisterFactoryType();
+    static void RegisterType();
 
     XNOR_ENGINE static void* CreateObject(size_t hash);
     XNOR_ENGINE static void* CreateObject(const std::string& name);
@@ -33,7 +33,7 @@ public:
     XNOR_ENGINE static void SerializeObject(void* obj, size_t hash);
     XNOR_ENGINE static void DeserializeObject(void* obj, size_t hash);
 
-    XNOR_ENGINE static void RegisterTypes();
+    XNOR_ENGINE static void RegisterAllTypes();
 
     XNOR_ENGINE static std::string GetTypeName(size_t hash);
 

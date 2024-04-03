@@ -140,19 +140,6 @@ private:
     /// @param obj Object pointer
     /// @param hash Object hash
     XNOR_ENGINE static void DisplayObjectUsingFactory(void* obj, size_t hash);
-    
-    // TODO maybe move elsewhere
-    template <Concepts::ResourceT T>
-    static Pointer<T> FilterResources(ImGuiTextFilter& filter);
-
-    static inline Entity* FilterEntity(ImGuiTextFilter& filter);
-
-    XNOR_ENGINE static Component* FilterComponent(ImGuiTextFilter& filter);
-
-    static inline void* m_ResourceFilterTarget = nullptr;
-    static inline void* m_EntityFilterTarget = nullptr;
-    static inline void* m_ComponentFilterTarget = nullptr;
-    static inline ImGuiTextFilter m_TextFilter;
 };
 
 END_XNOR_CORE

@@ -25,3 +25,8 @@ void ScriptComponent::Update()
 
     m_ManagedObject.InvokeMethod("Update");
 }
+
+Coral::ManagedObject& ScriptComponent::GetManagedObject()
+{
+    return m_ManagedObject;
+}

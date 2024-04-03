@@ -3,33 +3,43 @@ namespace Game
     public class TestScript : ScriptComponent
     {
         private ColorHsva color;
+        private float intensity;
 
         private Light light;
 
         public TestScript()
         {
             Logger.LogTempDebug("Bobby was constructed!");
+            intensity = 1f / 360f;
+        }
+
+        ~TestScript()
+        {
+            Logger.LogTempDebug("Bobby was destructed!");
         }
         
         public override void Begin()
         {
             Logger.LogTempDebug("Bobby began acting!");
-            
-            color = (ColorHsva) ColorRgb.Red();
+
+            color = ColorHsva.Red;
         }
 
         public override void Update()
         {
             if (light == null)
             {
-                light = GetComponent<PointLight>();
-                return;
+                if (!TryGetComponent(out PointLight pointLight))
+                    return;
+
+                light = pointLight;
             }
             
-            color.h++;
+            color.H += intensity;
+            if (color.H >= 1f)
+                color.H = 0f;
 
             light.color = (Colorf) color;
-            light.intensity = 200f;
 
             transform.SetPositionX(MathF.Cos(Time.GetTotalTime()) * 2f);
             transform.SetPositionZ(MathF.Sin(Time.GetTotalTime()) * 2f);

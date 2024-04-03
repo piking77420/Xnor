@@ -5,14 +5,17 @@
 #include "file/file.hpp"
 
 #include "application.hpp"
+#include "reflection/dotnet_reflection.hpp"
 
 // We need to include Window.h here but it must be the last include as it breaks everything otherwise
 #undef APIENTRY
-#include <Windows.h>
+#define XMLDocument XMLDocument_dont_care
+#include <windows.h>
+#undef XMLDocument
 
 using namespace XnorCore;
 
-constexpr const char* AlcName = "XNOR Coral AssemblyLoadContext";
+constexpr const char_t* AlcName = "XNOR Coral AssemblyLoadContext";
 
 Coral::HostSettings DotnetRuntime::m_Settings =
 {
@@ -64,17 +67,20 @@ void DotnetRuntime::Shutdown()
 
 bool_t DotnetRuntime::LoadAssembly(const std::string& name)
 {
-    const std::filesystem::path&& filepath = Application::executablePath.parent_path().string() + static_cast<char_t>(std::filesystem::path::preferred_separator) + name + ".dll";
+    const std::filesystem::path&& filepath = Application::executablePath.parent_path() / (name + ".dll");
     
     Logger::LogInfo("Loading .NET assembly {}", filepath.filename());
 
     const std::string&& str = filepath.string();
     
-    DotnetAssembly* assembly = new DotnetAssembly(str);
+    DotnetAssembly* const assembly = new DotnetAssembly(str);
     if (assembly->Load(m_Alc))
     {
         //assembly->ProcessTypes();
         m_LoadedAssemblies.push_back(assembly);
+
+        if (name == "Game")
+            DotnetReflection::PrintTypes();
     }
 
     return false;
@@ -113,6 +119,26 @@ void DotnetRuntime::ReloadAllAssemblies()
     
     for (auto&& assembly : assemblies)
         LoadAssembly(assembly);
+}
+
+bool_t DotnetRuntime::BuildGameProject()
+{
+    constexpr const char* gameProjectLocation = "Game";
+    
+    const std::filesystem::path gameProjectDirectory = gameProjectLocation;
+
+    if (!exists(gameProjectDirectory))
+        return false;
+
+    if (!is_directory(gameProjectDirectory))
+        return false;
+
+    if (!exists(gameProjectDirectory / "Game.csproj"))
+        return false;
+
+    std::system(("start dotnet build " + absolute(gameProjectDirectory).string()).c_str());  // NOLINT(concurrency-mt-unsafe)
+
+    return true;
 }
 
 bool_t DotnetRuntime::GetInitialized()
