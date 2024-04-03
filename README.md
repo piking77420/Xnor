@@ -1,6 +1,6 @@
 # XNOR ENGINE 
 
-![Editor logo](assets_internal/editor/logo.png)
+![Editor logo](assets_internal/editor/ui/logo.png)
 
 ### A 3D game engine using OpenGL written in C++
 #### The goal of the engine is to develop a FPS puzzle game
