@@ -25,9 +25,10 @@ public:
     /// @brief Special prefix used to store automatically added @ref Shader "Shaders".
     ///
     /// This is mainly used in LoadAll.
-    static constexpr const char_t* ReservedShaderPrefix = "_shaders/";
+    static constexpr const char_t* const ReservedShaderPrefix = "_shaders/";
 
-    static constexpr const char_t* GuidMapFilePath = "assets/guid_map.txt";
+    /// @brief The path to the GUID map file.
+    static constexpr const char_t* const GuidMapFilePath = "assets/guid_map.txt";
     
     /// @brief Creates the Resource corresponding to the given @p name without loading it.
     template <Concepts::ResourceT T>
@@ -65,6 +66,7 @@ public:
     [[nodiscard]]
     static Pointer<T> Get(const Pointer<File>& file);
 
+    /// @brief Returns the Resource that was either added or loaded using the given file name.
     template <Concepts::ResourceT T = Resource>
     [[nodiscard]]
     static Pointer<T> Get(const Guid& guid);

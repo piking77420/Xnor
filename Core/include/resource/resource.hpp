@@ -83,6 +83,7 @@ public:
     /// This function also renames the Resource entry in the ResourceManager using ResourceManager::Rename(const std::string&, const std::string&).
     XNOR_ENGINE void SetName(std::string newName);
 
+    /// @brief Sets the GUID of this Resource.
     XNOR_ENGINE void SetGuid(const Guid& guid);
 
     /// @brief Returns the Guid of this Resource.
