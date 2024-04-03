@@ -74,11 +74,11 @@ struct std::formatter<Exception>
 
     /// @brief Formats a string using the given instance of @c std::exception, according to the given options in the parse function.
     template <class FormatContext>
-    typename FormatContext::iterator format(const Exception& path, FormatContext& ctx) const
+    typename FormatContext::iterator format(const Exception& ex, FormatContext& ctx) const
     {
         std::ostringstream out;
 
-        out << path.what();
+        out << ex.what();
         
         return std::ranges::copy(std::move(out).str(), ctx.out()).out;
     }

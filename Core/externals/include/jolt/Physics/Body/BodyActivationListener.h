@@ -10,7 +10,7 @@ class BodyID;
 
 /// A listener class that receives events when a body activates or deactivates.
 /// It can be registered with the BodyManager (or PhysicsSystem).
-class JPH_EXPORT BodyActivationListener
+class BodyActivationListener
 {
 public:
 	/// Ensure virtual destructor

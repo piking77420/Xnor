@@ -183,11 +183,7 @@ public:
 	void							UnlockAllBodies() const;
 
 	/// Function to update body's layer (should only be called by the BodyInterface since it also requires updating the broadphase)
-	inline void						SetBodyObjectLayerInternal(Body &ioBody, ObjectLayer inLayer) const
-	{
-		ioBody.mObjectLayer = inLayer;
-		ioBody.mBroadPhaseLayer = mBroadPhaseLayerInterface->GetBroadPhaseLayer(inLayer);
-	}
+	inline void						SetBodyObjectLayerInternal(Body &ioBody, ObjectLayer inLayer) const { ioBody.mObjectLayer = inLayer; ioBody.mBroadPhaseLayer = mBroadPhaseLayerInterface->GetBroadPhaseLayer(inLayer); }
 
 	/// Set the Body::EFlags::InvalidateContactCache flag for the specified body. This means that the collision cache is invalid for any body pair involving that body until the next physics step.
 	void							InvalidateContactCacheForBody(Body &ioBody);
@@ -234,8 +230,12 @@ public:
 		bool						mDrawMassAndInertia = false;					///< Draw the mass and inertia (as the box equivalent) for each body
 		bool						mDrawSleepStats = false;						///< Draw stats regarding the sleeping algorithm of each body
 		bool						mDrawSoftBodyVertices = false;					///< Draw the vertices of soft bodies
+		bool						mDrawSoftBodyVertexVelocities = false;			///< Draw the velocities of the vertices of soft bodies
 		bool						mDrawSoftBodyEdgeConstraints = false;			///< Draw the edge constraints of soft bodies
+		bool						mDrawSoftBodyBendConstraints = false;			///< Draw the bend constraints of soft bodies
 		bool						mDrawSoftBodyVolumeConstraints = false;			///< Draw the volume constraints of soft bodies
+		bool						mDrawSoftBodySkinConstraints = false;			///< Draw the skin constraints of soft bodies
+		bool						mDrawSoftBodyLRAConstraints = false;			///< Draw the LRA constraints of soft bodies
 		bool						mDrawSoftBodyPredictedBounds = false;			///< Draw the predicted bounds of soft bodies
 	};
 

@@ -12,57 +12,68 @@ BEGIN_XNOR_CORE
 
 /// @brief Wrapper around C++20 Coroutines.
 /// @see <a href="https://en.cppreference.com/w/cpp/language/coroutines">C++20 Coroutines</a>
-class Coroutine
+class Coroutine // TODO Add template for chrono seconds
 {
+    struct Awaitable;
+    
 public:
     using AwaitType = std::chrono::milliseconds;
-    
-private:
-    struct Awaitable
-    {
-        AwaitType duration;
-        
-        bool_t await_ready(const AwaitType& from);
-
-        bool_t await_suspend(std::coroutine_handle<> h);
-
-        void await_resume();
-    };
     
     struct promise_type
     {
         AwaitType awaitValue;
-        
-        std::exception_ptr exception;
- 
-        Coroutine get_return_object();
 
-        std::suspend_always initial_suspend();
+        /// @brief Returns the object that will be returns to the caller of a CoroutineFunc
+        XNOR_ENGINE Coroutine get_return_object();
 
-        std::suspend_always final_suspend() noexcept;
+        /// @brief Empty implementation
+        XNOR_ENGINE std::suspend_always initial_suspend();
 
-        void unhandled_exception();
+        /// @brief Empty implementation
+        XNOR_ENGINE std::suspend_always final_suspend() noexcept;
 
-        void return_void();
+        /// @brief Logs the exception and rethrows it
+        XNOR_ENGINE void unhandled_exception();
 
-        Awaitable await_transform(const AwaitType& duration);
+        /// @brief Called when @c co_return is used in a Coroutine body
+        XNOR_ENGINE void return_void();
 
-        void return_value();
+        /// @brief Converts a AwaitType value to an Awaitable. Called when @c co_await is used with an AwaitType value.
+        XNOR_ENGINE Awaitable await_transform(const AwaitType& duration);
+    };
+    
+private:
+    struct Awaitable
+    {
+        /// @brief Returns false if await_suspend should be called
+        XNOR_ENGINE bool_t await_ready();
+
+        /// @brief Effectively calls @c std::this_thread::sleep with promise_type::awaitValue
+        XNOR_ENGINE bool_t await_suspend(std::coroutine_handle<promise_type> h);
+
+        /// @brief Empty implementation
+        XNOR_ENGINE void await_resume();
     };
     
 public:
     using HandleType = std::coroutine_handle<promise_type>;
 
-    Coroutine(HandleType handle);
+    // ReSharper disable once CppNonExplicitConvertingConstructor
+    XNOR_ENGINE Coroutine(HandleType handle);
 
-    ~Coroutine();
+    XNOR_ENGINE ~Coroutine();
 
     DEFAULT_COPY_MOVE_OPERATIONS(Coroutine)
 
-    bool_t Resume();
+    /// @brief Resumes the Coroutine.
+    /// @return Whether the Coroutine, after being resumed, is back to the waiting state.
+    XNOR_ENGINE bool_t Resume();
 
 private:
-    HandleType m_Handle;
+    HandleType m_Handle; // TODO Use Pointer instead
 };
+
+template <typename... Args>
+using CoroutineFunc = Coroutine(*)(Args...);
 
 END_XNOR_CORE
