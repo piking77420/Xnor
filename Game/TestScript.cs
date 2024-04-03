@@ -38,6 +38,10 @@ namespace Game
                 light = pointLight;
             }
             
+            // Dangerous
+            // Only for limit testing
+            //entity.AddComponent(new PointLight());
+            
             color.H += intensity;
             if (color.H >= 1f)
                 color.H = 0f;
