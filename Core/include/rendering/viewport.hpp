@@ -21,6 +21,9 @@ public:
 	/// @brief The Camera used to render a frame.
 	const Camera* camera = nullptr;
 
+	/// @brief Texture that's rendered to
+	Texture* m_Image = nullptr;
+
 	/// @brief Viewport size
 	Vector2i viewPortSize = Window::GetSize();
 
@@ -47,18 +50,11 @@ public:
 	/// @param newSize New size
 	XNOR_ENGINE void Resize(Vector2i newSize);
 	
-	/// @brief Gets the internal texture that's rendered to
-	/// @returns Internal image
-	[[nodiscard]]
-	XNOR_ENGINE Texture* GetImage() const;
-
 	/// @brief Checks if the viewport is valid
 	/// @returns Whether it's valid
 	[[nodiscard]]
 	XNOR_ENGINE bool_t IsValid() const;
 	
-private:
-	Texture* m_Image = nullptr;
 };
 
 END_XNOR_CORE

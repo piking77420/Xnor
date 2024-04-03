@@ -42,10 +42,6 @@ void Viewport::Resize(const Vector2i newSize)
     Init(newSize);
 }
 
-Texture* Viewport::GetImage() const
-{
-    return m_Image;
-}
 
 bool_t Viewport::IsValid() const
 {
