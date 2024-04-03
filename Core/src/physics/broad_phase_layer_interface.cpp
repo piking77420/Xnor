@@ -28,14 +28,14 @@ JPH::BroadPhaseLayer BroadPhaseLayerInterfaceImpl::GetBroadPhaseLayer(JPH::Objec
 }
 
 #if defined(JPH_EXTERNAL_PROFILE) || defined(JPH_PROFILE_ENABLED)
-const char_t* GetBroadPhaseLayerName(const JPH::BroadPhaseLayer inLayer) const
+const char_t* BroadPhaseLayerInterfaceImpl::GetBroadPhaseLayerName(const JPH::BroadPhaseLayer inLayer) const
 {
     switch (static_cast<JPH::BroadPhaseLayer::Type>(inLayer))
     {
-        case static_cast<JPH::BroadPhaseLayer::Type>(JPH::BroadPhaseLayers::NON_MOVING):
+        case static_cast<JPH::BroadPhaseLayer::Type>(Layers::NON_MOVING):
             return "NON_MOVING";
 
-        case static_cast<JPH::BroadPhaseLayer::Type>(JPH::BroadPhaseLayers::MOVING):
+        case static_cast<JPH::BroadPhaseLayer::Type>(Layers::MOVING):
             return "MOVING";
 
         default:

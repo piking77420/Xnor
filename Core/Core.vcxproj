@@ -49,7 +49,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY;JPH_DEBUG_RENDERER</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY;JPH_DEBUG_RENDERER;JPH_FLOATING_POINT_EXCEPTIONS_ENABLED;JPH_PROFILE_ENABLED</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;include;inline;externals\inline</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>

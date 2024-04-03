@@ -150,3 +150,9 @@ using stdstring = std::string;
 #if defined(SWIG) || defined(SWIG_WRAP)
 #define SWIG_ONLY
 #endif
+
+#ifndef SWIG
+#define ALIGNAS(size) alignas(size)
+#else
+#define ALIGNAS(size)
+#endif

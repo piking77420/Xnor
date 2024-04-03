@@ -21,7 +21,7 @@ public:
     XNOR_ENGINE JPH::BroadPhaseLayer GetBroadPhaseLayer(JPH::ObjectLayer inLayer) const override;
 
 #if defined(JPH_EXTERNAL_PROFILE) || defined(JPH_PROFILE_ENABLED)
-    XNOR_ENGINE virtual const char_t* GetBroadPhaseLayerName(BroadPhaseLayer inLayer) const override;
+    XNOR_ENGINE virtual const char_t* GetBroadPhaseLayerName(JPH::BroadPhaseLayer inLayer) const override;
 #endif // JPH_EXTERNAL_PROFILE || JPH_PROFILE_ENABLED
 
 private:
