@@ -7,6 +7,7 @@
 
 BEGIN_XNOR_CORE
 
+/// @private
 class BodyActivationListenerImpl : public JPH::BodyActivationListener
 {
 public:

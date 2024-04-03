@@ -38,6 +38,8 @@ public:
     template <Concepts::ComponentT T>
     T* AddComponent();
 
+    /// @brief Adds a raw Component to the entity
+    /// @param component Component
     XNOR_ENGINE void AddComponent(Component* component);
 
     /// @brief Gets a specified Component

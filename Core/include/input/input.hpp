@@ -19,6 +19,7 @@ class Input
     STATIC_CLASS(Input)
     
 public:
+    /// @brief Whether the mouse is locked
     XNOR_ENGINE static inline bool_t mouseLocked = false;
     
     /// @brief Checks if a specified key is of the specified status
