@@ -28,6 +28,26 @@ void ViewportData::Destroy()
     postprocessRendertarget.Destroy();
 }
 
+void ViewportData::BindDescriptor() const
+{
+    positionAttachment->BindTexture(DefferedDescriptor::Position);
+    normalAttachement->BindTexture(DefferedDescriptor::Normal);
+    albedoAttachment->BindTexture(DefferedDescriptor::Albedo);
+    metallicRoughnessReflectance->BindTexture(DefferedDescriptor::MetallicRoughessReflectance);
+    ambiantOcclusion->BindTexture(DefferedDescriptor::AmbiantOcclusion);
+    emissive->BindTexture(DefferedDescriptor::Emissivive);
+}
+
+void ViewportData::UnBindDescriptor() const
+{
+    positionAttachment->UnBindTexture(DefferedDescriptor::Position);
+    normalAttachement->UnBindTexture(DefferedDescriptor::Normal);
+    albedoAttachment->UnBindTexture(DefferedDescriptor::Albedo);
+    metallicRoughnessReflectance->UnBindTexture(DefferedDescriptor::MetallicRoughessReflectance);
+    ambiantOcclusion->UnBindTexture(DefferedDescriptor::AmbiantOcclusion);
+    emissive->UnBindTexture(DefferedDescriptor::Emissivive);
+}
+
 void ViewportData::InitForward(const Vector2i size)
 {
     renderBuffer = new Framebuffer();

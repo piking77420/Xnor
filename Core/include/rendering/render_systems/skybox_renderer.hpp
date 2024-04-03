@@ -14,6 +14,8 @@ BEGIN_XNOR_CORE
 /// @brief Renderer specialized for a skybox
 class SkyboxRenderer
 {
+private:
+    static inline constexpr uint32_t SkyBoxAlbedoTextureBindingIndex = 0;
 public:
     XNOR_ENGINE SkyboxRenderer() = default;
     XNOR_ENGINE ~SkyboxRenderer() = default;

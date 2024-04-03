@@ -229,13 +229,6 @@ void Editor::SetupImGuiStyle() const
 void Editor::CreateTestScene()
 {
 	using namespace XnorCore;
-
-	// TODO Move skybox parser in rhi
-	World::scene->skybox.Initialize();
-	Pointer<Texture> texture = ResourceManager::Get<Texture>("assets/textures/puresky.hdr");
-	texture->loadData.flipVertically = true;
-	texture->Reload();
-	World::scene->skybox.LoadFromHdrTexture(texture);
 }
 
 void Editor::MenuBar()

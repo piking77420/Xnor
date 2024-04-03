@@ -84,7 +84,7 @@ void BloomPass::DownSampling(const BloomRenderTarget& bloomRenderTarget) const
         bloomMip.texture->BindTexture(0);
     }
     
-    bloomRenderTarget.thresholdTexture->UnbindTexture(0);
+    bloomRenderTarget.thresholdTexture->UnBindTexture(0);
     m_DownSample->Unuse();
 }
 

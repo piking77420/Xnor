@@ -37,22 +37,28 @@ public:
     
     /// @brief take a hdr file in input and wrap it to cubeMap
     /// @param hdfFile hdr image
-    XNOR_ENGINE void LoadFromHdrTexture(const Pointer<Texture>& hdfFile);
+    XNOR_ENGINE void LoadFromHdrTexture(const Pointer<Texture>& hdfFile) const;
 
+    /// @brief Bind All Texture For Rendering
+    XNOR_ENGINE void BindDesriptorSet() const;
+    
+    /// @brief UnBind All Texture For Rendering
+    XNOR_ENGINE void UnbindDesriptorSet() const;
+
+    XNOR_ENGINE const Cubemap* GetSkyboxAlbedoColor() const;
+
+private:
     /// @brief Irradiance map
-    Cubemap* irradianceMap = nullptr;
+    Cubemap* m_IrradianceMap = nullptr;
 
     /// @brief Cube map
-    Cubemap* cubeMap = nullptr;
+    Cubemap* m_CubeMap = nullptr;
 
     /// @brief Pre-filter map
-    Cubemap* prefilterMap = nullptr;
+    Cubemap* m_PrefilterMap = nullptr;
 
     /// @brief Pre-compute brdf texture
-    Texture* precomputeBrdfTexture = nullptr;
-    
-private:
-    SkyBoxParser m_SkyBoxParser;
+    Texture* m_PrecomputeBrdfTexture = nullptr;
 };
 
 END_XNOR_CORE

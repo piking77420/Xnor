@@ -17,11 +17,14 @@ class Scene
     REFLECTABLE_IMPL(Scene)
 
 public:
-    XNOR_ENGINE Scene() = default;
+    /// @brief Skybox handler
+    Skybox skybox;
+    
+    XNOR_ENGINE Scene();
     XNOR_ENGINE ~Scene();
 
     DEFAULT_COPY_MOVE_OPERATIONS(Scene)
-
+    
     /// @brief Gets all of the specified Component in every entity in the scene
     /// @tparam ComponentT Component type
     /// @param components Result components
@@ -75,10 +78,6 @@ public:
 
     [[nodiscard]]
     XNOR_ENGINE uint32_t GetEntityIndex(const Entity* entity) const;
-
-    /// @brief Skybox handler
-    // TODO move to rhi + not static
-    XNOR_ENGINE static inline Skybox skybox;
 
 private:
     List<Entity*> m_Entities;

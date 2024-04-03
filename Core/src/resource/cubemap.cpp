@@ -56,6 +56,12 @@ m_TextureFiltering(textureCreateInfo.filtering),m_TextureWrapping(textureCreateI
     m_LoadedInRhi = true;
 }
 
+Cubemap::~Cubemap()
+{
+    DestroyInRhi();
+    Unload();
+}
+
 void Cubemap::BindTexture(const uint32_t unit) const
 {
     Rhi::BindTexture(unit, m_Id);

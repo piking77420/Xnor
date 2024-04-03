@@ -190,8 +190,8 @@ void Rhi::UseShader(const uint32_t shaderId)
 #endif
 
 	const ShaderInternal& shaderInternal = m_ShaderMap.at(shaderId);
-	
-	glDepthFunc(GetOpengDepthEnum(shaderInternal.depthFunction));
+
+	ComputeDepthFunction(shaderInternal.depthFunction);
 	
 	if (shaderInternal.blendFunction.isBlending)
 	{
@@ -583,6 +583,20 @@ uint32_t Rhi::CullFaceToOpenglCullFace(const CullFace::CullFace cullFace)
 	}
 
 	return GL_FRONT_AND_BACK;
+}
+
+void Rhi::ComputeDepthFunction(DepthFunction::DepthFunction depthFunction)
+{
+
+	if (depthFunction != DepthFunction::Disable)
+	{
+		DepthTest(true);
+		glDepthFunc(GetOpengDepthEnum(depthFunction));
+	}	
+	else
+	{
+		DepthTest(false);
+	}
 }
 
 uint32_t Rhi::GetOpengDepthEnum(const DepthFunction::DepthFunction depthFunction)
@@ -1381,7 +1395,7 @@ void Rhi::OpenglDebugCallBack(const uint32_t source, const uint32_t type, const 
 void Rhi::Initialize()
 {
 	gladLoadGL();
-	DepthTest(true);
+	DepthTest(m_Depth);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);  
@@ -1409,7 +1423,7 @@ void Rhi::Shutdown()
 	delete m_MaterialUniform;
 }
 
-void Rhi::PrepareUniform()
+void Rhi::PrepareRendering()
 {
 	m_CameraUniform = new UniformBuffer;
 	m_CameraUniform->Allocate(sizeof(CameraUniformData), nullptr);
@@ -1426,6 +1440,8 @@ void Rhi::PrepareUniform()
 	m_MaterialUniform = new UniformBuffer;
 	m_MaterialUniform->Allocate(sizeof(MaterialData),nullptr);
 	m_MaterialUniform->Bind(4);
+
+	skyBoxParser.Init();
 }
 
 void Rhi::SetClearColor(const Vector4& color)
@@ -1496,7 +1512,8 @@ TextureFormat::TextureFormat Rhi::GetTextureFormatFromChannels(const uint32_t ch
 
 void Rhi::DepthTest(const bool_t value)
 {
-	value ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST); 
+	value ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+	m_Depth = value;
 }
 
 
