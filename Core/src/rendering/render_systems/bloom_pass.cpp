@@ -59,7 +59,7 @@ void BloomPass::UpSampling(const BloomRenderTarget& bloomRenderTarget) const
         // Target
         m_UpSample->BindImage(1, *nextMip.texture, 0, false, 0, ImageAccess::ReadWrite);
 
-        m_UpSample->DispatchCompute(static_cast<uint32_t>(std::ceil(mipSize.x / 8.f)), static_cast<uint32_t>(std::ceil(mipSize.y / 8.f)), 1);  
+        m_UpSample->DispatchCompute(static_cast<uint32_t>(std::ceil(mipSize.x / ComputeShaderDispactValue)), static_cast<uint32_t>(std::ceil(mipSize.y / ComputeShaderDispactValue)), 1);  
 
         m_UpSample->SetMemoryBarrier(AllBarrierBits);
     }
@@ -98,7 +98,7 @@ void BloomPass::ThresholdFilter(const Texture& imageWithoutBloom, const BloomRen
     m_UpSample->BindImage(0, imageWithoutBloom, 0, false, 0, ImageAccess::ReadWrite);
     m_UpSample->BindImage(1, thresholdTexture, 0, false, 0, ImageAccess::ReadWrite);
 
-    m_ThresholdFilter->DispatchCompute(static_cast<uint32_t>(std::ceil(static_cast<float_t>(viewportSize.x) / 8.f)), static_cast<uint32_t>(std::ceil(static_cast<float_t>(viewportSize.y) / 8.f)) ,1);  
+    m_ThresholdFilter->DispatchCompute(static_cast<uint32_t>(std::ceil(static_cast<float_t>(viewportSize.x) / ComputeShaderDispactValue)), static_cast<uint32_t>(std::ceil(static_cast<float_t>(viewportSize.y) / ComputeShaderDispactValue)) ,1);  
     m_ThresholdFilter->SetMemoryBarrier(AllBarrierBits);
     m_ThresholdFilter->Unuse();
 }
