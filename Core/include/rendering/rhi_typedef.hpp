@@ -333,6 +333,10 @@ struct CameraUniformData
 	Matrix projection = Matrix::Identity();
 	/// @brief Camera position
 	Vector3 cameraPos;
+
+	float_t near;
+
+	float_t far;
 };
 
 /// @brief Model UniformBuffer data

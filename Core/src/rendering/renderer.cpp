@@ -309,6 +309,8 @@ void Renderer::BindCamera(const Camera& camera,const Vector2i screenSize) const
 	camera.GetView(&cam.view);
 	camera.GetProjection(screenSize, &cam.projection);
 	cam.cameraPos = camera.position;
+	cam.near = camera.near;
+	cam.far = camera.far;
 	Rhi::UpdateCameraUniform(cam);
 }
 

@@ -382,6 +382,7 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 			cam.position  = pos;
 		 	cam.front = front;
 			cam.up = up;
+			cam.right = Vector3::Cross(front,up	).Normalized();
 
 			const uint32_t currentFace = static_cast<uint32_t>(k + i * 6);
 			m_ShadowFrameBuffer->AttachTextureLayer(*m_PointLightShadowMapCubemapArrayPixelDistance, Attachment::Color00, 0, currentFace);
