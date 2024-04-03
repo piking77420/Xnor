@@ -77,6 +77,6 @@ const std::string& DotnetAssembly::GetName() const
     return m_Name;
 }
 
-void DotnetAssembly::ProcessScriptComponent(Coral::Type& subclass)
+void DotnetAssembly::ProcessScriptComponent(Coral::Type&)
 {
 }
