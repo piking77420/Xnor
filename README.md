@@ -23,6 +23,8 @@
 
 ## Screenshots
 
+### Alpha
+
 ![Overview](screenshots/alpha/1.png)
 
 ![Diamond viking room](screenshots/alpha/2.png)
@@ -32,6 +34,18 @@
 ![Overview with game view and scene view](screenshots/alpha/4.png)
 
 ![Hierarchy](screenshots/alpha/5.png)
+
+### Beta
+
+![Overview](screenshots/beta/1.png)
+
+![PBR](screenshots/beta/2.png)
+
+![Bloom](screenshots/beta/3.png)
+
+![Colliders](screenshots/beta/4.png)
+
+![Test scene](screenshots/beta/5.png)
 
 ## External libraries
 
