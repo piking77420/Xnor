@@ -23,32 +23,42 @@ public:
     /// @brief Shutdowns the current .NET runtime.
     XNOR_ENGINE static void Shutdown();
 
-    /// @brief 
+    /// @brief Loads the assembly with the given @p name.
+    ///
+    /// This assembly should be in the working directory.
+    ///
+    /// @param name The name of the assembly to load. This should be the file name without the '.dll' extension.
     XNOR_ENGINE static bool_t LoadAssembly(const std::string& name);
 
+    /// @brief Returns the loaded assembly with the given @p name.
     XNOR_ENGINE static DotnetAssembly* GetAssembly(const std::string& name);
 
+    /// @brief Unloads all loaded assemblies.
+    ///
+    /// @param reloadContext Unloading all assemblies means unloading the AssemblyLoadContext. This parameter describes whether to reload the context afterwards.
     XNOR_ENGINE static void UnloadAllAssemblies(bool_t reloadContext = false);
 
+    /// @brief Reloads all loaded assemblies.
     XNOR_ENGINE static void ReloadAllAssemblies();
 
+    /// @brief Builds the Game .NET project.
     XNOR_ENGINE static bool_t BuildGameProject();
 
+    /// @brief Returns whether the runtime is initialized.
     XNOR_ENGINE static bool_t GetInitialized();
 
 private:
-    static inline constexpr int32_t DotnetMinVersionMajor = 5;
-    static inline constexpr int32_t DotnetMinVersionMinor = 0;
+    XNOR_ENGINE static inline constexpr int32_t DotnetVersionMajor = 5;
     
     static Coral::HostSettings m_Settings;
     
-    static inline Coral::HostInstance m_Runtime;
+    XNOR_ENGINE static inline Coral::HostInstance m_Runtime;
     
-    static inline Coral::AssemblyLoadContext m_Alc;
+    XNOR_ENGINE static inline Coral::AssemblyLoadContext m_Alc;
 
-    static inline bool_t m_Initialized = false;
+    XNOR_ENGINE static inline bool_t m_Initialized = false;
 
-    static inline std::vector<DotnetAssembly*> m_LoadedAssemblies;
+    XNOR_ENGINE static inline std::vector<DotnetAssembly*> m_LoadedAssemblies;
 
     static bool CheckDotnetInstalled();
 

@@ -587,7 +587,6 @@ uint32_t Rhi::CullFaceToOpenglCullFace(const CullFace::CullFace cullFace)
 
 void Rhi::ComputeDepthFunction(DepthFunction::DepthFunction depthFunction)
 {
-
 	if (depthFunction != DepthFunction::Disable)
 	{
 		DepthTest(true);
@@ -626,6 +625,9 @@ uint32_t Rhi::GetOpengDepthEnum(const DepthFunction::DepthFunction depthFunction
 
 		case DepthFunction::GreaterEqual:
 			return GL_GEQUAL;
+
+		case DepthFunction::Disable:
+			return GL_LESS;
 	}
 
 	return GL_LESS;

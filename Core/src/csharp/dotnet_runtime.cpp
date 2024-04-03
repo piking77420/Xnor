@@ -30,13 +30,17 @@ bool_t DotnetRuntime::Initialize()
 
     if (!CheckDotnetInstalled())
     {
-        Logger::LogError(".NET is not installed on this machine");
+        constexpr const char_t* const errorMessage = ".NET is not installed on this machine";
+        Logger::LogFatal(errorMessage);
+        MessageBoxA(nullptr, errorMessage, "Fatal Error", MB_OK | MB_ICONSTOP);
         throw std::runtime_error(".NET is not installed on this machine");
     }
 
     if (!CheckDotnetVersion())
     {
-        Logger::LogError("Invalid .NET version. The XNOR Engine needs at least .NET Core {}.{}", DotnetMinVersionMajor, DotnetMinVersionMinor);
+        static const std::string ErrorMessage = std::format("Invalid .NET version. XNOR Engine needs at least .NET {}.0", DotnetVersionMajor);
+        Logger::LogFatal(ErrorMessage);
+        MessageBoxA(nullptr, ErrorMessage.c_str(), "Fatal Error", MB_OK | MB_ICONSTOP);
         throw std::runtime_error("Invalid .NET version");
     }
 
@@ -50,7 +54,11 @@ bool_t DotnetRuntime::Initialize()
 
     m_Alc = m_Runtime.CreateAssemblyLoadContext(AlcName);
 
-    LoadAssembly("CoreCSharp");
+    if (!LoadAssembly("CoreCSharp"))
+    {
+        Logger::LogError("An unknown error occured while loading XNOR .NET library");
+        return false;
+    }
 
     return true;
 }
@@ -76,13 +84,11 @@ bool_t DotnetRuntime::LoadAssembly(const std::string& name)
     DotnetAssembly* const assembly = new DotnetAssembly(str);
     if (assembly->Load(m_Alc))
     {
-        //assembly->ProcessTypes();
+        assembly->ProcessTypes();
         m_LoadedAssemblies.push_back(assembly);
-
-        if (name == "Game")
-            DotnetReflection::PrintTypes();
+        return true;
     }
-
+    
     return false;
 }
 
@@ -118,12 +124,17 @@ void DotnetRuntime::ReloadAllAssemblies()
     UnloadAllAssemblies(true);
     
     for (auto&& assembly : assemblies)
-        LoadAssembly(assembly);
+    {
+        if (LoadAssembly(assembly))
+            continue;
+
+        Logger::LogWarning("Couldn't reload assembly {}", assembly);
+    }
 }
 
 bool_t DotnetRuntime::BuildGameProject()
 {
-    constexpr const char* gameProjectLocation = "Game";
+    constexpr const char_t* const gameProjectLocation = "Game";
     
     const std::filesystem::path gameProjectDirectory = gameProjectLocation;
 
@@ -175,7 +186,7 @@ bool DotnetRuntime::CheckDotnetVersion()
     file.Load();
 
     constexpr const char_t* dotnetCoreName = "Microsoft.NETCore.App";
-    const size_t dotnetCoreNameLength = strlen(dotnetCoreName);
+    const size_t dotnetCoreNameLength = std::strlen(dotnetCoreName);
 
     const char_t* const data = file.GetData();
     std::stringstream stream(data);
@@ -192,7 +203,7 @@ bool DotnetRuntime::CheckDotnetVersion()
         int32_t major, minor;
         (void) sscanf_s(sub.c_str(), "%d.%d", &major, &minor);
         
-        if (major > DotnetMinVersionMajor || (major == DotnetMinVersionMajor && minor >= DotnetMinVersionMinor))
+        if (major == DotnetVersionMajor)
         {
             foundValidDotnet = true;
             break;
