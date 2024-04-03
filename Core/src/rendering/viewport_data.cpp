@@ -38,7 +38,7 @@ void ViewportData::BindDescriptor() const
     emissive->BindTexture(DefferedDescriptor::Emissivive);
 }
 
-void ViewportData::UnBindDescriptor() const
+void ViewportData::UnbindDescriptor() const
 {
     positionAttachment->UnBindTexture(DefferedDescriptor::Position);
     normalAttachement->UnBindTexture(DefferedDescriptor::Normal);

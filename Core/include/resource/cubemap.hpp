@@ -19,7 +19,9 @@ public:
     /// @brief Creates a cubemap using 6 provided texture file names
     /// @param cubeMapsTextures Texture file names
     XNOR_ENGINE explicit Cubemap(const std::array<std::string, 6>& cubeMapsTextures);
-    
+
+    /// @brief Creates a cubemap using texture creation info
+    /// @param textureCreateInfo Texture creation info
     XNOR_ENGINE explicit Cubemap(const TextureCreateInfo& textureCreateInfo);
 
     XNOR_ENGINE ~Cubemap() override;
