@@ -11,10 +11,14 @@
 - Scene graph
 - Content browser
 - Entity inspector
+- Physical Based Rendering
 
-- TODO : Physical Based Rendering
+
+- WIP : C# scripting
+- WIP : Physics engine
+
+
 - TODO : Animation
-- TODO : C# scripting
 - TODO : Shader graph
 
 ## Screenshots
