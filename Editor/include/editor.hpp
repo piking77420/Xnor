@@ -4,6 +4,7 @@
 
 #include "application.hpp"
 #include "definitions.hpp"
+#include "draw_gizmo.hpp"
 #include "editor_data.hpp"
 #include "editing/picking_strategy.hpp"
 
@@ -19,6 +20,8 @@ public:
 	void CheckWindowResize() override;
 	
 	EditorData data;
+
+	DrawGizmo drawGizmo;
 	
 	explicit Editor();
 

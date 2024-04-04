@@ -692,4 +692,46 @@ enum class ImageAccess
 	ReadWrite,
 };
 
+
+enum BufferDataType
+{
+	Byte,
+	UnsignedByte,
+	Short,
+	UnsignedShort,
+	Int,
+	UnsignedInt,
+	Float,
+	Double
+};
+
+struct VertexAttributePointer
+{
+	uint32_t index = 0;
+	size_t size = 0;
+	BufferDataType bufferDatatype = Byte;
+	bool_t normalized = 0;
+	size_t stride = 0;
+	const void* pointer;
+	
+};
+
+struct AttributeDivisor
+{
+	uint32_t index = 0;
+	uint32_t divisor = 0;
+};
+
+struct VBODescriptor
+{
+	VertexAttributePointer* VertexAttributesPointer = nullptr;
+	size_t VBOAttributePointerSize = 0;
+
+	AttributeDivisor* attributesDivisorPointer = nullptr;
+	size_t attributesDivisorPointerSize = 0;
+
+};
+
+
+
 END_XNOR_CORE

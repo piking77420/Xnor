@@ -225,12 +225,6 @@ void Editor::SetupImGuiStyle() const
 	style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.800000011920929f, 0.800000011920929f, 0.800000011920929f, 0.3499999940395355f);
 }
 
-// ReSharper disable once CppMemberFunctionMayBeStatic
-void Editor::CreateTestScene()
-{
-	using namespace XnorCore;
-}
-
 void Editor::MenuBar()
 {
 	if (ImGui::BeginMainMenuBar())
@@ -323,7 +317,6 @@ void Editor::Update()
 {
 	using namespace XnorCore;
 
-	CreateTestScene();
 	Window::Show();
 	while (!Window::ShouldClose())
 	{

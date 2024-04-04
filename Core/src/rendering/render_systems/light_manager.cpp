@@ -18,30 +18,24 @@ LightManager::~LightManager()
 	delete m_SpotLightShadowMapTextureArray;
 	delete m_PointLightShadowMapCubemapArrayPixelDistance;
 	delete m_DepthBufferForPointLightPass;
+	delete m_ShadowFrameBufferPointLight;
 }
 
 void LightManager::InitResources()
 {
 	m_GpuLightData = new GpuLightData();
-	
 	m_DirLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/gizmos/dirlight_icon.png");
 	m_PointLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/gizmos/point_light.png");
 	m_SpotLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/gizmos/spot_light.png");
-	m_EditorUi = ResourceManager::Get<Shader>("editor_ui_shader");
 
-	constexpr BlendFunction blendFunction =
-	{
-		.isBlending = true,
-		.sValue = BlendValue::SrcAlpha,
-		.dValue = BlendValue::OneMinusSrcAlpha
-	};
+	m_ShadowFrameBuffer = new Framebuffer;
+	m_ShadowFrameBufferPointLight = new Framebuffer;
 	
-	m_EditorUi->SetBlendFunction(blendFunction);
-	m_EditorUi->CreateInRhi();
-	m_EditorUi->SetInt("uiTexture",0);
-	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
+	InitShader();
+	InitShadowMap();
 	
-	InitShadow();
+	// need to attach it one time 
+	m_ShadowFrameBufferPointLight->AttachTexture(*m_DepthBufferForPointLightPass, Attachment::Depth, 0);
 }
 
 void LightManager::BeginFrame(const Scene& scene, const Renderer& renderer)
@@ -53,11 +47,11 @@ void LightManager::BeginFrame(const Scene& scene, const Renderer& renderer)
 	FecthLightInfo();
 	ComputeShadow(scene, renderer);
 	Rhi::UpdateLight(*m_GpuLightData);
-
 }
 
 void LightManager::EndFrame(const Scene&)
 {
+	// This function is call at the end of the frame  
 }
 
 void LightManager::DrawLightGizmo(const Camera& camera, const Scene& scene)
@@ -73,51 +67,8 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 	shader->Use();
 	
 	std::map<float_t, GizmoLight> sortedLight;
-	
-	for (const PointLight* const pointLight : m_PointLights)
-	{
-		if (pointLight == nullptr)
-			continue;
-		
-		GizmoLight gizmoLight = {
-			.pos = pointLight->GetEntity()->transform.GetPosition(),
-			.light = pointLight,
-			.type = RenderingLight::PointLight,
-		};
-		
-		const float_t distance = (camera.position - pointLight->GetEntity()->transform.GetPosition()).SquaredLength();
-		sortedLight.emplace(distance, gizmoLight);
-	}
-	
-	for (const SpotLight* const spotLight : m_SpotLights)
-	{
-		if (spotLight == nullptr)
-			continue;
-		
-		GizmoLight gizmoLight = {
-			.pos = spotLight->GetEntity()->transform.GetPosition(),
-			.light = spotLight,
-			.type = RenderingLight::SpothLight
-		};
-		
-		const float_t distance = (camera.position - spotLight->GetEntity()->transform.GetPosition()).SquaredLength();
-		sortedLight.emplace(distance, gizmoLight);
-	}
-	
-	for (const DirectionalLight* const dirLight : m_DirectionalLights)
-	{
-		if (dirLight == nullptr)
-			continue;
-		
-		GizmoLight gizmoLight = {
-			.pos = dirLight->GetEntity()->transform.GetPosition(),
-			.light = dirLight,
-			.type = RenderingLight::DirLight
-		};
-		
-		const float_t distance = (camera.position - dirLight->GetEntity()->transform.GetPosition()).SquaredLength();
-		sortedLight.emplace(distance, gizmoLight);
-	}
+
+	GetDistanceFromCamera(&sortedLight, camera);
 	
 	for (decltype(sortedLight)::reverse_iterator it = sortedLight.rbegin(); it != sortedLight.rend(); it++)
 	{
@@ -206,7 +157,7 @@ void LightManager::FecthLightInfo() const
 			.color = static_cast<Vector3>(pointLight->color),
 			.intensity = pointLight->intensity,
 			.position = static_cast<Vector3>(pointLight->GetEntity()->transform.worldMatrix[3]),
-			.radius = 30.f * sqrt(pointLight->intensity),
+			.radius = LightThreshold * sqrt(pointLight->intensity),
 			.isCastingShadow = pointLight[i].castShadow
 		};
 	}
@@ -267,8 +218,9 @@ void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& ren
 			continue;
 
 		const Texture& shadowMap = *m_DirectionalShadowMaps;
-		Camera cam;
 		
+		// Set the camera for dirlight as a orthographic
+		Camera cam;
 		cam.isOrthographic = true;
 		cam.position = directionalLight->entity->transform.GetPosition();
 		cam.LookAt(cam.position + directionalLight->GetLightDirection());
@@ -304,14 +256,11 @@ void LightManager::ComputeShadowSpotLight(const Scene& scene, const Renderer& re
 		cam.LookAt(cam.position + m_SpotLights[i]->GetLightDirection());
 		cam.near = m_SpotLights[i]->near;
 		cam.far = m_SpotLights[i]->far;
-
-		Matrix matrix;
-		cam.GetVp(SpotLightShadowMapSize, &matrix);
-
-		m_GpuLightData->spotLightData[i].lightSpaceMatrix = matrix;
-
-		Rhi::AttachTextureToFrameBufferLayer(m_ShadowFrameBuffer->GetId(), Attachment::Depth, m_SpotLightShadowMapTextureArray->GetId(),0,static_cast<uint32_t>(i));
+		cam.GetVp(SpotLightShadowMapSize, &m_GpuLightData->spotLightData[i].lightSpaceMatrix);
 		
+		
+		m_ShadowFrameBuffer->AttachTextureLayer(*m_SpotLightShadowMapTextureArray, Attachment::Depth, 0, static_cast<uint32_t>(i));
+
 		RenderPassBeginInfo renderPassBeginInfo =
 		{
 			.frameBuffer = m_ShadowFrameBuffer,
@@ -328,68 +277,27 @@ void LightManager::ComputeShadowSpotLight(const Scene& scene, const Renderer& re
 void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& renderer)
 {
 	Camera cam;
-	m_ShadowFrameBuffer->AttachTexture(*m_DepthBufferForPointLightPass, Attachment::Depth, 0);
-
 	for (size_t i = 0; i < m_PointLights.size(); i++)
 	{
 		if (!m_PointLights[i]->castShadow)
 			continue;
 		
-		const Vector3 pos = static_cast<Vector3>(m_PointLights[i]->entity->transform.worldMatrix[3]);
-		Vector3 front;
-		Vector3 up;
+		const Vector3&& pos = static_cast<Vector3>(m_PointLights[i]->entity->transform.worldMatrix[3]);
 		
 		// Render fo each face of a the CubeMap
 		for (size_t k = 0; k < 6; k++)
 		{
-			switch (k)
-			{
-				case 0:
-					front = -Vector3::UnitX();
-					up = Vector3::UnitY();
-					break;
-
-				case 1:
-					front = Vector3::UnitX();
-					up = Vector3::UnitY();
-					break;
-
-				case 2:
-					front = Vector3::UnitY();
-					up = Vector3::UnitZ();
-					break;
-
-				case 3:
-					front = -Vector3::UnitY();
-					up = -Vector3::UnitZ();
-					break;
-
-				case 4:
-					front = -Vector3::UnitZ();
-					up = Vector3::UnitY();
-					break;
-
-				case 5:
-					front = Vector3::UnitZ();
-					up = Vector3::UnitY();
-					break;
-
-				default:
-					Logger::LogError("Unreachable Face of CubeMap shadowMap PointLight !");
-					break;
-			}
-
-			cam.position  = pos;
-		 	cam.front = front;
-			cam.up = up;
-			cam.right = Vector3::Cross(front,up	).Normalized();
-
+			GetPointLightDirection(k, &cam.front, &cam.up);
+			cam.position = pos;
+			cam.right = Vector3::Cross(cam.front,cam.up).Normalized();
+			
+			// Get Current CubeMap faces In Cubemap Array
 			const uint32_t currentFace = static_cast<uint32_t>(k + i * 6);
-			m_ShadowFrameBuffer->AttachTextureLayer(*m_PointLightShadowMapCubemapArrayPixelDistance, Attachment::Color00, 0, currentFace);
+			m_ShadowFrameBufferPointLight->AttachTextureLayer(*m_PointLightShadowMapCubemapArrayPixelDistance, Attachment::Color00, 0, currentFace);
 			
 			RenderPassBeginInfo renderPassBeginInfo =
 			{
-				.frameBuffer = m_ShadowFrameBuffer,
+				.frameBuffer = m_ShadowFrameBufferPointLight,
 				.renderAreaOffset = { 0, 0 },
 				.renderAreaExtent = SpotLightShadowMapSize ,
 				.clearBufferFlags = static_cast<BufferFlag::BufferFlag>(BufferFlag::DepthBit | BufferFlag::ColorBit),
@@ -401,28 +309,100 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 	}
 }
 
-void LightManager::InitShadow()
+
+void LightManager::GetDistanceFromCamera(std::map<float_t, GizmoLight>* sortedLight, const Camera& camera) const
 {
-	m_ShadowFrameBuffer = new Framebuffer;
 	
-	m_ShadowMapShader = ResourceManager::Get<Shader>("depth_shader");
-
-	constexpr ShaderProgramCullInfo cullInfo =
+	for (const PointLight* const pointLight : m_PointLights)
 	{
-		.enableCullFace = true,
-		.cullFace = CullFace::Front,
-		.frontFace = FrontFace::CCW
-	};
+		if (pointLight == nullptr)
+			continue;
+		
+		GizmoLight gizmoLight = {
+			.pos = pointLight->GetEntity()->transform.GetPosition(),
+			.light = pointLight,
+			.type = RenderingLight::PointLight,
+		};
+		
+		const float_t distance = (camera.position - pointLight->GetEntity()->transform.GetPosition()).SquaredLength();
+		sortedLight->emplace(distance, gizmoLight);
+	}
+	
+	for (const SpotLight* const spotLight : m_SpotLights)
+	{
+		if (spotLight == nullptr)
+			continue;
+		
+		GizmoLight gizmoLight = {
+			.pos = spotLight->GetEntity()->transform.GetPosition(),
+			.light = spotLight,
+			.type = RenderingLight::SpothLight
+		};
+		
+		const float_t distance = (camera.position - spotLight->GetEntity()->transform.GetPosition()).SquaredLength();
+		sortedLight->emplace(distance, gizmoLight);
+	}
+	
+	for (const DirectionalLight* const dirLight : m_DirectionalLights)
+	{
+		if (dirLight == nullptr)
+			continue;
+		
+		GizmoLight gizmoLight = {
+			.pos = dirLight->GetEntity()->transform.GetPosition(),
+			.light = dirLight,
+			.type = RenderingLight::DirLight
+		};
+		
+		const float_t distance = (camera.position - dirLight->GetEntity()->transform.GetPosition()).SquaredLength();
+		sortedLight->emplace(distance, gizmoLight);
+	}
+}
 
-	m_ShadowMapShader->SetFaceCullingInfo(cullInfo);
-	m_ShadowMapShader->CreateInRhi();
+void LightManager::GetPointLightDirection(const size_t index, Vector3* front, Vector3* up) const
+{
+	switch (index)
+	{
+	case 0:
+		*front = -Vector3::UnitX();
+		*up = Vector3::UnitY();
+		break;
 
-	m_ShadowMapShaderPointLight = ResourceManager::Get<Shader>("depth_shader_point_light");
-	m_ShadowMapShaderPointLight->SetFaceCullingInfo(cullInfo);
-	m_ShadowMapShaderPointLight->CreateInRhi();
+	case 1:
+		*front = Vector3::UnitX();
+		*up = Vector3::UnitY();
+		break;
 
+	case 2:
+		*front = Vector3::UnitY();
+		*up = Vector3::UnitZ();
+		break;
+
+	case 3:
+		*front = -Vector3::UnitY();
+		*up = -Vector3::UnitZ();
+		break;
+
+	case 4:
+		*front = -Vector3::UnitZ();
+		*up = Vector3::UnitY();
+		break;
+
+	case 5:
+		*front = Vector3::UnitZ();
+		*up = Vector3::UnitY();
+		break;
+
+	default:
+		Logger::LogError("Unreachable Face of CubeMap shadowMap PointLight !");
+		break;
+	}
+}
+
+void LightManager::InitShadowMap()
+{
 	const TextureCreateInfo textureCreateInfo =
-	{
+		{
 		.size = DirectionalShadowMapSize,
 		.filtering = TextureFiltering::Nearest,
 		.wrapping = TextureWrapping::ClampToBorder,
@@ -478,4 +458,36 @@ void LightManager::InitShadow()
 
 	m_PointLightShadowMapCubemapArrayPixelDistance = new Texture(pointLightCubeMapArrayWorldSpaceInfo);
 
+}
+
+void LightManager::InitShader()
+{
+	m_EditorUi = ResourceManager::Get<Shader>("editor_ui_shader");
+
+	constexpr BlendFunction blendFunction =
+	{
+		.isBlending = true,
+		.sValue = BlendValue::SrcAlpha,
+		.dValue = BlendValue::OneMinusSrcAlpha
+	};
+	
+	m_EditorUi->SetBlendFunction(blendFunction);
+	m_EditorUi->CreateInRhi();
+	m_EditorUi->SetInt("uiTexture",0);
+	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
+	
+	m_ShadowMapShader = ResourceManager::Get<Shader>("depth_shader");
+	constexpr ShaderProgramCullInfo cullInfo =
+	{
+		.enableCullFace = true,
+		.cullFace = CullFace::Front,
+		.frontFace = FrontFace::CCW
+	};
+
+	m_ShadowMapShader->SetFaceCullingInfo(cullInfo);
+	m_ShadowMapShader->CreateInRhi();
+
+	m_ShadowMapShaderPointLight = ResourceManager::Get<Shader>("depth_shader_point_light");
+	m_ShadowMapShaderPointLight->SetFaceCullingInfo(cullInfo);
+	m_ShadowMapShaderPointLight->CreateInRhi();
 }

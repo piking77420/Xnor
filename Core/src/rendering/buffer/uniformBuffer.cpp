@@ -1,4 +1,4 @@
-﻿#include "..\..\include\rendering\uniform_buffer.hpp"
+﻿#include "rendering/buffer/uniform_buffer.hpp"
 
 #include <glad/glad.h>
 

@@ -108,7 +108,8 @@
     <ClCompile Include="externals\src\stb\stb_image.c" />
     <ClCompile Include="externals\src\ttf\ttfParser.cpp" />
     <ClInclude Include="include\reflection\filters.hpp" />
-    <ClInclude Include="include\rendering\draw_gizmo.hpp" />
+    <ClInclude Include="include\rendering\buffer\uniform_buffer.hpp" />
+    <ClInclude Include="include\rendering\buffer\vbo.hpp" />
     <ClInclude Include="include\rendering\frustum.hpp" />
     <ClInclude Include="include\scene\component\test_component_physics.hpp" />
     <ClCompile Include="src\application.cpp" />
@@ -133,7 +134,7 @@
     <ClCompile Include="src\reflection\filters.cpp" />
     <ClCompile Include="src\reflection\type_renderer.cpp" />
     <ClCompile Include="src\rendering\bloom_rendertarget.cpp" />
-    <ClCompile Include="src\rendering\draw_gizmo.cpp">
+    <ClCompile Include="src\rendering\buffer\uniformBuffer.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <Optimization>Disabled</Optimization>
@@ -203,10 +204,11 @@
       <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_WINDLL;_UNICODE;UNICODE;;XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY;JPH_DEBUG_RENDERER;JPH_FLOATING_POINT_EXCEPTIONS_ENABLED;JPH_PROFILE_ENABLED</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>;externals\include;include;inline;externals\inline</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>;externals\include;include;inline;externals\inline;C:\Projet\vcpkg\installed\x64-windows\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="src\rendering\buffer\vbo.cpp" />
     <ClCompile Include="src\rendering\frustum.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -295,7 +297,6 @@
     <ClCompile Include="src\rendering\render_systems\skybox_renderer.cpp" />
     <ClCompile Include="src\rendering\render_systems\tone_mapping.cpp" />
     <ClCompile Include="src\rendering\rhi.cpp" />
-    <ClCompile Include="src\rendering\uniformBuffer.cpp" />
     <ClCompile Include="src\rendering\viewport_data.cpp" />
     <ClCompile Include="src\resource\compute_shader.cpp" />
     <ClCompile Include="src\resource\cubemap.cpp" />
@@ -814,7 +815,6 @@
     <ClInclude Include="include\rendering\render_systems\light_manager.hpp" />
     <ClInclude Include="include\rendering\render_systems\skybox_renderer.hpp" />
     <ClInclude Include="include\rendering\render_systems\tone_mapping.hpp" />
-    <ClInclude Include="include\rendering\uniform_buffer.hpp" />
     <ClInclude Include="include\rendering\viewport_data.hpp" />
     <ClInclude Include="include\resource\compute_shader.hpp" />
     <ClInclude Include="include\resource\cubemap.hpp" />

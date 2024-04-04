@@ -15,11 +15,6 @@ layout (std140, binding = 0) uniform CameraUniform
     float far;
 };
 
-layout (std140, binding = 1) uniform ModelUniform
-{
-    mat4 model;
-    mat4 normalInvertMatrix;
-};
 
 out vec4 Color;
 
