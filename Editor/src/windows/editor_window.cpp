@@ -12,6 +12,7 @@ EditorWindow::EditorWindow(Editor* editor, XnorCore::Viewport& viewport)
 void EditorWindow::Display()
 {
     RenderWindow::Display();
+    m_DrawGizmo.DrawGizmos(*m_Viewport);
     
     m_PickingStrategy.ResizeHandle(m_Size);
     

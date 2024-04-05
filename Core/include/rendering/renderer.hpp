@@ -92,6 +92,8 @@ private:
         const Viewport& viewport, Vector2i viewportSize, bool_t isEditor) const;
     
     XNOR_ENGINE void DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) const;
+
+
 };
 
 END_XNOR_CORE

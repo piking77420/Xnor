@@ -15,8 +15,6 @@ BEGIN_XNOR_EDITOR
 class DrawGizmo
 {
 private:
-    static constexpr size_t BaseReserveGizmoVector = 100;
-
     
     struct GizmoSphere
     {
@@ -40,12 +38,12 @@ private:
         XnorCore::ColorRgb color;
     };
     
-    static inline std::vector<GizmoSphere> m_GizmoSphereVector {std::vector<GizmoSphere>(BaseReserveGizmoVector)};
-    static inline std::vector<GizmoRectangle> m_GizmoRectangleVector {std::vector<GizmoRectangle>(BaseReserveGizmoVector)};
-    static inline std::vector<GizmoCapsule> m_GizmoCapsuleVector {std::vector<GizmoCapsule>(BaseReserveGizmoVector)};
+    static inline std::vector<GizmoSphere> m_GizmoSphereVector;
+    static inline std::vector<GizmoRectangle> m_GizmoRectangleVector;
+    static inline std::vector<GizmoCapsule> m_GizmoCapsuleVector;
     
 public:
-    DrawGizmo() = default;
+    DrawGizmo();
 
     ~DrawGizmo() = default;
     
@@ -60,7 +58,15 @@ public:
 private:
     XnorCore::Pointer<XnorCore::Shader> m_GizmoShader;
 
+    XnorCore::Pointer<XnorCore::Shader> m_Sphere;
+
+    XnorCore::Pointer<XnorCore::Shader> m_Cube;
+
+    XnorCore::Pointer<XnorCore::Shader> m_Capsule;
+    
     XnorCore::RenderPass m_RenderPass;
+
+    XnorCore::ModelUniformData modelData;
 
 
     void DrawRectangle();
@@ -68,6 +74,8 @@ private:
     void DrawSphere();
 
     void DrawCapsule();
+
+    void Clear();
 };
 
 END_XNOR_EDITOR
