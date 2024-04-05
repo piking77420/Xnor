@@ -2,30 +2,39 @@
 
 #include <vector>
 
-#include "Maths/vector3.hpp"
-#include "rendering/viewport.hpp"
-#include "utils/color.hpp"
 #include "definitions.hpp"
+#include "../../../Core/externals/include/Maths/vector3.hpp"
+#include "../../../Core/include/rendering/render_pass.hpp"
+#include "../../../Core/include/utils/color.hpp"
+#include "../../../Core/include/utils/pointer.hpp"
+
+
+
+namespace XnorCore
+{
+    class Shader;
+    class Viewport;
+}
 
 BEGIN_XNOR_EDITOR
-
-class DrawGizmo
+    class DrawGizmo
 {
 private:
     static constexpr size_t BaseReserveGizmoVector = 100;
 
+    
     struct GizmoSphere
     {
         Vector3 position;
         float_t radius;
-        XnorCore::ColorRgb color;
+        ColorRgb color;
     };
 
     struct GizmoRectangle
     {
         Vector3 position;
         Vector3 size;
-        XnorCore::ColorRgb color;
+        ColorRgb color;
     };
 
     struct GizmoCapsule
@@ -33,7 +42,7 @@ private:
         Vector3 position;
         float_t height;
         float_t radius;
-        XnorCore::ColorRgb color;
+        ColorRgb color;
     };
     
     static inline std::vector<GizmoSphere> m_GizmoSphereVector {std::vector<GizmoSphere>(BaseReserveGizmoVector)};
@@ -45,15 +54,15 @@ public:
 
     ~DrawGizmo() = default;
     
-    static Sphere(Vector3 position, float_t radius = 1.f, XnorCore::ColorRgb color = XnorCore::ColorRgb::Green());
+    static void Sphere(Vector3 position, float_t radius = 1.f, ColorRgb color = ColorRgb::Green());
     
-    static void Rectancgle(Vector3 position, Vector3 size, XnorCore::ColorRgb color = XnorCore::ColorRgb::Green());
+    static void Rectancgle(Vector3 position, Vector3 size, ColorRgb color = ColorRgb::Green());
     
-    static void Capsule(Vector3 position, float_t height, float_t radius, XnorCore::ColorRgb color = XnorCore::ColorRgb::Green());
+    static void Capsule(Vector3 position, float_t height, float_t radius, ColorRgb color = ColorRgb::Green());
 
     void DrawGizmos(const XnorCore::Viewport& viewport);
 private:
-    XnorCore::Pointer<XnorCore::Shader> m_GizmoShader;
+    Pointer<XnorCore::Shader> m_GizmoShader;
 
     XnorCore::RenderPass m_RenderPass;
 

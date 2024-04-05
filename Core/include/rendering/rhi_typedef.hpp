@@ -5,6 +5,7 @@
 
 #include "core.hpp"
 #include "utils/color.hpp"
+#include <vector>
 
 
 
@@ -217,9 +218,14 @@ END_ENUM
 /// @brief %Texture data type
 BEGIN_ENUM(DataType)
 {
-	Float = 0,
+	Byte,
 	UnsignedByte,
-	UnsignedByte64,
+	Short,
+	UnsignedShort,
+	Int,
+	UnsignedInt,
+	Float,
+	Double
 }
 END_ENUM
 
@@ -693,26 +699,15 @@ enum class ImageAccess
 };
 
 
-enum BufferDataType
-{
-	Byte,
-	UnsignedByte,
-	Short,
-	UnsignedShort,
-	Int,
-	UnsignedInt,
-	Float,
-	Double
-};
 
 struct VertexAttributePointer
 {
 	uint32_t index = 0;
 	size_t size = 0;
-	BufferDataType bufferDatatype = Byte;
-	bool_t normalized = 0;
+	DataType::DataType bufferDatatype = DataType::Byte;
+	bool_t normalized = false;
 	size_t stride = 0;
-	const void* pointer;
+	const void* pointer = nullptr;
 	
 };
 
@@ -724,8 +719,8 @@ struct AttributeDivisor
 
 struct VBODescriptor
 {
-	VertexAttributePointer* VertexAttributesPointer = nullptr;
-	size_t VBOAttributePointerSize = 0;
+	VertexAttributePointer* vertexAttributesPointer = nullptr;
+	size_t vboAttributePointerSize = 0;
 
 	AttributeDivisor* attributesDivisorPointer = nullptr;
 	size_t attributesDivisorPointerSize = 0;

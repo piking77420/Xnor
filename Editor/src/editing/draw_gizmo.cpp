@@ -1,4 +1,4 @@
-﻿#include "draw_gizmo.hpp"
+﻿#include "editing/draw_gizmo.hpp"
 
 using namespace XnorEditor;
 

@@ -109,7 +109,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\draw_gizmo.cpp">
+    <ClCompile Include="src\editing\draw_gizmo.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <Optimization>Disabled</Optimization>
@@ -204,7 +204,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\definitions.hpp" />
-    <ClInclude Include="include\draw_gizmo.hpp" />
+    <ClInclude Include="include\editing\draw_gizmo.hpp" />
     <ClInclude Include="include\editing\picking_strategy.hpp" />
     <ClInclude Include="include\editing\transform_gizmo.hpp" />
     <ClInclude Include="include\editor.hpp" />

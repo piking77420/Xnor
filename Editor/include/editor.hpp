@@ -4,7 +4,7 @@
 
 #include "application.hpp"
 #include "definitions.hpp"
-#include "draw_gizmo.hpp"
+#include "editing/draw_gizmo.hpp"
 #include "editor_data.hpp"
 #include "editing/picking_strategy.hpp"
 
