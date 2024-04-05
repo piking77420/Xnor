@@ -26,7 +26,6 @@ using namespace XnorEditor;
 
 void Editor::CheckWindowResize()
 {
-	
 }
 
 Editor::Editor()

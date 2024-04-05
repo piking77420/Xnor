@@ -744,7 +744,7 @@
     <CoralManagedFiles Include="$(ProjectDir)externals\managed\Coral\$(Configuration)\*" />
   </ItemGroup>
   <Target Name="CopyCoralManaged" AfterTargets="Build">
-    <Copy SourceFiles="@(CoralManagedFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(CoralManagedFiles)" DestinationFolder="$(OutDir)\DotnetAssemblies" SkipUnchangedFiles="true" />
     <Message Text="Copy Coral Managed Assemblies" Importance="high" />
   </Target>
 </Project>

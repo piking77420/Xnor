@@ -17,6 +17,8 @@ class DotnetRuntime
     STATIC_CLASS(DotnetRuntime)
     
 public:
+    XNOR_ENGINE static inline constexpr const char_t* const AssembliesDirectory = "DotnetAssemblies";
+    
     /// @brief Initializes the .NET runtime.
     XNOR_ENGINE static bool_t Initialize();
 
@@ -25,7 +27,7 @@ public:
 
     /// @brief Loads the assembly with the given @p name.
     ///
-    /// This assembly should be in the working directory.
+    /// This assembly should be in the 'DotnetAssemblies' directory, within the working directory.
     ///
     /// @param name The name of the assembly to load. This should be the file name without the '.dll' extension.
     XNOR_ENGINE static bool_t LoadAssembly(const std::string& name);
@@ -59,6 +61,8 @@ private:
     XNOR_ENGINE static inline bool_t m_Initialized = false;
 
     XNOR_ENGINE static inline std::vector<DotnetAssembly*> m_LoadedAssemblies;
+    
+    XNOR_ENGINE static inline std::filesystem::path m_AssembliesPath;
 
     static bool CheckDotnetInstalled();
 

@@ -44,7 +44,8 @@ bool_t DotnetRuntime::Initialize()
         throw std::runtime_error("Invalid .NET version");
     }
 
-    m_Settings.CoralDirectory = Application::executablePath.parent_path().string();
+    m_AssembliesPath = Application::executablePath.parent_path() / AssembliesDirectory;
+    m_Settings.CoralDirectory = m_AssembliesPath.string();
     
     if (!m_Runtime.Initialize(m_Settings))
     {
@@ -75,7 +76,7 @@ void DotnetRuntime::Shutdown()
 
 bool_t DotnetRuntime::LoadAssembly(const std::string& name)
 {
-    const std::filesystem::path&& filepath = Application::executablePath.parent_path() / (name + ".dll");
+    const std::filesystem::path&& filepath = m_AssembliesPath / (name + ".dll");
     
     Logger::LogInfo("Loading .NET assembly {}", filepath.filename());
 
@@ -84,7 +85,7 @@ bool_t DotnetRuntime::LoadAssembly(const std::string& name)
     DotnetAssembly* const assembly = new DotnetAssembly(str);
     if (assembly->Load(m_Alc))
     {
-        assembly->ProcessTypes();
+        //assembly->ProcessTypes();
         m_LoadedAssemblies.push_back(assembly);
         return true;
     }
@@ -226,7 +227,7 @@ void DotnetRuntime::CoralMessageCallback(std::string_view message, const Coral::
 
 void DotnetRuntime::CoralExceptionCallback(std::string_view message)
 {
-    Logger::LogError("Unhandled C# exception: {}", message);
+    Logger::LogError("Unhandled .NET exception: {}", message);
 }
 
 Logger::LogLevel DotnetRuntime::CoralMessageLevelToXnor(const Coral::MessageLevel level)

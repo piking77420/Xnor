@@ -77,5 +77,8 @@ Application::~Application()
 void Application::Exit(const int32_t code)
 {
 	Logger::LogInfo("Force exiting Application");
-	std::exit(code);
+
+	delete m_ApplicationInstance;
+	
+	std::exit(code);  // NOLINT(concurrency-mt-unsafe)
 }
