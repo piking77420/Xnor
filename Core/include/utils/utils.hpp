@@ -1,5 +1,4 @@
-﻿// ReSharper disable CppInconsistentNaming
-#pragma once
+﻿#pragma once
 
 #include <filesystem>
 #include <functional>

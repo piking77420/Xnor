@@ -57,7 +57,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);MATH_DEFINE_FORMATTER;SWIG_WRAP;MATH_TOOLBOX_DLL_IMPORT</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(TargetCppProjectDir)include;$(TargetCppProjectDir)inline;$(TargetCppProjectDir)externals\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(TargetCppProjectDir)include;$(TargetCppProjectDir)inline;$(TargetCppProjectDir)externals\include;..\CoreLibs\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>

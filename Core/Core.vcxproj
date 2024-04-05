@@ -50,7 +50,7 @@
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY;JPH_DEBUG_RENDERER;JPH_FLOATING_POINT_EXCEPTIONS_ENABLED;JPH_PROFILE_ENABLED</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;include;inline;externals\inline</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;include;inline;externals\inline;..\CoreLibs\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ConformanceMode>false</ConformanceMode>
@@ -59,7 +59,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);$(ProjectDir)externals\libs\lib\Common;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp.lib;zlibstatic.lib;toolbox.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;assimp.lib;zlibstatic.lib;toolbox.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib</AdditionalDependencies>
       <AdditionalOptions>/WHOLEARCHIVE:toolbox.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
@@ -74,7 +74,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;include;inline;externals\inline</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;include;inline;externals\inline;..\CoreLibs\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ConformanceMode>false</ConformanceMode>
@@ -85,7 +85,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);$(ProjectDir)externals\libs\lib\Common;%(AdditionalLibraryDirectories);$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp.lib;zlibstatic.lib;toolbox.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib</AdditionalDependencies>
+      <AdditionalDependencies>;opengl32.lib;assimp.lib;zlibstatic.lib;toolbox.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib</AdditionalDependencies>
       <AdditionalOptions>/WHOLEARCHIVE:toolbox.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
@@ -94,19 +94,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="externals\src\glad.c" />
-    <ClCompile Include="externals\src\ImguiGizmo\ImGuizmo.cpp" />
-    <ClCompile Include="externals\src\ImGui\imgui.cpp" />
-    <ClCompile Include="externals\src\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="externals\src\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="externals\src\ImGui\imgui_impl_glfw.cpp" />
-    <ClCompile Include="externals\src\ImGui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="externals\src\ImGui\imgui_stdlib.cpp" />
-    <ClCompile Include="externals\src\ImGui\imgui_tables.cpp" />
-    <ClCompile Include="externals\src\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="externals\src\RapidXMLSTD.cpp" />
-    <ClCompile Include="externals\src\stb\stb_image.c" />
-    <ClCompile Include="externals\src\ttf\ttfParser.cpp" />
     <ClInclude Include="include\reflection\filters.hpp" />
     <ClInclude Include="include\scene\component\test_component_physics.hpp" />
     <ClCompile Include="src\application.cpp" />
@@ -293,20 +280,8 @@
     <ClInclude Include="externals\include\Coral\Type.hpp" />
     <ClInclude Include="externals\include\Coral\TypeCache.hpp" />
     <ClInclude Include="externals\include\Coral\Utility.hpp" />
-    <ClInclude Include="externals\include\glad\glad.h" />
     <ClInclude Include="externals\include\GLFW\glfw3.h" />
     <ClInclude Include="externals\include\GLFW\glfw3native.h" />
-    <ClInclude Include="externals\include\ImguiGizmo\ImGuizmo.h" />
-    <ClInclude Include="externals\include\ImGui\imconfig.h" />
-    <ClInclude Include="externals\include\ImGui\imgui.h" />
-    <ClInclude Include="externals\include\ImGui\imgui_impl_glfw.h" />
-    <ClInclude Include="externals\include\ImGui\imgui_impl_opengl3.h" />
-    <ClInclude Include="externals\include\ImGui\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="externals\include\ImGui\imgui_internal.h" />
-    <ClInclude Include="externals\include\ImGui\imgui_stdlib.h" />
-    <ClInclude Include="externals\include\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="externals\include\ImGui\imstb_textedit.h" />
-    <ClInclude Include="externals\include\ImGui\imstb_truetype.h" />
     <ClInclude Include="externals\include\jolt\AABBTree\AABBTreeBuilder.h" />
     <ClInclude Include="externals\include\jolt\AABBTree\AABBTreeToBuffer.h" />
     <ClInclude Include="externals\include\jolt\AABBTree\NodeCodec\NodeCodecQuadTreeHalfFloat.h" />
@@ -588,7 +563,6 @@
     <ClInclude Include="externals\include\jolt\TriangleSplitter\TriangleSplitterLongestAxis.h" />
     <ClInclude Include="externals\include\jolt\TriangleSplitter\TriangleSplitterMean.h" />
     <ClInclude Include="externals\include\jolt\TriangleSplitter\TriangleSplitterMorton.h" />
-    <ClInclude Include="externals\include\KHR\khrplatform.h" />
     <ClInclude Include="externals\include\magic_enum\magic_enum.hpp" />
     <ClInclude Include="externals\include\magic_enum\magic_enum_all.hpp" />
     <ClInclude Include="externals\include\magic_enum\magic_enum_containers.hpp" />
@@ -609,14 +583,7 @@
     <ClInclude Include="externals\include\Maths\vector2i.hpp" />
     <ClInclude Include="externals\include\Maths\vector3.hpp" />
     <ClInclude Include="externals\include\Maths\vector4.hpp" />
-    <ClInclude Include="externals\include\RapidXML\rapidxml.hpp" />
-    <ClInclude Include="externals\include\RapidXML\RapidXMLSTD.hpp" />
-    <ClInclude Include="externals\include\RapidXML\rapidxml_iterators.hpp" />
-    <ClInclude Include="externals\include\RapidXML\rapidxml_print.hpp" />
-    <ClInclude Include="externals\include\RapidXML\rapidxml_utils.hpp" />
     <ClInclude Include="externals\include\refl\refl.hpp" />
-    <ClInclude Include="externals\include\stb\stb_image.h" />
-    <ClInclude Include="externals\include\ttf\ttfParser.h" />
     <ClInclude Include="include\application.hpp" />
     <ClInclude Include="include\core.hpp" />
     <ClInclude Include="include\csharp\dotnet_assembly.hpp" />
