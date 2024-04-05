@@ -17,13 +17,13 @@ void Renderer::Initialize()
 	Rhi::PrepareRendering();
 }
 
-void Renderer::BeginFrame(const Scene& scene) const
+void Renderer::BeginFrame(const Scene& scene)
 {
 	m_LightManager.BeginFrame(scene, *this);
 	Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
 }
 
-void Renderer::EndFrame(const Scene& scene) const
+void Renderer::EndFrame(const Scene& scene)
 {
 	m_LightManager.EndFrame(scene);
 }

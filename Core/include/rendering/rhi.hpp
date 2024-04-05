@@ -293,7 +293,6 @@ private:
 		uint32_t ebo = 0;
 		uint32_t nbrOfVertex = 0;
 		uint32_t nbrOfIndicies = 0;
-		Model::Aabb aabb;
 	};
 	
 	struct ShaderInternal

@@ -38,15 +38,15 @@ layout (std140, binding = 4) uniform MaterialDataUniform
 };
 
 in VS_OUT {
-    vec4 fragPos;
-    vec3 normal;
-    vec2 texCoords;
+    smooth vec4 fragPos;
+    smooth vec3 normal;
+    smooth vec2 texCoords;
 
-    float metallic;
-    float roughness;
-    float reflectance;
-    float emissive;
-    float ambiantOccusion;
+    smooth float metallic;
+    smooth float roughness;
+    smooth float reflectance;
+    smooth float emissive;
+    smooth float ambiantOccusion;
 
     mat3 Tbn;
 } fs_in;

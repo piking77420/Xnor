@@ -28,11 +28,23 @@ void DrawGizmo::DrawGizmos(const XnorCore::Viewport& viewport)
         .clearColor = Vector4::Zero()
     };
     m_RenderPass.BeginRenderPass(renderPassBeginInfo);
+    
+    DrawRectangle();
+    DrawSphere();
+    DrawCapsule();
+    
+    m_RenderPass.EndRenderPass();
+}
 
-    XnorCore::ModelUniformData modelUniformData;
+void DrawGizmo::DrawRectangle()
+{
+}
 
-    
-    
-    
+void DrawGizmo::DrawSphere()
+{
+}
+
+void DrawGizmo::DrawCapsule()
+{
 }
 

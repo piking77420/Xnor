@@ -54,7 +54,7 @@ public:
     /// @brief Draws the light gizmos
     /// @param camera Editor camera
     /// @param scene Concerned scene
-    XNOR_ENGINE void DrawLightGizmo(const Camera& camera, const Scene& scene);
+    XNOR_ENGINE void DrawLightGizmo(const Camera& camera, const Scene& scene) const ;
 
     /// @brief Draws the light gizmos using a specified shader
     /// @param camera Editor camera

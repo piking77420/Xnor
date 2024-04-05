@@ -54,11 +54,8 @@ void LightManager::EndFrame(const Scene&)
 	// This function is call at the end of the frame  
 }
 
-void LightManager::DrawLightGizmo(const Camera& camera, const Scene& scene)
+void LightManager::DrawLightGizmo(const Camera& camera, const Scene& scene) const
 {
-	scene.GetAllComponentOfType<PointLight>(&m_PointLights);
-	scene.GetAllComponentOfType<SpotLight>(&m_SpotLights);
-	scene.GetAllComponentOfType<DirectionalLight>(&m_DirectionalLights);
 	DrawLightGizmoWithShader(camera, scene, m_EditorUi);
 }
 

@@ -5,14 +5,10 @@
 #include "definitions.hpp"
 #include "Maths/vector3.hpp"
 #include "rendering/render_pass.hpp"
+#include "rendering/viewport.hpp"
 #include "utils/color.hpp"
 #include "utils/pointer.hpp"
 
-namespace XnorCore
-{
-    class Shader;
-    class Viewport;
-}
 
 BEGIN_XNOR_EDITOR
 
@@ -65,6 +61,13 @@ private:
     XnorCore::Pointer<XnorCore::Shader> m_GizmoShader;
 
     XnorCore::RenderPass m_RenderPass;
+
+
+    void DrawRectangle();
+
+    void DrawSphere();
+
+    void DrawCapsule();
 };
 
 END_XNOR_EDITOR
