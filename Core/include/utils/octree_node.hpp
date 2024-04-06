@@ -11,8 +11,10 @@ BEGIN_XNOR_CORE
 
 class OctreeNode
 {
+private:
+    XNOR_ENGINE static inline constexpr size_t OctoTreeNodeChildArraySize = 8;
 public:
-    enum class Side
+    enum Side
     {
         TopLeftFront,
         TopRightFront,
@@ -26,17 +28,26 @@ public:
 
     DEFAULT_COPY_MOVE_OPERATIONS(OctreeNode)
 
-    OctreeNode() = default;
+    XNOR_ENGINE OctreeNode() = default;
 
-    OctreeNode(const Bound& boud,float_t minNodeSize);
+    XNOR_ENGINE OctreeNode(const Bound& boud,float_t minNodeSize);
+
+    XNOR_ENGINE ~OctreeNode(); 
     
-    ~OctreeNode() = default; 
+    XNOR_ENGINE void AddObject(const Bound& bound);
     
-    void DrawGizmo();
+    XNOR_ENGINE void DrawGizmo();
 
 private:
     Bound m_Bound;
     float_t m_MinNodeSize = 0.f;
+
+    XNOR_ENGINE void DivideAndAdd(const Bound& bound);
+    
+    std::array<OctreeNode*,OctoTreeNodeChildArraySize>* m_Childs = nullptr;
+    std::array<Bound,OctoTreeNodeChildArraySize> m_ChildBound;
+
 };
+
 
 END_XNOR_CORE

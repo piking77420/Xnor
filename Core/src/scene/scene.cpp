@@ -124,7 +124,7 @@ Scene::Scene()
     texture->Reload();
     skybox.LoadFromHdrTexture(texture);
 
-    renderOctoree = Octree(GetEntities(),1.f);
+    renderOctoree = Octree(GetEntities(),5.f);
 }
 
 Scene::~Scene()

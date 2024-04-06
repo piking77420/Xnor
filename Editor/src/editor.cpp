@@ -366,17 +366,18 @@ void Editor::EndFrame()
 void Editor::WorldBehaviours()
 {
 	XnorCore::SceneGraph::Update(XnorCore::World::scene->GetEntities());
+
 	
 	if (XnorCore::World::isPlaying)
 	{
 		if (!XnorCore::World::hasStarted)
 		{
 			XnorCore::World::Begin();
+			XnorCore::World::scene->renderOctoree.Compute(XnorCore::World::scene->GetEntities());
 			XnorCore::World::hasStarted = true;
 		}
 
 		XnorCore::World::Update();
 	}
-	XnorCore::World::scene->renderOctoree.Compute(XnorCore::World::scene->GetEntities());
 	XnorCore::World::Render();
 }

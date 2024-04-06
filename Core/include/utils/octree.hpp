@@ -19,6 +19,7 @@ public:
     void Draw();
     
     void Compute(const List<Entity*>& list);
+
 private:
     float_t m_MinSize = 1.f;
 

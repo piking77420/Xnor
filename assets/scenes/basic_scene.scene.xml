@@ -85,7 +85,7 @@
 						<normalTexture>D951D7C1-D2F0-4849-86-EF-1-74-A-42-66-C9</normalTexture>
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
-					<drawModelAabb>true</drawModelAabb>
+					<drawModelAabb>false</drawModelAabb>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -127,13 +127,13 @@
 			<name>PointLight</name>
 			<m_EntityId>A284C848-DC61-4853-A4-48-15-9D-CE-5D-73-BD</m_EntityId>
 			<transform>
-				<m_Position>-2 ; 3 ; -6</m_Position>
+				<m_Position>-1.1825911 ; 3 ; -0.77555037</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="PointLight">
-					<color>0.0070581296 ; 0.14682326 ; 0.7128713 ; 1</color>
+					<color>1 ; 0 ; 0.9582634 ; 1</color>
 					<intensity>10000</intensity>
 					<castShadow>true</castShadow>
 				</0>
@@ -159,7 +159,7 @@
 			<name>SpotLight</name>
 			<m_EntityId>8B8B51F5-90F0-405B-BE-3C-56-93-F2-7-34-F2</m_EntityId>
 			<transform>
-				<m_Position>0 ; 8 ; -5</m_Position>
+				<m_Position>-1.1825911 ; 8 ; -0.77555037</m_Position>
 				<m_EulerRotation>2.3046567 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1.0000837 ; 1.0000837</m_Scale>
 			</transform>
@@ -167,7 +167,7 @@
 				<0 typeName="SpotLight">
 					<cutOff>12.5</cutOff>
 					<outerCutOff>15</outerCutOff>
-					<color>1 ; 1 ; 1 ; 1</color>
+					<color>1 ; 0 ; 0.9582634 ; 1</color>
 					<intensity>1000</intensity>
 					<castShadow>true</castShadow>
 				</0>
@@ -185,8 +185,8 @@
 			<name>Capsule</name>
 			<m_EntityId>3843FD98-4FF2-4459-98-DA-67-D9-98-57-38-14</m_EntityId>
 			<transform>
-				<m_Position>0 ; 4 ; 0</m_Position>
-				<m_EulerRotation>0.69813174 ; -0 ; 0</m_EulerRotation>
+				<m_Position>-0.23061937 ; 26.216768 ; 2.02089</m_Position>
+				<m_EulerRotation>1.5708853 ; 3.0994415e-06 ; 0.23291312</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
 			<m_Components>
@@ -196,7 +196,7 @@
 					<constraints/>
 					<m_IsStatic>false</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
-					<m_IsActive>false</m_IsActive>
+					<m_IsActive>true</m_IsActive>
 				</0>
 				<1 typeName="TestComponentPhysics">
 					<m_JumpForce>1000</m_JumpForce>
@@ -250,7 +250,7 @@
 						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
-					<drawModelAabb>true</drawModelAabb>
+					<drawModelAabb>false</drawModelAabb>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>

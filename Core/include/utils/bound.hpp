@@ -14,7 +14,7 @@ public:
     /// @brief The maximum bound of this AABB.
     Vector3 max { std::numeric_limits<float_t>::min() };
      /// @brief The extents of the Bounding Box. This is always half of the size of the Bounds.
-    Vector3 extends;
+    Vector3 size;
     /// @brief The center bound of this AABB.
     Vector3 center = Vector3::Zero();
 
@@ -27,6 +27,8 @@ public:
     ~Bound() = default;
 
     Bound GetAabbFromTransform(const Transform& transform);
+
+    bool_t Intersect(const Bound& otherBound) const;
 
     void Encapsulate(const Bound& encaspulateBound);
     
