@@ -76,6 +76,9 @@ public:
     [[nodiscard]]
     XNOR_ENGINE const List<Entity*>& GetEntities();
 
+    /// @brief Gets the index of an entity in the scene List
+    /// @param entity Entity
+    /// @returns Entity index
     [[nodiscard]]
     XNOR_ENGINE uint32_t GetEntityIndex(const Entity* entity) const;
 

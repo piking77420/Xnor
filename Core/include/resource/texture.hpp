@@ -22,10 +22,16 @@ public:
     /// @see Texture::loadData
     struct LoadOptions
     {
+        /// @brief The desired color channel count.
+        ///
+        /// This would be 3 for RGB, or 4 for RGBA values for example.
+        /// If the value is 0, this will be determined automatically.
         int32_t desiredChannels = 0;
+        /// @brief Whether to vertically flip the Texture.
         bool_t flipVertically = false;
     };
 
+    /// @brief The default Texture loading options. This is the default value of Texture::loadData.
     XNOR_ENGINE static inline LoadOptions defaultLoadOptions;
 
     /// @brief Allowed extensions for texture files

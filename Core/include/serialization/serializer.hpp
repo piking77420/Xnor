@@ -43,10 +43,13 @@ public:
     /// @param filePath File name
     XNOR_ENGINE static void StartSerialization(const std::string& filePath);
 
+    /// @brief Starts a deserialization with the provided file
+    /// @param filePath File name
     XNOR_ENGINE static void StartDeserialization(const std::string& filePath);
 
     /// @brief Ends the serialization
     XNOR_ENGINE static void EndSerialization();
+    /// @brief Ends the deserialization
     XNOR_ENGINE static void EndDeserialization();
 
     /// @brief Starts a root element

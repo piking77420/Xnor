@@ -5,6 +5,7 @@
 
 BEGIN_XNOR_CORE
 
+/// @private
 BEGIN_ENUM(FileSystemWatcherChangeTypes)
 {
     Changed = 1 << 0,
@@ -14,18 +15,21 @@ BEGIN_ENUM(FileSystemWatcherChangeTypes)
 }
 END_ENUM
 
+/// @private
 struct FileSystemWatcherEventArgs
 {
     Pointer<Entry> entry;
     ENUM_VALUE(FileSystemWatcherChangeTypes) changeTypes;
 };
 
+/// @private
 struct RenamedFileSystemWatcherEventArgs : FileSystemWatcherEventArgs
 {
     std::string oldName;
     std::string oldFullPath;
 };
 
+/// @private
 class FileSystemWatcher
 {
 public:

@@ -104,7 +104,7 @@ namespace Meta
     template <typename T, typename A>
     constexpr bool_t IsStdVector<std::vector<T, A>> = true;
 
-    /// @brief Checks whether the type is a @ref List
+    /// @brief Checks whether the type is a List
     template <typename>
     constexpr bool_t IsXnorList = false;
 
@@ -112,7 +112,7 @@ namespace Meta
     template <typename T>
     constexpr bool_t IsXnorList<List<T>> = true;
 
-    /// @brief Checks whether the type is a @ref Pointer
+    /// @brief Checks whether the type is a Pointer
     template <typename>
     constexpr bool_t IsXnorPointer = false;
 

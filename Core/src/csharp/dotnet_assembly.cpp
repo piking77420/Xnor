@@ -79,9 +79,4 @@ const std::string& DotnetAssembly::GetName() const
 
 void DotnetAssembly::ProcessScriptComponent(Coral::Type& subclass)
 {
-    Entity* const entity = World::scene->CreateEntity(static_cast<std::string>(subclass.GetFullName()) + " Entity");
-    auto&& instance = subclass.CreateInstance();
-    ScriptComponent* const ptr = instance.GetFieldValue<ScriptComponent*>("swigCPtr");
-    ptr->Initialize(instance);
-    entity->AddComponent(ptr);
 }

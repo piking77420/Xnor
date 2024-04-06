@@ -43,11 +43,17 @@ Application::Application()
     Input::Initialize();
     Screen::Initialize();
 
-	DotnetRuntime::Initialize();
+	if (!DotnetRuntime::Initialize())
+	{
+		const int result = MessageBoxA(nullptr, "Couldn't initialize .NET runtime. Continue execution anyway ?", "Error", MB_YESNO | MB_ICONERROR | MB_DEFBUTTON2);
+		if (result == IDNO)
+			Exit(EXIT_FAILURE);
+	}
 
 	World::scene = new Scene;
 
-	DotnetRuntime::LoadAssembly("Game");
+	if (!DotnetRuntime::LoadAssembly("Game"))
+		Logger::LogWarning("Couldn't load assembly Game.dll");
 }
 
 Application::~Application()
@@ -68,3 +74,8 @@ Application::~Application()
     Logger::Stop();
 }
 
+void Application::Exit(const int32_t code)
+{
+	Logger::LogInfo("Force exiting Application");
+	std::exit(code);
+}

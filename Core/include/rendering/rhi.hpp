@@ -23,7 +23,7 @@ class Rhi
 	STATIC_CLASS(Rhi)
 	
 public:
-
+	/// @brief Skybox parser
 	XNOR_ENGINE static inline SkyBoxParser skyBoxParser;
 
 	/// @brief Sets the polygon mode

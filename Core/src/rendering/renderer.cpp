@@ -106,7 +106,7 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	Rhi::DrawModel(m_Quad->GetId());
 	
 	skybox.UnbindDesriptorSet();
-	viewportData.UnBindDescriptor();
+	viewportData.UnbindDescriptor();
 	viewportData.colorPass.EndRenderPass();
 	
 	m_GBufferShaderLit->Unuse();

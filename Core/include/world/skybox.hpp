@@ -45,6 +45,9 @@ public:
     /// @brief UnBind All Texture For Rendering
     XNOR_ENGINE void UnbindDesriptorSet() const;
 
+    /// @brief Gets the skybox albedo color map
+    /// @returns Cubemap albedo
+    [[nodiscard]]
     XNOR_ENGINE const Cubemap* GetSkyboxAlbedoColor() const;
 
 private:

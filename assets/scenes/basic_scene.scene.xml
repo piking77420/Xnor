@@ -43,7 +43,7 @@
 						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
 						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
 						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
-						<ambiantOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambiantOcclusionTexture>
+						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 				</0>
@@ -83,7 +83,7 @@
 						<metallicTexture>92C273FA-1E2D-43AA-B8-CF-AE-D0-15-6F-57-87</metallicTexture>
 						<roughnessTexture>D951D7C1-D2F0-4849-86-EF-1-74-A-42-66-C9</roughnessTexture>
 						<normalTexture>D951D7C1-D2F0-4849-86-EF-1-74-A-42-66-C9</normalTexture>
-						<ambiantOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambiantOcclusionTexture>
+						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 				</0>
@@ -115,7 +115,7 @@
 						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
 						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
 						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
-						<ambiantOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambiantOcclusionTexture>
+						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 				</0>
@@ -127,14 +127,14 @@
 			<name>PointLight</name>
 			<m_EntityId>A284C848-DC61-4853-A4-48-15-9D-CE-5D-73-BD</m_EntityId>
 			<transform>
-				<m_Position>4 ; 3 ; 6</m_Position>
+				<m_Position>-2 ; 3 ; -6</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="PointLight">
-					<color>1 ; 1 ; 1 ; 1</color>
-					<intensity>1</intensity>
+					<color>0.0070581296 ; 0.14682326 ; 0.7128713 ; 1</color>
+					<intensity>10000</intensity>
 					<castShadow>true</castShadow>
 				</0>
 				<1 typeName="TestComponent">
@@ -216,7 +216,7 @@
 						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
 						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
 						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
-						<ambiantOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambiantOcclusionTexture>
+						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 				</2>
@@ -224,6 +224,70 @@
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
 		</6>
+		<7>
+			<name>VikingRoom</name>
+			<m_EntityId>924CE8D3-CDEA-4D8A-86-BE-50-D-74-E7-AF-38</m_EntityId>
+			<transform>
+				<m_Position>1 ; 0 ; -6</m_Position>
+				<m_EulerRotation>-1.716861 ; 1.225529 ; -0.06609928</m_EulerRotation>
+				<m_Scale>1.0000046 ; 1.0000085 ; 1.0000095</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="MeshRenderer">
+					<model>7D4A901C-2429-4A7D-B2-98-A0-92-E4-79-B4-BE</model>
+					<material>
+						<materialType>Opaque</materialType>
+						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
+						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
+						<metallic>0</metallic>
+						<roughness>0</roughness>
+						<reflectance>0</reflectance>
+						<emissive>0</emissive>
+						<ambientOcclusion>0</ambientOcclusion>
+						<albedoTexture>E01B5F33-4744-4694-92-4-19-7E-C7-F2-98-A1</albedoTexture>
+						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
+						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
+						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
+						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
+					</material>
+					<drawModelAabb>false</drawModelAabb>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</7>
+		<8>
+			<name>Entity</name>
+			<m_EntityId>5D07D9-346E-48FE-81-81-6E-87-5A-2A-F-2D</m_EntityId>
+			<transform>
+				<m_Position>-5 ; 0 ; -7</m_Position>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="MeshRenderer">
+					<model>99097F3B-B578-4C0B-A2-64-E1-51-5A-41-BA-A</model>
+					<material>
+						<materialType>Opaque</materialType>
+						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
+						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
+						<metallic>0</metallic>
+						<roughness>0</roughness>
+						<reflectance>0</reflectance>
+						<emissive>0</emissive>
+						<ambientOcclusion>0</ambientOcclusion>
+						<albedoTexture>90AE1CB3-FE66-4A43-A8-56-84-5B-DF-4A-A9-39</albedoTexture>
+						<metallicTexture>9A5AAB27-D34F-41A0-9C-D0-F4-85-99-CE-A3-8D</metallicTexture>
+						<roughnessTexture>E63967DB-EC4B-490C-92-46-C6-89-35-D3-7F-89</roughnessTexture>
+						<normalTexture>5C24E623-41D9-473C-A6-43-40-DE-D-F8-45-C1</normalTexture>
+						<ambientOcclusionTexture>2510E55D-BFD3-4B1F-B6-1E-65-C2-A2-6F-AD-CB</ambientOcclusionTexture>
+					</material>
+					<drawModelAabb>false</drawModelAabb>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</8>
 	</m_Entities>
 </Scene>
 

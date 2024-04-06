@@ -28,5 +28,4 @@ public:
 
 END_XNOR_CORE
 
-REFL_AUTO(type(XnorCore::MeshCollider, bases<XnorCore::Collider>)
-)
+REFL_AUTO(type(XnorCore::MeshCollider, bases<XnorCore::Collider>))

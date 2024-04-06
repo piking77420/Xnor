@@ -15,7 +15,11 @@ public:
     /// @brief The path of the current executable
     ///
     /// This is valid once @ref Application::Application "the Application constructor" has been called
-    static inline std::filesystem::path executablePath;
+    XNOR_ENGINE static inline std::filesystem::path executablePath;
+    
+    /// @brief Exits the currently-executing Application immediately.
+    [[noreturn]]
+    XNOR_ENGINE static void Exit(int32_t code = 0);
     
     /// @brief Renderer of the application
     Renderer renderer;

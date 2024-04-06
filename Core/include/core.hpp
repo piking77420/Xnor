@@ -136,6 +136,33 @@ namespace XnorCore {}
 using stdstring = std::string;
 #endif
 
+/// @brief Opens an @c enum with the given name.
+///
+/// ### Reason
+/// Since using an @c enum @c class type means casting a value every time we want it as a number, and
+/// using a classic C @c enum means having its constants in the current namespace, we use this set of macros instead.
+///
+/// This macro generates a @c namespace with the given enum name, containing a C @c enum with the given name in it.
+/// This means that all the @c enum constants are in a separate namespace and should therefore be accessed with the enum name
+/// each time, but also that for storing a value of that type we need to use @c EnumName::EnumName. To fix that, we created
+/// the ENUM_VALUE macro, which effectively does what we need.
+///
+/// ### Usage
+/// This macro should be used as the following:
+/// @code
+/// BEGIN_ENUM(EnumName)
+/// {
+///     Value1,
+///     Value2,
+///     Value3
+/// }
+/// END_ENUM
+/// @endcode
+///
+/// A variable storing a value of an @c enum generated with this macro should be declared like this:
+/// @code
+/// ENUM_VALUE(EnumName) variableName = EnumName::Value2;
+/// @endcode
 #ifndef DOXYGEN
 #define BEGIN_ENUM(name)    \
     namespace name          \
@@ -146,6 +173,9 @@ using stdstring = std::string;
     enum name
 #endif
 
+/// @brief Closes an @c enum declaration that was opened using BEGIN_ENUM.
+///
+/// @see BEGIN_ENUM
 #ifndef DOXYGEN
 #define END_ENUM    \
         ;           \
@@ -155,6 +185,9 @@ using stdstring = std::string;
     ;
 #endif
 
+/// @brief Generates the type for a variable using an @c enum that was created with the BEGIN_ENUM and END_ENUM macros.
+///
+/// @see BEGIN_ENUM
 #ifndef DOXYGEN
 #define ENUM_VALUE(enumName) enumName::enumName
 #else
@@ -165,6 +198,9 @@ using stdstring = std::string;
 #define SWIG_ONLY
 #endif
 
+/// @brief Equivalent to @c alignas(size).
+///
+/// We need this to be a macro because it generates SWIG syntax errors.
 #ifndef SWIG
 #define ALIGNAS(size) alignas(size)
 #else

@@ -625,6 +625,9 @@ uint32_t Rhi::GetOpengDepthEnum(const DepthFunction::DepthFunction depthFunction
 
 		case DepthFunction::GreaterEqual:
 			return GL_GEQUAL;
+
+		case DepthFunction::Disable:
+			return GL_LESS;
 	}
 
 	return GL_LESS;
