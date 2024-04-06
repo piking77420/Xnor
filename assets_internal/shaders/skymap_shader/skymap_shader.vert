@@ -11,6 +11,8 @@ layout (std140, binding = 0) uniform CameraUniform
     mat4 view;
     mat4 projection;
     vec3 cameraPos;
+    float near;
+    float far;
 };
 
 out VS_OUT

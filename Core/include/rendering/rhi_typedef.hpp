@@ -5,6 +5,7 @@
 
 #include "core.hpp"
 #include "utils/color.hpp"
+#include <vector>
 
 
 
@@ -217,9 +218,14 @@ END_ENUM
 /// @brief %Texture data type
 BEGIN_ENUM(DataType)
 {
-	Float = 0,
+	Byte,
 	UnsignedByte,
-	UnsignedByte64,
+	Short,
+	UnsignedShort,
+	Int,
+	UnsignedInt,
+	Float,
+	Double
 }
 END_ENUM
 
@@ -333,6 +339,10 @@ struct CameraUniformData
 	Matrix projection = Matrix::Identity();
 	/// @brief Camera position
 	Vector3 cameraPos;
+
+	float_t near;
+
+	float_t far;
 };
 
 /// @brief Model UniformBuffer data
@@ -687,5 +697,36 @@ enum class ImageAccess
 	WriteOnly,
 	ReadWrite,
 };
+
+
+
+struct VertexAttributePointer
+{
+	uint32_t index = 0;
+	size_t size = 0;
+	DataType::DataType bufferDatatype = DataType::Byte;
+	bool_t normalized = false;
+	size_t stride = 0;
+	const void* pointer = nullptr;
+	
+};
+
+struct AttributeDivisor
+{
+	uint32_t index = 0;
+	uint32_t divisor = 0;
+};
+
+struct VBODescriptor
+{
+	VertexAttributePointer* vertexAttributesPointer = nullptr;
+	size_t vboAttributePointerSize = 0;
+
+	AttributeDivisor* attributesDivisorPointer = nullptr;
+	size_t attributesDivisorPointerSize = 0;
+
+};
+
+
 
 END_XNOR_CORE

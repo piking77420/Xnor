@@ -25,15 +25,13 @@ public:
     /// @brief Update function
     XNOR_ENGINE void Update() override;
 
-private:
-    Vector3 m_Center = Vector3::Zero();
-    Quaternion m_Rotation = Quaternion::Identity();
-    Vector3 m_Size = Vector3(1.f);
+    Vector3 center = Vector3::Zero();
+    Vector3 size = Vector3(1.f);
 };
 
 END_XNOR_CORE
 
 REFL_AUTO(type(XnorCore::BoxCollider, bases<XnorCore::Collider>),
-    field(m_Center),
-    field(m_Size)
+    field(center),
+    field(size)
 )

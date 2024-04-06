@@ -3,6 +3,12 @@
 
 using namespace XnorEditor;
 
+void EditorWindow::OnApplicationRendering()
+{
+    RenderWindow::OnApplicationRendering();
+    m_DrawGizmo.DrawGizmos(*m_Viewport, m_Editor->data.selectedEntity);
+}
+
 EditorWindow::EditorWindow(Editor* editor, XnorCore::Viewport& viewport)
     : RenderWindow(editor, "Editor", viewport) , m_PickingStrategy(m_Editor)
   , m_EditorCamera(*m_Editor, m_Editor->data.editorCam)
@@ -12,7 +18,6 @@ EditorWindow::EditorWindow(Editor* editor, XnorCore::Viewport& viewport)
 void EditorWindow::Display()
 {
     RenderWindow::Display();
-    
     m_PickingStrategy.ResizeHandle(m_Size);
     
     m_TransfromGizmo.SetRendering(

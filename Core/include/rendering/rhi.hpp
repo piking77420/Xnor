@@ -7,8 +7,8 @@
 #include "material.hpp"
 #include "render_pass.hpp"
 #include "rhi_typedef.hpp"
-#include "uniform_buffer.hpp"
 #include "vertex.hpp"
+#include "buffer/uniform_buffer.hpp"
 #include "render_systems/skybox_parser.hpp"
 #include "resource/model.hpp"
 
@@ -246,6 +246,45 @@ public:
 	/// @param textureInternalFormat Texture internal format
 	XNOR_ENGINE static void BindImageTexture(uint32_t unit, uint32_t texture, uint32_t level, bool_t layered, uint32_t layer, ImageAccess imageAcess, TextureInternalFormat::TextureInternalFormat textureInternalFormat);
 
+
+
+	// Enum to OpenglEnum
+	XNOR_ENGINE static uint32_t GetOpengDepthEnum(DepthFunction::DepthFunction depthFunction);
+	
+	XNOR_ENGINE static uint32_t BlendEquationToOpengl(BlendEquation::BlendEquation blendEquation);
+	
+	XNOR_ENGINE static uint32_t GetOpenglShaderType(ShaderType::ShaderType shaderType);
+	
+	XNOR_ENGINE static std::string GetShaderTypeToString(ShaderType::ShaderType shaderType);
+	
+	XNOR_ENGINE static uint32_t GetOpenglTextureType(TextureType::TextureType textureType);
+	
+	XNOR_ENGINE static uint32_t GetOpenglInternalFormat(TextureInternalFormat::TextureInternalFormat textureFormat);
+	
+	XNOR_ENGINE static uint32_t GetOpenGlTextureFormat(TextureFormat::TextureFormat textureFormat);
+	
+	XNOR_ENGINE static uint32_t GetOpenglTextureWrapper(TextureWrapping::TextureWrapping textureWrapping);
+	
+	XNOR_ENGINE static uint32_t GetOpenglTextureFilter(TextureFiltering::TextureFiltering textureFiltering);
+	
+	XNOR_ENGINE static uint32_t GetBlendValueOpengl(BlendValue::BlendValue blendFunction);
+	
+	XNOR_ENGINE static uint32_t GetOpenglBufferBit(BufferFlag::BufferFlag flag);
+	
+	XNOR_ENGINE static uint32_t AttachementToOpenglAttachement(Attachment::Attachment attachment);
+	
+	XNOR_ENGINE static uint32_t CubeMapFacesToOpengl(CubeMapFace cubeMapFace);
+	
+	XNOR_ENGINE static uint32_t MemoryBarrierToOpengl(GpuMemoryBarrier memoryBarrier);
+	
+	XNOR_ENGINE static uint32_t GetImageAccessOpengl(ImageAccess imageAcess);
+
+	XNOR_ENGINE static uint32_t FrontFaceToOpenglFrontFace(FrontFace::FrontFace frontFace);
+	
+	XNOR_ENGINE static uint32_t CullFaceToOpenglCullFace(CullFace::CullFace cullFace);
+
+	XNOR_ENGINE static uint32_t GetOpenglDataType(DataType::DataType dataType);
+
 private:
 	struct ModelInternal
 	{
@@ -254,7 +293,6 @@ private:
 		uint32_t ebo = 0;
 		uint32_t nbrOfVertex = 0;
 		uint32_t nbrOfIndicies = 0;
-		Model::Aabb aabb;
 	};
 	
 	struct ShaderInternal
@@ -285,30 +323,11 @@ private:
 	
 	XNOR_ENGINE static int32_t GetUniformInMap(uint32_t shaderId, const char_t* uniformKey);
 
-	XNOR_ENGINE static uint32_t GetOpenglDataType(DataType::DataType dataType);
 
 	// Texture 
 	XNOR_ENGINE static uint32_t CreateTextureId(TextureType::TextureType textureType);
 
-	// Enum to OpenglEnum
-	XNOR_ENGINE static uint32_t GetOpengDepthEnum(DepthFunction::DepthFunction depthFunction);
-	XNOR_ENGINE static uint32_t BlendEquationToOpengl(BlendEquation::BlendEquation blendEquation);
-	XNOR_ENGINE static uint32_t GetOpenglShaderType(ShaderType::ShaderType shaderType);
-	XNOR_ENGINE static std::string GetShaderTypeToString(ShaderType::ShaderType shaderType);
-	XNOR_ENGINE static uint32_t GetOpenglTextureType(TextureType::TextureType textureType);
-	XNOR_ENGINE static uint32_t GetOpenglInternalFormat(TextureInternalFormat::TextureInternalFormat textureFormat);
-	XNOR_ENGINE static uint32_t GetOpenGlTextureFormat(TextureFormat::TextureFormat textureFormat);
-	XNOR_ENGINE static uint32_t GetOpenglTextureWrapper(TextureWrapping::TextureWrapping textureWrapping);
-	XNOR_ENGINE static uint32_t GetOpenglTextureFilter(TextureFiltering::TextureFiltering textureFiltering);
-	XNOR_ENGINE static uint32_t GetBlendValueOpengl(BlendValue::BlendValue blendFunction);
-	XNOR_ENGINE static uint32_t GetOpenglBufferBit(BufferFlag::BufferFlag flag);
-	XNOR_ENGINE static uint32_t AttachementToOpenglAttachement(Attachment::Attachment attachment);
-	XNOR_ENGINE static uint32_t CubeMapFacesToOpengl(CubeMapFace cubeMapFace);
-	XNOR_ENGINE static uint32_t MemoryBarrierToOpengl(GpuMemoryBarrier memoryBarrier);
-	XNOR_ENGINE static uint32_t GetImageAccessOpengl(ImageAccess imageAcess);
-
-	XNOR_ENGINE static uint32_t FrontFaceToOpenglFrontFace(FrontFace::FrontFace frontFace);
-	XNOR_ENGINE static uint32_t CullFaceToOpenglCullFace(CullFace::CullFace cullFace);
+	
 
 	/// @brief Set the depth function to the graphic API
 	/// @param depthFunction The current depthFunction to set to the api

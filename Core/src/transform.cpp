@@ -128,3 +128,18 @@ bool_t Transform::GetChanged() const
 {
     return m_Changed;
 }
+
+Vector3 Transform::GetRight() const
+{
+    return static_cast<Vector3>(worldMatrix * Vector4::UnitX());
+}
+
+Vector3 Transform::GetUp() const
+{
+    return static_cast<Vector3>(worldMatrix * Vector4::UnitY());
+}
+
+Vector3 Transform::GetForward() const
+{
+    return static_cast<Vector3>(worldMatrix * Vector4::UnitZ());
+}

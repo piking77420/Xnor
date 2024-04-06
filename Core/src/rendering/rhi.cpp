@@ -1276,14 +1276,31 @@ uint32_t Rhi::GetOpenglDataType(const DataType::DataType dataType)
 {
 	switch (dataType)
 	{
-		case DataType::Float:
-			return GL_FLOAT;
-
+		
+		case DataType::Byte:
+			return GL_BYTE;
+		
 		case DataType::UnsignedByte:
 			return GL_UNSIGNED_BYTE;
 		
-		case DataType::UnsignedByte64:
-			return GL_UNSIGNED_INT_8_8_8_8;
+		case DataType::Short:
+			return GL_SHORT;
+		
+		case DataType::UnsignedShort:
+			return GL_UNSIGNED_SHORT;
+			
+		case DataType::Int:
+			return GL_INT;
+			
+		case DataType::UnsignedInt:
+			return GL_UNSIGNED_INT ;
+
+		case DataType::Float:
+			return GL_FLOAT;
+		
+		case DataType::Double:
+			return GL_DOUBLE;
+			
 	}
 
 	return GL_UNSIGNED_BYTE;

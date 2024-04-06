@@ -25,12 +25,13 @@ public:
     /// @brief Update function
     XNOR_ENGINE void Update() override;
 
+    float_t radius = 1.f;
+
 private:
-    float_t m_Radius = 1.f;
 };
 
 END_XNOR_CORE
 
 REFL_AUTO(type(XnorCore::SphereCollider, bases<XnorCore::Collider>),
-    field(m_Radius)
+    field(radius)
 )

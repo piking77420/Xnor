@@ -18,6 +18,7 @@ int main(int, char**)
 	using namespace XnorCore;
 	using namespace XnorEditor;
 
+	
 	Logger::OpenDefaultFile();
 	XnorFactory::RegisterAllTypes();
 

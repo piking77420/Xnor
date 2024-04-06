@@ -17,13 +17,13 @@ void Renderer::Initialize()
 	Rhi::PrepareRendering();
 }
 
-void Renderer::BeginFrame(const Scene& scene) const
+void Renderer::BeginFrame(const Scene& scene)
 {
 	m_LightManager.BeginFrame(scene, *this);
 	Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
 }
 
-void Renderer::EndFrame(const Scene& scene) const
+void Renderer::EndFrame(const Scene& scene)
 {
 	m_LightManager.EndFrame(scene);
 }
@@ -178,6 +178,7 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 }
 
+
 void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers, const MaterialType materialType) const
 {
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
@@ -309,6 +310,8 @@ void Renderer::BindCamera(const Camera& camera,const Vector2i screenSize) const
 	camera.GetView(&cam.view);
 	camera.GetProjection(screenSize, &cam.projection);
 	cam.cameraPos = camera.position;
+	cam.near = camera.near;
+	cam.far = camera.far;
 	Rhi::UpdateCameraUniform(cam);
 }
 

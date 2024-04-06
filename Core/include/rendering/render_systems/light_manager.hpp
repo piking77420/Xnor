@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <map>
+
 #include "core.hpp"
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
@@ -25,7 +27,9 @@ private:
     static constexpr Vector2i DirectionalShadowMapSize = { 1024, 1024 };
     static constexpr Vector2i SpotLightShadowMapSize = { 1024, 1024 };
     static constexpr Vector2i PointLightLightShadowMapSize = { 1024, 1024 };
-
+    
+    static constexpr float_t LightThreshold = 30.f;
+    
     static constexpr TextureInternalFormat::TextureInternalFormat ShadowDepthTextureInternalFormat = TextureInternalFormat::DepthComponent32F;
     
 public:
@@ -50,7 +54,7 @@ public:
     /// @brief Draws the light gizmos
     /// @param camera Editor camera
     /// @param scene Concerned scene
-    XNOR_ENGINE void DrawLightGizmo(const Camera& camera, const Scene& scene);
+    XNOR_ENGINE void DrawLightGizmo(const Camera& camera, const Scene& scene) const ;
 
     /// @brief Draws the light gizmos using a specified shader
     /// @param camera Editor camera
@@ -97,7 +101,8 @@ private:
     
     RenderPass m_ShadowRenderPass;
     Framebuffer* m_ShadowFrameBuffer {nullptr};
-    
+    Framebuffer* m_ShadowFrameBufferPointLight {nullptr};
+
     Texture* m_SpotLightShadowMapTextureArray = nullptr;
     
     Texture* m_PointLightShadowMapCubemapArrayPixelDistance = nullptr;
@@ -118,7 +123,13 @@ private:
 
     XNOR_ENGINE void ComputeShadowPointLight(const Scene& scene, const Renderer& renderer);
     
-    XNOR_ENGINE void InitShadow();
+    XNOR_ENGINE void GetDistanceFromCamera(std::map<float_t, GizmoLight>* sortedLight, const Camera& camera) const;
+
+    XNOR_ENGINE void GetPointLightDirection(size_t index, Vector3* front,Vector3* up) const;
+    
+    XNOR_ENGINE void InitShadowMap();
+
+    XNOR_ENGINE void InitShader();
 };
 
 END_XNOR_CORE

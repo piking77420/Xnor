@@ -2,12 +2,15 @@
 
 #include "editor_camera.hpp"
 #include "render_window.hpp"
+#include "editing/draw_gizmo.hpp"
 #include "editing/transform_gizmo.hpp"
 
 BEGIN_XNOR_EDITOR
 class EditorWindow : public RenderWindow
 {
 public:
+    void OnApplicationRendering() override;
+
     explicit EditorWindow(Editor* editor, XnorCore::Viewport& viewport);
 
     ~EditorWindow() override = default;
@@ -24,10 +27,12 @@ protected:
     void SelectEntityOnScreen();
 
     PickingStrategy m_PickingStrategy;
+    
+
 private:
     EditorCamera m_EditorCamera;
     TransfromGizmo m_TransfromGizmo;
-
+    DrawGizmo m_DrawGizmo;
 };
 
 END_XNOR_EDITOR

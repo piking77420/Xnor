@@ -38,11 +38,11 @@ public:
     
     /// @brief Update All the infos of the current frame lights, animation, etc...
     /// @param scene The scene
-    XNOR_ENGINE void BeginFrame(const Scene& scene) const;
+    XNOR_ENGINE void BeginFrame(const Scene& scene);
 
     /// @brief stuff made at the end of the frame
     /// @param scene The scene
-    XNOR_ENGINE void EndFrame(const Scene& scene) const;
+    XNOR_ENGINE void EndFrame(const Scene& scene);
 
     /// @brief Renders a scene on a viewport
     /// @param viewport Viewport target
@@ -62,9 +62,9 @@ public:
     XNOR_ENGINE void SwapBuffers() const;
 
 private:
-    mutable LightManager m_LightManager;
-    mutable SkyboxRenderer m_SkyboxRenderer;
-    mutable PostProcessPass m_PostProcessPass;
+    LightManager m_LightManager;
+    SkyboxRenderer m_SkyboxRenderer;
+    PostProcessPass m_PostProcessPass;
     
     Pointer<Shader> m_GBufferShader;
     Pointer<Shader> m_GBufferShaderLit;
@@ -92,6 +92,8 @@ private:
         const Viewport& viewport, Vector2i viewportSize, bool_t isEditor) const;
     
     XNOR_ENGINE void DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) const;
+
+
 };
 
 END_XNOR_CORE
