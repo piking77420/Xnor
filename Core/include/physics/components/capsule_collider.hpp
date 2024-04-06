@@ -15,6 +15,10 @@ class CapsuleCollider : public Collider
     REFLECTABLE_IMPL(CapsuleCollider)
 
 public:
+    
+    float_t height = 1.f;
+    float_t radius = 1.f;
+    
     XNOR_ENGINE CapsuleCollider() = default; 
     XNOR_ENGINE ~CapsuleCollider() override = default;
     
@@ -24,15 +28,12 @@ public:
     XNOR_ENGINE void Begin() override;
     /// @brief Update function
     XNOR_ENGINE void Update() override;
-
-private:
-    float_t m_Height = 1.f;
-    float_t m_Radius = 1.f;
+    
 };
 
 END_XNOR_CORE
 
 REFL_AUTO(type(XnorCore::CapsuleCollider, bases<XnorCore::Collider>),
-    field(m_Height),
-    field(m_Radius)
+    field(height),
+    field(radius)
 )

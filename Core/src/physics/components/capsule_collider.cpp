@@ -19,7 +19,7 @@ void CapsuleCollider::Begin()
         .isStatic = m_IsStatic
     };
 
-    m_BodyId = PhysicsWorld::CreateCapsule(info, m_Height, m_Radius);
+    m_BodyId = PhysicsWorld::CreateCapsule(info, height, radius);
 }
 
 void CapsuleCollider::Update()

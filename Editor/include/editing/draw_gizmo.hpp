@@ -53,29 +53,32 @@ public:
     
     static void Capsule(Vector3 position, float_t height, float_t radius, XnorCore::ColorRgb color = XnorCore::ColorRgb::Green());
 
-    void DrawGizmos(const XnorCore::Viewport& viewport);
+    void DrawGizmos(const XnorCore::Viewport& viewport, const XnorCore::Entity* selectedEntity);
+
 
 private:
     XnorCore::Pointer<XnorCore::Shader> m_GizmoShader;
 
-    XnorCore::Pointer<XnorCore::Shader> m_Sphere;
+    XnorCore::Pointer<XnorCore::Model> m_Sphere;
 
-    XnorCore::Pointer<XnorCore::Shader> m_Cube;
+    XnorCore::Pointer<XnorCore::Model> m_Cube;
 
-    XnorCore::Pointer<XnorCore::Shader> m_Capsule;
+    XnorCore::Pointer<XnorCore::Model> m_Capsule;
     
     XnorCore::RenderPass m_RenderPass;
 
     XnorCore::ModelUniformData modelData;
-
-
+    
     void DrawRectangle();
 
     void DrawSphere();
 
     void DrawCapsule();
-
+    
     void Clear();
+    
+    void DrawCollider(const XnorCore::Entity& entity);
+
 };
 
 END_XNOR_EDITOR

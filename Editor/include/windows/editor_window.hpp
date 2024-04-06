@@ -9,6 +9,8 @@ BEGIN_XNOR_EDITOR
 class EditorWindow : public RenderWindow
 {
 public:
+    void OnApplicationRendering() override;
+
     explicit EditorWindow(Editor* editor, XnorCore::Viewport& viewport);
 
     ~EditorWindow() override = default;

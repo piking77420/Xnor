@@ -21,7 +21,7 @@ void SphereCollider::Begin()
         .isStatic = m_IsStatic
     };
 
-    m_BodyId = PhysicsWorld::CreateSphere(info, m_Radius);
+    m_BodyId = PhysicsWorld::CreateSphere(info, radius);
 }
 
 void SphereCollider::Update()
