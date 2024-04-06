@@ -29,7 +29,7 @@ void Frustum::UpdateFromCamera(const Camera& camera, const float_t aspect)
 
 }
 
-bool_t Frustum::AABBCollidWithPlane(const Plane& plane, const Model::Aabb& aabb, const Vector3& center) const
+bool_t Frustum::AABBCollidWithPlane(const Plane& plane, const Bound& aabb, const Vector3& center) const
 {
     const float r = center.x * std::abs(plane.normal.x) +
             center.y * std::abs(plane.normal.y) + center.z * std::abs(plane.normal.z);
@@ -37,7 +37,7 @@ bool_t Frustum::AABBCollidWithPlane(const Plane& plane, const Model::Aabb& aabb,
     return -r <= plane.GetSignedDistanceToPlane(center);
 }
 
-bool_t Frustum::IsInFrutum(const Camera& camera, const Model::Aabb& aabb, const XnorCore::Transform& transform) const
+bool_t Frustum::IsInFrutum(const Camera& camera, const Bound& aabb, const XnorCore::Transform& transform) const
 {
     // Get The center of the AABB
     const Vector3&& center = (aabb.max - aabb.min) * 0.5f;
@@ -61,13 +61,13 @@ bool_t Frustum::IsInFrutum(const Camera& camera, const Model::Aabb& aabb, const 
        Calc::Abs(Vector3::Dot(Vector3::UnitZ(), up)) +
        Calc::Abs(Vector3::Dot(Vector3::UnitZ(), forward));
 
-    
-    const Model::Aabb obb =
+    /*
+    const Aabb obb =
     {
         .min = static_cast<Vector3>(transform.worldMatrix * Vector4(aabb.min.x, aabb.min.y , aabb.min.z, 1.f)),
         .max = static_cast<Vector3>(transform.worldMatrix * Vector4(aabb.max.x, aabb.max.y , aabb.max.z, 1.f)),
     };
-
+*/
     
     
     

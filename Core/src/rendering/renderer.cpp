@@ -162,13 +162,9 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 			continue;
 
 		const Transform& transform =  meshRenderer->GetEntity()->transform;
-		const Model::Aabb&& modelAabb = meshRenderer->model->GetAabb();
-
-		const Vector3&& aabbSize = (modelAabb.max - modelAabb.min) * 0.5f;
-		const Vector3&& center = (modelAabb.max + modelAabb.min) * 0.5f;
-
-		const Matrix&& trsAabb = Matrix::Trs(center, Quaternion::Identity(), aabbSize);
-		modelData.model = transform.worldMatrix * trsAabb;
+		const Bound&& modelAabb = meshRenderer->model->GetAabb().GetAabbFromTransform(transform);
+		const Matrix&& trsAabb = Matrix::Trs(modelAabb.center, Quaternion::Identity(), modelAabb.extends);
+		modelData.model = trsAabb;
 		Rhi::UpdateModelUniform(modelData);
 
 		Rhi::DrawModel(m_Cube->GetId());

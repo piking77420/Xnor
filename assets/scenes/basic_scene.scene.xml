@@ -48,8 +48,8 @@
 					<drawModelAabb>false</drawModelAabb>
 				</0>
 				<1 typeName="BoxCollider">
-					<m_Center>0 ; 0 ; 0</m_Center>
-					<m_Size>1 ; 1 ; 1</m_Size>
+					<center>0 ; 0 ; 0</center>
+					<size>1 ; 1 ; 1</size>
 					<constraints/>
 					<m_IsStatic>true</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
@@ -64,8 +64,8 @@
 			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
 			<transform>
 				<m_Position>-4 ; 2 ; 0</m_Position>
-				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1 ; 1</m_Scale>
+				<m_EulerRotation>3.0368652 ; 0.22738181 ; -3.0790445e-06</m_EulerRotation>
+				<m_Scale>1.0000148 ; 1.0000385 ; 1.0000244</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">
@@ -85,7 +85,7 @@
 						<normalTexture>D951D7C1-D2F0-4849-86-EF-1-74-A-42-66-C9</normalTexture>
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
-					<drawModelAabb>false</drawModelAabb>
+					<drawModelAabb>true</drawModelAabb>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -191,8 +191,8 @@
 			</transform>
 			<m_Components>
 				<0 typeName="CapsuleCollider">
-					<m_Height>1</m_Height>
-					<m_Radius>1</m_Radius>
+					<height>1</height>
+					<radius>1</radius>
 					<constraints/>
 					<m_IsStatic>false</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
@@ -228,9 +228,9 @@
 			<name>VikingRoom</name>
 			<m_EntityId>924CE8D3-CDEA-4D8A-86-BE-50-D-74-E7-AF-38</m_EntityId>
 			<transform>
-				<m_Position>1 ; 0 ; -6</m_Position>
-				<m_EulerRotation>-1.716861 ; 1.225529 ; -0.06609928</m_EulerRotation>
-				<m_Scale>1.0000046 ; 1.0000085 ; 1.0000095</m_Scale>
+				<m_Position>0 ; 0 ; -2</m_Position>
+				<m_EulerRotation>-1.3976296 ; -0.070366874 ; -0.35123503</m_EulerRotation>
+				<m_Scale>1.000041 ; 1.00006 ; 1.0000691</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">
@@ -250,7 +250,7 @@
 						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
-					<drawModelAabb>false</drawModelAabb>
+					<drawModelAabb>true</drawModelAabb>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -276,11 +276,11 @@
 						<reflectance>0</reflectance>
 						<emissive>0</emissive>
 						<ambientOcclusion>0</ambientOcclusion>
-						<albedoTexture>90AE1CB3-FE66-4A43-A8-56-84-5B-DF-4A-A9-39</albedoTexture>
-						<metallicTexture>9A5AAB27-D34F-41A0-9C-D0-F4-85-99-CE-A3-8D</metallicTexture>
-						<roughnessTexture>E63967DB-EC4B-490C-92-46-C6-89-35-D3-7F-89</roughnessTexture>
-						<normalTexture>5C24E623-41D9-473C-A6-43-40-DE-D-F8-45-C1</normalTexture>
-						<ambientOcclusionTexture>2510E55D-BFD3-4B1F-B6-1E-65-C2-A2-6F-AD-CB</ambientOcclusionTexture>
+						<albedoTexture>0-0-0-0-0-0-0-0-0-0-0</albedoTexture>
+						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
+						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
+						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
+						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 				</0>

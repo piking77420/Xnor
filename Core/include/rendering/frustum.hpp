@@ -39,10 +39,10 @@ class Frustum
 
     void UpdateFromCamera(const Camera& camera, float_t aspect);
 
-    bool_t IsInFrutum(const Camera& camera, const Model::Aabb& aabb, const XnorCore::Transform& transform) const ;
+    bool_t IsInFrutum(const Camera& camera, const Bound& aabb, const XnorCore::Transform& transform) const ;
 
 private:
-    bool_t AABBCollidWithPlane(const Plane& plane, const Model::Aabb& aabb, const Vector3& center) const;
+    bool_t AABBCollidWithPlane(const Plane& plane, const Bound& aabb, const Vector3& center) const;
     
     std::array<Plane,5> m_Plane;
 };

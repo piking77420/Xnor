@@ -26,6 +26,7 @@ public:
 
     /// @brief Whether to draw the model AABB box
     bool_t drawModelAabb = false;
+    
 };
 
 END_XNOR_CORE

@@ -4,6 +4,7 @@
 
 #include "core.hpp"
 #include "entity.hpp"
+#include "utils/octree.hpp"
 #include "world/skybox.hpp"
 
 /// @file scene.hpp
@@ -19,6 +20,9 @@ class Scene
 public:
     /// @brief Skybox handler
     Skybox skybox;
+
+    /// @brief Octotree base on rendering AABB
+    Octree renderOctoree;
     
     XNOR_ENGINE Scene();
     XNOR_ENGINE ~Scene();

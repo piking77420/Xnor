@@ -17,3 +17,8 @@ void World::Update()
     PhysicsWorld::Update(Time::GetDeltaTime());
     scene->PostPhysics();
 }
+
+void World::Render()
+{
+    scene->renderOctoree.Draw();
+}

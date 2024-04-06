@@ -268,7 +268,20 @@ void Editor::MenuBar()
 			
 			ImGui::EndMenu();
 		}
-		
+
+		if (ImGui::BeginMenu("CurrentScene"))
+		{
+			if (ImGui::MenuItem("DrawCurrentSceneAABB"))
+			{
+				if (XnorCore::World::scene != nullptr)
+				{
+					XnorCore::World::scene->renderOctoree.draw = !XnorCore::World::scene->renderOctoree.draw;
+				}
+				
+			}
+			ImGui::EndMenu();
+		}
+			
 		ImGui::EndMainMenuBar();
 	}
 }
@@ -364,4 +377,6 @@ void Editor::WorldBehaviours()
 
 		XnorCore::World::Update();
 	}
+	XnorCore::World::scene->renderOctoree.Compute(XnorCore::World::scene->GetEntities());
+	XnorCore::World::Render();
 }
