@@ -11,6 +11,8 @@
 
 #include <string>
 
+#include "ImGui/imgui.h"
+
 namespace ImGui
 {
     // ImGui::InputText() with std::string

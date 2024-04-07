@@ -58,7 +58,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;IMGUI_EXPORT;RAPID_XML_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;IMGUI_EXPORT;RAPID_XML_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>include</AdditionalIncludeDirectories>
@@ -69,7 +69,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>glfw3.lib</AdditionalDependencies>
+      <AdditionalDependencies>toolbox.lib;glfw3.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>libs\lib\$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
@@ -83,7 +83,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;IMGUI_EXPORT;RAPID_XML_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;IMGUI_EXPORT;RAPID_XML_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>include</AdditionalIncludeDirectories>
@@ -96,7 +96,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>glfw3.lib</AdditionalDependencies>
+      <AdditionalDependencies>toolbox.lib;glfw3.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>libs\lib\$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
@@ -121,6 +121,17 @@
     <ClInclude Include="include\ImGui\imstb_textedit.h" />
     <ClInclude Include="include\ImGui\imstb_truetype.h" />
     <ClInclude Include="include\KHR\khrplatform.h" />
+    <ClInclude Include="include\Maths\calc.hpp" />
+    <ClInclude Include="include\Maths\definitions.hpp" />
+    <ClInclude Include="include\Maths\easing.hpp" />
+    <ClInclude Include="include\Maths\math.hpp" />
+    <ClInclude Include="include\Maths\matrix.hpp" />
+    <ClInclude Include="include\Maths\matrix3.hpp" />
+    <ClInclude Include="include\Maths\quaternion.hpp" />
+    <ClInclude Include="include\Maths\vector2.hpp" />
+    <ClInclude Include="include\Maths\vector2i.hpp" />
+    <ClInclude Include="include\Maths\vector3.hpp" />
+    <ClInclude Include="include\Maths\vector4.hpp" />
     <ClInclude Include="include\RapidXML\rapidxml.hpp" />
     <ClInclude Include="include\RapidXML\RapidXMLSTD.hpp" />
     <ClInclude Include="include\RapidXML\rapidxml_iterators.hpp" />

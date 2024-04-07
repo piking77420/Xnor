@@ -59,8 +59,8 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;assimp.lib;zlibstatic.lib;toolbox.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib</AdditionalDependencies>
-      <AdditionalOptions>/WHOLEARCHIVE:toolbox.lib %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib</AdditionalDependencies>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y "externals\libs\dll\$(Configuration)\*" "$(OutDir)"</Command>
@@ -85,8 +85,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);%(AdditionalLibraryDirectories);$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>;opengl32.lib;assimp.lib;zlibstatic.lib;toolbox.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib</AdditionalDependencies>
-      <AdditionalOptions>/WHOLEARCHIVE:toolbox.lib %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>;opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib</AdditionalDependencies>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y "externals\libs\dll\$(Configuration)\*" "$(OutDir)"</Command>
@@ -285,8 +285,6 @@
     <ClInclude Include="externals\include\Coral\Type.hpp" />
     <ClInclude Include="externals\include\Coral\TypeCache.hpp" />
     <ClInclude Include="externals\include\Coral\Utility.hpp" />
-    <ClInclude Include="externals\include\GLFW\glfw3.h" />
-    <ClInclude Include="externals\include\GLFW\glfw3native.h" />
     <ClInclude Include="externals\include\jolt\AABBTree\AABBTreeBuilder.h" />
     <ClInclude Include="externals\include\jolt\AABBTree\AABBTreeToBuffer.h" />
     <ClInclude Include="externals\include\jolt\AABBTree\NodeCodec\NodeCodecQuadTreeHalfFloat.h" />
@@ -577,17 +575,6 @@
     <ClInclude Include="externals\include\magic_enum\magic_enum_iostream.hpp" />
     <ClInclude Include="externals\include\magic_enum\magic_enum_switch.hpp" />
     <ClInclude Include="externals\include\magic_enum\magic_enum_utility.hpp" />
-    <ClInclude Include="externals\include\Maths\calc.hpp" />
-    <ClInclude Include="externals\include\Maths\definitions.hpp" />
-    <ClInclude Include="externals\include\Maths\easing.hpp" />
-    <ClInclude Include="externals\include\Maths\math.hpp" />
-    <ClInclude Include="externals\include\Maths\matrix.hpp" />
-    <ClInclude Include="externals\include\Maths\matrix3.hpp" />
-    <ClInclude Include="externals\include\Maths\quaternion.hpp" />
-    <ClInclude Include="externals\include\Maths\vector2.hpp" />
-    <ClInclude Include="externals\include\Maths\vector2i.hpp" />
-    <ClInclude Include="externals\include\Maths\vector3.hpp" />
-    <ClInclude Include="externals\include\Maths\vector4.hpp" />
     <ClInclude Include="externals\include\refl\refl.hpp" />
     <ClInclude Include="include\application.hpp" />
     <ClInclude Include="include\core.hpp" />

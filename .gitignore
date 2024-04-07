@@ -711,6 +711,10 @@ fabric.properties
 !**/externals/**
 !CoreLibs/libs/**
 
+Core/externals/libs/lib/**/CoreLibs.lib
+Core/externals/libs/lib/**/CoreLibs.pdb
+Core/externals/libs/lib/**/CoreLibs.idb
+
 .idea/
 
 !assets/**
