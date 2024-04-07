@@ -2,20 +2,30 @@
 
 using namespace XnorCore;
 
-Bound:: Bound(const Vector3 newCenter, const Vector3 newSize) : size(newSize),
+Bound:: Bound(const Vector3 newCenter, const Vector3 newSize) : extents(newSize * 0.5f),
 center(newCenter)
 {
-    const Vector3 sizeHalf = size * 0.5f;
-    max = (center + sizeHalf);
-    min = (center - sizeHalf);
+}
+
+Vector3 Bound::GetMin() const
+{
+    return center - extents;
+}
+
+Vector3 Bound::GetMax() const
+{
+    return center + extents;
+}
+
+Vector3 Bound::GetSize() const
+{
+    return extents * 2.f; 
 }
 
 void Bound::SetMinMax(Vector3 newmin, Vector3 newMax)
 {
-    max = newMax;
-    min = newmin;
-    center = (max + min) * 0.5f;
-    size = ((max - min));
+    extents = (newMax - newmin) * 0.5f;
+    center = newmin + extents;
 }
 
 Bound Bound::GetAabbFromTransform(const Bound& bound,const Transform& transform)
@@ -33,38 +43,44 @@ Bound Bound::GetAabbFromCamera(const Bound& bound, const Camera& cam)
     return ReturnAabbFromMatrix(bound, view, cam.position);
 }
 
-bool Bound::Intersect(const Bound& otherBound)
+bool Bound::Intersect(const Bound& otherBound) const
 {
-    return !(otherBound.max.x < min.x || otherBound.min.x > max.x ||
-             otherBound.max.y < min.y || otherBound.min.y > max.y ||
-             otherBound.max.z < min.z || otherBound.min.z > max.z);
+    const Vector3 max = GetMax();
+    const Vector3 min = GetMin();
+
+    const Vector3 otherMax = otherBound.GetMax();
+    const Vector3 otherMin = otherBound.GetMin();
+    
+    return min.x <= otherMax.x && max.x >= otherMin.x && min.y <= otherMax.y && max.y >= otherMin.y && min.z <= otherMax.z && max.z >= otherMin.z;
 }
 
 void Bound::Encapsulate(const Bound& encapsulateBound)
 {
-    if (encapsulateBound.min.x < min.x)
-        min.x = encapsulateBound.min.x;
-    if (encapsulateBound.min.y < min.y)
-        min.y = encapsulateBound.min.y;
-    if (encapsulateBound.min.z < min.z)
-        min.z = encapsulateBound.min.z;
+    Encapsulate(encapsulateBound.center - encapsulateBound.extents);
+    Encapsulate(encapsulateBound.center + encapsulateBound.extents);
+}
 
-    if (encapsulateBound.max.x > max.x)
-        max.x = encapsulateBound.max.x;
-    if (encapsulateBound.max.y > max.y)
-        max.y = encapsulateBound.max.y;
-    if (encapsulateBound.max.z > max.z)
-        max.z = encapsulateBound.max.z;
+void Bound::Encapsulate(Vector3 point)
+{
+    const Vector3 min = GetMin();
+    const Vector3 max = GetMax();
+    
+    const float_t minX = std::min(min.x, point.x);
+    const float_t minY = std::min(min.y, point.y);
+    const float_t minZ = std::min(min.z, point.z);
+    
+    const float_t maxX = std::max(max.x, point.x);
+    const float_t maxY = std::max(max.y, point.y);
+    const float_t maxZ = std::max(max.z, point.z);
 
-    size = ((max - min));
-    center = ((max + min) * 0.5f);
+    SetMinMax( { minX, minY, minZ }, { maxX, maxY, maxZ });
 }
 
 Bound Bound::ReturnAabbFromMatrix(const Bound& bound,const Matrix& matrix, const Vector3 center)
 {
-    const Vector3 right = static_cast<Vector3>(matrix[0]) * bound.size.x * 0.5f;
-    const Vector3 up =  static_cast<Vector3>(matrix[1]) * bound.size.y * 0.5f;
-    const Vector3 forward =  static_cast<Vector3>(matrix[2]) * bound.size.z * 0.5f;
+    const Vector3 right = static_cast<Vector3>(matrix[0]) * bound.extents.x;
+    const Vector3 up =  static_cast<Vector3>(matrix[1]) * bound.extents.y;
+    const Vector3 forward =  static_cast<Vector3>(matrix[2]) * bound.extents.z;
     
     const float_t newExtendX = std::abs(Vector3::Dot(Vector3::UnitX(),right))  + 
        std::abs(Vector3::Dot(Vector3::UnitX(),up))  +  std::abs(Vector3::Dot(Vector3::UnitX(),forward));

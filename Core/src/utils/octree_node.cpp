@@ -7,8 +7,8 @@ using namespace XnorCore;
 
 OctreeNode::OctreeNode(const Bound& boud, float_t minNodeSize) : m_Bound(boud) , m_MinNodeSize(minNodeSize)
 {
-    const float_t quarter = m_Bound.size.x * 0.25f * 0.5f;
-    const float_t childLength = m_Bound.size.x * 0.25f;
+    const float_t quarter = m_Bound.GetSize().x * 0.25f;
+    const float_t childLength = m_Bound.GetSize().x * 0.5f;
     const Vector3 childSize = Vector3(childLength);
     
     m_ChildBound[TopLeftFront] = Bound(m_Bound.center + Vector3(-quarter,quarter,-quarter), childSize );
@@ -48,12 +48,12 @@ void OctreeNode::AddObject(const Bound& bound)
 
 void OctreeNode::DrawGizmo()
 {
-    DrawGizmo::Rectangle(m_Bound.center,m_Bound.size * 0.5f);
+    DrawGizmo::Rectangle(m_Bound.center, m_Bound.extents);
 }
 
 void OctreeNode::DrawGizmoWithChild()
 {
-    DrawGizmo::Rectangle(m_Bound.center,m_Bound.size * 0.5f);
+    DrawGizmo::Rectangle(m_Bound.center, m_Bound.extents);
 
     if (m_Childs != nullptr)
         for (size_t i = 0; i < m_Childs->size(); i++)
@@ -67,7 +67,7 @@ void OctreeNode::DrawGizmoWithChild()
 
 void OctreeNode::DivideAndAdd(const Bound& bound)
 {
-    if (m_Bound.size.x <= m_MinNodeSize)
+    if (m_Bound.GetSize().x <= m_MinNodeSize)
     {
         return;
     }

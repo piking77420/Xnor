@@ -10,12 +10,8 @@ BEGIN_XNOR_CORE
 class XNOR_ENGINE Bound
 {
 public:
-    /// @brief The minimum bound of this AABB.
-    Vector3 min { std::numeric_limits<float_t>::max() };
-    /// @brief The maximum bound of this AABB.
-    Vector3 max { std::numeric_limits<float_t>::min() };
      /// @brief The extents of the Bounding Box. This is always size of the Bounds.
-    Vector3 size;
+    Vector3 extents;
     /// @brief The center bound of this Bound.
     Vector3 center = Vector3::Zero();
     
@@ -25,16 +21,24 @@ public:
 
     ~Bound() = default;
 
+    Vector3 GetMin() const;
+
+    Vector3 GetMax() const;
+
+    Vector3 GetSize() const;
+
     void SetMinMax(Vector3 newmin, Vector3 newMax);
 
     static Bound GetAabbFromTransform(const Bound& bound,const Transform& transform);
     
     static Bound GetAabbFromCamera(const Bound& bound,const Camera& cam);
 
-    bool_t Intersect(const Bound& otherBound);
+    bool_t Intersect(const Bound& otherBound) const;
 
     void Encapsulate(const Bound& encaspulateBound);
-    
+
+    void Encapsulate(Vector3 point);
+
 private:
 
     static Bound ReturnAabbFromMatrix(const Bound& bound, const Matrix& matrix, const Vector3 center);

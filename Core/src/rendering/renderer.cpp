@@ -163,7 +163,7 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 
 		const Transform& transform =  meshRenderer->GetEntity()->transform;
 		const Bound&& modelAabb = Bound::GetAabbFromTransform( meshRenderer->model->GetAabb(), transform);
-		const Matrix&& trsAabb = Matrix::Trs(modelAabb.center, Quaternion::Identity(), modelAabb.size * 0.5f);
+		const Matrix&& trsAabb = Matrix::Trs(modelAabb.center, Quaternion::Identity(), modelAabb.extents);
 		modelData.model = trsAabb;
 		Rhi::UpdateModelUniform(modelData);
 

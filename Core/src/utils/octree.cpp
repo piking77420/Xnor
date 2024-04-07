@@ -62,6 +62,12 @@ void Octree::ComputeRootBound(const List<Entity*>& list)
         const Bound currentObjectBounb = Bound::GetAabbFromTransform(meshRenderer->model->GetAabb(),meshRenderer->entity->transform);
         mainBound.Encapsulate(currentObjectBounb);
     }
+
+    const Vector3 previousSize = mainBound.GetSize();
+    const float_t maxSize = std::max( { previousSize.x , previousSize.y ,previousSize.z });
+    const Vector3 size = Vector3(maxSize) * 0.5f;
+    mainBound.SetMinMax(mainBound.center - size, mainBound.center + size);
+    
     rootNode = OctreeNode(mainBound, m_MinSize);
 }
 

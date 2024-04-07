@@ -39,15 +39,9 @@ bool_t Frustum::AABBCollidWithPlane(const Plane& plane, const Bound& aabb, const
 
 bool_t Frustum::IsInFrutum(const Camera& camera, const Bound& aabb, const XnorCore::Transform& transform) const
 {
-    // Get The center of the AABB
-    const Vector3&& center = (aabb.max - aabb.min) * 0.5f;
-    
-    // Get The Vector Between center and the max
-    const Vector3&& extend = center - aabb.max;
-    
-    const Vector3&& right = transform.GetRight() * extend.x;
-    const Vector3&& up = transform.GetUp() * extend.y;
-    const Vector3&& forward = transform.GetForward() * extend.z;
+    const Vector3&& right = transform.GetRight() * aabb.extents.x;
+    const Vector3&& up = transform.GetUp() * aabb.extents.y;
+    const Vector3&& forward = transform.GetForward() * aabb.extents.z;
 
     const float_t newIi = Calc::Abs(Vector3::Dot(Vector3::UnitX(), right)) +
       Calc::Abs(Vector3::Dot(Vector3::UnitX(), up)) +
