@@ -67,6 +67,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalOptions>/WHOLEARCHIVE:toolbox.lib /WHOLEARCHIVE:glfw.lib</AdditionalOptions>
     </Link>
     <Lib>
       <AdditionalDependencies>toolbox.lib;glfw3.lib</AdditionalDependencies>

@@ -60,7 +60,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib</AdditionalDependencies>
-      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/WHOLEARCHIVE:CoreLibs.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y "externals\libs\dll\$(Configuration)\*" "$(OutDir)"</Command>
@@ -86,7 +86,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);%(AdditionalLibraryDirectories);$(OutDir)</AdditionalLibraryDirectories>
       <AdditionalDependencies>;opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib</AdditionalDependencies>
-      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/WHOLEARCHIVE:CoreLibs.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y "externals\libs\dll\$(Configuration)\*" "$(OutDir)"</Command>
