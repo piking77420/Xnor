@@ -185,9 +185,9 @@
 			<name>Capsule</name>
 			<m_EntityId>3843FD98-4FF2-4459-98-DA-67-D9-98-57-38-14</m_EntityId>
 			<transform>
-				<m_Position>-0.23061937 ; 26.216768 ; 2.02089</m_Position>
-				<m_EulerRotation>1.5708853 ; 3.0994415e-06 ; 0.23291312</m_EulerRotation>
-				<m_Scale>1 ; 1 ; 1</m_Scale>
+				<m_Position>-0.23061937 ; 1.2167683 ; 2.02089</m_Position>
+				<m_EulerRotation>1.5708853 ; 3.069639e-06 ; 0.23291284</m_EulerRotation>
+				<m_Scale>0.99999964 ; 0.9999899 ; 0.99999887</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="CapsuleCollider">
@@ -234,7 +234,7 @@
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">
-					<model>7D4A901C-2429-4A7D-B2-98-A0-92-E4-79-B4-BE</model>
+					<model>0-0-0-0-0-0-0-0-0-0-0</model>
 					<material>
 						<materialType>Opaque</materialType>
 						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>

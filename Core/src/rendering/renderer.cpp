@@ -103,7 +103,7 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	skybox.BindDesriptorSet();
 	m_LightManager.BindShadowMap();
 	
-	Rhi::DrawModel(m_Quad->GetId());
+	Rhi::DrawModel(DrawMode::Triangles, m_Quad->GetId());
 	
 	skybox.UnbindDesriptorSet();
 	viewportData.UnbindDescriptor();
@@ -162,12 +162,12 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 			continue;
 
 		const Transform& transform =  meshRenderer->GetEntity()->transform;
-		const Bound&& modelAabb = meshRenderer->model->GetAabb().GetAabbFromTransform(transform);
+		const Bound&& modelAabb = Bound::GetAabbFromTransform( meshRenderer->model->GetAabb(), transform);
 		const Matrix&& trsAabb = Matrix::Trs(modelAabb.center, Quaternion::Identity(), modelAabb.size * 0.5f);
 		modelData.model = trsAabb;
 		Rhi::UpdateModelUniform(modelData);
 
-		Rhi::DrawModel(m_Cube->GetId());
+		Rhi::DrawModel(DrawMode::Triangles, m_Cube->GetId());
 	}
 	
 	m_GizmoShader->Unuse();
@@ -218,7 +218,7 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		if (meshRenderer->model.IsValid())
 		{
 			Rhi::BindMaterial(meshRenderer->material);
-			Rhi::DrawModel(meshRenderer->model->GetId());
+			Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
 		}
 	}
 }
@@ -264,7 +264,7 @@ void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRe
 		if (meshRenderer->model.IsValid())
 		{
 			Rhi::BindMaterial(meshRenderer->material);
-			Rhi::DrawModel(meshRenderer->model->GetId());
+			Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
 		}
 	}
 }
@@ -295,7 +295,7 @@ void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*
 		if (meshRenderer->model.IsValid())
 		{
 			Rhi::BindMaterial(meshRenderer->material);
-			Rhi::DrawModel(meshRenderer->model->GetId());
+			Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
 		}
 	}
 }

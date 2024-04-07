@@ -105,11 +105,13 @@ bool_t Rhi::DestroyModel(const uint32_t modelId)
 	return true;
 }
 
-void Rhi::DrawModel(const uint32_t modelId)
+void Rhi::DrawModel(DrawMode::DrawMode drawMode,const uint32_t modelId)
 {
 	const ModelInternal model = m_ModelMap.at(modelId);
 	glBindVertexArray(model.vao);
-	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(model.nbrOfIndicies), GL_UNSIGNED_INT, nullptr);
+	
+	
+	glDrawElements(DrawModeToOpengl(drawMode), static_cast<GLsizei>(model.nbrOfIndicies), GL_UNSIGNED_INT, nullptr);
 }
 
 void Rhi::DestroyProgram(const uint32_t shaderId)
@@ -1305,6 +1307,49 @@ uint32_t Rhi::GetOpenglDataType(const DataType::DataType dataType)
 
 	return GL_UNSIGNED_BYTE;
 }
+
+uint32_t Rhi::DrawModeToOpengl(DrawMode::DrawMode drawMode)
+{
+	switch (drawMode)
+	{
+	case DrawMode::Point:
+		return GL_POINTS;
+		
+	case DrawMode::Line:
+		return GL_LINES;
+		
+	case DrawMode::LineLoop:
+		return GL_LINE_LOOP;
+		
+	case DrawMode::LineStrip:
+		return GL_LINE_STRIP;
+
+	case DrawMode::Triangles:
+		return GL_TRIANGLES;
+		
+	case DrawMode::TrianglesStrip:
+		return GL_TRIANGLE_STRIP;
+
+	case DrawMode::TrianglesFan:
+		return GL_TRIANGLE_FAN;
+		
+	case DrawMode::LineStripAdjency:
+		return GL_LINES_ADJACENCY;
+	
+	case DrawMode::TrianglesStripAdjency:
+		return GL_LINE_STRIP_ADJACENCY;
+		
+	case DrawMode::TrianglesAdjency:
+		return GL_TRIANGLES_ADJACENCY;
+	
+	default :
+		return GL_TRIANGLES;
+		
+	}
+
+	return GL_TRIANGLES;
+}
+
 
 void Rhi::OpenglDebugCallBack(const uint32_t source, const uint32_t type, const uint32_t id, const uint32_t severity, const int32_t, const char_t* const message, const void* const)
 {

@@ -13,22 +13,22 @@ public:
     Vector3 min { std::numeric_limits<float_t>::max() };
     /// @brief The maximum bound of this AABB.
     Vector3 max { std::numeric_limits<float_t>::min() };
-     /// @brief The extents of the Bounding Box. This is always half of the size of the Bounds.
+     /// @brief The extents of the Bounding Box. This is always size of the Bounds.
     Vector3 size;
-    /// @brief The center bound of this AABB.
+    /// @brief The center bound of this Bound.
     Vector3 center = Vector3::Zero();
-
-    Bound(Vector3 minimum,Vector3 maximum);
-
-    Bound(Vector3 newCenter, float_t extendX, float_t extendY, float_t extendZ);
+    
+    Bound(Vector3 newCenter, Vector3 newSize);
     
     Bound() = default;
 
     ~Bound() = default;
 
-    Bound GetAabbFromTransform(const Transform& transform);
+    void SetMinMax(Vector3 newmin, Vector3 newMax);
 
-    bool_t Intersect(const Bound& otherBound) const;
+    static Bound GetAabbFromTransform(const Bound& bound,const Transform& transform);
+
+    bool_t Intersect(const Bound& otherBound);
 
     void Encapsulate(const Bound& encaspulateBound);
     

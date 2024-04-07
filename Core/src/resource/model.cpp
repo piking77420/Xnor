@@ -154,5 +154,5 @@ void Model::ComputeAabb(const aiAABB& assimpAabb)
         max = Vector3(&assimpAabb.mMax.x);
     }
 
-   m_Aabb = Bound(min, max);
+   m_Aabb.SetMinMax(min, max);
 }

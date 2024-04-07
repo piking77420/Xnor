@@ -97,7 +97,7 @@ void DrawGizmo::DrawCollider(const Entity& entity)
     }
     modelData.model = entity.transform.worldMatrix * colliderMatrix;
     Rhi::UpdateModelUniform(modelData);
-    Rhi::DrawModel(model->GetId());
+    Rhi::DrawModel(DrawMode::Triangles, model->GetId());
     
     
 }
@@ -108,7 +108,7 @@ void DrawGizmo::DrawRectangle()
     {
         modelData.model = Matrix::Trs(gizmo.position, Quaternion::Identity(), Vector3(gizmo.size));
         Rhi::UpdateModelUniform(modelData);
-        Rhi::DrawModel(m_Cube->GetId());
+        Rhi::DrawModel(DrawMode::Triangles, m_Cube->GetId());
     }
 }
 
@@ -119,7 +119,7 @@ void DrawGizmo::DrawSphere()
     {
         modelData.model = Matrix::Trs(gizmo.position, Quaternion::Identity(), Vector3(gizmo.radius));
         Rhi::UpdateModelUniform(modelData);
-        Rhi::DrawModel(m_Sphere->GetId());
+        Rhi::DrawModel(DrawMode::Triangles, m_Sphere->GetId());
     }
     
 }

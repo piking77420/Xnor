@@ -38,6 +38,8 @@ public:
     
     XNOR_ENGINE void DrawGizmo();
 
+    XNOR_ENGINE void DrawGizmoWithChild();
+
 private:
     Bound m_Bound;
     float_t m_MinNodeSize = 0.f;

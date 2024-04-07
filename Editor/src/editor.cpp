@@ -271,13 +271,12 @@ void Editor::MenuBar()
 
 		if (ImGui::BeginMenu("CurrentScene"))
 		{
-			if (ImGui::MenuItem("DrawCurrentSceneAABB"))
+			if (ImGui::Checkbox("DrawScene ABB",&XnorCore::World::scene->renderOctoree.draw))
 			{
-				if (XnorCore::World::scene != nullptr)
-				{
-					XnorCore::World::scene->renderOctoree.draw = !XnorCore::World::scene->renderOctoree.draw;
-				}
-				
+			}
+			
+			if (ImGui::Checkbox("DrawScene All Octotree",&XnorCore::World::scene->renderOctoree.drawWithChild))
+			{
 			}
 			ImGui::EndMenu();
 		}

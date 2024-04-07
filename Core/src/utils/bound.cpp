@@ -2,13 +2,7 @@
 
 using namespace XnorCore;
 
-Bound::Bound(const Vector3 minimum, const Vector3 maximum) : min(minimum),max(maximum) , size((max - min)) ,
-center((max + min) * 0.5f)
-{
-    
-}
-
-Bound::Bound(const Vector3 newCenter, const float_t extendX, const float_t extendY, const float_t extendZ) : size( Vector3(extendX, extendY, extendZ)),
+Bound:: Bound(const Vector3 newCenter, const Vector3 newSize) : size(newSize),
 center(newCenter)
 {
     const Vector3 sizeHalf = size * 0.5f;
@@ -16,13 +10,21 @@ center(newCenter)
     min = (center - sizeHalf);
 }
 
-Bound Bound::GetAabbFromTransform(const Transform& transform)
+void Bound::SetMinMax(Vector3 newmin, Vector3 newMax)
+{
+    max = newMax;
+    min = newmin;
+    center = (max + min) * 0.5f;
+    size = ((max - min));
+}
+
+Bound Bound::GetAabbFromTransform(const Bound& bound,const Transform& transform)
 {
     
-    const Vector3 returnCenter = static_cast<Vector3>(transform.worldMatrix * Vector4(center.x, center.y, center.z, 1.f));
-    const Vector3 right = static_cast<Vector3>(transform.worldMatrix[0]) * size.x;
-    const Vector3 up =  static_cast<Vector3>(transform.worldMatrix[1]) * size.y;
-    const Vector3 forward =  static_cast<Vector3>(transform.worldMatrix[2]) * size.z;
+    const Vector3 returnCenter = static_cast<Vector3>(transform.worldMatrix * Vector4(bound.center.x, bound.center.y, bound.center.z, 1.f));
+    const Vector3 right = static_cast<Vector3>(transform.worldMatrix[0]) * bound.size.x * 0.5f;
+    const Vector3 up =  static_cast<Vector3>(transform.worldMatrix[1]) * bound.size.y * 0.5f;
+    const Vector3 forward =  static_cast<Vector3>(transform.worldMatrix[2]) * bound.size.z * 0.5f;
 
     const float_t newExtendX = std::abs(Vector3::Dot(Vector3::UnitX(),right))  + 
         std::abs(Vector3::Dot(Vector3::UnitX(),up))  +  std::abs(Vector3::Dot(Vector3::UnitX(),forward));
@@ -34,18 +36,14 @@ Bound Bound::GetAabbFromTransform(const Transform& transform)
        std::abs(Vector3::Dot(Vector3::UnitZ(),up))  +  std::abs(Vector3::Dot(Vector3::UnitZ(),forward));
 
     // Let the constructor
-    return Bound(returnCenter, newExtendX, newExtendY, newExtendZ);
+    return Bound(returnCenter, Vector3(newExtendX,newExtendY,newExtendZ) * 2.f);
 }
 
-bool_t Bound::Intersect(const Bound& otherBound) const
+bool Bound::Intersect(const Bound& otherBound)
 {
-    if (otherBound.min.x <= min.x || otherBound.min.y <= min.y  || otherBound.min.z <= min.z)
-        return true;
-    
-    if (otherBound.max.x >= max.x || otherBound.max.y >= max.y  || otherBound.max.z >= max.z)
-        return true;
-
-    return false;
+    return !(otherBound.max.x < min.x || otherBound.min.x > max.x ||
+             otherBound.max.y < min.y || otherBound.min.y > max.y ||
+             otherBound.max.z < min.z || otherBound.min.z > max.z);
 }
 
 void Bound::Encapsulate(const Bound& encapsulateBound)
@@ -65,5 +63,5 @@ void Bound::Encapsulate(const Bound& encapsulateBound)
         max.z = encapsulateBound.max.z;
 
     size = ((max - min));
-    center = ((max + min));
+    center = ((max + min) * 0.5f);
 }
