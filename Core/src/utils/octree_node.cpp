@@ -7,8 +7,8 @@ using namespace XnorCore;
 
 OctreeNode::OctreeNode(const Bound& boud, float_t minNodeSize) : m_Bound(boud) , m_MinNodeSize(minNodeSize)
 {
-    const float_t quarter = m_Bound.size.x * 0.25f;
-    const float_t childLength = m_Bound.size.x * 0.5f;
+    const float_t quarter = m_Bound.size.x * 0.25f * 0.5f;
+    const float_t childLength = m_Bound.size.x * 0.25f;
     const Vector3 childSize = Vector3(childLength);
     
     m_ChildBound[TopLeftFront] = Bound(m_Bound.center + Vector3(-quarter,quarter,-quarter), childSize );
