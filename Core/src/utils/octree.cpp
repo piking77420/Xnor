@@ -29,21 +29,7 @@ void Octree::Compute(const List<Entity*>& list)
     if (!list.IsValid())
         return;
     
-    Bound mainBound;
-    
-    for (size_t i = 0; i < list.GetSize(); i++)
-    {
-        const MeshRenderer* meshRenderer = list[i]->GetComponent<MeshRenderer>();
-        if (meshRenderer == nullptr)
-            continue;
-
-        if (!meshRenderer->model.IsValid())
-            continue;
-    
-        const Bound currentObjectBounb = Bound::GetAabbFromTransform(meshRenderer->model->GetAabb(),meshRenderer->entity->transform);
-        mainBound.Encapsulate(currentObjectBounb);
-    }
-    rootNode = OctreeNode(mainBound, m_MinSize);
+    ComputeRootBound(list);
 
     for (size_t i = 0; i < list.GetSize(); i++)
     {
@@ -57,5 +43,25 @@ void Octree::Compute(const List<Entity*>& list)
         const Bound currentObjectBounb = Bound::GetAabbFromTransform(meshRenderer->model->GetAabb(),meshRenderer->entity->transform);
         rootNode.AddObject(currentObjectBounb);
     }
+}
+
+
+void Octree::ComputeRootBound(const List<Entity*>& list)
+{
+    Bound mainBound;
+
+    for (size_t i = 0; i < list.GetSize(); i++)
+    {
+        const MeshRenderer* meshRenderer = list[i]->GetComponent<MeshRenderer>();
+        if (meshRenderer == nullptr)
+            continue;
+
+        if (!meshRenderer->model.IsValid())
+            continue;
+    
+        const Bound currentObjectBounb = Bound::GetAabbFromTransform(meshRenderer->model->GetAabb(),meshRenderer->entity->transform);
+        mainBound.Encapsulate(currentObjectBounb);
+    }
+    rootNode = OctreeNode(mainBound, m_MinSize);
 }
 

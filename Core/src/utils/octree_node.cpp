@@ -7,25 +7,25 @@ using namespace XnorCore;
 
 OctreeNode::OctreeNode(const Bound& boud, float_t minNodeSize) : m_Bound(boud) , m_MinNodeSize(minNodeSize)
 {
-    const Vector3 quarter = m_Bound.size * 0.25f;
-    const Vector3 childLength = m_Bound.size * 0.5f;
+    const float_t quarter = m_Bound.size.x * 0.25f;
+    const float_t childLength = m_Bound.size.x * 0.5f;
     const Vector3 childSize = Vector3(childLength);
     
-    m_ChildBound[TopLeftFront] = Bound(m_Bound.center + Vector3(-quarter.x,quarter.y,-quarter.z), childSize );
+    m_ChildBound[TopLeftFront] = Bound(m_Bound.center + Vector3(-quarter,quarter,-quarter), childSize );
     
-    m_ChildBound[TopRightFront] = Bound(m_Bound.center + Vector3(quarter.x,quarter.y,-quarter.z), childSize );
+    m_ChildBound[TopRightFront] = Bound(m_Bound.center + Vector3(quarter,quarter,-quarter), childSize );
     
-    m_ChildBound[BottomRightFront] = Bound(m_Bound.center + Vector3(-quarter.x,quarter.y,quarter.z), childSize );
+    m_ChildBound[BottomRightFront] = Bound(m_Bound.center + Vector3(-quarter,quarter,quarter), childSize );
     
-    m_ChildBound[BottomLeftFront] = Bound(m_Bound.center + Vector3(quarter.x,quarter.y,quarter.z), childSize );
+    m_ChildBound[BottomLeftFront] = Bound(m_Bound.center + Vector3(quarter,quarter,quarter), childSize );
     
-    m_ChildBound[TopLeftBottom] = Bound(m_Bound.center + Vector3(-quarter.x,-quarter.y,-quarter.z), childSize );
+    m_ChildBound[TopLeftBottom] = Bound(m_Bound.center + Vector3(-quarter,-quarter,-quarter), childSize );
     
-    m_ChildBound[TopRightBottom] = Bound(m_Bound.center + Vector3(quarter.x,-quarter.y,-quarter.z), childSize );
+    m_ChildBound[TopRightBottom] = Bound(m_Bound.center + Vector3(quarter,-quarter,-quarter), childSize );
     
-    m_ChildBound[BottomRightBack] = Bound(m_Bound.center + Vector3(-quarter.x,-quarter.y,quarter.z), childSize );
+    m_ChildBound[BottomRightBack] = Bound(m_Bound.center + Vector3(-quarter,-quarter,quarter), childSize );
 
-    m_ChildBound[BottomLeftBack] = Bound(m_Bound.center + Vector3(quarter.x,-quarter.y,quarter.z), childSize );
+    m_ChildBound[BottomLeftBack] = Bound(m_Bound.center + Vector3(quarter,-quarter,quarter), childSize );
 
 }
 
@@ -67,7 +67,7 @@ void OctreeNode::DrawGizmoWithChild()
 
 void OctreeNode::DivideAndAdd(const Bound& bound)
 {
-    if (m_Bound.size.x <= m_MinNodeSize || m_Bound.size.y <= m_MinNodeSize || m_Bound.size.z <= m_MinNodeSize)
+    if (m_Bound.size.x <= m_MinNodeSize)
     {
         return;
     }

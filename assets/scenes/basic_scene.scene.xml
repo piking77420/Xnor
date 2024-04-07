@@ -127,13 +127,13 @@
 			<name>PointLight</name>
 			<m_EntityId>A284C848-DC61-4853-A4-48-15-9D-CE-5D-73-BD</m_EntityId>
 			<transform>
-				<m_Position>-1.1825911 ; 3 ; -0.77555037</m_Position>
+				<m_Position>-0.43869844 ; 3 ; 1.3444493</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="PointLight">
-					<color>1 ; 0 ; 0.9582634 ; 1</color>
+					<color>1 ; 0 ; 0.9378929 ; 1</color>
 					<intensity>10000</intensity>
 					<castShadow>true</castShadow>
 				</0>
@@ -159,7 +159,7 @@
 			<name>SpotLight</name>
 			<m_EntityId>8B8B51F5-90F0-405B-BE-3C-56-93-F2-7-34-F2</m_EntityId>
 			<transform>
-				<m_Position>-1.1825911 ; 8 ; -0.77555037</m_Position>
+				<m_Position>-0.43869844 ; 8 ; 1.3444493</m_Position>
 				<m_EulerRotation>2.3046567 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1.0000837 ; 1.0000837</m_Scale>
 			</transform>
@@ -167,7 +167,7 @@
 				<0 typeName="SpotLight">
 					<cutOff>12.5</cutOff>
 					<outerCutOff>15</outerCutOff>
-					<color>1 ; 0 ; 0.9582634 ; 1</color>
+					<color>1 ; 0 ; 0.9378929 ; 1</color>
 					<intensity>1000</intensity>
 					<castShadow>true</castShadow>
 				</0>
@@ -185,9 +185,9 @@
 			<name>Capsule</name>
 			<m_EntityId>3843FD98-4FF2-4459-98-DA-67-D9-98-57-38-14</m_EntityId>
 			<transform>
-				<m_Position>-0.23061937 ; 1.2167683 ; 2.02089</m_Position>
-				<m_EulerRotation>1.5708853 ; 3.069639e-06 ; 0.23291284</m_EulerRotation>
-				<m_Scale>0.99999964 ; 0.9999899 ; 0.99999887</m_Scale>
+				<m_Position>2.2701154 ; -0.012526517 ; 7.15501</m_Position>
+				<m_EulerRotation>1.5632963 ; -0.02127397 ; 0.67807066</m_EulerRotation>
+				<m_Scale>0.9999992 ; 0.9999925 ; 1.000001</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="CapsuleCollider">
@@ -261,8 +261,8 @@
 			<m_EntityId>5D07D9-346E-48FE-81-81-6E-87-5A-2A-F-2D</m_EntityId>
 			<transform>
 				<m_Position>-5 ; 0 ; -7</m_Position>
-				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1 ; 1</m_Scale>
+				<m_EulerRotation>0.74600637 ; -0.2611954 ; -0.23427035</m_EulerRotation>
+				<m_Scale>0.99999946 ; 0.99999994 ; 0.9999998</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">

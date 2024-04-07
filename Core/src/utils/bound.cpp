@@ -20,23 +20,17 @@ void Bound::SetMinMax(Vector3 newmin, Vector3 newMax)
 
 Bound Bound::GetAabbFromTransform(const Bound& bound,const Transform& transform)
 {
-    
-    const Vector3 returnCenter = static_cast<Vector3>(transform.worldMatrix * Vector4(bound.center.x, bound.center.y, bound.center.z, 1.f));
-    const Vector3 right = static_cast<Vector3>(transform.worldMatrix[0]) * bound.size.x * 0.5f;
-    const Vector3 up =  static_cast<Vector3>(transform.worldMatrix[1]) * bound.size.y * 0.5f;
-    const Vector3 forward =  static_cast<Vector3>(transform.worldMatrix[2]) * bound.size.z * 0.5f;
-
-    const float_t newExtendX = std::abs(Vector3::Dot(Vector3::UnitX(),right))  + 
-        std::abs(Vector3::Dot(Vector3::UnitX(),up))  +  std::abs(Vector3::Dot(Vector3::UnitX(),forward));
-
-    const float_t newExtendY = std::abs(Vector3::Dot(Vector3::UnitY(),right))  + 
-       std::abs(Vector3::Dot(Vector3::UnitY(),up))  +  std::abs(Vector3::Dot(Vector3::UnitY(),forward));
-
-    const float_t newExtendZ = std::abs(Vector3::Dot(Vector3::UnitZ(),right))  + 
-       std::abs(Vector3::Dot(Vector3::UnitZ(),up))  +  std::abs(Vector3::Dot(Vector3::UnitZ(),forward));
-
+    const Vector3 globalPos = static_cast<Vector3>(transform.worldMatrix * Vector4(bound.center.x, bound.center.y, bound.center.z, 1.f));
     // Let the constructor
-    return Bound(returnCenter, Vector3(newExtendX,newExtendY,newExtendZ) * 2.f);
+    return ReturnAabbFromMatrix(bound, transform.worldMatrix, globalPos);
+}
+
+Bound Bound::GetAabbFromCamera(const Bound& bound, const Camera& cam)
+{
+    Matrix view;
+    cam.GetView(&view);
+    
+    return ReturnAabbFromMatrix(bound, view, cam.position);
 }
 
 bool Bound::Intersect(const Bound& otherBound)
@@ -64,4 +58,22 @@ void Bound::Encapsulate(const Bound& encapsulateBound)
 
     size = ((max - min));
     center = ((max + min) * 0.5f);
+}
+
+Bound Bound::ReturnAabbFromMatrix(const Bound& bound,const Matrix& matrix, const Vector3 center)
+{
+    const Vector3 right = static_cast<Vector3>(matrix[0]) * bound.size.x * 0.5f;
+    const Vector3 up =  static_cast<Vector3>(matrix[1]) * bound.size.y * 0.5f;
+    const Vector3 forward =  static_cast<Vector3>(matrix[2]) * bound.size.z * 0.5f;
+    
+    const float_t newExtendX = std::abs(Vector3::Dot(Vector3::UnitX(),right))  + 
+       std::abs(Vector3::Dot(Vector3::UnitX(),up))  +  std::abs(Vector3::Dot(Vector3::UnitX(),forward));
+
+    const float_t newExtendY = std::abs(Vector3::Dot(Vector3::UnitY(),right))  + 
+       std::abs(Vector3::Dot(Vector3::UnitY(),up))  +  std::abs(Vector3::Dot(Vector3::UnitY(),forward));
+
+    const float_t newExtendZ = std::abs(Vector3::Dot(Vector3::UnitZ(),right))  + 
+       std::abs(Vector3::Dot(Vector3::UnitZ(),up))  +  std::abs(Vector3::Dot(Vector3::UnitZ(),forward));
+
+    return Bound(center, Vector3(newExtendX,newExtendY,newExtendZ) * 2.f);
 }

@@ -3,6 +3,7 @@
 #include "core.hpp"
 #include "transform.hpp"
 #include "Maths/vector3.hpp"
+#include "rendering/camera.hpp"
 
 BEGIN_XNOR_CORE
     /// @brief Struct used to store the minimum and maximum bounds of the AABB of a Model.
@@ -27,13 +28,16 @@ public:
     void SetMinMax(Vector3 newmin, Vector3 newMax);
 
     static Bound GetAabbFromTransform(const Bound& bound,const Transform& transform);
+    
+    static Bound GetAabbFromCamera(const Bound& bound,const Camera& cam);
 
     bool_t Intersect(const Bound& otherBound);
 
     void Encapsulate(const Bound& encaspulateBound);
     
 private:
-    
+
+    static Bound ReturnAabbFromMatrix(const Bound& bound, const Matrix& matrix, const Vector3 center);
 };
 
 END_XNOR_CORE

@@ -3,6 +3,7 @@
 #include "scene/entity.hpp"
 
 BEGIN_XNOR_CORE
+
 class Octree
 {
 public:
@@ -11,8 +12,7 @@ public:
     bool_t draw;
 
     bool_t drawWithChild;
-
-
+    
     XNOR_ENGINE Octree() = default;
     
     XNOR_ENGINE Octree(const List<Entity*>& list, float_t minNodeSize);
@@ -26,6 +26,7 @@ public:
 private:
     float_t m_MinSize = 1.f;
 
+    XNOR_ENGINE void ComputeRootBound(const List<Entity*>& list);
 };
 
 END_XNOR_CORE
