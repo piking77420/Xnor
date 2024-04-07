@@ -101,6 +101,8 @@ struct Data64
 #include "input/mouse_input.hpp"
 #include "input/time.hpp"
 
+#include "rendering/buffer/uniform_buffer.hpp"
+
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/light.hpp"
 #include "rendering/light/point_light.hpp"
@@ -117,7 +119,6 @@ struct Data64
 #include "rendering/renderer.hpp"
 #include "rendering/rhi.hpp"
 #include "rendering/rhi_typedef.hpp"
-#include "rendering/uniform_buffer.hpp"
 #include "rendering/vertex.hpp"
 #include "rendering/viewport.hpp"
 #include "rendering/viewport_data.hpp"

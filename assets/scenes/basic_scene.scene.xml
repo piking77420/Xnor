@@ -256,38 +256,6 @@
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
 		</7>
-		<8>
-			<name>Entity</name>
-			<m_EntityId>5D07D9-346E-48FE-81-81-6E-87-5A-2A-F-2D</m_EntityId>
-			<transform>
-				<m_Position>-5 ; 0 ; -7</m_Position>
-				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1 ; 1</m_Scale>
-			</transform>
-			<m_Components>
-				<0 typeName="MeshRenderer">
-					<model>99097F3B-B578-4C0B-A2-64-E1-51-5A-41-BA-A</model>
-					<material>
-						<materialType>Opaque</materialType>
-						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
-						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
-						<metallic>0</metallic>
-						<roughness>0</roughness>
-						<reflectance>0</reflectance>
-						<emissive>0</emissive>
-						<ambientOcclusion>0</ambientOcclusion>
-						<albedoTexture>90AE1CB3-FE66-4A43-A8-56-84-5B-DF-4A-A9-39</albedoTexture>
-						<metallicTexture>9A5AAB27-D34F-41A0-9C-D0-F4-85-99-CE-A3-8D</metallicTexture>
-						<roughnessTexture>E63967DB-EC4B-490C-92-46-C6-89-35-D3-7F-89</roughnessTexture>
-						<normalTexture>5C24E623-41D9-473C-A6-43-40-DE-D-F8-45-C1</normalTexture>
-						<ambientOcclusionTexture>2510E55D-BFD3-4B1F-B6-1E-65-C2-A2-6F-AD-CB</ambientOcclusionTexture>
-					</material>
-					<drawModelAabb>false</drawModelAabb>
-				</0>
-			</m_Components>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
-			<m_Children/>
-		</8>
 	</m_Entities>
 </Scene>
 

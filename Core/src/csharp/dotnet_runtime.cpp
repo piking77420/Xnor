@@ -38,9 +38,9 @@ bool_t DotnetRuntime::Initialize()
 
     if (!CheckDotnetVersion())
     {
-        static const std::string ErrorMessage = std::format("Invalid .NET version. XNOR Engine needs .NET {}.0", DotnetVersionMajor);
-        Logger::LogFatal(ErrorMessage);
-        MessageBoxA(nullptr, ErrorMessage.c_str(), "Fatal Error", MB_OK | MB_ICONSTOP);
+        const std::string errorMessage = std::format("Invalid .NET version. XNOR Engine needs .NET {}.0", DotnetVersionMajor);
+        Logger::LogFatal(errorMessage);
+        MessageBoxA(nullptr, errorMessage.c_str(), "Fatal Error", MB_OK | MB_ICONSTOP);
         throw std::runtime_error("Invalid .NET version");
     }
 
