@@ -95,9 +95,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\reflection\filters.hpp" />
+    <ClInclude Include="include\rendering\bone.hpp" />
     <ClInclude Include="include\rendering\buffer\uniform_buffer.hpp" />
     <ClInclude Include="include\rendering\buffer\vbo.hpp" />
     <ClInclude Include="include\rendering\frustum.hpp" />
+    <ClInclude Include="include\resource\skeleton.hpp" />
     <ClInclude Include="include\scene\component\test_component_physics.hpp" />
     <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\csharp\dotnet_assembly.cpp" />
@@ -121,6 +123,7 @@
     <ClCompile Include="src\reflection\filters.cpp" />
     <ClCompile Include="src\reflection\type_renderer.cpp" />
     <ClCompile Include="src\rendering\bloom_rendertarget.cpp" />
+    <ClCompile Include="src\rendering\bone.cpp" />
     <ClCompile Include="src\rendering\buffer\uniformBuffer.cpp" />
     <ClCompile Include="src\rendering\buffer\vbo.cpp" />
     <ClCompile Include="src\rendering\frustum.cpp" />
@@ -152,6 +155,7 @@
     <ClCompile Include="src\resource\model.cpp" />
     <ClCompile Include="src\resource\resource.cpp" />
     <ClCompile Include="src\resource\resource_manager.cpp" />
+    <ClCompile Include="src\resource\skeleton.cpp" />
     <ClCompile Include="src\resource\texture.cpp" />
     <ClCompile Include="src\scene\component.cpp" />
     <ClCompile Include="src\scene\component\camera_component.cpp" />

@@ -42,7 +42,7 @@ Pointer<T> ResourceManager::Load(const Pointer<File>& file, bool_t loadInRhi)
             loaded ? "" : ". Loading it"
         );
 
-        if (!loaded)
+        // if (!loaded)
             resource->Load(file);
 
         return resource;

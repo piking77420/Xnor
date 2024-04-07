@@ -24,6 +24,7 @@ public:
         Unknown,
         Texture,
         Model,
+        Skeleton,
         Font,
         Xml,
         VertexShader,

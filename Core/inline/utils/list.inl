@@ -88,6 +88,14 @@ void List<T>::Reserve(const size_t capacity)
 }
 
 template <typename T>
+void List<T>::Resize(const size_t size)
+{
+    CheckGrow(size);
+
+    m_Size = size;
+}
+
+template <typename T>
 void List<T>::Clear()
 {
     if (m_Size == 0)

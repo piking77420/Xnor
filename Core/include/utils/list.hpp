@@ -64,6 +64,11 @@ public:
     /// @param capacity New capacity
     void Reserve(size_t capacity);
 
+    /// @brief Resizes a specified amount of elements in the list
+    /// 
+    /// @param size New size
+    void Resize(size_t size);
+
     /// @brief Clears the list
     void Clear();
 

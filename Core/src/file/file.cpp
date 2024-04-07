@@ -3,7 +3,7 @@
 #include <fstream>
 #include <ranges>
 
-
+#include "resource/skeleton.hpp"
 #include "resource/compute_shader.hpp"
 #include "resource/font.hpp"
 #include "resource/model.hpp"
@@ -113,6 +113,8 @@ void File::UpdateUtilityValues()
         m_Type = Type::Texture;
     if (Utils::StringArrayContains(Model::FileExtensions, m_Extension))
         m_Type = Type::Model;
+    if (Utils::StringArrayContains(Skeleton::FileExtensions, m_Extension))
+        m_Type = Type::Skeleton;
     if (Utils::StringArrayContains(Font::FileExtensions, m_Extension))
         m_Type = Type::Font;
     if (Utils::StringEqualsIgnoreCase(m_Extension, ".xml"))

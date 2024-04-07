@@ -7,6 +7,7 @@
 #include "resource/compute_shader.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
+#include "resource/skeleton.hpp"
 #include "resource/texture.hpp"
 
 using namespace XnorCore;
@@ -26,7 +27,7 @@ void ResourceManager::LoadAll()
         std::execution::par,
         files.begin(),
         files.end(),
-        [](auto&& file) -> void
+        [](const Pointer<File>& file) -> void
         {
             if (std::ranges::find(Texture::FileExtensions, file->GetExtension()) != Texture::FileExtensions.end())
             {
@@ -36,10 +37,14 @@ void ResourceManager::LoadAll()
             {
                 Load<Model>(file, false);
             }
+            else if (std::ranges::find(Skeleton::FileExtensions, file->GetExtension()) != Skeleton::FileExtensions.end())
+            {
+                Load<Skeleton>(file, false);
+            }
         }
     );
 
-    for (auto&& file : files)
+    for (Pointer<File>& file : files)
     {
         if (std::ranges::find(Shader::VertexFileExtensions, file->GetExtension()) != Shader::VertexFileExtensions.end() ||
             std::ranges::find(Shader::FragmentFileExtensions, file->GetExtension()) != Shader::FragmentFileExtensions.end() ||
