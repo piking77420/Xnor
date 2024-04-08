@@ -7,10 +7,11 @@
 #include "reflection/reflection.hpp"
 #include "rendering/light/light.hpp"
 #include "scene/component.hpp"
+#include "utils/coroutine.hpp"
+#include "utils/guid.hpp"
 
 BEGIN_XNOR_CORE
-
-/// @private
+    /// @private
 class TestComponent : public Component
 {
     REFLECTABLE_IMPL(TestComponent)
@@ -42,8 +43,12 @@ private:
 
     Entity* m_TestEntity = nullptr;
 
+    Guid coroutineId;
+
     static inline int32_t m_StaticTest = 1;
     static inline Transform m_StaticTransform {};
+
+    Coroutine FlashRoutine();
 };
 
 END_XNOR_CORE

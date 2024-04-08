@@ -148,7 +148,7 @@ Pointer<Directory> FileManager::LoadDirectory(std::filesystem::path path)
     return directory;
 }
 
-bool FileManager::Contains(const std::filesystem::path& path)
+bool_t FileManager::Contains(const std::filesystem::path& path)
 {
     return m_Entries.contains(path);
 }
