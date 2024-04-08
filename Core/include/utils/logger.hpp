@@ -171,11 +171,6 @@ public:
     /// @brief Synchronizes the calling thread with the logger one, and makes sure all logs have been printed before returning.
     XNOR_ENGINE static void Synchronize();
 
-    /// @brief Synchronizes the threads and stops the logger.
-    ///
-    /// After a call to this function, logger function calls won't do anything.
-    XNOR_ENGINE static void Stop();
-
 private:
     struct LogEntry
     {
@@ -203,7 +198,12 @@ private:
 
     XNOR_ENGINE static inline std::thread m_Thread = std::thread(Run);
 
-    static void PrintLog(const LogEntry& log);
+    XNOR_ENGINE static void PrintLog(const LogEntry& log);
+
+    /// @brief Synchronizes the threads and stops the logger.
+    ///
+    /// After a call to this function, logger function calls won't do anything.
+    XNOR_ENGINE static void Stop();
 };
 
 END_XNOR_CORE

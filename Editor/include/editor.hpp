@@ -34,7 +34,7 @@ public:
 private:
 	std::vector<UiWindow*> m_UiWindows;
 
-	void UpdateWindow();
+	void UpdateWindows();
 
 	void OnRenderingWindow();
 	

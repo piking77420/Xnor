@@ -24,6 +24,8 @@ bool_t Guid::operator==(const Guid& other) const
 		   reinterpret_cast<const uint64_t*>(this)[1] == reinterpret_cast<const uint64_t*>(&other)[1];
 }
 
+bool_t Guid::operator!=(const Guid& other) const { return !(*this == other); }
+
 Guid Guid::FromString(const char_t* str)
 {
 	Guid g = Guid();

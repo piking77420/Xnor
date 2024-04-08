@@ -27,9 +27,15 @@ public:
 
     /// @brief Compares 2 @ref Guid
     /// @param other Other guid
-    /// @return Whether the @ref Guid are equals
+    /// @return Whether the @ref Guid are equal
     [[nodiscard]]
     bool_t operator==(const Guid& other) const;
+
+    /// @brief Compares 2 @ref Guid
+    /// @param other Other guid
+    /// @return Whether the @ref Guid are different
+    [[nodiscard]]
+    bool_t operator!=(const Guid& other) const;
 
     /// @brief Parses a Guid from a string
     /// @param str String

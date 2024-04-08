@@ -1,5 +1,7 @@
 #include "pch.hpp"
 
+#include "window.hpp"
+#include "input/time.hpp"
 #include "utils/logger.hpp"
 
 Coroutine WaitRoutine()
@@ -8,20 +10,24 @@ Coroutine WaitRoutine()
 
     DEBUG_LOG("First Coroutine log");
     
-    co_await 1500ms;
+    co_await 0.25s;
 
     DEBUG_LOG("Second Coroutine log");
     
-    co_await 1500ms;
+    co_await 0s;
 
     DEBUG_LOG("Third Coroutine log");
+    
+    co_await 250ms;
+
+    DEBUG_LOG("Fourth Coroutine log");
 
     co_return;
 }
 
-TEST(Coroutine, GeneralTests)
+TEST(Coroutine, General)
 {
-    Coroutine c = WaitRoutine();
+    const Coroutine c = WaitRoutine();
     
     DEBUG_LOG("First outside log");
     
@@ -36,4 +42,28 @@ TEST(Coroutine, GeneralTests)
     c.Resume();
     
     DEBUG_LOG("Fourth outside log");
+    
+    c.Resume();
+    
+    DEBUG_LOG("Fifth outside log");
+}
+
+TEST(Coroutine, Manager)
+{
+    // We need GLFW here for the Time::Update function which itself is needed for the Coroutine::UpdateAll function
+    Window::Initialize();
+    
+    const Guid id = Coroutine::Start(WaitRoutine());
+    
+    DEBUG_LOG("First outside log");
+
+    while (Coroutine::IsRunning(id))
+    {
+        Time::Update();
+        Coroutine::UpdateAll();
+    }
+
+    DEBUG_LOG("Second outside log");
+
+    Window::Shutdown();
 }

@@ -39,7 +39,7 @@ public:
 
     /// @brief Checks whether the FileManager contains the specified Entry path.
     [[nodiscard]]
-    XNOR_ENGINE static bool Contains(const std::filesystem::path& path);
+    XNOR_ENGINE static bool_t Contains(const std::filesystem::path& path);
 
     /// @brief Tries to get the Entry with the given @p path.
     /// @tparam T The type of Entry to get.

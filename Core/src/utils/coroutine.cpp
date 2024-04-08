@@ -1,6 +1,9 @@
 // ReSharper disable CppMemberFunctionMayBeStatic
 #include "utils/coroutine.hpp"
 
+#include <ranges>
+
+#include "input/time.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -14,6 +17,58 @@ bool_t Coroutine::Awaitable::await_suspend(std::coroutine_handle<promise_type> h
 }
 
 void Coroutine::Awaitable::await_resume() {}
+
+Guid Coroutine::Start(const Coroutine& coroutine)
+{
+    Guid id = Guid::New();
+    m_RunningRoutines.emplace(id, Coroutine(id, coroutine.m_Handle));
+    return id;
+}
+
+void Coroutine::Start(const Coroutine& coroutine, Guid* const coroutineId)
+{
+    Guid& ref = *coroutineId;
+    if (ref != Guid::Empty() && IsRunning(ref))
+        Stop(ref);
+    ref = Start(coroutine);
+}
+
+void Coroutine::UpdateAll()
+{
+    std::vector<Coroutine*> finishedRoutines;
+    
+    for (auto&& entry : std::views::values(m_RunningRoutines))
+    {
+        auto& awaitValue = entry.m_Handle.promise().awaitValue;
+        
+        awaitValue -= AwaitType(Time::GetDeltaTime<double_t>());
+        if (awaitValue > AwaitType::zero())
+            continue;
+        
+        entry.Resume();
+
+        if (entry.Finished())
+            finishedRoutines.push_back(&entry);
+    }
+
+    for (auto&& routine : finishedRoutines)
+        Stop(routine->GetId());
+}
+
+void Coroutine::Stop(const Guid& coroutineId)
+{
+    if (!m_RunningRoutines.contains(coroutineId))
+        return;
+
+    m_RunningRoutines.at(coroutineId).Destroy();
+    m_RunningRoutines.erase(coroutineId);
+}
+
+bool_t Coroutine::IsRunning(const Guid& coroutineId) { return m_RunningRoutines.contains(coroutineId); }
+
+bool_t Coroutine::IsRunningAndNotEmpty(const Guid& coroutineId) { return coroutineId != Guid::Empty() && IsRunning(coroutineId); }
+
+size_t Coroutine::GetRunningCount() { return m_RunningRoutines.size(); }
 
 Coroutine Coroutine::promise_type::get_return_object() { return Coroutine(HandleType::from_promise(*this)); }
 
@@ -34,7 +89,7 @@ void Coroutine::promise_type::unhandled_exception()
     }
 }
 
-void Coroutine::promise_type::return_void() {}
+void Coroutine::promise_type::return_void() { finished = true; }
 
 Coroutine::Awaitable Coroutine::promise_type::await_transform(const AwaitType& duration)
 {
@@ -44,13 +99,12 @@ Coroutine::Awaitable Coroutine::promise_type::await_transform(const AwaitType& d
 
 Coroutine::Coroutine(const HandleType handle) : m_Handle(handle) {}
 
-Coroutine::~Coroutine() { m_Handle.destroy(); }
+void Coroutine::Resume() const { m_Handle.resume(); }
 
-// ReSharper disable once CppMemberFunctionMayBeConst
-bool_t Coroutine::Resume()
-{
-    m_Handle.promise().awaitValue = AwaitType::zero();
-    m_Handle.resume();
+bool_t Coroutine::Finished() const { return m_Handle.promise().finished; }
 
-    return m_Handle.promise().awaitValue != AwaitType::zero();
-}
+void Coroutine::Destroy() const { m_Handle.destroy(); }
+
+Guid Coroutine::GetId() const { return m_Id; }
+
+Coroutine::Coroutine(const Guid& guid, const HandleType handle) : Coroutine(handle) { m_Id = guid; }

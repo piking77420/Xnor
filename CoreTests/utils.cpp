@@ -6,12 +6,6 @@ TEST(Utils, IntToPointer)
     EXPECT_EQ(Utils::IntToPointer<char*>(0), nullptr);
 }
 
-TEST(Utils, ConversionVectorImVec)
-{
-    constexpr Vector2 v(2.4f);
-    EXPECT_EQ(v, Utils::FromImVec(Utils::ToImVec(v)));
-}
-
 TEST(Utils, HumanizeString)
 {
     EXPECT_EQ(Utils::HumanizeString("stringToHumanize"), "String To Humanize");
