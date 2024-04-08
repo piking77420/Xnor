@@ -2,6 +2,7 @@
 
 #include <array>
 #include <execution>
+#include <fstream>
 
 #include "file/file_manager.hpp"
 #include "resource/compute_shader.hpp"
@@ -88,37 +89,47 @@ void ResourceManager::LoadGuidMap()
 {
     const Pointer<File> guidMap = FileManager::Get(GuidMapFilePath);
     const char_t* const dataRaw = guidMap.Get()->GetData();
-    const size_t dataSize = guidMap.Get()->GetSize();
 
-    std::string data = std::string(dataRaw);
+    std::istringstream stream(dataRaw);
+    std::string line;
 
-    size_t position = 0; // TODO Fix loop bavure
-    while (position < dataSize)
+    while (std::getline(stream, line))
     {
-        const size_t guidPos = data.find_first_of(';');
+        const size_t guidPos = line.find_first_of(';');
 
-        const std::string resourceName = data.substr(0, guidPos);
-        const Guid guid = Guid::FromString(&data[guidPos + 1]);
-
-        const size_t backslashPos = data.find_first_of('\n');
-        position += backslashPos;
-
-        data = data.substr(backslashPos + 1);
+        const std::string resourceName = line.substr(0, guidPos);
+        const Guid guid = Guid::FromString(&line[guidPos + 1]);
 
         auto&& it = m_Resources.find(resourceName);
 
-        if (it == m_Resources.end())
-        {
-            //Logger::LogInfo("Resource in the guid map wasn't found : {}", resourceName);
-        }
-        else
+        if (it != m_Resources.end())
         {
             it->second->SetGuid(guid);
-            m_GuidMap.emplace(guid, it->second);
+            m_GuidMap.emplace(guid, it->first);
         }
-
-        //Logger::LogInfo("{} ; {}", resourceName, static_cast<std::string>(guid));
     }
+
+    for (auto&& res : m_Resources)
+    {
+        auto it = std::ranges::find_if(m_GuidMap, [&res](auto&& p) -> bool_t { return p.second == res.first; });
+
+        if (it == m_GuidMap.end())
+        {
+            m_GuidMap.emplace(res.second->GetGuid(), res.second->GetName());
+        }
+    }
+}
+
+void ResourceManager::SaveGuidMap()
+{
+    std::ofstream file(GuidMapFilePath);
+
+    for (auto&& res : m_GuidMap)
+    {
+        file << res.second << ";" << static_cast<std::string>(res.first) << '\n';
+    }
+
+    file.close();
 }
 
 bool ResourceManager::Contains(const std::string& name)
@@ -189,6 +200,7 @@ void ResourceManager::UnloadAll()
     }
     // Smart pointers are deleted automatically, we only need to clear the container
     m_Resources.clear();
-    
+
+    SaveGuidMap();
     Logger::LogInfo("ResourceManager unload successful. Took {}", std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start));
 }

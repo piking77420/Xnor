@@ -108,7 +108,7 @@ Pointer<T> ResourceManager::Get(const Guid& guid)
     if (it == m_GuidMap.end())
         return nullptr;
 
-    return Utils::DynamicPointerCast<T>(it->second);
+    return Utils::DynamicPointerCast<T>(GetNoCheck<T>(it->second));
 }
 
 template <Concepts::ResourceT T>
