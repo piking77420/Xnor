@@ -15,13 +15,11 @@ public:
     
     XNOR_ENGINE Octree() = default;
     
-    XNOR_ENGINE Octree(const List<Entity*>& list, float_t minNodeSize);
-
     XNOR_ENGINE ~Octree() = default;
 
     XNOR_ENGINE void Draw();
     
-    XNOR_ENGINE void Compute(const List<Entity*>& list);
+    XNOR_ENGINE void Compute(const List<Entity*>& list, float_t minNodeSize);
 
 private:
     float_t m_MinSize = 1.f;

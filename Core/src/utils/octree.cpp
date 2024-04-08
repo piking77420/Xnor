@@ -4,12 +4,6 @@
 
 using namespace XnorCore;
 
-
-Octree::Octree(const List<Entity*>& list , const float_t minNodeSize) : m_MinSize(minNodeSize)
-{
-    Compute(list);
-}
-
 void Octree::Draw()
 {
     if (drawWithChild)
@@ -24,8 +18,10 @@ void Octree::Draw()
     }
 }
 
-void Octree::Compute(const List<Entity*>& list)
+void Octree::Compute(const List<Entity*>& list, float_t minNodeSize)
 {
+    m_MinSize = minNodeSize;
+    
     if (!list.IsValid())
         return;
     

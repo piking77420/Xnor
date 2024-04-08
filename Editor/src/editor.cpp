@@ -372,7 +372,7 @@ void Editor::WorldBehaviours()
 		if (!XnorCore::World::hasStarted)
 		{
 			XnorCore::World::Begin();
-			XnorCore::World::scene->renderOctoree.Compute(XnorCore::World::scene->GetEntities());
+			XnorCore::World::scene->renderOctoree.Compute(XnorCore::World::scene->GetEntities(),1.f);
 			XnorCore::World::hasStarted = true;
 		}
 
