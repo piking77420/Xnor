@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "Maths/vector3.hpp"
+#include <Maths/vector3.hpp>
 #include "rendering/render_pass.hpp"
 #include "rendering/viewport.hpp"
 #include "utils/color.hpp"

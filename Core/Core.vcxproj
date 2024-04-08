@@ -94,10 +94,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\reflection\filters.hpp" />
     <ClInclude Include="include\rendering\buffer\uniform_buffer.hpp" />
-    <ClInclude Include="include\rendering\buffer\vbo.hpp" />
-    <ClInclude Include="include\rendering\draw_gizmo.hpp" />
     <ClInclude Include="include\rendering\frustum.hpp" />
     <ClInclude Include="include\scene\component\test_component_physics.hpp" />
     <ClCompile Include="src\application.cpp" />
@@ -197,8 +194,6 @@
       <AdditionalIncludeDirectories>include;externals\include;..\Core\include;..\Core\externals\include;..\Core\inline;inline;..\Core\externals\inline</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LinkCompiled>true</LinkCompiled>
-    </ClCompile>
-    <ClCompile Include="src\rendering\frustum.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <Optimization>Disabled</Optimization>
@@ -272,9 +267,6 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
-=======
-    <ClCompile Include="src\rendering\frustum.cpp" />
->>>>>>> dev
     <ClCompile Include="src\rendering\light\directional_light.cpp" />
     <ClCompile Include="src\rendering\light\light.cpp" />
     <ClCompile Include="src\rendering\light\point_light.cpp" />
@@ -474,7 +466,7 @@
     <ClCompile Include="src\world\scene_graph.cpp" />
     <ClCompile Include="src\world\skybox.cpp" />
     <ClCompile Include="src\world\world.cpp" />
-  </ItemGroup>
+    </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\include\assimp\aabb.h" />
     <ClInclude Include="externals\include\assimp\ai_assert.h" />
