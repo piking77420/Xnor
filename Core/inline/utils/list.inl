@@ -92,7 +92,11 @@ void List<T>::Resize(const size_t size)
 {
     CheckGrow(size);
 
+    const size_t oldSize = m_Size;
     m_Size = size;
+
+    for (size_t i = oldSize; i < size; i++)
+        ::new (static_cast<void*>(&m_Data[i])) T();
 }
 
 template <typename T>

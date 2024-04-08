@@ -5,6 +5,7 @@
 
 #include "file/file_manager.hpp"
 #include "resource/compute_shader.hpp"
+#include "resource/mesh.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
 #include "resource/skeleton.hpp"
@@ -32,6 +33,10 @@ void ResourceManager::LoadAll()
             if (std::ranges::find(Texture::FileExtensions, file->GetExtension()) != Texture::FileExtensions.end())
             {
                 Load<Texture>(file, false);
+            }
+            else if (std::ranges::find(Mesh::FileExtensions, file->GetExtension()) != Mesh::FileExtensions.end())
+            {
+                Load<Mesh>(file, false);
             }
             else if (std::ranges::find(Model::FileExtensions, file->GetExtension()) != Model::FileExtensions.end())
             {

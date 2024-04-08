@@ -1025,7 +1025,7 @@ typename FmtContext::iterator std::formatter<Matrix>::format(Matrix m, FmtContex
 {
     std::ostringstream out;
     
-    const char_t separator = m_Multiline ? '\n' : ' ';
+    const char_t separator = m_Multiline ? ' ' : '\n';
 
     out << std::vformat(
             "[ {:" + m_Format + "} ; {:" + m_Format + "} ; {:" + m_Format + "} ; {:" + m_Format + "} ]" + separator

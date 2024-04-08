@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "rendering/material.hpp"
+#include "resource/mesh.hpp"
 #include "resource/model.hpp"
 #include "scene/component.hpp"
 
@@ -21,6 +22,9 @@ public:
     /// @brief @ref Model of the mesh
     Pointer<Model> model;
 
+    /// @brief @ref Mesh
+    Pointer<Mesh> mesh;
+
     /// @brief @ref Material to render with
     Material material;
 
@@ -34,6 +38,7 @@ END_XNOR_CORE
 REFL_AUTO(
     type(XnorCore::MeshRenderer, bases<XnorCore::Component>),
     field(model),
+    field(mesh),
     field(material),
     field(drawModelAabb)
 );

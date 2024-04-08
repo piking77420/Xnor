@@ -99,6 +99,8 @@
     <ClInclude Include="include\rendering\buffer\uniform_buffer.hpp" />
     <ClInclude Include="include\rendering\buffer\vbo.hpp" />
     <ClInclude Include="include\rendering\frustum.hpp" />
+    <ClInclude Include="include\resource\animation.hpp" />
+    <ClInclude Include="include\resource\mesh.hpp" />
     <ClInclude Include="include\resource\skeleton.hpp" />
     <ClInclude Include="include\scene\component\test_component_physics.hpp" />
     <ClCompile Include="src\application.cpp" />
@@ -142,9 +144,11 @@
     <ClCompile Include="src\rendering\render_systems\tone_mapping.cpp" />
     <ClCompile Include="src\rendering\rhi.cpp" />
     <ClCompile Include="src\rendering\viewport_data.cpp" />
+    <ClCompile Include="src\resource\animation.cpp" />
     <ClCompile Include="src\resource\compute_shader.cpp" />
     <ClCompile Include="src\resource\cubemap.cpp" />
     <ClCompile Include="src\resource\font.cpp" />
+    <ClCompile Include="src\resource\mesh.cpp" />
     <ClCompile Include="src\resource\shader.cpp" />
     <ClCompile Include="src\file\file.cpp" />
     <ClCompile Include="src\file\file_manager.cpp" />

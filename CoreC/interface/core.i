@@ -126,6 +126,8 @@ struct Data64
 #include "resource/cubemap.hpp"
 #include "resource/font.hpp"
 #include "resource/model.hpp"
+#include "resource/mesh.hpp"
+#include "resource/animation.hpp"
 #include "resource/resource.hpp"
 #include "resource/resource_manager.hpp"
 #include "resource/shader.hpp"
@@ -181,6 +183,7 @@ struct Data64
 %include "resource/cubemap.hpp"
 %include "resource/font.hpp"
 %include "resource/model.hpp"
+%include "resource/mesh.hpp"
 %include "resource/resource_manager.hpp"
 
 %include "resource/shader.hpp"

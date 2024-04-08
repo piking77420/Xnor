@@ -1,17 +1,18 @@
 ﻿#include "rendering/bone.hpp"
 
+#include "utils/logger.hpp"
+
 using namespace XnorCore;
 
-void Bone::Create(const Matrix& localMatrix, const Matrix& offsetMatrix, const int32_t parent)
+void Bone::Create(const Matrix& localMatrix, const Matrix& offsetMatrix)
 {
-    local = localMatrix;
-    global = localMatrix;
-    globalInverse = offsetMatrix;
-    parentId = parent;
+    local = localMatrix.Transposed();
+    global = local;
+    globalInverse = offsetMatrix.Transposed();
+    parentId = -1;
 
-    Vector3 scale;
-    Vector3 skew;
-    Vector4 perspective;
-    
-    local.Decompose(&position, &rotation, &scale, &skew, &perspective);
+    if (name == "spine_01")
+    {
+        Logger::LogInfo("{}", local);
+    }
 }
