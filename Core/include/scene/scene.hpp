@@ -4,6 +4,7 @@
 
 #include "core.hpp"
 #include "entity.hpp"
+#include "component/mesh_renderer.hpp"
 #include "utils/octree.hpp"
 #include "world/skybox.hpp"
 
@@ -22,7 +23,7 @@ public:
     Skybox skybox;
 
     /// @brief Octotree base on rendering AABB
-    Octree renderOctoree;
+    Octree<const MeshRenderer*> renderOctoree;
     
     XNOR_ENGINE Scene();
     XNOR_ENGINE ~Scene();

@@ -123,8 +123,6 @@ Scene::Scene()
     texture->loadData.flipVertically = true;
     texture->Reload();
     skybox.LoadFromHdrTexture(texture);
-
-    renderOctoree.Compute(GetEntities(),1.f);
 }
 
 Scene::~Scene()

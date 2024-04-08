@@ -1347,9 +1347,7 @@ uint32_t Rhi::DrawModeToOpengl(DrawMode::DrawMode drawMode)
 		
 	}
 
-	return GL_TRIANGLES;
 }
-
 
 void Rhi::OpenglDebugCallBack(const uint32_t source, const uint32_t type, const uint32_t id, const uint32_t severity, const int32_t, const char_t* const message, const void* const)
 {

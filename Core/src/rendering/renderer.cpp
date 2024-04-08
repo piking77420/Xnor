@@ -152,6 +152,7 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 	m_GizmoShader->Use();
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Line);
 	ModelUniformData modelData;
+	m_GizmoShader->SetVec3("color",{0.f,1.f,0.f});
 
 	for (const MeshRenderer* const meshRenderer : meshRenderers)
 	{

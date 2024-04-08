@@ -182,49 +182,6 @@
 			<m_Children/>
 		</5>
 		<6>
-			<name>Capsule</name>
-			<m_EntityId>3843FD98-4FF2-4459-98-DA-67-D9-98-57-38-14</m_EntityId>
-			<transform>
-				<m_Position>2.2701154 ; -0.012526517 ; 7.15501</m_Position>
-				<m_EulerRotation>1.5632963 ; -0.02127397 ; 0.67807066</m_EulerRotation>
-				<m_Scale>0.9999992 ; 0.9999925 ; 1.000001</m_Scale>
-			</transform>
-			<m_Components>
-				<0 typeName="CapsuleCollider">
-					<height>1</height>
-					<radius>1</radius>
-					<constraints/>
-					<m_IsStatic>false</m_IsStatic>
-					<m_IsTrigger>false</m_IsTrigger>
-					<m_IsActive>true</m_IsActive>
-				</0>
-				<1 typeName="TestComponentPhysics">
-					<m_JumpForce>1000</m_JumpForce>
-				</1>
-				<2 typeName="MeshRenderer">
-					<model>29075914-46D0-4C58-B8-37-A9-2A-1F-15-91-D1</model>
-					<material>
-						<materialType>Opaque</materialType>
-						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
-						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
-						<metallic>0</metallic>
-						<roughness>0</roughness>
-						<reflectance>0</reflectance>
-						<emissive>0</emissive>
-						<ambientOcclusion>0</ambientOcclusion>
-						<albedoTexture>7587E9E6-C775-4518-93-22-41-74-BC-95-DD-3D</albedoTexture>
-						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
-						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
-						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
-						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
-					</material>
-					<drawModelAabb>false</drawModelAabb>
-				</2>
-			</m_Components>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
-			<m_Children/>
-		</6>
-		<7>
 			<name>VikingRoom</name>
 			<m_EntityId>924CE8D3-CDEA-4D8A-86-BE-50-D-74-E7-AF-38</m_EntityId>
 			<transform>
@@ -255,8 +212,8 @@
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
-		</7>
-		<8>
+		</6>
+		<7>
 			<name>Entity</name>
 			<m_EntityId>5D07D9-346E-48FE-81-81-6E-87-5A-2A-F-2D</m_EntityId>
 			<transform>
@@ -287,7 +244,7 @@
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
-		</8>
+		</7>
 	</m_Entities>
 </Scene>
 

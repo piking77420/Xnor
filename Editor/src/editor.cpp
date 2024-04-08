@@ -243,9 +243,6 @@ void Editor::MenuBar()
 				path = data.currentScene->GetPathString();
 			}
 
-			std::vector<XnorCore::TestComponent*> v;
-			XnorCore::World::scene->GetAllComponentOfType<XnorCore::TestComponent>(&v);
-
 			if (ImGui::MenuItem("Save"))
 			{
 				XnorCore::Serializer::StartSerialization(path);
@@ -365,17 +362,37 @@ void Editor::EndFrame()
 void Editor::WorldBehaviours()
 {
 	XnorCore::SceneGraph::Update(XnorCore::World::scene->GetEntities());
-
 	
 	if (XnorCore::World::isPlaying)
 	{
 		if (!XnorCore::World::hasStarted)
 		{
 			XnorCore::World::Begin();
-			XnorCore::World::scene->renderOctoree.Compute(XnorCore::World::scene->GetEntities(),1.f);
 			XnorCore::World::hasStarted = true;
 		}
+		
+		std::vector<XnorCore::OctreeNodeData<const XnorCore::MeshRenderer*>> datas;
+		
+		for (uint32_t i = 0; i <  XnorCore::World::scene->GetEntities().GetSize();i++)
+		{
+			XnorCore::Entity& ent = *XnorCore::World::scene->GetEntities()[i];
 
+			XnorCore::MeshRenderer* meshRenderer = nullptr;
+			if(ent.TryGetComponent(&meshRenderer))
+			{
+				if (!meshRenderer->model.IsValid())
+					continue;
+			
+				XnorCore::Bound bound = bound.GetAabbFromTransform(meshRenderer->model->GetAabb(), meshRenderer->entity->transform);
+
+				XnorCore::OctreeNodeData<const XnorCore::MeshRenderer*> data;
+				data.bound = bound;
+				data.handle = meshRenderer;
+				datas.emplace_back(data);
+			}
+		}
+		XnorCore::World::scene->renderOctoree.Compute(datas,1.f);
+		
 		XnorCore::World::Update();
 	}
 	XnorCore::World::Render();

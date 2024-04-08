@@ -17,17 +17,17 @@ DrawGizmo::DrawGizmo()
     m_GizmoShader = ResourceManager::Get<Shader>("gizmo_shader");
 }
 
-void DrawGizmo::Sphere(Vector3 position, float_t radius, ColorRgb color)
+void DrawGizmo::Sphere(Vector3 position, float_t radius, Colorf color)
 {
     m_GizmoSphereVector.push_back({ position, radius, color });
 }
 
-void DrawGizmo::Rectangle(Vector3 position, Vector3 size, ColorRgb color)
+void DrawGizmo::Rectangle(Vector3 position, Vector3 size, Colorf color)
 {
     m_GizmoRectangleVector.push_back({ position, size, color });
 }
 
-void DrawGizmo::Capsule(Vector3 position, float_t height, float_t radius, ColorRgb color)
+void DrawGizmo::Capsule(Vector3 position, float_t height, float_t radius, Colorf color)
 {
     m_GizmoCapsuleVector.push_back({ position, height, radius, color });
 }
@@ -106,6 +106,7 @@ void DrawGizmo::DrawRectangle()
 {
     for (GizmoRectangle& gizmo : m_GizmoRectangleVector)
     {
+        m_GizmoShader->SetVec3("color",static_cast<Vector3>(gizmo.color));
         modelData.model = Matrix::Trs(gizmo.position, Quaternion::Identity(), Vector3(gizmo.size));
         Rhi::UpdateModelUniform(modelData);
         Rhi::DrawModel(DrawMode::Triangles, m_Cube->GetId());
@@ -117,6 +118,7 @@ void DrawGizmo::DrawSphere()
 
     for (GizmoSphere& gizmo : m_GizmoSphereVector)
     {
+        //m_GizmoShader->SetVec3("color",static_cast<Vector3>(gizmo.color));
         modelData.model = Matrix::Trs(gizmo.position, Quaternion::Identity(), Vector3(gizmo.radius));
         Rhi::UpdateModelUniform(modelData);
         Rhi::DrawModel(DrawMode::Triangles, m_Sphere->GetId());
@@ -128,7 +130,7 @@ void DrawGizmo::DrawCapsule()
 {
     for ([[maybe_unused]] GizmoCapsule& gizmo : m_GizmoCapsuleVector)
     {
-        
+
     }
 }
 

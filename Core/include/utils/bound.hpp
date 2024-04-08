@@ -14,6 +14,8 @@ public:
     Vector3 extents;
     /// @brief The center bound of this Bound.
     Vector3 center = Vector3::Zero();
+
+    DEFAULT_COPY_MOVE_OPERATIONS(Bound)
     
     Bound(Vector3 newCenter, Vector3 newSize);
     

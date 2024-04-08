@@ -18,14 +18,14 @@ private:
     {
         Vector3 position;
         float_t radius;
-        ColorRgb color;
+        Colorf color;
     };
 
     struct GizmoRectangle
     {
         Vector3 position;
         Vector3 size;
-        ColorRgb color;
+        Colorf color;
     };
 
     struct GizmoCapsule
@@ -33,7 +33,7 @@ private:
         Vector3 position;
         float_t height;
         float_t radius;
-        ColorRgb color;
+        Colorf color;
     };
     
     XNOR_ENGINE static inline std::vector<GizmoSphere> m_GizmoSphereVector;
@@ -45,11 +45,11 @@ public:
 
     XNOR_ENGINE ~DrawGizmo() = default;
     
-    XNOR_ENGINE static void Sphere(Vector3 position, float_t radius = 1.f, ColorRgb color = ColorRgb::Green());
+    XNOR_ENGINE static void Sphere(Vector3 position, float_t radius = 1.f, Colorf color = Colorf::Green());
     
-    XNOR_ENGINE static void Rectangle(Vector3 position, Vector3 size, ColorRgb color = ColorRgb::Green());
+    XNOR_ENGINE static void Rectangle(Vector3 position, Vector3 size, Colorf color = Colorf::Green());
     
-    XNOR_ENGINE static void Capsule(Vector3 position, float_t height, float_t radius, ColorRgb color = ColorRgb::Green());
+    XNOR_ENGINE static void Capsule(Vector3 position, float_t height, float_t radius, Colorf color = Colorf::Green());
 
     XNOR_ENGINE void DrawGizmos(const Viewport& viewport, const Entity* selectedEntity);
 
