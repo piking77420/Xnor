@@ -29,7 +29,11 @@ void Frustum::UpdateFromCamera(const Camera& camera, const float_t aspect)
 
 }
 
+<<<<<<< HEAD
 bool_t Frustum::AABBCollidWithPlane(const Plane& plane, const Bound& aabb, const Vector3& center) const
+=======
+bool_t Frustum::AABBCollidWithPlane(const Plane& plane, const Model::Aabb&, const Vector3& center) const
+>>>>>>> dev
 {
     const float r = center.x * std::abs(plane.normal.x) +
             center.y * std::abs(plane.normal.y) + center.z * std::abs(plane.normal.z);
@@ -37,7 +41,11 @@ bool_t Frustum::AABBCollidWithPlane(const Plane& plane, const Bound& aabb, const
     return -r <= plane.GetSignedDistanceToPlane(center);
 }
 
+<<<<<<< HEAD
 bool_t Frustum::IsInFrutum(const Camera& camera, const Bound& aabb, const XnorCore::Transform& transform) const
+=======
+bool_t Frustum::IsInFrutum(const Camera&, const Model::Aabb& aabb, const Transform& transform) const
+>>>>>>> dev
 {
     const Vector3&& right = transform.GetRight() * aabb.extents.x;
     const Vector3&& up = transform.GetUp() * aabb.extents.y;

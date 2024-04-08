@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "rendering/renderer.hpp"
+#include "utils/event.hpp"
 
 /// @file application.hpp
 /// @brief Defines the XnorCore::Application class.
@@ -17,7 +18,7 @@ public:
     /// This is valid once @ref Application::Application "the Application constructor" has been called
     XNOR_ENGINE static inline std::filesystem::path executablePath;
     
-    /// @brief Exits the currently-executing Application immediately.
+    /// @brief Exits the currently-executing Application immediately, destroying the current Application beforehand.
     [[noreturn]]
     XNOR_ENGINE static void Exit(int32_t code = 0);
     

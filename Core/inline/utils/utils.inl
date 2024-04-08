@@ -6,23 +6,13 @@
 
 BEGIN_XNOR_CORE
 
-template <typename PtrT, typename IntT>
+template <Concepts::PointerT PtrT, Concepts::IntegralT IntT>
 constexpr PtrT Utils::IntToPointer(const IntT number)
 {
     static_assert(std::is_pointer_v<PtrT>, "PtrT must be a raw pointer type, ex: PtrT=int*");
     static_assert(std::is_integral_v<IntT>, "IntT must be an integral type, ex: IntT=int");
     
     return reinterpret_cast<PtrT>(reinterpret_cast<uint8_t*>(1) + static_cast<const size_t>(number) - 1);
-}
-
-constexpr ImVec2 Utils::ToImVec(const Vector2 v)
-{
-    return ImVec2(v.x, v.y);
-}
-
-constexpr Vector2 Utils::FromImVec(const ImVec2 v)
-{
-    return Vector2(v.x, v.y);
 }
 
 constexpr ImVec4 Utils::ToImCol(const ColorRgb color)

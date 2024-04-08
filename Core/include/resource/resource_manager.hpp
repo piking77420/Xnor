@@ -135,6 +135,7 @@ public:
 
 private:
     XNOR_ENGINE static inline std::unordered_map<std::string, Pointer<Resource>> m_Resources;
+    XNOR_ENGINE static inline std::mutex m_ResourcesMutex;
     XNOR_ENGINE static inline std::unordered_map<Guid, Pointer<Resource>> m_GuidMap;
     
     template <Concepts::ResourceT T>

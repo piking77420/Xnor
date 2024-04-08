@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <OutputPath>..\x64\Debug\</OutputPath>
+    <OutputPath>..\x64\Debug\DotnetAssemblies\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>..\x64\Release\</OutputPath>
+    <OutputPath>..\x64\Release\DotnetAssemblies\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup>

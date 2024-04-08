@@ -212,6 +212,7 @@
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
+<<<<<<< HEAD
 		</6>
 		<7>
 			<name>Entity</name>
@@ -244,6 +245,8 @@
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
+=======
+>>>>>>> dev
 		</7>
 	</m_Entities>
 </Scene>

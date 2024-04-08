@@ -33,8 +33,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="$(OutputPath)..\Core.dll" CopyToOutputDirectory="Always" />
-    <EmbeddedResource Include="$(OutputPath)..\CoreC.dll" CopyToOutputDirectory="Always" />
+    <EmbeddedResource Include="$(OutputPath)..\Core.dll" CopyToOutputDirectory="PreserveNewest" />
+    <EmbeddedResource Include="$(OutputPath)..\CoreC.dll" CopyToOutputDirectory="PreserveNewest" />
+    <EmbeddedResource Include="$(OutputPath)..\Jolt.dll" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

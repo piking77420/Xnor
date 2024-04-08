@@ -12,6 +12,7 @@
 #include "resource/resource_manager.hpp"
 #include "scene/component/test_component.hpp"
 #include "serialization/serializer.hpp"
+#include "utils/coroutine.hpp"
 #include "windows/content_browser.hpp"
 #include "windows/editor_window.hpp"
 #include "windows/header_window.hpp"
@@ -26,7 +27,6 @@ using namespace XnorEditor;
 
 void Editor::CheckWindowResize()
 {
-	
 }
 
 Editor::Editor()
@@ -282,7 +282,7 @@ void Editor::MenuBar()
 	}
 }
 
-void Editor::UpdateWindow()
+void Editor::UpdateWindows()
 {
 	for (UiWindow* const w : m_UiWindows)
 	{
@@ -336,12 +336,13 @@ void Editor::Update()
 		CheckWindowResize();
 		
 		renderer.BeginFrame(*World::scene);
-		UpdateWindow();
+		UpdateWindows();
 		WorldBehaviours();
 		OnRenderingWindow();
 		
 		renderer.EndFrame(*World::scene);
 
+		Coroutine::UpdateAll();
 		Input::Update();
 		EndFrame();
 		renderer.SwapBuffers();

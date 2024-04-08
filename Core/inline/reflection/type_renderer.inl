@@ -56,7 +56,7 @@ void TypeRenderer::DisplayGridPlotting(const Metadata<ReflectT, MemberT, Descrip
 
     // TODO handle resize
     constexpr Vector2 size = Vector2(100, 100);
-    ImGui::InvisibleButton("##canvas", Utils::ToImVec(size));
+    ImGui::InvisibleButton("##canvas", size);
 
     const ImVec2 p0 = ImGui::GetItemRectMin();
     const ImVec2 p1 = ImGui::GetItemRectMax();
@@ -70,7 +70,7 @@ void TypeRenderer::DisplayGridPlotting(const Metadata<ReflectT, MemberT, Descrip
         const ImGuiIO& io = ImGui::GetIO();
 
         // Compute new value, ranged between 0 and 1
-        const Vector2 newValue = (Utils::FromImVec(io.MousePos) - Utils::FromImVec(p0)) / size;
+        const Vector2 newValue = (io.MousePos - p0) / size;
 
         // Remap the value from [0; 1] to [min; max]
         metadata.obj->x = Utils::RemapValue(newValue.x, uniformRange, plottingRange);
@@ -92,9 +92,9 @@ void TypeRenderer::DisplayGridPlotting(const Metadata<ReflectT, MemberT, Descrip
     );;
 
     // Compute cursor position
-    const Vector2 position = Utils::FromImVec(p0) + clamped * size;
+    const Vector2 position = p0 + clamped * size;
 
-    drawList->AddCircle(Utils::ToImVec(position), 5, IM_COL32_WHITE);
+    drawList->AddCircle(position, 5, IM_COL32_WHITE);
     ImGui::PopClipRect();
 
     // Draw slider float version

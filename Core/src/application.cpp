@@ -17,6 +17,15 @@
 
 using namespace XnorCore;
 
+void Application::Exit(const int32_t code)
+{
+	Logger::LogInfo("Force exiting Application");
+
+	delete m_ApplicationInstance;
+	
+	std::exit(code);  // NOLINT(concurrency-mt-unsafe)
+}
+
 Application::Application()
 {
     m_ApplicationInstance = this;
@@ -70,12 +79,4 @@ Application::~Application()
     Window::Shutdown();
 	
     FileManager::UnloadAll();
-	
-    Logger::Stop();
-}
-
-void Application::Exit(const int32_t code)
-{
-	Logger::LogInfo("Force exiting Application");
-	std::exit(code);
 }

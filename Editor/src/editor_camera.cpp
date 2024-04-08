@@ -31,7 +31,7 @@ void EditorCamera::CameraOnRightClick()
     if (ImGui::IsMouseClicked(ImGuiMouseButton_Right))
     {
         XnorCore::Window::SetCursorHidden(true);
-        m_MouseDragStart = XnorCore::Utils::FromImVec(ImGui::GetMousePos());
+        m_MouseDragStart = ImGui::GetMousePos();
     }
 
     if (ImGui::IsMouseDown(ImGuiMouseButton_Right))
