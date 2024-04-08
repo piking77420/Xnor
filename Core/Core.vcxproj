@@ -59,7 +59,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib;OpenAL32.lib</AdditionalDependencies>
       <AdditionalOptions>/WHOLEARCHIVE:CoreLibs.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
@@ -85,7 +85,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);%(AdditionalLibraryDirectories);$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>;opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib</AdditionalDependencies>
+      <AdditionalDependencies>;opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib;OpenAL32.lib</AdditionalDependencies>
       <AdditionalOptions>/WHOLEARCHIVE:CoreLibs.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
@@ -94,12 +94,22 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="externals\include\AL\al.h" />
+    <ClInclude Include="externals\include\AL\alc.h" />
+    <ClInclude Include="externals\include\AL\alext.h" />
+    <ClInclude Include="externals\include\AL\efx-creative.h" />
+    <ClInclude Include="externals\include\AL\efx-presets.h" />
+    <ClInclude Include="externals\include\AL\efx.h" />
+    <ClInclude Include="include\audio\audio.hpp" />
+    <ClInclude Include="include\audio\audio_device.hpp" />
     <ClInclude Include="include\reflection\filters.hpp" />
     <ClInclude Include="include\rendering\buffer\uniform_buffer.hpp" />
     <ClInclude Include="include\rendering\buffer\vbo.hpp" />
     <ClInclude Include="include\rendering\frustum.hpp" />
     <ClInclude Include="include\scene\component\test_component_physics.hpp" />
     <ClCompile Include="src\application.cpp" />
+    <ClCompile Include="src\audio\audio.cpp" />
+    <ClCompile Include="src\audio\audio_device.cpp" />
     <ClCompile Include="src\csharp\dotnet_assembly.cpp" />
     <ClCompile Include="src\csharp\dotnet_runtime.cpp" />
     <ClCompile Include="src\csharp\dotnet_utils.cpp" />
