@@ -217,7 +217,7 @@ Pointer<T> ResourceManager::AddNoCheck(std::string name)
     Pointer<T> resource = Pointer<T>::Create(std::forward<std::string>(name));
 
     {
-        std::scoped_lock<std::mutex> lock(m_ResourcesMutex);
+        std::scoped_lock lock(m_ResourcesMutex);
         // We cannot reuse the variable 'name' here in case it was moved inside the Resource constructor
         m_Resources[resource->GetName()] = static_cast<Pointer<Resource>>(resource.CreateStrongReference());
     }
@@ -234,7 +234,7 @@ Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file, const bool_t loadInR
     Pointer<T> resource = Pointer<T>::Create(file->GetPathString());
     
     {
-        std::scoped_lock<std::mutex> lock(m_ResourcesMutex);
+        std::scoped_lock lock(m_ResourcesMutex);
         m_Resources[resource->GetName()] = static_cast<Pointer<Resource>>(resource.CreateStrongReference());
     }
 
@@ -254,7 +254,7 @@ Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file, const bool_t loadInR
 template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::GetNoCheck(const std::string& name)
 {
-    std::scoped_lock<std::mutex> lock(m_ResourcesMutex);
+    std::scoped_lock lock(m_ResourcesMutex);
     return Pointer<T>(m_Resources.at(name));
 }
 
