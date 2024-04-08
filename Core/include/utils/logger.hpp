@@ -203,7 +203,10 @@ private:
 
     XNOR_ENGINE static inline std::thread m_Thread = std::thread(Run);
 
-    static void PrintLog(const LogEntry& log);
+    XNOR_ENGINE static void PrintLog(const LogEntry& log);
+
+    /// @brief Function to be called on program exit, e.g. when @c main() returns.
+    XNOR_ENGINE static void AtExit();
 };
 
 END_XNOR_CORE

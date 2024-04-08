@@ -175,6 +175,9 @@ void Logger::Run()
 {
     // Set thread name for easier debugging
     (void) SetThreadDescription(m_Thread.native_handle(), L"Logger Thread");
+
+    if (std::atexit(AtExit))
+        LogWarning("Couldn't register Logger::Stop using std::atexit function");
     
     std::unique_lock lock(mutex);
     while (running || !m_Lines.Empty())
@@ -249,11 +252,4 @@ void Logger::PrintLog(const LogEntry& log)
         file << baseMessage;
 }
 
-// Explicitly instantiate empty template versions of the Log functions for the C# DLL linkage
-template void Logger::Log<>(LogLevel level, const std::string& format);
-template void Logger::LogTempDebug<>(const std::string& format, const char_t* file, int32_t line);
-template void Logger::LogDebug<>(const std::string& format);
-template void Logger::LogInfo<>(const std::string& format);
-template void Logger::LogWarning<>(const std::string& format);
-template void Logger::LogError<>(const std::string& format);
-template void Logger::LogFatal<>(const std::string& format);
+void Logger::AtExit() { Stop(); }

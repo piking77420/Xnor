@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "rendering/renderer.hpp"
+#include "utils/event.hpp"
 
 /// @file application.hpp
 /// @brief Defines the XnorCore::Application class.

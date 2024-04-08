@@ -12,6 +12,7 @@
 #include "core.hpp"
 
 #include "utils/color.hpp"
+#include "utils/concepts.hpp"
 #include "utils/pointer.hpp"
 
 /// @file utils.hpp
@@ -32,7 +33,7 @@ namespace Utils
     /// @tparam IntT Type of the number, must be integral
     /// @param number Number to convert
     /// @return Pointer representation of the number
-    template <typename PtrT, typename IntT>
+    template <Concepts::PointerT PtrT, Concepts::IntegralT IntT>
     [[nodiscard]]
     constexpr PtrT IntToPointer(IntT number);
 
@@ -55,18 +56,6 @@ namespace Utils
     /// @param objectWidth Width of the element to align
     /// @param alignment In window alignment, 0.5f by default to center the object
     XNOR_ENGINE void AlignImGuiCursor(float_t objectWidth, float_t alignment = 0.5f);
-
-    /// @brief Converts a Vector2 to an ImVec2
-    /// @param v Vector2 to convert
-    /// @return ImVec2 representation
-    [[nodiscard]]
-    XNOR_ENGINE constexpr ImVec2 ToImVec(Vector2 v);
-
-    /// @brief Converts an ImVec2 to a Vector2
-    /// @param v ImVec2 to convert
-    /// @return Vector2 representation
-    [[nodiscard]]
-    XNOR_ENGINE constexpr Vector2 FromImVec(ImVec2 v);
 
     /// @brief Converts a ColorRgb to an ImVec4
     /// @param color ColorRgb to convert

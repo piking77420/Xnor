@@ -91,7 +91,7 @@ void EditorWindow::SelectEntityOnScreen()
 {
     if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
     {
-        const Vector2 mousepos = XnorCore::Utils::FromImVec(ImGui::GetMousePos());
+        const Vector2 mousepos = ImGui::GetMousePos();
         Vector2i mouseposI = {static_cast<int32_t>(mousepos.x), static_cast<int32_t>(mousepos.y)};
         mouseposI -= m_Position;
         // Flip the y axis 

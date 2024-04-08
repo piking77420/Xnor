@@ -54,6 +54,14 @@ namespace Concepts
     /// @brief Concept that forces a type to be a color, e.g. one of: ColorRgb, ColorRgba, Colorf or ColorHsv
     template <class T>
     concept ColorT = Meta::IsAny<T, ColorRgb, ColorRgba, Colorf, ColorHsva>;
+
+    /// @brief Concept that forces a type to be a raw pointer
+    template <typename T>
+    concept PointerT = std::is_pointer_v<T>;
+
+    /// @brief Concept that forces a type to be of an integral type
+    template <typename T>
+    concept IntegralT = std::is_integral_v<T>;
 }
 
 END_XNOR_CORE
