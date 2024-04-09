@@ -11,7 +11,8 @@
 #include "utils/guid.hpp"
 
 BEGIN_XNOR_CORE
-    /// @private
+
+/// @private
 class TestComponent : public Component
 {
     REFLECTABLE_IMPL(TestComponent)
