@@ -94,7 +94,9 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\data_structure\object_bounding.hpp" />
     <ClInclude Include="include\data_structure\octree.hpp" />
+    <ClInclude Include="include\data_structure\octree_node.hpp" />
     <ClInclude Include="include\rendering\buffer\uniform_buffer.hpp" />
     <ClInclude Include="include\rendering\frustum.hpp" />
     <ClInclude Include="include\scene\component\test_component_physics.hpp" />
@@ -102,6 +104,7 @@
     <ClCompile Include="src\csharp\dotnet_assembly.cpp" />
     <ClCompile Include="src\csharp\dotnet_runtime.cpp" />
     <ClCompile Include="src\csharp\dotnet_utils.cpp" />
+    <ClCompile Include="src\data_structure\object_bounding.cpp" />
     <ClCompile Include="src\data_structure\octree.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -176,6 +179,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="src\data_structure\octree_node.cpp" />
     <ClCompile Include="src\file\directory.cpp" />
     <ClCompile Include="src\file\entry.cpp" />
     <ClCompile Include="src\input\input.cpp" />

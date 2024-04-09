@@ -33,7 +33,7 @@ public:
 
 	// tmpr
 	/// @brief Octotree base on rendering AABB
-	XnorCore::Octree<const XnorCore::MeshRenderer*,1.f> renderOctoree;
+	XnorCore::Octree<XnorCore::MeshRenderer> renderOctoree;
 private:
 	std::vector<UiWindow*> m_UiWindows;
 

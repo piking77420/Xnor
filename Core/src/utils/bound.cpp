@@ -55,7 +55,7 @@ bool_t Bound::Countains(const Bound& otherBound) const
 
     const Vector3 otherMax = otherBound.GetMax();
     const Vector3 otherMin = otherBound.GetMin();
-    
+
     return min.x <= otherMax.x && max.x >= otherMin.x && min.y <= otherMax.y && max.y >= otherMin.y && min.z <= otherMax.z && max.z >= otherMin.z;
 } 
 

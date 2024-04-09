@@ -368,7 +368,7 @@ void Editor::WorldBehaviours()
 			XnorCore::World::Begin();
 			XnorCore::World::hasStarted = true;
 
-			std::vector<XnorCore::ObjectBounding<const XnorCore::MeshRenderer*>> datas;
+			std::vector<XnorCore::ObjectBounding<XnorCore::MeshRenderer>> datas;
 		
 			for (uint32_t i = 0; i <  XnorCore::World::scene->GetEntities().GetSize();i++)
 			{
@@ -382,14 +382,13 @@ void Editor::WorldBehaviours()
 			
 					XnorCore::Bound bound = bound.GetAabbFromTransform(meshRenderer->model->GetAabb(), meshRenderer->entity->transform);
 
-					XnorCore::ObjectBounding<const XnorCore::MeshRenderer*> data;
+					XnorCore::ObjectBounding<XnorCore::MeshRenderer> data;
 					data.bound = bound;
 					data.handle = meshRenderer;
 					datas.emplace_back(data);
 				}
 			}
-			renderOctoree = XnorCore::Octree<const XnorCore::MeshRenderer*,1.f>(datas,XnorCore::Bound());
-			renderOctoree.Update();
+			renderOctoree = XnorCore::Octree<XnorCore::MeshRenderer>(datas);
 		}
 		
 		XnorCore::World::Update();
