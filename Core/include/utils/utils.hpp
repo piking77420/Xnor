@@ -195,6 +195,9 @@ namespace Utils
     template <typename Ret, typename... Args>
     [[nodiscard]]
     constexpr size_t FunctionAddress(std::function<Ret(Args...)> f);
+
+    template <typename T, typename... Args>
+    void Construct(T* ptr, Args&&... args); 
 }
 
 END_XNOR_CORE

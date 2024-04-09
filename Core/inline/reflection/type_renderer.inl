@@ -104,9 +104,33 @@ void TypeRenderer::DisplayGridPlotting(const Metadata<ReflectT, MemberT, Descrip
 }
 
 template <typename ReflectT, typename MemberT, typename DescriptorT>
-void TypeRenderer::DisplayStdMap(const Metadata<ReflectT, MemberT, DescriptorT>&)
+void TypeRenderer::DisplayStdMap(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
+    using KeyType = typename MemberT::key_type;
+    using MappedType = typename MemberT::mapped_type;
     
+    ImGui::CollapsingHeader(metadata.name);
+
+    for (std::pair<KeyType, MappedType> it : *metadata.obj)
+    {
+        Metadata<ReflectT, KeyType, DescriptorT> metadataKey =
+        {
+            .topLevelObj = metadata.topLevelObj,
+            .name = metadata.name,
+            .obj = &it.first
+        };
+    
+        Metadata<ReflectT, MappedType, DescriptorT> metadataMap =
+        {
+            .topLevelObj = metadata.topLevelObj,
+            .name = metadata.name,
+            .obj = &it.second
+        };
+
+        DisplaySimpleType<ReflectT, KeyType, DescriptorT>(metadataKey);
+        ImGui::SameLine();
+        DisplaySimpleType<ReflectT, MappedType, DescriptorT>(metadataMap);
+    }
 }
 
 template <typename ReflectT, typename MemberT, typename DescriptorT>
@@ -589,6 +613,10 @@ void TypeRenderer::DisplaySimpleType(const Metadata<ReflectT, MemberT, Descripto
     else if constexpr (Meta::IsStdMap<MemberT>)
     {
         DisplayStdMap<ReflectT, MemberT, DescriptorT>(metadata);
+    }
+    else if constexpr (Meta::IsStdFunction<MemberT>)
+    {
+        ImGui::TextDisabled("Function at %p", Utils::FunctionAddress(*metadata.obj));
     }
     else
     {

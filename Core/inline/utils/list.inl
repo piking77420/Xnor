@@ -2,11 +2,13 @@
 
 #include <stdexcept>
 
+#include "utils/utils.hpp"
+
 BEGIN_XNOR_CORE
 
 template <typename T>
 List<T>::List()
-    : m_Size(0), m_TypeSize(sizeof(T))
+    : m_Size(0)
 {
     m_Capacity = 1;
 
@@ -15,43 +17,42 @@ List<T>::List()
 
 template <typename T>
 List<T>::List(const size_t size)
-    : m_Size(size), m_TypeSize(sizeof(T))
+    : m_Size(size)
 {
     m_Capacity = std::bit_ceil(m_Size);
     
     Malloc(m_Capacity);
 
     for (size_t i = 0; i < m_Size; i++)
-        m_Data[i] = T();
+        Utils::Construct<T>(&m_Data[i]);
 }
 
 template <typename T>
 List<T>::List(const size_t size, const T& defaultValue)
-    : m_Size(size), m_TypeSize(sizeof(T))
+    : m_Size(size)
 {
     m_Capacity = std::bit_ceil(m_Size);
 
     Malloc(m_Capacity);
     
     for (size_t i = 0; i < m_Size; i++)
-        m_Data[i] = defaultValue;
+        Utils::Construct<T>(&m_Data[i], defaultValue);
 }
 
 template <typename T>
-List<T>::List(const size_t size, const T values[])
-    : m_Size(size), m_TypeSize(sizeof(T))
+List<T>::List(const size_t size, const T* const values)
+    : m_Size(size)
 {
     m_Capacity = std::bit_ceil(m_Size);
     
     Malloc(m_Capacity);
 
     for (size_t i = 0; i < m_Size; i++)
-        m_Data[i] = values[i];
+        Utils::Construct<T>(&m_Data[i], values[i]);
 }
 
 template <typename T>
 List<T>::List(const std::initializer_list<T>& values)
-    : m_TypeSize(sizeof(T))
 {
     m_Size = values.size();
     m_Capacity = std::bit_ceil(m_Size);
@@ -61,7 +62,7 @@ List<T>::List(const std::initializer_list<T>& values)
     const T* const it = values.begin();
 
     for (size_t i = 0; i < m_Size; i++)
-        m_Data[i] = it[i];
+        Utils::Construct<T>(&m_Data[i], it[i]);
 }
 
 template <typename T>
@@ -96,7 +97,7 @@ void List<T>::Resize(const size_t size)
     m_Size = size;
 
     for (size_t i = oldSize; i < size; i++)
-        ::new (static_cast<void*>(&m_Data[i])) T();
+        Utils::Construct<T>(&m_Data[i]);
 }
 
 template <typename T>
@@ -119,7 +120,7 @@ void List<T>::Add()
 {
     CheckGrow(m_Size + 1);
 
-    m_Data[m_Size] = T();
+    Utils::Construct<T>(&m_Data[m_Size]);
     m_Size++;
 }
 
@@ -128,7 +129,7 @@ void List<T>::Add(const T& element)
 {
     CheckGrow(m_Size + 1);
 
-    m_Data[m_Size] = element;
+    Utils::Construct<T>(&m_Data[m_Size], element);
     m_Size++;
 }
 
@@ -137,7 +138,7 @@ void List<T>::Add(T&& element)
 {
     CheckGrow(m_Size + 1);
 
-    m_Data[m_Size] = std::move(element);
+    Utils::Construct<T>(&m_Data[m_Size], std::forward<T>(element));
     m_Size++;
 }
 
@@ -146,7 +147,7 @@ void List<T>::AddRange(const T* const data, const size_t number)
 {
     CheckGrow(m_Size + number);
 
-    std::memcpy(&m_Data[m_Size], data, number * m_TypeSize);
+    std::memcpy(&m_Data[m_Size], data, number * sizeof(T));
 
     m_Size += number;
 }
@@ -158,7 +159,7 @@ void List<T>::AddRange(const std::initializer_list<T>& values)
 
     CheckGrow(m_Size + number);
 
-    std::memcpy(&m_Data[m_Size], values.begin(), number * m_TypeSize);
+    std::memcpy(&m_Data[m_Size], values.begin(), number * sizeof(T));
 
     m_Size += number;
 }
@@ -168,7 +169,7 @@ void List<T>::AddZeroed()
 {
     CheckGrow(m_Size + 1);
 
-    std::memset(Access(m_Size), 0, m_TypeSize);
+    std::memset(&m_Data[m_Size], 0, sizeof(T));
     m_Size++;
 }
 
@@ -176,14 +177,14 @@ template <typename T>
 void List<T>::Fill(const T& value)
 {
     for (size_t i = 0; i < m_Size; i++)
-        m_Data[i] = value;
+        Utils::Construct<T>(&m_Data[i], value);
 }
 
 template <typename T>
 void List<T>::Fill(T&& value)
 {
     for (size_t i = 0; i < m_Size; i++)
-        m_Data[i] = std::move(value);
+        Utils::Construct<T, T&&>(&m_Data[i], std::forward<T>(value));
 }
 
 template <typename T>
@@ -192,7 +193,7 @@ void List<T>::Emplace(Args&&... args) // NOLINT(cppcoreguidelines-missing-std-fo
 {
     CheckGrow(m_Size + 1);
 
-    m_Data[m_Size] = T(std::forward<Args>(args)...);
+    Utils::Construct<T>(&m_Data[m_Size], std::forward<Args>(args)...);
     m_Size++;
 }
 
@@ -204,8 +205,8 @@ void List<T>::Insert(size_t index)
 
     CheckGrow(m_Size + 1);
 
-    std::memcpy(&m_Data[index + 1], &m_Data[index], (m_Size - index) * m_TypeSize);
-    m_Data[index] = T();
+    std::memcpy(&m_Data[index + 1], &m_Data[index], (m_Size - index) * sizeof(T));
+    Utils::Construct<T>(&m_Data[m_Size]);
     
     m_Size++;
 }
@@ -218,8 +219,8 @@ void List<T>::Insert(const T& element, const size_t index)
 
     CheckGrow(m_Size + 1);
 
-    std::memcpy(&m_Data[index + 1], &m_Data[index], (m_Size - index) * m_TypeSize);
-    m_Data[index] = element;
+    std::memcpy(&m_Data[index + 1], &m_Data[index], (m_Size - index) * sizeof(T));
+    Utils::Construct<T>(&m_Data[index], element);
     
     m_Size++;
 }
@@ -232,8 +233,8 @@ void List<T>::Insert(T&& element, const size_t index)
 
     CheckGrow(m_Size + 1);
 
-    std::memcpy(&m_Data[index + 1], &m_Data[index], (m_Size - index) * m_TypeSize);
-    m_Data[index] = std::move(element);
+    std::memcpy(&m_Data[index + 1], &m_Data[index], (m_Size - index) * sizeof(T));
+    Utils::Construct<T>(&m_Data[index], std::forward<T>(element));
     
     m_Size++;
 }
@@ -246,8 +247,8 @@ void List<T>::InsertZeroed(const size_t index)
 
     CheckGrow(m_Size + 1);
 
-    std::memcpy(Access(index + 1), Access(index), (m_Size - index) * m_TypeSize);
-    std::memset(Access(index), 0, m_TypeSize);
+    std::memcpy(&m_Data[index + 1], &m_Data[index], (m_Size - index) * sizeof(T));
+    std::memset(&m_Data[index], 0, sizeof(T));
     
     m_Size++;
 }
@@ -266,7 +267,7 @@ void List<T>::Remove(const T& element)
         return;
 
     m_Data[i].~T();
-    std::memcpy(&m_Data[i], &m_Data[i + 1], (m_Size - i - 1) * m_TypeSize);
+    std::memcpy(&m_Data[i], &m_Data[i + 1], (m_Size - i - 1) * sizeof(T));
 
     CheckShrink(m_Size - 1);
     m_Size--;
@@ -279,7 +280,7 @@ void List<T>::RemoveAt(const size_t index)
         throw std::invalid_argument("List remove at subscript out of range");
 
     m_Data[index].~T();
-    std::memcpy(Access(index), Access(index + 1), (m_Size - index - 1) * m_TypeSize);
+    std::memcpy(&m_Data[index], &m_Data[index + 1], (m_Size - index - 1) * sizeof(T));
 
     CheckShrink(m_Size - 1);
     m_Size--;
@@ -304,7 +305,7 @@ void List<T>::RemoveRange(const size_t start, const size_t end)
         m_Data[i].~T();
     }
     
-    std::memcpy(Access(start), Access(end + 1), (m_Size - end - 1) * m_TypeSize);
+    std::memcpy(&m_Data[start], &m_Data[end + 1], (m_Size - end - 1) * sizeof(T));
 
     CheckShrink(m_Size - removedSize);
     m_Size -= removedSize;
@@ -324,6 +325,13 @@ bool_t List<T>::Contains(const T& element) const
 
 template <typename T>
 void List<T>::Iterate(const std::function<void(T*, size_t)>& lambda)
+{
+    for (size_t i = 0; i < m_Size; i++)
+        lambda(&m_Data[i], i);
+}
+
+template <typename T>
+void List<T>::Iterate(const std::function<void(const T*, size_t)>& lambda) const
 {
     for (size_t i = 0; i < m_Size; i++)
         lambda(&m_Data[i], i);
@@ -387,18 +395,12 @@ size_t List<T>::GetCapacity() const
 }
 
 template <typename T>
-size_t List<T>::GetTypeSize() const
-{
-    return m_TypeSize;
-}
-
-template <typename T>
 T& List<T>::operator[](const size_t index)
 {
     if (index >= m_Size)
         throw std::invalid_argument("List subscript out of range");
 
-    return *Access(index);
+    return m_Data[index];
 }
 
 template <typename T>
@@ -407,25 +409,25 @@ const T& List<T>::operator[](const size_t index) const
     if (index >= m_Size)
         throw std::invalid_argument("List subscript out of range");
 
-    return *Access(index);
+    return m_Data[index];
 }
 
 template <typename T>
 void List<T>::Malloc(const size_t size)
 {
-    m_Data = static_cast<T*>(std::malloc(size * m_TypeSize));
+    m_Data = static_cast<T*>(std::malloc(size * sizeof(T)));
 }
 
 template <typename T>
 void List<T>::Calloc(const size_t size)
 {
-    m_Data = static_cast<T*>(std::calloc(size, m_TypeSize));
+    m_Data = static_cast<T*>(std::calloc(size, sizeof(T)));
 }
 
 template <typename T>
 void List<T>::Realloc(const size_t size)
 {
-    m_Data = static_cast<T*>(std::realloc(m_Data, size * m_TypeSize));
+    m_Data = static_cast<T*>(std::realloc(m_Data, size * sizeof(T)));
 }
 
 template <typename T>
@@ -448,18 +450,6 @@ void List<T>::CheckShrink(const size_t newSize)
 
         Realloc(m_Capacity);
     }
-}
-
-template <typename T>
-T* List<T>::Access(const size_t index)
-{
-    return reinterpret_cast<T*>(reinterpret_cast<uint8_t*>(m_Data) + index * m_TypeSize);
-}
-
-template <typename T>
-const T* List<T>::Access(const size_t index) const
-{
-    return reinterpret_cast<const T*>(reinterpret_cast<const uint8_t*>(m_Data) + index * m_TypeSize);
 }
 
 END_XNOR_CORE

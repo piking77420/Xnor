@@ -2,6 +2,7 @@
 
 #include <coroutine>
 #include <exception>
+#include <unordered_map>
 
 #include "core.hpp"
 #include "utils/concepts.hpp"

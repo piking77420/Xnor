@@ -32,7 +32,7 @@ bool_t Timeline<Args...>::Update(Args&&... args)
     if (m_LastEvent->first <= m_Time)
     {
         m_LastEvent->second.Invoke(std::forward<Args>(args)...);
-    
+
         ++m_LastEvent;
     }
 

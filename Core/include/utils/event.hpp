@@ -3,9 +3,9 @@
 #include "core.hpp"
 
 #include <functional>
-#include <vector>
 
-#include "utils/utils.hpp"
+#include "list.hpp"
+#include "reflection/reflection.hpp"
 
 /// @file event.hpp
 /// @brief Defines the Event class.
@@ -20,6 +20,8 @@ BEGIN_XNOR_CORE
 template <typename... Args>
 class Event
 {
+    REFLECTABLE_IMPL(Event)
+    
 public:
     /// @brief Signature of the event function
     using FunctionT = void(Args...);
@@ -43,9 +45,13 @@ public:
     Event& operator-=(const StdFunctionT& func);
 
 private:
-    std::vector<StdFunctionT> m_Functions;
+    List<StdFunctionT> m_Functions;
 };
 
 END_XNOR_CORE
+
+REFL_AUTO(template((typename... Args), (XnorCore::Event<Args...>)),
+    field(m_Functions)
+)
 
 #include "utils/event.inl"

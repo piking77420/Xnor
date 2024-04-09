@@ -2,9 +2,6 @@
 #include "reflection/xnor_factory.hpp"
 #include "utils/logger.hpp"
 
-#include "utils/meta_programming.hpp"
-#include "utils/timeline.hpp"
-
 // https://www.reddit.com/r/opengl/comments/unc3fy/how_to_programatically_set_the_gpu_to_my_opengl/?onetap_auto=true&one_tap=true 
 extern "C"
 {

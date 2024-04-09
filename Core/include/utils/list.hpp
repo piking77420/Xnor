@@ -48,7 +48,7 @@ public:
     /// 
     /// @param size List size
     /// @param values Provided values
-    explicit List(size_t size, const T values[]);
+    explicit List(size_t size, const T* values);
 #endif
 
     /// @brief Creates a list with the specified values
@@ -58,6 +58,8 @@ public:
 
     /// @brief Destroys the list
     ~List();
+
+    DEFAULT_COPY_MOVE_OPERATIONS(List)
 
     /// @brief Reserves a specified amount of elements in the list
     /// 
@@ -176,6 +178,13 @@ public:
     /// @param lambda Function lambda
     void Iterate(const std::function<void(T*, size_t)>& lambda);
 
+    /// @brief Allows iteration over the list with a lambda
+    /// 
+    /// <p>The lambda returns void, and has a pointer to the current element and its index as parameters</p>
+    /// 
+    /// @param lambda Function lambda
+    void Iterate(const std::function<void(const T*, size_t)>& lambda) const;
+
     /// @brief Checks if an element exists that fulfills the requirements provided in a lambda
     /// 
     /// <p>The lambda returns bool_t, and has a pointer to the current element and its index as parameters</p>
@@ -221,12 +230,6 @@ public:
     [[nodiscard]]
     size_t GetCapacity() const;
 
-    /// @brief Gets the type size of T
-    /// 
-    /// @return Type size
-    [[nodiscard]]
-    size_t GetTypeSize() const;
-
 #ifndef SWIG
     /// @brief Gets an element of the list at a specified index
     /// 
@@ -251,7 +254,6 @@ private:
     T* m_Data;
     size_t m_Size;
     size_t m_Capacity;
-    size_t m_TypeSize;
 
     /// @brief Performs a malloc on the data
     /// @param size Size
@@ -272,18 +274,6 @@ private:
     /// @brief Checks if the list should shrink
     /// @param newSize New size
     void CheckShrink(size_t newSize);
-
-    /// @brief Gets the address to the nth element of the list
-    /// @param index Index
-    /// @return Pointer to nth element
-    [[nodiscard]]
-    T* Access(size_t index);
-
-    /// @brief Gets the address to the nth element of the list
-    /// @param index Index
-    /// @return Pointer to nth element
-    [[nodiscard]]
-    const T* Access(size_t index) const;
 };
 
 END_XNOR_CORE

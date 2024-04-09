@@ -55,7 +55,7 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
             m_Skeletons.Add(skeleton);
         }
 
-        model->CreateInRhi();
+        // model->CreateInRhi();
         models.Add(model);
     }
 

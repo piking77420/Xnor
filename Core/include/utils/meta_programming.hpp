@@ -107,6 +107,13 @@ namespace Meta
 
     /// @brief Checks whether the type is a @c std::vector
     template <typename>
+    constexpr bool_t IsStdFunction = false;
+
+    template <typename T, typename... Args>
+    constexpr bool_t IsStdFunction<std::function<T(Args...)>> = true;
+
+    /// @brief Checks whether the type is a @c std::vector
+    template <typename>
     constexpr bool_t IsStdMap = false;
 
     template <typename T, typename A>

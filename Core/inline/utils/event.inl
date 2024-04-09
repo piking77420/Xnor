@@ -1,36 +1,40 @@
 #pragma once
 
+#include "utils/utils.hpp"
+
 BEGIN_XNOR_CORE
 
 template <typename... Args>
 void Event<Args...>::Invoke(Args... args) const
 {
-    for (const std::function<FunctionT>& function : m_Functions)
-        function(std::forward<Args>(args)...);
+    m_Functions.Iterate([&args...](const StdFunctionT* f, const size_t) -> void
+    {
+        (*f)(std::forward<Args>(args)...);
+    });
 }
 
 template <typename... Args>
 void Event<Args...>::Clear()
 {
-    m_Functions.clear();
+    m_Functions.Clear();
 }
 
 template <typename... Args>
-Event<Args...>& Event<Args...>::operator+=(std::function<FunctionT> func)
+Event<Args...>& Event<Args...>::operator+=(StdFunctionT func)
 {
-    m_Functions.push_back(std::move(func));
+    m_Functions.Add(std::forward<StdFunctionT>(func));
 
     return *this;
 }
 
 template <typename ... Args>
-Event<Args...>& Event<Args...>::operator-=(const std::function<FunctionT>& func)
+Event<Args...>& Event<Args...>::operator-=(const StdFunctionT& func)
 {
-    for (typename decltype(m_Functions)::const_iterator it = m_Functions.begin(); it != m_Functions.end(); it++)
+    for (size_t i = 0; i < m_Functions.GetSize(); i++)
     {
-        if (Utils::FunctionAddress(*it) == Utils::FunctionAddress(func))
+        if (Utils::FunctionAddress(m_Functions[i]) == Utils::FunctionAddress(func))
         {
-            m_Functions.erase(it);
+            m_Functions.RemoveAt(i);
             break;
         }
     }
