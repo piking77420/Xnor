@@ -5,6 +5,7 @@
 #include "core.hpp"
 #include "material.hpp"
 #include "viewport.hpp"
+#include "render_systems/animation_render.hpp"
 #include "render_systems/light_manager.hpp"
 #include "render_systems/skybox_renderer.hpp"
 #include "resource/model.hpp"
@@ -65,6 +66,7 @@ private:
     LightManager m_LightManager;
     SkyboxRenderer m_SkyboxRenderer;
     PostProcessPass m_PostProcessPass;
+    AnimationRender m_AnimationRender;
     
     Pointer<Shader> m_GBufferShader;
     Pointer<Shader> m_GBufferShaderLit;

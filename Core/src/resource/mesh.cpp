@@ -8,8 +8,8 @@ using namespace XnorCore;
 
 Mesh::~Mesh()
 {
-    for (uint32_t i = 0; i < m_Models.GetSize(); i++)
-        delete m_Models[i];
+    for (uint32_t i = 0; i < models.GetSize(); i++)
+        delete models[i];
 
     for (uint32_t i = 0; i < m_Textures.GetSize(); i++)
         delete m_Textures[i];
@@ -20,7 +20,7 @@ Mesh::~Mesh()
     for (uint32_t i = 0; i < m_Animations.GetSize(); i++)
         delete m_Animations[i];
 
-    m_Models.Clear();
+    models.Clear();
     m_Textures.Clear();
     m_Skeletons.Clear();
     m_Animations.Clear();
@@ -55,7 +55,7 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
             m_Skeletons.Add(skeleton);
         }
 
-        m_Models.Add(model);
+        models.Add(model);
     }
 
     /*

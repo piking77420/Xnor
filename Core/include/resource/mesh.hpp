@@ -25,6 +25,8 @@ public:
         ".fbx"
     };
 
+    List<Model*> models;
+    
     // Use the base class' constructors
     using Resource::Resource;
 
@@ -39,7 +41,6 @@ public:
     XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;
 
 private:
-    List<Model*> m_Models;
     List<Texture*> m_Textures;
     List<Skeleton*> m_Skeletons;
     List<Animation*> m_Animations;

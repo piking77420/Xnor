@@ -61,26 +61,39 @@ uint32_t Rhi::CreateModel(const std::vector<Vertex>& vertices, const std::vector
 	offset = static_cast<GLintptr>(indices.size() * sizeof(uint32_t));
 	glNamedBufferData(modelInternal.ebo, offset, indices.data(), GL_STATIC_DRAW);
 
+	// Position
 	glEnableVertexArrayAttrib(modelInternal.vao, 0);
 	glVertexArrayAttribBinding(modelInternal.vao, 0, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 0, 3, GL_FLOAT, GL_FALSE, 0);
 
+	// Normal
 	glEnableVertexArrayAttrib(modelInternal.vao, 1);
 	glVertexArrayAttribBinding(modelInternal.vao, 1, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 1, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, normal));
 
+	// Texture Coord
 	glEnableVertexArrayAttrib(modelInternal.vao, 2);
 	glVertexArrayAttribBinding(modelInternal.vao, 2, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 2, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex, textureCoord));
 
+	// Tangent
 	glEnableVertexArrayAttrib(modelInternal.vao, 3);
 	glVertexArrayAttribBinding(modelInternal.vao, 3, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 3, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, tangent));
-
+	
+	// bitangent 
 	glEnableVertexArrayAttrib(modelInternal.vao, 4);
 	glVertexArrayAttribBinding(modelInternal.vao, 4, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 4, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, bitangent));
+
+	glEnableVertexArrayAttrib(modelInternal.vao, 5);
+	glVertexArrayAttribBinding(modelInternal.vao, 5, 0);
+	glVertexArrayAttribFormat(modelInternal.vao, 5, Vertex::MaxBoneWeight, GL_FLOAT, GL_FALSE, offsetof(Vertex, boneIndices));
 	
+	glEnableVertexArrayAttrib(modelInternal.vao, 6);
+	glVertexArrayAttribBinding(modelInternal.vao, 6, 0);
+	glVertexArrayAttribFormat(modelInternal.vao, 6, Vertex::MaxBoneWeight, GL_FLOAT, GL_FALSE, offsetof(Vertex,boneWeight));
+
 	glVertexArrayVertexBuffer(modelInternal.vao, 0, modelInternal.vbo, 0, sizeof(Vertex));
 	glVertexArrayElementBuffer(modelInternal.vao, modelInternal.ebo);
 	
@@ -1440,6 +1453,7 @@ void Rhi::Shutdown()
 	delete m_ModelUniform;
 	delete m_LightUniform;
 	delete m_MaterialUniform;
+	delete m_AnimationBuffer;
 }
 
 void Rhi::PrepareRendering()
@@ -1459,6 +1473,10 @@ void Rhi::PrepareRendering()
 	m_MaterialUniform = new UniformBuffer;
 	m_MaterialUniform->Allocate(sizeof(MaterialData),nullptr);
 	m_MaterialUniform->Bind(4);
+
+	m_AnimationBuffer = new UniformBuffer();
+	m_AnimationBuffer->Allocate(sizeof(SkinnedMeshGPUData),nullptr);
+	m_AnimationBuffer->Bind(5);
 
 	skyBoxParser.Init();
 }
@@ -1481,6 +1499,11 @@ void Rhi::UpdateModelUniform(const ModelUniformData& modelUniformData)
 void Rhi::UpdateCameraUniform(const CameraUniformData& cameraUniformData)
 {
 	m_CameraUniform->Update(sizeof(CameraUniformData), 0, cameraUniformData.view.Raw());
+}
+
+void Rhi::UpdateAninationUniform(const SkinnedMeshGPUData& skinnedMeshGPUData)
+{
+	m_LightUniform->Update(sizeof(SkinnedMeshGPUData), 0, skinnedMeshGPUData.BoneMatrices->Raw());
 }
 
 void Rhi::UpdateLight(const GpuLightData& lightData)
