@@ -208,7 +208,7 @@ public:
 
 	/// @brief Updates the animation UniformBuffer
 	/// @param skinnedMeshGPUData Data
-	XNOR_ENGINE static void UpdateAninationUniform(const SkinnedMeshGPUData& skinnedMeshGPUData);
+	XNOR_ENGINE static void UpdateAninationUniform(const SkinnedMeshGpuData& skinnedMeshGPUData);
 
 	/// @brief Updates the light UniformBuffer
 	/// @param lightData Data

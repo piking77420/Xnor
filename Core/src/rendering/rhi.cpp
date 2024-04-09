@@ -86,14 +86,17 @@ uint32_t Rhi::CreateModel(const std::vector<Vertex>& vertices, const std::vector
 	glVertexArrayAttribBinding(modelInternal.vao, 4, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 4, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, bitangent));
 
+	// ids
 	glEnableVertexArrayAttrib(modelInternal.vao, 5);
 	glVertexArrayAttribBinding(modelInternal.vao, 5, 0);
-	glVertexArrayAttribFormat(modelInternal.vao, 5, Vertex::MaxBoneWeight, GL_FLOAT, GL_FALSE, offsetof(Vertex, boneIndices));
-	
+	glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, boneIndices));
+
+	// weights
 	glEnableVertexArrayAttrib(modelInternal.vao, 6);
 	glVertexArrayAttribBinding(modelInternal.vao, 6, 0);
-	glVertexArrayAttribFormat(modelInternal.vao, 6, Vertex::MaxBoneWeight, GL_FLOAT, GL_FALSE, offsetof(Vertex,boneWeight));
+	glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, boneWeight));
 
+	
 	glVertexArrayVertexBuffer(modelInternal.vao, 0, modelInternal.vbo, 0, sizeof(Vertex));
 	glVertexArrayElementBuffer(modelInternal.vao, modelInternal.ebo);
 	
@@ -1475,7 +1478,7 @@ void Rhi::PrepareRendering()
 	m_MaterialUniform->Bind(4);
 
 	m_AnimationBuffer = new UniformBuffer();
-	m_AnimationBuffer->Allocate(sizeof(SkinnedMeshGPUData),nullptr);
+	m_AnimationBuffer->Allocate(sizeof(SkinnedMeshGpuData),nullptr);
 	m_AnimationBuffer->Bind(5);
 
 	skyBoxParser.Init();
@@ -1501,9 +1504,9 @@ void Rhi::UpdateCameraUniform(const CameraUniformData& cameraUniformData)
 	m_CameraUniform->Update(sizeof(CameraUniformData), 0, cameraUniformData.view.Raw());
 }
 
-void Rhi::UpdateAninationUniform(const SkinnedMeshGPUData& skinnedMeshGPUData)
+void Rhi::UpdateAninationUniform(const SkinnedMeshGpuData& skinnedMeshGPUData)
 {
-	m_LightUniform->Update(sizeof(SkinnedMeshGPUData), 0, skinnedMeshGPUData.BoneMatrices->Raw());
+	m_LightUniform->Update(sizeof(SkinnedMeshGpuData), 0, skinnedMeshGPUData.boneMatrices->Raw());
 }
 
 void Rhi::UpdateLight(const GpuLightData& lightData)

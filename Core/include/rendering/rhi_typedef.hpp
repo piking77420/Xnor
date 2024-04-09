@@ -561,9 +561,9 @@ struct ALIGNAS(16) GpuLightData
 
 
 /// @brief UniformBuffer data for animation
-struct ALIGNAS(16) SkinnedMeshGPUData
+struct ALIGNAS(16) SkinnedMeshGpuData
 {
-	Matrix BoneMatrices[MaxBones];
+	Matrix boneMatrices[MaxBones];
 };
 
 #pragma warning(pop) // 4324

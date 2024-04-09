@@ -8,12 +8,12 @@ using namespace XnorCore;
 
 AnimationRender::AnimationRender()
 {
-    m_SkinnedMeshGPUData = new SkinnedMeshGPUData;
+    m_SkinnedMeshGpuData = new SkinnedMeshGpuData;
 }
 
 AnimationRender::~AnimationRender()
 {
-    delete m_SkinnedMeshGPUData;
+    delete m_SkinnedMeshGpuData;
 }
 
 void AnimationRender::InitResources()
@@ -40,7 +40,6 @@ void AnimationRender::RenderAnimation() const
     m_SkinnedShader->Use();
     for (const SkinnedMeshRender* skinnedMeshRender : m_SkinnedRender)
     {
-       
         ModelUniformData modelData;
         modelData.model = skinnedMeshRender->GetTransform().worldMatrix;
 		
@@ -58,16 +57,17 @@ void AnimationRender::RenderAnimation() const
         Rhi::BindMaterial(skinnedMeshRender->material);
         skinnedMeshRender->material.BindMaterial();
         
-        if (skinnedMeshRender->mesh->models.IsValid())
-        for (uint32_t i = 0; i < skinnedMeshRender->mesh->models.GetSize(); i++)
+        if (skinnedMeshRender->mesh && skinnedMeshRender->mesh->models.IsValid())
         {
-            // TODO Compute Matricie and set it to the struct  m_SkinnedMeshGPUData;
-            //m_SkinnedMeshGPUData
-            // Set data in Shader
-            Rhi::UpdateAninationUniform(*m_SkinnedMeshGPUData);
-            Rhi::DrawModel(skinnedMeshRender->mesh->models[i]->GetId());
+            for (uint32_t i = 0; i < skinnedMeshRender->mesh->models.GetSize(); i++)
+            {
+                // TODO Compute matrices and set it to the struct m_SkinnedMeshGpuData;
+                //m_SkinnedMeshGPUData
+                // Set data in Shader
+                Rhi::UpdateAninationUniform(*m_SkinnedMeshGpuData);
+                Rhi::DrawModel(skinnedMeshRender->mesh->models[i]->GetId());
+            }
         }
-        
     }
     m_SkinnedShader->Unuse();
 }

@@ -1,5 +1,5 @@
 %module CoreC
 
-%ignore XnorCore::SkinnedMeshGPUData;
+%ignore XnorCore::SkinnedMeshGpuData;
 
 %include "rendering/rhi_typedef.hpp"

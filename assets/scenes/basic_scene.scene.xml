@@ -30,6 +30,7 @@
 			<m_Components>
 				<0 typeName="MeshRenderer">
 					<model>99097F3B-B578-4C0B-A2-64-E1-51-5A-41-BA-A</model>
+					<mesh>0-0-0-0-0-0-0-0-0-0-0</mesh>
 					<material>
 						<materialType>Opaque</materialType>
 						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
@@ -48,8 +49,8 @@
 					<drawModelAabb>false</drawModelAabb>
 				</0>
 				<1 typeName="BoxCollider">
-					<m_Center>0 ; 0 ; 0</m_Center>
-					<m_Size>1 ; 1 ; 1</m_Size>
+					<center>0 ; 0 ; 0</center>
+					<size>1 ; 1 ; 1</size>
 					<constraints/>
 					<m_IsStatic>true</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
@@ -70,6 +71,7 @@
 			<m_Components>
 				<0 typeName="MeshRenderer">
 					<model>29075914-46D0-4C58-B8-37-A9-2A-1F-15-91-D1</model>
+					<mesh>0-0-0-0-0-0-0-0-0-0-0</mesh>
 					<material>
 						<materialType>Opaque</materialType>
 						<albedoColor>1 ; 1 ; 1 ; 1</albedoColor>
@@ -102,6 +104,7 @@
 			<m_Components>
 				<0 typeName="MeshRenderer">
 					<model>0-0-0-0-0-0-0-0-0-0-0</model>
+					<mesh>0-0-0-0-0-0-0-0-0-0-0</mesh>
 					<material>
 						<materialType>Opaque</materialType>
 						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
@@ -150,6 +153,10 @@
 					<m_RotationSpeed>1</m_RotationSpeed>
 					<m_Radius>1</m_Radius>
 					<m_TestEntity>0-0-0-0-0-0-0-0-0-0-0</m_TestEntity>
+					<m_Timeline>
+						<m_Duration>0</m_Duration>
+						<m_Time>0</m_Time>
+					</m_Timeline>
 				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -176,6 +183,10 @@
 					<m_RotationSpeed>1</m_RotationSpeed>
 					<m_Radius>1</m_Radius>
 					<m_TestEntity>0-0-0-0-0-0-0-0-0-0-0</m_TestEntity>
+					<m_Timeline>
+						<m_Duration>0</m_Duration>
+						<m_Time>0</m_Time>
+					</m_Timeline>
 				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -191,8 +202,8 @@
 			</transform>
 			<m_Components>
 				<0 typeName="CapsuleCollider">
-					<m_Height>1</m_Height>
-					<m_Radius>1</m_Radius>
+					<height>1</height>
+					<radius>1</radius>
 					<constraints/>
 					<m_IsStatic>false</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
@@ -203,6 +214,7 @@
 				</1>
 				<2 typeName="MeshRenderer">
 					<model>29075914-46D0-4C58-B8-37-A9-2A-1F-15-91-D1</model>
+					<mesh>0-0-0-0-0-0-0-0-0-0-0</mesh>
 					<material>
 						<materialType>Opaque</materialType>
 						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
@@ -235,6 +247,7 @@
 			<m_Components>
 				<0 typeName="MeshRenderer">
 					<model>7D4A901C-2429-4A7D-B2-98-A0-92-E4-79-B4-BE</model>
+					<mesh>0-0-0-0-0-0-0-0-0-0-0</mesh>
 					<material>
 						<materialType>Opaque</materialType>
 						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
@@ -256,6 +269,38 @@
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
 		</7>
+		<8>
+			<name>Mesh</name>
+			<m_EntityId>D243FC4F-BF9-4BD6-A9-4-EB-37-42-4C-24-7D</m_EntityId>
+			<transform>
+				<m_Position>0 ; 3 ; 4</m_Position>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="SkinnedMeshRender">
+					<mesh>B55EABFF-7722-4172-8F-D0-8B-B6-59-25-A3-2A</mesh>
+					<material>
+						<materialType>Opaque</materialType>
+						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
+						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
+						<metallic>0</metallic>
+						<roughness>0</roughness>
+						<reflectance>0</reflectance>
+						<emissive>0</emissive>
+						<ambientOcclusion>0</ambientOcclusion>
+						<albedoTexture>7587E9E6-C775-4518-93-22-41-74-BC-95-DD-3D</albedoTexture>
+						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
+						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
+						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
+						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
+					</material>
+					<drawModelAabb>false</drawModelAabb>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</8>
 	</m_Entities>
 </Scene>
 

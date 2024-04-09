@@ -1,5 +1,7 @@
 #pragma once
 
+#include <map>
+
 #include "core.hpp"
 #include "event.hpp"
 
@@ -8,9 +10,12 @@ BEGIN_XNOR_CORE
 template <typename... Args>
 class Timeline
 {
+    REFLECTABLE_IMPL(Timeline)
+    
     using FunctionT = typename Event<Args...>::StdFunctionT;
     
 public:
+    Timeline() = default;
     explicit Timeline(float_t duration);
     ~Timeline() = default;
 
@@ -30,5 +35,11 @@ private:
 };
 
 END_XNOR_CORE
+
+REFL_AUTO(template((typename... Args), (XnorCore::Timeline<Args...>)),
+    field(m_Events),
+    field(m_Duration),
+    field(m_Time)
+)
 
 #include "utils/timeline.inl"

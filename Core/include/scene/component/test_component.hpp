@@ -9,10 +9,10 @@
 #include "scene/component.hpp"
 #include "utils/coroutine.hpp"
 #include "utils/guid.hpp"
+#include "utils/timeline.hpp"
 
 BEGIN_XNOR_CORE
-
-/// @private
+    /// @private
 class TestComponent : public Component
 {
     REFLECTABLE_IMPL(TestComponent)
@@ -50,6 +50,8 @@ private:
     static inline Transform m_StaticTransform {};
 
     Coroutine FlashRoutine();
+
+    Timeline<float_t> m_Timeline;
 };
 
 END_XNOR_CORE
@@ -62,5 +64,6 @@ REFL_AUTO(
     field(m_Radius),
     field(m_StaticTest),
     field(m_StaticTransform),
-    field(m_TestEntity)
+    field(m_TestEntity),
+    field(m_Timeline)
 );

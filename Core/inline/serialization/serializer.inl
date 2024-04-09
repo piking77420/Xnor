@@ -277,6 +277,10 @@ void Serializer::SerializeSimpleType(const Metadata<ReflectT, MemberT, Descripto
     {
         SerializeEnum<ReflectT, MemberT, DescriptorT>(metadata);
     }
+    else if constexpr (Meta::IsStdMap<MemberT>)
+    {
+        // TODO std::map
+    }
     else
     {
         BeginXmlElement(metadata.name, "");
@@ -427,6 +431,10 @@ void Serializer::DeserializeSimpleType(const Metadata<ReflectT, MemberT, Descrip
     else if constexpr (Meta::IsSame<MemberT, Guid>)
     {
         *metadata.obj = Guid::FromString(value);
+    }
+    else if constexpr (Meta::IsStdMap<MemberT>)
+    {
+        // TODO std::map
     }
     else
     {

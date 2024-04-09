@@ -5,6 +5,7 @@
 #include "ImGui/imgui_stdlib.h"
 #include "magic_enum/magic_enum_all.hpp"
 #include "reflection/filters.hpp"
+#include "utils/timeline.hpp"
 #include "utils/utils.hpp"
 #include "world/world.hpp"
 
@@ -100,6 +101,12 @@ void TypeRenderer::DisplayGridPlotting(const Metadata<ReflectT, MemberT, Descrip
     // Draw slider float version
     ImGui::SameLine();
     ImGui::SliderFloat2("##v2", metadata.obj->Raw(), plotting.minimum, plotting.maximum, "%.3f", ImGuiSliderFlags_AlwaysClamp);
+}
+
+template <typename ReflectT, typename MemberT, typename DescriptorT>
+void TypeRenderer::DisplayStdMap(const Metadata<ReflectT, MemberT, DescriptorT>&)
+{
+    
 }
 
 template <typename ReflectT, typename MemberT, typename DescriptorT>
@@ -578,6 +585,10 @@ void TypeRenderer::DisplaySimpleType(const Metadata<ReflectT, MemberT, Descripto
             DisplayEnumFlag<ReflectT, MemberT, DescriptorT>(metadata);
         else
             DisplayEnum<ReflectT, MemberT, DescriptorT>(metadata);
+    }
+    else if constexpr (Meta::IsStdMap<MemberT>)
+    {
+        DisplayStdMap<ReflectT, MemberT, DescriptorT>(metadata);
     }
     else
     {
