@@ -23,6 +23,8 @@ public:
 
     ~Bound() = default;
 
+    bool_t operator==(const Bound& other) const;
+
     Vector3 GetMin() const;
 
     Vector3 GetMax() const;
@@ -35,11 +37,12 @@ public:
     
     static Bound GetAabbFromCamera(const Bound& bound,const Camera& cam);
 
-    bool_t Intersect(const Bound& otherBound) const;
+    bool_t Countains(const Bound& otherBound) const;
 
     void Encapsulate(const Bound& encaspulateBound);
 
     void Encapsulate(Vector3 point);
+
 
 private:
 

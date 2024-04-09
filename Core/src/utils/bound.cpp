@@ -7,6 +7,11 @@ center(newCenter)
 {
 }
 
+bool_t Bound::operator==(const Bound& other) const
+{
+    return center == other.center && extents == other.extents; 
+}
+
 Vector3 Bound::GetMin() const
 {
     return center - extents;
@@ -43,7 +48,7 @@ Bound Bound::GetAabbFromCamera(const Bound& bound, const Camera& cam)
     return ReturnAabbFromMatrix(bound, view, cam.position);
 }
 
-bool Bound::Intersect(const Bound& otherBound) const
+bool_t Bound::Countains(const Bound& otherBound) const
 {
     const Vector3 max = GetMax();
     const Vector3 min = GetMin();
@@ -52,7 +57,8 @@ bool Bound::Intersect(const Bound& otherBound) const
     const Vector3 otherMin = otherBound.GetMin();
     
     return min.x <= otherMax.x && max.x >= otherMin.x && min.y <= otherMax.y && max.y >= otherMin.y && min.z <= otherMax.z && max.z >= otherMin.z;
-}
+} 
+
 
 void Bound::Encapsulate(const Bound& encapsulateBound)
 {

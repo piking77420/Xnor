@@ -18,7 +18,3 @@ void World::Update()
     scene->PostPhysics();
 }
 
-void World::Render()
-{
-    scene->renderOctoree.Draw();
-}

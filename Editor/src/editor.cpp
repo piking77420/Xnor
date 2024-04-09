@@ -268,13 +268,10 @@ void Editor::MenuBar()
 
 		if (ImGui::BeginMenu("CurrentScene"))
 		{
-			if (ImGui::Checkbox("DrawScene ABB",&XnorCore::World::scene->renderOctoree.draw))
+			if (ImGui::Checkbox("DrawScene ABB",&renderOctoree.draw))
 			{
 			}
 			
-			if (ImGui::Checkbox("DrawScene All Octotree",&XnorCore::World::scene->renderOctoree.drawWithChild))
-			{
-			}
 			ImGui::EndMenu();
 		}
 			
@@ -370,31 +367,35 @@ void Editor::WorldBehaviours()
 		{
 			XnorCore::World::Begin();
 			XnorCore::World::hasStarted = true;
-		}
-		
-		std::vector<XnorCore::OctreeNodeData<const XnorCore::MeshRenderer*>> datas;
-		
-		for (uint32_t i = 0; i <  XnorCore::World::scene->GetEntities().GetSize();i++)
-		{
-			XnorCore::Entity& ent = *XnorCore::World::scene->GetEntities()[i];
 
-			XnorCore::MeshRenderer* meshRenderer = nullptr;
-			if(ent.TryGetComponent(&meshRenderer))
+			std::vector<XnorCore::ObjectBounding<const XnorCore::MeshRenderer*>> datas;
+		
+			for (uint32_t i = 0; i <  XnorCore::World::scene->GetEntities().GetSize();i++)
 			{
-				if (!meshRenderer->model.IsValid())
-					continue;
-			
-				XnorCore::Bound bound = bound.GetAabbFromTransform(meshRenderer->model->GetAabb(), meshRenderer->entity->transform);
+				XnorCore::Entity& ent = *XnorCore::World::scene->GetEntities()[i];
 
-				XnorCore::OctreeNodeData<const XnorCore::MeshRenderer*> data;
-				data.bound = bound;
-				data.handle = meshRenderer;
-				datas.emplace_back(data);
+				XnorCore::MeshRenderer* meshRenderer = nullptr;
+				if(ent.TryGetComponent(&meshRenderer))
+				{
+					if (!meshRenderer->model.IsValid())
+						continue;
+			
+					XnorCore::Bound bound = bound.GetAabbFromTransform(meshRenderer->model->GetAabb(), meshRenderer->entity->transform);
+
+					XnorCore::ObjectBounding<const XnorCore::MeshRenderer*> data;
+					data.bound = bound;
+					data.handle = meshRenderer;
+					datas.emplace_back(data);
+				}
 			}
+			renderOctoree = XnorCore::Octree<const XnorCore::MeshRenderer*,1.f>(datas,XnorCore::Bound());
+			renderOctoree.Update();
 		}
-		XnorCore::World::scene->renderOctoree.Compute(datas,1.f);
 		
 		XnorCore::World::Update();
 	}
-	XnorCore::World::Render();
+	
+	if (renderOctoree.draw)
+		renderOctoree.Draw();
+	
 }
