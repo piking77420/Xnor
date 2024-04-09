@@ -101,6 +101,7 @@
     <ClInclude Include="externals\include\AL\efx-presets.h" />
     <ClInclude Include="externals\include\AL\efx.h" />
     <ClInclude Include="include\audio\audio.hpp" />
+    <ClInclude Include="include\audio\audio_context.hpp" />
     <ClInclude Include="include\audio\audio_device.hpp" />
     <ClInclude Include="include\reflection\filters.hpp" />
     <ClInclude Include="include\rendering\buffer\uniform_buffer.hpp" />
@@ -701,6 +702,7 @@
     <Content Include="include\rendering\rhi_typedef.hpp" />
     <Content Include="include\utils\meta_programming.hpp" />
     <ClInclude Include="inline\reflection\dotnet_reflection.inl" />
+    <Content Include="include\utils\windows.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="externals\include\jolt\Jolt.natvis" />

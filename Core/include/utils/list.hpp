@@ -48,8 +48,15 @@ public:
     /// 
     /// @param size List size
     /// @param values Provided values
-    explicit List(size_t size, const T values[]);
+    explicit List(size_t size, const T* values);
 #endif
+    
+    /// @brief Creates a list with the specified array
+    ///
+    /// @tparam Size The @p array size
+    /// @param array Array
+    template <size_t Size>
+    explicit List(const std::array<T, Size>& array);
 
     /// @brief Creates a list with the specified values
     /// 
@@ -245,7 +252,7 @@ private:
 #endif
     T* m_Data;
     size_t m_Size;
-    size_t m_Capacity;
+    size_t m_Capacity = 1;
     size_t m_TypeSize;
 
     /// @brief Performs a malloc on the data

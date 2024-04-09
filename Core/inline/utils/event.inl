@@ -1,5 +1,7 @@
 #pragma once
 
+#include "utils/utils.hpp"
+
 BEGIN_XNOR_CORE
 
 template <typename... Args>

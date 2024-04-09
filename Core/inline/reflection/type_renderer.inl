@@ -89,7 +89,7 @@ void TypeRenderer::DisplayGridPlotting(const Metadata<ReflectT, MemberT, Descrip
     const Vector2 clamped = Vector2(
         Utils::RemapValue(metadata.obj->x, plottingRange, uniformRange),
         Utils::RemapValue(metadata.obj->y, plottingRange, uniformRange)
-    );;
+    );
 
     // Compute cursor position
     const Vector2 position = p0 + clamped * size;

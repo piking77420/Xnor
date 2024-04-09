@@ -5,8 +5,6 @@
 #include <functional>
 #include <vector>
 
-#include "utils/utils.hpp"
-
 /// @file event.hpp
 /// @brief Defines the Event class.
 

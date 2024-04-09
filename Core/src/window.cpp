@@ -1,6 +1,7 @@
 #include "window.hpp"
 
 #include "utils/logger.hpp"
+#include "utils/windows.hpp"
 
 using namespace XnorCore;
 
@@ -88,6 +89,16 @@ void Window::SetCursorHidden(const bool_t value)
 void Window::SetCursorPosition(const Vector2 newPosition)
 {
 	glfwSetCursorPos(m_Window, newPosition.x, newPosition.y);
+}
+
+void Window::MessageBox(const std::string& title, const std::string& text, const ENUM_VALUE(MessageBoxOptions) flags)
+{
+	int32_t finalFlags = 0;
+
+	if (flags & MessageBoxOptions::YesNo)
+		finalFlags = MB_YESNO;
+	
+	MessageBoxA(nullptr, text.c_str(), title.c_str(), finalFlags);
 }
 
 void Window::GlfwResizeFramebuffer(GLFWwindow*, const int32_t width, const int32_t height)

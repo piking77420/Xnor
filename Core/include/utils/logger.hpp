@@ -5,7 +5,7 @@
 #include <thread>
 
 #include "core.hpp"
-#include "utils/formatter.hpp"
+#include "utils/concepts.hpp"
 #include "utils/ts_queue.hpp"
 
 /// @file logger.hpp

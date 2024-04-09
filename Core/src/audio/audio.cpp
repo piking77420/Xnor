@@ -1,15 +1,77 @@
 #include "audio/audio.hpp"
 
+#include <set>
+
 #include <AL/al.h>
 #include <AL/alc.h>
+
+#include "utils/logger.hpp"
 
 using namespace XnorCore;
 
 bool_t Audio::Initialize()
 {
+    Logger::LogInfo("Initializing audio");
+    
+    InitializeDevices();
+    
     return true;
 }
 
 void Audio::Shutdown()
 {
+    Logger::LogInfo("Shutting down audio");
+
+    for (auto&& device : m_AvailableDevices)
+        delete device;
+}
+
+bool_t Audio::CheckError()
+{
+    const ALCenum error = alGetError();
+
+    if (error != AL_NO_ERROR)
+    {
+        Logger::LogError("[OpenAL] {}", std::string_view(alGetString(error)));
+        return true;
+    }
+
+    return false;
+}
+
+void Audio::InitializeDevices()
+{
+    // Use std::set to make sure we don't create duplicate devices
+    std::set<const char_t*> deviceNameList;
+
+    // Get all available devices if the extension is present (this should always be the case)
+    if (alcIsExtensionPresent(nullptr, "ALC_ENUMERATION_EXT"))
+    {
+        const char_t* deviceNames = alcGetString(nullptr, ALC_DEVICE_SPECIFIER);
+        IterateAlStringList(deviceNames, [&](const char_t* str) { deviceNameList.emplace(str); });
+    }
+
+    // Just in case the enumeration extension isn't present, add the default device
+    deviceNameList.emplace(alcGetString(nullptr, ALC_DEFAULT_DEVICE_SPECIFIER));
+
+    // Create the devices and add them to the list
+    const size_t size = deviceNameList.size();
+    m_AvailableDevices.resize(size);
+    auto&& it = deviceNameList.begin();
+    for (auto& device : m_AvailableDevices)
+    {
+        device = new AudioDevice(*it);
+        it++;
+    }
+
+    m_CurrentDevice = m_AvailableDevices.back();
+}
+
+void Audio::IterateAlStringList(const char_t* list, const std::function<void(const char_t*)>& lambda)
+{
+    for (int32_t i = 0; list[i] != '\0' || list[i + 1] != '\0'; i++)
+    {
+        if (i == 0 || list[i - 1] == '\0')
+            lambda(list + i);
+    }
 }

@@ -1,3 +1,4 @@
+// ReSharper disable CppClangTidyCppcoreguidelinesNoMalloc
 #pragma once
 
 #include <stdexcept>
@@ -8,8 +9,6 @@ template <typename T>
 List<T>::List()
     : m_Size(0), m_TypeSize(sizeof(T))
 {
-    m_Capacity = 1;
-
     Calloc(m_Capacity);
 }
 
@@ -38,7 +37,7 @@ List<T>::List(const size_t size, const T& defaultValue)
 }
 
 template <typename T>
-List<T>::List(const size_t size, const T values[])
+List<T>::List(const size_t size, const T* const values)
     : m_Size(size), m_TypeSize(sizeof(T))
 {
     m_Capacity = std::bit_ceil(m_Size);
@@ -47,6 +46,19 @@ List<T>::List(const size_t size, const T values[])
 
     for (size_t i = 0; i < m_Size; i++)
         m_Data[i] = values[i];
+}
+
+template <typename T>
+template <size_t Size>
+List<T>::List(const std::array<T, Size>& array)
+    : m_Size(Size), m_TypeSize(sizeof(T))
+{
+    m_Capacity = std::bit_ceil(Size);
+    
+    Malloc(m_Capacity);
+
+    for (size_t i = 0; i < Size; i++)
+        m_Data[i] = array[i];
 }
 
 template <typename T>
