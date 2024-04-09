@@ -49,9 +49,10 @@ public:
     void Draw();
 
     Bound& GetBound();
+
    
 private:
-    uint32_t m_ActiveOctans = 0;
+    int32_t m_ActiveOctans = 0;
     std::array<OctreeNode*,8> m_Child;
     OctreeNode* m_Parent = nullptr;
     
@@ -74,6 +75,8 @@ OctreeNode<T>::OctreeNode(ObjectBounding<T> objectBounding)
 {
         
 }
+
+
 template <class T>
 void OctreeNode<T>::CreateBoundChild(Octans octans, Bound* outBound)
 {
@@ -123,13 +126,25 @@ void OctreeNode<T>::CreateBoundChild(Octans octans, Bound* outBound)
 template <class T>
 void OctreeNode<T>::Draw()
 {
-    DrawGizmo::Rectangle(m_ObjectBounding.bound.center, m_ObjectBounding.bound.extents,m_ObjectBounding.handle == nullptr ? Colorf::Green() : Colorf::Red());
+    Colorf color = Colorf::Green();
+    for (size_t i = 0; i < m_Child.size(); i++)
+    {
+        if (m_ActiveOctans & (1 << i))
+        {
+            if (m_Child[i]->m_ObjectBounding.handle)
+            {
+                color = Colorf::Blue();
+                break;
+            }
+        }
+    }
+    DrawGizmo::Rectangle(m_ObjectBounding.bound.center, m_ObjectBounding.bound.extents, m_ObjectBounding.handle == nullptr ? color : Colorf::Red());
 
     for (size_t i = 0; i < m_Child.size(); i++)
     {
         if (m_ActiveOctans & (1 << i))
         {
-            m_Child[i]->Draw();
+             m_Child[i]->Draw();
         }
     }
 }
@@ -144,30 +159,28 @@ template <class T>
 void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
 {
     // END CONDITION Smallest value the render
-   /* if (objectBounding.bound.Countains(m_ObjectBounding.bound))
+    
+    if (m_ObjectBounding.bound.GetSize().x < 1.f)
     {
-        m_ObjectBounding = objectBounding; 
-    }*/
-    if (objectBounding.bound.GetSize().x < 1.f ||objectBounding.bound.GetSize().y < 1.f || objectBounding.bound.GetSize().z < 1.f)
-    {
-        m_ObjectBounding = objectBounding; 
+        m_ObjectBounding = objectBounding;
+        return;
     }
 
     for (size_t i = 0 ; i < 8; i++)
     {
-        uint32_t current = (m_ActiveOctans | (1 << i));
+        uint32_t current = (0 | (1 << i));
         Bound bound;
         CreateBoundChild(static_cast<Octans>(current),&bound);
         
         if (bound.Countains(objectBounding.bound))
         {
             m_ActiveOctans = (m_ActiveOctans | (1 << i));
-            
+            ObjectBounding<T> childrenData;
+            childrenData.bound = bound;
             // Steal the handle
-            m_Child[i] = new OctreeNode(objectBounding);
-            objectBounding.handle = nullptr;
+            m_Child[i] = new OctreeNode(childrenData);
             m_Child[i]->m_Parent = this;
-            
+            m_Child[i]->AddObject(objectBounding);
         }
     }
     

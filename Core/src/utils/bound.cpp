@@ -56,8 +56,11 @@ bool_t Bound::Countains(const Bound& otherBound) const
     const Vector3 otherMax = otherBound.GetMax();
     const Vector3 otherMin = otherBound.GetMin();
 
-    return min.x <= otherMax.x && max.x >= otherMin.x && min.y <= otherMax.y && max.y >= otherMin.y && min.z <= otherMax.z && max.z >= otherMin.z;
-} 
+    const bool_t xOverlap = min.x <= otherMax.x && max.x >= otherMin.x;
+    const bool_t yOverlap = min.y <= otherMax.y && max.y >= otherMin.y;
+    const bool_t zOverlap = min.z <= otherMax.z && max.z >= otherMin.z;
+
+    return xOverlap && yOverlap && zOverlap;} 
 
 
 void Bound::Encapsulate(const Bound& encapsulateBound)

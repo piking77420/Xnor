@@ -388,13 +388,17 @@ void Editor::WorldBehaviours()
 					datas.emplace_back(data);
 				}
 			}
-			renderOctoree = XnorCore::Octree<XnorCore::MeshRenderer>(datas);
+			renderOctoree.~Octree();
+			renderOctoree = XnorCore::Octree<XnorCore::MeshRenderer>();
+			renderOctoree.Compute(datas);
+			
+			
 		}
 		
 		XnorCore::World::Update();
 	}
-	
 	if (renderOctoree.draw)
 		renderOctoree.Draw();
+	
 	
 }

@@ -55,7 +55,7 @@
 			<name>Entity</name>
 			<m_EntityId>C74CD1E1-1F57-4F9C-BB-FE-C9-F-6B-51-20-83</m_EntityId>
 			<transform>
-				<m_Position>-4 ; 4 ; -4</m_Position>
+				<m_Position>-4 ; 11 ; -4</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
@@ -87,7 +87,7 @@
 			<name>Cube</name>
 			<m_EntityId>DE4AB759-9A09-42A9-99-75-A0-A1-C5-8F-5F-E1</m_EntityId>
 			<transform>
-				<m_Position>2 ; 2 ; 7</m_Position>
+				<m_Position>2 ; 7 ; 7</m_Position>
 				<m_EulerRotation>0.62880605 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 0.99999976 ; 0.99999976</m_Scale>
 			</transform>
@@ -119,9 +119,9 @@
 			<name>vikingroom</name>
 			<m_EntityId>929A1963-D643-4C73-91-F6-3B-DC-88-D2-E5-CD</m_EntityId>
 			<transform>
-				<m_Position>-4 ; 3 ; 4</m_Position>
-				<m_EulerRotation>-1.5358874 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1.0000032 ; 1.0000032</m_Scale>
+				<m_Position>-4 ; 10 ; 4</m_Position>
+				<m_EulerRotation>-1.5358872 ; -0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1.0000049 ; 1.0000049</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">

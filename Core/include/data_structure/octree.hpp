@@ -15,15 +15,21 @@ template<class T>
 class Octree
 {
 public:
+    
 
     bool_t draw;
     
-    Octree(std::vector<ObjectBounding<T>>& data)
+    void Compute(std::vector<ObjectBounding<T>>& data)
     {
         for (ObjectBounding<T>& element : data)
         {
             motherNode.GetBound().Encapsulate(element.bound);
         }
+        const Vector3 previousSize = motherNode.GetBound().GetSize();
+        const float_t maxSize = std::max( { previousSize.x , previousSize.y ,previousSize.z });
+        const Vector3 size = Vector3(maxSize) * 0.5f;
+        motherNode.GetBound().SetMinMax(motherNode.GetBound().center - size,motherNode.GetBound().center + size);
+
 
         for (ObjectBounding<T>& element : data)
         {
@@ -33,8 +39,12 @@ public:
     
     Octree() = default;
 
-    void Draw();
+    ~Octree() = default;
+
+    DEFAULT_COPY_MOVE_OPERATIONS(Octree)
     
+    void Draw();
+
 private:
     OctreeNode<T> motherNode;
 };
