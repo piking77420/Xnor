@@ -23,6 +23,7 @@ class Event
 public:
     /// @brief Signature of the event function
     using FunctionT = void(Args...);
+    using StdFunctionT = std::function<FunctionT>;
 
     /// @brief Invokes the currently registered events with the provided parameters
     /// @param args Parameters
@@ -34,15 +35,15 @@ public:
     /// @brief Adds a function to the event list
     /// @param func Function
     /// @return This
-    Event& operator+=(std::function<FunctionT> func);
+    Event& operator+=(StdFunctionT func);
 
     /// @brief Removes a function from the event list
     /// @param func Function
     /// @return This
-    Event& operator-=(const std::function<FunctionT>& func);
+    Event& operator-=(const StdFunctionT& func);
 
 private:
-    std::vector<std::function<FunctionT>> m_Functions;
+    std::vector<StdFunctionT> m_Functions;
 };
 
 END_XNOR_CORE

@@ -838,6 +838,7 @@
     <ClInclude Include="inline\utils\logger.inl" />
     <ClInclude Include="inline\utils\pointer.inl" />
     <ClInclude Include="inline\utils\reference_counter.inl" />
+    <ClInclude Include="inline\utils\timeline.inl" />
     <ClInclude Include="inline\utils\ts_queue.inl" />
     <ClInclude Include="inline\utils\utils.inl" />
     <ClCompile Include="src\physics\components\box_collider.cpp" />
@@ -849,6 +850,7 @@
     <Content Include="include\rendering\rhi_typedef.hpp" />
     <Content Include="include\utils\meta_programming.hpp" />
     <ClInclude Include="inline\reflection\dotnet_reflection.inl" />
+    <Content Include="include\utils\timeline.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="externals\include\jolt\Jolt.natvis" />
