@@ -52,7 +52,7 @@ uint32_t Rhi::CreateModel(const std::vector<Vertex>& vertices, const std::vector
 	modelInternal.nbrOfIndicies = static_cast<uint32_t>(indices.size()); 
 	
 	glCreateVertexArrays(1, &modelInternal.vao);
-
+	
 	glCreateBuffers(1, &modelInternal.vbo);
 	glCreateBuffers(1, &modelInternal.ebo);
 
@@ -85,17 +85,14 @@ uint32_t Rhi::CreateModel(const std::vector<Vertex>& vertices, const std::vector
 	glEnableVertexArrayAttrib(modelInternal.vao, 4);
 	glVertexArrayAttribBinding(modelInternal.vao, 4, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 4, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, bitangent));
-
+	
 	// ids
 	glEnableVertexArrayAttrib(modelInternal.vao, 5);
-	glVertexArrayAttribBinding(modelInternal.vao, 5, 0);
-	glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, boneIndices));
+	glVertexAttribIPointer(5, Vertex::MaxBoneWeight, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, boneIndices));
 
 	// weights
 	glEnableVertexArrayAttrib(modelInternal.vao, 6);
-	glVertexArrayAttribBinding(modelInternal.vao, 6, 0);
-	glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, boneWeight));
-
+	glVertexAttribPointer(6, Vertex::MaxBoneWeight, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, boneWeight));
 	
 	glVertexArrayVertexBuffer(modelInternal.vao, 0, modelInternal.vbo, 0, sizeof(Vertex));
 	glVertexArrayElementBuffer(modelInternal.vao, modelInternal.ebo);

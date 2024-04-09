@@ -26,8 +26,8 @@ struct Vertex
 	Vector3 tangent;
 	Vector3 bitangent;
 
-	Vector4 boneIndices[MaxBoneWeight];
-	Vector4 boneWeight[MaxBoneWeight];
+	uint32_t boneIndices[MaxBoneWeight];
+	float_t boneWeight[MaxBoneWeight];
 };
 
 END_XNOR_CORE
