@@ -23,9 +23,6 @@ template <typename T>
 class List
 {    
 public:
-    static_assert(std::is_default_constructible_v<T>, "T must have a default constructor");
-    static_assert(std::is_copy_constructible_v<T>, "T must have a copy constructor");
-
     /// @brief The type of the List<T>, refers to T
     using Type = T;
 
@@ -61,11 +58,6 @@ public:
 
     DEFAULT_COPY_MOVE_OPERATIONS(List)
 
-    /// @brief Reserves a specified amount of elements in the list
-    /// 
-    /// @param capacity New capacity
-    void Reserve(size_t capacity);
-
     /// @brief Resizes a specified amount of elements in the list
     /// 
     /// @param size New size
@@ -99,9 +91,6 @@ public:
     /// 
     /// @param values Values
     void AddRange(const std::initializer_list<T>& values);
-
-    /// @brief Adds a zeroed out element to the list  
-    void AddZeroed();
 
     /// @brief Fills the list with a specified value
     /// 
@@ -142,11 +131,6 @@ public:
     /// @param index Index
     void Insert(T&& element, size_t index);
 #endif
-
-    /// @brief Inserts an zeroed element in the list at the given position
-    /// 
-    /// @param index Index
-    void InsertZeroed(size_t index);
 
     /// @brief Removes an element from the list (only removes the first occurence it finds)
     /// 
@@ -255,17 +239,8 @@ private:
     size_t m_Size;
     size_t m_Capacity;
 
-    /// @brief Performs a malloc on the data
-    /// @param size Size
-    void Malloc(size_t size);
-    
-    /// @brief Performs a calloc on the data
-    /// @param size Size
-    void Calloc(size_t size);
-
-    /// @brief Performs a realloc on the data
-    /// @param size Size
-    void Realloc(size_t size);
+    template <typename... Args>
+    void EmplaceInternal(size_t where, Args&&... args);
 
     /// @brief Checks if the list should grow
     /// @param newSize New size

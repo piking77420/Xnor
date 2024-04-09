@@ -124,10 +124,4 @@ constexpr size_t Utils::FunctionAddress(std::function<Ret(Args...)> f)
     return reinterpret_cast<size_t>(*fnPointer);
 }
 
-template <typename T, typename... Args>
-void Utils::Construct(T* const ptr, Args&&... args)
-{
-    ::new(static_cast<void*>(ptr)) T(std::forward<Args>(args)...);
-}
-
 END_XNOR_CORE

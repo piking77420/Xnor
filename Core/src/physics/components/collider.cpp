@@ -61,36 +61,11 @@ void Collider::AddForce(const Vector3& force) const
 
 void Collider::AddDebugEvents()
 {
-    std::vector<std::function<void(Collider*, Collider*, const CollisionData&)>> v;
-    v.emplace_back(Test);
-    std::function<void(Collider*, Collider*, const CollisionData&)> lambda = [](const Collider* const self, const Collider* const other, const CollisionData& data) -> void
-    {
-        Logger::LogDebug("OnTriggerEnter between {} and {} ; Normal : {} ; Pen depth : {}", self->entity->name, other->entity->name, data.normal, data.penetrationDepth);
-    };
-    v.emplace_back(lambda);
-    v.clear();
-
-    List<std::function<void()>> l1(2);
-    l1.Add([]{});
-    l1.Add([]{});
-    l1.Clear();
-
-    List<std::function<void(Collider*, Collider*, const CollisionData&)>> l;
-    l.Add(Test);
-    l.Add(lambda);
-    using T = typename decltype(l)::Type;
-    l.RemoveAt(l.GetSize() - 1);
-    l.Clear();
-
     onTriggerEnter += [](const Collider* const self, const Collider* const other, const CollisionData& data) -> void
     {
         Logger::LogDebug("OnTriggerEnter between {} and {} ; Normal : {} ; Pen depth : {}", self->entity->name, other->entity->name, data.normal, data.penetrationDepth);
     };
 
-    onTriggerEnter += Test;
-
-    onTriggerEnter.Clear();
-    
     onTriggerStay += [](const Collider* const self, const Collider* const other, const CollisionData& data) -> void
     {
         Logger::LogDebug("OnTriggerStay between {} and {} ; Normal : {} ; Pen depth : {}", self->entity->name, other->entity->name, data.normal, data.penetrationDepth);

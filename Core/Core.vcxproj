@@ -798,6 +798,7 @@
     <ClInclude Include="include\scene\scene.hpp" />
     <ClInclude Include="include\screen.hpp" />
     <ClInclude Include="include\serialization\serializer.hpp" />
+    <ClInclude Include="include\utils\allocator.hpp" />
     <ClInclude Include="include\utils\color.hpp" />
     <ClInclude Include="include\utils\concepts.hpp" />
     <ClInclude Include="include\utils\coroutine.hpp" />
@@ -832,6 +833,7 @@
     <ClInclude Include="inline\scene\entity.inl" />
     <ClInclude Include="inline\scene\scene.inl" />
     <ClInclude Include="inline\serialization\serializer.inl" />
+    <ClInclude Include="inline\utils\allocator.inl" />
     <ClInclude Include="inline\utils\color.inl" />
     <ClInclude Include="inline\utils\event.inl" />
     <ClInclude Include="inline\utils\list.inl" />

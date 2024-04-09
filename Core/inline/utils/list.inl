@@ -1,8 +1,9 @@
+// ReSharper disable CppClangTidyCppcoreguidelinesRvalueReferenceParamNotMoved
 #pragma once
 
 #include <stdexcept>
 
-#include "utils/utils.hpp"
+#include "utils/allocator.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -12,7 +13,7 @@ List<T>::List()
 {
     m_Capacity = 1;
 
-    Calloc(m_Capacity);
+    m_Data = Allocator::Allocate<T>(m_Capacity);
 }
 
 template <typename T>
@@ -20,11 +21,11 @@ List<T>::List(const size_t size)
     : m_Size(size)
 {
     m_Capacity = std::bit_ceil(m_Size);
-    
-    Malloc(m_Capacity);
+
+    m_Data = Allocator::Allocate<T>(m_Capacity);
 
     for (size_t i = 0; i < m_Size; i++)
-        Utils::Construct<T>(&m_Data[i]);
+        Allocator::Construct<T>(&m_Data[i]);
 }
 
 template <typename T>
@@ -33,10 +34,10 @@ List<T>::List(const size_t size, const T& defaultValue)
 {
     m_Capacity = std::bit_ceil(m_Size);
 
-    Malloc(m_Capacity);
+    m_Data = Allocator::Allocate<T>(m_Capacity);
     
     for (size_t i = 0; i < m_Size; i++)
-        Utils::Construct<T>(&m_Data[i], defaultValue);
+        Allocator::Construct<T>(&m_Data[i], defaultValue);
 }
 
 template <typename T>
@@ -44,11 +45,11 @@ List<T>::List(const size_t size, const T* const values)
     : m_Size(size)
 {
     m_Capacity = std::bit_ceil(m_Size);
-    
-    Malloc(m_Capacity);
+
+    m_Data = Allocator::Allocate<T>(m_Capacity);
 
     for (size_t i = 0; i < m_Size; i++)
-        Utils::Construct<T>(&m_Data[i], values[i]);
+        Allocator::Construct<T>(&m_Data[i], values[i]);
 }
 
 template <typename T>
@@ -56,36 +57,28 @@ List<T>::List(const std::initializer_list<T>& values)
 {
     m_Size = values.size();
     m_Capacity = std::bit_ceil(m_Size);
-    
-    Malloc(m_Capacity);
+
+    m_Data = Allocator::Allocate<T>(m_Capacity);
     
     const T* const it = values.begin();
 
     for (size_t i = 0; i < m_Size; i++)
-        Utils::Construct<T>(&m_Data[i], it[i]);
+        Allocator::Construct<T>(&m_Data[i], it[i]);
 }
 
 template <typename T>
 List<T>::~List()
 {
-    Clear();
-    std::free(m_Data);
+    for (size_t i = 0; i < m_Size; i++)
+    {
+        m_Data[i].~T();
+    }
 
+    Allocator::Deallocate<T>(m_Data, m_Capacity);
     m_Data = nullptr;
     
     m_Size = 0;
     m_Capacity = 0;
-}
-
-template <typename T>
-void List<T>::Reserve(const size_t capacity)
-{
-    if (m_Capacity >= capacity)
-        return;
-    
-    m_Capacity = capacity;
-
-    Realloc(m_Capacity);
 }
 
 template <typename T>
@@ -97,7 +90,7 @@ void List<T>::Resize(const size_t size)
     m_Size = size;
 
     for (size_t i = oldSize; i < size; i++)
-        Utils::Construct<T>(&m_Data[i]);
+        Allocator::Construct<T>(&m_Data[i]);
 }
 
 template <typename T>
@@ -118,33 +111,25 @@ void List<T>::Clear()
 template <typename T>
 void List<T>::Add()
 {
-    CheckGrow(m_Size + 1);
-
-    Utils::Construct<T>(&m_Data[m_Size]);
-    m_Size++;
+    EmplaceInternal(m_Size);
 }
 
 template <typename T>
 void List<T>::Add(const T& element)
 {
-    CheckGrow(m_Size + 1);
-
-    Utils::Construct<T>(&m_Data[m_Size], element);
-    m_Size++;
+    EmplaceInternal(m_Size, element);
 }
 
 template <typename T>
 void List<T>::Add(T&& element)
 {
-    CheckGrow(m_Size + 1);
-
-    Utils::Construct<T>(&m_Data[m_Size], std::forward<T>(element));
-    m_Size++;
+    EmplaceInternal(m_Size, std::forward<T>(element));
 }
 
 template <typename T>
 void List<T>::AddRange(const T* const data, const size_t number)
 {
+    // FIXME
     CheckGrow(m_Size + number);
 
     std::memcpy(&m_Data[m_Size], data, number * sizeof(T));
@@ -155,6 +140,7 @@ void List<T>::AddRange(const T* const data, const size_t number)
 template <typename T>
 void List<T>::AddRange(const std::initializer_list<T>& values)
 {
+    // FIXME
     const size_t number = values.size();
 
     CheckGrow(m_Size + number);
@@ -165,48 +151,37 @@ void List<T>::AddRange(const std::initializer_list<T>& values)
 }
 
 template <typename T>
-void List<T>::AddZeroed()
-{
-    CheckGrow(m_Size + 1);
-
-    std::memset(&m_Data[m_Size], 0, sizeof(T));
-    m_Size++;
-}
-
-template <typename T>
 void List<T>::Fill(const T& value)
 {
     for (size_t i = 0; i < m_Size; i++)
-        Utils::Construct<T>(&m_Data[i], value);
+        Allocator::Construct<T>(&m_Data[i], value);
 }
 
 template <typename T>
 void List<T>::Fill(T&& value)
 {
     for (size_t i = 0; i < m_Size; i++)
-        Utils::Construct<T, T&&>(&m_Data[i], std::forward<T>(value));
+        Allocator::Construct<T, T&&>(&m_Data[i], std::forward<T>(value));
 }
 
 template <typename T>
 template <class... Args>
-void List<T>::Emplace(Args&&... args) // NOLINT(cppcoreguidelines-missing-std-forward)
+void List<T>::Emplace(Args&&... args)
 {
-    CheckGrow(m_Size + 1);
-
-    Utils::Construct<T>(&m_Data[m_Size], std::forward<Args>(args)...);
-    m_Size++;
+    EmplaceInternal(m_Size, std::forward<Args>(args)...);
 }
 
 template <typename T>
 void List<T>::Insert(size_t index)
 {
+    // FIXME
     if (index >= m_Size)
         throw std::invalid_argument("List insert index out of range");
 
     CheckGrow(m_Size + 1);
 
     std::memcpy(&m_Data[index + 1], &m_Data[index], (m_Size - index) * sizeof(T));
-    Utils::Construct<T>(&m_Data[m_Size]);
+    Allocator::Construct<T>(&m_Data[m_Size]);
     
     m_Size++;
 }
@@ -214,13 +189,14 @@ void List<T>::Insert(size_t index)
 template <typename T>
 void List<T>::Insert(const T& element, const size_t index)
 {
+    // FIXME
     if (index >= m_Size)
         throw std::invalid_argument("List insert index out of range");
 
     CheckGrow(m_Size + 1);
 
     std::memcpy(&m_Data[index + 1], &m_Data[index], (m_Size - index) * sizeof(T));
-    Utils::Construct<T>(&m_Data[index], element);
+    Allocator::Construct<T>(&m_Data[index], element);
     
     m_Size++;
 }
@@ -228,27 +204,14 @@ void List<T>::Insert(const T& element, const size_t index)
 template <typename T>
 void List<T>::Insert(T&& element, const size_t index)
 {
+    // FIXME
     if (index >= m_Size)
         throw std::invalid_argument("List insert index out of range");
 
     CheckGrow(m_Size + 1);
 
     std::memcpy(&m_Data[index + 1], &m_Data[index], (m_Size - index) * sizeof(T));
-    Utils::Construct<T>(&m_Data[index], std::forward<T>(element));
-    
-    m_Size++;
-}
-
-template <typename T>
-void List<T>::InsertZeroed(const size_t index)
-{
-    if (index >= m_Size)
-        throw std::invalid_argument("List insert index out of range");
-
-    CheckGrow(m_Size + 1);
-
-    std::memcpy(&m_Data[index + 1], &m_Data[index], (m_Size - index) * sizeof(T));
-    std::memset(&m_Data[index], 0, sizeof(T));
+    Allocator::Construct<T>(&m_Data[index], std::forward<T>(element));
     
     m_Size++;
 }
@@ -256,6 +219,7 @@ void List<T>::InsertZeroed(const size_t index)
 template <typename T>
 void List<T>::Remove(const T& element)
 {
+    // FIXME
     size_t i;
     for (i = 0; i < m_Size; i++)
     {
@@ -276,6 +240,7 @@ void List<T>::Remove(const T& element)
 template <typename T>
 void List<T>::RemoveAt(const size_t index)
 {
+    // FIXME
     if (index >= m_Size)
         throw std::invalid_argument("List remove at subscript out of range");
 
@@ -289,6 +254,7 @@ void List<T>::RemoveAt(const size_t index)
 template <typename T>
 void List<T>::RemoveRange(const size_t start, const size_t end)
 {
+    // FIXME
     if (start >= m_Size)
         throw std::invalid_argument("List remove range start subscript out of range");
     
@@ -413,43 +379,50 @@ const T& List<T>::operator[](const size_t index) const
 }
 
 template <typename T>
-void List<T>::Malloc(const size_t size)
+template <typename... Args>
+void List<T>::EmplaceInternal(const size_t where, Args&&... args)
 {
-    m_Data = static_cast<T*>(std::malloc(size * sizeof(T)));
-}
+    const size_t oldSize = m_Size;
+    const size_t newSize = oldSize + 1;
+    T* const oldPtr = m_Data;
 
-template <typename T>
-void List<T>::Calloc(const size_t size)
-{
-    m_Data = static_cast<T*>(std::calloc(size, sizeof(T)));
-}
+    if (newSize > m_Capacity)
+    {
+        m_Capacity <<= 1;
 
-template <typename T>
-void List<T>::Realloc(const size_t size)
-{
-    m_Data = static_cast<T*>(std::realloc(m_Data, size * sizeof(T)));
+        T* const newPtr = Allocator::Allocate<T>(m_Capacity);
+
+        for (size_t i = 0; i < oldSize; i++)
+            Allocator::Construct<T>(&newPtr[i], m_Data[i]);
+
+        m_Data = newPtr;
+
+        Allocator::Deallocate<T>(oldPtr, oldSize);
+    }
+
+    Allocator::Construct<T>(&m_Data[where], std::forward<Args>(args)...);
 }
 
 template <typename T>
 void List<T>::CheckGrow(const size_t newSize)
 {
-    if (newSize > m_Capacity)
+    /*if (newSize > m_Capacity)
     {
         m_Capacity = std::bit_ceil(newSize);
 
         Realloc(m_Capacity);
-    }
+    }*/
 }
 
 template <typename T>
 void List<T>::CheckShrink(const size_t newSize)
 {
-    if (newSize < m_Capacity)
+    /*if (newSize < m_Capacity)
     {
         m_Capacity = std::bit_ceil(newSize);
 
         Realloc(m_Capacity);
-    }
+    }*/
 }
 
 END_XNOR_CORE
