@@ -14,7 +14,7 @@ bool_t Audio::Initialize()
     Logger::LogInfo("Initializing audio");
     
     InitializeDevices();
-    
+
     return true;
 }
 
@@ -42,7 +42,7 @@ bool_t Audio::CheckError()
 void Audio::InitializeDevices()
 {
     // Use std::set to make sure we don't create duplicate devices
-    std::set<const char_t*> deviceNameList;
+    std::set<std::string> deviceNameList;
 
     // Get all available devices if the extension is present (this should always be the case)
     if (alcIsExtensionPresent(nullptr, "ALC_ENUMERATION_EXT"))
@@ -60,7 +60,7 @@ void Audio::InitializeDevices()
     auto&& it = deviceNameList.begin();
     for (auto& device : m_AvailableDevices)
     {
-        device = new AudioDevice(*it);
+        device = new AudioDevice(std::string(*it));
         it++;
     }
 

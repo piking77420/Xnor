@@ -107,9 +107,11 @@
     <ClInclude Include="include\rendering\buffer\uniform_buffer.hpp" />
     <ClInclude Include="include\rendering\buffer\vbo.hpp" />
     <ClInclude Include="include\rendering\frustum.hpp" />
+    <ClInclude Include="include\resource\audio_track.hpp" />
     <ClInclude Include="include\scene\component\test_component_physics.hpp" />
     <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\audio\audio.cpp" />
+    <ClCompile Include="src\audio\audio_context.cpp" />
     <ClCompile Include="src\audio\audio_device.cpp" />
     <ClCompile Include="src\csharp\dotnet_assembly.cpp" />
     <ClCompile Include="src\csharp\dotnet_runtime.cpp" />
@@ -150,6 +152,7 @@
     <ClCompile Include="src\rendering\render_systems\tone_mapping.cpp" />
     <ClCompile Include="src\rendering\rhi.cpp" />
     <ClCompile Include="src\rendering\viewport_data.cpp" />
+    <ClCompile Include="src\resource\audio_track.cpp" />
     <ClCompile Include="src\resource\compute_shader.cpp" />
     <ClCompile Include="src\resource\cubemap.cpp" />
     <ClCompile Include="src\resource\font.cpp" />
@@ -680,6 +683,7 @@
     <ClInclude Include="inline\reflection\xnor_factory.inl" />
     <ClInclude Include="inline\reflection\reflection.inl" />
     <ClInclude Include="inline\reflection\type_renderer.inl" />
+    <ClInclude Include="inline\resource\audio_track.inl" />
     <ClInclude Include="inline\resource\resource_manager.inl" />
     <ClInclude Include="inline\resource\texture.inl" />
     <ClInclude Include="inline\scene\entity.inl" />

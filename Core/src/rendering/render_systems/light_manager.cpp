@@ -126,7 +126,7 @@ void LightManager::UnBindShadowMap() const
 		if (!directionalLight->castShadow)
 			continue;
 
-		m_DirectionalShadowMaps->UnBindTexture(ShadowTextureBinding::Directional);
+		m_DirectionalShadowMaps->UnbindTexture(ShadowTextureBinding::Directional);
 	}
 
 	m_SpotLightShadowMapTextureArray->BindTexture(ShadowTextureBinding::SpotLight);

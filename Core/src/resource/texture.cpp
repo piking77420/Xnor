@@ -6,20 +6,23 @@
 
 using namespace XnorCore;
 
-Texture::Texture(const TextureCreateInfo& createInfo) :
-    m_Size(createInfo.size)
-    , m_TextureFiltering(createInfo.filtering), m_TextureWrapping(createInfo.wrapping)
+Texture::Texture(const TextureCreateInfo& createInfo)
+    : m_Size(createInfo.size)
+    , m_TextureFiltering(createInfo.filtering)
+    , m_TextureWrapping(createInfo.wrapping)
     , m_TextureInternalFormat(createInfo.internalFormat)
 {
     if (!createInfo.datas.empty())
-    m_Data = static_cast<uint8_t*>(createInfo.datas.at(0));
+        m_Data = static_cast<uint8_t*>(createInfo.datas.at(0));
     
     m_Id = Rhi::CreateTexture(createInfo);
     m_LoadedInRhi = true;
 }
 
-Texture::Texture(const TextureInternalFormat::TextureInternalFormat textureInternalFormat, const Vector2i size , const TextureFormat::TextureFormat textureFormat)
-    : m_Size(size), m_TextureInternalFormat(textureInternalFormat) , m_TextureFormat(textureFormat)
+Texture::Texture(const ENUM_VALUE(TextureInternalFormat) textureInternalFormat, const Vector2i size, const ENUM_VALUE(TextureFormat) textureFormat)
+    : m_Size(size)
+    , m_TextureInternalFormat(textureInternalFormat)
+    , m_TextureFormat(textureFormat)
 {
     const TextureCreateInfo createInfo
     {
@@ -31,7 +34,6 @@ Texture::Texture(const TextureInternalFormat::TextureInternalFormat textureInter
         .internalFormat = m_TextureInternalFormat
     };
     
-
     m_Id = Rhi::CreateTexture(createInfo);
     m_LoadedInRhi = true;
 }
@@ -127,7 +129,7 @@ void Texture::BindTexture(const uint32_t index) const
     Rhi::BindTexture(index, m_Id);
 }
 
-void Texture::UnBindTexture(const uint32_t index) const
+void Texture::UnbindTexture(const uint32_t index) const
 {
     Rhi::BindTexture(index, 0);
 }
