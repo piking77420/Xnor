@@ -7,7 +7,7 @@ BEGIN_XNOR_CORE
 template <typename... Args>
 void Event<Args...>::Invoke(Args... args) const
 {
-    m_Functions.Iterate([&args...](const StdFunctionT* f, const size_t) -> void
+    m_Functions.Iterate([&args...](const StdFunctionT* f) -> void
     {
         (*f)(std::forward<Args>(args)...);
     });

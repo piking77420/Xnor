@@ -57,7 +57,7 @@ void AnimationRender::RenderAnimation() const
         Rhi::BindMaterial(skinnedMeshRender->material);
         skinnedMeshRender->material.BindMaterial();
         
-        if (skinnedMeshRender->mesh && skinnedMeshRender->mesh->models.IsValid())
+        if (skinnedMeshRender->mesh)
         {
             for (uint32_t i = 0; i < skinnedMeshRender->mesh->models.GetSize(); i++)
             {
