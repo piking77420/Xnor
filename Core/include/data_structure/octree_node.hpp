@@ -26,9 +26,11 @@ public:
     DEFAULT_COPY_MOVE_OPERATIONS(OctreeNode)
 
     void AddObject(ObjectBounding<T>& objectBounding);
-   
-
+    
     OctreeNode(ObjectBounding<T> objectBounding);
+
+    OctreeNode(const Bound& boundingBox,const std::list<T*>& list);
+
     
     OctreeNode() = default; 
 
@@ -56,7 +58,8 @@ private:
     std::array<OctreeNode*,8> m_Child;
     OctreeNode* m_Parent = nullptr;
     
-    ObjectBounding<T> m_ObjectBounding;
+    Bound m_BoudingBox;
+    std::list<T*> m_Handels;
     
     void DivideAndAdd(ObjectBounding<T>& objectBounding);
     
@@ -73,9 +76,15 @@ void OctreeNode<T>::AddObject(ObjectBounding<T>& objectBounding)
 
 template <class T>
 OctreeNode<T>::OctreeNode(ObjectBounding<T> objectBounding)
-: m_ObjectBounding(objectBounding)
+: m_BoudingBox(objectBounding.bound)
 {
-        
+    m_Handels.push_back(objectBounding.handle);
+}
+
+template <class T>
+OctreeNode<T>::OctreeNode(const Bound& boundingBox, const std::list<T*>& list) : m_BoudingBox(boundingBox)
+{
+    m_Handels.insert(m_Handels.end(),list.begin(),list.end());
 }
 
 
@@ -83,10 +92,10 @@ template <class T>
 void OctreeNode<T>::CreateBoundChild(Octans octans, Bound* outBound)
 {
     
-    const float_t quarter = m_ObjectBounding.bound.GetSize().x * 0.25f;
-    const Vector3 childLength = m_ObjectBounding.bound.GetSize() * 0.5f;
+    const float_t quarter = m_BoudingBox.GetSize().x * 0.25f;
+    const Vector3 childLength = m_BoudingBox.GetSize() * 0.5f;
     const Vector3 childSize = Vector3(childLength);
-    const Vector3 center = m_ObjectBounding.bound.center;
+    const Vector3 center = m_BoudingBox.center;
     
     switch (octans)
     {
@@ -133,14 +142,14 @@ void OctreeNode<T>::Draw()
     {
         if (m_ActiveOctans & (1 << i))
         {
-            if (m_Child[i]->m_ObjectBounding.handle)
+            if (!m_Child[i]->m_Handels.empty())
             {
                 color = Colorf::Blue();
                 break;
             }
         }
     }
-    DrawGizmo::Rectangle(m_ObjectBounding.bound.center, m_ObjectBounding.bound.extents, m_ObjectBounding.handle == nullptr ? color : Colorf::Red());
+    DrawGizmo::Rectangle(m_BoudingBox.center, m_BoudingBox.extents, m_Handels.empty() ? color : Colorf::Red());
 
     for (size_t i = 0; i < m_Child.size(); i++)
     {
@@ -154,16 +163,16 @@ void OctreeNode<T>::Draw()
 template <class T>
 Bound& OctreeNode<T>::GetBound()
 {
-    return m_ObjectBounding.bound;
+    return m_BoudingBox;
 }
 
 template <class T>
 void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
 {
     // If current bound is less than min size return 
-    if (m_ObjectBounding.bound.GetSize().x < objectBounding.bound.GetSize().x)
+    if (m_BoudingBox.GetSize().x < objectBounding.bound.GetSize().x)
     {
-        m_ObjectBounding.handle = objectBounding.handle;
+        m_Handels.push_back(objectBounding.handle);
         return;
     }
 
@@ -177,18 +186,19 @@ void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
         // if the current octan countain the object bound
         if (octanbound.Countain(objectBounding.bound))
         {
-                
+            ObjectBounding<T> child;
+            child.bound = objectBounding.bound;
+            child.handle =  objectBounding.handle;
+            
             m_ActiveOctans = (m_ActiveOctans | (1 << i));
             
-            ObjectBounding<T> childrenData;
-            childrenData.bound = octanbound;
-            childrenData.handle = objectBounding.handle;
-            
-            m_Child[i] = new OctreeNode(childrenData);
+            m_Child[i] = new OctreeNode(child);
             m_Child[i]->m_Parent = this;
             // try adding the current object bound in the valid octan
             m_Child[i]->AddObject(objectBounding);
-            m_ObjectBounding.handle = nullptr;
+            
+            // remove the handle
+            std::erase(m_Handels,objectBounding.handle);
             break;
             
         }
@@ -200,7 +210,7 @@ void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
 template <class T>
 Vector3 OctreeNode<T>::GetSizeOfOctans() const 
 {
-    const Vector3 childLength = m_ObjectBounding.bound.GetSize() * 0.5f;
+    const Vector3 childLength = m_BoudingBox.GetSize() * 0.5f;
     const Vector3 childSize = Vector3(childLength);
     return childSize;
 }

@@ -18,6 +18,10 @@ class MeshRenderer : public Component
 public:
     XNOR_ENGINE MeshRenderer() = default;
 
+    XNOR_ENGINE ~MeshRenderer() override = default ;
+    
+    DEFAULT_COPY_MOVE_OPERATIONS(MeshRenderer);
+
     /// @brief @ref Model of the mesh
     Pointer<Model> model;
 
