@@ -53,6 +53,7 @@ void Renderer::EndFrame(const Scene& scene)
 void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene) const
 {
 	BindCamera(*viewport.camera,viewport.viewPortSize);
+	m_Frustum.UpdateFromCamera(*viewport.camera,viewport.GetAspect());
 	const ViewportData& viewportData = viewport.viewportData;
 	DeferedRenderring(*viewport.camera, m_MeshRenderers, scene.skybox, viewportData, viewport.viewPortSize);
 	ForwardPass(m_MeshRenderers, scene.skybox, viewport, viewport.viewPortSize, viewport.isEditor);
@@ -65,10 +66,11 @@ void Renderer::RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& r
 	const Pointer<Shader>& shaderToUse, const Scene& scene,	const bool_t drawEditorUi
 ) const
 {
+	Vector2i viewportSize = renderPassBeginInfo.renderAreaOffset + renderPassBeginInfo.renderAreaExtent;
 	std::vector<const MeshRenderer*> meshrenderers;
 	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderers);
-	BindCamera(camera, renderPassBeginInfo.renderAreaOffset + renderPassBeginInfo.renderAreaExtent);
-	
+	BindCamera(camera,viewportSize );
+	m_Frustum.UpdateFromCamera(camera,static_cast<float_t>(viewportSize.x) / static_cast<float_t>(viewportSize.y));
 	renderPass.BeginRenderPass(renderPassBeginInfo);
 	DrawAllMeshRendersNonShaded(meshrenderers, scene);
 	
@@ -228,11 +230,17 @@ void Renderer::DrawMeshRendersByType(const Camera& camera,const std::vector<cons
 	{
 		if (meshRenderer->material.materialType != materialType)
 			continue;
+
+		Bound aabb;
+		meshRenderer->GetAABB(&aabb);
+		if (!m_Frustum.IsOnFrustum(aabb))
+		{
+			continue;
+		}
 		
 		const Transform& transform = meshRenderer->GetEntity()->transform;
 		ModelUniformData modelData;
 		modelData.model = transform.worldMatrix;
-		modelData.meshRenderIndex = reinterpret_cast<uint64_t>(meshRenderer->GetEntity());
 		
 		try
 		{
@@ -320,6 +328,14 @@ void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*
 
 	for (const MeshRenderer* const meshRenderer : meshRenderers)
 	{
+
+		Bound aabb;
+		meshRenderer->GetAABB(&aabb);
+		if (!m_Frustum.IsOnFrustum(aabb))
+		{
+			continue;
+		}
+		
 		const Transform& transform = meshRenderer->GetEntity()->transform;
 		ModelUniformData modelData;
 		modelData.model = transform.worldMatrix;

@@ -843,7 +843,6 @@
     <Content Include="externals\include\assimp\.editorconfig" />
     <Content Include="externals\include\assimp\config.h.in" />
     <Content Include="externals\include\jolt\Physics\Collision\Shape\TaperedCapsuleShape.gliffy" />
-    <Content Include="include\rendering\rhi_typedef.hpp" />
     <Content Include="include\utils\meta_programming.hpp" />
     <ClInclude Include="inline\reflection\dotnet_reflection.inl" />
   </ItemGroup>

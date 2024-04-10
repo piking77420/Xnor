@@ -53,11 +53,3 @@ Vector2i Camera::ProjectOn(const Vector3& vertex, const Vector2i screenSize, con
 
 	return Vector2i(static_cast<int32_t>(vec.x), static_cast<int32_t>(vec.y));
 }
-
-bool_t Camera::IsOnFrustum(const Bound& bound,const Vector2i screeSize) const
-{
-	Frustum frustum;
-	frustum.UpdateFromCamera(*this,static_cast<float_t>(screeSize.x) / static_cast<float_t>(screeSize.y));
-	
-	return bound.IsOnPlane(frustum.plane[0]) && bound.IsOnPlane(frustum.plane[1]) && bound.IsOnPlane(frustum.plane[2]) && bound.IsOnPlane(frustum.plane[3]) && bound.IsOnPlane(frustum.plane[4]);
-}

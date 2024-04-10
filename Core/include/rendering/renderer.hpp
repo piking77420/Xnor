@@ -3,6 +3,7 @@
 #include <Maths/vector4.hpp>
 
 #include "core.hpp"
+#include "frustum.hpp"
 #include "material.hpp"
 #include "viewport.hpp"
 #include "render_systems/light_manager.hpp"
@@ -68,6 +69,7 @@ private:
     SkyboxRenderer m_SkyboxRenderer;
     PostProcessPass m_PostProcessPass;
     mutable Octree<const MeshRenderer> m_RenderOctree;
+    mutable Frustum m_Frustum;
     
     Pointer<Shader> m_GBufferShader;
     Pointer<Shader> m_GBufferShaderLit;

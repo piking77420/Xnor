@@ -40,14 +40,6 @@ Bound Bound::GetAabbFromTransform(const Bound& bound,const Transform& transform)
     return ReturnAabbFromMatrix(bound, transform.worldMatrix, globalPos);
 }
 
-Bound Bound::GetAabbFromCamera(const Bound& bound, const Camera& cam)
-{
-    Matrix view;
-    cam.GetView(&view);
-    
-    return ReturnAabbFromMatrix(bound, view, cam.position);
-}
-
 bool_t Bound::Intersect(const Bound& otherBound) const
 {
     const Vector3 max = GetMax();
@@ -78,7 +70,7 @@ bool_t Bound::Countain(const Bound& otherBound) const
     return xInside && yInside && zInside;
 }
 
-bool_t Bound::IsOnPlane(const Plane& plane) const
+bool_t Bound:: IsOnPlane(const Plane& plane) const
 {
     // Compute the projection interval radius of b onto L(t) = b.c + t * p.n
     const float_t r = extents.x * std::abs(plane.normal.x) +

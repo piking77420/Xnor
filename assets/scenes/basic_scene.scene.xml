@@ -55,7 +55,7 @@
 			<name>Entity</name>
 			<m_EntityId>C74CD1E1-1F57-4F9C-BB-FE-C9-F-6B-51-20-83</m_EntityId>
 			<transform>
-				<m_Position>-4 ; 11 ; -4</m_Position>
+				<m_Position>-4 ; 3 ; -4</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
@@ -147,6 +147,24 @@
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
 		</4>
+		<5>
+			<name>PointLight</name>
+			<m_EntityId>2314CF44-68D4-439C-B2-F7-1A-EA-C1-5A-10-44</m_EntityId>
+			<transform>
+				<m_Position>-3 ; 4 ; -1</m_Position>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="PointLight">
+					<color>1 ; 0 ; 0 ; 1</color>
+					<intensity>1000</intensity>
+					<castShadow>true</castShadow>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</5>
 	</m_Entities>
 </Scene>
 
