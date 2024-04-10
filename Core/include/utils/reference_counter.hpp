@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include <mutex>
-#include <utility>
 #include <vector>
 
 #include "core.hpp"

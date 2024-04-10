@@ -717,8 +717,6 @@ Core/externals/libs/lib/Debug/CoreLibs.idb
 Core/externals/libs/lib/Release/CoreLibs.lib
 Core/externals/libs/lib/Release/CoreLibs.pdb
 
-.idea/
-
 !assets/**
 !assets_internal/**
 

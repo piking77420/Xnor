@@ -2,18 +2,10 @@
 
 #include <type_traits>
 
-#include "utils/list.hpp"
-
 BEGIN_XNOR_CORE
 
 template <Concepts::PointerT PtrT, Concepts::IntegralT IntT>
-constexpr PtrT Utils::IntToPointer(const IntT number)
-{
-    static_assert(std::is_pointer_v<PtrT>, "PtrT must be a raw pointer type, ex: PtrT=int*");
-    static_assert(std::is_integral_v<IntT>, "IntT must be an integral type, ex: IntT=int");
-    
-    return reinterpret_cast<PtrT>(reinterpret_cast<uint8_t*>(1) + static_cast<const size_t>(number) - 1);
-}
+constexpr PtrT Utils::IntToPointer(const IntT number) { return reinterpret_cast<PtrT>(reinterpret_cast<uint8_t*>(1) + static_cast<const size_t>(number) - 1); }
 
 constexpr ImVec4 Utils::ToImCol(const ColorRgb color)
 {
@@ -21,10 +13,7 @@ constexpr ImVec4 Utils::ToImCol(const ColorRgb color)
     return ImVec4(c.r, c.g, c.b, c.a);
 }
 
-constexpr ImVec4 Utils::ToImCol(const Colorf& color)
-{
-    return ImVec4(color.r, color.g, color.b, color.a);
-}
+constexpr ImVec4 Utils::ToImCol(const Colorf& color) { return ImVec4(color.r, color.g, color.b, color.a); }
 
 constexpr ImVec4 Utils::ToImCol(const ColorHsva color)
 {
@@ -32,10 +21,7 @@ constexpr ImVec4 Utils::ToImCol(const ColorHsva color)
     return ImVec4(c.r, c.g, c.b, c.a);
 }
 
-constexpr Colorf Utils::FromImCol(const ImVec4& color)
-{
-    return Colorf(color.x, color.y, color.z, color.w);
-}
+constexpr Colorf Utils::FromImCol(const ImVec4& color) { return Colorf(color.x, color.y, color.z, color.w); }
 
 constexpr std::string Utils::RemoveNamespaces(const std::string& str)
 {

@@ -71,7 +71,7 @@ public:
     /// @param textureInternalFormat Format inside the FrameBuffer
     /// @param size Size
     /// @param textureFormat The memory format
-    XNOR_ENGINE Texture(TextureInternalFormat::TextureInternalFormat textureInternalFormat, Vector2i size , const TextureFormat::TextureFormat textureFormat = TextureFormat::TextureFormat::Rgb );
+    XNOR_ENGINE Texture(ENUM_VALUE(TextureInternalFormat) textureInternalFormat, Vector2i size, ENUM_VALUE(TextureFormat) textureFormat = TextureFormat::Rgb);
     
     XNOR_ENGINE ~Texture() override;
 
@@ -118,7 +118,7 @@ public:
     
     /// @brief Unbinds the texture
     /// @param index Index
-    XNOR_ENGINE void UnBindTexture(uint32_t index) const;
+    XNOR_ENGINE void UnbindTexture(uint32_t index) const;
 
     /// @brief Gets the texture id
     /// @return Texture id

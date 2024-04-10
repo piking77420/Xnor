@@ -63,13 +63,7 @@ inline bool_t XnorFactory::IsChildOf(const size_t typeHash, const size_t parentH
     if (parentIt != parents.end())
         return true;
 
-    for (size_t i = 0; i < parents.size(); i++)
-    {
-        if (IsChildOf(parents[i], parentHash))
-            return true;
-    }
-
-    return false;
+    return std::ranges::any_of(parents, [&] (const size_t parent) { return IsChildOf(parent, parentHash); });
 }
 
 template <typename T>

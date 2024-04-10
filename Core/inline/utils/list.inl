@@ -28,6 +28,15 @@ List<T>::List(const size_t size, const T* const values)
 }
 
 template <typename T>
+template <size_t Size>
+List<T>::List(const std::array<T, Size>& array)
+    : m_Vector(Size)
+{
+    for (size_t i = 0; i < Size; i++)
+        m_Vector[i] = array[i];
+}
+
+template <typename T>
 List<T>::List(const std::initializer_list<T>& values)
     : m_Vector(values)
 {

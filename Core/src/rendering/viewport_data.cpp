@@ -40,12 +40,12 @@ void ViewportData::BindDescriptor() const
 
 void ViewportData::UnbindDescriptor() const
 {
-    positionAttachment->UnBindTexture(DefferedDescriptor::Position);
-    normalAttachement->UnBindTexture(DefferedDescriptor::Normal);
-    albedoAttachment->UnBindTexture(DefferedDescriptor::Albedo);
-    metallicRoughnessReflectance->UnBindTexture(DefferedDescriptor::MetallicRoughessReflectance);
-    ambiantOcclusion->UnBindTexture(DefferedDescriptor::AmbiantOcclusion);
-    emissive->UnBindTexture(DefferedDescriptor::Emissivive);
+    positionAttachment->UnbindTexture(DefferedDescriptor::Position);
+    normalAttachement->UnbindTexture(DefferedDescriptor::Normal);
+    albedoAttachment->UnbindTexture(DefferedDescriptor::Albedo);
+    metallicRoughnessReflectance->UnbindTexture(DefferedDescriptor::MetallicRoughessReflectance);
+    ambiantOcclusion->UnbindTexture(DefferedDescriptor::AmbiantOcclusion);
+    emissive->UnbindTexture(DefferedDescriptor::Emissivive);
 }
 
 void ViewportData::InitForward(const Vector2i size)

@@ -89,7 +89,7 @@ void Skybox::UnbindDesriptorSet() const
 {
     m_IrradianceMap->UnBindTexture(DefferedDescriptor::SkyboxIrradiance);
     m_PrefilterMap->UnBindTexture(DefferedDescriptor::SkyboxPrefilterMap);
-    m_PrecomputeBrdfTexture->UnBindTexture(DefferedDescriptor::SkyboxPrecomputeBrdf);
+    m_PrecomputeBrdfTexture->UnbindTexture(DefferedDescriptor::SkyboxPrecomputeBrdf);
 }
 
 const Cubemap* Skybox::GetSkyboxAlbedoColor() const

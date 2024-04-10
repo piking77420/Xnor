@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <format>
 #include <sstream>
@@ -51,7 +52,7 @@ private:
     uint32_t m_Data1 = 0;
     uint16_t m_Data2 = 0;
     uint16_t m_Data3 = 0;
-    uint8_t  m_Data4[Data4Size] = {};
+    std::array<uint8_t, Data4Size> m_Data4 = {};
 
     friend struct std::hash<Guid>;
 };
