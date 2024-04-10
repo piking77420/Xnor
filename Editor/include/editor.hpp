@@ -31,9 +31,6 @@ public:
 	// TODO temp
 	static constexpr const char_t* SerializedScenePath = "assets/scenes/basic_scene.scene.xml";
 
-	// tmpr
-	/// @brief Octotree base on rendering AABB
-	XnorCore::Octree<XnorCore::MeshRenderer> renderOctoree;
 private:
 	std::vector<UiWindow*> m_UiWindows;
 

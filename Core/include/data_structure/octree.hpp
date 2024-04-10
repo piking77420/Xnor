@@ -15,27 +15,9 @@ template<class T>
 class Octree
 {
 public:
-    
-
     bool_t draw;
     
-    void Compute(std::vector<ObjectBounding<T>>& data)
-    {
-        for (ObjectBounding<T>& element : data)
-        {
-            motherNode.GetBound().Encapsulate(element.bound);
-        }
-        const Vector3 previousSize = motherNode.GetBound().GetSize();
-        const float_t maxSize = std::max( { previousSize.x , previousSize.y ,previousSize.z });
-        const Vector3 size = Vector3(maxSize) * 0.5f;
-        motherNode.GetBound().SetMinMax(motherNode.GetBound().center - size,motherNode.GetBound().center + size);
-
-
-        for (ObjectBounding<T>& element : data)
-        {
-            motherNode.AddObject(element);
-        }
-    }
+    void Update(std::vector<ObjectBounding<T>>& data);
     
     Octree() = default;
 
@@ -46,14 +28,44 @@ public:
     void Draw();
 
 private:
+
+    void Clear();
+    
     OctreeNode<T> motherNode;
 };
+
+template <class T>
+void Octree<T>::Update(std::vector<ObjectBounding<T>>& data)
+{
+    Clear();
+    
+    for (ObjectBounding<T>& element : data)
+    {
+        motherNode.GetBound().Encapsulate(element.bound);
+    }
+    const Vector3 previousSize = motherNode.GetBound().GetSize();
+    const float_t maxSize = std::max( { previousSize.x , previousSize.y ,previousSize.z });
+    const Vector3 size = Vector3(maxSize) * 0.5f;
+    motherNode.GetBound().SetMinMax(motherNode.GetBound().center - size,motherNode.GetBound().center + size);
+
+
+    for (ObjectBounding<T>& element : data)
+    {
+        motherNode.AddObject(element);
+    }
+}
 
 template <class T>
 void Octree<T>::Draw()
 {
     if (draw)
         motherNode.Draw();
+}
+
+template <class T>
+void Octree<T>::Clear()
+{
+    motherNode.Clear();
 }
 
 

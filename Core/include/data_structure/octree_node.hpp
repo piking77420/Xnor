@@ -52,6 +52,7 @@ public:
 
     Bound& GetBound();
 
+    void Clear();
    
 private:
     int32_t m_ActiveOctans = 0;
@@ -60,8 +61,7 @@ private:
     
     Bound m_BoudingBox;
     std::vector<T*> m_Handels;
-
-
+    
     void DivideAndAdd(ObjectBounding<T>& objectBounding);
     
     Vector3 GetSizeOfOctans() const;
@@ -80,7 +80,6 @@ OctreeNode<T>::OctreeNode(ObjectBounding<T> objectBounding)
 {
     m_BoudingBox = objectBounding.bound;
     m_Handels.push_back(objectBounding.handle);
-   // objectBounding.push_back(objectBounding.handle);
 }
 
 
@@ -163,16 +162,32 @@ Bound& OctreeNode<T>::GetBound()
 }
 
 template <class T>
+void OctreeNode<T>::Clear()
+{
+    for (size_t i = 0; i < m_Child.size(); i++)
+    {
+        if (m_ActiveOctans & (1 << i))
+        {
+            m_Child[i]->Clear();
+        }
+    }
+
+    m_ActiveOctans = 0;
+    m_Handels.clear();
+}
+
+template <class T>
 void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
 {
     // If current bound is less than min size return 
     if (m_BoudingBox.GetSize().x < objectBounding.bound.GetSize().x)
     {
+        m_BoudingBox = objectBounding.bound;
         m_Handels.push_back(objectBounding.handle);
         return;
     }
-
-    // for each possible octan
+    bool_t hasDivide = false;
+    
     for (size_t i = 0 ; i < 8; i++)
     {
         uint32_t current = (0 | (1 << i));
@@ -182,18 +197,26 @@ void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
         // if the current octan countain the object bound
         if (octanbound.Countain(objectBounding.bound))
         {
-                
             m_ActiveOctans = (m_ActiveOctans | (1 << i));
             
             ObjectBounding<T> childrenData;
             childrenData.bound = octanbound;
             childrenData.handle = objectBounding.handle;
             
-            m_Child[i] = new OctreeNode(childrenData);
+            if (m_Child[i] == nullptr)
+            {
+                m_Child[i] = new OctreeNode(childrenData);
+            }
+            else
+            {
+                m_Child[i]->m_BoudingBox = childrenData.bound;
+                m_Child[i]->m_Handels.push_back(childrenData.handle);
+            }
+            
             m_Child[i]->m_Parent = this;
             // try adding the current object bound in the valid octan
+            hasDivide = true;
             m_Child[i]->AddObject(objectBounding);
-            
             std::erase(m_Handels,objectBounding.handle);
             break;
             
@@ -201,6 +224,8 @@ void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
       
     }
 
+    if (!hasDivide)
+        m_Handels.push_back(objectBounding.handle);
     
 }
 

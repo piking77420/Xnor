@@ -78,7 +78,16 @@ bool_t Bound::Countain(const Bound& otherBound) const
     return xInside && yInside && zInside;
 }
 
+bool_t Bound::IsOnPlane(const Plane& plane) const
+{
+    // Compute the projection interval radius of b onto L(t) = b.c + t * p.n
+    const float_t r = extents.x * std::abs(plane.normal.x) +
+            extents.y * std::abs(plane.normal.y) + extents.z * std::abs(plane.normal.z);
 
+    return -r <= plane.GetSignedDistanceToPlane(center);
+}
+
+    
 void Bound::Encapsulate(const Bound& encapsulateBound)
 {
     Encapsulate(encapsulateBound.center - encapsulateBound.extents);

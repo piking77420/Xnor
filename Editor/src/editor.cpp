@@ -265,16 +265,7 @@ void Editor::MenuBar()
 			
 			ImGui::EndMenu();
 		}
-
-		if (ImGui::BeginMenu("CurrentScene"))
-		{
-			if (ImGui::Checkbox("DrawScene ABB",&renderOctoree.draw))
-			{
-			}
-			
-			ImGui::EndMenu();
-		}
-			
+		renderer.RenderMenu();
 		ImGui::EndMainMenuBar();
 	}
 }
@@ -367,38 +358,8 @@ void Editor::WorldBehaviours()
 		{
 			XnorCore::World::Begin();
 			XnorCore::World::hasStarted = true;
-
-			std::vector<XnorCore::ObjectBounding<XnorCore::MeshRenderer>> datas;
-		
-			for (uint32_t i = 0; i <  XnorCore::World::scene->GetEntities().GetSize();i++)
-			{
-				XnorCore::Entity& ent = *XnorCore::World::scene->GetEntities()[i];
-
-				XnorCore::MeshRenderer* meshRenderer = nullptr;
-				if(ent.TryGetComponent(&meshRenderer))
-				{
-					if (!meshRenderer->model.IsValid())
-						continue;
-			
-					XnorCore::Bound bound = bound.GetAabbFromTransform(meshRenderer->model->GetAabb(), meshRenderer->entity->transform);
-
-					XnorCore::ObjectBounding<XnorCore::MeshRenderer> data;
-					data.bound = bound;
-					data.handle = meshRenderer;
-					datas.emplace_back(data);
-				}
-			}
-			renderOctoree.~Octree();
-			renderOctoree = XnorCore::Octree<XnorCore::MeshRenderer>();
-			renderOctoree.Compute(datas);
-			
-			
 		}
 		
 		XnorCore::World::Update();
 	}
-	if (renderOctoree.draw)
-		renderOctoree.Draw();
-	
-	
 }

@@ -4,6 +4,7 @@
 #include "transform.hpp"
 #include "Maths/vector3.hpp"
 #include "rendering/camera.hpp"
+#include "rendering/frustum.hpp"
 
 BEGIN_XNOR_CORE
     /// @brief Struct used to store the minimum and maximum bounds of the AABB of a Model.
@@ -41,8 +42,9 @@ public:
 
     bool_t Countain(const Bound& otherBound) const;
 
+    bool_t IsOnPlane(const Plane& frustum) const;
 
-    void Encapsulate(const Bound& encaspulateBound);
+    void Encapsulate(const Bound& plane);
 
     void Encapsulate(Vector3 point);
 

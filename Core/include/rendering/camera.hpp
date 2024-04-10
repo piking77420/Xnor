@@ -4,6 +4,7 @@
 
 #include "Maths/vector2i.hpp"
 #include "Maths/vector3.hpp"
+#include "utils/bound.hpp"
 
 /// @file camera.hpp
 /// @brief Defines the XnorCore::Camera class.
@@ -64,6 +65,9 @@ public:
 	/// @return Result position
 	[[nodiscard]]
 	Vector2i ProjectOn(const Vector3& vertex, Vector2i screenSize, const Matrix& model) const;
+
+
+	bool_t IsOnFrustum(const Bound& bound, const Vector2i screeSize) const;
 };
 
 END_XNOR_CORE

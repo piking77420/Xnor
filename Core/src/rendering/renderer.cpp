@@ -6,6 +6,24 @@
 
 using namespace XnorCore;
 
+void Renderer::RenderMenu()
+{
+	if (ImGui::BeginMenu("CurrentScene"))
+	{
+		if (ImGui::Checkbox("DrawScene Octree",&m_RenderOctree.draw))
+		{
+			
+		}
+			
+		ImGui::EndMenu();
+	}
+	
+	if (m_RenderOctree.draw)
+	{
+		m_RenderOctree.Draw();
+	}
+}
+
 void Renderer::Initialize()
 {
 	Rhi::SetClearColor(clearColor);
@@ -21,6 +39,10 @@ void Renderer::BeginFrame(const Scene& scene)
 {
 	m_LightManager.BeginFrame(scene, *this);
 	Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
+	scene.GetAllComponentOfType<MeshRenderer>(&m_MeshRenderers);
+	
+	PrepareOctree();
+	
 }
 
 void Renderer::EndFrame(const Scene& scene)
@@ -31,21 +53,16 @@ void Renderer::EndFrame(const Scene& scene)
 void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene) const
 {
 	BindCamera(*viewport.camera,viewport.viewPortSize);
-
-	std::vector<const MeshRenderer*> meshrenderers;
-	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderers);
-
 	const ViewportData& viewportData = viewport.viewportData;
-
-	DefferedRendering(meshrenderers, scene.skybox, viewportData, viewport.viewPortSize);
-	ForwardPass(meshrenderers, scene.skybox, viewport, viewport.viewPortSize, viewport.isEditor);
+	DeferedRenderring(*viewport.camera, m_MeshRenderers, scene.skybox, viewportData, viewport.viewPortSize);
+	ForwardPass(m_MeshRenderers, scene.skybox, viewport, viewport.viewPortSize, viewport.isEditor);
 	
 	if (viewportData.usePostProcess)
 		m_PostProcessPass.Compute(*viewport.viewportData.colorAttachment , *viewport.m_Image, viewportData.postprocessRendertarget);
 }
 
 void Renderer::RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass,
-	const Pointer<Shader>& shadertoUse, const Scene& scene,	const bool_t drawEditorUi
+	const Pointer<Shader>& shaderToUse, const Scene& scene,	const bool_t drawEditorUi
 ) const
 {
 	std::vector<const MeshRenderer*> meshrenderers;
@@ -57,7 +74,7 @@ void Renderer::RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& r
 	
 	if (drawEditorUi)
 	{
-		m_LightManager.DrawLightGizmoWithShader(camera, scene, shadertoUse);
+		m_LightManager.DrawLightGizmoWithShader(camera, scene, shaderToUse);
 	}
 	
 	renderPass.EndRenderPass();
@@ -68,7 +85,9 @@ void Renderer::SwapBuffers() const
 	Rhi::SwapBuffers();
 }
 
-void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox, const ViewportData& viewportData, const Vector2i viewportSize) const 
+
+
+void Renderer::DeferedRenderring(const Camera& camera,const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox, const ViewportData& viewportData, const Vector2i viewportSize) const 
 {
 	const RenderPassBeginInfo renderPassBeginInfo =
 	{
@@ -81,7 +100,7 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	
 	viewportData.gBufferPass.BeginRenderPass(renderPassBeginInfo);
 	m_GBufferShader->Use();
-	DrawMeshRendersByType(meshRenderers, MaterialType::Opaque);
+	DrawMeshRendersByType(camera,meshRenderers, MaterialType::Opaque);
 	m_GBufferShader->Unuse();
 	viewportData.gBufferPass.EndRenderPass();
 
@@ -129,7 +148,7 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
 	viewportData.colorPass.BeginRenderPass(renderPassBeginInfoLit);
 	
 	m_Forward->Use();
-	DrawMeshRendersByType(meshRenderers, MaterialType::Lit);
+	DrawMeshRendersByType(*viewport.camera, meshRenderers, MaterialType::Lit);
 	m_Forward->Unuse();
 
 	if (isEditor)
@@ -175,8 +194,33 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 }
 
+void Renderer::PrepareOctree() const
+{
+	std::vector<ObjectBounding<const MeshRenderer>> meshrenderWithAabb;
+	
+	for (uint32_t i = 0; i < World::scene->GetEntities().GetSize();i++)
+	{
+		Entity& ent = *World::scene->GetEntities()[i];
 
-void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers, const MaterialType materialType) const
+		const MeshRenderer* meshRenderer = nullptr;
+		if(ent.TryGetComponent(&meshRenderer))
+		{
+			if (!meshRenderer->model.IsValid())
+				continue;
+
+			Bound bound = bound.GetAabbFromTransform(meshRenderer->model->GetAabb(), meshRenderer->entity->transform);
+
+			ObjectBounding<const MeshRenderer> data;
+			data.bound = bound;
+			data.handle = meshRenderer;
+			meshrenderWithAabb.emplace_back(data);
+		}
+	}
+	m_RenderOctree.Update(meshrenderWithAabb);
+}
+
+
+void Renderer::DrawMeshRendersByType(const Camera& camera,const std::vector<const MeshRenderer*>& meshRenderers, const MaterialType materialType) const
 {
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 
@@ -316,7 +360,7 @@ void Renderer::InitResources()
 {
 	// Deferred 
 	m_GBufferShaderLit = ResourceManager::Get<Shader>("deferred_opaque");
-	m_GBufferShaderLit->SetDepthFunction( DepthFunction::DepthFunction::Disable);
+	m_GBufferShaderLit->SetDepthFunction(DepthFunction::Disable);
 	
 	m_GBufferShaderLit->CreateInRhi();
 	m_GBufferShaderLit->Use();

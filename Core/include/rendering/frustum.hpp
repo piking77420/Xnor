@@ -15,12 +15,19 @@ struct Plane
     float_t distance = 0.f;
 
     Plane(Vector3 vec1, Vector3 vec2);
+
+    Plane() = default;
+
+    ~Plane();
+
+    DEFAULT_COPY_MOVE_OPERATIONS(Plane)
     
     float_t GetSignedDistanceToPlane(const Vector3& point) const;
 };
 
 class Frustum
 {
+public:
     enum Face
     {
         Top,
@@ -31,6 +38,9 @@ class Frustum
         Near
     };
 
+    std::array<Plane,5> plane;
+
+
     DEFAULT_COPY_MOVE_OPERATIONS(Frustum)
 
     Frustum() = default;
@@ -39,12 +49,7 @@ class Frustum
 
     void UpdateFromCamera(const Camera& camera, float_t aspect);
 
-    bool_t IsInFrutum(const Camera& camera, const Bound& aabb, const XnorCore::Transform& transform) const ;
-
 private:
-    bool_t AABBCollidWithPlane(const Plane& plane, const Bound& aabb, const Vector3& center) const;
-    
-    std::array<Plane,5> m_Plane;
 };
 
 END_XNOR_CORE
