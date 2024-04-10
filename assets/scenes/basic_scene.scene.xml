@@ -119,9 +119,9 @@
 			<name>vikingroom</name>
 			<m_EntityId>929A1963-D643-4C73-91-F6-3B-DC-88-D2-E5-CD</m_EntityId>
 			<transform>
-				<m_Position>-4 ; 10 ; 4</m_Position>
+				<m_Position>-6 ; 10 ; -2</m_Position>
 				<m_EulerRotation>-1.5358872 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1.0000049 ; 1.0000049</m_Scale>
+				<m_Scale>1 ; 1.0000173 ; 1.0000173</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">

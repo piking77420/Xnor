@@ -179,13 +179,16 @@ void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
         {
                 
             m_ActiveOctans = (m_ActiveOctans | (1 << i));
+            
             ObjectBounding<T> childrenData;
             childrenData.bound = octanbound;
+            childrenData.handle = objectBounding.handle;
             
             m_Child[i] = new OctreeNode(childrenData);
             m_Child[i]->m_Parent = this;
             // try adding the current object bound in the valid octan
             m_Child[i]->AddObject(objectBounding);
+            m_ObjectBounding.handle = nullptr;
             break;
             
         }
