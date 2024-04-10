@@ -19,43 +19,28 @@
 using namespace XnorCore;
 
 std::mutex mutex;
-bool synchronizing = false;
-bool running = true;
+bool_t synchronizing = false;
+bool_t running = true;
 std::ofstream file;
+
+uint32_t logIndex = 0;
+
+constexpr const char_t* const LogBegin = "# LOG {} BEGIN";
+constexpr const char_t* const LogEnd = "# LOG {} END";
 
 void Logger::OpenFile(const std::filesystem::path &filepath)
 {
     CloseFile();
     
-    const bool exists = std::filesystem::exists(filepath);
+    const bool_t exists = std::filesystem::exists(filepath);
     if (!exists)
+    {
         create_directories(filepath.parent_path());
-
-    file.open(filepath, std::ios_base::out | std::ios_base::app);
-
-    if (!file.is_open() || !file.good())
-    {
-        LogWarning("Could not open log file for writing: {}", absolute(filepath));
-        return;
-    }
-
-    LogInfo("Logging to file: {}", filepath);
-
-    // If the file already exists, add newlines to space from the last log
-    if (!exists)
-    {
-        LogInfo("Starting logging #0");
     }
     else
     {
-        // Write a newline to separate each log entry and use std::endl to make
-        // sure to flush it so that when we count the number of newlines, we get
-        // the correct number
-        file << std::endl; // NOLINT(performance-avoid-endl)
-
-        // Read file contents to count empty lines and therefore know how many logs
-        // where written in the file.
-        std::ifstream in(filepath);
+        // Read file contents to get the current file's log count
+        std::ifstream in(filepath, std::ios_base::in | std::ios_base::ate);
 
         if (!in.is_open() || !in.good())
         {
@@ -63,26 +48,45 @@ void Logger::OpenFile(const std::filesystem::path &filepath)
         }
         else
         {
+            in.seekg(-1, decltype(in)::cur);
             std::string line;
-            uint32_t count = 0;
-            while (!in.eof())
-            {
-                std::getline(in, line);
-                if (line.empty() || line == "\n")
-                    count++;
-            }
-            LogInfo("Starting logging #{}", 1);
+            std::getline(in, line);
+            
+            std::string str = LogBegin;
+            std::stringstream s(line);
+            s.seekg(static_cast<std::streamoff>(str.find('{')));
+            s >> logIndex;
         }
     }
+
+    file.open(filepath, std::ios_base::out | std::ios_base::ate);
+
+    if (!file.is_open() || !file.good())
+    {
+        LogWarning("Could not open log file for writing: {}", absolute(filepath));
+        return;
+    }
+    
+    // Separate the current logs from the previous ones using a newline
+    if (exists)
+        file << '\n';
+
+    file << std::format(LogBegin, logIndex) << '\n';
+
+    LogInfo("Logging to file: {}", filepath);
+    // Prevent this log from being printed to the file
+    m_Lines.Back().printToFile = false;
+
+    LogInfo("Starting logging #{}", logIndex);
 }
 
 void Logger::OpenDefaultFile()
 {
     // Get the current date and format it in yyyy-mm-dd for the file name
     const std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    std::tm ltime;
-    (void) localtime_s(&ltime, &t);
-    const std::_Timeobj<char_t, const tm *> timeFormatter = std::put_time(&ltime, "%F.log");
+    std::tm localTime{};
+    (void) localtime_s(&localTime, &t);
+    const std::_Timeobj<char_t, const tm *> timeFormatter = std::put_time(&localTime, "%F.log");
     const std::string date = (std::ostringstream() << timeFormatter).str();
     OpenFile("logs/" + date);
 }
@@ -96,6 +100,8 @@ void Logger::CloseFile()
 {
     if (!file.is_open())
         return;
+
+    file << std::format(LogEnd, logIndex) << '\n';
     
     file.flush();
     file.close();
@@ -166,7 +172,7 @@ void Logger::Run()
     (void) SetThreadDescription(m_Thread.native_handle(), L"Logger Thread");
 
     if (std::atexit(Stop))
-        LogWarning("Couldn't register Logger::Stop using std::atexit function");
+        LogWarning("Couldn't register Logger::Stop using std::atexit");
     
     std::unique_lock lock(mutex);
     while (running || !m_Lines.Empty())
@@ -176,7 +182,7 @@ void Logger::Run()
         while (!m_Lines.Empty())
             PrintLog(m_Lines.Pop());
 
-        // As we don't use std::endl for newlines, make sure to flush the streams before going to sleep
+        // As we don't use std::endl for newlines, make sure to flush the streams before going back to sleep
         std::cout.flush();
         if (file.is_open())
             file.flush();
@@ -197,7 +203,7 @@ void Logger::PrintLog(const LogEntry& log)
     const auto&& t = std::chrono::duration_cast<std::chrono::milliseconds, long long>(log.time.time_since_epoch());
     const std::string time = std::format("[{:%T}] ", t);
 
-    // Setup the base text message
+    // Set up the base text message
     std::string baseMessage = log.message + '\n';
     const LogLevel level = log.level;
 

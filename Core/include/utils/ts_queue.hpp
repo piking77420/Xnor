@@ -28,11 +28,19 @@ public:
 
     /// @brief Gets a reference to the front item in the queue
     /// @returns Item
-    const T& Front();
+    T& Front();
+
+    /// @brief Gets a reference to the front item in the queue
+    /// @returns Item
+    const T& Front() const;
 
     /// @brief Gets a reference to the back item in the queue
     /// @returns Item
-    const T& Back();
+    T& Back();
+
+    /// @brief Gets a reference to the back item in the queue
+    /// @returns Item
+    const T& Back() const;
 
     /// @brief Pushes a new item on the back of the queue by copying it
     /// @param item Item
