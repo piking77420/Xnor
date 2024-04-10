@@ -29,7 +29,7 @@ public:
     
     OctreeNode(ObjectBounding<T> objectBounding);
 
-    OctreeNode(const Bound& boundingBox,const std::list<T*>& list);
+    OctreeNode(const Bound& boundingBox,const std::vector<T*>& list);
 
     
     OctreeNode() = default; 
@@ -59,8 +59,9 @@ private:
     OctreeNode* m_Parent = nullptr;
     
     Bound m_BoudingBox;
-    std::list<T*> m_Handels;
-    
+    std::vector<T*> m_Handels;
+
+
     void DivideAndAdd(ObjectBounding<T>& objectBounding);
     
     Vector3 GetSizeOfOctans() const;
@@ -76,15 +77,10 @@ void OctreeNode<T>::AddObject(ObjectBounding<T>& objectBounding)
 
 template <class T>
 OctreeNode<T>::OctreeNode(ObjectBounding<T> objectBounding)
-: m_BoudingBox(objectBounding.bound)
 {
+    m_BoudingBox = objectBounding.bound;
     m_Handels.push_back(objectBounding.handle);
-}
-
-template <class T>
-OctreeNode<T>::OctreeNode(const Bound& boundingBox, const std::list<T*>& list) : m_BoudingBox(boundingBox)
-{
-    m_Handels.insert(m_Handels.end(),list.begin(),list.end());
+   // objectBounding.push_back(objectBounding.handle);
 }
 
 
@@ -142,14 +138,14 @@ void OctreeNode<T>::Draw()
     {
         if (m_ActiveOctans & (1 << i))
         {
-            if (!m_Child[i]->m_Handels.empty())
+            if (!m_Child[i]->m_Handels.empty())//)m_Child[i]->m_ObjectBounding.handle != nullptr)
             {
                 color = Colorf::Blue();
                 break;
             }
         }
     }
-    DrawGizmo::Rectangle(m_BoudingBox.center, m_BoudingBox.extents, m_Handels.empty() ? color : Colorf::Red());
+    DrawGizmo::Rectangle(m_BoudingBox.center, m_BoudingBox.extents, m_Handels.empty()  ? color : Colorf::Red());
 
     for (size_t i = 0; i < m_Child.size(); i++)
     {
@@ -186,24 +182,25 @@ void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
         // if the current octan countain the object bound
         if (octanbound.Countain(objectBounding.bound))
         {
-            ObjectBounding<T> child;
-            child.bound = objectBounding.bound;
-            child.handle =  objectBounding.handle;
-            
+                
             m_ActiveOctans = (m_ActiveOctans | (1 << i));
             
-            m_Child[i] = new OctreeNode(child);
+            ObjectBounding<T> childrenData;
+            childrenData.bound = octanbound;
+            childrenData.handle = objectBounding.handle;
+            
+            m_Child[i] = new OctreeNode(childrenData);
             m_Child[i]->m_Parent = this;
             // try adding the current object bound in the valid octan
             m_Child[i]->AddObject(objectBounding);
             
-            // remove the handle
             std::erase(m_Handels,objectBounding.handle);
             break;
             
         }
       
     }
+
     
 }
 
