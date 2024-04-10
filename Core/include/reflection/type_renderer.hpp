@@ -67,6 +67,11 @@ public:
     template <typename ReflectT, typename MemberT, typename DescriptorT>
     static void DisplayEnumFlag(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 
+    /// @brief Displays a simple type (calls its TypeRendererImpl)
+    /// @tparam ReflectT Reflected top level type
+    /// @tparam MemberT Member type
+    /// @tparam DescriptorT Field descriptor type
+    /// @param metadata Member metadata
     template <typename ReflectT, typename MemberT, typename DescriptorT>
     static void DisplaySimpleType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 
@@ -91,9 +96,17 @@ private:
     static void CheckDisplayTooltip(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 };
 
+// TODO move to a separate file
+
+/// @brief Implementation for a type renderer, template specialization can be used to provide a custom render behavior to a custom type
+/// @tparam MemberT Member type
 template <typename MemberT, typename = void>
 struct TypeRendererImpl
 {
+    /// @brief Renders the provided type
+    /// @tparam ReflectT Reflected top level type
+    /// @tparam DescriptorT Field descriptor type
+    /// @param metadata Member metadata
     template <typename ReflectT, typename DescriptorT>
     static void Render(const TypeRenderer::Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 };
