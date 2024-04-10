@@ -37,7 +37,10 @@ public:
     
     static Bound GetAabbFromCamera(const Bound& bound,const Camera& cam);
 
-    bool_t Countains(const Bound& otherBound) const;
+    bool_t Intersect(const Bound& otherBound) const;
+
+    bool_t Countain(const Bound& otherBound) const;
+
 
     void Encapsulate(const Bound& encaspulateBound);
 

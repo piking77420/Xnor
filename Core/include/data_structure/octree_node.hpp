@@ -160,11 +160,10 @@ Bound& OctreeNode<T>::GetBound()
 template <class T>
 void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
 {
-    
     // If current bound is less than min size return 
-    if (m_ObjectBounding.bound.GetSize().x < 1.f)
+    if (m_ObjectBounding.bound.GetSize().x < objectBounding.bound.GetSize().x)
     {
-        m_ObjectBounding = objectBounding;
+        m_ObjectBounding.handle = objectBounding.handle;
         return;
     }
 
@@ -176,7 +175,7 @@ void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
         CreateBoundChild(static_cast<Octans>(current),&octanbound);
 
         // if the current octan countain the object bound
-        if (octanbound.Countains(objectBounding.bound))
+        if (octanbound.Countain(objectBounding.bound))
         {
                 
             m_ActiveOctans = (m_ActiveOctans | (1 << i));
@@ -187,6 +186,8 @@ void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
             m_Child[i]->m_Parent = this;
             // try adding the current object bound in the valid octan
             m_Child[i]->AddObject(objectBounding);
+            break;
+            
         }
       
     }

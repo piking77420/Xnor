@@ -48,7 +48,7 @@ Bound Bound::GetAabbFromCamera(const Bound& bound, const Camera& cam)
     return ReturnAabbFromMatrix(bound, view, cam.position);
 }
 
-bool_t Bound::Countains(const Bound& otherBound) const
+bool_t Bound::Intersect(const Bound& otherBound) const
 {
     const Vector3 max = GetMax();
     const Vector3 min = GetMin();
@@ -60,7 +60,23 @@ bool_t Bound::Countains(const Bound& otherBound) const
     const bool_t yOverlap = min.y <= otherMax.y && max.y >= otherMin.y;
     const bool_t zOverlap = min.z <= otherMax.z && max.z >= otherMin.z;
 
-    return xOverlap && yOverlap && zOverlap;} 
+    return xOverlap && yOverlap && zOverlap;
+}
+
+bool_t Bound::Countain(const Bound& otherBound) const
+{
+    const Vector3 max = GetMax();
+    const Vector3 min = GetMin();
+
+    const Vector3 otherMax = otherBound.GetMax();
+    const Vector3 otherMin = otherBound.GetMin();
+
+    const bool_t xInside = min.x <= otherMin.x && max.x >= otherMax.x;
+    const bool_t yInside = min.y <= otherMin.y && max.y >= otherMax.y;
+    const bool_t zInside = min.z <= otherMin.z && max.z >= otherMax.z;
+
+    return xInside && yInside && zInside;
+}
 
 
 void Bound::Encapsulate(const Bound& encapsulateBound)
