@@ -96,8 +96,6 @@ private:
     static void CheckDisplayTooltip(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 };
 
-// TODO move to a separate file
-
 /// @brief Implementation for a type renderer, template specialization can be used to provide a custom render behavior to a custom type
 /// @tparam MemberT Member type
 template <typename MemberT, typename = void>
@@ -111,96 +109,7 @@ struct TypeRendererImpl
     static void Render(const TypeRenderer::Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 };
 
-template <typename MemberT>
-struct TypeRendererImpl<MemberT, Meta::EnableIf<Meta::IsEnum<MemberT>>>
-{
-    template <typename ReflectT, typename DescriptorT>
-    static void Render(const TypeRenderer::Metadata<ReflectT, MemberT, DescriptorT>& metadata);
-};
-
-template <typename MemberT>
-struct TypeRendererImpl<MemberT, Meta::EnableIf<Meta::IsIntegralOrFloating<MemberT>>>
-{
-    template <typename ReflectT, typename DescriptorT>
-    static void Render(const TypeRenderer::Metadata<ReflectT, MemberT, DescriptorT>& metadata);
-};
-
-template <typename T>
-struct TypeRendererImpl<Pointer<T>, Meta::EnableIf<Meta::IsBaseOf<Resource, T>>>
-{
-    template <typename ReflectT, typename DescriptorT>
-    static void Render(const TypeRenderer::Metadata<ReflectT, Pointer<T>, DescriptorT>& metadata);  
-};
-
-template <>
-struct TypeRendererImpl<Entity*>
-{
-    template <typename ReflectT, typename DescriptorT>
-    static void Render(const TypeRenderer::Metadata<ReflectT, Entity*, DescriptorT>& metadata);
-};
-
-template <>
-struct TypeRendererImpl<Component*>
-{
-    template <typename ReflectT, typename DescriptorT>
-    static void Render(const TypeRenderer::Metadata<ReflectT, Component*, DescriptorT>& metadata);
-};
-
-template <typename T, size_t N>
-struct TypeRendererImpl<T[N]>
-{
-    template <typename ReflectT, typename DescriptorT>
-    static void Render(const TypeRenderer::Metadata<ReflectT, T[N], DescriptorT>& metadata);
-};
-
-template <typename T>
-struct TypeRendererImpl<List<T>>
-{
-    template <typename ReflectT, typename DescriptorT>
-    static void Render(const TypeRenderer::Metadata<ReflectT, List<T>, DescriptorT>& metadata);
-};
-
-template <typename KeyT, typename T>
-struct TypeRendererImpl<std::map<KeyT, T>>
-{
-    template <typename ReflectT, typename DescriptorT>
-    static void Render(const TypeRenderer::Metadata<ReflectT, std::map<KeyT, T>, DescriptorT>& metadata);
-};
-
-template <>
-struct TypeRendererImpl<List<Component*>>
-{
-    template <typename ReflectT, typename DescriptorT>
-    static void Render(const TypeRenderer::Metadata<ReflectT, List<Component*>, DescriptorT>& metadata);
-};
-
-template <typename Ret, typename... Args>
-struct TypeRendererImpl<std::function<Ret(Args...)>>
-{
-    template <typename ReflectT, typename DescriptorT>
-    static void Render(const TypeRenderer::Metadata<ReflectT, std::function<Ret(Args...)>, DescriptorT>& metadata);
-};
-
-#define TYPE_RENDERER_IMPL(type)\
-template <>\
-struct TypeRendererImpl<type>\
-{\
-    template <typename ReflectT, typename DescriptorT>\
-    static void Render(const TypeRenderer::Metadata<ReflectT, type, DescriptorT>& metadata);\
-};\
-
-TYPE_RENDERER_IMPL(bool_t)
-TYPE_RENDERER_IMPL(Vector2)
-TYPE_RENDERER_IMPL(Vector2i)
-TYPE_RENDERER_IMPL(Vector3)
-TYPE_RENDERER_IMPL(Vector4)
-TYPE_RENDERER_IMPL(Quaternion)
-TYPE_RENDERER_IMPL(Colorf)
-TYPE_RENDERER_IMPL(ColorRgb)
-TYPE_RENDERER_IMPL(ColorHsva)
-TYPE_RENDERER_IMPL(ColorRgba)
-TYPE_RENDERER_IMPL(std::string)
-
 END_XNOR_CORE
 
 #include "reflection/type_renderer.inl"
+#include "reflection/type_renderer_impl.hpp"

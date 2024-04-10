@@ -765,6 +765,7 @@
     <ClInclude Include="inline\input\input.inl" />
     <ClInclude Include="inline\input\time.inl" />
     <ClInclude Include="inline\reflection\filters.inl" />
+    <ClInclude Include="inline\reflection\type_renderer_impl.hpp" />
     <ClInclude Include="inline\reflection\xnor_factory.inl" />
     <ClInclude Include="inline\reflection\reflection.inl" />
     <ClInclude Include="inline\reflection\type_renderer.inl" />
