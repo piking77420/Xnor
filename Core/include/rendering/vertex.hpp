@@ -26,7 +26,7 @@ struct Vertex
 	Vector3 tangent;
 	Vector3 bitangent;
 
-	uint32_t boneIndices[MaxBoneWeight];
+	int32_t boneIndices[MaxBoneWeight];
 	float_t boneWeight[MaxBoneWeight];
 };
 

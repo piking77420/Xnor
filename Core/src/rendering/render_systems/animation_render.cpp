@@ -64,6 +64,7 @@ void AnimationRender::RenderAnimation() const
                 // TODO Compute matrices and set it to the struct m_SkinnedMeshGpuData;
                 //m_SkinnedMeshGPUData
                 // Set data in Shader
+                
                 Rhi::UpdateAninationUniform(*m_SkinnedMeshGpuData);
                 Rhi::DrawModel(skinnedMeshRender->mesh->models[i]->GetId());
             }
