@@ -59,6 +59,8 @@ private:
     ObjectBounding<T> m_ObjectBounding;
     
     void DivideAndAdd(ObjectBounding<T>& objectBounding);
+    
+    Vector3 GetSizeOfOctans() const;
 
 };
 
@@ -158,32 +160,45 @@ Bound& OctreeNode<T>::GetBound()
 template <class T>
 void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
 {
-    // END CONDITION Smallest value the render
     
+    // If current bound is less than min size return 
     if (m_ObjectBounding.bound.GetSize().x < 1.f)
     {
         m_ObjectBounding = objectBounding;
         return;
     }
 
+    // for each possible octan
     for (size_t i = 0 ; i < 8; i++)
     {
         uint32_t current = (0 | (1 << i));
-        Bound bound;
-        CreateBoundChild(static_cast<Octans>(current),&bound);
-        
-        if (bound.Countains(objectBounding.bound))
+        Bound octanbound;
+        CreateBoundChild(static_cast<Octans>(current),&octanbound);
+
+        // if the current octan countain the object bound
+        if (octanbound.Countains(objectBounding.bound))
         {
+                
             m_ActiveOctans = (m_ActiveOctans | (1 << i));
             ObjectBounding<T> childrenData;
-            childrenData.bound = bound;
-            // Steal the handle
+            childrenData.bound = octanbound;
+            
             m_Child[i] = new OctreeNode(childrenData);
             m_Child[i]->m_Parent = this;
+            // try adding the current object bound in the valid octan
             m_Child[i]->AddObject(objectBounding);
         }
+      
     }
     
+}
+
+template <class T>
+Vector3 OctreeNode<T>::GetSizeOfOctans() const 
+{
+    const Vector3 childLength = m_ObjectBounding.bound.GetSize() * 0.5f;
+    const Vector3 childSize = Vector3(childLength);
+    return childSize;
 }
 
 END_XNOR_CORE

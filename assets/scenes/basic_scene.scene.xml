@@ -87,7 +87,7 @@
 			<name>Cube</name>
 			<m_EntityId>DE4AB759-9A09-42A9-99-75-A0-A1-C5-8F-5F-E1</m_EntityId>
 			<transform>
-				<m_Position>2 ; 7 ; 7</m_Position>
+				<m_Position>2 ; 15 ; -7</m_Position>
 				<m_EulerRotation>0.62880605 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 0.99999976 ; 0.99999976</m_Scale>
 			</transform>
