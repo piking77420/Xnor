@@ -47,6 +47,9 @@ private:
 
     static inline int32_t m_StaticTest = 1;
     static inline Transform m_StaticTransform {};
+    Vector2 m_GridPlottingTest;
+    float_t m_Array[2][3];
+    List<int32_t> m_List;
 
     Coroutine FlashRoutine();
 };
@@ -61,5 +64,8 @@ REFL_AUTO(
     field(m_Radius),
     field(m_StaticTest),
     field(m_StaticTransform),
-    field(m_TestEntity)
+    field(m_TestEntity),
+    field(m_GridPlottingTest, XnorCore::Reflection::GridPlotting(0, 1)),
+    field(m_Array, XnorCore::Reflection::NotSerializable()),
+    field(m_List, XnorCore::Reflection::NotSerializable())
 );

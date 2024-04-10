@@ -131,6 +131,9 @@ namespace Reflection
     struct ReadOnly : FieldAttribute
     {
     };
+
+    template <typename T>
+    constexpr bool_t IsReflected = refl::trait::is_reflectable_v<T>;
     
     /// @brief Gets the type info of a class
     /// @tparam ReflectT Type

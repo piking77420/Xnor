@@ -51,6 +51,11 @@ namespace Meta
     template <typename T>
     constexpr bool_t IsPointer = std::is_pointer_v<T>;
 
+    /// @brief Checks whether @c T is a class
+    /// @tparam T Type
+    template <typename T>
+    constexpr bool_t IsClass = std::is_class_v<T>;
+
     /// @brief Checks whether @c T is an enum
     /// @tparam T Type
     template <typename T>
@@ -75,6 +80,9 @@ namespace Meta
     /// @tparam T Type
     template <typename T>
     constexpr bool_t IsDefaultConstructible = std::is_default_constructible_v<T>;
+
+    template <bool_t Test>
+    using EnableIf = std::enable_if_t<Test>;
 
     /// @brief Removes the array specification from @c T
     ///
