@@ -1,8 +1,8 @@
 ﻿#pragma once
 
 #include "core.hpp"
-#include "reflection/reflection.hpp"
 #include "scene/component.hpp"
+#include "utils/color.hpp"
 
 /// @file light.hpp
 /// @brief Defines the XnorCore::Light class

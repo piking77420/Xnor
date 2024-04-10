@@ -7,6 +7,7 @@
 /// @brief Defines utilities for meta programming and template manipulation
 
 #include <type_traits>
+#include <map>
 
 #include <Maths/quaternion.hpp>
 #include <Maths/vector2.hpp>
@@ -111,6 +112,20 @@ namespace Meta
 
     template <typename T, typename A>
     constexpr bool_t IsStdVector<std::vector<T, A>> = true;
+
+    /// @brief Checks whether the type is a @c std::vector
+    template <typename>
+    constexpr bool_t IsStdFunction = false;
+
+    template <typename T, typename... Args>
+    constexpr bool_t IsStdFunction<std::function<T(Args...)>> = true;
+
+    /// @brief Checks whether the type is a @c std::vector
+    template <typename>
+    constexpr bool_t IsStdMap = false;
+
+    template <typename T, typename A>
+    constexpr bool_t IsStdMap<std::map<T, A>> = true;
 
     /// @brief Checks whether the type is a List
     template <typename>

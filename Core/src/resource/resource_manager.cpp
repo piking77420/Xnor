@@ -6,8 +6,10 @@
 
 #include "file/file_manager.hpp"
 #include "resource/compute_shader.hpp"
+#include "resource/mesh.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
+#include "resource/skeleton.hpp"
 #include "resource/texture.hpp"
 
 using namespace XnorCore;
@@ -27,20 +29,28 @@ void ResourceManager::LoadAll()
         std::execution::par,
         files.begin(),
         files.end(),
-        [](auto&& file) -> void
+        [](const Pointer<File>& file) -> void
         {
             if (std::ranges::find(Texture::FileExtensions, file->GetExtension()) != Texture::FileExtensions.end())
             {
                 Load<Texture>(file, false);
             }
+            else if (std::ranges::find(Mesh::FileExtensions, file->GetExtension()) != Mesh::FileExtensions.end())
+            {
+                Load<Mesh>(file, false);
+            }
             else if (std::ranges::find(Model::FileExtensions, file->GetExtension()) != Model::FileExtensions.end())
             {
                 Load<Model>(file, false);
             }
+            else if (std::ranges::find(Skeleton::FileExtensions, file->GetExtension()) != Skeleton::FileExtensions.end())
+            {
+                Load<Skeleton>(file, false);
+            }
         }
     );
 
-    for (auto&& file : files)
+    for (Pointer<File>& file : files)
     {
         if (std::ranges::find(Shader::VertexFileExtensions, file->GetExtension()) != Shader::VertexFileExtensions.end() ||
             std::ranges::find(Shader::FragmentFileExtensions, file->GetExtension()) != Shader::FragmentFileExtensions.end() ||

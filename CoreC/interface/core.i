@@ -126,6 +126,8 @@ struct Data64
 #include "resource/cubemap.hpp"
 #include "resource/font.hpp"
 #include "resource/model.hpp"
+#include "resource/mesh.hpp"
+#include "resource/animation.hpp"
 #include "resource/resource.hpp"
 #include "resource/resource_manager.hpp"
 #include "resource/shader.hpp"
@@ -169,6 +171,8 @@ struct Data64
 
 %include "utils/guid.hpp"
 
+%include "utils/list.i"
+
 %include "resource/resource.hpp"
 
 %include "file/entry.hpp"
@@ -176,11 +180,12 @@ struct Data64
 %include "file/file.i"
 %include "file/file_manager.hpp"
 
-%include "rendering/rhi_typedef.hpp"
+%include "rendering/rhi_typedef.i"
 
 %include "resource/cubemap.hpp"
 %include "resource/font.hpp"
 %include "resource/model.hpp"
+%include "resource/mesh.hpp"
 %include "resource/resource_manager.hpp"
 
 %include "resource/shader.hpp"
@@ -213,8 +218,6 @@ struct Data64
 %include "scene/component/script_component.hpp"
 
 %include "transform.hpp"
-
-%include "utils/list.i"
 
 %include "scene/entity.i"
 

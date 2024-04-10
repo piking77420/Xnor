@@ -8,6 +8,8 @@
 #include "resource/resource_manager.hpp"
 #include "scene/entity.hpp"
 
+#include "utils/meta_programming.hpp"
+
 /// @file type_renderer.hpp
 /// @brief Defines the TypeRenderer
 
@@ -80,14 +82,6 @@ private:
     template <typename ReflectT, bool_t StaticT>
     static void DisplayFields(ReflectT* obj);
 
-    /// @brief Displays a List
-    /// @tparam ReflectT Reflected top level type
-    /// @tparam MemberT Member type
-    /// @tparam DescriptorT Field descriptor type
-    /// @param metadata Member metadata
-    template <typename ReflectT, typename MemberT, typename DescriptorT>
-    static void DisplayList(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
-
     /// @brief Displays a tooltip if the member has one
     /// @tparam ReflectT Reflected top level type
     /// @tparam MemberT Member type
@@ -153,11 +147,25 @@ struct TypeRendererImpl<List<T>>
     static void Render(const TypeRenderer::Metadata<ReflectT, List<T>, DescriptorT>& metadata);
 };
 
+template <typename KeyT, typename T>
+struct TypeRendererImpl<std::map<KeyT, T>>
+{
+    template <typename ReflectT, typename DescriptorT>
+    static void Render(const TypeRenderer::Metadata<ReflectT, std::map<KeyT, T>, DescriptorT>& metadata);
+};
+
 template <>
 struct TypeRendererImpl<List<Component*>>
 {
     template <typename ReflectT, typename DescriptorT>
     static void Render(const TypeRenderer::Metadata<ReflectT, List<Component*>, DescriptorT>& metadata);
+};
+
+template <typename Ret, typename... Args>
+struct TypeRendererImpl<std::function<Ret(Args...)>>
+{
+    template <typename ReflectT, typename DescriptorT>
+    static void Render(const TypeRenderer::Metadata<ReflectT, std::function<Ret(Args...)>, DescriptorT>& metadata);
 };
 
 #define TYPE_RENDERER_IMPL(type)\

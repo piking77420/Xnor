@@ -206,6 +206,10 @@ public:
 	/// @param cameraUniformData Data
 	XNOR_ENGINE static void UpdateCameraUniform(const CameraUniformData& cameraUniformData);
 
+	/// @brief Updates the animation UniformBuffer
+	/// @param skinnedMeshGPUData Data
+	XNOR_ENGINE static void UpdateAninationUniform(const SkinnedMeshGpuData& skinnedMeshGPUData);
+
 	/// @brief Updates the light UniformBuffer
 	/// @param lightData Data
 	XNOR_ENGINE static void UpdateLight(const GpuLightData& lightData);
@@ -307,6 +311,8 @@ private:
 	XNOR_ENGINE static inline UniformBuffer* m_ModelUniform;
 	XNOR_ENGINE static inline UniformBuffer* m_LightUniform;
 	XNOR_ENGINE static inline UniformBuffer* m_MaterialUniform;
+	XNOR_ENGINE static inline UniformBuffer* m_AnimationBuffer;
+
 
 	XNOR_ENGINE static inline bool_t m_Blending = false;
 	XNOR_ENGINE static inline bool_t m_Cullface = false;

@@ -6,6 +6,7 @@
 #include "input/keyboard_input.hpp"
 #include "magic_enum/magic_enum_all.hpp"
 #include "reflection/filters.hpp"
+#include "utils/timeline.hpp"
 #include "utils/utils.hpp"
 #include "world/world.hpp"
 
@@ -454,6 +455,40 @@ void TypeRendererImpl<List<Component*>>::Render(const TypeRenderer::Metadata<Ref
             c->entity = metadata.topLevelObj;
         }
     }
+}
+
+template <typename KeyT, typename T>
+template <typename ReflectT, typename DescriptorT>
+void TypeRendererImpl<std::map<KeyT, T>>::Render(const TypeRenderer::Metadata<ReflectT, std::map<KeyT, T>, DescriptorT>& metadata)
+{
+    ImGui::CollapsingHeader(metadata.name);
+
+    for (std::pair<KeyT, T> it : *metadata.obj)
+    {
+        TypeRenderer::Metadata<ReflectT, KeyT, DescriptorT> metadataKey =
+        {
+            .topLevelObj = metadata.topLevelObj,
+            .name = metadata.name,
+            .obj = &it.first
+        };
+    
+        TypeRenderer::Metadata<ReflectT, T, DescriptorT> metadataMap =
+        {
+            .topLevelObj = metadata.topLevelObj,
+            .name = metadata.name,
+            .obj = &it.second
+        };
+
+        TypeRenderer::DisplaySimpleType<ReflectT, KeyT, DescriptorT>(metadataKey);
+        ImGui::SameLine();
+        TypeRenderer::DisplaySimpleType<ReflectT, T, DescriptorT>(metadataMap);
+    }
+}
+template <typename Ret, typename... Args>
+template <typename ReflectT, typename DescriptorT>
+void TypeRendererImpl<std::function<Ret(Args...)>>::Render(const TypeRenderer::Metadata<ReflectT, std::function<Ret(Args...)>, DescriptorT>& metadata)
+{
+    ImGui::TextDisabled("Function at %p", Utils::FunctionAddress(*metadata.obj));
 }
 
 template <typename ReflectT, typename MemberT, typename DescriptorT>

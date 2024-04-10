@@ -49,10 +49,8 @@ private:
 	void BeginDockSpace() const;
 
 	void EndDockSpace() const;
-		
-	void SetupImGuiStyle() const;
 
-	void CreateTestScene();
+	void SetupImGuiStyle() const;
 	
 	void MenuBar();
 };

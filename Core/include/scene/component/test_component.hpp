@@ -9,6 +9,7 @@
 #include "scene/component.hpp"
 #include "utils/coroutine.hpp"
 #include "utils/guid.hpp"
+#include "utils/timeline.hpp"
 
 BEGIN_XNOR_CORE
     /// @private
@@ -52,6 +53,8 @@ private:
     List<int32_t> m_List;
 
     Coroutine FlashRoutine();
+
+    Timeline<float_t> m_Timeline;
 };
 
 END_XNOR_CORE
@@ -67,5 +70,6 @@ REFL_AUTO(
     field(m_TestEntity),
     field(m_GridPlottingTest, XnorCore::Reflection::GridPlotting(0, 1)),
     field(m_Array, XnorCore::Reflection::NotSerializable()),
-    field(m_List, XnorCore::Reflection::NotSerializable())
+    field(m_List, XnorCore::Reflection::NotSerializable()),
+    field(m_Timeline)
 );

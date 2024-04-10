@@ -7,6 +7,7 @@
 #include "utils/color.hpp"
 #include <vector>
 
+#include "vertex.hpp"
 
 
 /// @file rhi_typedef.hpp
@@ -21,6 +22,8 @@ static constexpr uint32_t MaxSpotLights = 100;
 static constexpr uint32_t MaxPointLights = 100;
 /// @brief Maximum amount of directional lights that can exists in a same scene
 static constexpr uint32_t MaxDirectionalLights = 1;
+
+static constexpr uint32_t MaxBones = 100;
 
 /// @brief Polygon rasterization mode
 /// @see <a href="https://registry.khronos.org/OpenGL-Refpages/gl4/html/glPolygonMode.xhtml">OpenGL specification</a>
@@ -556,7 +559,15 @@ struct ALIGNAS(16) GpuLightData
 	DirectionalLightData directionalData[MaxDirectionalLights];
 };
 
+
+/// @brief UniformBuffer data for animation
+struct ALIGNAS(16) SkinnedMeshGpuData
+{
+	Matrix boneMatrices[MaxBones];
+};
+
 #pragma warning(pop) // 4324
+	
 
 /// @brief Material UniformBuffer data
 struct MaterialData

@@ -70,6 +70,10 @@ protected:
     /// @brief Adds the default debug events for the callbacks
     void AddDebugEvents();
 
+    static void Test(Collider*, Collider*, const CollisionData&) {}
+
+    static void Test2() {}
+
     /// @brief Jolt internal body ID for the collider
     uint32_t m_BodyId = std::numeric_limits<uint32_t>::max();
 
@@ -87,5 +91,6 @@ REFL_AUTO(type(XnorCore::Collider, bases<XnorCore::Component>),
     field(constraints, XnorCore::Reflection::EnumFlags()),
     field(m_IsStatic),
     field(m_IsTrigger),
-    field(m_IsActive, XnorCore::Reflection::ReadOnly())
+    field(m_IsActive, XnorCore::Reflection::ReadOnly()),
+    field(onTriggerEnter, XnorCore::Reflection::NotSerializable())
 )

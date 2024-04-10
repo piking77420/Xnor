@@ -40,6 +40,8 @@ typedef bool bool_t;
 #define XNOR_ENGINE __declspec(dllimport)
 #endif
 
+#define ALLOCATOR_FUNC __declspec(allocator)
+
 /// @brief Starts the @ref XnorCore namespace.
 #define BEGIN_XNOR_CORE namespace XnorCore {
 
