@@ -85,15 +85,15 @@ uint32_t Rhi::CreateModel(const std::vector<Vertex>& vertices, const std::vector
 	glEnableVertexArrayAttrib(modelInternal.vao, 4);
 	glVertexArrayAttribBinding(modelInternal.vao, 4, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 4, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, bitangent));
-	
+
 	// ids
 	glEnableVertexArrayAttrib(modelInternal.vao, 5);
-	glVertexAttribIPointer(5, Vertex::MaxBoneWeight, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, boneIndices));
+	glVertexAttribIPointer(5, Vertex::MaxBoneWeight, GL_INT, sizeof(Vertex), Utils::IntToPointer<void*>(offsetof(Vertex, boneIndices)));
 
 	// weights
 	glEnableVertexArrayAttrib(modelInternal.vao, 6);
-	glVertexAttribPointer(6, Vertex::MaxBoneWeight, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, boneWeight));
-	
+	glVertexAttribPointer(6, Vertex::MaxBoneWeight, GL_FLOAT, GL_FALSE, sizeof(Vertex), Utils::IntToPointer<void*>(offsetof(Vertex, boneWeight)));
+
 	glVertexArrayVertexBuffer(modelInternal.vao, 0, modelInternal.vbo, 0, sizeof(Vertex));
 	glVertexArrayElementBuffer(modelInternal.vao, modelInternal.ebo);
 	
