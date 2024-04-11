@@ -6,56 +6,50 @@
 
 BEGIN_XNOR_CORE
 
+enum Octans : uint8_t
+{
+    Zero = 0x00,// 0b00000000
+    Q1 = 0x01, // 0b00000001
+    Q2 = 0x02, // 0b00000010
+    Q3 = 0x04, // 0b00000100
+    Q4 = 0x08, // 0b00001000
+    Q5 = 0x10, // 0b00010000
+    Q6 = 0x20, // 0b00100000
+    Q7 = 0x40, // 0b01000000
+    Q8 = 0x80, // 0b10000000
+};
+
+
 
 template<class T>
 class OctreeNode
 {
 public:
-    enum Octans : uint8_t
-    {
-        Q1 = 0x01, // 0b00000001
-        Q2 = 0x02, // 0b00000010
-        Q3 = 0x04, // 0b00000100
-        Q4 = 0x08, // 0b00001000
-        Q5 = 0x10, // 0b00010000
-        Q6 = 0x20, // 0b00100000
-        Q7 = 0x40, // 0b01000000
-        Q8 = 0x80, // 0b10000000
-    };
-
+    
     DEFAULT_COPY_MOVE_OPERATIONS(OctreeNode)
-
-    void AddObject(ObjectBounding<T>& objectBounding);
     
     OctreeNode(ObjectBounding<T> objectBounding);
-
-    OctreeNode(const Bound& boundingBox,const std::vector<T*>& list);
-
     
     OctreeNode() = default; 
 
-    ~OctreeNode()
-    {
-        for (size_t i = 0; i < m_Child.size(); i++)
-        {
-            if (m_ActiveOctans & (1 << i))
-            {
-                delete m_Child[i];
-                m_Child[i] = nullptr;
-            }
-        }
-    }
-
+    ~OctreeNode();
+    
     void CreateBoundChild(Octans octans, Bound* outBound);
+    
+    void AddObject(ObjectBounding<T>& objectBounding);
 
     void Draw();
 
     Bound& GetBound();
 
     void Clear();
+
+    bool_t IsOctanValid(int32_t i) const;
+
+    bool_t GetChildNode(int32_t octan,const OctreeNode<T>* outNode) const;
    
 private:
-    int32_t m_ActiveOctans = 0;
+    Octans m_ActiveOctans = Zero;
     std::array<OctreeNode*,8> m_Child;
     OctreeNode* m_Parent = nullptr;
     
@@ -63,9 +57,6 @@ private:
     std::vector<T*> m_Handels;
     
     void DivideAndAdd(ObjectBounding<T>& objectBounding);
-    
-    Vector3 GetSizeOfOctans() const;
-
 };
 
 
@@ -83,6 +74,18 @@ OctreeNode<T>::OctreeNode(ObjectBounding<T> objectBounding)
 }
 
 
+template <class T>
+OctreeNode<T>::~OctreeNode()
+{
+    for (size_t i = 0; i < m_Child.size(); i++)
+    {
+        if (IsOctanValid(i))
+        {
+            delete m_Child[i];
+            m_Child[i] = nullptr;
+        }
+    }
+}
 template <class T>
 void OctreeNode<T>::CreateBoundChild(Octans octans, Bound* outBound)
 {
@@ -125,7 +128,9 @@ void OctreeNode<T>::CreateBoundChild(Octans octans, Bound* outBound)
         case Q8:
             *outBound = Bound(center + Vector3(quarter,-quarter,quarter), childSize );
             break;
-            
+        case Zero:
+            break;
+        default: ;
     }
 }
 
@@ -166,15 +171,34 @@ void OctreeNode<T>::Clear()
 {
     for (size_t i = 0; i < m_Child.size(); i++)
     {
-        if (m_ActiveOctans & (1 << i))
+        if (IsOctanValid(i))
         {
             m_Child[i]->Clear();
         }
     }
 
-    m_ActiveOctans = 0;
+    m_ActiveOctans = Zero;
     m_Handels.clear();
+    m_BoudingBox = Bound();
 }
+
+template <class T>
+bool_t OctreeNode<T>::IsOctanValid(const int32_t i) const
+{
+    return m_ActiveOctans & (1 <<i);
+}
+
+template <class T>
+bool_t OctreeNode<T>::GetChildNode(int32_t octan, const OctreeNode<T>* outNode) const
+{
+    if (IsOctanValid(octan))
+    {
+        outNode = m_Child.at(octan);
+        return true;
+    }
+    return false;
+}
+
 
 template <class T>
 void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
@@ -197,7 +221,7 @@ void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
         // if the current octan countain the object bound
         if (octanbound.Countain(objectBounding.bound))
         {
-            m_ActiveOctans = (m_ActiveOctans | (1 << i));
+            m_ActiveOctans = static_cast<Octans>(m_ActiveOctans | (1 << i));
             
             ObjectBounding<T> childrenData;
             childrenData.bound = octanbound;
@@ -229,12 +253,5 @@ void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
     
 }
 
-template <class T>
-Vector3 OctreeNode<T>::GetSizeOfOctans() const 
-{
-    const Vector3 childLength = m_BoudingBox.GetSize() * 0.5f;
-    const Vector3 childSize = Vector3(childLength);
-    return childSize;
-}
 
 END_XNOR_CORE

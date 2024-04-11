@@ -233,7 +233,7 @@ void Renderer::DrawMeshRendersByType(const Camera& camera,const std::vector<cons
 
 		Bound aabb;
 		meshRenderer->GetAABB(&aabb);
-		if (!m_Frustum.IsOnFrustum(aabb))
+		if (m_Frustum.IsOnFrustum(aabb))
 		{
 			continue;
 		}
@@ -252,25 +252,10 @@ void Renderer::DrawMeshRendersByType(const Camera& camera,const std::vector<cons
 		}
 		
 		Rhi::UpdateModelUniform(modelData);
-
-		if (meshRenderer->material.albedoTexture.IsValid())
-			meshRenderer->material.albedoTexture->BindTexture(MaterialTextureEnum::Albedo);
 		
-		if (meshRenderer->material.metallicTexture.IsValid())
-			meshRenderer->material.metallicTexture->BindTexture(MaterialTextureEnum::Metallic);
-
-		if (meshRenderer->material.roughnessTexture.IsValid())
-			meshRenderer->material.roughnessTexture->BindTexture(MaterialTextureEnum::Roughness);
-
-		if (meshRenderer->material.normalTexture.IsValid())
-			meshRenderer->material.normalTexture->BindTexture(MaterialTextureEnum::Normal);
-
-		if (meshRenderer->material.ambientOcclusionTexture.IsValid())
-			meshRenderer->material.ambientOcclusionTexture->BindTexture(MaterialTextureEnum::AmbiantOcclusion);
-
 		if (meshRenderer->model.IsValid())
 		{
-			Rhi::BindMaterial(meshRenderer->material);
+			meshRenderer->material.BindMaterial();
 			Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
 		}
 	}
@@ -298,25 +283,10 @@ void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRe
 		}
 		
 		Rhi::UpdateModelUniform(modelData);
-
-		if (meshRenderer->material.albedoTexture.IsValid())
-			meshRenderer->material.albedoTexture->BindTexture(MaterialTextureEnum::Albedo);
-		
-		if (meshRenderer->material.metallicTexture.IsValid())
-			meshRenderer->material.metallicTexture->BindTexture(MaterialTextureEnum::Metallic);
-
-		if (meshRenderer->material.roughnessTexture.IsValid())
-			meshRenderer->material.roughnessTexture->BindTexture(MaterialTextureEnum::Roughness);
-
-		if (meshRenderer->material.normalTexture.IsValid())
-			meshRenderer->material.normalTexture->BindTexture(MaterialTextureEnum::Normal);
-
-		if (meshRenderer->material.ambientOcclusionTexture.IsValid())
-			meshRenderer->material.ambientOcclusionTexture->BindTexture(MaterialTextureEnum::AmbiantOcclusion);
 		
 		if (meshRenderer->model.IsValid())
 		{
-			Rhi::BindMaterial(meshRenderer->material);
+			meshRenderer->material.BindMaterial();
 			Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
 		}
 	}
@@ -331,7 +301,7 @@ void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*
 
 		Bound aabb;
 		meshRenderer->GetAABB(&aabb);
-		if (!m_Frustum.IsOnFrustum(aabb))
+		if (m_Frustum.IsOnFrustum(aabb))
 		{
 			continue;
 		}
@@ -355,7 +325,6 @@ void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*
 		
 		if (meshRenderer->model.IsValid())
 		{
-			Rhi::BindMaterial(meshRenderer->material);
 			Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
 		}
 	}

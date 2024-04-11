@@ -17,6 +17,9 @@ public:
     ///
     /// This is valid once @ref Application::Application "the Application constructor" has been called
     XNOR_ENGINE static inline std::filesystem::path executablePath;
+
+    /// @brief Current Application instance.
+    XNOR_ENGINE static inline Application* applicationInstance = nullptr;
     
     /// @brief Exits the currently-executing Application immediately, destroying the current Application beforehand.
     [[noreturn]]
@@ -24,6 +27,8 @@ public:
     
     /// @brief Renderer of the application
     Renderer renderer;
+    
+    XnorCore::Viewport* gameViewPort = nullptr;
 
     /// @brief ctor, Initializes the sub systems
     XNOR_ENGINE Application();
@@ -40,8 +45,7 @@ public:
     XNOR_ENGINE virtual void CheckWindowResize() = 0;
     
 protected:
-    /// @brief Current Application instance.
-    XNOR_ENGINE static inline Application* m_ApplicationInstance = nullptr;
+  
 };
 
 END_XNOR_CORE

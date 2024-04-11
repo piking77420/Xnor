@@ -47,6 +47,14 @@
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 				</0>
+				<1 typeName="BoxCollider">
+					<center>0 ; 0 ; 0</center>
+					<size>1 ; 1 ; 1</size>
+					<constraints>ConstraintPosition|ConstraintRotation</constraints>
+					<m_IsStatic>true</m_IsStatic>
+					<m_IsTrigger>false</m_IsTrigger>
+					<m_IsActive>false</m_IsActive>
+				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
@@ -55,7 +63,7 @@
 			<name>Entity</name>
 			<m_EntityId>C74CD1E1-1F57-4F9C-BB-FE-C9-F-6B-51-20-83</m_EntityId>
 			<transform>
-				<m_Position>-4 ; 3 ; -4</m_Position>
+				<m_Position>0 ; 3 ; 1</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
@@ -79,6 +87,18 @@
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 				</0>
+				<1 typeName="TestComponentPhysics">
+					<m_JumpForce>14.6</m_JumpForce>
+				</1>
+				<2 typeName="CapsuleCollider">
+					<height>1</height>
+					<radius>1</radius>
+					<constraints/>
+					<m_IsStatic>false</m_IsStatic>
+					<m_IsTrigger>false</m_IsTrigger>
+					<m_IsActive>false</m_IsActive>
+				</2>
+				<3 typeName="CameraComponent"/>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>

@@ -84,8 +84,7 @@ void Editor::CreateDefaultWindows()
 
 	data.editorViewPort.isEditor = true;
 	data.editorViewPort.camera = &data.editorCam;
-	data.gameViewPort.camera = &data.gameCam;
-	m_UiWindows.push_back(new RenderWindow(this,data.gameViewPort));
+	m_UiWindows.push_back(new RenderWindow(this,*gameViewPort));
 	m_UiWindows.push_back(new EditorWindow(this,data.editorViewPort));
 
 	if (XnorCore::FileManager::Contains(SerializedScenePath))
