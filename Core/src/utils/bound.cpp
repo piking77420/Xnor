@@ -68,6 +68,7 @@ bool_t Bound::Countain(const Bound& otherBound) const
     const bool_t zInside = min.z <= otherMin.z && max.z >= otherMax.z;
 
     return xInside && yInside && zInside;
+
 }
 
 bool_t Bound:: IsOnPlane(const Plane& plane) const

@@ -6,6 +6,8 @@
 #include "scene/entity.hpp"
 
 #include <vector>
+
+#include "octree_iterator.hpp"
 #include "stack"
 #include "octree_node.hpp"
 
@@ -30,7 +32,10 @@ public:
     
     void Draw();
 
-    
+    OctreeIterator<OctreeNode<T>> GetIterator() const
+    {
+        return  OctreeIterator<OctreeNode<T>>(m_MotherNode);
+    }
 
 private:
     void Clear();
@@ -46,16 +51,15 @@ void Octree<T>::Update(std::vector<ObjectBounding<T>>& data)
     // Get the bounding box who contain all the data
     for (ObjectBounding<T>& element : data)
     {
-        m_MotherNode.GetBound().Encapsulate(element.bound);
+        m_MotherNode.boudingBox.Encapsulate(element.bound);
     }
 
     // normalize the mother box with his max to be a cube
-    const Vector3 previousSize = m_MotherNode.GetBound().GetSize();
+    const Vector3 previousSize = m_MotherNode.boudingBox.GetSize();
     const float_t maxSize = std::max( { previousSize.x , previousSize.y ,previousSize.z });
     const Vector3 size = Vector3(maxSize) * 0.5f;
-    m_MotherNode.GetBound().SetMinMax(m_MotherNode.GetBound().center - size,m_MotherNode.GetBound().center + size);
+    m_MotherNode.boudingBox.SetMinMax(m_MotherNode.boudingBox.center - size,m_MotherNode.boudingBox.center + size);
     
-
     for (ObjectBounding<T>& element : data)
     {
         m_MotherNode.AddObject(element);
