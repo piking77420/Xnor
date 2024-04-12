@@ -216,8 +216,6 @@ private:
 
     XNOR_ENGINE static inline std::shared_ptr<LogEntry> m_LastLog;
 
-    XNOR_ENGINE static inline uint32_t m_SameLastLogs = 0;
-
     XNOR_ENGINE static inline bool_t m_LastLogCollapsed = false;
 
     XNOR_ENGINE static inline std::condition_variable m_CondVar;

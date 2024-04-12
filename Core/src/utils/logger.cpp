@@ -218,6 +218,13 @@ void Logger::Run()
 
 void Logger::PrintLog(const std::shared_ptr<LogEntry>& log)
 {
+    static uint64_t sameLastLogs;
+    static decltype(sameLastLogs) oldSameLastLogs = sameLastLogs;
+    if (log->previousLog)
+        sameLastLogs++;
+    else
+        sameLastLogs = 0;
+
     // Get the message time and format it in [hh:mm:ss:ms]
     const auto&& t = std::chrono::duration_cast<std::chrono::milliseconds, int64_t>(log->time.time_since_epoch());
     const std::string time = std::format("[{:%T}] ", t);
@@ -259,21 +266,16 @@ void Logger::PrintLog(const std::shared_ptr<LogEntry>& log)
     const bool_t printToFile = log->printToFile && m_File.is_open();
 
     // If the last log is the same as the current one, we should collapse this one
-    if (m_SameLastLogs > 0)
+    if (sameLastLogs > 0)
     {
         if (log->printToConsole)
         {
-            // If we already printed the same log, move the cursor up to override the last line
-            if (m_SameLastLogs > 1)
-            {
-                CONSOLE_SCREEN_BUFFER_INFO info;
-                GetConsoleScreenBufferInfo(nullptr, &info);
-                COORD newPosition = info.dwCursorPosition;
-                newPosition.Y -= 1;
-                SetConsoleCursorPosition(nullptr, newPosition);
-            }
+            // If we already printed the same log, move the cursor back to the beginning of the line
+            if (sameLastLogs > 1)
+                std::cout << '\r';
 
-            std::cout << color + baseMessage + "... and " + std::to_string(m_SameLastLogs) + " more" + ANSI_RESET;
+            std::cout << color + baseMessage + "... and " + std::to_string(sameLastLogs) + " more" + ANSI_RESET;
+            std::cout.flush();
         }
 
         // If we need to print to a file, we first wait for a different log
@@ -282,18 +284,21 @@ void Logger::PrintLog(const std::shared_ptr<LogEntry>& log)
     }
     else
     {
-        const std::string oldBaseMessage = baseMessage;
-        baseMessage += log->message + '\n';
+        const std::string message = baseMessage + log->message + '\n';
 
         if (log->printToConsole)
-            std::cout << color + baseMessage + ANSI_RESET;
+        {
+            if (m_LastLogCollapsed)
+                std::cout << '\n';
+            std::cout << color + message + ANSI_RESET;
+        }
 
         if (printToFile)
         {
             if (m_LastLogCollapsed)
-                m_File << oldBaseMessage + "...and " + std::to_string(m_SameLastLogs) + " more";
+                m_File << baseMessage + "...and " + std::to_string(oldSameLastLogs) + " more\n";
             else
-                m_File << baseMessage;
+                m_File << message;
         }
 
         m_LastLogCollapsed = false;

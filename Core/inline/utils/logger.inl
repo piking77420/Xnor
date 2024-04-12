@@ -18,15 +18,9 @@ void Logger::Log(const LogLevel level, const std::string& format, Args&&... args
     
     m_Logs.Push(entry);
     if (m_LastLog && *m_LastLog == *entry)
-    {
         entry->previousLog = m_LastLog;
-        m_SameLastLogs++;
-    }
     else
-    {
         m_LastLog = entry;
-        m_SameLastLogs = 0;
-    }
     
     m_CondVar.notify_one();
 }
@@ -41,15 +35,9 @@ void Logger::LogTempDebug(const std::string& format, const char_t* file, const i
     
     m_Logs.Push(entry);
     if (m_LastLog && *m_LastLog == *entry)
-    {
         entry->previousLog = m_LastLog;
-        m_SameLastLogs++;
-    }
     else
-    {
         m_LastLog = entry;
-        m_SameLastLogs = 0;
-    }
     
     m_CondVar.notify_one();
 }

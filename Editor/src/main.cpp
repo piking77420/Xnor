@@ -1,6 +1,7 @@
 #include "editor.hpp"
 #include "reflection/xnor_factory.hpp"
 #include "utils/logger.hpp"
+#include "utils/windows.hpp"
 
 // https://www.reddit.com/r/opengl/comments/unc3fy/how_to_programatically_set_the_gpu_to_my_opengl/?onetap_auto=true&one_tap=true 
 extern "C"
@@ -20,6 +21,13 @@ int main(int, char**)
 	Editor editor;
 
 	editor.Update();
+
+	Logger::LogInfo("Repeating log");
+	Logger::LogInfo("Repeating log");
+	Logger::LogInfo("Repeating log");
+	Logger::LogInfo("Repeating log");
+	Logger::LogInfo("Repeating log");
+	Logger::LogInfo("Repeating log");
 
 	return EXIT_SUCCESS;
 }
