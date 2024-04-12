@@ -6,12 +6,12 @@
 #include <assimp/scene.h>
 
 #include "core.hpp"
-#include "rendering/material.hpp"
 #include "resource/animation.hpp"
 #include "resource/model.hpp"
+#include "skeleton.hpp"
+#include "texture.hpp"
+#include "rendering/material.hpp"
 #include "resource/resource.hpp"
-#include "resource/skeleton.hpp"
-#include "resource/texture.hpp"
 #include "utils/list.hpp"
 
 BEGIN_XNOR_CORE

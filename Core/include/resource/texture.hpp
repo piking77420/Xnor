@@ -14,7 +14,7 @@
 BEGIN_XNOR_CORE
 
 /// @brief Represents an image in memory.
-class Texture : public Resource
+class Texture final : public Resource
 {
 public:
     /// @brief Options for loading the data of a Texture.
@@ -83,6 +83,8 @@ public:
     
     XNOR_ENGINE void Unload() override;
 
+    XNOR_ENGINE void SetIsEmbedded();
+
     /// @brief Gets the raw data of the texture
     /// @tparam T Type
     /// @return Data
@@ -127,30 +129,31 @@ public:
 
     /// @brief Gets the filtering option
     /// @return Filtering
-    XNOR_ENGINE TextureFiltering::TextureFiltering GetTextureFiltering() const;
+    XNOR_ENGINE ENUM_VALUE(TextureFiltering) GetTextureFiltering() const;
 
     /// @brief Gets the wrapping option
     /// @return Wrapping option
-    XNOR_ENGINE TextureWrapping::TextureWrapping GetTextureWrapping() const;
+    XNOR_ENGINE ENUM_VALUE(TextureWrapping) GetTextureWrapping() const;
     
     /// @brief Gets the internal format
     /// @return Internal format
-    XNOR_ENGINE TextureInternalFormat::TextureInternalFormat GetInternalFormat() const;
+    XNOR_ENGINE ENUM_VALUE(TextureInternalFormat) GetInternalFormat() const;
 
     /// @brief Gets the format
     /// @return Format
-    XNOR_ENGINE TextureFormat::TextureFormat GetTextureFormat() const;
+    XNOR_ENGINE ENUM_VALUE(TextureFormat) GetTextureFormat() const;
 
 private:
     uint8_t* m_Data = nullptr;
     Vector2i m_Size;
     int32_t m_DataChannels = 0;
     uint32_t m_Id = 0;
-    
-    TextureFiltering::TextureFiltering m_TextureFiltering = TextureFiltering::Nearest;
-    TextureWrapping::TextureWrapping m_TextureWrapping = TextureWrapping::Repeat;
-    TextureInternalFormat::TextureInternalFormat m_TextureInternalFormat = TextureInternalFormat::Rgba8;
-    TextureFormat::TextureFormat m_TextureFormat = TextureFormat::Rgb;
+    bool_t m_IsEmbedded = false;
+
+    ENUM_VALUE(TextureFiltering) m_TextureFiltering = TextureFiltering::Nearest;
+    ENUM_VALUE(TextureWrapping) m_TextureWrapping = TextureWrapping::Repeat;
+    ENUM_VALUE(TextureInternalFormat) m_TextureInternalFormat = TextureInternalFormat::Rgba8;
+    ENUM_VALUE(TextureFormat) m_TextureFormat = TextureFormat::Rgb;
 };
 
 END_XNOR_CORE

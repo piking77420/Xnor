@@ -6,8 +6,8 @@
 #include "resource/model.hpp"
 #include "scene/component.hpp"
 
-/// @file mesh_renderer.hpp
-/// @brief Defines the XnorCore::MeshRenderer class.
+/// @file skinned_mesh_render.hpp
+/// @brief Defines the XnorCore::SkinnedMeshRender class.
 
 BEGIN_XNOR_CORE
 

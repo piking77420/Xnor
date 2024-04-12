@@ -95,8 +95,8 @@ uint32_t Rhi::CreateModel(const std::vector<Vertex>& vertices, const std::vector
 	glEnableVertexArrayAttrib(modelInternal.vao, 6);
 	glVertexArrayAttribBinding(modelInternal.vao, 6, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 6, Vertex::MaxBoneWeight, GL_FLOAT, GL_FALSE, offsetof(Vertex, boneWeight));
-
 	
+
 	glVertexArrayVertexBuffer(modelInternal.vao, 0, modelInternal.vbo, 0, sizeof(Vertex));
 	glVertexArrayElementBuffer(modelInternal.vao, modelInternal.ebo);
 	

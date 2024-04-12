@@ -69,6 +69,7 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
             size = static_cast<int64_t>(static_cast<uint64_t>(scene->mTextures[i]->mWidth) * static_cast<uint64_t>(scene->mTextures[i]->mHeight) * sizeof(aiTexel));
     
         texture->Load(reinterpret_cast<const uint8_t*>(scene->mTextures[i]->pcData), size);
+        texture->SetIsEmbedded();
 
         textures.Add(texture);
     }
@@ -82,8 +83,10 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
         m_Animations.Add(animation);
     }
 
-    material.albedoTexture = Pointer<Texture>::Create(*textures[0]);
-    material.normalTexture = Pointer<Texture>::Create(*textures[1]);
+    if (textures.GetSize() >= 2)
+    {
+        material.albedoTexture = Pointer<Texture>::Create(*textures[0]);
+    }
 
     return true;
 }
