@@ -79,7 +79,7 @@ OctreeNode<T>::~OctreeNode()
 {
     for (size_t i = 0; i < m_Child.size(); i++)
     {
-        if (IsOctanValid(i))
+        if (IsOctanValid(static_cast<uint32_t>(i)))
         {
             delete m_Child[i];
             m_Child[i] = nullptr;
@@ -171,7 +171,7 @@ void OctreeNode<T>::Clear()
 {
     for (size_t i = 0; i < m_Child.size(); i++)
     {
-        if (IsOctanValid(i))
+        if (IsOctanValid(static_cast<uint32_t>(i)))
         {
             m_Child[i]->Clear();
         }

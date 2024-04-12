@@ -55,8 +55,8 @@ public:
     float_t emissive = 0.f;
     /// @brief Ambient occlusion parameter
     float_t ambientOcclusion = 0.f;
-
-    void BindMaterial() const;
+    
+    void XNOR_ENGINE BindMaterial() const;
 };
 
 END_XNOR_CORE

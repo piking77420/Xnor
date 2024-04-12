@@ -9,7 +9,7 @@ using namespace XnorCore;
 
 Collider::Collider()
 {
-    // AddDebugEvents();
+    AddDebugEvents();
 }
 
 Collider::~Collider()
@@ -65,7 +65,7 @@ void Collider::AddDebugEvents()
     {
         Logger::LogDebug("OnTriggerEnter between {} and {} ; Normal : {} ; Pen depth : {}", self->entity->name, other->entity->name, data.normal, data.penetrationDepth);
     };
-    
+
     onTriggerStay += [](const Collider* const self, const Collider* const other, const CollisionData& data) -> void
     {
         Logger::LogDebug("OnTriggerStay between {} and {} ; Normal : {} ; Pen depth : {}", self->entity->name, other->entity->name, data.normal, data.penetrationDepth);

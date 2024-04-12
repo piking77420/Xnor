@@ -32,12 +32,14 @@ void Renderer::Initialize()
 	m_SkyboxRenderer.InitializeResources();
 	m_LightManager.InitResources();
 	m_PostProcessPass.Init();
+	m_AnimationRender.InitResources();
 	Rhi::PrepareRendering();
 }
 
 void Renderer::BeginFrame(const Scene& scene)
 {
 	m_LightManager.BeginFrame(scene, *this);
+	m_AnimationRender.BeginFrame(scene,*this);
 	Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
 	scene.GetAllComponentOfType<MeshRenderer>(&m_MeshRenderers);
 	
@@ -48,6 +50,7 @@ void Renderer::BeginFrame(const Scene& scene)
 void Renderer::EndFrame(const Scene& scene)
 {
 	m_LightManager.EndFrame(scene);
+	m_AnimationRender.EndFrame();
 }
 
 void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene) const
@@ -101,9 +104,14 @@ void Renderer::DeferedRenderring(const Camera& camera,const std::vector<const Me
 	};
 	
 	viewportData.gBufferPass.BeginRenderPass(renderPassBeginInfo);
+	
+	// Draw Simple Mesh
 	m_GBufferShader->Use();
-	DrawMeshRendersByType(camera,meshRenderers, MaterialType::Opaque);
+	DrawMeshRendersByType(meshRenderers, MaterialType::Opaque);
 	m_GBufferShader->Unuse();
+	// DrawSkinnedMesh
+	m_AnimationRender.RenderAnimation();
+	
 	viewportData.gBufferPass.EndRenderPass();
 
 	const RenderPassBeginInfo renderPassBeginInfoLit =
@@ -150,7 +158,7 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
 	viewportData.colorPass.BeginRenderPass(renderPassBeginInfoLit);
 	
 	m_Forward->Use();
-	DrawMeshRendersByType(*viewport.camera, meshRenderers, MaterialType::Lit);
+	DrawMeshRendersByType(meshRenderers, MaterialType::Lit);
 	m_Forward->Unuse();
 
 	if (isEditor)
@@ -222,7 +230,7 @@ void Renderer::PrepareOctree() const
 }
 
 
-void Renderer::DrawMeshRendersByType(const Camera& camera,const std::vector<const MeshRenderer*>& meshRenderers, const MaterialType materialType) const
+void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers, const MaterialType materialType) const
 {
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 
@@ -252,7 +260,7 @@ void Renderer::DrawMeshRendersByType(const Camera& camera,const std::vector<cons
 		}
 		
 		Rhi::UpdateModelUniform(modelData);
-		
+
 		if (meshRenderer->model.IsValid())
 		{
 			meshRenderer->material.BindMaterial();
@@ -283,7 +291,7 @@ void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRe
 		}
 		
 		Rhi::UpdateModelUniform(modelData);
-		
+
 		if (meshRenderer->model.IsValid())
 		{
 			meshRenderer->material.BindMaterial();

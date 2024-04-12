@@ -20,7 +20,7 @@ class Model : public Resource
 {
 public:
     /// @brief Allowed extensions for models.
-    XNOR_ENGINE static inline constexpr std::array<const char_t*, 58> FileExtensions
+    XNOR_ENGINE static inline constexpr std::array<const char_t*, 57> FileExtensions
     {
         ".3d",
         ".3ds",
@@ -38,7 +38,6 @@ public:
         ".dae",
         ".dxf",
         ".enff",
-        ".fbx",
         ".gltf",
         ".glb",
         ".hmb",

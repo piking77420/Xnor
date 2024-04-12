@@ -8,6 +8,7 @@
 #include "scene/scene.hpp"
 #include "utils/utils.hpp"
 #include "serialization/serializer.hpp"
+#include "utils/coroutine.hpp"
 
 using namespace XnorEditor;
 
@@ -73,6 +74,8 @@ void HeaderWindow::DisplayOnPlay()
     
     if (ImGui::ImageButton(XnorCore::Utils::IntToPointer<ImTextureID>(m_StopButton->GetId()), { m_ImageSize, m_ImageSize }))
     {
+        XnorCore::Coroutine::StopAll();
+        
         std::string path;
         if (m_Editor->data.currentScene == nullptr)
         {

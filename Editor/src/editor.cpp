@@ -13,6 +13,7 @@
 #include "scene/component/test_component.hpp"
 #include "serialization/serializer.hpp"
 #include "utils/coroutine.hpp"
+#include "utils/timeline.hpp"
 #include "windows/content_browser.hpp"
 #include "windows/editor_window.hpp"
 #include "windows/header_window.hpp"
@@ -323,6 +324,7 @@ void Editor::Update()
 		CheckWindowResize();
 		
 		renderer.BeginFrame(*World::scene);
+
 		UpdateWindows();
 		WorldBehaviours();
 		OnRenderingWindow();

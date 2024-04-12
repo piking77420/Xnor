@@ -4,6 +4,7 @@
 #include <ranges>
 
 #include "input/time.hpp"
+#include "utils/formatter.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -62,6 +63,14 @@ void Coroutine::Stop(const Guid& coroutineId)
 
     m_RunningRoutines.at(coroutineId).Destroy();
     m_RunningRoutines.erase(coroutineId);
+}
+
+void Coroutine::StopAll()
+{
+    for (const auto& coroutine : m_RunningRoutines | std::views::values)
+        coroutine.Destroy();
+
+    m_RunningRoutines.clear();
 }
 
 bool_t Coroutine::IsRunning(const Guid& coroutineId) { return m_RunningRoutines.contains(coroutineId); }

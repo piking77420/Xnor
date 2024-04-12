@@ -44,17 +44,13 @@ void DotnetReflection::DisplaySimpleType(T* const obj, const char_t* const name)
     {
         ImGui::Checkbox(name, obj);
     }
-    else if constexpr (Meta::IsSame<T, uint8_t>)
+    else if constexpr (Meta::IsAny<T, uint8_t, char_t>)
     {
         ImGui::DragScalar(name, ImGuiDataType_U8, obj);
     }
     else if constexpr (Meta::IsSame<T, int8_t>)
     {
         ImGui::DragScalar(name, ImGuiDataType_S8, obj);
-    }
-    else if constexpr (Meta::IsSame<T, char_t>)
-    {
-        ImGui::DragScalar(name, ImGuiDataType_U8, obj);
     }
     else if constexpr (Meta::IsSame<T, double_t>)
     {
@@ -70,7 +66,7 @@ void DotnetReflection::DisplaySimpleType(T* const obj, const char_t* const name)
     }
     else if constexpr (Meta::IsSame<T, uint32_t>)
     {
-        ImGui::DragScalar(name, ImGuiDataType_S32, obj);
+        ImGui::DragScalar(name, ImGuiDataType_U32, obj);
     }
     else if constexpr (Meta::IsSame<T, int64_t>)
     {

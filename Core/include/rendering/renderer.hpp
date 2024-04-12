@@ -6,6 +6,7 @@
 #include "frustum.hpp"
 #include "material.hpp"
 #include "viewport.hpp"
+#include "render_systems/animation_render.hpp"
 #include "render_systems/light_manager.hpp"
 #include "render_systems/skybox_renderer.hpp"
 #include "resource/model.hpp"
@@ -68,6 +69,7 @@ private:
     LightManager m_LightManager;
     SkyboxRenderer m_SkyboxRenderer;
     PostProcessPass m_PostProcessPass;
+    AnimationRender m_AnimationRender;
     mutable Octree<const MeshRenderer> m_RenderOctree;
     mutable Frustum m_Frustum;
     
@@ -87,7 +89,7 @@ private:
     
     XNOR_ENGINE void InitResources();
     
-    XNOR_ENGINE void DrawMeshRendersByType(const Camera& camera,const std::vector<const MeshRenderer*>& meshRenderers, MaterialType materialType) const;
+    XNOR_ENGINE void DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers, MaterialType materialType) const;
     
     XNOR_ENGINE void DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRenderers, const Scene& scene) const;
     

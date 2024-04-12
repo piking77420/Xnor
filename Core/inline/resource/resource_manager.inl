@@ -42,7 +42,7 @@ Pointer<T> ResourceManager::Load(const Pointer<File>& file, bool_t loadInRhi)
             loaded ? "" : ". Loading it"
         );
 
-        if (!loaded)
+        // if (!loaded)
             resource->Load(file);
 
         return resource;
@@ -108,7 +108,7 @@ Pointer<T> ResourceManager::Get(const Guid& guid)
     if (it == m_GuidMap.end())
         return nullptr;
 
-    return Utils::DynamicPointerCast<T>(it->second);
+    return Utils::DynamicPointerCast<T>(GetNoCheck<T>(it->second));
 }
 
 template <Concepts::ResourceT T>
@@ -126,7 +126,6 @@ void ResourceManager::FindAll(std::vector<Pointer<T>>* result)
     
     for (auto& val : m_Resources | std::views::values)
     {
-        // ReSharper disable once CppTooWideScope
         Pointer<T> entry = Utils::DynamicPointerCast<T>(val);
         
         if (entry)

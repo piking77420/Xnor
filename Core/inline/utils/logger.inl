@@ -14,7 +14,7 @@ void Logger::Log(const LogLevel level, const std::string& format, Args&&... args
     if (level < minimumConsoleLevel && level < minimumFileLevel)
         return;
 
-    m_Lines.Push(LogEntry(std::vformat(format, std::make_format_args(args...)), level));
+    m_Lines.Push(LogEntry(std::vformat(format, std::make_format_args(std::forward<Args>(args)...)), level));
     m_CondVar.notify_one();
 }
 
@@ -24,7 +24,7 @@ void Logger::LogTempDebug(const std::string& format, const char_t* file, const i
     if (LogLevel::TemporaryDebug < minimumConsoleLevel && LogLevel::TemporaryDebug < minimumFileLevel)
         return;
 
-    m_Lines.Push(LogEntry(std::vformat(format, std::make_format_args(args...)), LogLevel::TemporaryDebug, file, line));
+    m_Lines.Push(LogEntry(std::vformat(format, std::make_format_args(std::forward<Args>(args)...)), LogLevel::TemporaryDebug, file, line));
     m_CondVar.notify_one();
 }
 

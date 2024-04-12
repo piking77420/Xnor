@@ -17,7 +17,7 @@ Resource::Resource(std::string name)
 
 Resource::~Resource() = default;
 
-bool_t Resource::Load(const uint8_t*, int64_t)
+bool_t Resource::Load(const uint8_t* const, const int64_t)
 {
     return false;
 }

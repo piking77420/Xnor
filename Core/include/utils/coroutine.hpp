@@ -1,10 +1,10 @@
 #pragma once
 
 #include <coroutine>
-#include <exception>
+#include <functional>
+#include <unordered_map>
 
 #include "core.hpp"
-#include "utils/concepts.hpp"
 #include "utils/guid.hpp"
 
 /// @file coroutine.hpp
@@ -31,7 +31,7 @@ public:
     struct promise_type
     {
         /// @brief The last @c co_await value
-        AwaitType awaitValue;
+        AwaitType awaitValue = AwaitType::zero();
 
         /// @brief Whether the Coroutine reached either a @c co_return statement, or the end of the function body.
         bool_t finished = false;
@@ -84,6 +84,8 @@ public:
     XNOR_ENGINE static void UpdateAll();
 
     XNOR_ENGINE static void Stop(const Guid& coroutineId);
+
+    XNOR_ENGINE static void StopAll();
 
     XNOR_ENGINE static bool_t IsRunning(const Guid& coroutineId);
 
@@ -138,6 +140,6 @@ private:
 
 /// @brief Coroutine function prototype.
 template <typename... Args>
-using CoroutineFunc = Coroutine(*)(Args...);
+using CoroutineFunc = std::function<Coroutine(Args...)>;
 
 END_XNOR_CORE

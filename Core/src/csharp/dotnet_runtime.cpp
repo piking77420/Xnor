@@ -6,12 +6,10 @@
 
 #include "application.hpp"
 #include "reflection/dotnet_reflection.hpp"
+#include "utils/formatter.hpp"
 
 // We need to include Window.h here but it must be the last include as it breaks everything otherwise
-#undef APIENTRY
-#define XMLDocument XMLDocument_dont_care
-#include <windows.h>
-#undef XMLDocument
+#include "utils/windows.hpp"
 
 using namespace XnorCore;
 

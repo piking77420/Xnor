@@ -3,7 +3,6 @@
 #include <cmath>
 
 #include "core.hpp"
-#include "utils/meta_programming.hpp"
 
 /// @file time.hpp
 /// @brief Defines the XnorCore::Time static class.

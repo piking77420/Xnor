@@ -4,7 +4,7 @@
 
 using namespace XnorCore;
 
-void XnorCore::Material::BindMaterial() const
+void Material::BindMaterial() const
 {
     if (albedoTexture.IsValid())
         albedoTexture->BindTexture(MaterialTextureEnum::Albedo);

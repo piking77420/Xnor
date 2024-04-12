@@ -9,11 +9,9 @@
 #include "resource/resource_manager.hpp"
 
 // We need windows.h for GetModuleFileNameA
-#undef APIENTRY
-// ReSharper disable once CppInconsistentNaming
-#define XMLDocument XMLDocument_dont_care
-#include <windows.h>
-#undef XMLDocument
+#include "utils/windows.hpp"
+
+#include "audio/audio.hpp"
 
 using namespace XnorCore;
 
@@ -52,9 +50,12 @@ Application::Application()
 	PhysicsWorld::Initialize();
     Input::Initialize();
     Screen::Initialize();
+	if (!Audio::Initialize())
+		Logger::LogError("Couldn't initialize audio");
 
 	if (!DotnetRuntime::Initialize())
 	{
+		Window::MessageBox("Error", "Couldn't initialize .NET runtime. Continue execution anyway ?", MessageBoxOptions::YesNo);
 		const int result = MessageBoxA(nullptr, "Couldn't initialize .NET runtime. Continue execution anyway ?", "Error", MB_YESNO | MB_ICONERROR | MB_DEFBUTTON2);
 		if (result == IDNO)
 			Exit(EXIT_FAILURE);
@@ -75,6 +76,7 @@ Application::~Application()
 	
 	DotnetRuntime::Shutdown();
 
+	Audio::Shutdown();
 	PhysicsWorld::Destroy();
 	
     ResourceManager::UnloadAll();

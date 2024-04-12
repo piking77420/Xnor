@@ -11,6 +11,7 @@
 #include "scene/component/camera_component.hpp"
 #include "scene/component/mesh_renderer.hpp"
 #include "scene/component/script_component.hpp"
+#include "scene/component/skinned_mesh_render.hpp"
 #include "scene/component/test_component.hpp"
 #include "scene/component/test_component_physics.hpp"
 
@@ -98,6 +99,7 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<CapsuleCollider>();
     RegisterType<TestComponentPhysics>();
     RegisterType<CameraComponent>();
+    RegisterType<SkinnedMeshRender>();
 }
 
 std::string XnorFactory::GetTypeName(const size_t hash)
