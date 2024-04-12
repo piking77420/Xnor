@@ -86,6 +86,7 @@ uint32_t Rhi::CreateModel(const std::vector<Vertex>& vertices, const std::vector
 	glVertexArrayAttribBinding(modelInternal.vao, 4, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 4, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, bitangent));
 
+	/*
 	// bone indices
 	glEnableVertexArrayAttrib(modelInternal.vao, 5);
 	glVertexArrayAttribBinding(modelInternal.vao, 5, 0);
@@ -94,7 +95,7 @@ uint32_t Rhi::CreateModel(const std::vector<Vertex>& vertices, const std::vector
 	glEnableVertexArrayAttrib(modelInternal.vao, 6);
 	glVertexArrayAttribBinding(modelInternal.vao, 6, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 6, Vertex::MaxBoneWeight, GL_FLOAT, GL_FALSE, offsetof(Vertex, boneWeight));
-
+*/
 	
 	glVertexArrayVertexBuffer(modelInternal.vao, 0, modelInternal.vbo, 0, sizeof(Vertex));
 	glVertexArrayElementBuffer(modelInternal.vao, modelInternal.ebo);
@@ -1505,7 +1506,7 @@ void Rhi::UpdateCameraUniform(const CameraUniformData& cameraUniformData)
 
 void Rhi::UpdateAnimationUniform(const SkinnedMeshGpuData& skinnedMeshGpuData)
 {
-	m_LightUniform->Update(sizeof(SkinnedMeshGpuData), 0, skinnedMeshGpuData.boneMatrices->Raw());
+	m_AnimationBuffer->Update(sizeof(SkinnedMeshGpuData), 0, skinnedMeshGpuData.boneMatrices->Raw());
 }
 
 void Rhi::UpdateLight(const GpuLightData& lightData)

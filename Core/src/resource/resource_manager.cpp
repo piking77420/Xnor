@@ -93,6 +93,8 @@ void ResourceManager::LoadAll()
         m_Resources.size() - oldResourceCount,
         std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start)
     );
+
+    
 }
 
 void ResourceManager::LoadGuidMap()
