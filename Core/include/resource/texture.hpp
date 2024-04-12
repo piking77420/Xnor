@@ -5,8 +5,8 @@
 #include <Maths/vector2i.hpp>
 
 #include "core.hpp"
-#include "resource.hpp"
 #include "rendering/rhi_typedef.hpp"
+#include "resource/resource.hpp"
 
 /// @file texture.hpp
 /// @brief Defines the XnorCore::Texture class
@@ -35,7 +35,7 @@ public:
     XNOR_ENGINE static inline LoadOptions defaultLoadOptions;
 
     /// @brief Allowed extensions for texture files
-    XNOR_ENGINE static inline constexpr std::array<const char_t*, 11> FileExtensions
+    XNOR_ENGINE static constexpr std::array<const char_t*, 11> FileExtensions
     {
         ".jpg",
         ".jpeg",

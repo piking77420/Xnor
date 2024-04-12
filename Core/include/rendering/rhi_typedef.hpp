@@ -1,13 +1,12 @@
 ﻿#pragma once
 
+#include <vector>
+
 #include <Maths/matrix.hpp>
 #include <Maths/vector2i.hpp>
 
 #include "core.hpp"
-#include "utils/color.hpp"
-#include <vector>
-
-#include "vertex.hpp"
+#include "rendering/vertex.hpp"
 
 
 /// @file rhi_typedef.hpp

@@ -166,12 +166,10 @@ struct Data64
 %}
 
 %include "utils/logger.i"
-
 %include "utils/pointer.hpp"
-
 %include "utils/guid.hpp"
-
 %include "utils/list.i"
+%include "utils/color.i"
 
 %include "resource/resource.hpp"
 
@@ -180,16 +178,20 @@ struct Data64
 %include "file/file.i"
 %include "file/file_manager.hpp"
 
+%include "rendering/vertex.hpp"
 %include "rendering/rhi_typedef.i"
 
 %include "resource/cubemap.hpp"
 %include "resource/font.hpp"
 %include "resource/model.hpp"
-%include "resource/mesh.hpp"
 %include "resource/resource_manager.hpp"
 
 %include "resource/shader.hpp"
 %include "resource/texture.hpp"
+
+%include "rendering/material.hpp"
+
+%include "resource/mesh.hpp"
 
 %include "input/gamepad_input.hpp"
 %include "input/keyboard_input.hpp"
@@ -201,8 +203,6 @@ struct Data64
 
 %include "csharp/dotnet_utils.hpp"
 
-%include "utils/color.i"
-
 %include "rendering/light/light.hpp"
 %include "rendering/light/directional_light.hpp"
 %include "rendering/light/point_light.hpp"
@@ -211,8 +211,6 @@ struct Data64
 %include "rendering/camera.hpp"
 
 %include "scene/component/camera_component.hpp"
-
-%include "rendering/material.hpp"
 
 %include "scene/component/mesh_renderer.hpp"
 %include "scene/component/script_component.hpp"

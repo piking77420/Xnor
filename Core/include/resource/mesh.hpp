@@ -3,16 +3,15 @@
 #include <array>
 
 #include <assimp/mesh.h>
+#include <assimp/scene.h>
 
-#include "animation.hpp"
 #include "core.hpp"
-#include "model.hpp"
-#include "skeleton.hpp"
-#include "texture.hpp"
-#include "assimp/scene.h"
-#include "file/file.hpp"
 #include "rendering/material.hpp"
+#include "resource/animation.hpp"
+#include "resource/model.hpp"
 #include "resource/resource.hpp"
+#include "resource/skeleton.hpp"
+#include "resource/texture.hpp"
 #include "utils/list.hpp"
 
 BEGIN_XNOR_CORE
@@ -21,7 +20,7 @@ class Mesh final : public Resource
 {
 public:
     /// @brief Allowed extensions for meshes.
-    XNOR_ENGINE static inline constexpr std::array<const char_t*, 1> FileExtensions
+    XNOR_ENGINE static constexpr std::array<const char_t*, 1> FileExtensions
     {
         ".fbx"
     };

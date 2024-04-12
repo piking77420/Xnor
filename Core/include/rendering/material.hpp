@@ -5,6 +5,7 @@
 #include "core.hpp"
 #include "reflection/reflection.hpp"
 #include "resource/texture.hpp"
+#include "utils/color.hpp"
 #include "utils/pointer.hpp"
 
 /// @file material.hpp
