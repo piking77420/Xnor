@@ -300,7 +300,7 @@ void Renderer::InitResources()
 	m_GBufferShaderLit->SetDepthFunction( DepthFunction::DepthFunction::Disable);
 	
 	m_GBufferShaderLit->CreateInRhi();
-	m_GBufferShaderLit->Use();r
+	m_GBufferShaderLit->Use();
 	
 	m_GBufferShaderLit->SetInt("gPosition", DefferedDescriptor::Position);
 	m_GBufferShaderLit->SetInt("gNormal", DefferedDescriptor::Normal);
