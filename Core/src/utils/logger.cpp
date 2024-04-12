@@ -3,9 +3,8 @@
 #include <fstream>
 #include <iostream>
 
-#include <windows.h>
-
 #include "utils/formatter.hpp"
+#include "utils/windows.hpp"
 
 #define ANSI_COLOR_GRAY     "\x1b[38;5;242m"
 #define ANSI_COLOR_GREEN    "\x1b[0;32m"
@@ -25,8 +24,8 @@ std::ofstream file;
 
 uint32_t logIndex = 0;
 
-constexpr const char_t* const LogBegin = "# LOG {} BEGIN";
-constexpr const char_t* const LogEnd = "# LOG {} END";
+constexpr const char_t* const LogBegin = "# LOG {} BEGIN\n";
+constexpr const char_t* const LogEnd = "# LOG {} END\n";
 
 void Logger::OpenFile(const std::filesystem::path &filepath)
 {
@@ -48,18 +47,21 @@ void Logger::OpenFile(const std::filesystem::path &filepath)
         }
         else
         {
-            in.seekg(-1, decltype(in)::cur);
+            in.seekg(-static_cast<decltype(in)::off_type>(std::strlen(LogEnd)), decltype(in)::cur);
+            const std::streampos lineStart = in.tellg();
             std::string line;
             std::getline(in, line);
+            in.seekg(lineStart);
             
-            std::string str = LogBegin;
+            std::string_view str = LogBegin;
             std::stringstream s(line);
-            s.seekg(static_cast<std::streamoff>(str.find('{')));
+            s.seekg(static_cast<decltype(in)::off_type>(str.find('{')), decltype(in)::cur);
             s >> logIndex;
+            logIndex++;
         }
     }
 
-    file.open(filepath, std::ios_base::out | std::ios_base::ate);
+    file.open(filepath, std::ios_base::out | std::ios_base::app);
 
     if (!file.is_open() || !file.good())
     {
@@ -71,7 +73,7 @@ void Logger::OpenFile(const std::filesystem::path &filepath)
     if (exists)
         file << '\n';
 
-    file << std::format(LogBegin, logIndex) << '\n';
+    file << std::format(LogBegin, logIndex);
 
     LogInfo("Logging to file: {}", filepath);
     // Prevent this log from being printed to the file
@@ -101,7 +103,7 @@ void Logger::CloseFile()
     if (!file.is_open())
         return;
 
-    file << std::format(LogEnd, logIndex) << '\n';
+    file << std::format(LogEnd, logIndex);
     
     file.flush();
     file.close();
@@ -193,8 +195,6 @@ void Logger::Run()
             m_CondVar.notify_one();
         }
     }
-    
-    CloseFile();
 }
 
 void Logger::PrintLog(const LogEntry& log)
@@ -256,4 +256,6 @@ void Logger::Stop()
 
     if (m_Thread.joinable())
         m_Thread.join();
+    
+    CloseFile();
 }
