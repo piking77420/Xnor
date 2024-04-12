@@ -1,4 +1,5 @@
 #version 460 core
+
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
@@ -8,7 +9,6 @@ layout (location = 5) in vec4 aBoneIndices;
 layout (location = 6) in vec4 aBoneWeights;
 
 #define MaxBones 100
-
 
 layout (std140, binding = 0) uniform CameraUniform
 {
@@ -70,17 +70,15 @@ out VS_OUT
 
 void main()
 {
-    
-    mat3 rotMatrix =  mat3(0.0f);
+    mat3 rotMatrix = mat3(0.0f);
     vec3 LocalNormal = vec3(0.0);
-    vec4 LocalPos =  vec4(0.0);
+    vec4 LocalPos = vec4(0.0);
 
-    
     // Compute Bone weight
-    for(int i = 0 ;i < 4 ;i++)
+    for (int i = 0; i < 4 ; i++)
     {
         int boneIndex = int(aBoneIndices[i]);
-        LocalPos += (mat[boneIndex] * aBoneWeights[i]) * vec4(aPos,1.0) ;
+        LocalPos += (mat[boneIndex] * aBoneWeights[i]) * vec4(aPos, 1.0);
 
         rotMatrix = mat3(mat[boneIndex]);
         LocalNormal += rotMatrix * aNormal;
@@ -88,8 +86,7 @@ void main()
 
     // Set the fragement pose base on animation and the model matrix
     vs_out.fragPos = model * vec4(LocalPos.xyz, 1.0);
-    gl_Position = projection * view * vs_out.fragPos ;
-
+    gl_Position = projection * view * vs_out.fragPos;
 
     vs_out.texCoords = aTexCoords;
     vs_out.roughness = roughness;

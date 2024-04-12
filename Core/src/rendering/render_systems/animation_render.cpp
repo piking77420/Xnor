@@ -1,5 +1,6 @@
 ﻿#include "rendering/render_systems/animation_render.hpp"
 
+#include "input/time.hpp"
 #include "rendering/rhi.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/scene.hpp"
@@ -54,8 +55,8 @@ void AnimationRender::RenderAnimation() const
 		
         Rhi::UpdateModelUniform(modelData);
 
-        Rhi::BindMaterial(skinnedMeshRender->mesh->material);
         skinnedMeshRender->mesh->material.BindMaterial();
+        Rhi::BindMaterial(skinnedMeshRender->mesh->material);
 
         if (skinnedMeshRender->mesh)
         {

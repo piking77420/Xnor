@@ -55,6 +55,36 @@ bool_t Model::Load(const aiMesh& loadedData)
         vert.bitangent = Vector3::Cross(vert.normal,vert.tangent);
     }
 
+    for (uint32_t i = 0; i < loadedData.mNumBones; i++)
+    {
+        for (size_t j = 0; j < loadedData.mBones[i]->mNumWeights; j++)
+        {
+            const uint32_t vertexId = loadedData.mBones[i]->mWeights[j].mVertexId;
+            const float_t weight = loadedData.mBones[i]->mWeights[j].mWeight;
+
+            for (size_t k = 0; k < Vertex::MaxBoneWeight; k++)
+            {
+                if (m_Vertices[vertexId].boneIndices[k] == -1)
+                {
+                    m_Vertices[vertexId].boneIndices[k] = static_cast<int32_t>(i);
+                    m_Vertices[vertexId].boneWeight[k] = weight;
+                    break;
+                }
+            }
+        }
+    }
+
+    if (loadedData.mNumBones != 0)
+    {
+        for (size_t i = 0; i < m_Vertices.size(); i++)
+        {
+            const float_t totalWeight = m_Vertices[i].boneWeight[0] + m_Vertices[i].boneWeight[1] + m_Vertices[i].boneWeight[2] + m_Vertices[i].boneWeight[3];
+
+            if (!Calc::Equals(totalWeight, 1))
+                Logger::LogInfo("{} ; {}", i, totalWeight);
+        }
+    }
+
     m_Indices.resize(static_cast<size_t>(loadedData.mNumFaces) * 3);
     
     for (uint32_t i = 0; i < loadedData.mNumFaces; i++)
