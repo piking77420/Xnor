@@ -134,7 +134,7 @@ void ResourceManager::SaveGuidMap()
 {
     std::ofstream file(GuidMapFilePath);
 
-    for (auto&& res : m_GuidMap)
+    for (const std::pair<const Guid, std::string>& res : m_GuidMap)
     {
         file << res.second << ";" << static_cast<std::string>(res.first) << '\n';
     }
@@ -144,6 +144,7 @@ void ResourceManager::SaveGuidMap()
 
 bool ResourceManager::Contains(const std::string& name)
 {
+    std::scoped_lock lock(m_ResourcesMutex);
     return m_Resources.contains(name);
 }
 

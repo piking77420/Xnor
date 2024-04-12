@@ -1503,9 +1503,9 @@ void Rhi::UpdateCameraUniform(const CameraUniformData& cameraUniformData)
 	m_CameraUniform->Update(sizeof(CameraUniformData), 0, cameraUniformData.view.Raw());
 }
 
-void Rhi::UpdateAninationUniform(const SkinnedMeshGpuData& skinnedMeshGPUData)
+void Rhi::UpdateAnimationUniform(const SkinnedMeshGpuData& skinnedMeshGpuData)
 {
-	m_LightUniform->Update(sizeof(SkinnedMeshGpuData), 0, skinnedMeshGPUData.boneMatrices->Raw());
+	m_LightUniform->Update(sizeof(SkinnedMeshGpuData), 0, skinnedMeshGpuData.boneMatrices->Raw());
 }
 
 void Rhi::UpdateLight(const GpuLightData& lightData)

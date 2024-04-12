@@ -279,7 +279,7 @@
 			</transform>
 			<m_Components>
 				<0 typeName="SkinnedMeshRender">
-					<mesh>B55EABFF-7722-4172-8F-D0-8B-B6-59-25-A3-2A</mesh>
+					<mesh>6681D90B-EA9E-4F13-87-FE-89-A8-AC-E0-A2-85</mesh>
 					<material>
 						<materialType>Opaque</materialType>
 						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>

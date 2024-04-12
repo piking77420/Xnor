@@ -62,10 +62,13 @@ void AnimationRender::RenderAnimation() const
             for (uint32_t i = 0; i < skinnedMeshRender->mesh->models.GetSize(); i++)
             {
                 // TODO Compute matrices and set it to the struct m_SkinnedMeshGpuData;
-                //m_SkinnedMeshGPUData
+                // m_SkinnedMeshGPUData
                 // Set data in Shader
-                
-                Rhi::UpdateAninationUniform(*m_SkinnedMeshGpuData);
+
+                for (size_t j = 0; j < MaxBones; j++)
+                    m_SkinnedMeshGpuData->boneMatrices[j] = Matrix::Identity();
+
+                Rhi::UpdateAnimationUniform(*m_SkinnedMeshGpuData);
                 Rhi::DrawModel(skinnedMeshRender->mesh->models[i]->GetId());
             }
         }
