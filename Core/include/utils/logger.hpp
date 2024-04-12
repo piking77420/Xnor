@@ -2,6 +2,7 @@
 
 #include <condition_variable>
 #include <filesystem>
+#include <fstream>
 #include <thread>
 
 #include "core.hpp"
@@ -19,8 +20,7 @@ BEGIN_XNOR_CORE
 /// @brief Static class used to log messages to the console and/or a file.
 ///
 /// ### Requirements
-/// Thread-safe logger that starts logging even before @c main() gets called because of a static-storage thread. The only necessary thing
-/// is to call @c Logger::Stop at the end of the program, which is already done in @c Application::~Application. You can synchronize the calling thread
+/// Thread-safe logger that starts logging even before @c main() gets called because of a static-storage thread. You can synchronize the calling thread
 /// with the logger one at any time by calling @c Logger::Synchronize.
 ///
 /// ### Options
@@ -181,6 +181,10 @@ private:
         std::string file;
         int32_t line = -1;
 
+        std::shared_ptr<LogEntry> previousLog = nullptr;
+
+        XNOR_ENGINE LogEntry();
+
         XNOR_ENGINE LogEntry(std::string&& message, LogLevel level);
 
         XNOR_ENGINE LogEntry(std::string&& message, LogLevel level, const std::string& file, int32_t line);
@@ -188,9 +192,15 @@ private:
         XNOR_ENGINE LogEntry(std::string&& message, LogLevel level, std::chrono::system_clock::time_point timePoint);
 
         XNOR_ENGINE LogEntry(std::string&& message, LogLevel level, std::chrono::system_clock::duration duration);
+
+        XNOR_ENGINE bool_t operator==(const LogEntry& other) const;
     };
 
-    XNOR_ENGINE static inline TsQueue<LogEntry> m_Lines;
+    XNOR_ENGINE static inline TsQueue<std::shared_ptr<LogEntry>> m_Logs;
+
+    XNOR_ENGINE static inline std::shared_ptr<LogEntry> m_LastLog;
+
+    XNOR_ENGINE static inline uint32_t m_SameLastLogs = 1;
 
     XNOR_ENGINE static inline std::condition_variable m_CondVar;
 
@@ -198,7 +208,19 @@ private:
 
     XNOR_ENGINE static inline std::thread m_Thread = std::thread(Run);
 
-    XNOR_ENGINE static void PrintLog(const LogEntry& log);
+    XNOR_ENGINE static inline std::mutex m_Mutex;
+
+    XNOR_ENGINE static inline bool_t m_Running = true;
+
+    XNOR_ENGINE static inline bool_t m_Synchronizing = false;
+
+    XNOR_ENGINE static inline std::ofstream m_File;
+
+    XNOR_ENGINE static inline std::filesystem::path m_Filepath;
+
+    XNOR_ENGINE static inline uint32_t m_LogIndex = 0;
+
+    XNOR_ENGINE static void PrintLog(const std::shared_ptr<LogEntry>& log);
 
     /// @brief Synchronizes the threads and stops the logger.
     ///

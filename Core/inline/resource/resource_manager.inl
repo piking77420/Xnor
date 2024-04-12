@@ -214,7 +214,7 @@ void ResourceManager::Unload(const Pointer<T>& resource)
 template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::AddNoCheck(std::string name)
 {
-    Pointer<T> resource = Pointer<T>::Create(std::forward<std::string>(name));
+    Pointer<T> resource = Pointer<T>::New(std::forward<std::string>(name));
 
     {
         std::scoped_lock lock(m_ResourcesMutex);
@@ -231,7 +231,7 @@ Pointer<T> ResourceManager::AddNoCheck(std::string name)
 template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file, const bool_t loadInRhi)
 {
-    Pointer<T> resource = Pointer<T>::Create(file->GetPathString());
+    Pointer<T> resource = Pointer<T>::New(file->GetPathString());
     
     {
         std::scoped_lock lock(m_ResourcesMutex);

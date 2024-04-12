@@ -72,7 +72,7 @@ public:
 
     /// @brief Creates a Pointer, calling @c new with @p T and forwarding all given arguments to its constructor.
     template <typename... Args>
-    static Pointer Create(Args&&... args);
+    static Pointer New(Args&&... args);
 
     /// @brief Creates a @ref Pointer with a default-initialized value.
     ///
@@ -85,7 +85,7 @@ public:
     /// @code
     /// Pointer<Type> ptr(Construct{});
     /// @endcode
-    static Pointer Create(Construct);
+    static Pointer New(Construct);
     
     /// @brief Creates an empty @ref Pointer without a reference counter and pointing to @c nullptr.
     Pointer() = default;
