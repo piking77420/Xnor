@@ -10,6 +10,42 @@
 
 BEGIN_XNOR_CORE
 
+template <class T, class U>
+concept ObjectBoundingT = Concepts::IsTSameAsU<ObjectBounding<T>,U>;
+
+template <ObjectBoundingT T>
+class OctreeIterator
+{
+    using Type = T;
+    using PtrType = T*;
+    using RefType = T&;
+
+    OctreeIterator() = default;
+    
+    OctreeIterator(PtrType ptr) : m_Ptr(ptr)
+    {
+        
+    } 
+
+    ~OctreeIterator() = default;
+
+
+    void operator++()
+    {
+       
+    }
+
+    void operator--()
+    {
+        
+    }
+    
+    
+    
+private:
+    PtrType m_Ptr;
+};
+
 
 
 template<class T>
@@ -28,11 +64,12 @@ public:
     
     void Draw();
 
+    
 
 private:
     void Clear();
     
-    OctreeNode<T> motherNode;
+    OctreeNode<T> m_MotherNode;
 };
 
 template <class T>
@@ -43,19 +80,19 @@ void Octree<T>::Update(std::vector<ObjectBounding<T>>& data)
     // Get the bounding box who contain all the data
     for (ObjectBounding<T>& element : data)
     {
-        motherNode.GetBound().Encapsulate(element.bound);
+        m_MotherNode.GetBound().Encapsulate(element.bound);
     }
 
     // normalize the mother box with his max to be a cube
-    const Vector3 previousSize = motherNode.GetBound().GetSize();
+    const Vector3 previousSize = m_MotherNode.GetBound().GetSize();
     const float_t maxSize = std::max( { previousSize.x , previousSize.y ,previousSize.z });
     const Vector3 size = Vector3(maxSize) * 0.5f;
-    motherNode.GetBound().SetMinMax(motherNode.GetBound().center - size,motherNode.GetBound().center + size);
+    m_MotherNode.GetBound().SetMinMax(m_MotherNode.GetBound().center - size,m_MotherNode.GetBound().center + size);
     
 
     for (ObjectBounding<T>& element : data)
     {
-        motherNode.AddObject(element);
+        m_MotherNode.AddObject(element);
     }
 }
 
@@ -63,7 +100,7 @@ template <class T>
 void Octree<T>::Draw()
 {
     if (draw)
-        motherNode.Draw();
+        m_MotherNode.Draw();
 }
 
 
@@ -71,7 +108,7 @@ void Octree<T>::Draw()
 template <class T>
 void Octree<T>::Clear()
 {
-    motherNode.Clear();
+    m_MotherNode.Clear();
 }
 
 
