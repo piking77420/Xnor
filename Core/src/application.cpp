@@ -8,9 +8,6 @@
 #include "rendering/rhi.hpp"
 #include "resource/resource_manager.hpp"
 
-// We need windows.h for GetModuleFileNameA
-#include "utils/windows.hpp"
-
 #include "audio/audio.hpp"
 #include "utils/message_box.hpp"
 
