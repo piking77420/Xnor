@@ -219,7 +219,9 @@ void Logger::Run()
 void Logger::PrintLog(const std::shared_ptr<LogEntry>& log)
 {
     static uint64_t sameLastLogs;
-    static decltype(sameLastLogs) oldSameLastLogs = sameLastLogs;
+    static decltype(sameLastLogs) oldSameLastLogs;
+    
+    oldSameLastLogs = sameLastLogs;
     if (log->previousLog)
         sameLastLogs++;
     else
@@ -274,7 +276,7 @@ void Logger::PrintLog(const std::shared_ptr<LogEntry>& log)
             if (sameLastLogs > 1)
                 std::cout << '\r';
 
-            std::cout << color + baseMessage + "... and " + std::to_string(sameLastLogs) + " more" + ANSI_RESET;
+            std::cout << color + baseMessage + "[...and " + std::to_string(sameLastLogs) + " more]" + ANSI_RESET;
             std::cout.flush();
         }
 
@@ -296,7 +298,7 @@ void Logger::PrintLog(const std::shared_ptr<LogEntry>& log)
         if (printToFile)
         {
             if (m_LastLogCollapsed)
-                m_File << baseMessage + "...and " + std::to_string(oldSameLastLogs) + " more\n";
+                m_File << baseMessage + "[...and " + std::to_string(oldSameLastLogs) + " more]\n";
             else
                 m_File << message;
         }
