@@ -71,14 +71,21 @@ out VS_OUT
 void main()
 {
     mat3 rotMatrix = mat3(0.0f);
-    vec3 LocalNormal = vec3(0.0);
-    vec4 LocalPos = vec4(0.0);
+    vec3 LocalNormal = vec3(aNormal);
+    vec4 LocalPos = vec4(0.0, 0.0, 0.0, 1.0);
 
     // Compute Bone weight
     for (int i = 0; i < 4 ; i++)
     {
         int boneIndex = int(aBoneIndices[i]);
-        LocalPos += (mat[boneIndex] * aBoneWeights[i]) * vec4(aPos, 1.0);
+        if (boneIndex == -1) 
+        {
+            // Dont applie bone transformation
+           LocalPos = vec4(aPos, 1.0);
+           continue;
+        }
+
+        LocalPos += (mat[boneIndex] * vec4(aPos, 1.0)) * aBoneWeights[i];
 
         rotMatrix = mat3(mat[boneIndex]);
         LocalNormal += rotMatrix * aNormal;

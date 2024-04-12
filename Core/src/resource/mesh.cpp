@@ -17,13 +17,13 @@ Mesh::~Mesh()
     for (uint32_t i = 0; i < m_Skeletons.GetSize(); i++)
         delete m_Skeletons[i];
 
-    for (uint32_t i = 0; i < m_Animations.GetSize(); i++)
-        delete m_Animations[i];
+    for (uint32_t i = 0; i < animations.GetSize(); i++)
+        delete animations[i];
 
     models.Clear();
     textures.Clear();
     m_Skeletons.Clear();
-    m_Animations.Clear();
+    animations.Clear();
 }
 
 bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
@@ -79,8 +79,9 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
         Animation* const animation = new Animation(scene->mAnimations[i]->mName.C_Str());
 
         animation->Load(*scene->mAnimations[i]);
+        animation->BindSkeleton(m_Skeletons[0]);
 
-        m_Animations.Add(animation);
+        animations.Add(animation);
     }
 
     if (textures.GetSize() >= 2)
@@ -102,6 +103,6 @@ void Mesh::CreateInRhi()
     for (uint32_t i = 0; i < m_Skeletons.GetSize(); i++)
         m_Skeletons[i]->CreateInRhi();
 
-    for (uint32_t i = 0; i < m_Animations.GetSize(); i++)
-        m_Animations[i]->CreateInRhi();
+    for (uint32_t i = 0; i < animations.GetSize(); i++)
+        animations[i]->CreateInRhi();
 }

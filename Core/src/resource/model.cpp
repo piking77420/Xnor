@@ -64,9 +64,9 @@ bool_t Model::Load(const aiMesh& loadedData)
 
             for (size_t k = 0; k < Vertex::MaxBoneWeight; k++)
             {
-                if (m_Vertices[vertexId].boneIndices[k] == -1)
+                if (Calc::Equals(m_Vertices[vertexId].boneIndices[k], -1))
                 {
-                    m_Vertices[vertexId].boneIndices[k] = static_cast<int32_t>(i);
+                    m_Vertices[vertexId].boneIndices[k] = static_cast<float_t>(i);
                     m_Vertices[vertexId].boneWeight[k] = weight;
                     break;
                 }

@@ -27,6 +27,7 @@ public:
 
     List<Model*> models;
     List<Texture*> textures;
+    List<Animation*> animations;
 
     Material material;
     
@@ -48,7 +49,6 @@ public:
 
 private:
     List<Skeleton*> m_Skeletons;
-    List<Animation*> m_Animations;
 };
 
 END_XNOR_CORE

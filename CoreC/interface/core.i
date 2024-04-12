@@ -190,7 +190,10 @@ struct Data64
 %include "resource/texture.hpp"
 
 %include "rendering/material.hpp"
+%include "rendering/bone.hpp"
 
+%include "resource/skeleton.hpp"
+%include "resource/animation.hpp"
 %include "resource/mesh.hpp"
 
 %include "input/gamepad_input.hpp"

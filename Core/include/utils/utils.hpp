@@ -4,6 +4,7 @@
 #include <functional>
 
 #include <Maths/quaternion.hpp>
+#include <Maths/vector2i.hpp>
 #include <Maths/vector2.hpp>
 #include <Maths/vector3.hpp>
 
@@ -129,7 +130,17 @@ namespace Utils
     /// @param newRange New range
     /// @return New value
     [[nodiscard]]
-    XNOR_ENGINE constexpr float_t RemapValue(float_t oldValue, Vector2 oldRange, Vector2 newRange); 
+    XNOR_ENGINE constexpr float_t RemapValue(float_t oldValue, Vector2 oldRange, Vector2 newRange);
+
+    /// @brief Remaps a value from one range to another
+    ///
+    /// e.g., the number 5 in the range [0;10] will become 1 if remapped to the range [0;2]
+    /// @param oldValue Value
+    /// @param oldRange Old range
+    /// @param newRange New range
+    /// @return New value
+    [[nodiscard]]
+    XNOR_ENGINE constexpr size_t RemapValue(size_t oldValue, Vector2i oldRange, Vector2i newRange);
 
     /// @brief Normalizes an angle (clamps its value between 0 and 2 * PI)
     /// @param angle Angle to normalize

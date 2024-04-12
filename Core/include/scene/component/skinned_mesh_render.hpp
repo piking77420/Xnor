@@ -15,10 +15,12 @@ BEGIN_XNOR_CORE
 class SkinnedMeshRender final : public Component
 {
     REFLECTABLE_IMPL(SkinnedMeshRender)
-    
+
 public:
     XNOR_ENGINE SkinnedMeshRender() = default;
-    
+
+    XNOR_ENGINE void Update() override;
+
     /// @brief @ref Mesh
     Pointer<Mesh> mesh;
 

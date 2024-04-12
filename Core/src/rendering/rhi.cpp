@@ -90,7 +90,7 @@ uint32_t Rhi::CreateModel(const std::vector<Vertex>& vertices, const std::vector
 	// bone indices
 	glEnableVertexArrayAttrib(modelInternal.vao, 5);
 	glVertexArrayAttribBinding(modelInternal.vao, 5, 0);
-	glVertexArrayAttribFormat(modelInternal.vao, 5, Vertex::MaxBoneWeight, GL_INT, GL_FALSE, offsetof(Vertex, boneIndices));
+	glVertexArrayAttribFormat(modelInternal.vao, 5, Vertex::MaxBoneWeight, GL_FLOAT, GL_FALSE, offsetof(Vertex, boneIndices));
 	// bone weights
 	glEnableVertexArrayAttrib(modelInternal.vao, 6);
 	glVertexArrayAttribBinding(modelInternal.vao, 6, 0);
