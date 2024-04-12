@@ -4,7 +4,8 @@
 #include "Maths/vector3.hpp"
 
 BEGIN_XNOR_CORE
-struct Plane
+
+struct XNOR_ENGINE Plane
 {
     Vector3 normal = Vector3::UnitY();
     float_t distance = 0.f;

@@ -213,7 +213,7 @@ void Renderer::PrepareOctree() const
 		Entity& ent = *World::scene->GetEntities()[i];
 
 		const MeshRenderer* meshRenderer = nullptr;
-		if(ent.TryGetComponent(&meshRenderer))
+		if (ent.TryGetComponent(&meshRenderer))
 		{
 			if (!meshRenderer->model.IsValid())
 				continue;

@@ -1,12 +1,14 @@
 ﻿#pragma once
 
+#include <Maths/vector3.hpp>
+
 #include "core.hpp"
 #include "transform.hpp"
-#include "Maths/vector3.hpp"
 #include "rendering/plane.hpp"
 
 BEGIN_XNOR_CORE
-    /// @brief Struct used to store the minimum and maximum bounds of the AABB of a Model.
+
+/// @brief Struct used to store the minimum and maximum bounds of the AABB of a Model.
 class XNOR_ENGINE Bound
 {
 public:

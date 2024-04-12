@@ -20,11 +20,14 @@ enum Octans : uint8_t
 };
 
 
-
 template<class T>
 class OctreeNode
 {
 public:
+
+    static constexpr size_t NbrOfChild = 8;
+
+    static bool_t IsOctanValid(Octans octans, int32_t bitIndex);
     
     DEFAULT_COPY_MOVE_OPERATIONS(OctreeNode)
     
@@ -40,17 +43,18 @@ public:
 
     void Draw();
 
-    Bound& GetBound();
+    Bound GetBound() const;
 
-    void Clear();
+    Octans GetActiveOctans() const;
 
-    bool_t IsOctanValid(int32_t i) const;
-
+    
     bool_t GetChildNode(int32_t octan,const OctreeNode<T>* outNode) const;
+    
+    void Clear();
    
-private:
+private:    
     Octans m_ActiveOctans = Zero;
-    std::array<OctreeNode*,8> m_Child;
+    std::array<OctreeNode*,NbrOfChild> m_Child;
     OctreeNode* m_Parent = nullptr;
     
     Bound m_BoudingBox;
@@ -67,6 +71,12 @@ void OctreeNode<T>::AddObject(ObjectBounding<T>& objectBounding)
 }
 
 template <class T>
+bool_t OctreeNode<T>::IsOctanValid(Octans octans, int32_t bitIndex)
+{
+    return octans & (1 << bitIndex);
+}
+
+template <class T>
 OctreeNode<T>::OctreeNode(ObjectBounding<T> objectBounding)
 {
     m_BoudingBox = objectBounding.bound;
@@ -79,7 +89,7 @@ OctreeNode<T>::~OctreeNode()
 {
     for (size_t i = 0; i < m_Child.size(); i++)
     {
-        if (IsOctanValid(static_cast<uint32_t>(i)))
+        if (IsOctanValid(m_ActiveOctans, static_cast<uint32_t>(i)))
         {
             delete m_Child[i];
             m_Child[i] = nullptr;
@@ -161,9 +171,15 @@ void OctreeNode<T>::Draw()
 }
 
 template <class T>
-Bound& OctreeNode<T>::GetBound()
+Bound OctreeNode<T>::GetBound() const
 {
     return m_BoudingBox;
+}
+
+template <class T>
+Octans OctreeNode<T>::GetActiveOctans() const
+{
+    return m_ActiveOctans;
 }
 
 template <class T>
@@ -171,7 +187,7 @@ void OctreeNode<T>::Clear()
 {
     for (size_t i = 0; i < m_Child.size(); i++)
     {
-        if (IsOctanValid(static_cast<uint32_t>(i)))
+        if (IsOctanValid(m_ActiveOctans, static_cast<uint32_t>(i)))
         {
             m_Child[i]->Clear();
         }
@@ -180,12 +196,6 @@ void OctreeNode<T>::Clear()
     m_ActiveOctans = Zero;
     m_Handels.clear();
     m_BoudingBox = Bound();
-}
-
-template <class T>
-bool_t OctreeNode<T>::IsOctanValid(const int32_t i) const
-{
-    return m_ActiveOctans & (1 <<i);
 }
 
 template <class T>
@@ -212,7 +222,7 @@ void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
     }
     bool_t hasDivide = false;
     
-    for (size_t i = 0 ; i < 8; i++)
+    for (size_t i = 0 ; i < m_Child.size(); i++)
     {
         uint32_t current = (0 | (1 << i));
         Bound octanbound;

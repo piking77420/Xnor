@@ -36,7 +36,8 @@ public:
     
     DEFAULT_COPY_MOVE_OPERATIONS(MeshRenderer);
 
-    void GetAABB(Bound* bound) const;
+    XNOR_ENGINE void GetAABB(Bound* bound) const;
+
 };
 
 END_XNOR_CORE

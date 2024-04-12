@@ -6,45 +6,11 @@
 #include "scene/entity.hpp"
 
 #include <vector>
+#include "stack"
 #include "octree_node.hpp"
 
 BEGIN_XNOR_CORE
 
-template <class T, class U>
-concept ObjectBoundingT = Concepts::IsTSameAsU<ObjectBounding<T>,U>;
-
-template <ObjectBoundingT T>
-class OctreeIterator
-{
-    using Type = T;
-    using PtrType = T*;
-    using RefType = T&;
-
-    OctreeIterator() = default;
-    
-    OctreeIterator(PtrType ptr) : m_Ptr(ptr)
-    {
-        
-    } 
-
-    ~OctreeIterator() = default;
-
-
-    void operator++()
-    {
-       
-    }
-
-    void operator--()
-    {
-        
-    }
-    
-    
-    
-private:
-    PtrType m_Ptr;
-};
 
 
 

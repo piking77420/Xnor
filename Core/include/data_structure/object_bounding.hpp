@@ -4,6 +4,7 @@
 #include "utils/bound.hpp"
 
 BEGIN_XNOR_CORE
+
 template<class T>
 struct ObjectBounding
 {
