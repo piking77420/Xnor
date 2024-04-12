@@ -7,9 +7,7 @@
 #include "application.hpp"
 #include "reflection/dotnet_reflection.hpp"
 #include "utils/formatter.hpp"
-
-// We need to include Window.h here but it must be the last include as it breaks everything otherwise
-#include "utils/windows.hpp"
+#include "utils/message_box.hpp"
 
 using namespace XnorCore;
 
@@ -30,7 +28,7 @@ bool_t DotnetRuntime::Initialize()
     {
         constexpr const char_t* const errorMessage = ".NET is not installed on this machine";
         Logger::LogFatal(errorMessage);
-        MessageBoxA(nullptr, errorMessage, "Fatal Error", MB_OK | MB_ICONSTOP);
+        MessageBox::Show(errorMessage, "Fatal Error", MessageBox::Type::Ok, MessageBox::Icon::Error);
         throw std::runtime_error(".NET is not installed on this machine");
     }
 
@@ -38,7 +36,7 @@ bool_t DotnetRuntime::Initialize()
     {
         const std::string errorMessage = std::format("Invalid .NET version. XNOR Engine needs .NET {}.0", DotnetVersionMajor);
         Logger::LogFatal(errorMessage);
-        MessageBoxA(nullptr, errorMessage.c_str(), "Fatal Error", MB_OK | MB_ICONSTOP);
+        MessageBox::Show(errorMessage, "Fatal Error", MessageBox::Type::Ok, MessageBox::Icon::Error);
         throw std::runtime_error("Invalid .NET version");
     }
 

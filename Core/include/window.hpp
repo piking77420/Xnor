@@ -1,58 +1,15 @@
 #pragma once
 
-#include <functional>
 #include <GLFW/glfw3.h>
+#include <Maths/vector2i.hpp>
 
 #include "core.hpp"
-#include "Maths/vector2i.hpp"
 #include "resource/texture.hpp"
 
 /// @file window.hpp
 /// @brief Defines the XnorCore::Window class.
 
 BEGIN_XNOR_CORE
-
-/// @brief Options for the Window::MessageBox function.
-BEGIN_ENUM(MessageBoxOptions)
-{
-	/// @brief The MessageBox contains the single option Ok.
-	Ok,
-	/// @brief The MessageBox contains the options Ok, Cancel.
-	OkCancel,
-	/// @brief The MessageBox contains the options Yes, No, Cancel.
-	YesNoCancel,
-	/// @brief The MessageBox contains the options Yes, No.
-	YesNo,
-	/// @brief The MessageBox contains the options Retry, Cancel.
-	RetryCancel,
-	/// @brief The MessageBox contains the options Cancel, Try Again, Continue.
-	CancelTryContinue
-}
-END_ENUM
-
-/// @brief Additional flags for the Window::MessageBox function.
-BEGIN_ENUM(MessageBoxFlags)
-{
-	/// @brief No additional flags.
-	None,
-
-	/// @brief Shows an exclamation mark in a triangle.
-	IconWarning,
-	/// @brief Shows a stop sign.
-	IconError,
-	/// @brief Shows an <i>i</i> in a circle.
-	IconInformation,
-
-	/// @brief Sets the default button as the first one. This is the case by default.
-	DefaultButton1,
-	/// @brief Sets the default button as the second one.
-	DefaultButton2,
-	/// @brief Sets the default button as the third one.
-	DefaultButton3,
-	/// @brief Sets the default button as the fourth one.
-	DefaultButton4
-}
-END_ENUM
 
 /// @brief A wrapper for the main window
 class XNOR_ENGINE Window
@@ -103,8 +60,6 @@ public:
 
 	/// @brief Sets the mouse cursor position.
 	static void SetCursorPosition(Vector2 newPosition);
-
-	static void MessageBox(const std::string& title, const std::string& text, ENUM_VALUE(MessageBoxOptions) flags);
 
 private:
 	/// @brief Callback when the window is resized

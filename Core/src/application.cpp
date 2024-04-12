@@ -12,6 +12,7 @@
 #include "utils/windows.hpp"
 
 #include "audio/audio.hpp"
+#include "utils/message_box.hpp"
 
 using namespace XnorCore;
 
@@ -56,9 +57,8 @@ Application::Application()
 
 	if (!DotnetRuntime::Initialize())
 	{
-		Window::MessageBox("Error", "Couldn't initialize .NET runtime. Continue execution anyway ?", MessageBoxOptions::YesNo);
-		const int result = MessageBoxA(nullptr, "Couldn't initialize .NET runtime. Continue execution anyway ?", "Error", MB_YESNO | MB_ICONERROR | MB_DEFBUTTON2);
-		if (result == IDNO)
+		const auto result = MessageBox::Show("Error", "Couldn't initialize .NET runtime. Continue execution anyway ?", MessageBox::Type::YesNo, MessageBox::Icon::Error, MessageBox::DefaultButton::Second);
+		if (result == MessageBox::Result::No)
 			Exit(EXIT_FAILURE);
 	}
 

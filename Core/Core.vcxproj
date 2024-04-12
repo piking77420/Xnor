@@ -181,6 +181,7 @@
     <ClCompile Include="src\utils\coroutine.cpp" />
     <ClCompile Include="src\utils\file_system_watcher.cpp" />
     <ClCompile Include="src\utils\logger.cpp" />
+    <ClCompile Include="src\utils\message_box.cpp" />
     <ClCompile Include="src\utils\utils.cpp" />
     <ClCompile Include="src\window.cpp" />
     <ClCompile Include="src\rendering\vertex.cpp" />
@@ -662,6 +663,7 @@
     <ClInclude Include="include\utils\formatter.hpp" />
     <ClInclude Include="include\utils\list.hpp" />
     <ClInclude Include="include\utils\logger.hpp" />
+    <ClInclude Include="include\utils\message_box.hpp" />
     <ClInclude Include="include\utils\pointer.hpp" />
     <ClInclude Include="include\utils\reference_counter.hpp" />
     <ClInclude Include="include\utils\ts_queue.hpp" />
