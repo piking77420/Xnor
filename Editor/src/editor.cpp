@@ -29,7 +29,8 @@ void Editor::CheckWindowResize()
 {
 }
 
-Editor::Editor()
+Editor::Editor(const int32_t argc, char_t** const argv)
+	: Application(argc, argv)
 {
 	XnorCore::Texture::defaultLoadOptions = { .flipVertically = false };
 	XnorCore::FileManager::LoadDirectory("assets_internal/editor");

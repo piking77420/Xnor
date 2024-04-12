@@ -26,7 +26,7 @@ public:
     Renderer renderer;
 
     /// @brief ctor, Initializes the sub systems
-    XNOR_ENGINE Application();
+    XNOR_ENGINE Application(int32_t argc, char_t** argv);
 
     /// @brief dtor, Destroys the sub systems
     XNOR_ENGINE virtual ~Application();

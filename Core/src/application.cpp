@@ -25,13 +25,11 @@ void Application::Exit(const int32_t code)
 	std::exit(code);  // NOLINT(concurrency-mt-unsafe)
 }
 
-Application::Application()
+Application::Application(const int32_t argc, char_t** const argv)
 {
     m_ApplicationInstance = this;
 
-	char_t exePath[MAX_PATH];
-	GetModuleFileNameA(nullptr, exePath, MAX_PATH);
-	executablePath = absolute(std::filesystem::path(exePath));
+	executablePath = argv[0];
 
 	Logger::Start();
     
