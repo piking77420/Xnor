@@ -171,6 +171,22 @@ public:
     /// @brief Synchronizes the calling thread with the logger one, and makes sure all logs have been printed before returning.
     XNOR_ENGINE static void Synchronize();
 
+    /// @brief Starts the logger.
+    ///
+    /// This function is called automatically when the Application is constructed.
+    /// After a call to this function, you can use the Log functions.
+    ///
+    /// This function doesn't do anything if the logger has already been started.
+    XNOR_ENGINE static void Start();
+
+    /// @brief Synchronizes the threads and stops the logger.
+    ///
+    /// This function is called automatically when the Application is destroyed.
+    /// After a call to this function, logger function calls won't do anything.
+    ///
+    /// This function doesn't do anything if the logger has already been stopped.
+    XNOR_ENGINE static void Stop();
+
 private:
     struct LogEntry
     {
@@ -200,17 +216,19 @@ private:
 
     XNOR_ENGINE static inline std::shared_ptr<LogEntry> m_LastLog;
 
-    XNOR_ENGINE static inline uint32_t m_SameLastLogs = 1;
+    XNOR_ENGINE static inline uint32_t m_SameLastLogs = 0;
+
+    XNOR_ENGINE static inline bool_t m_LastLogCollapsed = false;
 
     XNOR_ENGINE static inline std::condition_variable m_CondVar;
 
     XNOR_ENGINE static void Run();
 
-    XNOR_ENGINE static inline std::thread m_Thread = std::thread(Run);
+    XNOR_ENGINE static inline std::thread m_Thread;
 
     XNOR_ENGINE static inline std::mutex m_Mutex;
 
-    XNOR_ENGINE static inline bool_t m_Running = true;
+    XNOR_ENGINE static inline bool_t m_Running = false;
 
     XNOR_ENGINE static inline bool_t m_Synchronizing = false;
 
@@ -220,12 +238,8 @@ private:
 
     XNOR_ENGINE static inline uint32_t m_LogIndex = 0;
 
+    /// @brief Prints a log to the console and the logging file.
     XNOR_ENGINE static void PrintLog(const std::shared_ptr<LogEntry>& log);
-
-    /// @brief Synchronizes the threads and stops the logger.
-    ///
-    /// After a call to this function, logger function calls won't do anything.
-    XNOR_ENGINE static void Stop();
 };
 
 END_XNOR_CORE

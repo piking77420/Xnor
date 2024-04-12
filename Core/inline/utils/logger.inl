@@ -25,7 +25,7 @@ void Logger::Log(const LogLevel level, const std::string& format, Args&&... args
     else
     {
         m_LastLog = entry;
-        m_SameLastLogs = 1;
+        m_SameLastLogs = 0;
     }
     
     m_CondVar.notify_one();
@@ -48,7 +48,7 @@ void Logger::LogTempDebug(const std::string& format, const char_t* file, const i
     else
     {
         m_LastLog = entry;
-        m_SameLastLogs = 1;
+        m_SameLastLogs = 0;
     }
     
     m_CondVar.notify_one();

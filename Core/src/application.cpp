@@ -31,6 +31,8 @@ Application::Application()
 	char_t exePath[MAX_PATH];
 	GetModuleFileNameA(nullptr, exePath, MAX_PATH);
 	executablePath = absolute(std::filesystem::path(exePath));
+
+	Logger::Start();
     
     Window::Initialize();
 
@@ -81,4 +83,6 @@ Application::~Application()
     Window::Shutdown();
 	
     FileManager::UnloadAll();
+
+	Logger::Stop();
 }

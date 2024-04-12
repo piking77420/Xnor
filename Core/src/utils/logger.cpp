@@ -102,6 +102,34 @@ void Logger::Synchronize()
     m_CondVar.wait(lock, [] { return !m_Synchronizing; });
 }
 
+void Logger::Start()
+{
+    if (m_Running)
+        return;
+    
+    LogInfo("Starting logger");
+
+    m_Running = true;
+    
+    m_Thread = std::thread(Run);
+}
+
+void Logger::Stop()
+{
+    if (!m_Running)
+        return;
+    
+    LogInfo("Stopping logger");
+    
+    m_Running = false;
+    m_CondVar.notify_one();
+
+    if (m_Thread.joinable())
+        m_Thread.join();
+    
+    CloseFile();
+}
+
 Logger::LogEntry::LogEntry()
     : level(LogLevel::Info)
     , printToConsole(false)
@@ -157,16 +185,16 @@ Logger::LogEntry::LogEntry(
 {
 }
 
-bool_t Logger::LogEntry::operator==(const LogEntry& other) const { return message == other.message && level == other.level; }
+bool_t Logger::LogEntry::operator==(const LogEntry& other) const { return message == other.message && level == other.level && printToConsole == other.printToConsole && printToFile == other.printToFile; }
 
 void Logger::Run()
 {
     // Set thread name for easier debugging
     (void) SetThreadDescription(m_Thread.native_handle(), L"Logger Thread");
 
-    if (std::atexit(Stop))
-        LogWarning("Couldn't register Logger::Stop using std::atexit");
-    
+    // Detach this thread from the main one to make sure it finishes normally
+    m_Thread.detach();
+
     std::unique_lock lock(m_Mutex);
     while (m_Running || !m_Logs.Empty())
     {
@@ -195,9 +223,8 @@ void Logger::PrintLog(const std::shared_ptr<LogEntry>& log)
     const std::string time = std::format("[{:%T}] ", t);
 
     std::string baseMessage;
-    const LogLevel level = log->level;
     const char_t* color = ANSI_RESET;
-    switch (level)
+    switch (log->level)
     {
         case LogLevel::TemporaryDebug:
             color = ANSI_COLOR_GREEN;
@@ -229,24 +256,46 @@ void Logger::PrintLog(const std::shared_ptr<LogEntry>& log)
             break;
     }
 
-    baseMessage += log->message + '\n';
+    const bool_t printToFile = log->printToFile && m_File.is_open();
 
-    if (log->printToConsole)
-        std::cout << color + baseMessage + ANSI_RESET;
+    // If the last log is the same as the current one, we should collapse this one
+    if (m_SameLastLogs > 0)
+    {
+        if (log->printToConsole)
+        {
+            // If we already printed the same log, move the cursor up to override the last line
+            if (m_SameLastLogs > 1)
+            {
+                CONSOLE_SCREEN_BUFFER_INFO info;
+                GetConsoleScreenBufferInfo(nullptr, &info);
+                COORD newPosition = info.dwCursorPosition;
+                newPosition.Y -= 1;
+                SetConsoleCursorPosition(nullptr, newPosition);
+            }
 
-    if (log->printToFile && m_File.is_open())
-        m_File << baseMessage;
-}
+            std::cout << color + baseMessage + "... and " + std::to_string(m_SameLastLogs) + " more" + ANSI_RESET;
+        }
 
-void Logger::Stop()
-{
-    LogInfo("Stopping logger");
-    
-    m_Running = false;
-    m_CondVar.notify_one();
+        // If we need to print to a file, we first wait for a different log
+        
+        m_LastLogCollapsed = true;
+    }
+    else
+    {
+        const std::string oldBaseMessage = baseMessage;
+        baseMessage += log->message + '\n';
 
-    if (m_Thread.joinable())
-        m_Thread.join();
-    
-    CloseFile();
+        if (log->printToConsole)
+            std::cout << color + baseMessage + ANSI_RESET;
+
+        if (printToFile)
+        {
+            if (m_LastLogCollapsed)
+                m_File << oldBaseMessage + "...and " + std::to_string(m_SameLastLogs) + " more";
+            else
+                m_File << baseMessage;
+        }
+
+        m_LastLogCollapsed = false;
+    }
 }
