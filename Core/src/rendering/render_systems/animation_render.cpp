@@ -42,7 +42,7 @@ void AnimationRender::RenderAnimation() const
     {
         ModelUniformData modelData;
         modelData.model = skinnedMeshRender->GetTransform().worldMatrix;
-		
+
         try
         {
             modelData.normalInvertMatrix = skinnedMeshRender->GetTransform().worldMatrix.Inverted().Transposed();
@@ -54,9 +54,9 @@ void AnimationRender::RenderAnimation() const
 		
         Rhi::UpdateModelUniform(modelData);
 
-        Rhi::BindMaterial(skinnedMeshRender->material);
-        skinnedMeshRender->material.BindMaterial();
-        
+        Rhi::BindMaterial(skinnedMeshRender->mesh->material);
+        skinnedMeshRender->mesh->material.BindMaterial();
+
         if (skinnedMeshRender->mesh)
         {
             for (uint32_t i = 0; i < skinnedMeshRender->mesh->models.GetSize(); i++)

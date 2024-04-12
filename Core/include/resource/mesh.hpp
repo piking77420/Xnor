@@ -11,6 +11,7 @@
 #include "texture.hpp"
 #include "assimp/scene.h"
 #include "file/file.hpp"
+#include "rendering/material.hpp"
 #include "resource/resource.hpp"
 #include "utils/list.hpp"
 
@@ -26,6 +27,9 @@ public:
     };
 
     List<Model*> models;
+    List<Texture*> textures;
+
+    Material material;
     
     // Use the base class' constructors
     using Resource::Resource;
@@ -44,7 +48,6 @@ public:
     XNOR_ENGINE void CreateInRhi() override;
 
 private:
-    List<Texture*> m_Textures;
     List<Skeleton*> m_Skeletons;
     List<Animation*> m_Animations;
 };

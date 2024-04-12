@@ -12,7 +12,7 @@
 BEGIN_XNOR_CORE
 
 /// @brief Component that defines a mesh to render
-class SkinnedMeshRender : public Component
+class SkinnedMeshRender final : public Component
 {
     REFLECTABLE_IMPL(SkinnedMeshRender)
     
@@ -21,9 +21,6 @@ public:
     
     /// @brief @ref Mesh
     Pointer<Mesh> mesh;
-
-    /// @brief @ref Material to render with
-    Material material;
 
     /// @brief Whether to draw the model AABB box
     bool_t drawModelAabb = false;
@@ -35,6 +32,5 @@ END_XNOR_CORE
 REFL_AUTO(
     type(XnorCore::SkinnedMeshRender, bases<XnorCore::Component>),
     field(mesh),
-    field(material),
     field(drawModelAabb)
 );

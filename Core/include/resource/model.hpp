@@ -15,7 +15,7 @@
 BEGIN_XNOR_CORE
 
 /// @brief Holds the necessary information to draw a 3D model.
-class Model : public Resource
+class Model final : public Resource
 {
 public:
     /// @brief Struct used to store the minimum and maximum bounds of the AABB of a Model.

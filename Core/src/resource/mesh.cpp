@@ -11,8 +11,8 @@ Mesh::~Mesh()
     for (uint32_t i = 0; i < models.GetSize(); i++)
         delete models[i];
 
-    for (uint32_t i = 0; i < m_Textures.GetSize(); i++)
-        delete m_Textures[i];
+    for (uint32_t i = 0; i < textures.GetSize(); i++)
+        delete textures[i];
 
     for (uint32_t i = 0; i < m_Skeletons.GetSize(); i++)
         delete m_Skeletons[i];
@@ -21,7 +21,7 @@ Mesh::~Mesh()
         delete m_Animations[i];
 
     models.Clear();
-    m_Textures.Clear();
+    textures.Clear();
     m_Skeletons.Clear();
     m_Animations.Clear();
 }
@@ -62,10 +62,15 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
     {
         Texture* const texture = new Texture(scene->mTextures[i]->mFilename.C_Str());
 
-        const int64_t size = static_cast<int64_t>(static_cast<uint64_t>(scene->mTextures[i]->mWidth) * static_cast<uint64_t>(scene->mTextures[i]->mHeight) * sizeof(aiTexel));
+        int64_t size = 0;
+        if (scene->mTextures[i]->mHeight == 0)
+            size = scene->mTextures[i]->mWidth;
+        else
+            size = static_cast<int64_t>(static_cast<uint64_t>(scene->mTextures[i]->mWidth) * static_cast<uint64_t>(scene->mTextures[i]->mHeight) * sizeof(aiTexel));
+    
         texture->Load(reinterpret_cast<const uint8_t*>(scene->mTextures[i]->pcData), size);
 
-        m_Textures.Add(texture);
+        textures.Add(texture);
     }
 
     for (uint32_t i = 0; i < scene->mNumAnimations; i++)
@@ -77,6 +82,9 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
         m_Animations.Add(animation);
     }
 
+    material.albedoTexture = Pointer<Texture>::Create(*textures[0]);
+    material.normalTexture = Pointer<Texture>::Create(*textures[1]);
+
     return true;
 }
 
@@ -85,8 +93,8 @@ void Mesh::CreateInRhi()
     for (uint32_t i = 0; i < models.GetSize(); i++)
         models[i]->CreateInRhi();
 
-    for (uint32_t i = 0; i < m_Textures.GetSize(); i++)
-        m_Textures[i]->CreateInRhi();
+    for (uint32_t i = 0; i < textures.GetSize(); i++)
+        textures[i]->CreateInRhi();
 
     for (uint32_t i = 0; i < m_Skeletons.GetSize(); i++)
         m_Skeletons[i]->CreateInRhi();
