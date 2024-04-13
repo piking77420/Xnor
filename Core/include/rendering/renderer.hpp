@@ -30,6 +30,8 @@ public:
     /// @brief Clear color
     Vector4 clearColor = Vector4(0.f);
 
+    mutable Bound renderSceneAABB;
+
     XNOR_ENGINE Renderer() = default;
     XNOR_ENGINE ~Renderer() = default;
 

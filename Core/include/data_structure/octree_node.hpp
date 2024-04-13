@@ -34,6 +34,8 @@ public:
 
     Bound boudingBox;
     
+    OctreeNode* parent = nullptr;
+    
     DEFAULT_COPY_MOVE_OPERATIONS(OctreeNode)
     
     OctreeNode(ObjectBounding<T> objectBounding);
@@ -59,7 +61,6 @@ public:
 private:    
     Octans m_ActiveOctans = Zero;
     std::array<OctreeNode*, NbrOfChild> m_Child;
-    OctreeNode* m_Parent = nullptr;
     
     
     void DivideAndAdd(ObjectBounding<T>& objectBounding);
@@ -210,7 +211,7 @@ void OctreeNode<T>::Clear()
 template <class T>
 bool_t OctreeNode<T>::GetChildNode(int32_t octan, const OctreeNode<T>* outNode) const
 {
-    if (IsOctanValid(octan))
+    if (IsOctanValid(m_ActiveOctans, octan))
     {
         outNode = m_Child.at(octan);
         return true;
@@ -256,7 +257,7 @@ void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
                 m_Child[i]->handles.push_back(childrenData.handle);
             }
             
-            m_Child[i]->m_Parent = this;
+            m_Child[i]->parent = this;
             // try adding the current object bound in the valid octan
             hasDivide = true;
             m_Child[i]->AddObject(objectBounding);

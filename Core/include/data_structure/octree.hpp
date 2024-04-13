@@ -32,10 +32,17 @@ public:
     
     void Draw();
 
-    OctreeIterator<OctreeNode<T>> GetIterator() const
+    const OctreeIterator<OctreeNode<const T>> GetIterator() const
     {
-        return  OctreeIterator<OctreeNode<T>>(m_MotherNode);
+        return OctreeIterator<OctreeNode<const T>>(&m_MotherNode);
     }
+
+
+    OctreeIterator<OctreeNode<T>> GetIterator()
+    {
+        return OctreeIterator<OctreeNode<T>>(&m_MotherNode);
+    }
+
 
 private:
     void Clear();

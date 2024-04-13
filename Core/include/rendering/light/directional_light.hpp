@@ -14,14 +14,14 @@ class DirectionalLight : public Light
 {
     REFLECTABLE_IMPL(DirectionalLight)
 
-    constexpr static inline Vector2 DefaulNearFar = { 1.0f, 7.5f };
+    constexpr static inline Vector2 DefaulNearFar = { 1.0f, 50.f };
     
 public:
     /// @brief Orthographic left/right for the shadow map
-    Vector2 leftRight = { -10.f, 10.f };
+    Vector2 leftRight = { -50.f, 50.f };
 
     /// @brief Orthographic bottom/top for the shadow map
-    Vector2 bottomTop = { -10.f, 10.f };
+    Vector2 bottomTop = { -50.f, 50.f };
 
     XNOR_ENGINE DirectionalLight();
     XNOR_ENGINE ~DirectionalLight() override = default;

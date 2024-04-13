@@ -21,6 +21,9 @@ void EditorCamera::UpdateCamera()
     OnMiddleButton();
     CameraOnRightClick();
     EditorCameraMovement();
+    
+    const ImGuiIO& io = ImGui::GetIO();
+    m_LowPassFilterDeltaMouse.AddSample({ io.MouseDelta.x, io.MouseDelta.y } );
 }
 
 void EditorCamera::CameraOnRightClick()
@@ -43,14 +46,16 @@ void EditorCamera::CameraOnRightClick()
     {
         XnorCore::Window::SetCursorHidden(false);
     }
+
+    
 }
 
 void EditorCamera::EditorCameraRotation()
 {
-    const ImGuiIO& io = ImGui::GetIO();
-    
-    m_Yaw -= io.MouseDelta.x;
-    m_Pitch += io.MouseDelta.y; 
+   const Vector2 mousDelta = m_LowPassFilterDeltaMouse.GetAvarage<Vector2>();
+
+    m_Yaw -= mousDelta.x;
+    m_Pitch += mousDelta.y; 
     
     if (m_Pitch > MaxPitch)
         m_Pitch = MaxPitch;

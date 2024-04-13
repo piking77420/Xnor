@@ -53,58 +53,62 @@ public:
 
     ~OctreeIterator() = default;
 
-    // Return true if Pass to the end
-    bool_t operator++() const
+    // return true if we iterate to a children
+    // return false if all the octan has been iterated
+    bool_t DownTree() const
     {
-        if (!m_Ptr)
-            throw std::exception("Ptr is null");
-
-        
-        // 1. Check the next octan to iterate
-        // 2. if the current octant must be iterate Check if the current Element octan is valid
-            // if true push octan repeat
-            // if else try next octan
-            // if end then go back to parent
         uint32_t i = GetNextOctanToIterate();
-
-        // We Iterate in each octant
         if (i == AllOctanHasBeenIterated)
         {
-            if (m_Ptr->m_Parent == nullptr)
-            {
-               // ptr is the mother node so we check all the tree Return End
-               return true;
-            }
-            m_Ptr = m_Ptr->m_Parent; 
-            PopOctanState();
-            
-        }
-        else
-        {
-            m_Ptr->GetChildNode(i, m_Ptr);
-            return true;
+            return false;
         }
         
-        
-        return false;
+        OctansState& octanState = GetCurrentOctanState();
+        // we update the stae octan
+        octanState = static_cast<OctansState>((octanState | 1 << i));
+
+        m_Ptr->GetChildNode(i, m_Ptr);
+        PushOctanState(OctansStateZero);
+
+        return true;
     }
 
+    bool_t ClimbTree() const
+    {
+        // ptr point to the mother node so we end the iteration
+        if (m_Ptr->parent == nullptr)
+        {
+            m_OctanState.pop();
+            return false;
+        }
+
+        // pop the state of the actual node
+        PopOctanState();
+        m_Ptr = m_Ptr->parent;
+        return true;
+    }
+    
     Bound GetBound() const;
 
-    void GetHandles(std::vector<typename T::Type>* handles);
+    void GetHandles(std::vector<typename T::Type*>** handles);
+
+    void GetHandles(std::vector<const typename T::Type*>** handles) const;
+
     
 private:
-    PtrType m_Ptr;
+    mutable PtrType m_Ptr;
 
     mutable std::stack<XnorCore::OctansState> m_OctanState;
 
     void PushOctanState(OctansState octancState) const;
     
-    OctansState GetOctanState() const;
+    OctansState& GetCurrentOctanState() const;
     
     void PopOctanState() const;
 
-    int32_t GetNextOctanToIterate() const; 
+    int32_t GetNextOctanToIterate() const;
+
+  
 };
 
 template <typename T>
@@ -114,9 +118,15 @@ Bound OctreeIterator<T>::GetBound() const
 }
 
 template <typename T>
-void OctreeIterator<T>::GetHandles(std::vector<typename T::Type>* handles)
+void OctreeIterator<T>::GetHandles(std::vector<typename T::Type*>** handles)
 {
-    *handles = m_Ptr.handles;
+    *handles = &m_Ptr->handles;
+}
+
+template <typename T>
+void OctreeIterator<T>::GetHandles(std::vector<const typename T::Type*>** handles) const
+{
+    *handles = &m_Ptr->handles;
 }
 
 template <typename T>
@@ -126,7 +136,7 @@ void OctreeIterator<T>::PushOctanState(OctansState octancState) const
 }
 
 template <typename T>
-OctansState OctreeIterator<T>::GetOctanState() const
+OctansState& OctreeIterator<T>::GetCurrentOctanState() const
 {
    return m_OctanState.top();
 }
@@ -140,12 +150,12 @@ void OctreeIterator<T>::PopOctanState() const
 template <typename T>
 int32_t OctreeIterator<T>::GetNextOctanToIterate() const
 {
-    OctansState currentOctanState = GetOctanState();
+    OctansState currentOctanState = GetCurrentOctanState();
     
     for (int32_t i = 0; i < 8; i++)
     {
         // if 0 so has not been updated
-        if (!(currentOctanState & (1 << i)))
+        if ((currentOctanState & (1 << i)) == 0)
         {
             // Check if is valid
             if (T::IsOctanValid(m_Ptr->GetActiveOctans(),i))

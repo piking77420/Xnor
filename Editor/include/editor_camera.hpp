@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "definitions.hpp"
+#include "input/low_pass_filter.hpp"
 #include "rendering/camera.hpp"
 
 BEGIN_XNOR_EDITOR
@@ -35,6 +36,8 @@ private:
     bool_t m_FirstMove = false;
 
     float_t m_MouseWheelZoom = 50.f;
+
+    XnorCore::LowPassFilter <Vector2, 3> m_LowPassFilterDeltaMouse;
     
     void CameraOnRightClick();
     
@@ -47,6 +50,7 @@ private:
     void GoToObject();
 
     void AddMovement(const Vector3& movement);
+    
 };
 
 END_XNOR_EDITOR

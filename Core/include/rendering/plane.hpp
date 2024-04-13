@@ -10,7 +10,7 @@ struct XNOR_ENGINE Plane
     Vector3 normal = Vector3::UnitY();
     float_t distance = 0.f;
 
-    Plane(Vector3 vec1, Vector3 vec2);
+    Plane(Vector3 p1, Vector3 normal);
 
     Plane() = default;
 

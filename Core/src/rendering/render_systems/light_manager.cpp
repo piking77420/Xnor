@@ -56,6 +56,9 @@ void LightManager::EndFrame(const Scene&)
 
 void LightManager::DrawLightGizmo(const Camera& camera, const Scene& scene) const
 {
+	scene.GetAllComponentOfType<PointLight>(&m_PointLights);
+	scene.GetAllComponentOfType<SpotLight>(&m_SpotLights);
+	scene.GetAllComponentOfType<DirectionalLight>(&m_DirectionalLights);
 	DrawLightGizmoWithShader(camera, scene, m_EditorUi);
 }
 
@@ -215,11 +218,14 @@ void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& ren
 			continue;
 
 		const Texture& shadowMap = *m_DirectionalShadowMaps;
+
+		// Get Pos from scene aabb
+		Vector3 pos = renderer.renderSceneAABB.extents * directionalLight->GetLightDirection();
 		
 		// Set the camera for dirlight as a orthographic
 		Camera cam;
 		cam.isOrthographic = true;
-		cam.position = directionalLight->entity->transform.GetPosition();
+		cam.position = pos;
 		cam.LookAt(cam.position + directionalLight->GetLightDirection());
 		cam.near = directionalLight->near;
 		cam.far = directionalLight->far;

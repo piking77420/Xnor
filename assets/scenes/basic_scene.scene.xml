@@ -6,8 +6,8 @@
 			<m_EntityId>73C3991F-64C8-43BE-BA-FB-8F-9C-A2-38-C9-75</m_EntityId>
 			<transform>
 				<m_Position>0 ; 1 ; 0</m_Position>
-				<m_EulerRotation>0.07414048 ; -0.07402368 ; -0.7875441</m_EulerRotation>
-				<m_Scale>0.9999999 ; 0.99999934 ; 0.9999999</m_Scale>
+				<m_EulerRotation>-2.2438672 ; 0.62729216 ; -1.4958732</m_EulerRotation>
+				<m_Scale>1.000041 ; 1.0000083 ; 1.0000559</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="DirectionalLight">
@@ -24,8 +24,8 @@
 			<m_EntityId>DC36B839-E893-481D-B6-28-93-7E-24-FC-F4-C</m_EntityId>
 			<transform>
 				<m_Position>0 ; -2 ; 0</m_Position>
-				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
-				<m_Scale>10 ; 1 ; 10</m_Scale>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
+				<m_Scale>40 ; 4 ; 40</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">
@@ -64,9 +64,9 @@
 			<name>Sphere</name>
 			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
 			<transform>
-				<m_Position>-4 ; 2 ; 0</m_Position>
-				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1 ; 1</m_Scale>
+				<m_Position>-2 ; 10 ; -4</m_Position>
+				<m_EulerRotation>2.4653013 ; -1.0391712 ; -0.909016</m_EulerRotation>
+				<m_Scale>1.0000275 ; 1.0000166 ; 1.0000285</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">
@@ -87,7 +87,7 @@
 						<normalTexture>D951D7C1-D2F0-4849-86-EF-1-74-A-42-66-C9</normalTexture>
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
-					<drawModelAabb>false</drawModelAabb>
+					<drawModelAabb>true</drawModelAabb>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -127,78 +127,10 @@
 			<m_Children/>
 		</3>
 		<4>
-			<name>PointLight</name>
-			<m_EntityId>A284C848-DC61-4853-A4-48-15-9D-CE-5D-73-BD</m_EntityId>
-			<transform>
-				<m_Position>-2 ; 3 ; -6</m_Position>
-				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1 ; 1</m_Scale>
-			</transform>
-			<m_Components>
-				<0 typeName="PointLight">
-					<color>0.0070581296 ; 0.14682326 ; 0.7128713 ; 1</color>
-					<intensity>10000</intensity>
-					<castShadow>true</castShadow>
-				</0>
-				<1 typeName="TestComponent">
-					<TestComponent>
-						<m_StaticTest>100</m_StaticTest>
-						<m_StaticTransform>
-							<m_Position>0 ; 0 ; 0</m_Position>
-							<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
-							<m_Scale>1 ; 1 ; 1</m_Scale>
-						</m_StaticTransform>
-					</TestComponent>
-					<m_Rotate>true</m_Rotate>
-					<m_RotationSpeed>1</m_RotationSpeed>
-					<m_Radius>1</m_Radius>
-					<m_TestEntity>0-0-0-0-0-0-0-0-0-0-0</m_TestEntity>
-					<m_GridPlottingTest>0 ; 0</m_GridPlottingTest>
-					<m_Timeline>
-						<m_Duration>0</m_Duration>
-						<m_Time>0</m_Time>
-					</m_Timeline>
-				</1>
-			</m_Components>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
-			<m_Children/>
-		</4>
-		<5>
-			<name>SpotLight</name>
-			<m_EntityId>8B8B51F5-90F0-405B-BE-3C-56-93-F2-7-34-F2</m_EntityId>
-			<transform>
-				<m_Position>0 ; 8 ; -5</m_Position>
-				<m_EulerRotation>2.3046567 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1.0000837 ; 1.0000837</m_Scale>
-			</transform>
-			<m_Components>
-				<0 typeName="SpotLight">
-					<cutOff>12.5</cutOff>
-					<outerCutOff>15</outerCutOff>
-					<color>1 ; 1 ; 1 ; 1</color>
-					<intensity>1000</intensity>
-					<castShadow>true</castShadow>
-				</0>
-				<1 typeName="TestComponent">
-					<m_Rotate>true</m_Rotate>
-					<m_RotationSpeed>1</m_RotationSpeed>
-					<m_Radius>1</m_Radius>
-					<m_TestEntity>0-0-0-0-0-0-0-0-0-0-0</m_TestEntity>
-					<m_GridPlottingTest>0 ; 0</m_GridPlottingTest>
-					<m_Timeline>
-						<m_Duration>0</m_Duration>
-						<m_Time>0</m_Time>
-					</m_Timeline>
-				</1>
-			</m_Components>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
-			<m_Children/>
-		</5>
-		<6>
 			<name>Capsule</name>
 			<m_EntityId>3843FD98-4FF2-4459-98-DA-67-D9-98-57-38-14</m_EntityId>
 			<transform>
-				<m_Position>0 ; 4 ; 0</m_Position>
+				<m_Position>-8 ; 4 ; -3</m_Position>
 				<m_EulerRotation>0.69813174 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
@@ -238,14 +170,14 @@
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
-		</6>
-		<7>
+		</4>
+		<5>
 			<name>VikingRoom</name>
 			<m_EntityId>924CE8D3-CDEA-4D8A-86-BE-50-D-74-E7-AF-38</m_EntityId>
 			<transform>
-				<m_Position>1 ; 0 ; -6</m_Position>
-				<m_EulerRotation>-1.716861 ; 1.225529 ; -0.06609928</m_EulerRotation>
-				<m_Scale>1.0000046 ; 1.0000085 ; 1.0000095</m_Scale>
+				<m_Position>-7 ; 6 ; 2</m_Position>
+				<m_EulerRotation>1.1412212 ; -0.766784 ; 2.5165062</m_EulerRotation>
+				<m_Scale>1.0000355 ; 1.0000421 ; 1.0000316</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">
@@ -266,12 +198,12 @@
 						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
-					<drawModelAabb>false</drawModelAabb>
+					<drawModelAabb>true</drawModelAabb>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
-		</7>
+		</5>
 	</m_Entities>
 </Scene>
 

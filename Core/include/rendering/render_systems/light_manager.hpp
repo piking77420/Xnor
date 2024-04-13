@@ -109,9 +109,9 @@ private:
     Texture* m_DepthBufferForPointLightPass = nullptr;
     Texture* m_DirectionalShadowMaps = nullptr;
 
-    std::vector<const PointLight*> m_PointLights;
-    std::vector<const SpotLight*> m_SpotLights;
-    std::vector<const DirectionalLight*> m_DirectionalLights;
+    mutable std::vector<const PointLight*> m_PointLights;
+    mutable std::vector<const SpotLight*> m_SpotLights;
+    mutable std::vector<const DirectionalLight*> m_DirectionalLights;
     
     XNOR_ENGINE void FecthLightInfo() const;
 
