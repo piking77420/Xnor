@@ -10,7 +10,7 @@ extern "C"
 	_declspec(dllexport) int32_t AmdPowerXpressRequestHighPerformance = 1;
 }
 
-int32_t main(int32_t argc, char_t** argv)
+int32_t main(const int32_t argc, const char_t* const* const argv)
 {
 	using namespace XnorCore;
 	using namespace XnorEditor;
@@ -18,7 +18,7 @@ int32_t main(int32_t argc, char_t** argv)
 	Logger::OpenDefaultFile();
 	XnorFactory::RegisterAllTypes();
 
-	Editor editor(argc, argv);
+	Editor editor(std::forward<const int32_t>(argc), std::forward<const char_t* const* const>(argv));
 
 	editor.Update();
 

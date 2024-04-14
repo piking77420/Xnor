@@ -22,7 +22,7 @@ void Application::Exit(const int32_t code)
 	std::exit(code);  // NOLINT(concurrency-mt-unsafe)
 }
 
-Application::Application(const int32_t argc, char_t** const argv)
+Application::Application(const int32_t, const char_t* const* const argv)
 {
     m_ApplicationInstance = this;
 

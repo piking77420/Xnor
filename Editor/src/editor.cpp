@@ -3,7 +3,6 @@
 #include <ImGui/imgui.h>
 #include <ImGui/imgui_impl_glfw.h>
 #include <ImGui/imgui_impl_opengl3.h>
-#include <ImGui/imgui_internal.h>
 #include <ImguiGizmo/ImGuizmo.h>
 
 #include "csharp/dotnet_runtime.hpp"
@@ -29,8 +28,8 @@ void Editor::CheckWindowResize()
 {
 }
 
-Editor::Editor(const int32_t argc, char_t** const argv)
-	: Application(argc, argv)
+Editor::Editor(const int32_t argc, const char_t* const* const argv)
+	: Application(std::forward<const int32_t>(argc), std::forward<const char_t* const* const>(argv))
 {
 	XnorCore::Texture::defaultLoadOptions = { .flipVertically = false };
 	XnorCore::FileManager::LoadDirectory("assets_internal/editor");

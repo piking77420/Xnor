@@ -20,7 +20,7 @@ public:
 	
 	EditorData data;
 	
-	explicit Editor(int32_t argc, char_t** argv);
+	explicit Editor(int32_t argc, const char_t* const* argv);
 
 	~Editor() override;
 

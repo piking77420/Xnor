@@ -47,8 +47,8 @@ void Audio::InitializeDevices()
     // Get all available devices if the extension is present (this should always be the case)
     if (alcIsExtensionPresent(nullptr, "ALC_ENUMERATION_EXT"))
     {
-        const char_t* deviceNames = alcGetString(nullptr, ALC_DEVICE_SPECIFIER);
-        IterateAlStringList(deviceNames, [&](const char_t* str) { deviceNameList.emplace(str); });
+        const char_t* const deviceNames = alcGetString(nullptr, ALC_DEVICE_SPECIFIER);
+        IterateAlStringList(deviceNames, [&](const char_t* const str) { deviceNameList.emplace(str); });
     }
 
     // Just in case the enumeration extension isn't present, add the default device
