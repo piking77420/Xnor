@@ -24,9 +24,9 @@ LightManager::~LightManager()
 void LightManager::InitResources()
 {
 	m_GpuLightData = new GpuLightData();
-	m_DirLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/gizmos/dirlight_icon.png");
-	m_PointLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/gizmos/point_light.png");
-	m_SpotLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/gizmos/spot_light.png");
+	m_RenderingLightStruct.dirLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/gizmos/dirlight_icon.png");
+	m_RenderingLightStruct.pointLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/gizmos/point_light.png");
+	m_RenderingLightStruct.spotLightTexture = ResourceManager::Get<Texture>("assets_internal/editor/gizmos/spot_light.png");
 
 	m_ShadowFrameBuffer = new Framebuffer;
 	m_ShadowFrameBufferPointLight = new Framebuffer;
@@ -59,7 +59,7 @@ void LightManager::DrawLightGizmo(const Camera& camera, const Scene& scene) cons
 	scene.GetAllComponentOfType<PointLight>(&m_PointLights);
 	scene.GetAllComponentOfType<SpotLight>(&m_SpotLights);
 	scene.GetAllComponentOfType<DirectionalLight>(&m_DirectionalLights);
-	DrawLightGizmoWithShader(camera, scene, m_EditorUi);
+	DrawLightGizmoWithShader(camera, scene, m_RenderingLightStruct.editorUi);
 }
 
 void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& scene, const Pointer<Shader>& shader) const
@@ -73,13 +73,13 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 	for (decltype(sortedLight)::reverse_iterator it = sortedLight.rbegin(); it != sortedLight.rend(); it++)
 	{
 		ModelUniformData modelData;
-		float_t scaleScalar = m_ScaleFactor;
+		float_t scaleScalar = m_RenderingLightStruct.scaleFactor;
 
 		float_t distance = (it->second.pos - camera.position).SquaredLength();
-		if (distance < m_MinDistance * m_MinDistance)
+		if (distance < m_RenderingLightStruct.minDistance * m_RenderingLightStruct.minDistance)
 			scaleScalar = scaleScalar * (1.f / distance) * (1.f / distance);
 
-		scaleScalar = std::clamp(scaleScalar, m_MaxScalarFactor, m_MinScalarFactor);
+		scaleScalar = std::clamp(scaleScalar, m_RenderingLightStruct.maxScalarFactor, m_RenderingLightStruct.maxScalarFactor);
 		Matrix scale = Matrix::Scaling(Vector3(scaleScalar));
 		modelData.model = (scale * Matrix::LookAt(it->second.pos, camera.position, Vector3::UnitY())).Inverted();
 		modelData.normalInvertMatrix = Matrix::Identity();
@@ -89,20 +89,20 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 		switch (it->second.type)
 		{
 			case RenderingLight::PointLight:
-				m_PointLightTexture->BindTexture(0);
+				m_RenderingLightStruct.pointLightTexture->BindTexture(0);
 				break;
 			
 			case RenderingLight::SpothLight:
-				m_SpotLightTexture->BindTexture(0);
+				m_RenderingLightStruct.spotLightTexture->BindTexture(0);
 				break;
 			
 			case RenderingLight::DirLight:
-				m_DirLightTexture->BindTexture(0);
+				m_RenderingLightStruct.dirLightTexture->BindTexture(0);
 				break;
 		}
 		
 		Rhi::UpdateModelUniform(modelData);
-		Rhi::DrawModel(DrawMode::Triangles, m_Quad->GetId());
+		Rhi::DrawModel(DrawMode::Triangles, m_RenderingLightStruct.quad->GetId());
 	}
 
 	shader->Unuse();
@@ -110,28 +110,14 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 
 void LightManager::BindShadowMap() const
 {
-	for (const DirectionalLight* const directionalLight : m_DirectionalLights)
-	{
-		if (!directionalLight->castShadow)
-			continue;
-
-		m_DirectionalShadowMaps->BindTexture(ShadowTextureBinding::Directional);
-	}
-
+	m_DirectionalShadowMaps->BindTexture(ShadowTextureBinding::Directional);
 	m_SpotLightShadowMapTextureArray->BindTexture(ShadowTextureBinding::SpotLight);
 	m_PointLightShadowMapCubemapArrayPixelDistance->BindTexture(ShadowTextureBinding::PointLightCubemapArrayPixelDistance);
 }
 
 void LightManager::UnBindShadowMap() const
 {
-	for (const DirectionalLight* const directionalLight : m_DirectionalLights)
-	{
-		if (!directionalLight->castShadow)
-			continue;
-
-		m_DirectionalShadowMaps->UnbindTexture(ShadowTextureBinding::Directional);
-	}
-
+	m_DirectionalShadowMaps->UnbindTexture(ShadowTextureBinding::Directional);
 	m_SpotLightShadowMapTextureArray->BindTexture(ShadowTextureBinding::SpotLight);
 	m_PointLightShadowMapCubemapArrayPixelDistance->BindTexture(ShadowTextureBinding::PointLightCubemapArrayPixelDistance);
 }
@@ -210,6 +196,7 @@ void LightManager::ComputeShadow(const Scene& scene, const Renderer& renderer)
 
 void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& renderer)
 {
+
 	for (const DirectionalLight* const directionalLight : m_DirectionalLights)
 	{
 		m_GpuLightData->directionalData->isDirlightCastingShadow = directionalLight->castShadow;
@@ -218,32 +205,51 @@ void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& ren
 			continue;
 
 		const Texture& shadowMap = *m_DirectionalShadowMaps;
-
-		// Get Pos from scene aabb
-		Vector3 pos = renderer.renderSceneAABB.extents * directionalLight->GetLightDirection();
+		const Vector2i shadowMapSize = shadowMap.GetSize(); 
 		
+		Vector3 lightDir =  directionalLight->GetLightDirection();
+		// Get Pos from scene aabb
+		Vector3 pos = static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);//renderer.renderSceneAABB.extents * lightDir;
 		// Set the camera for dirlight as a orthographic
 		Camera cam;
 		cam.isOrthographic = true;
 		cam.position = pos;
-		cam.LookAt(cam.position + directionalLight->GetLightDirection());
+		cam.LookAt(cam.position + lightDir);
 		cam.near = directionalLight->near;
 		cam.far = directionalLight->far;
 		cam.leftRight = directionalLight->leftRight;
 		cam.bottomtop = directionalLight->bottomTop;
-		cam.GetVp(shadowMap.GetSize(), &m_GpuLightData->directionalData->lightSpaceMatrix);
 		
-		m_ShadowFrameBuffer->AttachTexture(shadowMap, Attachment::Depth, 0);
-		RenderPassBeginInfo renderPassBeginInfo =
+		// CacadeShadowMap // TODO Make it cleaner
+		std::vector<float_t> shadowCascadeLevels{ cam.far / 50.0f, cam.far / 25.0f, cam.far / 10.0f, cam.far / 2.0f };
+		m_CascadeShadowMap.SetCascadeLevel(shadowCascadeLevels);
+
+		for (size_t k = 0; k < shadowCascadeLevels.size(); k++)
 		{
-			.frameBuffer = m_ShadowFrameBuffer,
-			.renderAreaOffset = { 0, 0 },
-			.renderAreaExtent = shadowMap.GetSize(),
-			.clearBufferFlags = BufferFlag::DepthBit,
-			.clearColor = Vector4::Zero()
-		};
+			m_GpuLightData->directionalData->cascadePlaneDistance[k] = shadowCascadeLevels[k];
+		}
+
+		std::vector<Camera> cascadedCameras;
+		m_CascadeShadowMap.GetCascadeCameras(&cascadedCameras,cam,lightDir, shadowMapSize );
+
+		for (size_t i = 0; i < cascadedCameras.size(); i++)
+		{
+			cascadedCameras[i].GetVp(shadowMap.GetSize(), &m_GpuLightData->directionalData->lightSpaceMatrix[i]);
+			m_ShadowFrameBuffer->AttachTextureLayer(*m_DirectionalShadowMaps, Attachment::Depth, 0, static_cast<uint32_t>(i));
+			RenderPassBeginInfo renderPassBeginInfo =
+			{
+				.frameBuffer = m_ShadowFrameBuffer,
+				.renderAreaOffset = { 0, 0 },
+				.renderAreaExtent = shadowMapSize,
+				.clearBufferFlags = BufferFlag::DepthBit,
+				.clearColor = Vector4::Zero()
+			};
+			renderer.RenderNonShaded(cascadedCameras.at(i) , renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, scene, false);
+		}
 		
-		renderer.RenderNonShaded(cam, renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, scene, false);
+
+
+		
 	}
 }
 
@@ -282,7 +288,7 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 	Camera cam;
 	for (size_t i = 0; i < m_PointLights.size(); i++)
 	{
-		if (!m_PointLights[i]->castShadow)
+		if (!m_PointLights[i]->castShadow)	
 			continue;
 		
 		const Vector3&& pos = static_cast<Vector3>(m_PointLights[i]->entity->transform.worldMatrix[3]);
@@ -404,8 +410,12 @@ void LightManager::GetPointLightDirection(const size_t index, Vector3* front, Ve
 
 void LightManager::InitShadowMap()
 {
-	const TextureCreateInfo textureCreateInfo =
+	const TextureCreateInfo dirLightShadowMpa =
 		{
+		.textureType = TextureType::Texture2DArray,
+		.mipMaplevel = 1,
+		// TODO NOT A VARIABLE constexpr
+		.depth = DirectionalCascadeLevel + 1,
 		.size = DirectionalShadowMapSize,
 		.filtering = TextureFiltering::Nearest,
 		.wrapping = TextureWrapping::ClampToBorder,
@@ -414,7 +424,7 @@ void LightManager::InitShadowMap()
 		.dataType = DataType::Float
 	};
 	
-	m_DirectionalShadowMaps = new Texture(textureCreateInfo);
+	m_DirectionalShadowMaps = new Texture(dirLightShadowMpa);
 	
 	const TextureCreateInfo spothLightShadowArray =
 	{
@@ -465,7 +475,7 @@ void LightManager::InitShadowMap()
 
 void LightManager::InitShader()
 {
-	m_EditorUi = ResourceManager::Get<Shader>("editor_ui_shader");
+	m_RenderingLightStruct.editorUi = ResourceManager::Get<Shader>("editor_ui_shader");
 
 	constexpr BlendFunction blendFunction =
 	{
@@ -474,16 +484,16 @@ void LightManager::InitShader()
 		.dValue = BlendValue::OneMinusSrcAlpha
 	};
 	
-	m_EditorUi->SetBlendFunction(blendFunction);
-	m_EditorUi->CreateInRhi();
-	m_EditorUi->SetInt("uiTexture",0);
-	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
+	m_RenderingLightStruct.editorUi->SetBlendFunction(blendFunction);
+	m_RenderingLightStruct.editorUi->CreateInRhi();
+	m_RenderingLightStruct.editorUi->SetInt("uiTexture",0);
+	m_RenderingLightStruct.quad = ResourceManager::Get<Model>("assets/models/quad.obj");
 	
 	m_ShadowMapShader = ResourceManager::Get<Shader>("depth_shader");
 	constexpr ShaderProgramCullInfo cullInfo =
 	{
 		.enableCullFace = true,
-		.cullFace = CullFace::Front,
+		.cullFace = CullFace::Back,
 		.frontFace = FrontFace::CCW
 	};
 

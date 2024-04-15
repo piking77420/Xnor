@@ -25,6 +25,10 @@ static constexpr uint32_t MaxDirectionalLights = 1;
 
 static constexpr uint32_t MaxBones = 100;
 
+static constexpr size_t DirectionalCascadeLevel = 4;
+static constexpr size_t DirectionalCascadeLevelAllocation = 16;
+
+
 /// @brief Polygon rasterization mode
 /// @see <a href="https://registry.khronos.org/OpenGL-Refpages/gl4/html/glPolygonMode.xhtml">OpenGL specification</a>
 BEGIN_ENUM(PolygonMode)
@@ -539,8 +543,12 @@ struct ALIGNAS(16) DirectionalLightData
 	/// @brief CastShadow
 	int32_t isDirlightCastingShadow = 0;
 
+	uint32_t cascadeCount = DirectionalCascadeLevel;
+
+	float_t cascadePlaneDistance[DirectionalCascadeLevel];
+	
 	/// @brief Light space matrix
-	Matrix lightSpaceMatrix;
+	Matrix lightSpaceMatrix[DirectionalCascadeLevelAllocation];
 };
 
 /// @brief Light UniformBuffer data

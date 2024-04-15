@@ -62,6 +62,7 @@ public:
     /// @param drawEditorUi Whether to draw the editor only UI
     XNOR_ENGINE void RenderNonShaded(const Camera& camera, const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass, const Pointer<Shader>& shaderToUse, const Scene& scene, bool_t drawEditorUi) const;
     
+    
     /// @brief Swaps the front and back buffer.
     XNOR_ENGINE void SwapBuffers() const;
 

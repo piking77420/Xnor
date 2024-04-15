@@ -37,11 +37,10 @@ void Renderer::Initialize()
 
 void Renderer::BeginFrame(const Scene& scene)
 {
-    m_LightManager.BeginFrame(scene, *this);
-    m_AnimationRender.BeginFrame(scene, *this);
     Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
     scene.GetAllComponentOfType<MeshRenderer>(&m_MeshRenderers);
-
+    m_LightManager.BeginFrame(scene, *this);
+    m_AnimationRender.BeginFrame(scene, *this);
     PrepareOctree();
 }
 
@@ -68,7 +67,7 @@ void Renderer::RenderNonShaded(const Camera& camera, const RenderPassBeginInfo& 
  const RenderPass& renderPass,const Pointer<Shader>& shaderToUse, const Scene& scene, const bool_t drawEditorUi
 ) const
 {
-    Vector2i viewportSize = renderPassBeginInfo.renderAreaOffset + renderPassBeginInfo.renderAreaExtent;
+    const Vector2i viewportSize = renderPassBeginInfo.renderAreaOffset + renderPassBeginInfo.renderAreaExtent;
     BindCamera(camera, viewportSize);
     m_Frustum.UpdateFromCamera(camera, static_cast<float_t>(viewportSize.x) / static_cast<float_t>(viewportSize.y));
     renderPass.BeginRenderPass(renderPassBeginInfo);

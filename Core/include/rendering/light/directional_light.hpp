@@ -3,6 +3,7 @@
 #include <Maths/vector2i.hpp>
 
 #include "rendering/light/light.hpp"
+#include "utils/list.hpp"
 
 /// @file directional_light.hpp
 /// @brief Defines the XnorCore::DirectionalLight class
@@ -14,7 +15,7 @@ class DirectionalLight : public Light
 {
     REFLECTABLE_IMPL(DirectionalLight)
 
-    constexpr static inline Vector2 DefaulNearFar = { 1.0f, 50.f };
+    constexpr static inline Vector2 DefaulNearFar = { 0.1f, 500.f };
     
 public:
     /// @brief Orthographic left/right for the shadow map
