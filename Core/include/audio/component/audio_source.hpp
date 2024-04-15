@@ -8,6 +8,7 @@ BEGIN_XNOR_CORE
 class AudioSource : public Component
 {
 public:
+    AudioSource();
     ~AudioSource() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(AudioSource)

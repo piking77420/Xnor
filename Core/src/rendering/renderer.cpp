@@ -355,7 +355,7 @@ void Renderer::InitResources()
 	m_GBufferShaderLit = ResourceManager::Get<Shader>("deferred_opaque");
 	m_GBufferShaderLit->SetDepthFunction(DepthFunction::Disable);
 	
-	m_GBufferShaderLit->CreateInRhi();
+	m_GBufferShaderLit->CreateInInterface();
 	m_GBufferShaderLit->Use();
 	
 	m_GBufferShaderLit->SetInt("gPosition", DefferedDescriptor::Position);
@@ -385,7 +385,7 @@ void Renderer::InitResources()
 	};
 
 	m_GBufferShader->SetFaceCullingInfo(cullInfo);
-	m_GBufferShader->CreateInRhi();
+	m_GBufferShader->CreateInInterface();
 
 	// Init diffuse Texture for gbuffer
 	m_GBufferShader->Use();
@@ -399,13 +399,13 @@ void Renderer::InitResources()
 
 	// Forward
 	m_Forward = ResourceManager::Get<Shader>("basic_shader");
-	m_Forward->CreateInRhi();
+	m_Forward->CreateInInterface();
 
 	m_DrawTextureToScreenShader = ResourceManager::Get<Shader>("draw_texture_to_screen");
-	m_DrawTextureToScreenShader->CreateInRhi();
+	m_DrawTextureToScreenShader->CreateInInterface();
 	
 	m_GizmoShader = ResourceManager::Get<Shader>("gizmo_shader");
-	m_GizmoShader->CreateInRhi();
+	m_GizmoShader->CreateInInterface();
 
 	m_DrawTextureToScreenShader->Use();
 	m_DrawTextureToScreenShader->SetInt("bufferTextureId", 0);

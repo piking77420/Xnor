@@ -80,7 +80,7 @@ bool_t Shader::Load(const char_t* const buffer, const int64_t length, const Shad
     return true;
 }
 
-void Shader::CreateInRhi()
+void Shader::CreateInInterface()
 {
     std::vector<ShaderCode> code(m_Code.size());
     std::ranges::copy(m_Code, code.begin());
@@ -89,7 +89,7 @@ void Shader::CreateInRhi()
     m_LoadedInRhi = true;
 }
 
-void Shader::DestroyInRhi()
+void Shader::DestroyInInterface()
 {
     Rhi::DestroyProgram(m_Id);
     
@@ -99,7 +99,7 @@ void Shader::DestroyInRhi()
 
 void Shader::Recompile()
 {
-    DestroyInRhi();
+    DestroyInInterface();
 
     for (Pointer<File>& file : m_Files)
     {
@@ -107,7 +107,7 @@ void Shader::Recompile()
             file->Reload();
     }
 
-    CreateInRhi();
+    CreateInInterface();
 }
 
 void Shader::Unload()

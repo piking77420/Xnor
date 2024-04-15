@@ -22,20 +22,18 @@ class AudioContext
 {
 public:
     [[nodiscard]]
-    explicit AudioContext(AudioDevice& device);
+    XNOR_ENGINE explicit AudioContext(AudioDevice& device);
 
-    ~AudioContext();
+    XNOR_ENGINE ~AudioContext();
 
     DEFAULT_COPY_MOVE_OPERATIONS(AudioContext)
 
-    void MakeCurrent() const;
+    XNOR_ENGINE void MakeCurrent() const;
+
+    XNOR_ENGINE static bool_t CheckError();
 
     [[nodiscard]]
-    // ReSharper disable once CppNonExplicitConversionOperator
-    operator ALCcontext*() const;
-
-    [[nodiscard]]
-    int32_t GetMaxSourceCount(AudioSourceType sourceType) const;
+    XNOR_ENGINE int32_t GetMaxSourceCount(AudioSourceType sourceType) const;
 
     /// @brief Returns the next available source of the given type.
     [[nodiscard]]
@@ -47,7 +45,8 @@ private:
 
     List<int32_t> m_Attributes;
 
-    List<uint32_t> m_Sources;
+    List<uint32_t> m_SourcesMono;
+    List<uint32_t> m_SourcesStereo;
 };
 
 END_XNOR_CORE

@@ -137,7 +137,7 @@ void Rhi::DestroyProgram(const uint32_t shaderId)
 
 void Rhi::CheckCompilationError(const uint32_t shaderId, const std::string& type)
 {
-	int success;
+	int success = 0;
 	std::string infoLog(1024, '\0');
 
 	if (type != "PROGRAM")
@@ -926,7 +926,7 @@ void Rhi::BindTexture(const uint32_t unit, const uint32_t textureId)
 
 uint32_t Rhi::CreateFrameBuffer()
 {
-	uint32_t frameBufferId;
+	uint32_t frameBufferId = 0;
 	glCreateFramebuffers(1, &frameBufferId);
 	return frameBufferId;
 }
@@ -1056,7 +1056,7 @@ void Rhi::GetPixelFromAttachement(const uint32_t attachmentIndex, const Vector2i
 
 void Rhi::SwapBuffers()
 {
-	glfwSwapBuffers(Window::GetHandle());
+	glfwSwapBuffers(glfwGetCurrentContext());
 }
 
 uint32_t Rhi::GetOpenglShaderType(const ShaderType::ShaderType shaderType)
@@ -1243,19 +1243,19 @@ uint32_t Rhi::GetOpenGlTextureFormat(const TextureFormat::TextureFormat textureF
 
 void Rhi::LogComputeShaderInfo()
 {
-	int32_t workGroupCount[3];
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &workGroupCount[0]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &workGroupCount[1]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &workGroupCount[2]);
+	std::array<int32_t, 3> workGroupCount{};
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, workGroupCount.data());
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, workGroupCount.data() + 1);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, workGroupCount.data() + 2);
 	Logger::LogDebug("Max work groups per compute shader x: {} y: {} x: {}", workGroupCount[0], workGroupCount[1], workGroupCount[2]);
 	
-	int32_t workGroupSize[3];
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &workGroupSize[0]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, &workGroupSize[1]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, &workGroupSize[2]);
+	std::array<int32_t, 3> workGroupSize{};
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, workGroupSize.data());
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, workGroupSize.data() + 1);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, workGroupSize.data() + 2);
 	Logger::LogDebug("Max work group sizes  x: {} y: {} x: {}", workGroupSize[0], workGroupSize[1], workGroupSize[2]); 
 
-	int32_t workGroupInvocation;
+	int32_t workGroupInvocation = 0;
 	glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &workGroupInvocation);
 	Logger::LogDebug("Max invocations count per work group: {} ", workGroupInvocation);
 }

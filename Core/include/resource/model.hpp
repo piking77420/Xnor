@@ -99,10 +99,10 @@ public:
     XNOR_ENGINE bool_t Load(const aiMesh& loadedData);
 
     /// @copydoc XnorCore::Resource::CreateInRhi
-    XNOR_ENGINE void CreateInRhi() override;
+    XNOR_ENGINE void CreateInInterface() override;
 
     /// @copydoc XnorCore::Resource::DestroyInRhi
-    XNOR_ENGINE void DestroyInRhi() override;
+    XNOR_ENGINE void DestroyInInterface() override;
     
     /// @copydoc XnorCore::Resource::Unload
     XNOR_ENGINE void Unload() override;

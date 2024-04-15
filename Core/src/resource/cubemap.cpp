@@ -8,7 +8,7 @@
 
 using namespace XnorCore;
 
-void Cubemap::CreateInRhi()
+void Cubemap::CreateInInterface()
 {
     const TextureCreateInfo createInfo
     {
@@ -26,7 +26,7 @@ void Cubemap::CreateInRhi()
     m_LoadedInRhi = true;
 }
 
-void Cubemap::DestroyInRhi()
+void Cubemap::DestroyInInterface()
 {
     Rhi::DestroyTexture(m_Id);
     m_LoadedInRhi = false;
@@ -58,7 +58,7 @@ m_TextureFiltering(textureCreateInfo.filtering),m_TextureWrapping(textureCreateI
 
 Cubemap::~Cubemap()
 {
-    DestroyInRhi();
+    DestroyInInterface();
     Unload();
 }
 

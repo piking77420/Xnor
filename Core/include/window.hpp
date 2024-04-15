@@ -1,6 +1,5 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
 #include <Maths/vector2i.hpp>
 
 #include "core.hpp"
@@ -8,6 +7,9 @@
 
 /// @file window.hpp
 /// @brief Defines the XnorCore::Window class.
+
+// ReSharper disable once CppInconsistentNaming
+struct GLFWwindow;
 
 BEGIN_XNOR_CORE
 

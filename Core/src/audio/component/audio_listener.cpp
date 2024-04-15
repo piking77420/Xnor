@@ -17,14 +17,14 @@ void AudioListener::Update()
 
     // Position
     alListenerfv(AL_POSITION, transform.GetPosition().Raw());
-    Audio::CheckError();
+    AudioContext::CheckError();
 
     // TODO: Velocity
 
     // Orientation
     std::array at = { transform.worldMatrix * Vector3::UnitX(), Vector3::UnitY() };
     alListenerfv(AL_ORIENTATION, at[0].Raw());
-    Audio::CheckError();
+    AudioContext::CheckError();
 }
 
 float_t AudioListener::GetVolume() const
@@ -38,5 +38,5 @@ void AudioListener::SetVolume(const float_t newVolume)
     
     m_AudioContext->MakeCurrent();
     alListenerf(AL_GAIN, volume);
-    Audio::CheckError();
+    AudioContext::CheckError();
 }

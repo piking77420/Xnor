@@ -1,8 +1,9 @@
 #include "audio/audio_context.hpp"
 
+#include <AL/al.h>
 #include <AL/alc.h>
+#include <magic_enum/magic_enum.hpp>
 
-#include "AL/al.h"
 #include "audio/audio_device.hpp"
 #include "utils/logger.hpp"
 
@@ -18,11 +19,7 @@ AudioContext::AudioContext(AudioDevice& device)
         return;
     }
     
-    if (!alcMakeContextCurrent(m_Handle) || AudioDevice::CheckError(m_Device))
-    {
-        Logger::LogError("Unable to make audio context current for device {}", device.GetName());
-        return;
-    }
+    MakeCurrent();
 
     // Get the context attribute values
     int32_t size = 0;
@@ -40,7 +37,18 @@ AudioContext::~AudioContext()
 
 void AudioContext::MakeCurrent() const { alcMakeContextCurrent(m_Handle); }
 
-AudioContext::operator ALCcontext*() const { return m_Handle; }
+bool_t AudioContext::CheckError()
+{
+    const ALCenum error = alGetError();
+
+    if (error != AL_NO_ERROR)
+    {
+        Logger::LogError("[OpenAL] {}", std::string_view(alGetString(error)));
+        return true;
+    }
+
+    return false;
+}
 
 int32_t AudioContext::GetMaxSourceCount(const AudioSourceType sourceType) const
 {
@@ -57,28 +65,67 @@ int32_t AudioContext::GetMaxSourceCount(const AudioSourceType sourceType) const
 
 uint32_t AudioContext::GetSource(const AudioSourceType type)
 {
-    List<int32_t> states(m_Sources.GetSize());
+    List<uint32_t>& sources = type == AudioSourceType::Mono ? m_SourcesMono : m_SourcesStereo;
+    
+    List<int32_t> states(sources.GetSize());
 
-    const uint32_t* source = m_Sources.Find(
-        [] (const uint32_t* const s) -> bool_t
+    MakeCurrent();
+    
+    sources.Iterate(
+        [&] (const uint32_t* const s) -> void
         {
             int32_t value = 0;
             alGetSourcei(*s, AL_SOURCE_STATE, &value);
-            return value == AL_INITIAL;
+            states.Add(value);
         }
     );
 
-    if (source != nullptr)
-        return *source;
+    uint32_t source = 0;
+    for (size_t i = 0; i < sources.GetSize(); i++)
+    {
+        if (states[i] != AL_INITIAL)
+            continue;
 
-    source = m_Sources.Find(
-        [] (const uint32_t* const s) -> bool_t
-        {
-            int32_t value = 0;
-            alGetSourcei(*s, AL_SOURCE_STATE, &value);
-            return value == AL_STOPPED;
-        }
-    );
+        source = sources[i];
+        break;
+    }
 
-    return *source;
+    if (source != 0)
+        return source;
+
+    for (size_t i = 0; i < sources.GetSize(); i++)
+    {
+        if (states[i] != AL_STOPPED)
+            continue;
+
+        source = sources[i];
+        break;
+    }
+
+    if (source != 0)
+    {
+        // Rewind the source back to the AL_INITIAL state
+        alSourceRewind(source);
+        return source;
+    }
+
+    const int32_t maxCount = GetMaxSourceCount(type);
+
+    if (sources.GetSize() >= static_cast<uint32_t>(maxCount))
+    {
+        Logger::LogWarning("The maximum amount of audio sources of type {} has been reached, resetting the first one", magic_enum::enum_name(type));
+        return sources[0];
+    }
+
+    // Reset the error state here to avoid throwing an exception for a different OpenAL error
+    CheckError();
+
+    alGenSources(1, &source);
+
+    if (CheckError())
+        throw std::runtime_error("Cannot generate audio source");
+
+    sources.Add(source);
+
+    return source;
 }

@@ -35,11 +35,11 @@ public:
     /// @returns @c true if the loading succeeded, @c false otherwise.
     XNOR_ENGINE virtual bool_t Load(const Pointer<File>& file);
 
-    /// @brief Creates the Resource in the Rhi.
-    XNOR_ENGINE virtual void CreateInRhi();
+    /// @brief Creates the Resource in the current interface (Rhi/Audio).
+    XNOR_ENGINE virtual void CreateInInterface();
 
-    /// @brief Destroys the Resource in the Rhi.
-    XNOR_ENGINE virtual void DestroyInRhi();
+    /// @brief Destroys the Resource in the current interface (Rhi/Audio).
+    XNOR_ENGINE virtual void DestroyInInterface();
 
     /// @brief Unloads the loaded data.
     XNOR_ENGINE virtual void Unload();
@@ -49,14 +49,14 @@ public:
     /// This is effectively equivalent to calling Unload and then @ref Load(const uint8_t* buffer, int64_t length) "Load".
     /// 
     /// @returns @c true if the loading succeeded, @c false otherwise.
-    XNOR_ENGINE virtual bool_t Reload(const uint8_t* buffer, int64_t length, bool_t reloadInRhi = true);
+    XNOR_ENGINE virtual bool_t Reload(const uint8_t* buffer, int64_t length, bool_t reloadInInterface = true);
 
     /// @brief Unloads and then loads back this Resource.
     ///
     /// This is effectively equivalent to calling Unload and then @ref Load(const Pointer<File>&) "Load".
     /// 
     /// @returns @c true if the loading succeeded, @c false otherwise.
-    XNOR_ENGINE virtual bool_t Reload(const Pointer<File>& file, bool_t reloadInRhi = true);
+    XNOR_ENGINE virtual bool_t Reload(const Pointer<File>& file, bool_t reloadInInterface = true);
 
     /// @brief Unloads and then loads back this Resource.
     ///
@@ -64,7 +64,7 @@ public:
     /// using FileManager::Get(const std::filesystem::path&) as a parameter.
     /// 
     /// @returns @c true if the loading succeeded, @c false otherwise.
-    XNOR_ENGINE virtual bool_t Reload(bool_t reloadInRhi = true);
+    XNOR_ENGINE virtual bool_t Reload(bool_t reloadInInterface = true);
 
     /// @brief Returns whether the Resource has already been loaded.
     [[nodiscard]]

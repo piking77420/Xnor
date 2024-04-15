@@ -2,7 +2,6 @@
 
 #include <set>
 
-#include <AL/al.h>
 #include <AL/alc.h>
 
 #include "utils/logger.hpp"
@@ -24,19 +23,6 @@ void Audio::Shutdown()
 
     for (auto&& device : m_AvailableDevices)
         delete device;
-}
-
-bool_t Audio::CheckError()
-{
-    const ALCenum error = alGetError();
-
-    if (error != AL_NO_ERROR)
-    {
-        Logger::LogError("[OpenAL] {}", std::string_view(alGetString(error)));
-        return true;
-    }
-
-    return false;
 }
 
 AudioContext* Audio::GetContext() { return m_CurrentDevice->GetContext(); }

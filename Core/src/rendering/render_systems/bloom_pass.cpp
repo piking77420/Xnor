@@ -10,7 +10,7 @@ void BloomPass::Init()
     m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
     // Downsample
     m_DownSample = ResourceManager::Get<ComputeShader>("down_sample");
-    m_DownSample->CreateInRhi();
+    m_DownSample->CreateInInterface();
     m_DownSample->Use();
     m_DownSample->SetInt("currentMip", 0);
     m_DownSample->SetInt("nextMip", 1);
@@ -18,14 +18,14 @@ void BloomPass::Init()
 
     // Upsample
     m_UpSample = ResourceManager::Get<ComputeShader>("up_sample");
-    m_UpSample->CreateInRhi();
+    m_UpSample->CreateInInterface();
     m_UpSample->Use();
     m_UpSample->SetInt("currentMip", 0);
     m_UpSample->SetInt("nextMip", 1);    
     m_UpSample->Unuse();
 
     m_ThresholdFilter = ResourceManager::Get<ComputeShader>("bloom_threshold");
-    m_ThresholdFilter->CreateInRhi();
+    m_ThresholdFilter->CreateInInterface();
     m_ThresholdFilter->Use();
     m_ThresholdFilter->SetInt("baseImage", 0);
     m_ThresholdFilter->SetInt("thresholdTexture", 1);

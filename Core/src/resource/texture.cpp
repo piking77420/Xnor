@@ -41,7 +41,7 @@ Texture::Texture(const ENUM_VALUE(TextureInternalFormat) textureInternalFormat, 
 Texture::~Texture()
 {
     if (m_LoadedInRhi)
-        Texture::DestroyInRhi();
+        Texture::DestroyInInterface();
     
     if (m_Loaded)
         Texture::Unload();
@@ -65,7 +65,7 @@ bool_t Texture::Load(const uint8_t* buffer, const int64_t length)
     return true;
 }
 
-void Texture::CreateInRhi()
+void Texture::CreateInInterface()
 {
     
     TextureCreateInfo createInfo
@@ -93,7 +93,7 @@ void Texture::CreateInRhi()
     m_LoadedInRhi = true;
 }
 
-void Texture::DestroyInRhi()
+void Texture::DestroyInInterface()
 {
     Rhi::DestroyTexture(m_Id);
     

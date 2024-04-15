@@ -193,7 +193,7 @@ void ResourceManager::Unload(const Pointer<T>& resource)
         if (storedResource == Utils::DynamicPointerCast<Resource>(resource))
         {
             if (storedResource->IsLoadedInRhi())
-                storedResource->DestroyInRhi();
+                storedResource->DestroyInInterface();
             
             if (storedResource->IsLoaded())
                 storedResource->Unload();
@@ -245,7 +245,7 @@ Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file, const bool_t loadInR
     file->m_Resource = std::move(Pointer<Resource>(resource, false));
 
     if (loadInRhi)
-        resource->CreateInRhi();
+        resource->CreateInInterface();
 
     return resource;
 }

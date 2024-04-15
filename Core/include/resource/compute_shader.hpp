@@ -49,10 +49,10 @@ public:
 	XNOR_ENGINE bool_t Load(const char_t* buffer, int64_t length);
 
 	/// @brief Creates the shader in the @ref Rhi
-	XNOR_ENGINE void CreateInRhi() override;
+	XNOR_ENGINE void CreateInInterface() override;
 
 	/// @brief Destroys the shader in the @ref Rhi
-	XNOR_ENGINE void DestroyInRhi() override;
+	XNOR_ENGINE void DestroyInInterface() override;
 
 	/// @brief Recompiles the shader
 	XNOR_ENGINE void Recompile();

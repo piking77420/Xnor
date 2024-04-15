@@ -1,6 +1,7 @@
 ﻿#include "input/input.hpp"
 
-#include "assimp/Logger.hpp"
+#include <GLFW/glfw3.h>
+
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -155,11 +156,9 @@ void Input::HandleGamepad()
 
 void Input::ResetKey()
 {
-    GLFWwindow* const windowPtr = Window::GetHandle();
-
-    glfwSetKeyCallback(windowPtr, HandleKeyboard);
-    glfwSetMouseButtonCallback(windowPtr, HandleMouseButton);
-    glfwSetCursorPosCallback(windowPtr, MouseCursorPos);
+    glfwSetKeyCallback(m_WindowHandle, HandleKeyboard);
+    glfwSetMouseButtonCallback(m_WindowHandle, HandleMouseButton);
+    glfwSetCursorPosCallback(m_WindowHandle, MouseCursorPos);
 
     KeyStatuses defaultKeys;
     defaultKeys.fill(false);
@@ -211,7 +210,7 @@ void Input::Update()
 
 void Input::Initialize()
 {
-    GLFWwindow* const windowPtr = Window::GetHandle();
+    GLFWwindow* const windowPtr = glfwGetCurrentContext();
 
     glfwSetKeyCallback(windowPtr, HandleKeyboard);
     glfwSetMouseButtonCallback(windowPtr, HandleMouseButton);

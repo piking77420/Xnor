@@ -79,14 +79,14 @@ bool_t Model::Load(const aiMesh& loadedData)
     return true;
 }
 
-void Model::CreateInRhi()
+void Model::CreateInInterface()
 {
     m_ModelId = Rhi::CreateModel(m_Vertices, m_Indices);
 
     m_LoadedInRhi = true;
 }
 
-void Model::DestroyInRhi()
+void Model::DestroyInInterface()
 {
     Rhi::DestroyModel(m_ModelId);
 

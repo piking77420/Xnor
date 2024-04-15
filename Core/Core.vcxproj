@@ -94,6 +94,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\audio\audio_buffer.hpp" />
     <ClInclude Include="include\data_structure\object_bounding.hpp" />
     <ClInclude Include="include\data_structure\octree.hpp" />
     <ClInclude Include="include\data_structure\octree_iterator.hpp" />

@@ -60,14 +60,14 @@ void Skybox::LoadCubeMap(const std::array<std::string, 6>& cubeMapFiles)
 {
     if (m_CubeMap != nullptr)
     {
-        m_CubeMap->DestroyInRhi();
+        m_CubeMap->DestroyInInterface();
         m_CubeMap->Unload();
         delete m_CubeMap;
         m_CubeMap = nullptr;
     }
 
     m_CubeMap = new Cubemap(cubeMapFiles);
-    m_CubeMap->CreateInRhi();
+    m_CubeMap->CreateInInterface();
 }
 
 void Skybox::LoadFromHdrTexture(const Pointer<Texture>& hdfFile) const 

@@ -77,9 +77,9 @@ public:
 
     XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;
     
-    XNOR_ENGINE void CreateInRhi() override;
+    XNOR_ENGINE void CreateInInterface() override;
 
-    XNOR_ENGINE void DestroyInRhi() override;
+    XNOR_ENGINE void DestroyInInterface() override;
     
     XNOR_ENGINE void Unload() override;
 
