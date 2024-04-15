@@ -50,7 +50,7 @@ public:
     XNOR_ENGINE static bool_t GetInitialized();
 
 private:
-    XNOR_ENGINE static inline constexpr int32_t DotnetVersionMajor = 5;
+    XNOR_ENGINE static inline constexpr int32_t DotnetVersion = 5;
     
     static Coral::HostSettings m_Settings;
     
