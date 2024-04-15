@@ -52,7 +52,7 @@ bool_t Model::Load(const aiMesh& loadedData)
         vert.textureCoord = Vector2(&loadedData.mTextureCoords[0][i].x);
         
         vert.tangent = Vector3(&loadedData.mBitangents[i].x);
-        vert.bitangent = Vector3::Cross(vert.normal,vert.tangent);
+        vert.bitangent = Vector3::Cross(vert.normal, vert.tangent);
     }
 
     for (uint32_t i = 0; i < loadedData.mNumBones; i++)
@@ -80,8 +80,8 @@ bool_t Model::Load(const aiMesh& loadedData)
         {
             const float_t totalWeight = m_Vertices[i].boneWeight[0] + m_Vertices[i].boneWeight[1] + m_Vertices[i].boneWeight[2] + m_Vertices[i].boneWeight[3];
 
-            if (!Calc::Equals(totalWeight, 1))
-                Logger::LogInfo("{} ; {}", i, totalWeight);
+            if (!Calc::Equals(totalWeight, 1.f))
+                Logger::LogError("{} ; {}", i, totalWeight);
         }
     }
 

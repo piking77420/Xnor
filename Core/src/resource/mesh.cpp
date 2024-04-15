@@ -78,8 +78,7 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
     {
         Animation* const animation = new Animation(scene->mAnimations[i]->mName.C_Str());
 
-        animation->Load(*scene->mAnimations[i]);
-        animation->BindSkeleton(m_Skeletons[0]);
+        animation->Load(*scene, *scene->mAnimations[i], m_Skeletons[0]);
 
         animations.Add(animation);
     }

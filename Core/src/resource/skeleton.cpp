@@ -55,8 +55,6 @@ bool_t Skeleton::Load(const aiSkeleton& loadedData)
         m_Bones[i].parentId = bone->mParent;
     }
 
-    ComputeGlobalMatrices();
-    
     return true;
 }
 
@@ -75,10 +73,11 @@ inline bool_t Skeleton::Load(const aiMesh& loadedData)
         const Matrix* const local = reinterpret_cast<const Matrix*>(&bone->mOffsetMatrix);
         const Matrix* const globalInv = reinterpret_cast<const Matrix*>(&bone->mOffsetMatrix);
 
-        Bone* b = &m_Bones[i];
+        Bone* const b = &m_Bones[i];
         b->name = std::string(bone->mName.data);
         b->Create(*local, *globalInv);
-    
+        b->id = static_cast<int32_t>(i);
+
         boneInfo[i] = bone->mNode;
     }
 
@@ -97,38 +96,19 @@ inline bool_t Skeleton::Load(const aiMesh& loadedData)
         }
     }
 
-    ComputeGlobalMatrices();
-
     // PrintBones();
     
     return true;
 }
 
-const List<Bone>& Skeleton::GetBones() const
+List<Bone>& Skeleton::GetBones()
 {
     return m_Bones;
 }
 
-void Skeleton::ComputeGlobalMatrices()
+const List<Bone>& Skeleton::GetBones() const
 {
-    for (size_t i = 0; i < m_Bones.GetSize(); i++)
-    {
-        Bone& bone = m_Bones[i];
-        const int32_t parentId = bone.parentId;
-
-        if (parentId != -1)
-        {
-            bone.local = m_Bones[parentId].global.Inverted() * bone.local;
-
-            bone.position = static_cast<Vector3>(bone.local * Vector4(0.f, 0.f, 0.f, 1.f));
-
-            Vector3 position;
-            Vector3 scale;
-            Vector3 skew;
-            Vector4 perspective;
-            bone.local.Decompose(&position, &bone.rotation, &scale, &skew, &perspective);
-        }
-    }
+    return m_Bones;
 }
 
 void Skeleton::PrintBones() const

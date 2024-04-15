@@ -19,6 +19,7 @@ public:
     XNOR_ENGINE void Create(const Matrix& localMatrix, const Matrix& offsetMatrix);
 
     std::string name = "Bone_Unnamed";
+    int32_t id;
     Vector3 position;
     Quaternion rotation;
     Matrix local;

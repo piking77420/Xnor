@@ -194,6 +194,18 @@ T* List<T>::Find(const std::function<bool_t(const T*)>& lambda)
 }
 
 template <typename T>
+const T* List<T>::Find(const std::function<bool_t(const T*)>& lambda) const
+{
+    for (size_t i = 0; i < m_Vector.size(); i++)
+    {
+        if (lambda(&m_Vector[i]))
+            return &m_Vector[i];
+    }
+
+    return nullptr;
+}
+
+template <typename T>
 T* List<T>::GetData()
 {
     return m_Vector.data();

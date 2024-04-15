@@ -197,6 +197,14 @@ public:
     /// @return Pointer to element
     T* Find(const std::function<bool_t(const T*)>& lambda);
 
+    /// @brief Tries to find an element that fulfills the requirements provided in a lambda
+    /// 
+    /// <p>The lambda returns bool_t, and has a pointer to the current element as a parameters</p>
+    /// 
+    /// @param lambda Function lambda
+    /// @return Pointer to element
+    const T* Find(const std::function<bool_t(const T*)>& lambda) const;
+
 #ifndef SWIG
     /// @brief Gets the underlying pointer to the list
     /// 

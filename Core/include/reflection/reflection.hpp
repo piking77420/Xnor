@@ -59,7 +59,7 @@ namespace Reflection
     /// @brief Allows a boolean to be set to true when the field is modified
     /// @tparam T Parent type
     template <typename T>
-    struct NotifyChange : FieldAttribute
+    struct  NotifyChange : FieldAttribute
     {
         /// @brief Shorthand for a class member pointer
         using PtrType = bool_t T::*;

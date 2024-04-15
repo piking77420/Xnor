@@ -42,12 +42,12 @@ public:
     XNOR_ENGINE bool_t Load(const aiMesh& loadedData);
 
     [[nodiscard]]
+    XNOR_ENGINE List<Bone>& GetBones();
+    [[nodiscard]]
     XNOR_ENGINE const List<Bone>& GetBones() const;
 
 private:
     List<Bone> m_Bones;
-
-    void ComputeGlobalMatrices();
 
     void PrintBones() const;
 };
