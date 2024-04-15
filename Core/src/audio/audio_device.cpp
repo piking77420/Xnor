@@ -32,9 +32,6 @@ AudioDevice::AudioDevice(std::string&& name)
     }
 
     m_Context = new AudioContext(*this);
-
-    DEBUG_LOG("Max mono source count: {}", m_Context->GetMaxSourceCount(AudioSourceType::Mono));
-    DEBUG_LOG("Max stereo source count: {}", m_Context->GetMaxSourceCount(AudioSourceType::Stereo));
 }
 
 AudioDevice::~AudioDevice()
@@ -42,5 +39,9 @@ AudioDevice::~AudioDevice()
     delete m_Context;
     alcCloseDevice(m_Handle);
 }
+
+AudioContext* AudioDevice::GetContext() { return m_Context; }
+
+const AudioContext* AudioDevice::GetContext() const { return m_Context; }
 
 std::string AudioDevice::GetName() const { return m_Name; }

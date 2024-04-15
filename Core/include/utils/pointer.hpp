@@ -13,11 +13,6 @@
 
 BEGIN_XNOR_CORE
 
-/// @brief Used to default-construct the value of a Pointer.
-/// 
-/// @see Pointer::Create(Construct)
-struct Construct {};
-
 /// @brief Custom XNOR smart pointer.
 ///        Represents both a @c std::shared_ptr and a @c std::weak_ptr.
 ///
@@ -32,7 +27,7 @@ struct Construct {};
 /// @code
 /// struct Type { int i; explicit Type(int i) : i(i) {} };
 ///
-/// Pointer<Type> ptr = Pointer<Type>::Create(7);
+/// Pointer<Type> ptr = Pointer<Type>::New(7);
 /// @endcode
 /// ... and 7 will be forwarded as a parameter to the @c Type(int) constructor.
 ///
@@ -42,7 +37,7 @@ struct Construct {};
 /// Pointer<Type> ptr;
 ///
 /// // 2 - Default initialize the wrapped value: this effectively calls the wrapped type's default constructor
-/// Pointer<Type> ptr = Pointer<Type>::Create(Construct{}); // or Construct()
+/// Pointer<Type> ptr = Pointer<Type>::New();
 ///
 /// // 3 - Manually set the Pointer to nullptr: this is actually the same as default initializing it
 /// Pointer<Type> ptr = nullptr;
@@ -67,7 +62,7 @@ template <typename T>
 class Pointer
 {
 public:
-    /// @brief The type of ReferenceCounter, and therefore of raw pointer this Pointer is holding.
+    /// @brief The type of ReferenceCounter, and therefore the type this Pointer is pointing to.
     using Type = T;
 
     /// @brief Creates a Pointer, calling @c new with @p T and forwarding all given arguments to its constructor.
@@ -75,17 +70,7 @@ public:
     static Pointer New(Args&&... args);
 
     /// @brief Creates a @ref Pointer with a default-initialized value.
-    ///
-    /// The parameter is actually ignored in this call, and is only used to differentiate between a call to
-    /// @ref Pointer::Pointer() "the default constructor" and this one. We need this specific constructor
-    /// because the C++ language doesn't allow us to call a template constructor with empty template
-    /// parameters without template deduction.
-    /// 
-    /// This means that you can actually call this constructor like this:
-    /// @code
-    /// Pointer<Type> ptr(Construct{});
-    /// @endcode
-    static Pointer New(Construct);
+    static Pointer New();
     
     /// @brief Creates an empty @ref Pointer without a reference counter and pointing to @c nullptr.
     Pointer() = default;

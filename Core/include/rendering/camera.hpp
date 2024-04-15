@@ -39,6 +39,12 @@ public:
 	/// @brief Whether the camera is orthographic
 	bool_t isOrthographic = false;
 
+	Camera() = default;
+
+	~Camera() = default;
+
+	DEFAULT_COPY_MOVE_OPERATIONS(Camera);
+
 	/// @brief Computes the projection @ref Matrix of the camera
 	/// @param screenSize Screen size
 	/// @param matrix Result matrix
@@ -64,6 +70,7 @@ public:
 	/// @return Result position
 	[[nodiscard]]
 	Vector2i ProjectOn(const Vector3& vertex, Vector2i screenSize, const Matrix& model) const;
+	
 };
 
 END_XNOR_CORE

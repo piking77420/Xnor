@@ -24,11 +24,14 @@ void RenderWindow::Display()
 
 void RenderWindow::OnApplicationRendering()
 {
-    if (!m_Viewport->IsValid() || m_Viewport->viewPortSize != m_Size)
+    bool_t isValid = m_Viewport->IsValid();
+    
+    if (!isValid || m_Viewport->viewPortSize != m_Size)
     {
         m_Viewport->Resize(m_Size);
     }
-    
+
+    if (isValid)
     m_Editor->renderer.RenderViewport(*m_Viewport, *XnorCore::World::scene);
 }
 

@@ -42,7 +42,7 @@ Pointer<T> ResourceManager::Load(const Pointer<File>& file, bool_t loadInRhi)
             loaded ? "" : ". Loading it"
         );
 
-        if (!loaded)
+        // if (!loaded)
             resource->Load(file);
 
         return resource;
@@ -126,7 +126,6 @@ void ResourceManager::FindAll(std::vector<Pointer<T>>* result)
     
     for (auto& val : m_Resources | std::views::values)
     {
-        // ReSharper disable once CppTooWideScope
         Pointer<T> entry = Utils::DynamicPointerCast<T>(val);
         
         if (entry)

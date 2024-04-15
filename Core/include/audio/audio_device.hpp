@@ -23,6 +23,12 @@ public:
     DEFAULT_COPY_MOVE_OPERATIONS(AudioDevice)
 
     [[nodiscard]]
+    XNOR_ENGINE AudioContext* GetContext();
+
+    [[nodiscard]]
+    XNOR_ENGINE const AudioContext* GetContext() const;
+
+    [[nodiscard]]
     XNOR_ENGINE std::string GetName() const;
 
 private:

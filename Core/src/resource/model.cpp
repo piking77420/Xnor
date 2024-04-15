@@ -36,7 +36,7 @@ bool_t Model::Load(const uint8_t* buffer, const int64_t length)
         Logger::LogError("Invalid mesh format, should only contain a single model: {}", m_Name);
         return false;
     }
-   
+
     return Load(*scene->mMeshes[0]);
 }
 
@@ -50,8 +50,6 @@ bool_t Model::Load(const aiMesh& loadedData)
         vert.position = Vector3(&loadedData.mVertices[i].x);
         vert.normal = Vector3(&loadedData.mNormals[i].x);
         vert.textureCoord = Vector2(&loadedData.mTextureCoords[0][i].x);
-        
-
         
         vert.tangent = Vector3(&loadedData.mBitangents[i].x);
         vert.bitangent = Vector3::Cross(vert.normal,vert.tangent);
@@ -111,7 +109,7 @@ uint32_t Model::GetId() const
     return m_ModelId;
 }
 
-Model::Aabb Model::GetAabb() const
+Bound Model::GetAabb() const
 {
     return m_Aabb;
 }
@@ -123,29 +121,36 @@ const std::vector<Vertex>& Model::GetVertices() const
 
 void Model::ComputeAabb(const aiAABB& assimpAabb)
 {
+    Vector3 min;
+    Vector3 max;
+    
     if (assimpAabb.mMax.x == 0.f && assimpAabb.mMax.y == 0.f && assimpAabb.mMax.z == 0.f &&
         assimpAabb.mMin.x == 0.f && assimpAabb.mMin.y == 0.f && assimpAabb.mMin.z == 0.f)
     {
+        
+        
         for (const Vertex& vertex : m_Vertices)
         {
-            if (vertex.position.x < m_Aabb.min.x)
-                 m_Aabb.min.x = vertex.position.x;
-            if (vertex.position.y < m_Aabb.min.y)
-                m_Aabb.min.y = vertex.position.y;
-            if (vertex.position.z < m_Aabb.min.z)
-                m_Aabb.min.z = vertex.position.z;
+            if (vertex.position.x < min.x)
+                 min.x = vertex.position.x;
+            if (vertex.position.y < min.y)
+                min.y = vertex.position.y;
+            if (vertex.position.z < min.z)
+                min.z = vertex.position.z;
 
-            if (vertex.position.x > m_Aabb.max.x)
-                m_Aabb.max.x = vertex.position.x;
-            if (vertex.position.y > m_Aabb.max.y)
-                m_Aabb.max.y = vertex.position.y;
-            if (vertex.position.z > m_Aabb.max.z)
-                m_Aabb.max.z = vertex.position.z;
+            if (vertex.position.x > max.x)
+                max.x = vertex.position.x;
+            if (vertex.position.y > max.y)
+                max.y = vertex.position.y;
+            if (vertex.position.z > max.z)
+                max.z = vertex.position.z;
         }
     }
     else
     {
-        m_Aabb.min = Vector3(&assimpAabb.mMin.x);
-        m_Aabb.max = Vector3(&assimpAabb.mMax.x);
+        min = Vector3(&assimpAabb.mMin.x);
+        max = Vector3(&assimpAabb.mMax.x);
     }
+
+   m_Aabb.SetMinMax(min, max);
 }

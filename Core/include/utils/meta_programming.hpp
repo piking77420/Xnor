@@ -7,6 +7,7 @@
 /// @brief Defines utilities for meta programming and template manipulation
 
 #include <type_traits>
+#include <map>
 
 #include <Maths/quaternion.hpp>
 #include <Maths/vector2.hpp>
@@ -51,6 +52,11 @@ namespace Meta
     template <typename T>
     constexpr bool_t IsPointer = std::is_pointer_v<T>;
 
+    /// @brief Checks whether @c T is a class
+    /// @tparam T Type
+    template <typename T>
+    constexpr bool_t IsClass = std::is_class_v<T>;
+
     /// @brief Checks whether @c T is an enum
     /// @tparam T Type
     template <typename T>
@@ -75,6 +81,9 @@ namespace Meta
     /// @tparam T Type
     template <typename T>
     constexpr bool_t IsDefaultConstructible = std::is_default_constructible_v<T>;
+
+    template <bool_t Test>
+    using EnableIf = std::enable_if_t<Test>;
 
     /// @brief Removes the array specification from @c T
     ///
@@ -103,6 +112,20 @@ namespace Meta
 
     template <typename T, typename A>
     constexpr bool_t IsStdVector<std::vector<T, A>> = true;
+
+    /// @brief Checks whether the type is a @c std::vector
+    template <typename>
+    constexpr bool_t IsStdFunction = false;
+
+    template <typename T, typename... Args>
+    constexpr bool_t IsStdFunction<std::function<T(Args...)>> = true;
+
+    /// @brief Checks whether the type is a @c std::vector
+    template <typename>
+    constexpr bool_t IsStdMap = false;
+
+    template <typename T, typename A>
+    constexpr bool_t IsStdMap<std::map<T, A>> = true;
 
     /// @brief Checks whether the type is a List
     template <typename>

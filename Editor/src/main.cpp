@@ -22,12 +22,5 @@ int32_t main(const int32_t argc, const char_t* const* const argv)
 
 	editor.Update();
 
-	Logger::LogInfo("Repeating log");
-	Logger::LogInfo("Repeating log");
-	Logger::LogInfo("Repeating log");
-	Logger::LogInfo("Repeating log");
-	Logger::LogInfo("Repeating log");
-	Logger::LogInfo("Repeating log");
-
 	return EXIT_SUCCESS;
 }

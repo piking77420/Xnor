@@ -17,14 +17,15 @@ void Application::Exit(const int32_t code)
 {
 	Logger::LogInfo("Force exiting Application");
 
-	delete m_ApplicationInstance;
+	delete applicationInstance;
 	
 	std::exit(code);  // NOLINT(concurrency-mt-unsafe)
 }
 
 Application::Application(const int32_t, const char_t* const* const argv)
 {
-    m_ApplicationInstance = this;
+    applicationInstance = this;
+	
 
 	executablePath = argv[0];
 
@@ -61,10 +62,13 @@ Application::Application(const int32_t, const char_t* const* const argv)
 
 	if (!DotnetRuntime::LoadAssembly("Game"))
 		Logger::LogWarning("Couldn't load assembly Game.dll");
+
+	gameViewPort = new Viewport();
 }
 
 Application::~Application()
 {
+	delete gameViewPort;
 	delete World::scene;
 	
 	DotnetRuntime::Shutdown();

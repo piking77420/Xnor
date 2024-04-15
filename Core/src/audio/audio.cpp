@@ -39,20 +39,22 @@ bool_t Audio::CheckError()
     return false;
 }
 
+AudioContext* Audio::GetContext() { return m_CurrentDevice->GetContext(); }
+
 void Audio::InitializeDevices()
 {
     // Use std::set to make sure we don't create duplicate devices
     std::set<std::string> deviceNameList;
 
     // Get all available devices if the extension is present (this should always be the case)
-    if (alcIsExtensionPresent(nullptr, "ALC_ENUMERATION_EXT"))
+    if (alcIsExtensionPresent(nullptr, "ALC_ENUMERATE_ALL_EXT"))
     {
-        const char_t* const deviceNames = alcGetString(nullptr, ALC_DEVICE_SPECIFIER);
+        const char_t* const deviceNames = alcGetString(nullptr, ALC_ALL_DEVICES_SPECIFIER);
         IterateAlStringList(deviceNames, [&](const char_t* const str) { deviceNameList.emplace(str); });
     }
 
     // Just in case the enumeration extension isn't present, add the default device
-    deviceNameList.emplace(alcGetString(nullptr, ALC_DEFAULT_DEVICE_SPECIFIER));
+    deviceNameList.emplace(alcGetString(nullptr, ALC_DEFAULT_ALL_DEVICES_SPECIFIER));
 
     // Create the devices and add them to the list
     const size_t size = deviceNameList.size();

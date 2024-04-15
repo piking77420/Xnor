@@ -1,7 +1,6 @@
 #pragma once
 
 #include <functional>
-#include <unordered_map>
 
 #include "core.hpp"
 #include "audio/audio_device.hpp"
@@ -18,6 +17,10 @@ public:
     XNOR_ENGINE static void Shutdown();
 
     XNOR_ENGINE static bool_t CheckError();
+
+    /// @brief Returns the current device's context.
+    [[nodiscard]]
+    XNOR_ENGINE static AudioContext* GetContext();
 
 private:
     XNOR_ENGINE static inline std::vector<AudioDevice*> m_AvailableDevices;

@@ -2,8 +2,6 @@
 
 #include <refl/refl.hpp>
 
-#include "utils/meta_programming.hpp"
-
 /// @file reflection.hpp
 /// @brief Defines reflection types and helpers
 
@@ -84,8 +82,6 @@ namespace Reflection
     template <typename T>
     struct Range : FieldAttribute
     {
-        static_assert(Meta::IsIntegralOrFloating<T>, "Range attribute can only be used on integer or floating values");
-
         /// @brief Minimum value
         T minimum;
         /// @brief Maximum value
@@ -131,6 +127,9 @@ namespace Reflection
     struct ReadOnly : FieldAttribute
     {
     };
+
+    template <typename T>
+    constexpr bool_t IsReflected = refl::trait::is_reflectable_v<T>;
     
     /// @brief Gets the type info of a class
     /// @tparam ReflectT Type

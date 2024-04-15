@@ -14,64 +14,25 @@ float_t Plane::GetSignedDistanceToPlane(const Vector3& point) const
     return Vector3::Dot(normal, point) - distance;
 }
 
+
 void Frustum::UpdateFromCamera(const Camera& camera, const float_t aspect)
 {
-    const float halfVSide = camera.far * tanf(camera.fov * Calc::Deg2Rad * .5f);
-    const float halfHSide = halfVSide * aspect;
+    const float_t halfVSide = camera.far * tanf(camera.fov * Calc::Deg2Rad * .5f);
+    const float_t halfHSide = halfVSide * aspect;
+    
+    const Vector3 frontMultNear = camera.near * camera.front;
     const Vector3 frontMultFar = camera.far * camera.front;
     
-    m_Plane[Near] = { camera.position + camera.near * camera.front, camera.front };
-    m_Plane[Far] = { camera.position + frontMultFar, -camera.front };
-    m_Plane[Right] = { camera.position,Vector3::Cross(frontMultFar - camera.right * halfHSide, camera.up) };
-    m_Plane[Left] = { camera.position,Vector3::Cross(camera.up,frontMultFar + camera.right * halfHSide) };
-    m_Plane[Top] = { camera.position, Vector3::Cross(camera.right, frontMultFar - camera.up * halfVSide) };
-    m_Plane[Bottom] = { camera.position, Vector3::Cross(frontMultFar + camera.up * halfVSide, camera.right) };
+    plane[Near] = { camera.position + frontMultNear, camera.front };
+    plane[Far] = { camera.position + frontMultFar, -camera.front };
+    plane[Right] = { camera.position,Vector3::Cross(frontMultFar - camera.right * halfHSide, camera.up) };
+    plane[Left] = { camera.position,Vector3::Cross(camera.up,frontMultFar + (camera.right * halfHSide)) };
+    plane[Top] = { camera.position, Vector3::Cross(camera.right, frontMultFar - (camera.up * halfVSide)) };
+    plane[Bottom] = { camera.position, Vector3::Cross(frontMultFar + (camera.up * halfVSide), camera.right) };
 
 }
 
-bool_t Frustum::AABBCollidWithPlane(const Plane& plane, const Model::Aabb&, const Vector3& center) const
+bool_t Frustum::IsOnFrustum(const Bound& bound) const
 {
-    const float r = center.x * std::abs(plane.normal.x) +
-            center.y * std::abs(plane.normal.y) + center.z * std::abs(plane.normal.z);
-
-    return -r <= plane.GetSignedDistanceToPlane(center);
-}
-
-bool_t Frustum::IsInFrutum(const Camera&, const Model::Aabb& aabb, const Transform& transform) const
-{
-    // Get The center of the AABB
-    const Vector3&& center = (aabb.max - aabb.min) * 0.5f;
-    
-    // Get The Vector Between center and the max
-    const Vector3&& extend = center - aabb.max;
-    
-    const Vector3&& right = transform.GetRight() * extend.x;
-    const Vector3&& up = transform.GetUp() * extend.y;
-    const Vector3&& forward = transform.GetForward() * extend.z;
-
-    const float_t newIi = Calc::Abs(Vector3::Dot(Vector3::UnitX(), right)) +
-      Calc::Abs(Vector3::Dot(Vector3::UnitX(), up)) +
-      Calc::Abs(Vector3::Dot(Vector3::UnitX(), forward));
-
-    const float_t newIj = Calc::Abs(Vector3::Dot(Vector3::UnitY(), right)) +
-       Calc::Abs(Vector3::Dot(Vector3::UnitY(), up)) +
-       Calc::Abs(Vector3::Dot(Vector3::UnitY(), forward));
-
-    const float_t newIk = Calc::Abs(Vector3::Dot(Vector3::UnitZ(), right)) +
-       Calc::Abs(Vector3::Dot(Vector3::UnitZ(), up)) +
-       Calc::Abs(Vector3::Dot(Vector3::UnitZ(), forward));
-
-    
-    const Model::Aabb obb =
-    {
-        .min = static_cast<Vector3>(transform.worldMatrix * Vector4(aabb.min.x, aabb.min.y , aabb.min.z, 1.f)),
-        .max = static_cast<Vector3>(transform.worldMatrix * Vector4(aabb.max.x, aabb.max.y , aabb.max.z, 1.f)),
-    };
-
-    
-    
-    
-    
-
-    return false;
+    return bound.IsOnPlane(plane[0]) && bound.IsOnPlane(plane[1]) && bound.IsOnPlane(plane[2]) && bound.IsOnPlane(plane[3]) && bound.IsOnPlane(plane[4]);
 }

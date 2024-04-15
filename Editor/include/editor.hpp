@@ -30,7 +30,7 @@ public:
 
 	// TODO temp
 	static constexpr const char_t* SerializedScenePath = "assets/scenes/basic_scene.scene.xml";
-	
+
 private:
 	std::vector<UiWindow*> m_UiWindows;
 
@@ -49,10 +49,8 @@ private:
 	void BeginDockSpace() const;
 
 	void EndDockSpace() const;
-		
-	void SetupImGuiStyle() const;
 
-	void CreateTestScene();
+	void SetupImGuiStyle() const;
 	
 	void MenuBar();
 };

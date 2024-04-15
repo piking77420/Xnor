@@ -12,6 +12,7 @@
 #include "scene/component/test_component.hpp"
 #include "serialization/serializer.hpp"
 #include "utils/coroutine.hpp"
+#include "utils/timeline.hpp"
 #include "windows/content_browser.hpp"
 #include "windows/editor_window.hpp"
 #include "windows/header_window.hpp"
@@ -84,8 +85,7 @@ void Editor::CreateDefaultWindows()
 
 	data.editorViewPort.isEditor = true;
 	data.editorViewPort.camera = &data.editorCam;
-	data.gameViewPort.camera = &data.gameCam;
-	m_UiWindows.push_back(new RenderWindow(this,data.gameViewPort));
+	m_UiWindows.push_back(new RenderWindow(this,*gameViewPort));
 	m_UiWindows.push_back(new EditorWindow(this,data.editorViewPort));
 
 	if (XnorCore::FileManager::Contains(SerializedScenePath))
@@ -243,9 +243,6 @@ void Editor::MenuBar()
 				path = data.currentScene->GetPathString();
 			}
 
-			std::vector<XnorCore::TestComponent*> v;
-			XnorCore::World::scene->GetAllComponentOfType<XnorCore::TestComponent>(&v);
-
 			if (ImGui::MenuItem("Save"))
 			{
 				XnorCore::Serializer::StartSerialization(path);
@@ -268,7 +265,7 @@ void Editor::MenuBar()
 			
 			ImGui::EndMenu();
 		}
-		
+		renderer.RenderMenu();
 		ImGui::EndMainMenuBar();
 	}
 }
@@ -327,6 +324,7 @@ void Editor::Update()
 		CheckWindowResize();
 		
 		renderer.BeginFrame(*World::scene);
+
 		UpdateWindows();
 		WorldBehaviours();
 		OnRenderingWindow();
@@ -362,7 +360,7 @@ void Editor::WorldBehaviours()
 			XnorCore::World::Begin();
 			XnorCore::World::hasStarted = true;
 		}
-
+		
 		XnorCore::World::Update();
 	}
 }

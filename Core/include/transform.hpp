@@ -23,7 +23,6 @@ class XNOR_ENGINE Transform final
 	REFLECTABLE_IMPL(Transform)
 
 public:
-
 	/// @brief World transformation matrix of the transform
 	Matrix worldMatrix = Matrix::Identity();
 	
@@ -97,12 +96,11 @@ public:
 	/// @brief Returns whether at least one of this Transform's field was changed last frame.
 	bool_t GetChanged() const;
 	
-	Vector3 GetRight() const;
+	inline Vector3 GetRight() const;
 
-	Vector3 GetUp() const;
+	inline Vector3 GetUp() const;
 
-	Vector3 GetForward() const;
-
+	inline Vector3 GetForward() const;
 	
 private:
 	/// @brief Position

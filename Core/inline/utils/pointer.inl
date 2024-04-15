@@ -10,7 +10,7 @@ Pointer<T> Pointer<T>::New(Args&&... args)  // NOLINT(cppcoreguidelines-missing-
 }
 
 template <typename T>
-Pointer<T> Pointer<T>::New(Construct)
+Pointer<T> Pointer<T>::New()
 {
     return Pointer(new ReferenceCounter<T>, true);
 }

@@ -74,7 +74,7 @@ uniform samplerCubeArray pointLightCubemapArrayPixelDistance;
 
 in vec2 texCoords;
 
-vec3 gridSamplingDisk[20] = vec3[]
+const vec3 gridSamplingDiskVec3[20] = vec3[]
 (
     vec3(1, 1,  1), vec3( 1, -1,  1), vec3(-1, -1,  1), vec3(-1, 1,  1),
     vec3(1, 1, -1), vec3( 1, -1, -1), vec3(-1, -1, -1), vec3(-1, 1, -1),
@@ -82,6 +82,16 @@ vec3 gridSamplingDisk[20] = vec3[]
     vec3(1, 0,  1), vec3(-1,  0,  1), vec3( 1,  0, -1), vec3(-1, 0, -1),
     vec3(0, 1,  1), vec3( 0, -1,  1), vec3( 0, -1, -1), vec3( 0, 1, -1)
 );
+
+const vec2 gridSamplingDiskVec2[20] = vec2[]
+(
+    vec2(1, 1), vec2( 1, -1), vec2(-1, -1), vec2(-1, 1),
+    vec2(1, 1), vec2( 1, -1), vec2(-1, -1), vec2(-1, 1),
+    vec2(1, 1), vec2( 1, -1), vec2(-1, -1), vec2(-1, 1),
+    vec2(1, 0), vec2(-1,  0), vec2( 1,  0), vec2(-1, 0),
+    vec2(0, 1), vec2( 0, -1), vec2( 0, -1), vec2( 0, 1)
+);
+
 
 float ShadowCalculation(vec4 fragPosLightSpace, vec3 n, vec3 l)
 {
@@ -163,12 +173,13 @@ float ShadowCalculationPointLight(vec3 LightToPixel, vec3 fragPos, int index)
     float bias = 0.15;
     int samples = 20;
     float viewDistance = length(cameraPos - fragPos);
-    float diskRadius = 0.05;
-    
+    float diskRadius = (1.0 + (viewDistance / far)) / 25.0;
+
     for(int i = 0; i < samples; ++i)
     {
-        vec3 offset = gridSamplingDisk[i] * diskRadius;
-        float distance = texture(pointLightCubemapArrayPixelDistance, vec4(LightToPixel.x + offset.x, LightToPixel.y + offset.y, LightToPixel.z + offset.z , index)).r;
+        vec3 offset = gridSamplingDiskVec3[i] * diskRadius;
+        vec3 textureUv = (LightToPixel + offset) * far;
+        float distance = texture(pointLightCubemapArrayPixelDistance, vec4(textureUv.x, textureUv.y, textureUv.z , index)).r;
         
         if(distance + bias < currentDistance)
         shadow += 1.0;

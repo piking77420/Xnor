@@ -122,10 +122,13 @@ struct Data64
 #include "rendering/vertex.hpp"
 #include "rendering/viewport.hpp"
 #include "rendering/viewport_data.hpp"
+#include "rendering/plane.hpp"
 
 #include "resource/cubemap.hpp"
 #include "resource/font.hpp"
 #include "resource/model.hpp"
+#include "resource/mesh.hpp"
+#include "resource/animation.hpp"
 #include "resource/resource.hpp"
 #include "resource/resource_manager.hpp"
 #include "resource/shader.hpp"
@@ -150,6 +153,7 @@ struct Data64
 #include "utils/pointer.hpp"
 #include "utils/reference_counter.hpp"
 #include "utils/ts_queue.hpp"
+#include "utils/bound.hpp"
 #include "utils/utils.hpp"
 
 #include "world/scene_graph.hpp"
@@ -169,6 +173,8 @@ struct Data64
 
 %include "utils/guid.hpp"
 
+%include "utils/list.i"
+
 %include "resource/resource.hpp"
 
 %include "file/entry.hpp"
@@ -176,11 +182,20 @@ struct Data64
 %include "file/file.i"
 %include "file/file_manager.hpp"
 
-%include "rendering/rhi_typedef.hpp"
+%include "rendering/rhi_typedef.i"
 
 %include "resource/cubemap.hpp"
 %include "resource/font.hpp"
+
+%include "transform.hpp"
+
+%include "rendering/plane.hpp"
+
+%include "utils/bound.hpp"
+
 %include "resource/model.hpp"
+
+%include "resource/mesh.hpp"
 %include "resource/resource_manager.hpp"
 
 %include "resource/shader.hpp"
@@ -211,10 +226,6 @@ struct Data64
 
 %include "scene/component/mesh_renderer.hpp"
 %include "scene/component/script_component.hpp"
-
-%include "transform.hpp"
-
-%include "utils/list.i"
 
 %include "scene/entity.i"
 

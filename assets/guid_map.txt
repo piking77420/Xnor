@@ -49,5 +49,8 @@ assets_internal/editor/gizmos/dirlight_icon.png;6119E8D-B01D-4AE5-9D-B1-30-39-A1
 _shaders/bloom_threshold;848A1E09-D127-47FC-AC-76-27-C5-F-5F-92-92
 _shaders/depth_shader_point_light;48268CE4-BA8C-4CB7-BB-28-28-B4-43-B8-FF-C9
 _shaders/down_sample;86AB86C5-5C39-4C38-B1-5E-3F-61-A2-73-74-74
+_shaders/skinned_gbuffer;D416B5BA-C667-4145-8F-D8-FA-72-ED-DE-14-7
 _shaders/draw_gizmo_instanced;1D8CCE20-12B2-47D2-80-67-84-42-ED-56-F-5A
 _shaders/up_sample;590ABFD0-76AD-4F2D-94-50-D4-C5-9A-B5-A6-6
+assets/models/Coyote-Walking.fbx;6C09C002-82DC-4AF6-9D-41-B6-3A-31-72-4D-63
+assets/models/Coyote-Running.fbx;6681D90B-EA9E-4F13-87-FE-89-A8-AC-E0-A2-85

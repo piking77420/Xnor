@@ -60,11 +60,10 @@ out VS_OUT
 
 void main()
 {
-    vs_out.texCoords = aTexCoords;
-    
     vs_out.fragPos = model * vec4(aPos, 1.0);
     gl_Position = projection * view * vs_out.fragPos ;
-    
+
+    vs_out.texCoords = aTexCoords;
     vs_out.roughness = roughness;
     vs_out.metallic = metallic;
     vs_out.reflectance = reflectance;

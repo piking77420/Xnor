@@ -61,7 +61,7 @@ public:
 
 	/// @brief Draws a model
 	/// @param modelId Model id
-	XNOR_ENGINE static void DrawModel(uint32_t modelId); 
+	XNOR_ENGINE static void DrawModel(DrawMode::DrawMode drawMode, uint32_t modelId); 
 	
 	/// @brief Destroy a shader program
 	/// @param shaderId Shader id
@@ -206,6 +206,10 @@ public:
 	/// @param cameraUniformData Data
 	XNOR_ENGINE static void UpdateCameraUniform(const CameraUniformData& cameraUniformData);
 
+	/// @brief Updates the animation UniformBuffer
+	/// @param skinnedMeshGPUData Data
+	XNOR_ENGINE static void UpdateAninationUniform(const SkinnedMeshGpuData& skinnedMeshGPUData);
+
 	/// @brief Updates the light UniformBuffer
 	/// @param lightData Data
 	XNOR_ENGINE static void UpdateLight(const GpuLightData& lightData);
@@ -285,6 +289,8 @@ public:
 
 	XNOR_ENGINE static uint32_t GetOpenglDataType(DataType::DataType dataType);
 
+	XNOR_ENGINE static uint32_t DrawModeToOpengl(DrawMode::DrawMode drawMode);
+
 private:
 	struct ModelInternal
 	{
@@ -307,6 +313,8 @@ private:
 	XNOR_ENGINE static inline UniformBuffer* m_ModelUniform;
 	XNOR_ENGINE static inline UniformBuffer* m_LightUniform;
 	XNOR_ENGINE static inline UniformBuffer* m_MaterialUniform;
+	XNOR_ENGINE static inline UniformBuffer* m_AnimationBuffer;
+
 
 	XNOR_ENGINE static inline bool_t m_Blending = false;
 	XNOR_ENGINE static inline bool_t m_Cullface = false;

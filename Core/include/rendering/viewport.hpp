@@ -54,6 +54,8 @@ public:
 	/// @returns Whether it's valid
 	[[nodiscard]]
 	XNOR_ENGINE bool_t IsValid() const;
+
+	XNOR_ENGINE float_t GetAspect() const;
 	
 };
 

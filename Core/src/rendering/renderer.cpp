@@ -6,6 +6,24 @@
 
 using namespace XnorCore;
 
+void Renderer::RenderMenu()
+{
+	if (ImGui::BeginMenu("CurrentScene"))
+	{
+		if (ImGui::Checkbox("DrawScene Octree",&m_RenderOctree.draw))
+		{
+			
+		}
+			
+		ImGui::EndMenu();
+	}
+	
+	if (m_RenderOctree.draw)
+	{
+		m_RenderOctree.Draw();
+	}
+}
+
 void Renderer::Initialize()
 {
 	Rhi::SetClearColor(clearColor);
@@ -14,50 +32,54 @@ void Renderer::Initialize()
 	m_SkyboxRenderer.InitializeResources();
 	m_LightManager.InitResources();
 	m_PostProcessPass.Init();
+	m_AnimationRender.InitResources();
 	Rhi::PrepareRendering();
 }
 
 void Renderer::BeginFrame(const Scene& scene)
 {
 	m_LightManager.BeginFrame(scene, *this);
+	m_AnimationRender.BeginFrame(scene,*this);
 	Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
+	scene.GetAllComponentOfType<MeshRenderer>(&m_MeshRenderers);
+	
+	PrepareOctree();
+	
 }
 
 void Renderer::EndFrame(const Scene& scene)
 {
 	m_LightManager.EndFrame(scene);
+	m_AnimationRender.EndFrame();
 }
 
 void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene) const
 {
 	BindCamera(*viewport.camera,viewport.viewPortSize);
-
-	std::vector<const MeshRenderer*> meshrenderers;
-	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderers);
-
+	m_Frustum.UpdateFromCamera(*viewport.camera,viewport.GetAspect());
 	const ViewportData& viewportData = viewport.viewportData;
-
-	DefferedRendering(meshrenderers, scene.skybox, viewportData, viewport.viewPortSize);
-	ForwardPass(meshrenderers, scene.skybox, viewport, viewport.viewPortSize, viewport.isEditor);
+	DeferedRenderring(*viewport.camera, m_MeshRenderers, scene.skybox, viewportData, viewport.viewPortSize);
+	ForwardPass(m_MeshRenderers, scene.skybox, viewport, viewport.viewPortSize, viewport.isEditor);
 	
 	if (viewportData.usePostProcess)
 		m_PostProcessPass.Compute(*viewport.viewportData.colorAttachment , *viewport.m_Image, viewportData.postprocessRendertarget);
 }
 
 void Renderer::RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass,
-	const Pointer<Shader>& shadertoUse, const Scene& scene,	const bool_t drawEditorUi
+	const Pointer<Shader>& shaderToUse, const Scene& scene,	const bool_t drawEditorUi
 ) const
 {
+	Vector2i viewportSize = renderPassBeginInfo.renderAreaOffset + renderPassBeginInfo.renderAreaExtent;
 	std::vector<const MeshRenderer*> meshrenderers;
 	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderers);
-	BindCamera(camera, renderPassBeginInfo.renderAreaOffset + renderPassBeginInfo.renderAreaExtent);
-	
+	BindCamera(camera,viewportSize );
+	m_Frustum.UpdateFromCamera(camera,static_cast<float_t>(viewportSize.x) / static_cast<float_t>(viewportSize.y));
 	renderPass.BeginRenderPass(renderPassBeginInfo);
 	DrawAllMeshRendersNonShaded(meshrenderers, scene);
 	
 	if (drawEditorUi)
 	{
-		m_LightManager.DrawLightGizmoWithShader(camera, scene, shadertoUse);
+		m_LightManager.DrawLightGizmoWithShader(camera, scene, shaderToUse);
 	}
 	
 	renderPass.EndRenderPass();
@@ -68,7 +90,9 @@ void Renderer::SwapBuffers() const
 	Rhi::SwapBuffers();
 }
 
-void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox, const ViewportData& viewportData, const Vector2i viewportSize) const 
+
+
+void Renderer::DeferedRenderring(const Camera& camera,const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox, const ViewportData& viewportData, const Vector2i viewportSize) const 
 {
 	const RenderPassBeginInfo renderPassBeginInfo =
 	{
@@ -80,9 +104,14 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	};
 	
 	viewportData.gBufferPass.BeginRenderPass(renderPassBeginInfo);
+	
+	// Draw Simple Mesh
 	m_GBufferShader->Use();
 	DrawMeshRendersByType(meshRenderers, MaterialType::Opaque);
 	m_GBufferShader->Unuse();
+	// DrawSkinnedMesh
+	m_AnimationRender.RenderAnimation();
+	
 	viewportData.gBufferPass.EndRenderPass();
 
 	const RenderPassBeginInfo renderPassBeginInfoLit =
@@ -103,7 +132,7 @@ void Renderer::DefferedRendering(const std::vector<const MeshRenderer*>& meshRen
 	skybox.BindDesriptorSet();
 	m_LightManager.BindShadowMap();
 	
-	Rhi::DrawModel(m_Quad->GetId());
+	Rhi::DrawModel(DrawMode::Triangles, m_Quad->GetId());
 	
 	skybox.UnbindDesriptorSet();
 	viewportData.UnbindDescriptor();
@@ -152,6 +181,7 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 	m_GizmoShader->Use();
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Line);
 	ModelUniformData modelData;
+	m_GizmoShader->SetVec3("color",{0.f,1.f,0.f});
 
 	for (const MeshRenderer* const meshRenderer : meshRenderers)
 	{
@@ -162,20 +192,41 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 			continue;
 
 		const Transform& transform =  meshRenderer->GetEntity()->transform;
-		const Model::Aabb&& modelAabb = meshRenderer->model->GetAabb();
-
-		const Vector3&& aabbSize = (modelAabb.max - modelAabb.min) * 0.5f;
-		const Vector3&& center = (modelAabb.max + modelAabb.min) * 0.5f;
-
-		const Matrix&& trsAabb = Matrix::Trs(center, Quaternion::Identity(), aabbSize);
-		modelData.model = transform.worldMatrix * trsAabb;
+		const Bound&& modelAabb = Bound::GetAabbFromTransform( meshRenderer->model->GetAabb(), transform);
+		const Matrix&& trsAabb = Matrix::Trs(modelAabb.center, Quaternion::Identity(), modelAabb.extents);
+		modelData.model = trsAabb;
 		Rhi::UpdateModelUniform(modelData);
 
-		Rhi::DrawModel(m_Cube->GetId());
+		Rhi::DrawModel(DrawMode::Triangles, m_Cube->GetId());
 	}
 	
 	m_GizmoShader->Unuse();
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
+}
+
+void Renderer::PrepareOctree() const
+{
+	std::vector<ObjectBounding<const MeshRenderer>> meshrenderWithAabb;
+	
+	for (uint32_t i = 0; i < World::scene->GetEntities().GetSize();i++)
+	{
+		Entity& ent = *World::scene->GetEntities()[i];
+
+		const MeshRenderer* meshRenderer = nullptr;
+		if (ent.TryGetComponent(&meshRenderer))
+		{
+			if (!meshRenderer->model.IsValid())
+				continue;
+
+			Bound bound = bound.GetAabbFromTransform(meshRenderer->model->GetAabb(), meshRenderer->entity->transform);
+
+			ObjectBounding<const MeshRenderer> data;
+			data.bound = bound;
+			data.handle = meshRenderer;
+			meshrenderWithAabb.emplace_back(data);
+		}
+	}
+	m_RenderOctree.Update(meshrenderWithAabb);
 }
 
 
@@ -187,11 +238,17 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 	{
 		if (meshRenderer->material.materialType != materialType)
 			continue;
+
+		Bound aabb;
+		meshRenderer->GetAABB(&aabb);
+		if (m_Frustum.IsOnFrustum(aabb))
+		{
+			continue;
+		}
 		
 		const Transform& transform = meshRenderer->GetEntity()->transform;
 		ModelUniformData modelData;
 		modelData.model = transform.worldMatrix;
-		modelData.meshRenderIndex = reinterpret_cast<uint64_t>(meshRenderer->GetEntity());
 		
 		try
 		{
@@ -204,25 +261,10 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		
 		Rhi::UpdateModelUniform(modelData);
 
-		if (meshRenderer->material.albedoTexture.IsValid())
-			meshRenderer->material.albedoTexture->BindTexture(MaterialTextureEnum::Albedo);
-		
-		if (meshRenderer->material.metallicTexture.IsValid())
-			meshRenderer->material.metallicTexture->BindTexture(MaterialTextureEnum::Metallic);
-
-		if (meshRenderer->material.roughnessTexture.IsValid())
-			meshRenderer->material.roughnessTexture->BindTexture(MaterialTextureEnum::Roughness);
-
-		if (meshRenderer->material.normalTexture.IsValid())
-			meshRenderer->material.normalTexture->BindTexture(MaterialTextureEnum::Normal);
-
-		if (meshRenderer->material.ambientOcclusionTexture.IsValid())
-			meshRenderer->material.ambientOcclusionTexture->BindTexture(MaterialTextureEnum::AmbiantOcclusion);
-
 		if (meshRenderer->model.IsValid())
 		{
-			Rhi::BindMaterial(meshRenderer->material);
-			Rhi::DrawModel(meshRenderer->model->GetId());
+			meshRenderer->material.BindMaterial();
+			Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
 		}
 	}
 }
@@ -250,25 +292,10 @@ void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRe
 		
 		Rhi::UpdateModelUniform(modelData);
 
-		if (meshRenderer->material.albedoTexture.IsValid())
-			meshRenderer->material.albedoTexture->BindTexture(MaterialTextureEnum::Albedo);
-		
-		if (meshRenderer->material.metallicTexture.IsValid())
-			meshRenderer->material.metallicTexture->BindTexture(MaterialTextureEnum::Metallic);
-
-		if (meshRenderer->material.roughnessTexture.IsValid())
-			meshRenderer->material.roughnessTexture->BindTexture(MaterialTextureEnum::Roughness);
-
-		if (meshRenderer->material.normalTexture.IsValid())
-			meshRenderer->material.normalTexture->BindTexture(MaterialTextureEnum::Normal);
-
-		if (meshRenderer->material.ambientOcclusionTexture.IsValid())
-			meshRenderer->material.ambientOcclusionTexture->BindTexture(MaterialTextureEnum::AmbiantOcclusion);
-		
 		if (meshRenderer->model.IsValid())
 		{
-			Rhi::BindMaterial(meshRenderer->material);
-			Rhi::DrawModel(meshRenderer->model->GetId());
+			meshRenderer->material.BindMaterial();
+			Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
 		}
 	}
 }
@@ -279,6 +306,14 @@ void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*
 
 	for (const MeshRenderer* const meshRenderer : meshRenderers)
 	{
+
+		Bound aabb;
+		meshRenderer->GetAABB(&aabb);
+		if (m_Frustum.IsOnFrustum(aabb))
+		{
+			continue;
+		}
+		
 		const Transform& transform = meshRenderer->GetEntity()->transform;
 		ModelUniformData modelData;
 		modelData.model = transform.worldMatrix;
@@ -298,8 +333,7 @@ void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*
 		
 		if (meshRenderer->model.IsValid())
 		{
-			Rhi::BindMaterial(meshRenderer->material);
-			Rhi::DrawModel(meshRenderer->model->GetId());
+			Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
 		}
 	}
 }
@@ -319,7 +353,7 @@ void Renderer::InitResources()
 {
 	// Deferred 
 	m_GBufferShaderLit = ResourceManager::Get<Shader>("deferred_opaque");
-	m_GBufferShaderLit->SetDepthFunction( DepthFunction::DepthFunction::Disable);
+	m_GBufferShaderLit->SetDepthFunction(DepthFunction::Disable);
 	
 	m_GBufferShaderLit->CreateInRhi();
 	m_GBufferShaderLit->Use();

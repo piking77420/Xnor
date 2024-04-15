@@ -8,8 +8,10 @@
 #include "rendering/light/light.hpp"
 #include "rendering/light/point_light.hpp"
 #include "rendering/light/spot_light.hpp"
+#include "scene/component/camera_component.hpp"
 #include "scene/component/mesh_renderer.hpp"
 #include "scene/component/script_component.hpp"
+#include "scene/component/skinned_mesh_render.hpp"
 #include "scene/component/test_component.hpp"
 #include "scene/component/test_component_physics.hpp"
 
@@ -86,7 +88,6 @@ void XnorFactory::RegisterAllTypes()
     // It'll probably stay this way for the classes internal to Core, and as for the user scripts generated from the editor, a solution will be found at a later date probably
     
     RegisterType<MeshRenderer>();
-    RegisterType<Light>();
     RegisterType<DirectionalLight>();
     RegisterType<TestComponent>();
     RegisterType<PointLight>();
@@ -97,6 +98,8 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<SphereCollider>();
     RegisterType<CapsuleCollider>();
     RegisterType<TestComponentPhysics>();
+    RegisterType<CameraComponent>();
+    RegisterType<SkinnedMeshRender>();
 }
 
 std::string XnorFactory::GetTypeName(const size_t hash)

@@ -119,6 +119,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="interface\input\time.i" />
+    <Content Include="interface\rendering\rhi_typedef.i" />
+    <Content Include="interface\typemaps\cs_static_class.i" />
+    <Content Include="interface\typemaps\cs_struct.i" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
