@@ -44,6 +44,7 @@ void AudioBuffer::SetData(const void* const data, const int32_t length, const ui
 {
     m_Context->MakeCurrent();
     alBufferData(m_Handle, AlFormatFromData(channels, bitDepth), data, length, sampleRate);
+    AudioContext::CheckError();
 }
 
 uint32_t AudioBuffer::GetHandle() const

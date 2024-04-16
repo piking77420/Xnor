@@ -7,7 +7,6 @@
 #include "physics/components/collider.hpp"
 #include "physics/components/sphere_collider.hpp"
 #include "rendering/light/directional_light.hpp"
-#include "rendering/light/light.hpp"
 #include "rendering/light/point_light.hpp"
 #include "rendering/light/spot_light.hpp"
 #include "scene/component/camera_component.hpp"
@@ -89,10 +88,12 @@ void XnorFactory::RegisterAllTypes()
     // Manually registering the types is sub-optimal, however, it's the best way I've found so far
     // It'll probably stay this way for the classes internal to Core, and as for the user scripts generated from the editor, a solution will be found at a later date probably
     
+    RegisterType<Component>();
     RegisterType<MeshRenderer>();
     RegisterType<DirectionalLight>();
     RegisterType<TestComponent>();
     RegisterType<PointLight>();
+    RegisterType<Light>();
     RegisterType<SpotLight>();
     RegisterType<ScriptComponent>();
     RegisterType<Collider>();

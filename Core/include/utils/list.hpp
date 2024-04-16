@@ -205,6 +205,8 @@ public:
     /// @return Pointer to element
     T* Find(const std::function<bool_t(const T*, size_t)>& lambda);
 
+    void Sort(std::function<bool_t(const T& left, const T& right)> predicate = std::less());
+
 #ifndef SWIG
     /// @brief Gets the underlying pointer to the list
     /// 

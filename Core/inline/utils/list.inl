@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <ranges>
 
 BEGIN_XNOR_CORE
@@ -204,6 +205,9 @@ T* List<T>::Find(const std::function<bool_t(const T*, size_t)>& lambda)
 
     return nullptr;
 }
+
+template <typename T>
+void List<T>::Sort(std::function<bool_t(const T& left, const T& right)> predicate) { std::ranges::sort(m_Vector, predicate); }
 
 template <typename T>
 T* List<T>::GetData() { return m_Vector.data(); }

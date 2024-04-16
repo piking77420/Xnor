@@ -59,7 +59,7 @@ void Audio::InitializeDevices()
         it++;
     }
 
-    m_CurrentDevice = m_AvailableDevices.Back();
+    m_CurrentDevice = m_AvailableDevices.Front();
 }
 
 void Audio::IterateAlStringList(const char_t* list, const std::function<void(const char_t*)>& lambda)

@@ -39,5 +39,15 @@ END_XNOR_CORE
 
 REFL_AUTO(
     type(XnorCore::AudioListener, bases<XnorCore::Component>),
-    field(m_Volume, XnorCore::Reflection::Range(0.f, 5.f))
+    field(dopplerEffect),
+    field(
+        m_Volume,
+        XnorCore::Reflection::Range(0.f, 5.f),
+        XnorCore::Reflection::ModifiedCallback<XnorCore::AudioListener>(
+            [](XnorCore::AudioListener* listener)
+            {
+                listener->SetVolume(listener->m_Volume);
+            }
+        )
+    )
 )

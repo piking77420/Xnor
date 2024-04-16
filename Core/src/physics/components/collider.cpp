@@ -9,7 +9,7 @@ using namespace XnorCore;
 
 Collider::Collider()
 {
-    AddDebugEvents();
+    //AddDebugEvents();
 }
 
 Collider::~Collider()

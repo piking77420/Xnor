@@ -22,7 +22,7 @@ void AudioListener::Update()
     // TODO: Velocity
 
     // Orientation
-    std::array at = { transform.worldMatrix * Vector3::UnitX(), Vector3::UnitY() };
+    std::array at = { transform.worldMatrix * Vector3::UnitZ(), Vector3::UnitY() };
     alListenerfv(AL_ORIENTATION, at[0].Raw());
     AudioContext::CheckError();
 }

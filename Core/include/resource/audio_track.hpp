@@ -51,19 +51,19 @@ public:
     T* GetData();
     
     [[nodiscard]]
-    int32_t GetDataSize() const;
+    XNOR_ENGINE int32_t GetDataSize() const;
 
     [[nodiscard]]
-    uint16_t GetChannels() const;
+    XNOR_ENGINE uint16_t GetChannels() const;
 
     [[nodiscard]]
-    int32_t GetSampleRate() const;
+    XNOR_ENGINE int32_t GetSampleRate() const;
 
     [[nodiscard]]
-    uint16_t GetBitDepth() const;
+    XNOR_ENGINE uint16_t GetBitDepth() const;
 
     [[nodiscard]]
-    const AudioBuffer* GetBuffer() const;
+    XNOR_ENGINE const AudioBuffer* GetBuffer() const;
 
 private:
     /// @brief The raw, uncompressed audio data.
@@ -79,9 +79,9 @@ private:
 
     AudioBuffer* m_Buffer = nullptr;
     
-    bool_t LoadWavefront(const uint8_t* buffer, int64_t length);
-    int64_t LoadWavefrontFormat(const uint8_t* data);
-    int64_t LoadWavefrontData(const uint8_t* data);
+    XNOR_ENGINE bool_t LoadWavefront(const uint8_t* buffer, int64_t length);
+    XNOR_ENGINE int64_t LoadWavefrontFormat(const uint8_t* data);
+    XNOR_ENGINE int64_t LoadWavefrontData(const uint8_t* data);
 };
 
 END_XNOR_CORE

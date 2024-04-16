@@ -236,6 +236,7 @@
 				</2>
 				<3 typeName="CameraComponent"/>
 				<4 typeName="AudioListener">
+					<dopplerEffect>true</dopplerEffect>
 					<m_Volume>1</m_Volume>
 				</4>
 			</m_Components>
@@ -271,6 +272,9 @@
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 				</0>
+				<1 typeName="AudioSource">
+					<track>DFE1D450-B4E3-49F1-B8-41-92-36-78-74-9C-54</track>
+				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>

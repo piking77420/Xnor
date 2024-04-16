@@ -18,7 +18,7 @@ int32_t main(const int32_t argc, const char_t* const* const argv)
 	Logger::OpenDefaultFile();
 	XnorFactory::RegisterAllTypes();
 
-	Editor editor(std::forward<const int32_t>(argc), std::forward<const char_t* const* const>(argv));
+	Editor editor(std::forward<decltype(argc)>(argc), std::forward<decltype(argv)>(argv));
 
 	editor.Update();
 
