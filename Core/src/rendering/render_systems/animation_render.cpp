@@ -55,17 +55,13 @@ void AnimationRender::RenderAnimation() const
 		
         Rhi::UpdateModelUniform(modelData);
 
-        skinnedMeshRender->mesh->material.BindMaterial();
-        Rhi::BindMaterial(skinnedMeshRender->mesh->material);
-
         if (skinnedMeshRender->mesh)
         {
+            skinnedMeshRender->mesh->material.BindMaterial();
+            Rhi::BindMaterial(skinnedMeshRender->mesh->material);
+
             for (uint32_t i = 0; i < skinnedMeshRender->mesh->models.GetSize(); i++)
             {
-                // TODO Compute matrices and set it to the struct m_SkinnedMeshGpuData;
-                // m_SkinnedMeshGPUData
-                // Set data in Shader
-
                 const List<Matrix>& matrices = skinnedMeshRender->mesh->animations[0]->GetMatrices();
                 for (size_t j = 0; j < matrices.GetSize(); j++)
                     m_SkinnedMeshGpuData->boneMatrices[j] = matrices[j];
