@@ -20,9 +20,10 @@ class Mesh final : public Resource
 {
 public:
     /// @brief Allowed extensions for meshes.
-    XNOR_ENGINE static constexpr std::array<const char_t*, 1> FileExtensions
+    XNOR_ENGINE static constexpr std::array<const char_t*, 2> FileExtensions
     {
-        ".fbx"
+        ".fbx",
+        ".dae"
     };
 
     List<Model*> models;

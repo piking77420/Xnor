@@ -1,3 +1,4 @@
+assets/models/Coyote-Running.fbm/CH_NPC_MOB_Coyote_D_LTS.jpg;F463520F-F9E7-4C07-9F-A0-E2-39-C3-3E-AF-CF
 assets/models/viking_room.obj;7D4A901C-2429-4A7D-B2-98-A0-92-E4-79-B4-BE
 assets_internal/editor/gizmos/point_light.png;9A60727E-1CD5-4DB8-A2-B8-1B-BC-C6-DA-63-4F
 assets/skybox/right.jpg;2A4A1863-ECE4-4E0D-A6-5-59-DD-35-F3-37-4D
@@ -25,6 +26,7 @@ _shaders/basic_shader;9B97090E-BBBB-44EC-B8-BE-B4-62-A5-75-A-D5
 assets/textures/normal_map/normal.png;89BA98FF-7100-493D-93-11-A5-85-82-52-33-63
 _shaders/draw_texture_to_screen;4E808DB8-45EE-49C7-AA-30-61-2D-C3-F6-52-6E
 assets/textures/gradient.png;8F6DD5BC-E9BE-4E2A-A7-3-67-3A-42-CD-57-B6
+assets/models/Coyote-Running.fbm/CH_NPC_MOB_Coyote_N_LTS.jpg;DCF442CA-40C8-416A-B0-BE-4E-13-F9-FD-32-3
 assets/textures/normal_map/viking_room_normal_map.png;62B11E27-5C33-4D20-B8-14-2F-BC-D9-6B-18-4F
 assets_internal/editor/gizmos/spot_light.png;9D89B96-6A1B-4A65-B5-E2-70-A3-E6-40-10-E4
 assets/textures/newport_loft.hdr;5B4A8E56-E7E7-4D2C-BF-B7-44-F5-7-64-3A-AD
@@ -53,6 +55,4 @@ _shaders/draw_gizmo_instanced;1D8CCE20-12B2-47D2-80-67-84-42-ED-56-F-5A
 _shaders/skinned_gbuffer;D416B5BA-C667-4145-8F-D8-FA-72-ED-DE-14-7
 _shaders/up_sample;590ABFD0-76AD-4F2D-94-50-D4-C5-9A-B5-A6-6
 assets/models/Coyote-Running.fbx;6681D90B-EA9E-4F13-87-FE-89-A8-AC-E0-A2-85
-assets/models/Coyote-Running.fbm/CH_NPC_MOB_Coyote_SP_LTS.jpg;746984E5-2379-41E8-A7-6B-8D-E0-E3-B2-C5-7F
-assets/models/Coyote-Running.fbm/CH_NPC_MOB_Coyote_D_LTS.jpg;BDD45440-134C-48AB-8A-CB-A0-CF-B1-E7-D2-DE
-assets/models/Coyote-Running.fbm/CH_NPC_MOB_Coyote_N_LTS.jpg;E1652B69-D334-43B2-BB-38-E6-24-AE-3D-27-9A
+assets/models/Coyote-Running.fbm/CH_NPC_MOB_Coyote_SP_LTS.jpg;D87F6473-F343-44E8-91-DB-FA-CD-9A-5A-F5-A

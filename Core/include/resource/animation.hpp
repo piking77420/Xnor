@@ -32,10 +32,12 @@ public:
 
     XNOR_ENGINE void Update();
 
+    XNOR_ENGINE void BindSkeleton(const Skeleton* skeleton);
+
     /// @copydoc XnorCore::Resource::Load(const uint8_t* buffer, int64_t length)
     XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;
 
-    XNOR_ENGINE bool_t Load(const aiScene& scene, const aiAnimation& loadedData, Skeleton* skeleton);
+    XNOR_ENGINE bool_t Load(const aiAnimation& loadedData);
 
     [[nodiscard]]
     XNOR_ENGINE const List<Matrix>& GetMatrices() const;
@@ -61,7 +63,7 @@ private:
     int32_t m_FrameCount;
     size_t m_CurrentFrame;
 
-    Skeleton* m_Skeleton;
+    const Skeleton* m_Skeleton;
 
     float_t m_Time;
 
@@ -71,9 +73,7 @@ private:
 
     AssimpNodeData m_RootNode;
 
-    XNOR_ENGINE void LoadMissingBones(const aiAnimation& loadedData);
-    XNOR_ENGINE void ReadHierarchyData(AssimpNodeData& dest, const aiNode* src);
-	XNOR_ENGINE void CalculateBoneTransform(const AssimpNodeData* node, const Matrix& parentTransform);
+    XNOR_ENGINE void UpdateBoneTransform(const Bone* bone, const Matrix& parentMatrix);
 };
 
 END_XNOR_CORE

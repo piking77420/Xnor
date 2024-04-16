@@ -101,9 +101,52 @@ inline bool_t Skeleton::Load(const aiMesh& loadedData)
     return true;
 }
 
-List<Bone>& Skeleton::GetBones()
+bool_t Skeleton::Load(const aiScene& scene, const aiAnimation& loadedData)
 {
-    return m_Bones;
+    const uint32_t size = loadedData.mNumChannels;
+
+    for (uint32_t i = 0; i < size; i++)
+    {
+        const aiNodeAnim* const channel = loadedData.mChannels[i];
+        std::string boneName = channel->mNodeName.data;
+
+        if (m_Bones.Exists([&boneName](const Bone* b) -> bool_t { return b->name == boneName; }))
+            continue;
+
+        const aiNode* const node = scene.mRootNode->FindNode(channel->mNodeName);
+        std::string parentName = node->mParent->mName.C_Str();
+        const size_t parentPos = m_Bones.FindPosition([&parentName](const Bone* b) -> bool_t { return b->name == parentName; });
+
+        Bone bone;
+        bone.name = boneName;
+        bone.local = Matrix::Identity();
+        bone.global = Matrix(0.f);
+        bone.globalInverse = Matrix::Identity();
+        bone.id = static_cast<int32_t>(m_Bones.GetSize());
+
+        for (uint32_t j = 0; j < node->mNumChildren; j++)
+        {
+            const aiNode* const childNode = node->mChildren[j];
+            std::string childName = childNode->mName.C_Str();
+            const size_t childPos = m_Bones.FindPosition([&childName](const Bone* b) -> bool_t { return b->name == childName; });
+
+            if (childPos != std::numeric_limits<size_t>::max())
+            {
+                bone.children.Add(static_cast<int32_t>(childPos));
+                m_Bones[childPos].parentId = bone.id;
+            }
+        }
+
+        if (parentPos != std::numeric_limits<size_t>::max())
+        {
+            bone.parentId = static_cast<int32_t>(parentPos);
+            m_Bones[bone.parentId].children.Add(bone.id);
+        }
+        
+        m_Bones.Add(bone);
+    }
+
+    return true;
 }
 
 const List<Bone>& Skeleton::GetBones() const

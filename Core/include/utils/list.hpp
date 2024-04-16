@@ -187,6 +187,7 @@ public:
     /// 
     /// @param lambda Function lambda
     /// @return Element exists
+    [[nodiscard]]
     bool_t Exists(const std::function<bool_t(const T*)>& lambda) const;
 
     /// @brief Tries to find an element that fulfills the requirements provided in a lambda
@@ -195,6 +196,7 @@ public:
     /// 
     /// @param lambda Function lambda
     /// @return Pointer to element
+    [[nodiscard]]
     T* Find(const std::function<bool_t(const T*)>& lambda);
 
     /// @brief Tries to find an element that fulfills the requirements provided in a lambda
@@ -203,7 +205,15 @@ public:
     /// 
     /// @param lambda Function lambda
     /// @return Pointer to element
+    [[nodiscard]]
     const T* Find(const std::function<bool_t(const T*)>& lambda) const;
+
+    /// @brief Tries to find an element that fulfills the requirements provided in a lambda
+    /// 
+    /// @param lambda Function lambda
+    /// @return Index of the element in the list (size_t max if not found)
+    [[nodiscard]]
+    size_t FindPosition(const std::function<bool_t(const T*)>& lambda) const;
 
 #ifndef SWIG
     /// @brief Gets the underlying pointer to the list

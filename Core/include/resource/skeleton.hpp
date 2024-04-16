@@ -38,11 +38,9 @@ public:
     XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;
 
     XNOR_ENGINE bool_t Load(const aiSkeleton& loadedData);
-
     XNOR_ENGINE bool_t Load(const aiMesh& loadedData);
+    XNOR_ENGINE bool_t Load(const aiScene& scene, const aiAnimation& loadedData);
 
-    [[nodiscard]]
-    XNOR_ENGINE List<Bone>& GetBones();
     [[nodiscard]]
     XNOR_ENGINE const List<Bone>& GetBones() const;
 

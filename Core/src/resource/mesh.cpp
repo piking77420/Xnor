@@ -29,7 +29,7 @@ Mesh::~Mesh()
 bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
 {
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFileFromMemory(buffer, length, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FindInvalidData | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace | aiProcess_PopulateArmatureData);
+    const aiScene* scene = importer.ReadFileFromMemory(buffer, length, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace | aiProcess_PopulateArmatureData);
 
     if (!scene)
     {
@@ -52,6 +52,10 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
             Skeleton* const skeleton = new Skeleton();
 
             skeleton->Load(*scene->mMeshes[i]);
+
+            if (i < scene->mNumAnimations)
+                skeleton->Load(*scene, *scene->mAnimations[i]);
+            
             m_Skeletons.Add(skeleton);
         }
 
@@ -78,14 +82,10 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
     {
         Animation* const animation = new Animation(scene->mAnimations[i]->mName.C_Str());
 
-        animation->Load(*scene, *scene->mAnimations[i], m_Skeletons[0]);
+        animation->Load(*scene->mAnimations[i]);
+        animation->BindSkeleton(m_Skeletons[0]);
 
         animations.Add(animation);
-    }
-
-    if (textures.GetSize() >= 2)
-    {
-        material.albedoTexture = Pointer<Texture>::Create(*textures[0]);
     }
 
     return true;

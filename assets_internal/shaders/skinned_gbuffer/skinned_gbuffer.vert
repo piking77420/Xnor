@@ -71,28 +71,28 @@ out VS_OUT
 void main()
 {
     mat3 rotMatrix = mat3(0.0f);
-    vec3 LocalNormal = vec3(aNormal);
-    vec4 LocalPos = vec4(0.0, 0.0, 0.0, 1.0);
+    vec3 localNormal = vec3(aNormal);
+    vec4 finalPosition = vec4(0.0, 0.0, 0.0, 1.0);
 
-    // Compute Bone weight
-    for (int i = 0; i < 4 ; i++)
+    for(int i = 0; i < 4; i++)
     {
-        int boneIndex = int(aBoneIndices[i]);
-        if (boneIndex == -1) 
+        int idx = int(aBoneIndices[i]);
+        if (idx == -1)
+            continue;
+
+        if (idx >= MaxBones)
         {
-            // Dont applie bone transformation
-           LocalPos = vec4(aPos, 1.0);
-           continue;
+            finalPosition = vec4(aPos, 1.0f);
+            break;
         }
 
-        LocalPos += (mat[boneIndex] * vec4(aPos, 1.0)) * aBoneWeights[i];
-
-        rotMatrix = mat3(mat[boneIndex]);
-        LocalNormal += rotMatrix * aNormal;
+        vec4 localPosition = mat[idx] * vec4(aPos ,1.0f);
+        finalPosition += localPosition * aBoneWeights[i];
+        localNormal = mat3(mat[idx]) * aNormal;
     }
 
     // Set the fragement pose base on animation and the model matrix
-    vs_out.fragPos = model * vec4(LocalPos.xyz, 1.0);
+    vs_out.fragPos = model * vec4(finalPosition.xyz, 1.0);
     gl_Position = projection * view * vs_out.fragPos;
 
     vs_out.texCoords = aTexCoords;
@@ -105,11 +105,11 @@ void main()
     // Compute Normal
     if (hasNormalMap == false)
     {
-        vs_out.normal = mat3(normalInvertMatrix) * LocalNormal;
+        vs_out.normal = mat3(normalInvertMatrix) * localNormal;
     }
     else
     { 
-        vs_out.normal = mat3(normalInvertMatrix) * LocalNormal;
+        vs_out.normal = mat3(normalInvertMatrix) * localNormal;
         vec3 T = normalize(vec3(model * vec4(aTangent, 0.0)));
         vec3 B = normalize(vec3(model * vec4(aBitangent, 0.0)));
         vec3 N = normalize(vec3(model * vec4(aNormal, 0.0)));

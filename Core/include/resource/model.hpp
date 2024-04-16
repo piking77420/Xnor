@@ -28,7 +28,7 @@ public:
     };
 
     /// @brief Allowed extensions for models.
-    XNOR_ENGINE static inline constexpr std::array<const char_t*, 57> FileExtensions
+    XNOR_ENGINE static inline constexpr std::array<const char_t*, 56> FileExtensions
     {
         ".3d",
         ".3ds",
@@ -43,7 +43,6 @@ public:
         ".bvh",
         ".csm",
         ".cob",
-        ".dae",
         ".dxf",
         ".enff",
         ".gltf",
