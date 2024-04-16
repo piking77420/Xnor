@@ -7,11 +7,11 @@
 
 using namespace XnorCore;
 
-AudioListener::AudioListener() { m_AudioContext = Audio::GetContext(); }
+AudioListener::AudioListener() { m_Context = Audio::GetContext(); }
 
 void AudioListener::Update()
 {
-    m_AudioContext->MakeCurrent();
+    m_Context->MakeCurrent();
 
     const Transform& transform = GetTransform();
 
@@ -19,11 +19,20 @@ void AudioListener::Update()
     alListenerfv(AL_POSITION, transform.GetPosition().Raw());
     AudioContext::CheckError();
 
-    // TODO: Velocity
+    Vector3 velocity;
+    std::array orientation = { transform.worldMatrix * Vector3::UnitZ(), Vector3::UnitY() };
+    if (!dopplerEffect)
+    {
+        velocity = Vector3::Zero();
+        orientation[0] = Vector3::Zero();
+    }
+    
+    // Velocity
+    alListenerfv(AL_VELOCITY, velocity.Raw());
+    AudioContext::CheckError();
 
     // Orientation
-    std::array at = { transform.worldMatrix * Vector3::UnitZ(), Vector3::UnitY() };
-    alListenerfv(AL_ORIENTATION, at[0].Raw());
+    alListenerfv(AL_ORIENTATION, orientation[0].Raw());
     AudioContext::CheckError();
 }
 
@@ -36,7 +45,7 @@ void AudioListener::SetVolume(const float_t newVolume)
 {
     m_Volume = std::max(0.f, newVolume);
     
-    m_AudioContext->MakeCurrent();
+    m_Context->MakeCurrent();
     alListenerf(AL_GAIN, m_Volume);
     AudioContext::CheckError();
 }

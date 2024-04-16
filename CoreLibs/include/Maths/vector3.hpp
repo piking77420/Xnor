@@ -50,7 +50,7 @@ public:
     /// @brief Returns a Vector3 with @c x @c = @c 0, @c y @c = @c 1, @c z @c = @c 0.
 	static constexpr void UnitY(Vector3* result) noexcept;
 
-    /// @brief Returns a Vector3 with @c x @c = @c 0, @c y @c = @c 0, @c z @c = @c 1.
+    /// @brief Returns a Vector3 with @code x = 0, y = 0, z = 1@endcode.
 	[[nodiscard]]
 	static constexpr Vector3 UnitZ() noexcept;
 

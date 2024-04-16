@@ -29,7 +29,7 @@ public:
     void SetVolume(float_t newVolume);
 
 private:
-    AudioContext* m_AudioContext = nullptr;
+    AudioContext* m_Context = nullptr;
     
     /// @brief Volume in the range [0, inf]. Default value is 1.
     float_t m_Volume = 1.f;

@@ -2,6 +2,7 @@
 
 #include <set>
 
+#include <AL/al.h>
 #include <AL/alc.h>
 
 #include "utils/logger.hpp"
@@ -13,6 +14,9 @@ bool_t Audio::Initialize()
     Logger::LogInfo("Initializing audio");
     
     InitializeDevices();
+
+    alDopplerFactor(0.f);
+    AudioContext::CheckError();
 
     return true;
 }
