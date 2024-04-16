@@ -238,6 +238,9 @@ private:
 
     /// @brief Prints a log to the console and the logging file.
     XNOR_ENGINE static void PrintLog(const std::shared_ptr<LogEntry>& log);
+
+    /// @brief Builds the given log's prefix. Returns the [prefix, color] pair.
+    XNOR_ENGINE static std::pair<std::string, const char_t*> BuildLogPrefix(const std::shared_ptr<LogEntry>& log);
 };
 
 END_XNOR_CORE

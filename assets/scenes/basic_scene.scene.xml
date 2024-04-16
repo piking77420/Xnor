@@ -235,6 +235,9 @@
 					<drawModelAabb>false</drawModelAabb>
 				</2>
 				<3 typeName="CameraComponent"/>
+				<4 typeName="AudioListener">
+					<m_Volume>1</m_Volume>
+				</4>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>

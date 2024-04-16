@@ -222,11 +222,59 @@ void Logger::PrintLog(const std::shared_ptr<LogEntry>& log)
     static decltype(sameLastLogs) oldSameLastLogs;
     
     oldSameLastLogs = sameLastLogs;
-    if (log->previousLog)
+    if (log->previousLog && *log->previousLog == *log)
         sameLastLogs++;
     else
         sameLastLogs = 0;
 
+    auto&& prefix = BuildLogPrefix(log);
+    const std::string& baseMessage = prefix.first;
+    const char_t* const color = prefix.second;
+
+    const bool_t printToFile = log->printToFile && m_File.is_open();
+
+    // If the last log is the same as the current one, we should collapse this one
+    if (sameLastLogs > 0)
+    {
+        if (log->printToConsole)
+        {
+            // If we already printed the same log, move the cursor back to the beginning of the line
+            if (sameLastLogs > 1)
+                std::cout << '\r';
+
+            std::cout << color + baseMessage + "[...and " + std::to_string(sameLastLogs) + " more]" + ANSI_RESET;
+        }
+
+        // If we need to print to a file, we first wait for a different log
+        
+        m_LastLogCollapsed = true;
+    }
+    else
+    {
+        const std::string message = baseMessage + log->message + '\n';
+
+        if (log->printToConsole)
+        {
+            if (m_LastLogCollapsed)
+                std::cout << '\n';
+            std::cout << color + message + ANSI_RESET;
+        }
+
+        if (printToFile)
+        {
+            if (m_LastLogCollapsed)
+                m_File << BuildLogPrefix(log->previousLog).first + "[...and " + std::to_string(oldSameLastLogs) + " more]\n";
+            else
+                m_File << message;
+        }
+
+        m_LastLogCollapsed = false;
+        log->previousLog = nullptr; // We don't need the previous log if it isn't collapsed
+    }
+}
+
+std::pair<std::string, const char_t*> Logger::BuildLogPrefix(const std::shared_ptr<LogEntry>& log)
+{
     // Get the message time and format it in [hh:mm:ss:ms]
     const auto&& t = std::chrono::duration_cast<std::chrono::milliseconds, int64_t>(log->time.time_since_epoch());
     const std::string time = std::format("[{:%T}] ", t);
@@ -265,44 +313,5 @@ void Logger::PrintLog(const std::shared_ptr<LogEntry>& log)
             break;
     }
 
-    const bool_t printToFile = log->printToFile && m_File.is_open();
-
-    // If the last log is the same as the current one, we should collapse this one
-    if (sameLastLogs > 0)
-    {
-        if (log->printToConsole)
-        {
-            // If we already printed the same log, move the cursor back to the beginning of the line
-            if (sameLastLogs > 1)
-                std::cout << '\r';
-
-            std::cout << color + baseMessage + "[...and " + std::to_string(sameLastLogs) + " more]" + ANSI_RESET;
-            std::cout.flush();
-        }
-
-        // If we need to print to a file, we first wait for a different log
-        
-        m_LastLogCollapsed = true;
-    }
-    else
-    {
-        const std::string message = baseMessage + log->message + '\n';
-
-        if (log->printToConsole)
-        {
-            if (m_LastLogCollapsed)
-                std::cout << '\n';
-            std::cout << color + message + ANSI_RESET;
-        }
-
-        if (printToFile)
-        {
-            if (m_LastLogCollapsed)
-                m_File << baseMessage + "[...and " + std::to_string(oldSameLastLogs) + " more]\n";
-            else
-                m_File << message;
-        }
-
-        m_LastLogCollapsed = false;
-    }
+    return std::make_pair(baseMessage, color);
 }

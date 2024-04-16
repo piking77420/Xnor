@@ -32,12 +32,12 @@ bool_t Resource::Load(const Pointer<File>& file)
 
 void Resource::CreateInInterface()
 {
-    m_LoadedInRhi = true;
+    m_LoadedInInterface = true;
 }
 
 void Resource::DestroyInInterface()
 {
-    m_LoadedInRhi = false;
+    m_LoadedInInterface = false;
 }
 
 void Resource::Unload()
@@ -84,9 +84,9 @@ bool_t Resource::IsLoaded() const
     return m_Loaded;
 }
 
-bool_t Resource::IsLoadedInRhi() const
+bool_t Resource::IsLoadedInInterface() const
 {
-    return m_LoadedInRhi;
+    return m_LoadedInInterface;
 }
 
 std::string Resource::GetName() const

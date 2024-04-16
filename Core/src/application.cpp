@@ -34,6 +34,9 @@ Application::Application(const int32_t, const char_t* const* const argv)
     Window::Initialize();
 
 	Rhi::Initialize();
+	
+	if (!Audio::Initialize())
+		Logger::LogError("Couldn't initialize audio");
 
 	Texture::defaultLoadOptions = { .flipVertically = true };
 	FileManager::LoadDirectory("assets");
@@ -48,8 +51,6 @@ Application::Application(const int32_t, const char_t* const* const argv)
 	PhysicsWorld::Initialize();
     Input::Initialize();
     Screen::Initialize();
-	if (!Audio::Initialize())
-		Logger::LogError("Couldn't initialize audio");
 
 	if (!DotnetRuntime::Initialize())
 	{
@@ -73,10 +74,12 @@ Application::~Application()
 	
 	DotnetRuntime::Shutdown();
 
-	Audio::Shutdown();
 	PhysicsWorld::Destroy();
 	
     ResourceManager::UnloadAll();
+	
+	Audio::Shutdown();
+	
 	Rhi::Shutdown();
 
     Window::Shutdown();

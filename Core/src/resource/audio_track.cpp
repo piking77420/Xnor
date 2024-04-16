@@ -1,5 +1,6 @@
 #include "resource/audio_track.hpp"
 
+#include "audio/audio.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -9,7 +10,7 @@ AudioTrack::~AudioTrack()
     AudioTrack::Unload();
 }
 
-bool_t AudioTrack::Load(const uint8_t* buffer, const int64_t length)
+bool_t AudioTrack::Load(const uint8_t* const buffer, const int64_t length)
 {
     const char_t* const type = reinterpret_cast<const char_t*>(buffer);
 
@@ -22,17 +23,56 @@ bool_t AudioTrack::Load(const uint8_t* buffer, const int64_t length)
 
 void AudioTrack::CreateInInterface()
 {
-    Resource::CreateInInterface();
+    m_Buffer = new AudioBuffer(this);
+    Audio::RegisterBuffer(m_Buffer);
+    
+    m_LoadedInInterface = true;
 }
 
 void AudioTrack::DestroyInInterface()
 {
-    Resource::DestroyInInterface();
+    Audio::UnregisterBuffer(m_Buffer);
+    delete m_Buffer;
+    m_Buffer = nullptr;
+    
+    m_LoadedInInterface = false;
 }
 
 void AudioTrack::Unload()
 {
-    delete m_Data;
+    // The data was new-ed by the File wrapper, so we don't need to delete it here
+    m_Data = nullptr;
+    m_DataSize = 0;
+    m_Channels = 0;
+    m_SampleRate = 0;
+    m_BitDepth = 0;
+    
+    m_Loaded = false;
+}
+
+int32_t AudioTrack::GetDataSize() const
+{
+    return m_DataSize;
+}
+
+uint16_t AudioTrack::GetChannels() const
+{
+    return m_Channels;
+}
+
+int32_t AudioTrack::GetSampleRate() const
+{
+    return m_SampleRate;
+}
+
+uint16_t AudioTrack::GetBitDepth() const
+{
+    return m_BitDepth;
+}
+
+const AudioBuffer* AudioTrack::GetBuffer() const
+{
+    return m_Buffer;
 }
 
 bool_t AudioTrack::LoadWavefront(const uint8_t* const buffer, const int64_t length)
@@ -46,14 +86,15 @@ bool_t AudioTrack::LoadWavefront(const uint8_t* const buffer, const int64_t leng
 
     while (offset < length)
     {
-        if (strncmp(str + offset, "fmt ", 4) != 0)
+        if (strncmp(str + offset, "fmt ", 4) == 0)
             offset += LoadWavefrontFormat(buffer + offset);
-        else if (strncmp(str + offset, "data", 4) != 0)
+        else if (strncmp(str + offset, "data", 4) == 0)
             offset += LoadWavefrontData(buffer + offset);
         else
             offset++;
     }
-    
+
+    m_Loaded = true;
     return true;
 }
 
@@ -81,9 +122,9 @@ int64_t AudioTrack::LoadWavefrontFormat(const uint8_t* const data)
 
 int64_t AudioTrack::LoadWavefrontData(const uint8_t* const data)
 {
-    const uint32_t length = *reinterpret_cast<const uint32_t*>(data + 4);
+    const int32_t length = *reinterpret_cast<const int32_t*>(data + 4);
     m_Data = data + 8;
-    m_Size = length;
+    m_DataSize = length;
 
     return length + 8;
 }

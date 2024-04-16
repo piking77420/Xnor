@@ -23,13 +23,13 @@ void Cubemap::CreateInInterface()
     };
 
     m_Id = Rhi::CreateTexture(createInfo);
-    m_LoadedInRhi = true;
+    m_LoadedInInterface = true;
 }
 
 void Cubemap::DestroyInInterface()
 {
     Rhi::DestroyTexture(m_Id);
-    m_LoadedInRhi = false;
+    m_LoadedInInterface = false;
 }
 
 void Cubemap::Unload()
@@ -53,7 +53,7 @@ Cubemap::Cubemap(const TextureCreateInfo& textureCreateInfo) : m_CubemapSize(tex
 m_TextureFiltering(textureCreateInfo.filtering),m_TextureWrapping(textureCreateInfo.wrapping), m_TextureInternalFormat(textureCreateInfo.internalFormat)
 {
     m_Id = Rhi::CreateTexture(textureCreateInfo);
-    m_LoadedInRhi = true;
+    m_LoadedInInterface = true;
 }
 
 Cubemap::~Cubemap()

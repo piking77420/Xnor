@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "core.hpp"
 #include "utils/list.hpp"
 

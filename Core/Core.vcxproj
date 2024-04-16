@@ -126,6 +126,7 @@
     <ClInclude Include="include\scene\component\test_component_physics.hpp" />
     <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\audio\audio.cpp" />
+    <ClCompile Include="src\audio\audio_buffer.cpp" />
     <ClCompile Include="src\audio\audio_context.cpp" />
     <ClCompile Include="src\audio\audio_device.cpp" />
     <ClCompile Include="src\audio\component\audio_listener.cpp" />

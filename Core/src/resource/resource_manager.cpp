@@ -141,11 +141,13 @@ void ResourceManager::SaveGuidMap()
 
 bool ResourceManager::Contains(const std::string& name)
 {
+    std::scoped_lock lock(m_ResourcesMutex);
     return m_Resources.contains(name);
 }
 
 bool ResourceManager::Contains(const Pointer<File>& file)
 {
+    std::scoped_lock lock(m_ResourcesMutex);
     return m_Resources.contains(file->GetPathString());
 }
 
@@ -180,7 +182,7 @@ void ResourceManager::Unload(const std::string& name)
         return;
     }
     
-    if (resource->second->IsLoadedInRhi())
+    if (resource->second->IsLoadedInInterface())
         resource->second->DestroyInInterface();
 
     if (resource->second->IsLoaded())
@@ -199,7 +201,7 @@ void ResourceManager::UnloadAll()
     {
         Logger::LogDebug("Unloading resource {}", resource.first);
         
-        if (resource.second->IsLoadedInRhi())
+        if (resource.second->IsLoadedInInterface())
             resource.second->DestroyInInterface();
         
         if (resource.second->IsLoaded())

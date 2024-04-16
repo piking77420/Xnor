@@ -3,6 +3,7 @@
 #include <functional>
 
 #include "core.hpp"
+#include "audio/audio_buffer.hpp"
 #include "audio/audio_device.hpp"
 
 BEGIN_XNOR_CORE
@@ -20,9 +21,15 @@ public:
     [[nodiscard]]
     XNOR_ENGINE static AudioContext* GetContext();
 
+    XNOR_ENGINE static void RegisterBuffer(AudioBuffer* buffer);
+
+    XNOR_ENGINE static void UnregisterBuffer(AudioBuffer* buffer);
+
 private:
-    XNOR_ENGINE static inline std::vector<AudioDevice*> m_AvailableDevices;
+    XNOR_ENGINE static inline List<AudioDevice*> m_AvailableDevices;
     XNOR_ENGINE static inline AudioDevice* m_CurrentDevice = nullptr;
+
+    XNOR_ENGINE static inline List<AudioBuffer*> m_Buffers;
 
     XNOR_ENGINE static void InitializeDevices();
 

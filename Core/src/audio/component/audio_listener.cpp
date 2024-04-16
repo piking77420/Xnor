@@ -29,14 +29,14 @@ void AudioListener::Update()
 
 float_t AudioListener::GetVolume() const
 {
-    return volume;
+    return m_Volume;
 }
 
 void AudioListener::SetVolume(const float_t newVolume)
 {
-    volume = std::max(0.f, newVolume);
+    m_Volume = std::max(0.f, newVolume);
     
     m_AudioContext->MakeCurrent();
-    alListenerf(AL_GAIN, volume);
+    alListenerf(AL_GAIN, m_Volume);
     AudioContext::CheckError();
 }

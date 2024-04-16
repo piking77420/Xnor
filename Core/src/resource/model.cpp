@@ -83,14 +83,14 @@ void Model::CreateInInterface()
 {
     m_ModelId = Rhi::CreateModel(m_Vertices, m_Indices);
 
-    m_LoadedInRhi = true;
+    m_LoadedInInterface = true;
 }
 
 void Model::DestroyInInterface()
 {
     Rhi::DestroyModel(m_ModelId);
 
-    m_LoadedInRhi = false;
+    m_LoadedInInterface = false;
 }
 
 void Model::Unload()

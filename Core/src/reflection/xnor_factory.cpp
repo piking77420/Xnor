@@ -1,5 +1,7 @@
 #include "reflection/xnor_factory.hpp"
 
+#include "audio/component/audio_listener.hpp"
+#include "audio/component/audio_source.hpp"
 #include "physics/components/box_collider.hpp"
 #include "physics/components/capsule_collider.hpp"
 #include "physics/components/collider.hpp"
@@ -100,6 +102,9 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<TestComponentPhysics>();
     RegisterType<CameraComponent>();
     RegisterType<SkinnedMeshRender>();
+
+    RegisterType<AudioListener>();
+    RegisterType<AudioSource>();
 }
 
 std::string XnorFactory::GetTypeName(const size_t hash)

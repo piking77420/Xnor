@@ -6,8 +6,10 @@
 
 BEGIN_XNOR_CORE
 
-class AudioListener : public Component
+class XNOR_ENGINE AudioListener : public Component
 {
+    REFLECTABLE_IMPL(AudioListener)
+    
 public:
     bool_t dopplerEffect = true;
     
@@ -30,7 +32,12 @@ private:
     AudioContext* m_AudioContext = nullptr;
     
     /// @brief Volume in the range [0, inf]. Default value is 1.
-    float_t volume = 1.f;
+    float_t m_Volume = 1.f;
 };
 
 END_XNOR_CORE
+
+REFL_AUTO(
+    type(XnorCore::AudioListener, bases<XnorCore::Component>),
+    field(m_Volume, XnorCore::Reflection::Range(0.f, 5.f))
+)

@@ -21,11 +21,18 @@ void Audio::Shutdown()
 {
     Logger::LogInfo("Shutting down audio");
 
+    for (auto&& buffer : m_Buffers)
+        delete buffer;
+
     for (auto&& device : m_AvailableDevices)
         delete device;
 }
 
 AudioContext* Audio::GetContext() { return m_CurrentDevice->GetContext(); }
+
+void Audio::UnregisterBuffer(AudioBuffer* buffer) { m_Buffers.Remove(buffer); }
+
+void Audio::RegisterBuffer(AudioBuffer* buffer) { m_Buffers.Add(buffer); }
 
 void Audio::InitializeDevices()
 {
@@ -44,7 +51,7 @@ void Audio::InitializeDevices()
 
     // Create the devices and add them to the list
     const size_t size = deviceNameList.size();
-    m_AvailableDevices.resize(size);
+    m_AvailableDevices.Resize(size);
     auto&& it = deviceNameList.begin();
     for (auto& device : m_AvailableDevices)
     {
@@ -52,7 +59,7 @@ void Audio::InitializeDevices()
         it++;
     }
 
-    m_CurrentDevice = m_AvailableDevices.back();
+    m_CurrentDevice = m_AvailableDevices.Back();
 }
 
 void Audio::IterateAlStringList(const char_t* list, const std::function<void(const char_t*)>& lambda)

@@ -206,39 +206,63 @@ T* List<T>::Find(const std::function<bool_t(const T*, size_t)>& lambda)
 }
 
 template <typename T>
-T* List<T>::GetData()
-{
-    return m_Vector.data();
-}
+T* List<T>::GetData() { return m_Vector.data(); }
 
 template <typename T>
-const T* List<T>::GetData() const
-{
-    return m_Vector.data();
-}
+const T* List<T>::GetData() const { return m_Vector.data(); }
 
 template <typename T>
-size_t List<T>::GetSize() const
-{
-    return m_Vector.size();
-}
+size_t List<T>::GetSize() const { return m_Vector.size(); }
 
 template <typename T>
-size_t List<T>::GetCapacity() const
-{
-    return m_Vector.capacity();
-}
+size_t List<T>::GetCapacity() const { return m_Vector.capacity(); }
 
 template <typename T>
-T& List<T>::operator[](const size_t index)
-{
-    return m_Vector[index];
-}
+T& List<T>::operator[](const size_t index) { return m_Vector[index]; }
 
 template <typename T>
-const T& List<T>::operator[](const size_t index) const
-{
-    return m_Vector[index];
-}
+const T& List<T>::operator[](const size_t index) const { return m_Vector[index]; }
+
+template <typename T>
+const T& List<T>::Front() const { return m_Vector.front(); }
+
+template <typename T>
+T& List<T>::Front() { return m_Vector.front(); }
+
+template <typename T>
+const T& List<T>::Back() const { return m_Vector.back(); }
+
+template <typename T>
+T& List<T>::Back() { return m_Vector.back(); }
+
+template <typename T>
+typename List<T>::Iterator List<T>::Begin() { return m_Vector.begin(); }
+
+template <typename T>
+typename List<T>::Iterator List<T>::End() { return m_Vector.end(); }
+
+template <typename T>
+typename List<T>::ConstIterator List<T>::CBegin() const { return m_Vector.cbegin(); }
+
+template <typename T>
+typename List<T>::ConstIterator List<T>::CEnd() const { return m_Vector.cend(); }
+
+template <typename T>
+typename List<T>::ReverseIterator List<T>::RBegin() const { return m_Vector.rbegin(); }
+
+template <typename T>
+typename List<T>::ReverseIterator List<T>::REnd() const { return m_Vector.rend(); }
+
+template <typename T>
+typename List<T>::ConstReverseIterator List<T>::CrBegin() const { return m_Vector.crbegin(); }
+
+template <typename T>
+typename List<T>::ConstReverseIterator List<T>::CrEnd() const { return m_Vector.crend(); }
+
+template <typename T>
+typename List<T>::Iterator List<T>::begin() { return Begin(); }
+
+template <typename T>
+typename List<T>::Iterator List<T>::end() { return End(); }
 
 END_XNOR_CORE

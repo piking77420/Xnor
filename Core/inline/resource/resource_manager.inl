@@ -4,6 +4,7 @@
 
 #include "resource/compute_shader.hpp"
 #include "resource/shader.hpp"
+#include "utils/formatter.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -42,8 +43,7 @@ Pointer<T> ResourceManager::Load(const Pointer<File>& file, bool_t loadInRhi)
             loaded ? "" : ". Loading it"
         );
 
-        // if (!loaded)
-            resource->Load(file);
+        resource->Load(file);
 
         return resource;
     }
@@ -192,7 +192,7 @@ void ResourceManager::Unload(const Pointer<T>& resource)
         Pointer<Resource>& storedResource = it->second;
         if (storedResource == Utils::DynamicPointerCast<Resource>(resource))
         {
-            if (storedResource->IsLoadedInRhi())
+            if (storedResource->IsLoadedInInterface())
                 storedResource->DestroyInInterface();
             
             if (storedResource->IsLoaded())

@@ -249,6 +249,48 @@ public:
     const T& operator[](size_t index) const;
 #endif
 
+    [[nodiscard]]
+    const T& Front() const;
+
+    [[nodiscard]]
+    T& Front();
+
+    [[nodiscard]]
+    const T& Back() const;
+
+    [[nodiscard]]
+    T& Back();
+
+    [[nodiscard]]
+    Iterator Begin();
+
+    [[nodiscard]]
+    Iterator End();
+
+    [[nodiscard]]
+    ConstIterator CBegin() const;
+
+    [[nodiscard]]
+    ConstIterator CEnd() const;
+
+    [[nodiscard]]
+    ReverseIterator RBegin() const;
+
+    [[nodiscard]]
+    ReverseIterator REnd() const;
+
+    [[nodiscard]]
+    ConstReverseIterator CrBegin() const;
+
+    [[nodiscard]]
+    ConstReverseIterator CrEnd() const;
+
+    [[nodiscard]]
+    Iterator begin();
+
+    [[nodiscard]]
+    Iterator end();
+
 private:
     std::vector<T> m_Vector;
 };

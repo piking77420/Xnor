@@ -70,9 +70,9 @@ public:
     [[nodiscard]]
     XNOR_ENGINE bool_t IsLoaded() const;
 
-    /// @brief Returns whether the Resource has already been loaded in the Rhi.
+    /// @brief Returns whether the Resource has already been loaded in the associated interface (Rhi/Audio).
     [[nodiscard]]
-    XNOR_ENGINE bool_t IsLoadedInRhi() const;
+    XNOR_ENGINE bool_t IsLoadedInInterface() const;
 
     /// @brief Returns the name of this Resource.
     [[nodiscard]]
@@ -93,8 +93,8 @@ public:
 protected:
     /// @brief Whether the resource was loaded
     bool_t m_Loaded = false;
-    /// @brief Whether the resource was loaded in the Rhi
-    bool_t m_LoadedInRhi = false;
+    /// @brief Whether the resource was loaded in the associated interface (Rhi/Audio)
+    bool_t m_LoadedInInterface = false;
 
     /// @brief Name of the resource
     std::string m_Name;

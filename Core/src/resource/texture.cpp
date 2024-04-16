@@ -16,7 +16,7 @@ Texture::Texture(const TextureCreateInfo& createInfo)
         m_Data = static_cast<uint8_t*>(createInfo.datas.at(0));
     
     m_Id = Rhi::CreateTexture(createInfo);
-    m_LoadedInRhi = true;
+    m_LoadedInInterface = true;
 }
 
 Texture::Texture(const ENUM_VALUE(TextureInternalFormat) textureInternalFormat, const Vector2i size, const ENUM_VALUE(TextureFormat) textureFormat)
@@ -35,12 +35,12 @@ Texture::Texture(const ENUM_VALUE(TextureInternalFormat) textureInternalFormat, 
     };
     
     m_Id = Rhi::CreateTexture(createInfo);
-    m_LoadedInRhi = true;
+    m_LoadedInInterface = true;
 }
 
 Texture::~Texture()
 {
-    if (m_LoadedInRhi)
+    if (m_LoadedInInterface)
         Texture::DestroyInInterface();
     
     if (m_Loaded)
@@ -90,14 +90,14 @@ void Texture::CreateInInterface()
     
     m_Id = Rhi::CreateTexture(createInfo);
     
-    m_LoadedInRhi = true;
+    m_LoadedInInterface = true;
 }
 
 void Texture::DestroyInInterface()
 {
     Rhi::DestroyTexture(m_Id);
     
-    m_LoadedInRhi = false;
+    m_LoadedInInterface = false;
 }
 
 void Texture::Unload()

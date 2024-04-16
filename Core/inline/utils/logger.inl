@@ -17,10 +17,9 @@ void Logger::Log(const LogLevel level, const std::string& format, Args&&... args
     const std::shared_ptr<LogEntry> entry = std::make_shared<LogEntry>(std::vformat(format, std::make_format_args(std::forward<Args>(args)...)), level);
     
     m_Logs.Push(entry);
-    if (m_LastLog && *m_LastLog == *entry)
+    if (m_LastLog)
         entry->previousLog = m_LastLog;
-    else
-        m_LastLog = entry;
+    m_LastLog = entry;
     
     m_CondVar.notify_one();
 }
@@ -34,10 +33,9 @@ void Logger::LogTempDebug(const std::string& format, const char_t* file, const i
     const std::shared_ptr<LogEntry> entry = std::make_shared<LogEntry>(std::vformat(format, std::make_format_args(std::forward<Args>(args)...)), LogLevel::TemporaryDebug, file, line);
     
     m_Logs.Push(entry);
-    if (m_LastLog && *m_LastLog == *entry)
+    if (m_LastLog)
         entry->previousLog = m_LastLog;
-    else
-        m_LastLog = entry;
+    m_LastLog = entry;
     
     m_CondVar.notify_one();
 }
