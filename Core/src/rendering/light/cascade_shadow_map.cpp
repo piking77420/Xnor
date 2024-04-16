@@ -101,6 +101,7 @@ void CascadeShadowMap::GetCamera(Camera* cascadedCamera,const float_t cascadedNe
     float_t maxY = std::numeric_limits<float_t>::lowest();
     float_t minZ = std::numeric_limits<float_t>::max();
     float_t maxZ = std::numeric_limits<float_t>::lowest();
+    
     for (const Vector4& v : corners)
     {
         const auto trf = lightView * v;

@@ -1,4 +1,5 @@
 #version 460 core
+#extension GL_NV_uniform_buffer_std430_layout : enable
 
 out vec4 FragColor;
 
@@ -28,7 +29,6 @@ struct SpotLightData
     vec3 direction;
     float outerCutOff;
     bool isCastShadow;
-    mat4 lightSpaceMatrix;
 };
 
 struct DirectionalData
@@ -39,16 +39,18 @@ struct DirectionalData
     bool isDirlightCastShadow;
     int cascadeCount;
     float cascadePlaneDistance[DirectionalCascadeLevel];
-    mat4 lightSpaceMatrix[DirectionalCascadeLevelAllocation];
 };
 
-layout (std140, binding = 2) uniform LightData
+layout (std430, binding = 2) uniform LightData
 {
     int nbrOfPointLight;
     int nbrOfSpotLight;
     PointLightData pointLightData[MaxPointLight];
     SpotLightData spotLightData[MaxSpotLight];
     DirectionalData directionalData;
+
+    mat4 spothLightlightSpaceMatrix[MaxSpotLight];
+    mat4 dirLightSpaceMatrix[DirectionalCascadeLevelAllocation];
 };
 layout (std140, binding = 0) uniform CameraUniform
 {
@@ -117,8 +119,9 @@ float DirLightShadowCalculation(vec3 fragPosWorldSpace, vec3 n, vec3 l)
     {
         layer = directionalData.cascadeCount;
     }
+    ;
 
-    vec4 fragPosLightSpace = directionalData.lightSpaceMatrix[layer] * vec4(fragPosWorldSpace, 1.0);
+    vec4 fragPosLightSpace = dirLightSpaceMatrix[layer] * vec4(fragPosWorldSpace, 1.0);
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     // transform to [0,1] range
@@ -173,7 +176,7 @@ float ShadowCalculationSpolight(vec4 fragPosLightSpace, vec3 n, vec3 l, int inde
     // calculate bias (based on depth map resolution and slope)
     vec3 normal = normalize(n);
     vec3 lightDir = normalize(l);
-    float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.00005);
+    float bias = max(0.00005 * (1.0 - dot(normal, lightDir)), 0.0000005f);
     // check whether current frag pos is in shadow
     float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
     // PCF
@@ -308,7 +311,7 @@ vec3 ComputeSpotLight(vec3 baseColor,vec4 fragPos,vec3 v, vec3 n, float roughnes
         
         if (light.isCastShadow) 
         {
-            float shadow = ShadowCalculationSpolight(light.lightSpaceMatrix * fragPos, n, l, i);
+            float shadow = ShadowCalculationSpolight(spothLightlightSpaceMatrix[i] * fragPos, n, l, i);
             Lo *= ( 1.0 - shadow );
         }
         outLo += Lo;

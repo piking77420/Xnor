@@ -522,12 +522,6 @@ struct ALIGNAS(16) SpotLightData
 	
 	/// @brief CastShadow
 	int32_t isCastingShadow = 0;
-
-	/// @brief Cringe padding even with alignas(16) skill issue
-	float_t padding[3];
-	
-	/// @brief LightSpaceMatrix for shadowMapping
-	Matrix lightSpaceMatrix;
 };
 
 /// @brief Directional light UniformBuffer data
@@ -543,12 +537,11 @@ struct ALIGNAS(16) DirectionalLightData
 	/// @brief CastShadow
 	int32_t isDirlightCastingShadow = 0;
 
-	uint32_t cascadeCount = DirectionalCascadeLevel;
+	int32_t cascadeCount = DirectionalCascadeLevel;
 
+	// Vector4 for padding even if we want a float
 	float_t cascadePlaneDistance[DirectionalCascadeLevel];
 	
-	/// @brief Light space matrix
-	Matrix lightSpaceMatrix[DirectionalCascadeLevelAllocation];
 };
 
 /// @brief Light UniformBuffer data
@@ -565,8 +558,13 @@ struct ALIGNAS(16) GpuLightData
 	SpotLightData spotLightData[MaxSpotLights];
 	/// @brief Directional light data
 	DirectionalLightData directionalData[MaxDirectionalLights];
-};
+	
+	/// @brief LightSpaceMatrix for shadowMapping
+	Matrix spotlightSpaceMatrix[MaxSpotLights];
 
+	/// @brief Light space matrix
+	Matrix dirLightSpaceMatrix[DirectionalCascadeLevelAllocation];
+};
 
 /// @brief UniformBuffer data for animation
 struct ALIGNAS(16) SkinnedMeshGpuData

@@ -86,7 +86,8 @@ void XnorFactory::RegisterAllTypes()
 {
     // Manually registering the types is sub-optimal, however, it's the best way I've found so far
     // It'll probably stay this way for the classes internal to Core, and as for the user scripts generated from the editor, a solution will be found at a later date probably
-    
+
+    RegisterType<Light>();
     RegisterType<MeshRenderer>();
     RegisterType<DirectionalLight>();
     RegisterType<TestComponent>();

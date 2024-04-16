@@ -88,7 +88,7 @@ private:
         float_t scaleFactor = 2.f;
         float_t minDistance = 1.f;
         float_t minScalarFactor = 10.f;
-        float_t maxScalarFactor = 10.f;
+        float_t maxScalarFactor = 2.f;
         
         Pointer<Texture> pointLightTexture;
         Pointer<Texture> dirLightTexture;

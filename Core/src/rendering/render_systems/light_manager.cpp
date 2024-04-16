@@ -73,18 +73,20 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 	for (decltype(sortedLight)::reverse_iterator it = sortedLight.rbegin(); it != sortedLight.rend(); it++)
 	{
 		ModelUniformData modelData;
-		float_t scaleScalar = m_RenderingLightStruct.scaleFactor;
+		float_t scaleScalar =m_RenderingLightStruct.scaleFactor;
 
 		float_t distance = (it->second.pos - camera.position).SquaredLength();
 		if (distance < m_RenderingLightStruct.minDistance * m_RenderingLightStruct.minDistance)
 			scaleScalar = scaleScalar * (1.f / distance) * (1.f / distance);
 
-		scaleScalar = std::clamp(scaleScalar, m_RenderingLightStruct.maxScalarFactor, m_RenderingLightStruct.maxScalarFactor);
+		scaleScalar = std::clamp(scaleScalar, m_RenderingLightStruct.maxScalarFactor, m_RenderingLightStruct.minScalarFactor);
 		Matrix scale = Matrix::Scaling(Vector3(scaleScalar));
 		modelData.model = (scale * Matrix::LookAt(it->second.pos, camera.position, Vector3::UnitY())).Inverted();
 		modelData.normalInvertMatrix = Matrix::Identity();
 		// +1 to avoid the black color of the attachment be a valid index  
 		modelData.meshRenderIndex = scene.GetEntityIndex(it->second.light->GetEntity()) + 1;
+		
+
 		
 		switch (it->second.type)
 		{
@@ -209,7 +211,7 @@ void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& ren
 		
 		Vector3 lightDir =  directionalLight->GetLightDirection();
 		// Get Pos from scene aabb
-		Vector3 pos = static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);//renderer.renderSceneAABB.extents * lightDir;
+		Vector3 pos = renderer.renderSceneAABB.extents * lightDir;//static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);
 		// Set the camera for dirlight as a orthographic
 		Camera cam;
 		cam.isOrthographic = true;
@@ -224,6 +226,7 @@ void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& ren
 		std::vector<float_t> shadowCascadeLevels{ cam.far / 50.0f, cam.far / 25.0f, cam.far / 10.0f, cam.far / 2.0f };
 		m_CascadeShadowMap.SetCascadeLevel(shadowCascadeLevels);
 
+		// Handle float array padding
 		for (size_t k = 0; k < shadowCascadeLevels.size(); k++)
 		{
 			m_GpuLightData->directionalData->cascadePlaneDistance[k] = shadowCascadeLevels[k];
@@ -234,7 +237,7 @@ void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& ren
 
 		for (size_t i = 0; i < cascadedCameras.size(); i++)
 		{
-			cascadedCameras[i].GetVp(shadowMap.GetSize(), &m_GpuLightData->directionalData->lightSpaceMatrix[i]);
+			cascadedCameras[i].GetVp(shadowMap.GetSize(),&m_GpuLightData->dirLightSpaceMatrix[i]);
 			m_ShadowFrameBuffer->AttachTextureLayer(*m_DirectionalShadowMaps, Attachment::Depth, 0, static_cast<uint32_t>(i));
 			RenderPassBeginInfo renderPassBeginInfo =
 			{
@@ -247,10 +250,10 @@ void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& ren
 			renderer.RenderNonShaded(cascadedCameras.at(i) , renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, scene, false);
 		}
 		
-
-
-		
 	}
+
+
+	
 }
 
 void LightManager::ComputeShadowSpotLight(const Scene& scene, const Renderer& renderer)
@@ -265,7 +268,7 @@ void LightManager::ComputeShadowSpotLight(const Scene& scene, const Renderer& re
 		cam.LookAt(cam.position + m_SpotLights[i]->GetLightDirection());
 		cam.near = m_SpotLights[i]->near;
 		cam.far = m_SpotLights[i]->far;
-		cam.GetVp(SpotLightShadowMapSize, &m_GpuLightData->spotLightData[i].lightSpaceMatrix);
+		cam.GetVp(SpotLightShadowMapSize, &m_GpuLightData->spotlightSpaceMatrix[i]);
 		
 		
 		m_ShadowFrameBuffer->AttachTextureLayer(*m_SpotLightShadowMapTextureArray, Attachment::Depth, 0, static_cast<uint32_t>(i));
