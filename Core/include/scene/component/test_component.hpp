@@ -12,8 +12,9 @@
 #include "utils/timeline.hpp"
 
 BEGIN_XNOR_CORE
-    /// @private
-class TestComponent : public Component
+
+/// @private
+class TestComponent final : public Component
 {
     REFLECTABLE_IMPL(TestComponent)
 

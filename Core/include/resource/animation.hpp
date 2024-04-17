@@ -7,6 +7,7 @@
 #include "assimp/scene.h"
 #include "file/file.hpp"
 #include "rendering/bone.hpp"
+#include "rendering/rhi_typedef.hpp"
 #include "resource/resource.hpp"
 #include "utils/list.hpp"
 
@@ -17,6 +18,14 @@ class Animation final : public Resource
     REFLECTABLE_IMPL(Animation)
     
 public:
+    struct KeyFrame
+    {
+        Vector3 translation;
+        Quaternion rotation;
+        Vector3 scaling;
+        float_t time{};
+    };
+
     /// @brief Allowed extensions for animations.
     XNOR_ENGINE static inline constexpr std::array<const char_t*, 0> FileExtensions
     {
@@ -32,8 +41,6 @@ public:
 
     XNOR_ENGINE ~Animation() override = default;
 
-    XNOR_ENGINE void Update();
-
     XNOR_ENGINE void BindSkeleton(const Skeleton* skeleton);
 
     /// @copydoc XnorCore::Resource::Load(const uint8_t* buffer, int64_t length)
@@ -42,39 +49,36 @@ public:
     XNOR_ENGINE bool_t Load(const aiAnimation& loadedData);
 
     [[nodiscard]]
-    XNOR_ENGINE const List<Matrix>& GetMatrices() const;
+    XNOR_ENGINE const Skeleton* GetSkeleton() const;
+
+    [[nodiscard]]
+    XNOR_ENGINE float_t GetDuration() const;
+
+    [[nodiscard]]
+    XNOR_ENGINE size_t GetFrameCount() const;
+    
+    [[nodiscard]]
+    XNOR_ENGINE float_t GetFramerate() const;
+    
+    [[nodiscard]]
+    XNOR_ENGINE float_t GetFrameDuration() const;
+
+    [[nodiscard]]
+    XNOR_ENGINE const List<KeyFrame>& GetBoneKeyFrame(const Bone& bone) const;
 
 private:
-    struct KeyFrame
-    {
-        Vector3 translation;
-        Quaternion rotation;
-        Vector3 scaling;
-        float_t time{};
-    };
-
-    float_t m_PlaySpeed = 1.f;
     float_t m_Duration;
     float_t m_Framerate;
     float_t m_FrameDuration;
     size_t m_FrameCount;
-    size_t m_CurrentFrame;
-
-    const Skeleton* m_Skeleton;
-
-    float_t m_Time;
-
     std::unordered_map<std::string, List<KeyFrame>> m_KeyFrames;
 
-    List<Matrix> m_CurrentFrameMatrices;
-    List<Matrix> m_FinalMatrices;
+    const Skeleton* m_Skeleton;
 };
 
 END_XNOR_CORE
 
 REFL_AUTO(type(XnorCore::Animation, bases<XnorCore::Resource>),
     field(m_Duration, XnorCore::Reflection::ReadOnly()),
-    field(m_Framerate, XnorCore::Reflection::ReadOnly()),
-    field(m_CurrentFrame, XnorCore::Reflection::DynamicRange(&XnorCore::Animation::m_FrameCount)),
-    field(m_PlaySpeed, XnorCore::Reflection::Range(-10.f, 10.f))
+    field(m_Framerate, XnorCore::Reflection::ReadOnly())
 )

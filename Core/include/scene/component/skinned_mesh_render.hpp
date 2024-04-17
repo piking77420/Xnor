@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "core.hpp"
+#include "rendering/animator.hpp"
 #include "rendering/material.hpp"
 #include "resource/mesh.hpp"
 #include "resource/model.hpp"
@@ -19,6 +20,7 @@ class SkinnedMeshRender final : public Component
 public:
     XNOR_ENGINE SkinnedMeshRender() = default;
 
+    XNOR_ENGINE void Begin() override;
     XNOR_ENGINE void Update() override;
 
     /// @brief @ref Mesh
@@ -26,6 +28,14 @@ public:
 
     /// @brief Whether to draw the model AABB box
     bool_t drawModelAabb = false;
+
+    XNOR_ENGINE void StartBlending(const Animation* target);
+
+    XNOR_ENGINE const List<Matrix>& GetMatrices() const;
+
+private:
+    Animator m_Animator;
+    Animator m_TargetAnimator;
 };
 
 END_XNOR_CORE
@@ -34,5 +44,6 @@ END_XNOR_CORE
 REFL_AUTO(
     type(XnorCore::SkinnedMeshRender, bases<XnorCore::Component>),
     field(mesh),
-    field(drawModelAabb)
+    field(drawModelAabb),
+    field(m_Animator)
 );

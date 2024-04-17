@@ -1,6 +1,7 @@
 ﻿#include "rendering/render_systems/animation_render.hpp"
 
 #include "input/time.hpp"
+#include "rendering/animator.hpp"
 #include "rendering/rhi.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/scene.hpp"
@@ -39,6 +40,7 @@ void AnimationRender::BeginFrame(const Scene& scene, const Renderer&)
 void AnimationRender::RenderAnimation() const
 {
     m_SkinnedShader->Use();
+
     for (const SkinnedMeshRender* skinnedMeshRender : m_SkinnedRender)
     {
         ModelUniformData modelData;
@@ -62,7 +64,7 @@ void AnimationRender::RenderAnimation() const
 
             for (uint32_t i = 0; i < skinnedMeshRender->mesh->models.GetSize(); i++)
             {
-                const List<Matrix>& matrices = skinnedMeshRender->mesh->animations[0]->GetMatrices();
+                const List<Matrix>& matrices = skinnedMeshRender->GetMatrices();
                 for (size_t j = 0; j < matrices.GetSize(); j++)
                     m_SkinnedMeshGpuData->boneMatrices[j] = matrices[j];
 

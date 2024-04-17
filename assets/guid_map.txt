@@ -56,3 +56,4 @@ assets/sounds/metal-pipe.wav;DFE1D450-B4E3-49F1-B8-41-92-36-78-74-9C-54
 _shaders/up_sample;590ABFD0-76AD-4F2D-94-50-D4-C5-9A-B5-A6-6
 assets/models/Coyote-Running.fbx;6681D90B-EA9E-4F13-87-FE-89-A8-AC-E0-A2-85
 assets/models/Coyote-Attack3.fbx;11578D18-4941-45F9-A6-5D-AE-9F-25-3E-90-76
+assets/models/Coyote-Walking.fbx;A3E30249-C6CD-4E28-83-1-6F-BA-50-14-C9-7C

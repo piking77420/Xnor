@@ -13,6 +13,7 @@
 /// @brief Defines various types and enumerations needed by XnorCore::Rhi.
 
 BEGIN_XNOR_CORE
+
 class Framebuffer;
 
 /// @brief Maximum amount of spot lights that can exists in a same scene

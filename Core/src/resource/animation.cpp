@@ -1,72 +1,11 @@
 #include "resource/animation.hpp"
 
 #include "input/time.hpp"
+#include "rendering/animator.hpp"
 #include "rendering/rhi_typedef.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
-
-void Animation::Update()
-{
-    if (!m_Skeleton)
-        return;
-
-    m_Time += Time::GetDeltaTime() * m_PlaySpeed;
-    m_Time = std::fmodf(m_Time, m_Duration);
-
-    if (m_PlaySpeed < 0.f && m_Time <= 0)
-    {
-        m_Time = m_Duration;
-    }
-
-    m_CurrentFrame = std::min(static_cast<size_t>(m_Time / m_FrameDuration), m_FrameCount - 1);
-
-    size_t nextFrame = m_CurrentFrame;
-    if (m_PlaySpeed < 0)
-    {
-        if (m_CurrentFrame == 0)
-            nextFrame = m_FrameCount - 1;
-        else
-            nextFrame = (m_CurrentFrame - 1) % m_FrameCount;
-    }
-    else
-    {
-        nextFrame = (m_CurrentFrame + 1) % m_FrameCount;
-    }
-    float_t t = std::fmodf(m_Time, m_FrameDuration) / m_FrameDuration;
-    if (m_PlaySpeed < 0)
-        t = 1 - t;
-
-    const List<Bone>& bones = m_Skeleton->GetBones();
-
-    for (size_t i = 0; i < bones.GetSize(); i++)
-    {
-        const Bone& bone = bones[i];
-        const auto&& it = m_KeyFrames.find(bone.name);
-
-        const List<KeyFrame>& keyFrames = it->second;
-
-        const size_t frame = Utils::RemapValue(m_CurrentFrame, Vector2i(0, static_cast<int32_t>(m_FrameCount)), Vector2i(0, static_cast<int32_t>(keyFrames.GetSize())));
-
-        const Vector3 position = Vector3::Lerp(keyFrames[frame].translation, keyFrames[nextFrame].translation, t);
-        const Quaternion rotation = Quaternion::Slerp(keyFrames[frame].rotation, keyFrames[nextFrame].rotation, t);
-        const Matrix localAnim = Matrix::Trs(position, rotation, Vector3(1.f));
-
-        if (bone.parentId != -1)
-        {
-            // The bone has a parent, so apply the parent global transform to it
-            m_CurrentFrameMatrices[bone.id] = m_CurrentFrameMatrices[bones[bone.parentId].id] * localAnim;
-        }
-        else
-        {
-            // The bone has no parent, so its local transform is the same as its global
-            m_CurrentFrameMatrices[bone.id] = localAnim;
-        }
-		
-        // Apply the inverse to the global transform to remove the bind pose transform
-        m_FinalMatrices[bone.id] = m_CurrentFrameMatrices[bone.id] * bone.global;
-    }
-}
 
 void Animation::BindSkeleton(const Skeleton* const skeleton)
 {
@@ -110,14 +49,35 @@ bool_t Animation::Load(const aiAnimation& loadedData)
         }
     }
 
-    m_CurrentFrameMatrices.Resize(loadedData.mNumChannels);
-    m_FinalMatrices.Resize(loadedData.mNumChannels);
-    m_FinalMatrices.Fill(Matrix::Identity());
-
     return true;
 }
 
-const List<Matrix>& Animation::GetMatrices() const
+const Skeleton* Animation::GetSkeleton() const
 {
-    return m_FinalMatrices;
+    return m_Skeleton;
+}
+
+float_t Animation::GetDuration() const
+{
+    return m_Duration;
+}
+
+size_t Animation::GetFrameCount() const
+{
+    return m_FrameCount;
+}
+
+float_t Animation::GetFramerate() const
+{
+    return m_Framerate;
+}
+
+float_t Animation::GetFrameDuration() const
+{
+    return m_FrameDuration;
+}
+
+const List<Animation::KeyFrame>& Animation::GetBoneKeyFrame(const Bone& bone) const
+{
+    return m_KeyFrames.find(bone.name)->second;
 }

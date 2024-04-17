@@ -237,12 +237,14 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 		if (meshRenderer->material.materialType != materialType)
 			continue;
 
+		
 		Bound aabb;
 		meshRenderer->GetAABB(&aabb);
 		if (m_Frustum.IsOnFrustum(aabb))
 		{
 			continue;
 		}
+		
 		
 		const Transform& transform = meshRenderer->GetEntity()->transform;
 		ModelUniformData modelData;
@@ -304,7 +306,7 @@ void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*
 
 	for (const MeshRenderer* const meshRenderer : meshRenderers)
 	{
-
+		
 		Bound aabb;
 		meshRenderer->GetAABB(&aabb);
 		if (m_Frustum.IsOnFrustum(aabb))
