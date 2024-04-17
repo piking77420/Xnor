@@ -28,6 +28,13 @@ struct TypeRendererImpl<Pointer<T>, Meta::EnableIf<Meta::IsBaseOf<Resource, T>>>
     static void Render(const TypeRenderer::Metadata<ReflectT, Pointer<T>, DescriptorT>& metadata);  
 };
 
+template <typename T>
+struct TypeRendererImpl<T*, Meta::EnableIf<Meta::IsBaseOf<Resource, T>>>
+{
+    template <typename ReflectT, typename DescriptorT>
+    static void Render(const TypeRenderer::Metadata<ReflectT, T*, DescriptorT>& metadata);  
+};
+
 template <>
 struct TypeRendererImpl<Entity*>
 {
@@ -116,7 +123,11 @@ void TypeRendererImpl<MemberT, Meta::EnableIf<Meta::IsIntegralOrFloating<MemberT
     uint32_t type;
 
     // Get imgui data type based on the member type
-    if constexpr (Meta::IsSame<MemberT, int32_t>)
+    if constexpr (Meta::IsSame<MemberT, int64_t>)
+        type = ImGuiDataType_S64;
+    else if constexpr (Meta::IsSame<MemberT, uint64_t>)
+        type = ImGuiDataType_U64;
+    else if constexpr (Meta::IsSame<MemberT, int32_t>)
         type = ImGuiDataType_S32;
     else if constexpr (Meta::IsSame<MemberT, uint32_t>)
         type = ImGuiDataType_U32;
@@ -147,12 +158,15 @@ void TypeRendererImpl<MemberT, Meta::EnableIf<Meta::IsIntegralOrFloating<MemberT
         if constexpr (range.minimum == nullptr)
         {
             constexpr MemberT zero = 0;
-            ImGui::SliderScalar(metadata.name, type, metadata.obj, &zero, range.maximum);    
+            const MemberT max = metadata.topLevelObj->*range.maximum;
+            ImGui::SliderScalar(metadata.name, type, metadata.obj, &zero, &max);    
         }
         else
         {
             // Has a dynamic range attribute, display as a slider
-            ImGui::SliderScalar(metadata.name, type, metadata.obj, range.minimum, range.maximum);
+            const MemberT min = metadata.topLevelObj->*range.minimum;
+            const MemberT max = metadata.topLevelObj->*range.maximum;
+            ImGui::SliderScalar(metadata.name, type, metadata.obj, &min, &max);
         }
     }
     else
@@ -334,6 +348,22 @@ void TypeRendererImpl<Pointer<T>, Meta::EnableIf<Meta::IsBaseOf<Resource, T>>>::
     Filters::FilterResources<T>(metadata.obj);
 
     ImGui::PopID();
+}
+
+template <typename T>
+template <typename ReflectT, typename DescriptorT>
+void TypeRendererImpl<T*, Meta::EnableIf<Meta::IsBaseOf<Resource, T>>>::Render(const TypeRenderer::Metadata<ReflectT, T*, DescriptorT>& metadata)
+{
+    if (metadata.obj)
+    {
+        const TypeRenderer::Metadata<ReflectT, T, DescriptorT> metadataPtr = {
+            .topLevelObj = metadata.topLevelObj,
+            .name = metadata.name,
+            .obj = *metadata.obj
+        };
+
+        TypeRenderer::DisplaySimpleType<ReflectT, T, DescriptorT>(metadataPtr);
+    }
 }
 
 template <typename ReflectT, typename DescriptorT>

@@ -14,6 +14,8 @@ BEGIN_XNOR_CORE
 
 class Animation final : public Resource
 {
+    REFLECTABLE_IMPL(Animation)
+    
 public:
     /// @brief Allowed extensions for animations.
     XNOR_ENGINE static inline constexpr std::array<const char_t*, 0> FileExtensions
@@ -51,15 +53,10 @@ private:
         float_t time{};
     };
 
-    struct AssimpNodeData
-    {
-        Matrix transformation;
-        std::string name;
-        List<AssimpNodeData> children;
-    };
-    
-    double_t m_Duration;
-    double_t m_Framerate;
+    float_t m_PlaySpeed = 1.f;
+    float_t m_Duration;
+    float_t m_Framerate;
+    float_t m_FrameDuration;
     size_t m_FrameCount;
     size_t m_CurrentFrame;
 
@@ -71,12 +68,13 @@ private:
 
     List<Matrix> m_CurrentFrameMatrices;
     List<Matrix> m_FinalMatrices;
-
-    AssimpNodeData m_RootNode;
-
-    XNOR_ENGINE void UpdateBoneTransform(const Bone* bone, const Matrix& parentMatrix);
 };
 
 END_XNOR_CORE
 
-REFL_AUTO(type(XnorCore::Animation, bases<XnorCore::Resource>))
+REFL_AUTO(type(XnorCore::Animation, bases<XnorCore::Resource>),
+    field(m_Duration, XnorCore::Reflection::ReadOnly()),
+    field(m_Framerate, XnorCore::Reflection::ReadOnly()),
+    field(m_CurrentFrame, XnorCore::Reflection::DynamicRange(&XnorCore::Animation::m_FrameCount)),
+    field(m_PlaySpeed, XnorCore::Reflection::Range(-10.f, 10.f))
+)

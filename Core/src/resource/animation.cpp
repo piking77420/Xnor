@@ -11,19 +11,33 @@ void Animation::Update()
     if (!m_Skeleton)
         return;
 
-    m_Time += Time::GetDeltaTime();
+    m_Time += Time::GetDeltaTime() * m_PlaySpeed;
+    m_Time = std::fmodf(m_Time, m_Duration);
 
-    if (m_Time >= m_Duration)
-        m_Time = 0.f;
+    if (m_PlaySpeed < 0.f && m_Time <= 0)
+    {
+        m_Time = m_Duration;
+    }
 
-    m_CurrentFrame = static_cast<size_t>(m_Time / m_Framerate);
+    m_CurrentFrame = std::min(static_cast<size_t>(m_Time / m_FrameDuration), m_FrameCount - 1);
+
+    size_t nextFrame = m_CurrentFrame;
+    if (m_PlaySpeed < 0)
+    {
+        if (m_CurrentFrame == 0)
+            nextFrame = m_FrameCount - 1;
+        else
+            nextFrame = (m_CurrentFrame - 1) % m_FrameCount;
+    }
+    else
+    {
+        nextFrame = (m_CurrentFrame + 1) % m_FrameCount;
+    }
+    float_t t = std::fmodf(m_Time, m_FrameDuration) / m_FrameDuration;
+    if (m_PlaySpeed < 0)
+        t = 1 - t;
 
     const List<Bone>& bones = m_Skeleton->GetBones();
-
-    // m_CurrentFrameMatrices.Fill(Matrix::Identity());
-
-    // const Bone* const root = bones.Find([](const Bone* b) -> bool_t { return b->parentId == -1; });
-    // UpdateBoneTransform(root, Matrix::Identity());
 
     for (size_t i = 0; i < bones.GetSize(); i++)
     {
@@ -34,7 +48,9 @@ void Animation::Update()
 
         const size_t frame = Utils::RemapValue(m_CurrentFrame, Vector2i(0, static_cast<int32_t>(m_FrameCount)), Vector2i(0, static_cast<int32_t>(keyFrames.GetSize())));
 
-        const Matrix localAnim = Matrix::Trs(keyFrames[frame].translation, keyFrames[frame].rotation, Vector3(1.f));
+        const Vector3 position = Vector3::Lerp(keyFrames[frame].translation, keyFrames[nextFrame].translation, t);
+        const Quaternion rotation = Quaternion::Slerp(keyFrames[frame].rotation, keyFrames[nextFrame].rotation, t);
+        const Matrix localAnim = Matrix::Trs(position, rotation, Vector3(1.f));
 
         if (bone.parentId != -1)
         {
@@ -65,8 +81,9 @@ bool_t Animation::Load(const uint8_t* const, const int64_t)
 bool_t Animation::Load(const aiAnimation& loadedData)
 {
     m_FrameCount = static_cast<size_t>(loadedData.mDuration);
-    m_Framerate = 1.f / loadedData.mTicksPerSecond;
-    m_Duration = loadedData.mDuration * m_Framerate;
+    m_Framerate = static_cast<float_t>(loadedData.mTicksPerSecond);
+    m_FrameDuration = 1.f / m_Framerate;
+    m_Duration = static_cast<float_t>(loadedData.mDuration / loadedData.mTicksPerSecond);
 
     for (uint32_t i = 0; i < loadedData.mNumChannels; i++)
     {
@@ -103,22 +120,4 @@ bool_t Animation::Load(const aiAnimation& loadedData)
 const List<Matrix>& Animation::GetMatrices() const
 {
     return m_FinalMatrices;
-}
-
-void Animation::UpdateBoneTransform(const Bone* const bone, const Matrix& parentMatrix)
-{
-    const List<Bone>& bones = m_Skeleton->GetBones();
-
-    const auto it = m_KeyFrames.find(bone->name);
-    const List<KeyFrame>& keyFrames = it->second;
-
-    const size_t frame = Utils::RemapValue(m_CurrentFrame, Vector2i(0, static_cast<int32_t>(m_FrameCount)), Vector2i(0, static_cast<int32_t>(keyFrames.GetSize())));
-
-    const Matrix localAnim = Matrix::Trs(keyFrames[frame].translation, keyFrames[frame].rotation, Vector3(1.f));
-    const Matrix globalTransform = parentMatrix * localAnim;
-
-    m_CurrentFrameMatrices[bone->id] = globalTransform * bone->global;
-    
-    for (size_t i = 0; i < bone->children.GetSize(); i++)
-        UpdateBoneTransform(&bones[bone->children[i]], globalTransform);
 }

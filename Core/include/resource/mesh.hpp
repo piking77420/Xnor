@@ -31,7 +31,7 @@ public:
     List<Animation*> animations;
 
     Material material;
-    
+
     // Use the base class' constructors
     using Resource::Resource;
 
@@ -55,5 +55,6 @@ private:
 END_XNOR_CORE
 
 REFL_AUTO(type(XnorCore::Mesh, bases<XnorCore::Resource>),
-    field(material)
+    field(material),
+    field(animations)
 )

@@ -97,7 +97,7 @@ namespace Reflection
     /// @tparam ReflectT Top level type
     /// @tparam T Field type
     template <typename ReflectT, typename T>
-    struct DynamicRange
+    struct DynamicRange : FieldAttribute
     {
         /// @brief Shorthand for a class member pointer
         using PtrType = T ReflectT::*;
