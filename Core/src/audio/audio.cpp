@@ -2,7 +2,6 @@
 
 #include <set>
 
-#include <AL/al.h>
 #include <AL/alc.h>
 
 #include "utils/logger.hpp"
@@ -14,6 +13,8 @@ bool_t Audio::Initialize()
     Logger::LogInfo("Initializing audio");
     
     InitializeDevices();
+    
+    m_CurrentContext = new AudioContext(*m_CurrentDevice);
 
     return true;
 }
@@ -22,22 +23,18 @@ void Audio::Shutdown()
 {
     Logger::LogInfo("Shutting down audio");
 
+    for (auto&& buffer : m_Buffers)
+        delete buffer;
+
     for (auto&& device : m_AvailableDevices)
         delete device;
 }
 
-bool_t Audio::CheckError()
-{
-    const ALCenum error = alGetError();
+AudioContext* Audio::GetContext() { return m_CurrentContext; }
 
-    if (error != AL_NO_ERROR)
-    {
-        Logger::LogError("[OpenAL] {}", std::string_view(alGetString(error)));
-        return true;
-    }
+void Audio::UnregisterBuffer(AudioBuffer* buffer) { m_Buffers.Remove(buffer); }
 
-    return false;
-}
+void Audio::RegisterBuffer(AudioBuffer* buffer) { m_Buffers.Add(buffer); }
 
 void Audio::InitializeDevices()
 {
@@ -45,18 +42,18 @@ void Audio::InitializeDevices()
     std::set<std::string> deviceNameList;
 
     // Get all available devices if the extension is present (this should always be the case)
-    if (alcIsExtensionPresent(nullptr, "ALC_ENUMERATION_EXT"))
+    if (alcIsExtensionPresent(nullptr, "ALC_ENUMERATE_ALL_EXT"))
     {
-        const char_t* deviceNames = alcGetString(nullptr, ALC_DEVICE_SPECIFIER);
-        IterateAlStringList(deviceNames, [&](const char_t* str) { deviceNameList.emplace(str); });
+        const char_t* const deviceNames = alcGetString(nullptr, ALC_ALL_DEVICES_SPECIFIER);
+        IterateAlStringList(deviceNames, [&](const char_t* const str) { deviceNameList.emplace(str); });
     }
 
     // Just in case the enumeration extension isn't present, add the default device
-    deviceNameList.emplace(alcGetString(nullptr, ALC_DEFAULT_DEVICE_SPECIFIER));
+    deviceNameList.emplace(alcGetString(nullptr, ALC_DEFAULT_ALL_DEVICES_SPECIFIER));
 
     // Create the devices and add them to the list
     const size_t size = deviceNameList.size();
-    m_AvailableDevices.resize(size);
+    m_AvailableDevices.Resize(size);
     auto&& it = deviceNameList.begin();
     for (auto& device : m_AvailableDevices)
     {
@@ -64,7 +61,7 @@ void Audio::InitializeDevices()
         it++;
     }
 
-    m_CurrentDevice = m_AvailableDevices.back();
+    m_CurrentDevice = m_AvailableDevices.Front();
 }
 
 void Audio::IterateAlStringList(const char_t* list, const std::function<void(const char_t*)>& lambda)

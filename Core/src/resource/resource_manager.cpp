@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include "file/file_manager.hpp"
+#include "resource/audio_track.hpp"
 #include "resource/compute_shader.hpp"
 #include "resource/mesh.hpp"
 #include "resource/model.hpp"
@@ -25,6 +26,7 @@ void ResourceManager::LoadAll()
 
     const size_t oldResourceCount = m_Resources.size();
 
+    // Load resource data asynchronously
     std::for_each(
         std::execution::par,
         files.begin(),
@@ -32,24 +34,19 @@ void ResourceManager::LoadAll()
         [](const Pointer<File>& file) -> void
         {
             if (std::ranges::find(Texture::FileExtensions, file->GetExtension()) != Texture::FileExtensions.end())
-            {
                 Load<Texture>(file, false);
-            }
             else if (std::ranges::find(Mesh::FileExtensions, file->GetExtension()) != Mesh::FileExtensions.end())
-            {
                 Load<Mesh>(file, false);
-            }
             else if (std::ranges::find(Model::FileExtensions, file->GetExtension()) != Model::FileExtensions.end())
-            {
                 Load<Model>(file, false);
-            }
             else if (std::ranges::find(Skeleton::FileExtensions, file->GetExtension()) != Skeleton::FileExtensions.end())
-            {
                 Load<Skeleton>(file, false);
-            }
+            else if (std::ranges::find(AudioTrack::FileExtensions, file->GetExtension()) != AudioTrack::FileExtensions.end())
+                Load<AudioTrack>(file, false);
         }
     );
 
+    // Do interface stuff synchronously (Rhi/Audio)
     for (Pointer<File>& file : files)
     {
         if (std::ranges::find(Shader::VertexFileExtensions, file->GetExtension()) != Shader::VertexFileExtensions.end() ||
@@ -83,7 +80,7 @@ void ResourceManager::LoadAll()
         else
         {
             if (Contains(file))
-                Get(file)->CreateInRhi();
+                Get(file)->CreateInInterface();
         }
     }
 
@@ -152,6 +149,7 @@ bool ResourceManager::Contains(const std::string& name)
 
 bool ResourceManager::Contains(const Pointer<File>& file)
 {
+    std::scoped_lock lock(m_ResourcesMutex);
     return m_Resources.contains(file->GetPathString());
 }
 
@@ -186,8 +184,8 @@ void ResourceManager::Unload(const std::string& name)
         return;
     }
     
-    if (resource->second->IsLoadedInRhi())
-        resource->second->DestroyInRhi();
+    if (resource->second->IsLoadedInInterface())
+        resource->second->DestroyInInterface();
 
     if (resource->second->IsLoaded())
         resource->second->Unload();
@@ -205,8 +203,8 @@ void ResourceManager::UnloadAll()
     {
         Logger::LogDebug("Unloading resource {}", resource.first);
         
-        if (resource.second->IsLoadedInRhi())
-            resource.second->DestroyInRhi();
+        if (resource.second->IsLoadedInInterface())
+            resource.second->DestroyInInterface();
         
         if (resource.second->IsLoaded())
             resource.second->Unload();

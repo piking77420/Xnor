@@ -24,6 +24,10 @@ namespace Concepts
     template <class T>
     concept EntryT = std::is_base_of_v<Entry, T>;
     
+    /// @brief Concept that forces a class to be same as the others
+    template <class T, class U>
+    concept IsTSameAsU = std::is_same_v<T,U>;
+    
     /// @brief Concept that forces a type to be a child of Component
     template <class T>
     concept ComponentT = std::is_base_of_v<Component, T>;
@@ -57,7 +61,7 @@ namespace Concepts
     /// @brief Concept that forces a type to be a raw pointer
     template <typename T>
     concept PointerT = std::is_pointer_v<T>;
-
+    
     /// @brief Concept that forces a type to be of an integral type
     template <typename T>
     concept IntegralT = std::is_integral_v<T>;

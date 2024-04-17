@@ -121,11 +121,13 @@ bool_t Rhi::DestroyModel(const uint32_t modelId)
 	return true;
 }
 
-void Rhi::DrawModel(const uint32_t modelId)
+void Rhi::DrawModel(const ENUM_VALUE(DrawMode) drawMode,const uint32_t modelId)
 {
 	const ModelInternal model = m_ModelMap.at(modelId);
 	glBindVertexArray(model.vao);
-	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(model.nbrOfIndicies), GL_UNSIGNED_INT, nullptr);
+	
+	
+	glDrawElements(DrawModeToOpengl(drawMode), static_cast<GLsizei>(model.nbrOfIndicies), GL_UNSIGNED_INT, nullptr);
 }
 
 void Rhi::DestroyProgram(const uint32_t shaderId)
@@ -136,7 +138,7 @@ void Rhi::DestroyProgram(const uint32_t shaderId)
 
 void Rhi::CheckCompilationError(const uint32_t shaderId, const std::string& type)
 {
-	int success;
+	int success = 0;
 	std::string infoLog(1024, '\0');
 
 	if (type != "PROGRAM")
@@ -925,7 +927,7 @@ void Rhi::BindTexture(const uint32_t unit, const uint32_t textureId)
 
 uint32_t Rhi::CreateFrameBuffer()
 {
-	uint32_t frameBufferId;
+	uint32_t frameBufferId = 0;
 	glCreateFramebuffers(1, &frameBufferId);
 	return frameBufferId;
 }
@@ -1055,7 +1057,7 @@ void Rhi::GetPixelFromAttachement(const uint32_t attachmentIndex, const Vector2i
 
 void Rhi::SwapBuffers()
 {
-	glfwSwapBuffers(Window::GetHandle());
+	glfwSwapBuffers(glfwGetCurrentContext());
 }
 
 uint32_t Rhi::GetOpenglShaderType(const ShaderType::ShaderType shaderType)
@@ -1242,19 +1244,19 @@ uint32_t Rhi::GetOpenGlTextureFormat(const TextureFormat::TextureFormat textureF
 
 void Rhi::LogComputeShaderInfo()
 {
-	int32_t workGroupCount[3];
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &workGroupCount[0]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &workGroupCount[1]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &workGroupCount[2]);
+	std::array<int32_t, 3> workGroupCount{};
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, workGroupCount.data());
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, workGroupCount.data() + 1);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, workGroupCount.data() + 2);
 	Logger::LogDebug("Max work groups per compute shader x: {} y: {} x: {}", workGroupCount[0], workGroupCount[1], workGroupCount[2]);
 	
-	int32_t workGroupSize[3];
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &workGroupSize[0]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, &workGroupSize[1]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, &workGroupSize[2]);
+	std::array<int32_t, 3> workGroupSize{};
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, workGroupSize.data());
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, workGroupSize.data() + 1);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, workGroupSize.data() + 2);
 	Logger::LogDebug("Max work group sizes  x: {} y: {} x: {}", workGroupSize[0], workGroupSize[1], workGroupSize[2]); 
 
-	int32_t workGroupInvocation;
+	int32_t workGroupInvocation = 0;
 	glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &workGroupInvocation);
 	Logger::LogDebug("Max invocations count per work group: {} ", workGroupInvocation);
 }
@@ -1320,6 +1322,47 @@ uint32_t Rhi::GetOpenglDataType(const DataType::DataType dataType)
 	}
 
 	return GL_UNSIGNED_BYTE;
+}
+
+uint32_t Rhi::DrawModeToOpengl(DrawMode::DrawMode drawMode)
+{
+	switch (drawMode)
+	{
+	case DrawMode::Point:
+		return GL_POINTS;
+		
+	case DrawMode::Line:
+		return GL_LINES;
+		
+	case DrawMode::LineLoop:
+		return GL_LINE_LOOP;
+		
+	case DrawMode::LineStrip:
+		return GL_LINE_STRIP;
+
+	case DrawMode::Triangles:
+		return GL_TRIANGLES;
+		
+	case DrawMode::TrianglesStrip:
+		return GL_TRIANGLE_STRIP;
+
+	case DrawMode::TrianglesFan:
+		return GL_TRIANGLE_FAN;
+		
+	case DrawMode::LineStripAdjency:
+		return GL_LINES_ADJACENCY;
+	
+	case DrawMode::TrianglesStripAdjency:
+		return GL_LINE_STRIP_ADJACENCY;
+		
+	case DrawMode::TrianglesAdjency:
+		return GL_TRIANGLES_ADJACENCY;
+	
+	default :
+		return GL_TRIANGLES;
+		
+	}
+
 }
 
 void Rhi::OpenglDebugCallBack(const uint32_t source, const uint32_t type, const uint32_t id, const uint32_t severity, const int32_t, const char_t* const message, const void* const)

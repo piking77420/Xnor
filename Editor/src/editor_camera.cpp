@@ -135,9 +135,10 @@ void EditorCamera::OnPressGoToObject()
     }
     else
     {
-        const XnorCore::Model::Aabb&& aabb = meshRenderer->model->GetAabb();
-        const Vector3 radiusVec = aabb.max - aabb.min;
-        Vector4 radiusPreScale = Vector4(radiusVec.x, radiusVec.y, radiusVec.z, 1.0f);
+        const XnorCore::Bound&& aabb = meshRenderer->model->GetAabb();
+        Vector4 radiusPreScale = Vector4(aabb.extents.x, aabb.extents.y, aabb.extents.z, 1.0f) * 0.5f;
+        radiusPreScale.w = 1.0f;
+        
         radiusPreScale = Matrix::Trs(Vector3(0.f), Quaternion::Identity(), currentEntiy.transform.GetScale()) * radiusPreScale;
         const Vector3 correctVec = {radiusPreScale.x, radiusPreScale.y, radiusPreScale.z};
         m_DistanceToStop = correctVec.Length();

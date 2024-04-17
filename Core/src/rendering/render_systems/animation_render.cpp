@@ -28,7 +28,7 @@ void AnimationRender::InitResources()
     };
 
     m_SkinnedShader->SetFaceCullingInfo(cullInfo);
-    m_SkinnedShader->CreateInRhi();
+    m_SkinnedShader->CreateInInterface();
 }
 
 void AnimationRender::BeginFrame(const Scene& scene, const Renderer&)
@@ -67,7 +67,7 @@ void AnimationRender::RenderAnimation() const
                     m_SkinnedMeshGpuData->boneMatrices[j] = matrices[j];
 
                 Rhi::UpdateAnimationUniform(*m_SkinnedMeshGpuData);
-                Rhi::DrawModel(skinnedMeshRender->mesh->models[i]->GetId());
+                Rhi::DrawModel(DrawMode::Triangles, skinnedMeshRender->mesh->models[i]->GetId());
             }
         }
     }

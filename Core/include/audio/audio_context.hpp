@@ -1,8 +1,7 @@
 #pragma once
 
-#include <vector>
-
 #include "core.hpp"
+#include "utils/list.hpp"
 
 // ReSharper disable once CppInconsistentNaming
 struct ALCcontext;
@@ -11,30 +10,41 @@ BEGIN_XNOR_CORE
 
 class AudioDevice;
 
-BEGIN_ENUM(AudioSourceType)
+enum class AudioSourceType
 {
     Mono,
     Stereo
-}
-END_ENUM
+};
 
 class AudioContext
 {
 public:
     [[nodiscard]]
-    explicit AudioContext(AudioDevice& device);
+    XNOR_ENGINE explicit AudioContext(AudioDevice& device);
 
-    ~AudioContext();
+    XNOR_ENGINE ~AudioContext();
 
     DEFAULT_COPY_MOVE_OPERATIONS(AudioContext)
 
-    int32_t GetMaxSourceCount(ENUM_VALUE(AudioSourceType) sourceType) const;
+    XNOR_ENGINE void MakeCurrent() const;
+
+    XNOR_ENGINE static bool_t CheckError();
+
+    [[nodiscard]]
+    XNOR_ENGINE int32_t GetMaxSourceCount(AudioSourceType sourceType) const;
+
+    /// @brief Returns the next available source of the given type.
+    [[nodiscard]]
+    XNOR_ENGINE uint32_t GetSource(AudioSourceType type = AudioSourceType::Mono);
 
 private:
     ALCcontext* m_Handle = nullptr;
     AudioDevice* m_Device = nullptr;
 
-    std::vector<int32_t> m_Attributes;
+    List<int32_t> m_Attributes;
+
+    List<uint32_t> m_SourcesMono;
+    List<uint32_t> m_SourcesStereo;
 };
 
 END_XNOR_CORE

@@ -74,6 +74,14 @@ private:
     using GamepadButtons = std::array<GamepadButtonStatuses, static_cast<uint32_t>(GamepadButton::Count)>;
     // For each Gamepad
     static inline std::array<GamepadButtons, GamepadMax> m_GamepadsButton;
+    
+    static inline Vector2 m_LastMousePosition;
+    
+    static inline Vector2 m_MousePosition;
+    
+    static inline Vector2 m_MouseDelta;
+
+    static inline GLFWwindow* m_WindowHandle = nullptr;
 
     static void HandleKeyboard(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
     
@@ -88,12 +96,6 @@ private:
     static void ResetKey();
 
     static void CheckGamepadAtLaunch();
-    
-    static inline Vector2 m_LastMousePosition;
-    
-    static inline Vector2 m_MousePosition;
-    
-    static inline Vector2 m_MouseDelta;
 };
 
 END_XNOR_CORE

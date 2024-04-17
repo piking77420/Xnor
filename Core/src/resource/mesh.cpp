@@ -93,17 +93,17 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
     return true;
 }
 
-void Mesh::CreateInRhi()
+void Mesh::CreateInInterface()
 {
     for (uint32_t i = 0; i < models.GetSize(); i++)
-        models[i]->CreateInRhi();
+        models[i]->CreateInInterface();
 
     for (uint32_t i = 0; i < textures.GetSize(); i++)
-        textures[i]->CreateInRhi();
+        textures[i]->CreateInInterface();
 
     for (uint32_t i = 0; i < m_Skeletons.GetSize(); i++)
-        m_Skeletons[i]->CreateInRhi();
+        m_Skeletons[i]->CreateInInterface();
 
     for (uint32_t i = 0; i < animations.GetSize(); i++)
-        animations[i]->CreateInRhi();
+        animations[i]->CreateInInterface();
 }

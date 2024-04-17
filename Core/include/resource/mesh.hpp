@@ -45,8 +45,8 @@ public:
     /// @copydoc XnorCore::Resource::Load(const uint8_t* buffer, int64_t length)
     XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;
 
-    /// @copydoc XnorCore::Resource::CreateInRhi()
-    XNOR_ENGINE void CreateInRhi() override;
+    /// @copydoc XnorCore::Resource::CreateInInterface()
+    XNOR_ENGINE void CreateInInterface() override;
 
 private:
     List<Skeleton*> m_Skeletons;

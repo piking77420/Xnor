@@ -29,8 +29,6 @@ private:
     ALCdevice* m_Handle = nullptr;
     std::string m_Name;
 
-    AudioContext* m_Context = nullptr;
-
     // AudioContext needs to access the handle of this class
     friend class AudioContext;
 };

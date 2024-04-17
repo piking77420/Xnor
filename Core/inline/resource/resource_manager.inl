@@ -4,6 +4,7 @@
 
 #include "resource/compute_shader.hpp"
 #include "resource/shader.hpp"
+#include "utils/formatter.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -42,8 +43,7 @@ Pointer<T> ResourceManager::Load(const Pointer<File>& file, bool_t loadInRhi)
             loaded ? "" : ". Loading it"
         );
 
-        // if (!loaded)
-            resource->Load(file);
+        resource->Load(file);
 
         return resource;
     }
@@ -192,8 +192,8 @@ void ResourceManager::Unload(const Pointer<T>& resource)
         Pointer<Resource>& storedResource = it->second;
         if (storedResource == Utils::DynamicPointerCast<Resource>(resource))
         {
-            if (storedResource->IsLoadedInRhi())
-                storedResource->DestroyInRhi();
+            if (storedResource->IsLoadedInInterface())
+                storedResource->DestroyInInterface();
             
             if (storedResource->IsLoaded())
                 storedResource->Unload();
@@ -213,7 +213,7 @@ void ResourceManager::Unload(const Pointer<T>& resource)
 template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::AddNoCheck(std::string name)
 {
-    Pointer<T> resource = Pointer<T>::Create(std::forward<std::string>(name));
+    Pointer<T> resource = Pointer<T>::New(std::forward<std::string>(name));
 
     {
         std::scoped_lock lock(m_ResourcesMutex);
@@ -230,7 +230,7 @@ Pointer<T> ResourceManager::AddNoCheck(std::string name)
 template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file, const bool_t loadInRhi)
 {
-    Pointer<T> resource = Pointer<T>::Create(file->GetPathString());
+    Pointer<T> resource = Pointer<T>::New(file->GetPathString());
     
     {
         std::scoped_lock lock(m_ResourcesMutex);
@@ -245,7 +245,7 @@ Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file, const bool_t loadInR
     file->m_Resource = std::move(Pointer<Resource>(resource, false));
 
     if (loadInRhi)
-        resource->CreateInRhi();
+        resource->CreateInInterface();
 
     return resource;
 }

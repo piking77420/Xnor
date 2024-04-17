@@ -1,9 +1,9 @@
 #pragma once
 
 #include <functional>
-#include <unordered_map>
 
 #include "core.hpp"
+#include "audio/audio_buffer.hpp"
 #include "audio/audio_device.hpp"
 
 BEGIN_XNOR_CORE
@@ -17,11 +17,20 @@ public:
 
     XNOR_ENGINE static void Shutdown();
 
-    XNOR_ENGINE static bool_t CheckError();
+    /// @brief Returns the current device's context.
+    [[nodiscard]]
+    XNOR_ENGINE static AudioContext* GetContext();
+
+    XNOR_ENGINE static void RegisterBuffer(AudioBuffer* buffer);
+
+    XNOR_ENGINE static void UnregisterBuffer(AudioBuffer* buffer);
 
 private:
-    XNOR_ENGINE static inline std::vector<AudioDevice*> m_AvailableDevices;
+    XNOR_ENGINE static inline List<AudioDevice*> m_AvailableDevices;
     XNOR_ENGINE static inline AudioDevice* m_CurrentDevice = nullptr;
+    XNOR_ENGINE static inline AudioContext* m_CurrentContext = nullptr;
+
+    XNOR_ENGINE static inline List<AudioBuffer*> m_Buffers;
 
     XNOR_ENGINE static void InitializeDevices();
 

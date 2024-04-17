@@ -1,13 +1,15 @@
 #include "reflection/xnor_factory.hpp"
 
+#include "audio/component/audio_listener.hpp"
+#include "audio/component/audio_source.hpp"
 #include "physics/components/box_collider.hpp"
 #include "physics/components/capsule_collider.hpp"
 #include "physics/components/collider.hpp"
 #include "physics/components/sphere_collider.hpp"
 #include "rendering/light/directional_light.hpp"
-#include "rendering/light/light.hpp"
 #include "rendering/light/point_light.hpp"
 #include "rendering/light/spot_light.hpp"
+#include "scene/component/camera_component.hpp"
 #include "scene/component/mesh_renderer.hpp"
 #include "scene/component/script_component.hpp"
 #include "scene/component/skinned_mesh_render.hpp"
@@ -86,11 +88,12 @@ void XnorFactory::RegisterAllTypes()
     // Manually registering the types is sub-optimal, however, it's the best way I've found so far
     // It'll probably stay this way for the classes internal to Core, and as for the user scripts generated from the editor, a solution will be found at a later date probably
     
+    RegisterType<Component>();
     RegisterType<MeshRenderer>();
-    RegisterType<Light>();
     RegisterType<DirectionalLight>();
     RegisterType<TestComponent>();
     RegisterType<PointLight>();
+    RegisterType<Light>();
     RegisterType<SpotLight>();
     RegisterType<ScriptComponent>();
     RegisterType<Collider>();
@@ -98,7 +101,11 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<SphereCollider>();
     RegisterType<CapsuleCollider>();
     RegisterType<TestComponentPhysics>();
+    RegisterType<CameraComponent>();
     RegisterType<SkinnedMeshRender>();
+
+    RegisterType<AudioListener>();
+    RegisterType<AudioSource>();
 }
 
 std::string XnorFactory::GetTypeName(const size_t hash)

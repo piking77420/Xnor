@@ -3,7 +3,6 @@
 #include <ImGui/imgui.h>
 #include <ImGui/imgui_impl_glfw.h>
 #include <ImGui/imgui_impl_opengl3.h>
-#include <ImGui/imgui_internal.h>
 #include <ImguiGizmo/ImGuizmo.h>
 
 #include "csharp/dotnet_runtime.hpp"
@@ -13,7 +12,6 @@
 #include "scene/component/test_component.hpp"
 #include "serialization/serializer.hpp"
 #include "utils/coroutine.hpp"
-#include "utils/timeline.hpp"
 #include "windows/content_browser.hpp"
 #include "windows/editor_window.hpp"
 #include "windows/header_window.hpp"
@@ -30,7 +28,8 @@ void Editor::CheckWindowResize()
 {
 }
 
-Editor::Editor()
+Editor::Editor(const int32_t argc, const char_t* const* const argv)
+	: Application(std::forward<decltype(argc)>(argc), std::forward<decltype(argv)>(argv))
 {
 	XnorCore::Texture::defaultLoadOptions = { .flipVertically = false };
 	XnorCore::FileManager::LoadDirectory("assets_internal/editor");
@@ -85,8 +84,7 @@ void Editor::CreateDefaultWindows()
 
 	data.editorViewPort.isEditor = true;
 	data.editorViewPort.camera = &data.editorCam;
-	data.gameViewPort.camera = &data.gameCam;
-	m_UiWindows.push_back(new RenderWindow(this,data.gameViewPort));
+	m_UiWindows.push_back(new RenderWindow(this,*gameViewPort));
 	m_UiWindows.push_back(new EditorWindow(this,data.editorViewPort));
 
 	if (XnorCore::FileManager::Contains(SerializedScenePath))
@@ -244,9 +242,6 @@ void Editor::MenuBar()
 				path = data.currentScene->GetPathString();
 			}
 
-			std::vector<XnorCore::TestComponent*> v;
-			XnorCore::World::scene->GetAllComponentOfType<XnorCore::TestComponent>(&v);
-
 			if (ImGui::MenuItem("Save"))
 			{
 				XnorCore::Serializer::StartSerialization(path);
@@ -269,7 +264,7 @@ void Editor::MenuBar()
 			
 			ImGui::EndMenu();
 		}
-		
+		renderer.RenderMenu();
 		ImGui::EndMainMenuBar();
 	}
 }
@@ -364,7 +359,7 @@ void Editor::WorldBehaviours()
 			XnorCore::World::Begin();
 			XnorCore::World::hasStarted = true;
 		}
-
+		
 		XnorCore::World::Update();
 	}
 }

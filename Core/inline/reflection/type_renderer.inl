@@ -184,6 +184,7 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
 
         // Shorthand for the notify change attribute
         using NotifyChangeT = Reflection::NotifyChange<ReflectT>;
+        using ModifiedCallbackT = Reflection::ModifiedCallback<ReflectT>;
 
         constexpr bool_t isConst = !DescriptorT::is_writable;
         constexpr bool_t hidden = Reflection::HasAttribute<Reflection::HideInInspector, DescriptorT>();
@@ -204,7 +205,7 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
             hasStatic = true;
         }
 
-        constexpr bool_t notifyChange = Reflection::HasAttribute<NotifyChangeT, DescriptorT>();
+        constexpr bool_t notifyChange = Reflection::HasAttribute<NotifyChangeT, DescriptorT>() || Reflection::HasAttribute<ModifiedCallbackT, DescriptorT>();
 
         if constexpr (!hidden && display)
         {
@@ -223,9 +224,17 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
 
                 if (newValue != oldValue)
                 {
-                    // Value was changed, set the pointer to true
-                    constexpr NotifyChangeT notify = Reflection::GetAttribute<NotifyChangeT, DescriptorT>();
-                    obj->*notify.pointer = true;
+                    if constexpr (Reflection::HasAttribute<NotifyChangeT, DescriptorT>())
+                    {
+                        // Value was changed, set the pointer to true
+                        constexpr NotifyChangeT notify = Reflection::GetAttribute<NotifyChangeT, DescriptorT>();
+                        obj->*notify.pointer = true;
+                    }
+                    else if constexpr (Reflection::HasAttribute<ModifiedCallbackT, DescriptorT>())
+                    {
+                        constexpr ModifiedCallbackT notify = Reflection::GetAttribute<ModifiedCallbackT, DescriptorT>();
+                        notify.callback(obj);
+                    }
                 }
             }
             else

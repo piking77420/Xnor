@@ -9,6 +9,7 @@
 #include "refl/refl.hpp"
 #include "rendering/vertex.hpp"
 #include "resource/resource.hpp"
+#include "utils/bound.hpp"
 
 /// @file model.hpp
 /// @brief Defines the XnorCore::Model class.
@@ -19,15 +20,6 @@ BEGIN_XNOR_CORE
 class Model final : public Resource
 {
 public:
-    /// @brief Struct used to store the minimum and maximum bounds of the AABB of a Model.
-    struct Aabb
-    {
-        /// @brief The minimum bound of this AABB.
-        Vector3 min { std::numeric_limits<float_t>::max() };
-        /// @brief The maximum bound of this AABB.
-        Vector3 max { std::numeric_limits<float_t>::min() };
-    };
-
     /// @brief Allowed extensions for models.
     XNOR_ENGINE static inline constexpr std::array<const char_t*, 56> FileExtensions
     {
@@ -106,11 +98,11 @@ public:
     /// @brief Loads a Model from assimp loaded data.
     XNOR_ENGINE bool_t Load(const aiMesh& loadedData);
 
-    /// @copydoc XnorCore::Resource::CreateInRhi
-    XNOR_ENGINE void CreateInRhi() override;
+    /// @copydoc XnorCore::Resource::CreateInInterface
+    XNOR_ENGINE void CreateInInterface() override;
 
     /// @copydoc XnorCore::Resource::DestroyInRhi
-    XNOR_ENGINE void DestroyInRhi() override;
+    XNOR_ENGINE void DestroyInInterface() override;
     
     /// @copydoc XnorCore::Resource::Unload
     XNOR_ENGINE void Unload() override;
@@ -122,7 +114,7 @@ public:
 
     /// @brief Gets the Aabb bounding box of the model
     /// @return Aabb bounding box
-    XNOR_ENGINE Aabb GetAabb() const;
+    XNOR_ENGINE Bound GetAabb() const;
 
 #ifndef SWIG
     /// @brief Gets the vertices of the model
@@ -138,7 +130,7 @@ private:
     std::vector<uint32_t> m_Indices;
     uint32_t m_ModelId = 0;
     
-    Aabb m_Aabb;
+    Bound m_Aabb;
 };
 
 END_XNOR_CORE

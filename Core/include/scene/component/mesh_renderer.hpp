@@ -17,7 +17,6 @@ class MeshRenderer : public Component
     REFLECTABLE_IMPL(MeshRenderer)
     
 public:
-    XNOR_ENGINE MeshRenderer() = default;
 
     /// @brief @ref Model of the mesh
     Pointer<Model> model;
@@ -30,6 +29,15 @@ public:
 
     /// @brief Whether to draw the model AABB box
     bool_t drawModelAabb = false;
+    
+    XNOR_ENGINE MeshRenderer() = default;
+
+    XNOR_ENGINE ~MeshRenderer() override = default ;
+    
+    DEFAULT_COPY_MOVE_OPERATIONS(MeshRenderer);
+
+    XNOR_ENGINE void GetAABB(Bound* bound) const;
+
 };
 
 END_XNOR_CORE

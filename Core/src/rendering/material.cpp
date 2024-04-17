@@ -1,5 +1,7 @@
 ﻿#include "rendering/material.hpp"
 
+#include "rendering/rhi.hpp"
+
 using namespace XnorCore;
 
 void Material::BindMaterial() const
@@ -18,4 +20,7 @@ void Material::BindMaterial() const
 
     if (ambientOcclusionTexture.IsValid())
         ambientOcclusionTexture->BindTexture(MaterialTextureEnum::AmbiantOcclusion);
+
+    Rhi::BindMaterial(*this);
+
 }

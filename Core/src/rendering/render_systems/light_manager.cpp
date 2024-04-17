@@ -99,7 +99,7 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 		}
 		
 		Rhi::UpdateModelUniform(modelData);
-		Rhi::DrawModel(m_Quad->GetId());
+		Rhi::DrawModel(DrawMode::Triangles, m_Quad->GetId());
 	}
 
 	shader->Unuse();
@@ -469,7 +469,7 @@ void LightManager::InitShader()
 	};
 	
 	m_EditorUi->SetBlendFunction(blendFunction);
-	m_EditorUi->CreateInRhi();
+	m_EditorUi->CreateInInterface();
 	m_EditorUi->SetInt("uiTexture",0);
 	m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
 	
@@ -482,9 +482,9 @@ void LightManager::InitShader()
 	};
 
 	m_ShadowMapShader->SetFaceCullingInfo(cullInfo);
-	m_ShadowMapShader->CreateInRhi();
+	m_ShadowMapShader->CreateInInterface();
 
 	m_ShadowMapShaderPointLight = ResourceManager::Get<Shader>("depth_shader_point_light");
 	m_ShadowMapShaderPointLight->SetFaceCullingInfo(cullInfo);
-	m_ShadowMapShaderPointLight->CreateInRhi();
+	m_ShadowMapShaderPointLight->CreateInInterface();
 }

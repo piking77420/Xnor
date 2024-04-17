@@ -8,6 +8,11 @@
 /// @file screen.hpp
 /// @brief Defines the XnorCore::Screen class.
 
+// ReSharper disable once CppInconsistentNaming
+struct GLFWmonitor;
+// ReSharper disable once CppInconsistentNaming
+struct GLFWvidmode;
+
 BEGIN_XNOR_CORE
 
 /// @brief Represents a screen/monitor

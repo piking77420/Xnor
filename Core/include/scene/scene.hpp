@@ -4,6 +4,8 @@
 
 #include "core.hpp"
 #include "entity.hpp"
+#include "component/mesh_renderer.hpp"
+#include "data_structure/octree.hpp"
 #include "world/skybox.hpp"
 
 /// @file scene.hpp

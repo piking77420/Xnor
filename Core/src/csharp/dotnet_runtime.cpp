@@ -7,9 +7,7 @@
 #include "application.hpp"
 #include "reflection/dotnet_reflection.hpp"
 #include "utils/formatter.hpp"
-
-// We need to include Window.h here but it must be the last include as it breaks everything otherwise
-#include "utils/windows.hpp"
+#include "utils/message_box.hpp"
 
 using namespace XnorCore;
 
@@ -30,15 +28,15 @@ bool_t DotnetRuntime::Initialize()
     {
         constexpr const char_t* const errorMessage = ".NET is not installed on this machine";
         Logger::LogFatal(errorMessage);
-        MessageBoxA(nullptr, errorMessage, "Fatal Error", MB_OK | MB_ICONSTOP);
+        MessageBox::Show(errorMessage, "Fatal Error", MessageBox::Type::Ok, MessageBox::Icon::Error);
         throw std::runtime_error(".NET is not installed on this machine");
     }
 
     if (!CheckDotnetVersion())
     {
-        const std::string errorMessage = std::format("Invalid .NET version. XNOR Engine needs .NET {}.0", DotnetVersionMajor);
+        const std::string errorMessage = std::format("Invalid .NET version. XNOR Engine needs .NET {}.0", DotnetVersion);
         Logger::LogFatal(errorMessage);
-        MessageBoxA(nullptr, errorMessage.c_str(), "Fatal Error", MB_OK | MB_ICONSTOP);
+        MessageBox::Show(errorMessage, "Fatal Error", MessageBox::Type::Ok, MessageBox::Icon::Error);
         throw std::runtime_error("Invalid .NET version");
     }
 
@@ -146,7 +144,7 @@ bool_t DotnetRuntime::BuildGameProject()
     if (!exists(gameProjectDirectory / "Game.csproj"))
         return false;
 
-    std::system(("start dotnet build " + absolute(gameProjectDirectory).string()).c_str());  // NOLINT(concurrency-mt-unsafe)
+    Utils::TerminalCommand("dotnet build " + absolute(gameProjectDirectory).string());  // NOLINT(concurrency-mt-unsafe)
 
     return true;
 }
@@ -159,28 +157,24 @@ bool_t DotnetRuntime::GetInitialized()
 bool DotnetRuntime::CheckDotnetInstalled()
 {
     // Check if the dotnet command returns a non-zero exit code
-    return std::system("dotnet --info 1> nul") == 0;  // NOLINT(concurrency-mt-unsafe)
+    return Utils::TerminalCommand("dotnet --info 1> nul", false) == 0;  // NOLINT(concurrency-mt-unsafe)
 }
 
-#define TEMP_FILE_PATH "%temp%/xnor_dotnet_list_runtimes.txt"
+constexpr const char_t* const TempFile = "xnor_dotnet_list_runtimes.txt";
 bool DotnetRuntime::CheckDotnetVersion()
 {
     // This function runs the 'dotnet --list-runtimes' command
     // This prints a list of all installed .NET runtimes on the current machine
     // We redirect the command output to TEMP_FILE_PATH and read it line by line
-    // to find one that suits us, e.g. one whose version is more recent than the
-    // DotnetMinVersionMajor and DotnetMinVersionMinor constants
+    // to find one that suits us, e.g. one whose version is equal to the DotnetVersion constant
     // Once this is done, we know for sure that the C# assemblies can be executed and let
     // the system choose the right version
-    
-    std::system("dotnet --list-runtimes 1> " TEMP_FILE_PATH);  // NOLINT(concurrency-mt-unsafe)
 
-    // Expand the %temp% environment variable
-    // This is done automatically in terminal commands but we need to do it manually for our strings
-    char_t* buffer = static_cast<char_t*>(_malloca(MAX_PATH));
-    ExpandEnvironmentStringsA(TEMP_FILE_PATH, buffer, MAX_PATH);
+    std::filesystem::path tempPath = std::filesystem::temp_directory_path() / TempFile;
     
-    File file(buffer);
+    Utils::TerminalCommand("dotnet --list-runtimes 1> \"" + tempPath.string() + '"', false);  // NOLINT(concurrency-mt-unsafe)
+    
+    File file(tempPath.string());
     
     file.Load();
 
@@ -199,10 +193,10 @@ bool DotnetRuntime::CheckDotnetVersion()
             continue;
 
         std::string sub = line.substr(dotnetCoreNameLength + 1);
-        int32_t major, minor;
+        int32_t major = 0, minor = 0;
         (void) sscanf_s(sub.c_str(), "%d.%d", &major, &minor);
         
-        if (major == DotnetVersionMajor)
+        if (major == DotnetVersion)
         {
             foundValidDotnet = true;
             break;
@@ -210,13 +204,10 @@ bool DotnetRuntime::CheckDotnetVersion()
     }
     
     file.Unload();
-    std::filesystem::remove(buffer);
-
-    _freea(buffer);
+    std::filesystem::remove(tempPath);
     
     return foundValidDotnet;
 }
-#undef TEMP_FILE_PATH
 
 void DotnetRuntime::CoralMessageCallback(std::string_view message, const Coral::MessageLevel level)
 {

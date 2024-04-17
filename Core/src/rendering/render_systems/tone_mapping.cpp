@@ -13,14 +13,14 @@ void ToneMapping::ComputeToneMaping(const Texture& imageWithoutToneMapping, cons
     m_Aces->Use();
     imageWithoutToneMapping.BindTexture(ToneMapedTextureBinding);
     bloomTexture.BindTexture(1);
-    Rhi::DrawModel(m_Quad->GetId());
+    Rhi::DrawModel(DrawMode::Triangles, m_Quad->GetId());
     m_Aces->Unuse();
 }
 
 void ToneMapping::InitializeResources()
 {
     m_Aces = ResourceManager::Get<Shader>("tone_mapper");
-    m_Aces->CreateInRhi();
+    m_Aces->CreateInInterface();
     m_Aces->Use();
     m_Aces->SetInt("beforeToneMappedImage", ToneMapedTextureBinding);
     m_Aces->SetInt("bloomBlur", 1);

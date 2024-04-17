@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include <type_traits>
 #include <unordered_map>
 
 #include "file/file.hpp"

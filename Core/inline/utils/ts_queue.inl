@@ -3,14 +3,28 @@
 BEGIN_XNOR_CORE
 
 template <typename T>
-const T& TsQueue<T>::Front()
+T& TsQueue<T>::Front()
 {
     std::scoped_lock lock(m_QueueMutex);
     return m_Queue.front();
 }
 
 template <typename T>
-const T& TsQueue<T>::Back()
+const T& TsQueue<T>::Front() const
+{
+    std::scoped_lock lock(m_QueueMutex);
+    return m_Queue.front();
+}
+
+template <typename T>
+T& TsQueue<T>::Back()
+{
+    std::scoped_lock lock(m_QueueMutex);
+    return m_Queue.back();
+}
+
+template <typename T>
+const T& TsQueue<T>::Back() const
 {
     std::scoped_lock lock(m_QueueMutex);
     return m_Queue.back();

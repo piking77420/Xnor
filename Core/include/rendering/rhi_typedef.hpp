@@ -74,15 +74,15 @@ struct ShaderProgramCullInfo
 BEGIN_ENUM(DrawMode)
 {
 	Point = 0,
-	LineStrip,
+	Line,
 	LineLoop,
-	LineStripAdjency,
+	LineStrip,
+	Triangles,
 	TrianglesStrip,
 	TrianglesFan,
-	Triangles,
+	LineStripAdjency,
 	TrianglesStripAdjency,
 	TrianglesAdjency,
-	Patches 
 }
 END_ENUM
 

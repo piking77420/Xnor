@@ -234,6 +234,11 @@
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 				</2>
+				<3 typeName="CameraComponent"/>
+				<4 typeName="AudioListener">
+					<dopplerEffect>true</dopplerEffect>
+					<m_Volume>1</m_Volume>
+				</4>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
@@ -267,6 +272,11 @@
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 				</0>
+				<1 typeName="AudioSource">
+					<audioTrack>61B61790-1047-476F-8F-FF-D4-6-2A-BC-85-14</audioTrack>
+					<m_Volume>0.149</m_Volume>
+					<m_Pitch>1</m_Pitch>
+				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>

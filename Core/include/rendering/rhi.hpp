@@ -60,8 +60,9 @@ public:
 	XNOR_ENGINE static bool_t DestroyModel(uint32_t modelId);
 
 	/// @brief Draws a model
+	/// @param drawMode Draw mode
 	/// @param modelId Model id
-	XNOR_ENGINE static void DrawModel(uint32_t modelId); 
+	XNOR_ENGINE static void DrawModel(ENUM_VALUE(DrawMode) drawMode, uint32_t modelId); 
 	
 	/// @brief Destroy a shader program
 	/// @param shaderId Shader id
@@ -288,6 +289,8 @@ public:
 	XNOR_ENGINE static uint32_t CullFaceToOpenglCullFace(CullFace::CullFace cullFace);
 
 	XNOR_ENGINE static uint32_t GetOpenglDataType(DataType::DataType dataType);
+
+	XNOR_ENGINE static uint32_t DrawModeToOpengl(DrawMode::DrawMode drawMode);
 
 private:
 	struct ModelInternal
