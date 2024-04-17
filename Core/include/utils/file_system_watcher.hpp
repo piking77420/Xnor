@@ -8,7 +8,7 @@ BEGIN_XNOR_CORE
 /// @private
 BEGIN_ENUM(FileSystemWatcherChangeTypes)
 {
-    Changed = 1 << 0,
+    Modified = 1 << 0,
     Created = 1 << 1,
     Deleted = 1 << 2,
     Renamed = 1 << 3
@@ -18,7 +18,7 @@ END_ENUM
 /// @private
 struct FileSystemWatcherEventArgs
 {
-    Pointer<Entry> entry;
+    std::filesystem::path path;
     ENUM_VALUE(FileSystemWatcherChangeTypes) changeTypes;
 };
 
@@ -33,29 +33,27 @@ struct RenamedFileSystemWatcherEventArgs : FileSystemWatcherEventArgs
 class FileSystemWatcher
 {
 public:
-    Event<const FileSystemWatcherEventArgs&> changed;
+    Event<const FileSystemWatcherEventArgs&> modified;
     Event<const FileSystemWatcherEventArgs&> created;
     Event<const FileSystemWatcherEventArgs&> deleted;
     Event<const RenamedFileSystemWatcherEventArgs&> renamed;
     
-    bool_t recursive = false;
-
     explicit FileSystemWatcher(const std::string& path);
 
     ~FileSystemWatcher();
 
-    DEFAULT_COPY_MOVE_OPERATIONS(FileSystemWatcher)
+    DELETE_COPY_MOVE_OPERATIONS(FileSystemWatcher)
+
+    void Start();
+
+    void Stop();
 
 private:
-    struct WatcherData
-    {
-        FileSystemWatcher* watcher;
-        Pointer<Directory> directory;
-        bool_t includeSubdirectories;
-    };
-    
     std::thread m_Thread;
-    Pointer<Entry> m_Entry;
+    std::condition_variable m_CondVar;
+    std::mutex m_Mutex;
+    
+    std::filesystem::path m_Path;
     bool_t m_IsDirectory = false;
 
     bool_t m_Running = true;

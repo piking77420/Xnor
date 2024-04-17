@@ -213,6 +213,7 @@
     <ClCompile Include="src\utils\logger.cpp" />
     <ClCompile Include="src\utils\message_box.cpp" />
     <ClCompile Include="src\utils\utils.cpp" />
+    <ClCompile Include="src\utils\windows.cpp" />
     <ClCompile Include="src\window.cpp" />
     <ClCompile Include="src\rendering\vertex.cpp" />
     <ClCompile Include="src\utils\guid.cpp" />

@@ -14,6 +14,9 @@ void Event<Args...>::Invoke(Args... args) const
 }
 
 template <typename... Args>
+void Event<Args...>::operator()(Args... args) const { Invoke(args...); }
+
+template <typename... Args>
 void Event<Args...>::Clear()
 {
     m_Functions.Clear();
