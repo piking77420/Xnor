@@ -27,7 +27,7 @@ void Frustum::UpdateFromCamera(const Camera& camera, const float_t aspect)
 
 bool_t Frustum::IsOnFrustum(const Bound& bound) const
 {
-    return bound.IsOnPlane(plane[0]) && bound.IsOnPlane(plane[1]) && bound.IsOnPlane(plane[2]) && bound.IsOnPlane(plane[3]) && bound.IsOnPlane(plane[4]);
+    return bound.IsOnPlane(plane[Top]) && bound.IsOnPlane(plane[Bottom]) && bound.IsOnPlane(plane[Right]) && bound.IsOnPlane(plane[Left]) && bound.IsOnPlane(plane[Far]) && bound.IsOnPlane(plane[Near]);
 }
 
 void Frustum::UpdateCameraPerspective(const Camera& camera, float_t aspect)
@@ -45,7 +45,7 @@ void Frustum::UpdateCameraPerspective(const Camera& camera, float_t aspect)
     plane[Top] = { camera.position, Vector3::Cross(camera.right, frontMultFar - (camera.up * halfVSide)) };
     plane[Bottom] = { camera.position, Vector3::Cross(frontMultFar + (camera.up * halfVSide), camera.right) };
 
-}
+}   
 
 void Frustum::UpdateCameraOrthoGraphic(const Camera& camera, float_t aspect)
 {

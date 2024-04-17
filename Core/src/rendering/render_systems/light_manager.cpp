@@ -198,6 +198,7 @@ void LightManager::ComputeShadow(const Scene& scene, const Renderer& renderer)
 
 void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& renderer)
 {
+	const Bound& rebderSceneAAbb = renderer.renderSceneAABB; 
 
 	for (const DirectionalLight* const directionalLight : m_DirectionalLights)
 	{
@@ -210,8 +211,9 @@ void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& ren
 		const Vector2i shadowMapSize = shadowMap.GetSize(); 
 		
 		Vector3 lightDir =  directionalLight->GetLightDirection();
+		Vector3 extendMax = Vector3(GetMax(rebderSceneAAbb.extents));
 		// Get Pos from scene aabb
-		Vector3 pos = renderer.renderSceneAABB.extents * lightDir;//static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);
+		Vector3 pos = renderer.renderSceneAABB.center + (extendMax * lightDir);//static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);
 		// Set the camera for dirlight as a orthographic
 		Camera cam;
 		cam.isOrthographic = true;
@@ -223,10 +225,11 @@ void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& ren
 		cam.bottomtop = directionalLight->bottomTop;
 		
 		// CacadeShadowMap // TODO Make it cleaner ,
-		std::vector<float_t> shadowCascadeLevels{ cam.far / 50.0f, cam.far / 25.0f, cam.far / 10.0f, cam.far / 2.0f };
+		std::vector<float_t> shadowCascadeLevels = { cam.far / 50.0f, cam.far / 25.0f, cam.far / 10.0f, cam.far / 2.0f };
+		
 		
 		m_CascadeShadowMap.SetCascadeLevel(shadowCascadeLevels);
-		m_CascadeShadowMap.SetZMultiplicator(10.f);
+		m_CascadeShadowMap.SetZMultiplicator(renderer.renderSceneAABB.extents.Length());//);
 
 		// Handle float array padding
 		for (size_t k = 0; k < shadowCascadeLevels.size(); k++)
@@ -508,4 +511,18 @@ void LightManager::InitShader()
 	m_ShadowMapShaderPointLight = ResourceManager::Get<Shader>("depth_shader_point_light");
 	m_ShadowMapShaderPointLight->SetFaceCullingInfo(cullInfo);
 	m_ShadowMapShaderPointLight->CreateInRhi();
+}
+
+float_t LightManager::GetMax(Vector3 vec) const
+{
+	if (vec.x > vec.y && vec.x > vec.z)
+		return vec.x;
+
+	if (vec.y > vec.x && vec.y > vec.z)
+		return vec.y;
+	
+	if (vec.z > vec.y && vec.z > vec.x)
+		return vec.z;
+
+	return vec.x;
 }

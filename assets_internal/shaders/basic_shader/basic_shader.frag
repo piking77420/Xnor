@@ -2,7 +2,7 @@
 
 const int MaxSpotLight = 100;
 const int MaxPointLight = 100;
-const int DirectionalCascadeLevel = 4;
+const int DirectionalCascadeLevel =10;
 
 struct PointLightData
 {

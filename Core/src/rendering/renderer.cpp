@@ -38,7 +38,6 @@ void Renderer::Initialize()
 void Renderer::BeginFrame(const Scene& scene)
 {
     Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
-    scene.GetAllComponentOfType<MeshRenderer>(&m_MeshRenderers);
     m_LightManager.BeginFrame(scene, *this);
     m_AnimationRender.BeginFrame(scene, *this);
     PrepareOctree();
@@ -52,6 +51,8 @@ void Renderer::EndFrame(const Scene& scene)
 
 void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene) const
 {
+    scene.GetAllComponentOfType<MeshRenderer>(&m_MeshRenderers);
+    
     BindCamera(*viewport.camera, viewport.viewPortSize);
     m_Frustum.UpdateFromCamera(*viewport.camera, viewport.GetAspect());
     const ViewportData& viewportData = viewport.viewportData;
@@ -305,12 +306,13 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
         if (meshRenderer->material.materialType != materialType)
             continue;
 
+        /*
         Bound aabb;
         meshRenderer->GetAABB(&aabb);
         if (m_Frustum.IsOnFrustum(aabb))
         {
             continue;
-        }
+        }*/
         
         const Transform& transform = meshRenderer->GetEntity()->transform;
         ModelUniformData modelData;

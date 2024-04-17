@@ -138,6 +138,8 @@ private:
 
     XNOR_ENGINE void InitShader();
 
+    
+    XNOR_ENGINE float_t GetMax(Vector3 vec) const;
 };
 
 END_XNOR_CORE

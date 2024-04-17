@@ -12,7 +12,6 @@ BEGIN_XNOR_CORE
 class CascadeShadowMap
 {
 public:
-    
     XNOR_ENGINE CascadeShadowMap() = default;
 
     XNOR_ENGINE ~CascadeShadowMap() = default;
@@ -25,12 +24,13 @@ public:
 
     XNOR_ENGINE void SetZMultiplicator(const float_t zMultiPlicator);
     
-    XNOR_ENGINE void CreateCascadeLevelFromAABB(const Bound& sceneAABB);
+    XNOR_ENGINE void CreateCascadeLevelFromAABB(const Bound& sceneAABB, float_t cameraFar);
 
-    XNOR_ENGINE static inline float_t ZMultiplicator = 10.f;
 private:
+    
     std::vector<float_t> m_CascadeLevel;
-
+    float_t m_ZMultiplicator = 10.f;
+    
     
     XNOR_ENGINE void ComputeFrustumCorner(std::vector<Vector4>* frustumCornerWorldSpace, const Matrix& proj, const Matrix& view);
 

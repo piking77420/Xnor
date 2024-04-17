@@ -1,5 +1,6 @@
 ﻿#include "rendering/light/cascade_shadow_map.hpp"
 
+#include "rendering/rhi.hpp"
 #include "rendering/rhi_typedef.hpp"
 
 using namespace XnorCore;
@@ -39,14 +40,23 @@ void CascadeShadowMap::SetCascadeLevel(const std::vector<float_t>& cascadeLevel)
 
 void CascadeShadowMap::SetZMultiplicator(const float_t zMultiPlicator)
 {
-    ZMultiplicator = zMultiPlicator;
+    m_ZMultiplicator = zMultiPlicator;
 }
 
-void CascadeShadowMap::CreateCascadeLevelFromAABB(const Bound& sceneAABB)
+void CascadeShadowMap::CreateCascadeLevelFromAABB(const Bound& sceneAABB, float_t cameraFar)
 {
+    const Vector3& extend = sceneAABB.extents;
+    const float_t extendNorm = extend.Length();
+    m_ZMultiplicator = extendNorm;
+
+    for (size_t i = 0; i < DirectionalCascadeLevelAllocation; i++)
+    {
+        
+        m_CascadeLevel.push_back(cameraFar /  extendNorm - (i * DirectionalCascadeLevelAllocation) );
+    }
     
-    ZMultiplicator = sceneAABB.GetSize().Length();
 }
+
 
 void CascadeShadowMap::ComputeFrustumCorner(std::vector<Vector4>* frustumCornerWorldSpace, const Matrix& proj,
                                             const Matrix& view)
@@ -124,19 +134,19 @@ void CascadeShadowMap::GetCamera(Camera* cascadedCamera,const float_t cascadedNe
     // TODO Tune this parameter according to the scene
     if (minZ < 0)
     {
-        minZ *= ZMultiplicator;
+        minZ *= m_ZMultiplicator;
     }
     else
     {
-        minZ /= ZMultiplicator;
+        minZ /= m_ZMultiplicator;
     }
     if (maxZ < 0)
     {
-        maxZ /= ZMultiplicator;
+        maxZ /= m_ZMultiplicator;
     }
     else
     {
-        maxZ *= ZMultiplicator;
+        maxZ *= m_ZMultiplicator;
     }
 
     cascadedCamera->near = minZ;

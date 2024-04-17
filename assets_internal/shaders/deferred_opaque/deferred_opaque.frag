@@ -117,7 +117,7 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
             break;
         }
     }
-    if (layer == -1)
+    if (layer == -1 )
     {
         layer = directionalData.cascadeCount;
     }

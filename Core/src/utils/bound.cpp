@@ -77,7 +77,7 @@ bool_t Bound:: IsOnPlane(const Plane& plane) const
     const float_t r = extents.x * std::abs(plane.normal.x) +
             extents.y * std::abs(plane.normal.y) + extents.z * std::abs(plane.normal.z);
 
-    return -r <= plane.GetSignedDistanceToPlane(center);
+    return -r - Calc::Zero <= plane.GetSignedDistanceToPlane(center);
 }
 
     
