@@ -149,6 +149,16 @@ bool_t Skeleton::Load(const aiScene& scene, const aiAnimation& loadedData)
     return true;
 }
 
+void Skeleton::ReorderBones()
+{
+    List<Bone> newBones;
+
+    Bone* const root = m_Bones.Find([](const Bone* b) -> bool_t { return b->parentId == -1; });
+    ReorderBones(root, &newBones);
+
+    m_Bones = newBones;
+}
+
 const List<Bone>& Skeleton::GetBones() const
 {
     return m_Bones;
@@ -160,5 +170,20 @@ void Skeleton::PrintBones() const
     {
         const Bone& bone = m_Bones[i];
         Logger::LogInfo("{} ; {} ; {}\n{}\n{}\n{}", bone.name, bone.position, Quaternion::ToEuler(bone.rotation) * Calc::Rad2Deg, bone.local, bone.global, bone.globalInverse);
+    }
+}
+
+void Skeleton::ReorderBones(Bone* const parent, List<Bone>* newBones)
+{
+    const int32_t newParentIdx = static_cast<int32_t>(newBones->GetSize());
+    newBones->Add(*parent);
+
+    for (size_t i = 0; i < parent->children.GetSize(); i++)
+    {
+        Bone* const child = &m_Bones[parent->children[i]];
+        child->parentId = newParentIdx;
+
+        (*newBones)[newParentIdx].children[i] = static_cast<int32_t>(newBones->GetSize());
+        ReorderBones(child, newBones);
     }
 }

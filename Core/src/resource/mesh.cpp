@@ -55,6 +55,8 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
 
             if (i < scene->mNumAnimations)
                 skeleton->Load(*scene, *scene->mAnimations[i]);
+
+            skeleton->ReorderBones();
             
             m_Skeletons.Add(skeleton);
         }

@@ -60,7 +60,7 @@ private:
     
     double_t m_Duration;
     double_t m_Framerate;
-    int32_t m_FrameCount;
+    size_t m_FrameCount;
     size_t m_CurrentFrame;
 
     const Skeleton* m_Skeleton;
@@ -70,6 +70,7 @@ private:
     std::unordered_map<std::string, List<KeyFrame>> m_KeyFrames;
 
     List<Matrix> m_CurrentFrameMatrices;
+    List<Matrix> m_FinalMatrices;
 
     AssimpNodeData m_RootNode;
 

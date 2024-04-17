@@ -14,6 +14,7 @@ _shaders/gbuffer;E54A069F-B756-4940-94-D6-6-A6-9-E4-2F-F3
 assets/models/cube.obj;99097F3B-B578-4C0B-A2-64-E1-51-5A-41-BA-A
 _shaders/irradiance_convolution;496B2C68-8F3F-4AB5-90-E9-4F-F2-99-EA-92-4D
 _shaders/skymap_shader;2AEC7A9-907-4DEA-B8-F0-3A-6F-DD-7B-7-8B
+assets/models/Coyote-Running.fbm/CH_NPC_MOB_Coyote_SP_LTS.jpg;1F76D246-A930-448C-B1-7C-35-F8-72-9E-ED-4B
 assets/skybox/left.jpg;444226B2-9630-40CD-BD-E8-98-FD-AD-CB-45-46
 assets/textures/puresky.hdr;6291CF33-C815-4CCC-AB-FA-88-B1-B4-F8-F0-AD
 assets/skybox/top.jpg;6EA6AD9C-15DD-415F-87-AE-A7-F0-65-61-59-5
@@ -39,10 +40,12 @@ _shaders/tone_mapper;57918165-1C3A-417B-83-EA-9F-51-3C-B5-EE-22
 _shaders/deferred_opaque;E3D63823-BA2A-4F48-81-A6-4E-53-31-11-1-6E
 _shaders/editor_ui_shader;DFBB329D-759-42B7-B9-1C-B2-5D-F6-4F-71-CC
 _shaders/equirectangular_to_cubemap;A16F98DB-4437-47B1-A2-39-DC-CE-7F-49-68-B1
+assets/models/Coyote-Running.fbm/CH_NPC_MOB_Coyote_D_LTS.jpg;340E0E6-7935-4E7D-B5-A4-72-58-9-21-B3-A8
 _shaders/prefilter_shader;8AA5AE3B-A35C-4638-96-D3-AF-9B-B-BE-39-D1
 _shaders/picking_shader;6C9039CE-9818-436D-BE-E9-F8-F9-84-15-D2-AC
 assets/models/capsule.obj;A736B6B3-BADE-48D4-92-9A-E2-68-39-6F-5B-23
 _shaders/depth_shader;8197B1B7-CCA2-4268-81-C7-1D-F5-61-78-8E-39
+assets/models/Coyote-Running.fbm/CH_NPC_MOB_Coyote_N_LTS.jpg;F6F5564B-8BE6-4091-A9-78-EE-B0-28-F-29-E8
 assets/textures/pbr/stainless/used-stainless-steel2_ao.png;7094E218-5FD2-4B95-96-B3-42-AB-38-FF-58-F8
 assets/textures/pbr/stainless/used-stainless-steel2_metallic.png;FD729C73-1920-471A-A4-16-0-DF-BF-99-31-FC
 assets_internal/editor/gizmos/dirlight_icon.png;6119E8D-B01D-4AE5-9D-B1-30-39-A1-8D-8A-5B
