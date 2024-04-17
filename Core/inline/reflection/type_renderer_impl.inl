@@ -135,9 +135,25 @@ void TypeRendererImpl<MemberT, Meta::EnableIf<Meta::IsIntegralOrFloating<MemberT
 
     if constexpr (Reflection::HasAttribute<Reflection::Range<MemberT>, DescriptorT>())
     {
-        const Reflection::Range<MemberT>& range = Reflection::GetAttribute<Reflection::Range<MemberT>, DescriptorT>();
+        constexpr Reflection::Range<MemberT> range = Reflection::GetAttribute<Reflection::Range<MemberT>, DescriptorT>();
         // Has a range attribute, display as a slider
         ImGui::SliderScalar(metadata.name, type, metadata.obj, &range.minimum, &range.maximum);        
+    }
+    else if constexpr (Reflection::HasAttribute<Reflection::DynamicRange<ReflectT, MemberT>, DescriptorT>())
+    {
+        constexpr Reflection::DynamicRange<ReflectT, MemberT> range = Reflection::GetAttribute<Reflection::DynamicRange<ReflectT, MemberT>, DescriptorT>();
+
+        // Has a dynamic range attribute, display as a slider
+        if constexpr (range.minimum == nullptr)
+        {
+            constexpr MemberT zero = 0;
+            ImGui::SliderScalar(metadata.name, type, metadata.obj, &zero, range.maximum);    
+        }
+        else
+        {
+            // Has a dynamic range attribute, display as a slider
+            ImGui::SliderScalar(metadata.name, type, metadata.obj, range.minimum, range.maximum);
+        }
     }
     else
     {
@@ -275,7 +291,7 @@ void TypeRendererImpl<Pointer<T>, Meta::EnableIf<Meta::IsBaseOf<Resource, T>>>::
     if (ImGui::BeginDragDropTarget())
     {
         const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("ContentBrowserFile");
-            
+
         if (payload)
         {
             // Get the received resource
@@ -301,6 +317,17 @@ void TypeRendererImpl<Pointer<T>, Meta::EnableIf<Meta::IsBaseOf<Resource, T>>>::
     {
         // Set current object as the filter target
         Filters::BeginResourceFilter();
+    }
+
+    if (metadata.obj->IsValid())
+    {
+        const TypeRenderer::Metadata<ReflectT, T, DescriptorT> metadataPtr = {
+            .topLevelObj = metadata.topLevelObj,
+            .name = metadata.name,
+            .obj = metadata.obj->Get()
+        };
+
+        TypeRenderer::DisplaySimpleType<ReflectT, T, DescriptorT>(metadataPtr);
     }
 
     // Check if the filter should be displayed

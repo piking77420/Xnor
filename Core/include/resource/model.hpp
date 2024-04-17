@@ -6,6 +6,7 @@
 
 #include "core.hpp"
 #include "file/file.hpp"
+#include "refl/refl.hpp"
 #include "rendering/vertex.hpp"
 #include "resource/resource.hpp"
 
@@ -141,3 +142,5 @@ private:
 };
 
 END_XNOR_CORE
+
+REFL_AUTO(type(XnorCore::Model, bases<XnorCore::Resource>))

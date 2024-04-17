@@ -158,4 +158,6 @@ private:
 
 END_XNOR_CORE
 
+REFL_AUTO(type(XnorCore::Texture, bases<XnorCore::Resource>))
+
 #include "resource/texture.inl"

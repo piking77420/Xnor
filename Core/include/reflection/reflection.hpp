@@ -93,6 +93,30 @@ namespace Reflection
         constexpr explicit Range(const T& min, const T& max) : minimum(min), maximum(max) {}
     };
 
+    /// @brief Allows an integer or floating type to be bound between a dynamic minimum and a maximum value, it will display the field using a slider
+    /// @tparam ReflectT Top level type
+    /// @tparam T Field type
+    template <typename ReflectT, typename T>
+    struct DynamicRange
+    {
+        /// @brief Shorthand for a class member pointer
+        using PtrType = T ReflectT::*;
+
+        /// @brief Minimum value
+        PtrType minimum;
+        /// @brief Maximum value
+        PtrType maximum;
+
+        /// @brief Creates a dynamic range with 0 being the minimum
+        /// @param max Maximum
+        constexpr explicit DynamicRange(const PtrType max) : minimum(nullptr), maximum(max) {}
+
+        /// @brief Creates a dynamic range
+        /// @param min Minimum
+        /// @param max Maximum
+        constexpr explicit DynamicRange(const PtrType min, const PtrType max) : minimum(min), maximum(max) {}
+    };
+
     /// @brief Allows a tooltip to be bound to a field
     struct Tooltip : FieldAttribute
     {

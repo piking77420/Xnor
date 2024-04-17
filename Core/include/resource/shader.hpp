@@ -8,6 +8,7 @@
 #include "rendering/rhi_typedef.hpp"
 #include "resource/resource.hpp"
 #include "utils/pointer.hpp"
+#include "reflection/reflection.hpp"
 
 /// @file shader.hpp
 /// @brief Defines the XnorCore::Shader class
@@ -15,7 +16,7 @@
 BEGIN_XNOR_CORE
 
 /// @brief Encapsulates a GPU shader
-class Shader : public Resource
+class Shader final : public Resource
 {
 private:
 	ShaderPipeline::ShaderPipeline ShaderTypeToShaderPipeline(ShaderType::ShaderType shaderType);
@@ -147,6 +148,8 @@ private:
 	
 	std::array<Pointer<File>, ShaderPipeline::Count> m_Files;
 	std::array<ShaderCode, ShaderPipeline::Count> m_Code;
-	
 };
+
 END_XNOR_CORE
+
+REFL_AUTO(type(XnorCore::Shader, bases<XnorCore::Resource>))

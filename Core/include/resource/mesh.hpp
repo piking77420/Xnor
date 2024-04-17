@@ -53,3 +53,7 @@ private:
 };
 
 END_XNOR_CORE
+
+REFL_AUTO(type(XnorCore::Mesh, bases<XnorCore::Resource>),
+    field(material)
+)

@@ -3,6 +3,7 @@
 #include "core.hpp"
 #include "utils/guid.hpp"
 #include "utils/pointer.hpp"
+#include "reflection/reflection.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -103,3 +104,5 @@ protected:
 };
 
 END_XNOR_CORE
+
+REFL_AUTO(type(XnorCore::Resource))

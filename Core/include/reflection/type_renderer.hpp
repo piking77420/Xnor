@@ -112,4 +112,4 @@ struct TypeRendererImpl
 END_XNOR_CORE
 
 #include "reflection/type_renderer.inl"
-#include "reflection/type_renderer_impl.hpp"
+#include "reflection/type_renderer_impl.inl"
