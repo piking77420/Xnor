@@ -30,18 +30,8 @@ AudioDevice::AudioDevice(std::string&& name)
         Logger::LogError("Unable to open audio device {}", m_Name);
         return;
     }
-
-    m_Context = new AudioContext(*this);
 }
 
-AudioDevice::~AudioDevice()
-{
-    delete m_Context;
-    alcCloseDevice(m_Handle);
-}
-
-AudioContext* AudioDevice::GetContext() { return m_Context; }
-
-const AudioContext* AudioDevice::GetContext() const { return m_Context; }
+AudioDevice::~AudioDevice() { alcCloseDevice(m_Handle); }
 
 std::string AudioDevice::GetName() const { return m_Name; }

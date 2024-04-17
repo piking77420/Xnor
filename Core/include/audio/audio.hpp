@@ -28,6 +28,7 @@ public:
 private:
     XNOR_ENGINE static inline List<AudioDevice*> m_AvailableDevices;
     XNOR_ENGINE static inline AudioDevice* m_CurrentDevice = nullptr;
+    XNOR_ENGINE static inline AudioContext* m_CurrentContext = nullptr;
 
     XNOR_ENGINE static inline List<AudioBuffer*> m_Buffers;
 

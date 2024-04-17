@@ -23,19 +23,11 @@ public:
     DEFAULT_COPY_MOVE_OPERATIONS(AudioDevice)
 
     [[nodiscard]]
-    XNOR_ENGINE AudioContext* GetContext();
-
-    [[nodiscard]]
-    XNOR_ENGINE const AudioContext* GetContext() const;
-
-    [[nodiscard]]
     XNOR_ENGINE std::string GetName() const;
 
 private:
     ALCdevice* m_Handle = nullptr;
     std::string m_Name;
-
-    AudioContext* m_Context = nullptr;
 
     // AudioContext needs to access the handle of this class
     friend class AudioContext;

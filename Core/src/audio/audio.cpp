@@ -2,7 +2,6 @@
 
 #include <set>
 
-#include <AL/al.h>
 #include <AL/alc.h>
 
 #include "utils/logger.hpp"
@@ -14,9 +13,8 @@ bool_t Audio::Initialize()
     Logger::LogInfo("Initializing audio");
     
     InitializeDevices();
-
-    alDopplerFactor(0.f);
-    AudioContext::CheckError();
+    
+    m_CurrentContext = new AudioContext(*m_CurrentDevice);
 
     return true;
 }
@@ -32,7 +30,7 @@ void Audio::Shutdown()
         delete device;
 }
 
-AudioContext* Audio::GetContext() { return m_CurrentDevice->GetContext(); }
+AudioContext* Audio::GetContext() { return m_CurrentContext; }
 
 void Audio::UnregisterBuffer(AudioBuffer* buffer) { m_Buffers.Remove(buffer); }
 
