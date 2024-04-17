@@ -100,11 +100,10 @@ const vec2 gridSamplingDiskVec2[20] = vec2[]
 );
 
 
-float DirLightShadowCalculation(vec3 fragPosWorldSpace, vec3 n, vec3 l)
+float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
 {
     // select cascade layer
-    vec4 fragPosViewSpace = view * vec4(fragPosWorldSpace, 1.0);
-    float depthValue = abs(fragPosViewSpace.z);
+    float depthValue = abs(fragPosWorldSpace.z);
 
     int layer = -1;
     for (int i = 0; i < directionalData.cascadeCount; ++i)
@@ -119,9 +118,9 @@ float DirLightShadowCalculation(vec3 fragPosWorldSpace, vec3 n, vec3 l)
     {
         layer = directionalData.cascadeCount;
     }
-    ;
+    
 
-    vec4 fragPosLightSpace = dirLightSpaceMatrix[layer] * vec4(fragPosWorldSpace, 1.0);
+    vec4 fragPosLightSpace = dirLightSpaceMatrix[layer] * vec4(fragPosWorldSpace.xyz, 1.0);
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     // transform to [0,1] range
@@ -137,7 +136,7 @@ float DirLightShadowCalculation(vec3 fragPosWorldSpace, vec3 n, vec3 l)
     }
     // calculate bias (based on depth map resolution and slope)
     float bias = max(0.05 * (1.0 - dot(n, l)), 0.005);
-    const float biasModifier = 0.5f;
+    const float biasModifier = 0.05f;
     if (layer == directionalData.cascadeCount)
     {
         bias *= 1 / (far * biasModifier);
@@ -375,8 +374,8 @@ vec3 ComputePointLight(vec3 baseColor,vec3 fragPos,vec3 v, vec3 n, float roughne
 
 void main()
 {
-    vec3 fragPos = texture(gPosition, texCoords).rgb;
     vec4 fragPosVec4 = texture(gPosition, texCoords);
+    vec3 fragPos = fragPosVec4.xyz;
 
     vec3 normal = texture(gNormal, texCoords).rgb;
     vec3 albedo =  pow(texture(gAlbedoSpec, texCoords).rgb,vec3(2.2));
@@ -429,7 +428,7 @@ void main()
     vec3 LoDir = (kD * albedo * InvPI + specular) * radiance * NdotL;
     if (directionalData.isDirlightCastShadow)
     {
-        float shadow = DirLightShadowCalculation(fragPosVec4.xyz, n, l);
+        float shadow = DirLightShadowCalculation(fragPosVec4, n, l);
         LoDir *= (1.0-shadow);
     }
     

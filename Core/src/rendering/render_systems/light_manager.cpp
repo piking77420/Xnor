@@ -222,9 +222,12 @@ void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& ren
 		cam.leftRight = directionalLight->leftRight;
 		cam.bottomtop = directionalLight->bottomTop;
 		
-		// CacadeShadowMap // TODO Make it cleaner
+		// CacadeShadowMap // TODO Make it cleaner ,
 		std::vector<float_t> shadowCascadeLevels{ cam.far / 50.0f, cam.far / 25.0f, cam.far / 10.0f, cam.far / 2.0f };
+		
+		
 		m_CascadeShadowMap.SetCascadeLevel(shadowCascadeLevels);
+		m_CascadeShadowMap.SetZMultiplicator(renderer.renderSceneAABB.GetSize().SquaredLength());
 
 		// Handle float array padding
 		for (size_t k = 0; k < shadowCascadeLevels.size(); k++)

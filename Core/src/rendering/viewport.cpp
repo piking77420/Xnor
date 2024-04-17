@@ -7,7 +7,7 @@ using namespace XnorCore;
 void Viewport::Init(const Vector2i size)
 {
     viewPortSize = size;
-
+ 
     using namespace XnorCore;
     const std::vector<RenderTargetInfo> attachementsType =
     {

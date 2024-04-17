@@ -37,6 +37,11 @@ void CascadeShadowMap::SetCascadeLevel(const std::vector<float_t>& cascadeLevel)
     m_CascadeLevel = cascadeLevel;
 }
 
+void CascadeShadowMap::SetZMultiplicator(const float_t zMultiPlicator)
+{
+    m_ZMultiplicator = zMultiPlicator;
+}
+
 void CascadeShadowMap::ComputeFrustumCorner(std::vector<Vector4>* frustumCornerWorldSpace, const Matrix& proj,
                                             const Matrix& view)
 {
@@ -74,8 +79,7 @@ void CascadeShadowMap::GetCamera(Camera* cascadedCamera,const float_t cascadedNe
             baseCamera.fov * Calc::Deg2Rad, static_cast<float_t>(screenSize.x) / static_cast<float_t>(screenSize.y), cascadedNear,
             cascadedFar);
 
-    cascadedCamera->near = cascadedNear;
-    cascadedCamera->far = cascadedFar;
+
     
     Matrix view;
     baseCamera.GetView(&view);
@@ -114,23 +118,25 @@ void CascadeShadowMap::GetCamera(Camera* cascadedCamera,const float_t cascadedNe
     }
 
     // TODO Tune this parameter according to the scene
-    constexpr float_t zMult = 10.0f;
     if (minZ < 0)
     {
-        minZ *= zMult;
+        minZ *= m_ZMultiplicator;
     }
     else
     {
-        minZ /= zMult;
+        minZ /= m_ZMultiplicator;
     }
     if (maxZ < 0)
     {
-        maxZ /= zMult;
+        maxZ /= m_ZMultiplicator;
     }
     else
     {
-        maxZ *= zMult;
+        maxZ *= m_ZMultiplicator;
     }
+
+    cascadedCamera->near = minZ;
+    cascadedCamera->far = maxZ;
     
     cascadedCamera->leftRight = { minX , maxX };
     cascadedCamera->bottomtop = { minY, maxY };

@@ -6,8 +6,8 @@
 			<m_EntityId>73C3991F-64C8-43BE-BA-FB-8F-9C-A2-38-C9-75</m_EntityId>
 			<transform>
 				<m_Position>-20.292645 ; 28 ; -2.0025966</m_Position>
-				<m_EulerRotation>-2.2438672 ; 0.62729216 ; -1.4958732</m_EulerRotation>
-				<m_Scale>1.000041 ; 1.0000086 ; 1.0001043</m_Scale>
+				<m_EulerRotation>0.049604513 ; 1.0593104 ; 0.10223254</m_EulerRotation>
+				<m_Scale>1.0000697 ; 1.0000064 ; 1.0001514</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="DirectionalLight">
