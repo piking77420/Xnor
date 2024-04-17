@@ -28,6 +28,10 @@ AudioSource::~AudioSource()
 
 void AudioSource::Begin()
 {
+    // Update pitch and volume in OpenAL
+    SetVolume(m_Volume);
+    SetPitch(m_Pitch);
+    Play();
 }
 
 void AudioSource::Update()
@@ -53,6 +57,8 @@ void AudioSource::Update()
     alSourcefv(m_Handle, AL_DIRECTION, orientation[0].Raw());
     AudioContext::CheckError();
 }
+
+void AudioSource::Play() { if (audioTrack) Play(*audioTrack); }
 
 void AudioSource::Play(AudioTrack& track)
 {

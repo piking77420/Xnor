@@ -273,7 +273,9 @@
 					<drawModelAabb>false</drawModelAabb>
 				</0>
 				<1 typeName="AudioSource">
-					<track>DFE1D450-B4E3-49F1-B8-41-92-36-78-74-9C-54</track>
+					<audioTrack>61B61790-1047-476F-8F-FF-D4-6-2A-BC-85-14</audioTrack>
+					<m_Volume>0.149</m_Volume>
+					<m_Pitch>1</m_Pitch>
 				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>

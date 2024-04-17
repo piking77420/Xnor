@@ -23,6 +23,8 @@ public:
     
     XNOR_ENGINE void Update() override;
 
+    XNOR_ENGINE void Play();
+
     XNOR_ENGINE void Play(AudioTrack& track);
 
     XNOR_ENGINE void SetBuffer(const AudioBuffer* buffer);
@@ -57,15 +59,7 @@ END_XNOR_CORE
 
 REFL_AUTO(
     type(XnorCore::AudioSource, bases<XnorCore::Component>),
-    field(
-        audioTrack,
-        XnorCore::Reflection::ModifiedCallback<XnorCore::AudioSource>(
-            [](XnorCore::AudioSource* source)
-            {
-                source->Play(*source->audioTrack);
-            }
-        )
-    ),
+    field(audioTrack),
     field(
         m_Volume,
         XnorCore::Reflection::Range(0.f, 5.f),
