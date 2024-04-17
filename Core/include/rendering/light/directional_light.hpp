@@ -15,7 +15,7 @@ class DirectionalLight : public Light
 {
     REFLECTABLE_IMPL(DirectionalLight)
 
-    constexpr static inline Vector2 DefaulNearFar = { 0.1f, 500.f };
+    constexpr static inline Vector2 DefaulNearFar = { 0.1f, 1000.f };
     
 public:
     /// @brief Orthographic left/right for the shadow map

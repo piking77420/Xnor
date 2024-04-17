@@ -6,9 +6,10 @@
 #include "Maths/matrix.hpp"
 #include "Maths/vector4.hpp"
 #include "rendering/camera.hpp"
+#include "utils/bound.hpp"
 
 BEGIN_XNOR_CORE
-    class CascadeShadowMap
+class CascadeShadowMap
 {
 public:
     
@@ -23,11 +24,13 @@ public:
     XNOR_ENGINE void SetCascadeLevel(const std::vector<float_t>& cascadeLevel);
 
     XNOR_ENGINE void SetZMultiplicator(const float_t zMultiPlicator);
+    
+    XNOR_ENGINE void CreateCascadeLevelFromAABB(const Bound& sceneAABB);
 
+    XNOR_ENGINE static inline float_t ZMultiplicator = 10.f;
 private:
     std::vector<float_t> m_CascadeLevel;
 
-    float_t m_ZMultiplicator = 10.f;
     
     XNOR_ENGINE void ComputeFrustumCorner(std::vector<Vector4>* frustumCornerWorldSpace, const Matrix& proj, const Matrix& view);
 

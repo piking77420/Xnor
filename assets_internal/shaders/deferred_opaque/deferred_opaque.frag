@@ -105,7 +105,7 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
     // select cascade layer
     vec4 fragPosWorldSpaceView = view * vec4(fragPosWorldSpace.xyz,1.0f);
     
-    float depthValue = fragPosWorldSpaceView.z;
+    float depthValue = abs(fragPosWorldSpaceView.z);
 
     int layer = -1;
     
@@ -137,17 +137,17 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
     {
         return 0.0;
     }
-    float bias = max(0.05 * (1.0 - dot(n, l)), 0.005);
+    float bias = max(0.05 * (1.0 - dot(normalize(n), normalize(l))), 0.005);
     
     // calculate bias (based on depth map resolution and slope)
-    const float biasModifier = 0.05f;
+    const float biasModifier = 0.5f;
     if (layer == directionalData.cascadeCount)
     {
         bias *= 1 / (far * biasModifier);
     }
     else
     {
-        bias *= 1 / ( directionalData.cascadePlaneDistance[layer] * biasModifier);
+        bias *= 1 / (directionalData.cascadePlaneDistance[layer] * biasModifier);
     }
 
     // PCF  
