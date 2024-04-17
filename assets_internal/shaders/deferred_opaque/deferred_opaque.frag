@@ -103,9 +103,12 @@ const vec2 gridSamplingDiskVec2[20] = vec2[]
 float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
 {
     // select cascade layer
-    float depthValue = abs(fragPosWorldSpace.z);
+    vec4 fragPosWorldSpaceView = view * vec4(fragPosWorldSpace.xyz,1.0f);
+    
+    float depthValue = fragPosWorldSpaceView.z;
 
     int layer = -1;
+    
     for (int i = 0; i < directionalData.cascadeCount; ++i)
     {
         if (depthValue < directionalData.cascadePlaneDistance[i])
@@ -134,8 +137,9 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
     {
         return 0.0;
     }
-    // calculate bias (based on depth map resolution and slope)
     float bias = max(0.05 * (1.0 - dot(n, l)), 0.005);
+    
+    // calculate bias (based on depth map resolution and slope)
     const float biasModifier = 0.05f;
     if (layer == directionalData.cascadeCount)
     {

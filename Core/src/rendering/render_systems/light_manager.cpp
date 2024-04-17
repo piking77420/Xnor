@@ -227,7 +227,7 @@ void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& ren
 		
 		
 		m_CascadeShadowMap.SetCascadeLevel(shadowCascadeLevels);
-		m_CascadeShadowMap.SetZMultiplicator(renderer.renderSceneAABB.GetSize().SquaredLength());
+		m_CascadeShadowMap.SetZMultiplicator(renderer.renderSceneAABB.extents.Length() / shadowCascadeLevels.size());
 
 		// Handle float array padding
 		for (size_t k = 0; k < shadowCascadeLevels.size(); k++)

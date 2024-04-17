@@ -153,7 +153,7 @@ BEGIN_ENUM(TextureWrapping)
 	/// @brief Uses the last valid border pixel of the texture
 	ClampToEdge,
 	/// @brief Samples a user given pixel
-	ClampToBorder
+	ClampToBorder,
 }
 END_ENUM
 
