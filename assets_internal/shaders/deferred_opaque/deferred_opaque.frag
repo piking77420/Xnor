@@ -5,7 +5,7 @@ out vec4 FragColor;
 
 const int MaxSpotLight = 100;
 const int MaxPointLight = 100;
-const int DirectionalCascadeLevel = 4;
+const int DirectionalCascadeLevel = 10;
 const int DirectionalCascadeLevelAllocation = 16;
 
 const float PI = 3.14159265359;

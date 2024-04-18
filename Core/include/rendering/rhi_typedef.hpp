@@ -25,7 +25,7 @@ static constexpr uint32_t MaxDirectionalLights = 1;
 
 static constexpr uint32_t MaxBones = 100;
 
-static constexpr size_t DirectionalCascadeLevel = 4;
+static constexpr size_t DirectionalCascadeLevel = 10;
 static constexpr size_t DirectionalCascadeLevelAllocation = 16;
 
 

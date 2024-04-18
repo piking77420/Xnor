@@ -11,7 +11,7 @@ void CascadeShadowMap::GetCascadeCameras(std::vector<Camera>* cameras, const Cam
 {
     cameras->resize(DirectionalCascadeLevel + 1);
     
-    for (size_t i = 0; i < DirectionalCascadeLevel + 1; ++i)
+    for (size_t i = 0; i < cameras->size(); ++i)
     {
         cameras->at(i) = baseCam;
         

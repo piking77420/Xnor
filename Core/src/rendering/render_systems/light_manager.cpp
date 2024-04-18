@@ -225,7 +225,19 @@ void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& ren
 		cam.bottomtop = directionalLight->bottomTop;
 		
 		// CacadeShadowMap // TODO Make it cleaner ,
-		std::vector<float_t> shadowCascadeLevels = { cam.far / 50.0f, cam.far / 25.0f, cam.far / 10.0f, cam.far / 2.0f };
+		std::vector<float_t> shadowCascadeLevels =
+			{
+			cam.far / 26.0f,
+			cam.far / 24.0f,
+			cam.far / 22.0f,
+			cam.far / 18.0f,
+			cam.far / 16.0f,
+			cam.far / 14.0f,
+			cam.far / 12.0f,
+			cam.far / 8.0f,
+			cam.far / 4.0f,
+			cam.far / 2.0f
+			};
 		
 		
 		m_CascadeShadowMap.SetCascadeLevel(shadowCascadeLevels);
