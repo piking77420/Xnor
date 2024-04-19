@@ -309,6 +309,7 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
         
         Bound aabb;
         meshRenderer->GetAABB(&aabb);
+        
         if (!m_Frustum.IsOnFrustum(aabb))
         {
             Logger::LogDebug("Cut By culling");
@@ -410,12 +411,17 @@ void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*
 
 void Renderer::BindCamera(const Camera& camera, const Vector2i screenSize) const
 {
+    Camera camera2 = camera;
+    
     CameraUniformData cam;
-    camera.GetView(&cam.view);
-    camera.GetProjection(screenSize, &cam.projection);
-    cam.cameraPos = camera.position;
-    cam.near = camera.near;
-    cam.far = camera.far;
+    camera2.GetView(&cam.view);
+    camera2.GetProjection(screenSize, &cam.projection);
+
+    
+    
+    cam.cameraPos = camera2.position;
+    cam.near = camera2.near;
+    cam.far = camera2.far;
     Rhi::UpdateCameraUniform(cam);
 }
 

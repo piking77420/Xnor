@@ -24,12 +24,12 @@
 			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
 			<transform>
 				<m_Position>0 ; 0 ; 0</m_Position>
-				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1.1 ; 1.0000228 ; 1.0000799</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">
-					<model>99097F3B-B578-4C0B-A2-64-E1-51-5A-41-BA-A</model>
+					<model>BB6F54E7-1D07-4547-8E-78-BF-B8-66-BD-A5-58</model>
 					<mesh>0-0-0-0-0-0-0-0-0-0-0</mesh>
 					<material>
 						<materialType>Opaque</materialType>

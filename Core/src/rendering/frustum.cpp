@@ -4,17 +4,6 @@
 
 using namespace XnorCore;
 
-Plane::Plane(const Vector3 p1, const Vector3 newNormal) : normal(newNormal.Normalized()),distance(Vector3::Dot(normal,p1))
-{
-    
-}
-
-float_t Plane::GetSignedDistanceToPlane(const Vector3& point) const
-{
-    return Vector3::Dot(normal, point) - distance;
-}
-
-
 void Frustum::UpdateFromCamera(const Camera& camera, const float_t aspect)
 {
     if (camera.isOrthographic)
@@ -34,6 +23,8 @@ bool_t Frustum::IsOnFrustum(const Bound& bound) const
     bool_t right  = bound.IsOnPlane(plane[Right]);
     bool_t left  = bound.IsOnPlane(plane[Left]);
 
+    
+
     return top && bottom && near && far && right && left;
 }
 
@@ -41,6 +32,7 @@ void Frustum::UpdateCameraPerspective(const Camera& camera, float_t aspect)
 {
     const float_t halfVSide = camera.far * tanf(camera.fov * Calc::Deg2Rad * .5f);
     const float_t halfHSide = halfVSide * aspect;
+    const Vector3 front = camera.front;
     
     const Vector3 frontMultFar = camera.far * camera.front;
     

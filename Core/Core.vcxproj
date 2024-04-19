@@ -456,6 +456,7 @@
     <ClCompile Include="src\rendering\light\point_light.cpp" />
     <ClCompile Include="src\rendering\light\spot_light.cpp" />
     <ClCompile Include="src\rendering\material.cpp" />
+    <ClCompile Include="src\rendering\plane.cpp" />
     <ClCompile Include="src\rendering\postprocess_rendertarget.cpp" />
     <ClCompile Include="src\rendering\render_pass.cpp" />
     <ClCompile Include="src\rendering\render_systems\animation_render.cpp">
