@@ -19,9 +19,18 @@ int32_t main(const int32_t argc, const char_t* const* const argv)
 	Logger::OpenDefaultFile();
 	XnorFactory::RegisterAllTypes();
 
+	FileSystemWatcher watcher("assets");
+	watcher.created += [](const FswEventArgs& args){ DEBUG_LOG("File created: {}", args.path); };
+	watcher.deleted += [](const FswEventArgs& args){ DEBUG_LOG("File deleted: {}", args.path); };
+	watcher.modified += [](const FswEventArgs& args){ DEBUG_LOG("File modified: {}", args.path); };
+	watcher.renamed += [](const FswRenamedEventArgs& args){ DEBUG_LOG("File renamed: {} -> {}", args.oldPath, args.path); };
+	watcher.Start();
+
 	Editor editor(std::forward<decltype(argc)>(argc), std::forward<decltype(argv)>(argv));
 
 	editor.Update();
+
+	watcher.Stop();
 
 	return EXIT_SUCCESS;
 }
