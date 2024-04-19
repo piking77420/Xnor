@@ -3,7 +3,7 @@
 #include "core.hpp"
 #include "rendering/rhi_typedef.hpp"
 #include "resource/shader.hpp"
-#include "scene/component/skinned_mesh_render.hpp"
+#include "..\..\scene\component\skinned_mesh_renderer.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -33,7 +33,7 @@ private:
 
     Pointer<Shader> m_SkinnedShader;
 
-    std::vector<const SkinnedMeshRender*> m_SkinnedRender;
+    std::vector<const SkinnedMeshRenderer*> m_SkinnedRender;
 };
 
 

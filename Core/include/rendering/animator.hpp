@@ -26,6 +26,8 @@ public:
 
     XNOR_ENGINE void Animate();
 
+    XNOR_ENGINE void SetCrossFadeDelta(float_t delta);
+
     [[nodiscard]]
     XNOR_ENGINE const List<Matrix>& GetMatrices() const;
     

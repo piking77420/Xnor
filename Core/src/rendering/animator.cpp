@@ -84,13 +84,18 @@ void Animator::Animate()
         }
         else
         {
-            // The bone has no parent, so its local transform is the same as its global
+            // The bone has no parent, so its global transform is the same as its local
             currentMatrices[bone.id] = localAnim;
         }
 	    
         // Apply the inverse to the global transform to remove the bind pose transform
         m_FinalMatrices[bone.id] = currentMatrices[bone.id] * bone.global;
     }
+}
+
+void Animator::SetCrossFadeDelta(const float_t delta)
+{
+    m_CrossFadeT = delta;
 }
 
 const List<Matrix>& Animator::GetMatrices() const

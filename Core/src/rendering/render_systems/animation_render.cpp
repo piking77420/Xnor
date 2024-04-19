@@ -34,14 +34,14 @@ void AnimationRender::InitResources()
 
 void AnimationRender::BeginFrame(const Scene& scene, const Renderer&)
 {
-    scene.GetAllComponentOfType<SkinnedMeshRender>(&m_SkinnedRender);
+    scene.GetAllComponentOfType<SkinnedMeshRenderer>(&m_SkinnedRender);
 }
 
 void AnimationRender::RenderAnimation() const
 {
     m_SkinnedShader->Use();
 
-    for (const SkinnedMeshRender* skinnedMeshRender : m_SkinnedRender)
+    for (const SkinnedMeshRenderer* skinnedMeshRender : m_SkinnedRender)
     {
         ModelUniformData modelData;
         modelData.model = skinnedMeshRender->GetTransform().worldMatrix;

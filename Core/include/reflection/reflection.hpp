@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include <functional>
 #include <refl/refl.hpp>
 
 /// @file reflection.hpp

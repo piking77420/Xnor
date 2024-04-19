@@ -17,13 +17,13 @@ Mesh::~Mesh()
     for (uint32_t i = 0; i < m_Skeletons.GetSize(); i++)
         delete m_Skeletons[i];
 
-    for (uint32_t i = 0; i < animations.GetSize(); i++)
-        delete animations[i];
+    for (uint32_t i = 0; i < m_Animations.GetSize(); i++)
+        delete m_Animations[i];
 
     models.Clear();
     textures.Clear();
     m_Skeletons.Clear();
-    animations.Clear();
+    m_Animations.Clear();
 }
 
 bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
@@ -87,7 +87,7 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
         animation->Load(*scene->mAnimations[i]);
         animation->BindSkeleton(m_Skeletons[0]);
 
-        animations.Add(animation);
+        m_Animations.Add(animation);
     }
 
     return true;
@@ -95,15 +95,23 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
 
 void Mesh::CreateInInterface()
 {
-    for (uint32_t i = 0; i < models.GetSize(); i++)
+    for (size_t i = 0; i < models.GetSize(); i++)
         models[i]->CreateInInterface();
 
-    for (uint32_t i = 0; i < textures.GetSize(); i++)
+    for (size_t i = 0; i < textures.GetSize(); i++)
         textures[i]->CreateInInterface();
 
-    for (uint32_t i = 0; i < m_Skeletons.GetSize(); i++)
+    for (size_t i = 0; i < m_Skeletons.GetSize(); i++)
         m_Skeletons[i]->CreateInInterface();
 
-    for (uint32_t i = 0; i < animations.GetSize(); i++)
-        animations[i]->CreateInInterface();
+    for (size_t i = 0; i < m_Animations.GetSize(); i++)
+        m_Animations[i]->CreateInInterface();
+}
+
+Animation* Mesh::GetAnimation(const size_t id)
+{
+    if (id >= m_Animations.GetSize())
+        return nullptr;
+    
+    return m_Animations[id];
 }

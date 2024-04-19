@@ -7,18 +7,18 @@
 #include "resource/model.hpp"
 #include "scene/component.hpp"
 
-/// @file skinned_mesh_render.hpp
+/// @file skinned_mesh_renderer.hpp
 /// @brief Defines the XnorCore::SkinnedMeshRender class.
 
 BEGIN_XNOR_CORE
 
 /// @brief Component that defines a mesh to render
-class SkinnedMeshRender final : public Component
+class SkinnedMeshRenderer final : public Component
 {
-    REFLECTABLE_IMPL(SkinnedMeshRender)
+    REFLECTABLE_IMPL(SkinnedMeshRenderer)
 
 public:
-    XNOR_ENGINE SkinnedMeshRender() = default;
+    XNOR_ENGINE SkinnedMeshRenderer() = default;
 
     XNOR_ENGINE void Begin() override;
     XNOR_ENGINE void Update() override;
@@ -29,7 +29,9 @@ public:
     /// @brief Whether to draw the model AABB box
     bool_t drawModelAabb = false;
 
+    XNOR_ENGINE void StartAnimation(const Animation* animation);
     XNOR_ENGINE void StartBlending(const Animation* target);
+    XNOR_ENGINE void SetCrossFadeDelta(float_t delta);
 
     XNOR_ENGINE const List<Matrix>& GetMatrices() const;
 
@@ -42,7 +44,7 @@ END_XNOR_CORE
 
 /// @private
 REFL_AUTO(
-    type(XnorCore::SkinnedMeshRender, bases<XnorCore::Component>),
+    type(XnorCore::SkinnedMeshRenderer, bases<XnorCore::Component>),
     field(mesh),
     field(drawModelAabb),
     field(m_Animator)

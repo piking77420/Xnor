@@ -120,10 +120,12 @@
     <ClInclude Include="include\rendering\rhi_typedef.hpp" />
     <ClInclude Include="include\rendering\render_systems\animation_render.hpp" />
     <ClInclude Include="include\resource\animation.hpp" />
+    <ClInclude Include="include\resource\animation_montage.hpp" />
     <ClInclude Include="include\resource\mesh.hpp" />
     <ClInclude Include="include\resource\skeleton.hpp" />
-    <ClInclude Include="include\scene\component\skinned_mesh_render.hpp" />
+    <ClInclude Include="include\scene\component\skinned_mesh_renderer.hpp" />
     <ClInclude Include="include\resource\audio_track.hpp" />
+    <ClInclude Include="include\scene\component\test_component_animation.hpp" />
     <ClInclude Include="include\scene\component\test_component_physics.hpp" />
     <ClCompile Include="src\application.cpp" />
     <ClCompile Include="src\audio\audio.cpp" />
@@ -180,6 +182,7 @@
     <ClCompile Include="src\rendering\rhi.cpp" />
     <ClCompile Include="src\rendering\viewport_data.cpp" />
     <ClCompile Include="src\resource\animation.cpp" />
+    <ClCompile Include="src\resource\animation_montage.cpp" />
     <ClCompile Include="src\resource\audio_track.cpp" />
     <ClCompile Include="src\resource\compute_shader.cpp" />
     <ClCompile Include="src\resource\cubemap.cpp" />
@@ -201,8 +204,9 @@
     <ClCompile Include="src\scene\component\camera_component.cpp" />
     <ClCompile Include="src\scene\component\mesh_renderer.cpp" />
     <ClCompile Include="src\scene\component\script_component.cpp" />
-    <ClCompile Include="src\scene\component\skinned_mesh_render.cpp" />
+    <ClCompile Include="src\scene\component\skinned_mesh_renderer.cpp" />
     <ClCompile Include="src\scene\component\test_component.cpp" />
+    <ClCompile Include="src\scene\component\test_component_animation.cpp" />
     <ClCompile Include="src\scene\component\test_component_physics.cpp" />
     <ClCompile Include="src\scene\entity.cpp" />
     <ClCompile Include="src\scene\scene.cpp" />

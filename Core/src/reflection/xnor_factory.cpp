@@ -12,8 +12,9 @@
 #include "scene/component/camera_component.hpp"
 #include "scene/component/mesh_renderer.hpp"
 #include "scene/component/script_component.hpp"
-#include "scene/component/skinned_mesh_render.hpp"
+#include "..\..\include\scene\component\skinned_mesh_renderer.hpp"
 #include "scene/component/test_component.hpp"
+#include "scene/component/test_component_animation.hpp"
 #include "scene/component/test_component_physics.hpp"
 
 using namespace XnorCore;
@@ -102,7 +103,8 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<CapsuleCollider>();
     RegisterType<TestComponentPhysics>();
     RegisterType<CameraComponent>();
-    RegisterType<SkinnedMeshRender>();
+    RegisterType<SkinnedMeshRenderer>();
+    RegisterType<TestComponentAnimation>();
 
     RegisterType<AudioListener>();
     RegisterType<AudioSource>();

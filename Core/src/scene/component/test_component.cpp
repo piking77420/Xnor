@@ -4,7 +4,7 @@
 #include "rendering/light/light.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/entity.hpp"
-#include "scene/component/skinned_mesh_render.hpp"
+#include "..\..\..\include\scene\component\skinned_mesh_renderer.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -15,10 +15,10 @@ void TestComponent::Begin()
 
     m_Light = GetEntity()->GetComponent<Light>();
 
-    SkinnedMeshRender* smr = nullptr;
-    if (GetEntity()->TryGetComponent<SkinnedMeshRender>(&smr))
+    SkinnedMeshRenderer* smr = nullptr;
+    if (GetEntity()->TryGetComponent<SkinnedMeshRenderer>(&smr))
     {
-        smr->StartBlending(ResourceManager::Get<Mesh>("assets/models/Coyote-Walking.fbx")->animations[0]);
+        smr->StartBlending(ResourceManager::Get<Mesh>("assets/models/Coyote-Walking.fbx")->GetAnimation(0));
     }
 
     m_Color = static_cast<ColorHsva>(ColorRgb::Red());

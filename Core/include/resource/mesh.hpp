@@ -18,6 +18,8 @@ BEGIN_XNOR_CORE
 
 class Mesh final : public Resource
 {
+    REFLECTABLE_IMPL(Mesh)
+    
 public:
     /// @brief Allowed extensions for meshes.
     XNOR_ENGINE static constexpr std::array<const char_t*, 2> FileExtensions
@@ -28,7 +30,6 @@ public:
 
     List<Model*> models;
     List<Texture*> textures;
-    List<Animation*> animations;
 
     Material material;
 
@@ -48,7 +49,10 @@ public:
     /// @copydoc XnorCore::Resource::CreateInInterface()
     XNOR_ENGINE void CreateInInterface() override;
 
+    XNOR_ENGINE Animation* GetAnimation(size_t id);
+
 private:
+    List<Animation*> m_Animations;
     List<Skeleton*> m_Skeletons;
 };
 
@@ -56,5 +60,5 @@ END_XNOR_CORE
 
 REFL_AUTO(type(XnorCore::Mesh, bases<XnorCore::Resource>),
     field(material),
-    field(animations)
+    field(m_Animations)
 )
