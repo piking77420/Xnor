@@ -27,3 +27,5 @@ bool_t Windows::CheckError()
 
     return false;
 }
+
+void Windows::SilenceError() { (void) GetLastError(); }

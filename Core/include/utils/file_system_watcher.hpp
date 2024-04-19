@@ -6,27 +6,15 @@
 BEGIN_XNOR_CORE
 
 /// @private
-BEGIN_ENUM(FileSystemWatcherChangeTypes)
-{
-    Modified = 1 << 0,
-    Created = 1 << 1,
-    Deleted = 1 << 2,
-    Renamed = 1 << 3
-}
-END_ENUM
-
-/// @private
 struct FileSystemWatcherEventArgs
 {
     std::filesystem::path path;
-    ENUM_VALUE(FileSystemWatcherChangeTypes) changeTypes;
 };
 
 /// @private
 struct RenamedFileSystemWatcherEventArgs : FileSystemWatcherEventArgs
 {
-    std::string oldName;
-    std::string oldFullPath;
+    std::filesystem::path oldPath;
 };
 
 /// @private
@@ -37,16 +25,18 @@ public:
     Event<const FileSystemWatcherEventArgs&> created;
     Event<const FileSystemWatcherEventArgs&> deleted;
     Event<const RenamedFileSystemWatcherEventArgs&> renamed;
-    
-    explicit FileSystemWatcher(const std::string& path);
 
-    ~FileSystemWatcher();
+    std::chrono::milliseconds updateRate{750};
+    
+    XNOR_ENGINE explicit FileSystemWatcher(const std::string& path);
+
+    XNOR_ENGINE ~FileSystemWatcher();
 
     DELETE_COPY_MOVE_OPERATIONS(FileSystemWatcher)
 
-    void Start();
+    XNOR_ENGINE void Start();
 
-    void Stop();
+    XNOR_ENGINE void Stop();
 
 private:
     std::thread m_Thread;
@@ -56,7 +46,7 @@ private:
     std::filesystem::path m_Path;
     bool_t m_IsDirectory = false;
 
-    bool_t m_Running = true;
+    bool_t m_Running = false;
 
     void Run();
 };
