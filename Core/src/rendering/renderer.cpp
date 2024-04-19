@@ -52,9 +52,9 @@ void Renderer::EndFrame(const Scene& scene)
 void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene) const
 {
     scene.GetAllComponentOfType<MeshRenderer>(&m_MeshRenderers);
-    
     BindCamera(*viewport.camera, viewport.viewPortSize);
     m_Frustum.UpdateFromCamera(*viewport.camera, viewport.GetAspect());
+    
     const ViewportData& viewportData = viewport.viewportData;
     DeferedRenderring(*viewport.camera, m_MeshRenderers, scene.skybox, viewportData, viewport.viewPortSize);
     ForwardPass(m_MeshRenderers, scene.skybox, viewport, viewport.viewPortSize, viewport.isEditor);
@@ -70,7 +70,7 @@ void Renderer::RenderNonShaded(const Camera& camera, const RenderPassBeginInfo& 
 {
     const Vector2i viewportSize = renderPassBeginInfo.renderAreaOffset + renderPassBeginInfo.renderAreaExtent;
     BindCamera(camera, viewportSize);
-    m_Frustum.UpdateFromCamera(camera, static_cast<float_t>(viewportSize.x) / static_cast<float_t>(viewportSize.y));
+    //m_Frustum.UpdateFromCamera(camera, static_cast<float_t>(viewportSize.x) / static_cast<float_t>(viewportSize.y));
     renderPass.BeginRenderPass(renderPassBeginInfo);
     DrawAllMeshRendersNonShaded(m_MeshRenderers, scene);
 
@@ -306,13 +306,14 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
         if (meshRenderer->material.materialType != materialType)
             continue;
 
-        /*
+        
         Bound aabb;
         meshRenderer->GetAABB(&aabb);
-        if (m_Frustum.IsOnFrustum(aabb))
+        if (!m_Frustum.IsOnFrustum(aabb))
         {
+            Logger::LogDebug("Cut By culling");
             continue;
-        }*/
+        }
         
         const Transform& transform = meshRenderer->GetEntity()->transform;
         ModelUniformData modelData;
@@ -381,8 +382,8 @@ void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*
         if (m_Frustum.IsOnFrustum(aabb))
         {
            continue;
-        }*/
-
+        }
+        */
         const Transform& transform = meshRenderer->GetEntity()->transform;
         ModelUniformData modelData;
         modelData.model = transform.worldMatrix;
@@ -398,10 +399,10 @@ void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*
             modelData.normalInvertMatrix = Matrix::Identity();
         }
 
-        Rhi::UpdateModelUniform(modelData);
 
         if (meshRenderer->model.IsValid())
         {
+            Rhi::UpdateModelUniform(modelData);
             Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
         }
     }
