@@ -25,8 +25,8 @@ static constexpr uint32_t MaxDirectionalLights = 1;
 
 static constexpr uint32_t MaxBones = 100;
 
-static constexpr size_t DirectionalCascadeLevel = 10;
-static constexpr size_t DirectionalCascadeLevelAllocation = 16;
+static constexpr size_t DirectionalCascadeLevel = 8;
+static constexpr size_t DirectionalCascadeLevelAllocation = 12;
 
 
 /// @brief Polygon rasterization mode

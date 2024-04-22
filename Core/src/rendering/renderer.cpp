@@ -65,23 +65,15 @@ void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene) cons
                                   viewportData.postprocessRendertarget);
 }
 
-void Renderer::RenderNonShaded(const Camera& camera, const RenderPassBeginInfo& renderPassBeginInfo,
- const RenderPass& renderPass,const Pointer<Shader>& shaderToUse, const Scene& scene, const bool_t drawEditorUi
-) const
+void Renderer::ZPass(const Scene& scene, const Camera& camera,
+    const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass, const Pointer<Shader>& shaderToUse,
+    bool_t drawEditorUi)
 {
-    const Vector2i viewportSize = renderPassBeginInfo.renderAreaOffset + renderPassBeginInfo.renderAreaExtent;
-    BindCamera(camera, viewportSize);
-    //m_Frustum.UpdateFromCamera(camera, static_cast<float_t>(viewportSize.x) / static_cast<float_t>(viewportSize.y));
-    renderPass.BeginRenderPass(renderPassBeginInfo);
-    DrawAllMeshRendersNonShaded(m_MeshRenderers, scene);
-
-    if (drawEditorUi)
-    {
-        m_LightManager.DrawLightGizmoWithShader(camera, scene, shaderToUse);
-    }
-
-    renderPass.EndRenderPass();
+    scene.GetAllComponentOfType<MeshRenderer>(&m_MeshRenderers);
+    RenderNonShadedPass(scene, camera, renderPassBeginInfo, renderPass, shaderToUse, drawEditorUi);
+    m_MeshRenderers.clear();
 }
+
 
 void Renderer::SwapBuffers() const
 {
@@ -313,7 +305,6 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
         
         if (!m_Frustum.IsOnFrustum(aabb))
         {
-            Logger::LogDebug("Cut By culling");
             continue;
         }
         
@@ -340,36 +331,6 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
     }
 }
 
-void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRenderers, const Scene& scene) const
-{
-    Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
-
-    for (const MeshRenderer* const meshRenderer : meshRenderers)
-    {
-        const Transform& transform = meshRenderer->GetEntity()->transform;
-        ModelUniformData modelData;
-        modelData.model = transform.worldMatrix;
-        // +1 to avoid the black color of the attachment be a valid index  
-        modelData.meshRenderIndex = scene.GetEntityIndex(meshRenderer->GetEntity()) + 1;
-
-        try
-        {
-            modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
-        }
-        catch (const std::invalid_argument&)
-        {
-            modelData.normalInvertMatrix = Matrix::Identity();
-        }
-
-        Rhi::UpdateModelUniform(modelData);
-
-        if (meshRenderer->model.IsValid())
-        {
-            meshRenderer->material.BindMaterial();
-            Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
-        }
-    }
-}
 
 void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*>& meshRenderers,
                                            const Scene& scene) const
@@ -378,14 +339,16 @@ void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*
 
     for (const MeshRenderer* const meshRenderer : meshRenderers)
     {
-        /*
+
+        
         Bound aabb;
         meshRenderer->GetAABB(&aabb);
-        if (m_Frustum.IsOnFrustum(aabb))
+        
+        if (!m_Frustum.IsOnFrustum(aabb))
         {
-           continue;
+            continue;
         }
-        */
+
         const Transform& transform = meshRenderer->GetEntity()->transform;
         ModelUniformData modelData;
         modelData.model = transform.worldMatrix;
@@ -408,6 +371,23 @@ void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*
             Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
         }
     }
+}
+
+void Renderer::RenderNonShadedPass(const Scene& scene, const Camera& camera, const RenderPassBeginInfo& renderPassBeginInfo,
+    const RenderPass& renderPass, const Pointer<Shader>& shaderToUse, bool_t drawEditorUi) const
+{
+    const Vector2i viewportSize = renderPassBeginInfo.renderAreaOffset + renderPassBeginInfo.renderAreaExtent;
+    BindCamera(camera, viewportSize);
+    m_Frustum.UpdateFromCamera(camera, static_cast<float_t>(viewportSize.x) / static_cast<float_t>(viewportSize.y));
+    renderPass.BeginRenderPass(renderPassBeginInfo);
+    DrawAllMeshRendersNonShaded(m_MeshRenderers, scene);
+
+    if (drawEditorUi)
+    {
+        m_LightManager.DrawLightGizmoWithShader(camera, scene, shaderToUse);
+    }
+
+    renderPass.EndRenderPass();
 }
 
 void Renderer::BindCamera(const Camera& camera, const Vector2i screenSize) const

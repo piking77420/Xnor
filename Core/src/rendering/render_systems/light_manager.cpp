@@ -76,7 +76,7 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 		float_t scaleScalar =m_RenderingLightStruct.scaleFactor;
 
 		float_t distance = (it->second.pos - camera.position).SquaredLength();
-		if (distance < m_RenderingLightStruct.minDistance * m_RenderingLightStruct.minDistance)
+		if (distance < m_RenderingLightStruct.maxScalarFactor * m_RenderingLightStruct.maxScalarFactor)
 			scaleScalar = scaleScalar * (1.f / distance) * (1.f / distance);
 
 		scaleScalar = std::clamp(scaleScalar, m_RenderingLightStruct.maxScalarFactor, m_RenderingLightStruct.minScalarFactor);
@@ -264,7 +264,7 @@ void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& ren
 				.clearBufferFlags = BufferFlag::DepthBit,
 				.clearColor = Vector4::Zero()
 			};
-			renderer.RenderNonShaded(cascadedCameras.at(i) , renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, scene, false);
+			renderer.RenderNonShadedPass(scene,cascadedCameras.at(i) , renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, false);
 		}
 		
 	}
@@ -299,7 +299,7 @@ void LightManager::ComputeShadowSpotLight(const Scene& scene, const Renderer& re
 			.clearColor = Vector4(0.f)
 		};
 		
-		renderer.RenderNonShaded(cam, renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, scene, false);
+		renderer.RenderNonShadedPass(scene, cam, renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, false);
 	}
 }
 
@@ -318,6 +318,9 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 		{
 			GetPointLightDirection(k, &cam.front, &cam.up);
 			cam.position = pos;
+			cam.near = m_PointLights[i]->near;
+			cam.far = m_PointLights[i]->far;
+			cam.right = Vector3::Cross(cam.front, cam.up).Normalized();
 			
 			// Get Current CubeMap faces In Cubemap Array
 			const uint32_t currentFace = static_cast<uint32_t>(k + i * 6);
@@ -332,7 +335,7 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 				.clearColor = Vector4(std::numeric_limits<float_t>::max())
 			};
 		
-			renderer.RenderNonShaded(cam, renderPassBeginInfo, m_ShadowRenderPass, m_ShadowMapShader, scene, false);
+			renderer.RenderNonShadedPass(scene, cam, renderPassBeginInfo, m_ShadowRenderPass, m_ShadowMapShader, false);
 		}
 	}
 }

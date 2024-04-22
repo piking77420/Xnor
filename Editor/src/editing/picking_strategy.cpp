@@ -48,8 +48,10 @@ bool_t PickingStrategy::GetEntityFromScreen(const Vector2i pixelPos, XnorCore::S
         .clearBufferFlags = static_cast<XnorCore::BufferFlag::BufferFlag>(XnorCore::BufferFlag::ColorBit | XnorCore::BufferFlag::DepthBit),
         .clearColor = Vector4::Zero()
     };
-    
-    m_Editor->renderer.RenderNonShaded(pointOfView, beginInfo, m_ColorPass, m_PickingShader, scene, true);
+
+    if (XnorCore::World::scene != nullptr)
+        m_Editor->renderer.ZPass(*XnorCore::World::scene, pointOfView, beginInfo, m_ColorPass, m_PickingShader, true);
+
     m_PickingShader->Unuse();
 
     float_t getValue = 0.f;

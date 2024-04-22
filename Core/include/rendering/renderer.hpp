@@ -53,6 +53,16 @@ public:
     /// @param scene Scene to render
     XNOR_ENGINE void RenderViewport(const Viewport& viewport, const Scene& scene) const;
 
+    /// @brief Renders a scene without shading , calling begin and endfrane 
+    /// @param camera Camera
+    /// @param renderPassBeginInfo Render pass begin info
+    /// @param renderPass Render pass
+    /// @param shaderToUse Shader to use
+    /// @param scene Scene to render
+    /// @param drawEditorUi Whether to draw the editor only UI
+    XNOR_ENGINE void ZPass(const Scene& scene,const Camera& camera, const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass,
+        const Pointer<Shader>& shaderToUse, bool_t drawEditorUi);
+
     /// @brief Renders a scene without shading
     /// @param camera Camera
     /// @param renderPassBeginInfo Render pass begin info
@@ -60,20 +70,21 @@ public:
     /// @param shaderToUse Shader to use
     /// @param scene Scene to render
     /// @param drawEditorUi Whether to draw the editor only UI
-    XNOR_ENGINE void RenderNonShaded(const Camera& camera, const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass, const Pointer<Shader>& shaderToUse, const Scene& scene, bool_t drawEditorUi) const;
-    
+    XNOR_ENGINE void RenderNonShadedPass(const Scene& scene, const Camera& camera, const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass, const
+                                         Pointer<Shader>& shaderToUse, bool_t drawEditorUi) const;
     
     /// @brief Swaps the front and back buffer.
     XNOR_ENGINE void SwapBuffers() const;
 
     XNOR_ENGINE void RenderMenu();
-
 private:
     LightManager m_LightManager;
     SkyboxRenderer m_SkyboxRenderer;
     PostProcessPass m_PostProcessPass;
     AnimationRender m_AnimationRender;
     mutable Octree<const MeshRenderer> m_RenderOctree;
+    mutable std::vector<const MeshRenderer*> m_MeshRenderers;
+
     mutable Frustum m_Frustum;
     
     Pointer<Shader> m_GBufferShader;
@@ -85,16 +96,13 @@ private:
     
     Pointer<Model> m_Quad;
     Pointer<Model> m_Cube;
-
-    mutable std::vector<const MeshRenderer*> m_MeshRenderers;
+    
     
     XNOR_ENGINE void BindCamera(const Camera& camera, Vector2i screenSize) const;
     
     XNOR_ENGINE void InitResources();
     
     XNOR_ENGINE void DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers, MaterialType materialType) const;
-    
-    XNOR_ENGINE void DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRenderers, const Scene& scene) const;
     
     XNOR_ENGINE void DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*>& meshRenderers, const Scene& scene) const;
 

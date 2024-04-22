@@ -25,10 +25,10 @@ public:
     bool_t castShadow = true;
 
     /// @brief Near clipping of the light
-    float_t near = 0.1f;
+    float_t near = 0.01f;
 
     /// @brief Far clipping of the light
-    float_t far = 100.f;
+    float_t far = 1000.f;
 
     XNOR_ENGINE Light() = default;
     XNOR_ENGINE ~Light() override = default;

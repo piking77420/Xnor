@@ -16,12 +16,12 @@ void Frustum::UpdateFromCamera(const Camera& camera, const float_t aspect)
 
 bool_t Frustum::IsOnFrustum(const Bound& bound) const
 {
-    bool_t top  = bound.IsOnPlane(plane[Top]);
-    bool_t bottom  = bound.IsOnPlane(plane[Bottom]);
-    bool_t near  = bound.IsOnPlane(plane[Near]);
-    bool_t far  = bound.IsOnPlane(plane[Far]);
-    bool_t right  = bound.IsOnPlane(plane[Right]);
-    bool_t left  = bound.IsOnPlane(plane[Left]);
+    const bool_t top  = bound.IsOnPlane(plane[Top]);
+    const bool_t bottom  = bound.IsOnPlane(plane[Bottom]);
+    const bool_t near  = bound.IsOnPlane(plane[Near]);
+    const bool_t far  = bound.IsOnPlane(plane[Far]);
+    const bool_t right  = bound.IsOnPlane(plane[Right]);
+    const bool_t left  = bound.IsOnPlane(plane[Left]);
 
     
 
@@ -32,7 +32,6 @@ void Frustum::UpdateCameraPerspective(const Camera& camera, float_t aspect)
 {
     const float_t halfVSide = camera.far * tanf(camera.fov * Calc::Deg2Rad * .5f);
     const float_t halfHSide = halfVSide * aspect;
-    const Vector3 front = camera.front;
     
     const Vector3 frontMultFar = camera.far * camera.front;
     

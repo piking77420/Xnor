@@ -5,8 +5,8 @@ out vec4 FragColor;
 
 const int MaxSpotLight = 100;
 const int MaxPointLight = 100;
-const int DirectionalCascadeLevel = 10;
-const int DirectionalCascadeLevelAllocation = 16;
+const int DirectionalCascadeLevel = 8;
+const int DirectionalCascadeLevelAllocation = 12;
 
 const float PI = 3.14159265359;
 const float InvPI = 1/PI;
@@ -268,7 +268,7 @@ vec3 ComputeIbl(float roughness,vec3 kD, float ao,vec3 albedo, vec3 N , vec3 R ,
 
     return ambient;
 }
-
+    
 
 vec3 ComputeSpotLight(vec3 baseColor,vec4 fragPos,vec3 v, vec3 n, float roughness, float metallic, vec3 f0)
 {

@@ -23,7 +23,7 @@
 			<name>Sphere</name>
 			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
 			<transform>
-				<m_Position>2 ; 4 ; -5</m_Position>
+				<m_Position>-4 ; 4 ; -15</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1.1 ; 1.0000228 ; 1.0000799</m_Scale>
 			</transform>
@@ -89,14 +89,14 @@
 			<name>PointLight</name>
 			<m_EntityId>FCC4FB4F-5C11-46FD-B2-6C-F6-2E-64-CF-1-E4</m_EntityId>
 			<transform>
-				<m_Position>5.341924 ; 6 ; -3.1127594</m_Position>
-				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1 ; 1</m_Scale>
+				<m_Position>-3.4315844 ; 3.5812829 ; -7.3984766</m_Position>
+				<m_EulerRotation>-1.5578505 ; -0.34906885 ; 3.0370042</m_EulerRotation>
+				<m_Scale>1.0000337 ; 1.0000143 ; 1.0000058</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="PointLight">
-					<color>0.2130326 ; 0.21196477 ; 0.21196477 ; 1</color>
-					<intensity>1e+05</intensity>
+					<color>1 ; 1 ; 1 ; 1</color>
+					<intensity>10000</intensity>
 					<castShadow>true</castShadow>
 				</0>
 			</m_Components>
