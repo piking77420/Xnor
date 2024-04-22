@@ -327,12 +327,11 @@ void Editor::Update()
 		BeginFrame();
 		CheckWindowResize();
 		
-		renderer.BeginFrame(*World::scene);
-
 		UpdateWindows();
 		WorldBehaviours();
-		OnRenderingWindow();
 		
+		renderer.BeginFrame(*World::scene);
+		OnRenderingWindow();
 		renderer.EndFrame(*World::scene);
 
 		Coroutine::UpdateAll();
