@@ -318,7 +318,6 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& r
 		{
 			GetPointLightDirection(k, &cam.front, &cam.up);
 			cam.position = pos;
-			cam.right = Vector3::Cross(cam.front,cam.up).Normalized();
 			
 			// Get Current CubeMap faces In Cubemap Array
 			const uint32_t currentFace = static_cast<uint32_t>(k + i * 6);
@@ -393,13 +392,13 @@ void LightManager::GetPointLightDirection(const size_t index, Vector3* front, Ve
 	switch (index)
 	{
 	case 0:
-		*front = -Vector3::UnitX();
-		*up = Vector3::UnitY();
+		*front = Vector3::UnitX();
+		*up = -Vector3::UnitY();
 		break;
 
 	case 1:
-		*front = Vector3::UnitX();
-		*up = Vector3::UnitY();
+		*front = -Vector3::UnitX();
+		*up = -Vector3::UnitY();
 		break;
 
 	case 2:
@@ -413,13 +412,13 @@ void LightManager::GetPointLightDirection(const size_t index, Vector3* front, Ve
 		break;
 
 	case 4:
-		*front = -Vector3::UnitZ();
-		*up = Vector3::UnitY();
+		*front = Vector3::UnitZ();
+		*up = -Vector3::UnitY();
 		break;
 
 	case 5:
-		*front = Vector3::UnitZ();
-		*up = Vector3::UnitY();
+		*front = -Vector3::UnitZ();
+		*up = -Vector3::UnitY();
 		break;
 
 	default:

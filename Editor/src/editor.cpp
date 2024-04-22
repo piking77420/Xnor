@@ -255,7 +255,11 @@ void Editor::MenuBar()
 			{
 				XnorCore::Serializer::StartDeserialization(path);
 				data.selectedEntity = nullptr;
+				
+				// End the current Frame
+				renderer.EndFrame(*XnorCore::World::scene);
 				delete XnorCore::World::scene;
+				
 				XnorCore::World::scene = new XnorCore::Scene();
 				// Possible memory leak?
 				XnorCore::Serializer::Deserialize<XnorCore::Scene, true>(XnorCore::World::scene);

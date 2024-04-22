@@ -54,8 +54,8 @@ void EditorCamera::EditorCameraRotation()
 {
    const Vector2 mousDelta = m_LowPassFilterDeltaMouse.GetAvarage<Vector2>();
 
-    m_Yaw -= mousDelta.x;
-    m_Pitch += mousDelta.y; 
+    m_Yaw += mousDelta.x;
+    m_Pitch -= mousDelta.y; 
     
     if (m_Pitch > MaxPitch)
         m_Pitch = MaxPitch;
@@ -78,10 +78,10 @@ void EditorCamera::EditorCameraMovement()
     Vector3 addVector;
 
     if (ImGui::IsKeyDown(ImGuiKey_W))
-        addVector -= m_EditorRefCamera->front * cameraSpeed;
+        addVector += m_EditorRefCamera->front * cameraSpeed;
 
     if (ImGui::IsKeyDown(ImGuiKey_S))
-        addVector += m_EditorRefCamera->front * cameraSpeed;
+        addVector -= m_EditorRefCamera->front * cameraSpeed;
 
     if (ImGui::IsKeyDown(ImGuiKey_A))
         addVector -= m_EditorRefCamera->right * cameraSpeed;
@@ -112,7 +112,7 @@ void EditorCamera::OnMiddleButton()
     if (io.MouseWheel == 0.f)
         return;
     
-    const Vector3 vector = -m_EditorRefCamera->front * io.MouseWheel;
+    const Vector3 vector = m_EditorRefCamera->front * io.MouseWheel;
     AddMovement(vector * m_MouseWheelZoom);
 }
 

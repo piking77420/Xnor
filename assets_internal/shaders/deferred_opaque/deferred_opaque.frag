@@ -205,7 +205,6 @@ float ShadowCalculationSpolight(vec4 fragPosLightSpace, vec3 n, vec3 l, int inde
 float ShadowCalculationPointLight(vec3 LightToPixel, vec3 fragPos, int index)
 {
     float currentDistance = length(LightToPixel);
-    LightToPixel.y = -LightToPixel.y;
     
     float shadow = 0.0;
     float bias = 0.15;

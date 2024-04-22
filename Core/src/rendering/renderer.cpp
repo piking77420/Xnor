@@ -37,6 +37,7 @@ void Renderer::Initialize()
 
 void Renderer::BeginFrame(const Scene& scene)
 {
+    scene.GetAllComponentOfType<MeshRenderer>(&m_MeshRenderers);
     Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
     m_LightManager.BeginFrame(scene, *this);
     m_AnimationRender.BeginFrame(scene, *this);
@@ -45,13 +46,13 @@ void Renderer::BeginFrame(const Scene& scene)
 
 void Renderer::EndFrame(const Scene& scene)
 {
+    m_MeshRenderers.clear();
     m_LightManager.EndFrame(scene);
     m_AnimationRender.EndFrame();
 }
 
 void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene) const
 {
-    scene.GetAllComponentOfType<MeshRenderer>(&m_MeshRenderers);
     BindCamera(*viewport.camera, viewport.viewPortSize);
     m_Frustum.UpdateFromCamera(*viewport.camera, viewport.GetAspect());
     
@@ -411,17 +412,14 @@ void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*
 
 void Renderer::BindCamera(const Camera& camera, const Vector2i screenSize) const
 {
-    Camera camera2 = camera;
     
     CameraUniformData cam;
-    camera2.GetView(&cam.view);
-    camera2.GetProjection(screenSize, &cam.projection);
-
+    camera.GetView(&cam.view);
+    camera.GetProjection(screenSize, &cam.projection);
     
-    
-    cam.cameraPos = camera2.position;
-    cam.near = camera2.near;
-    cam.far = camera2.far;
+    cam.cameraPos = camera.position;
+    cam.near = camera.near;
+    cam.far = camera.far;
     Rhi::UpdateCameraUniform(cam);
 }
 
@@ -458,7 +456,7 @@ void Renderer::InitResources()
     {
         .enableCullFace = true,
         .cullFace = CullFace::Front,
-        .frontFace = FrontFace::CCW
+        .frontFace = FrontFace::CW
     };
 
     m_GBufferShader->SetFaceCullingInfo(cullInfo);
