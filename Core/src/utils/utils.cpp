@@ -4,8 +4,6 @@
 #include <ImGui/imgui.h>
 
 #include "file/directory.hpp"
-#include "file/entry.hpp"
-#include "file/file.hpp"
 
 using namespace XnorCore;
 
@@ -125,36 +123,34 @@ Vector3 Utils::GetQuaternionEulerAngles(const Quaternion& rot)
     return NormalizeAngles(v);
 }
 
-void Utils::OpenInExplorer(const std::filesystem::path& path)
-{
-    OpenInExplorer(path, !is_directory(path));
-}
+void Utils::OpenInExplorer(const std::filesystem::path& path) { OpenInExplorer(path, !is_directory(path)); }
 
 void Utils::OpenInExplorer(const std::filesystem::path& path, const bool_t isFile)
 {
-    std::string command = "start explorer ";
+    std::string command = "explorer ";
     
     if (isFile)
         command += "/select,";
     
     command += '"' + absolute(path).string() + '"';
-    std::system(command.c_str());  // NOLINT(concurrency-mt-unsafe)
+    
+    TerminalCommand(command);
 }
 
-void Utils::OpenFile(const std::filesystem::path& filepath)
-{
-    std::string command = "start explorer ";
-    command += '"' + absolute(filepath).string() + '"';
-    std::system(command.c_str());  // NOLINT(concurrency-mt-unsafe)
-}
+void Utils::OpenFile(const std::filesystem::path& filepath) { TerminalCommand("explorer " + ('"' + absolute(filepath).string() + '"')); }
 
 bool_t Utils::StringEqualsIgnoreCase(const std::string& a, const std::string& b)
 {
     return std::ranges::equal(
         a, b,
-        [] (const char_t& aa, const char_t& bb)
+        [] (const char_t& aa, const char_t& bb) -> bool_t
         {
             return std::tolower(aa) == std::tolower(bb);
         }
     );
+}
+
+int32_t Utils::TerminalCommand(const std::string& command, const bool_t asynchronous)
+{
+    return std::system(((asynchronous ? "start /MIN " : "") + command).c_str());  // NOLINT(concurrency-mt-unsafe)
 }

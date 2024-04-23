@@ -17,7 +17,6 @@ BEGIN_XNOR_CORE
 /// @brief Encapsulates a GPU shader
 class Shader : public Resource
 {
-private:
 	ShaderPipeline::ShaderPipeline ShaderTypeToShaderPipeline(ShaderType::ShaderType shaderType);
 
 	ShaderType::ShaderType ShaderPipelineToShaderType(ShaderPipeline::ShaderPipeline shaderPipeline);
@@ -69,10 +68,10 @@ public:
 	XNOR_ENGINE bool_t Load(const char_t* buffer, int64_t length, ShaderPipeline::ShaderPipeline type);
 
 	/// @brief Creates the shader in the @ref Rhi
-	XNOR_ENGINE void CreateInRhi() override;
+	XNOR_ENGINE void CreateInInterface() override;
 
 	/// @brief Destroys the shader in the @ref Rhi
-	XNOR_ENGINE void DestroyInRhi() override;
+	XNOR_ENGINE void DestroyInInterface() override;
 
 	/// @brief Recompiles the shader
 	XNOR_ENGINE void Recompile();

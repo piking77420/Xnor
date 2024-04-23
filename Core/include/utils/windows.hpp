@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core.hpp"
+
 /// @file windows.hpp
 /// @brief A way to include the @c <Windows.h> header without some of its problematic macros.
 
@@ -12,3 +14,14 @@
 #undef min
 #undef max
 #undef MessageBox
+
+BEGIN_XNOR_CORE
+
+namespace Windows
+{
+    bool_t CheckError();
+
+    void SilenceError();
+}
+
+END_XNOR_CORE

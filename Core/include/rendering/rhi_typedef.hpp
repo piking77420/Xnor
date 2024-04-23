@@ -385,6 +385,23 @@ BEGIN_ENUM(UniformType)
 }
 END_ENUM
 
+struct GpuUniform
+{
+	ENUM_VALUE(UniformType) type;
+	uint32_t shaderKey;
+	union
+	{
+		int32_t Int;
+		int32_t Bool;
+		float_t Float;
+		Vector2 Vec2;
+		Vector3 Vec3;
+		Vector4 Vec4;
+		Matrix3 Mat3;
+		Matrix Mat4;
+	} data = {};
+};
+
 /// @brief Depth function
 BEGIN_ENUM(DepthFunction)
 {

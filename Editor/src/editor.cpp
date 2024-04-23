@@ -3,17 +3,16 @@
 #include <ImGui/imgui.h>
 #include <ImGui/imgui_impl_glfw.h>
 #include <ImGui/imgui_impl_opengl3.h>
-#include <ImGui/imgui_internal.h>
 #include <ImguiGizmo/ImGuizmo.h>
 
 #include "csharp/dotnet_runtime.hpp"
 #include "file/file_manager.hpp"
 #include "input/time.hpp"
 #include "resource/resource_manager.hpp"
+#include "resource/shader.hpp"
 #include "scene/component/test_component.hpp"
 #include "serialization/serializer.hpp"
 #include "utils/coroutine.hpp"
-#include "utils/timeline.hpp"
 #include "windows/content_browser.hpp"
 #include "windows/editor_window.hpp"
 #include "windows/header_window.hpp"
@@ -30,7 +29,8 @@ void Editor::CheckWindowResize()
 {
 }
 
-Editor::Editor()
+Editor::Editor(const int32_t argc, const char_t* const* const argv)
+	: Application(std::forward<decltype(argc)>(argc), std::forward<decltype(argv)>(argv))
 {
 	XnorCore::Texture::defaultLoadOptions = { .flipVertically = false };
 	XnorCore::FileManager::LoadDirectory("assets_internal/editor");
@@ -265,7 +265,10 @@ void Editor::MenuBar()
 				// XnorCore::Serializer::Deserialize<XnorCore::TestComponent, true>(v[0]);
 				XnorCore::Serializer::EndDeserialization();
 			}
-			
+
+			if (ImGui::MenuItem("Reload PBR"))
+				XnorCore::ResourceManager::Get<XnorCore::Shader>("deferred_opaque")->Recompile();
+
 			ImGui::EndMenu();
 		}
 		renderer.RenderMenu();

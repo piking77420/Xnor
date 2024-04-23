@@ -27,16 +27,16 @@ bool_t ComputeShader::Load(const char_t* buffer, int64_t length)
     return true;
 }
 
-void ComputeShader::CreateInRhi()
+void ComputeShader::CreateInInterface()
 {
     constexpr  ShaderCreateInfo shaderCreateInfo;
     
     m_Id = Rhi::CreateShaders( { m_ShaderCode } ,shaderCreateInfo);
 }
 
-void ComputeShader::DestroyInRhi()
+void ComputeShader::DestroyInInterface()
 {
-    Resource::DestroyInRhi();
+    Resource::DestroyInInterface();
 }
 
 void ComputeShader::Recompile()

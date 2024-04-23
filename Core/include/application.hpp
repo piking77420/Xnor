@@ -31,7 +31,7 @@ public:
     XnorCore::Viewport* gameViewPort = nullptr;
 
     /// @brief ctor, Initializes the sub systems
-    XNOR_ENGINE Application();
+    XNOR_ENGINE Application(int32_t argc, const char_t* const* argv);
 
     /// @brief dtor, Destroys the sub systems
     XNOR_ENGINE virtual ~Application();

@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include <functional>
 #include <refl/refl.hpp>
 
 /// @file reflection.hpp
@@ -70,6 +71,16 @@ namespace Reflection
         /// @brief Creates a notify change attribute using a pointer to a boolean inside the concerned class
         /// @param ptr Boolean pointer in the class
         constexpr explicit NotifyChange(const PtrType ptr) : pointer(ptr) {}
+    };
+
+    template <typename T>
+    struct ModifiedCallback : FieldAttribute
+    {
+        using Type = void (*) (T*);
+        
+        Type callback;
+
+        constexpr explicit ModifiedCallback(Type&& c) : callback(std::move(c)) {}
     };
 
     /// @brief Allows an enum to be treated as a list of binary flags

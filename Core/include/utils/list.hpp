@@ -12,7 +12,7 @@ BEGIN_XNOR_CORE
 /// @brief A dynamic array implementation.
 /// 
 /// ### Reasons
-/// A more user friendly list than @c std::vector, based on how @c %List is done in C#
+/// A more user-friendly list than @c std::vector, based on how @c %List is done in C#
 /// The internal structure and workings are similar to how std::vector works, it uses a capacity that grows exponentially based on powers of 2
 /// 
 /// @tparam T Type stored
@@ -191,11 +191,21 @@ public:
 
     /// @brief Tries to find an element that fulfills the requirements provided in a lambda
     /// 
-    /// <p>The lambda returns bool_t, and has a pointer to the current element as a parameters</p>
+    /// <p>The lambda returns bool_t, and has a pointer to the current element as a parameter</p>
     /// 
     /// @param lambda Function lambda
     /// @return Pointer to element
     T* Find(const std::function<bool_t(const T*)>& lambda);
+
+    /// @brief Tries to find an element that fulfills the requirements provided in a lambda
+    /// 
+    /// <p>The lambda returns bool_t, and has a pointer to the current element and its index as parameters</p>
+    /// 
+    /// @param lambda Function lambda
+    /// @return Pointer to element
+    T* Find(const std::function<bool_t(const T*, size_t)>& lambda);
+
+    void Sort(std::function<bool_t(const T& left, const T& right)> predicate = std::less());
 
 #ifndef SWIG
     /// @brief Gets the underlying pointer to the list
@@ -240,6 +250,48 @@ public:
     /// @throw invalid_argument If index >= list size
     const T& operator[](size_t index) const;
 #endif
+
+    [[nodiscard]]
+    const T& Front() const;
+
+    [[nodiscard]]
+    T& Front();
+
+    [[nodiscard]]
+    const T& Back() const;
+
+    [[nodiscard]]
+    T& Back();
+
+    [[nodiscard]]
+    Iterator Begin();
+
+    [[nodiscard]]
+    Iterator End();
+
+    [[nodiscard]]
+    ConstIterator CBegin() const;
+
+    [[nodiscard]]
+    ConstIterator CEnd() const;
+
+    [[nodiscard]]
+    ReverseIterator RBegin() const;
+
+    [[nodiscard]]
+    ReverseIterator REnd() const;
+
+    [[nodiscard]]
+    ConstReverseIterator CrBegin() const;
+
+    [[nodiscard]]
+    ConstReverseIterator CrEnd() const;
+
+    [[nodiscard]]
+    Iterator begin();
+
+    [[nodiscard]]
+    Iterator end();
 
 private:
     std::vector<T> m_Vector;

@@ -83,3 +83,6 @@ private:
 };
 
 END_XNOR_CORE
+
+// Voluntary include after the class definition because using Pointer<File> means we need to include File at some point
+#include "file/file.hpp"

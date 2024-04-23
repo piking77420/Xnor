@@ -27,10 +27,10 @@ public:
     XNOR_ENGINE ~Cubemap() override;
     
     /// @brief Creates the Cubemap in the Rhi
-    XNOR_ENGINE void CreateInRhi() override;
+    XNOR_ENGINE void CreateInInterface() override;
 
     /// @brief Destroys the Cubemap in the Rhi
-    XNOR_ENGINE void DestroyInRhi() override;
+    XNOR_ENGINE void DestroyInInterface() override;
 
     /// @brief Unloads the Cubemap
     XNOR_ENGINE void Unload() override;

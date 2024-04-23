@@ -507,7 +507,7 @@ void LightManager::InitShader()
 	};
 	
 	m_RenderingLightStruct.editorUi->SetBlendFunction(blendFunction);
-	m_RenderingLightStruct.editorUi->CreateInRhi();
+	m_RenderingLightStruct.editorUi->CreateInInterface();
 	m_RenderingLightStruct.editorUi->SetInt("uiTexture",0);
 	m_RenderingLightStruct.quad = ResourceManager::Get<Model>("assets/models/quad.obj");
 	
@@ -520,11 +520,11 @@ void LightManager::InitShader()
 	};
 
 	m_ShadowMapShader->SetFaceCullingInfo(cullInfo);
-	m_ShadowMapShader->CreateInRhi();
+	m_ShadowMapShader->CreateInInterface();
 
 	m_ShadowMapShaderPointLight = ResourceManager::Get<Shader>("depth_shader_point_light");
 	m_ShadowMapShaderPointLight->SetFaceCullingInfo(cullInfo);
-	m_ShadowMapShaderPointLight->CreateInRhi();
+	m_ShadowMapShaderPointLight->CreateInInterface();
 }
 
 float_t LightManager::GetMax(Vector3 vec) const

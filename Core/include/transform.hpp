@@ -23,7 +23,6 @@ class XNOR_ENGINE Transform final
 	REFLECTABLE_IMPL(Transform)
 
 public:
-
 	/// @brief World transformation matrix of the transform
 	Matrix worldMatrix = Matrix::Identity();
 	
@@ -102,7 +101,6 @@ public:
 	inline Vector3 GetUp() const;
 
 	inline Vector3 GetForward() const;
-
 	
 private:
 	/// @brief Position

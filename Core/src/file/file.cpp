@@ -3,13 +3,13 @@
 #include <fstream>
 #include <ranges>
 
-#include "resource/skeleton.hpp"
 #include "resource/compute_shader.hpp"
 #include "resource/font.hpp"
 #include "resource/mesh.hpp"
 #include "resource/model.hpp"
 #include "resource/resource.hpp"
 #include "resource/shader.hpp"
+#include "resource/skeleton.hpp"
 #include "resource/texture.hpp"
 #include "utils/formatter.hpp"
 #include "utils/logger.hpp"
@@ -55,6 +55,7 @@ bool_t File::Load()
 void File::Unload()
 {
     delete[] m_Data;
+    m_Data = nullptr;
     m_Size = 0;
     
     m_Loaded = false;

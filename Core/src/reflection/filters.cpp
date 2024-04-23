@@ -11,7 +11,8 @@ Entity* Filters::FilterEntity(Entity** target)
         return nullptr;
 
     m_TextFilter.Draw();
-    const List<Entity*>& entities = World::scene->GetEntities();
+    List<Entity*> entities = World::scene->GetEntities();
+    entities.Sort([](const Entity* const left, const Entity* const right) -> bool_t { return left->name < right->name; });
 
     Entity* e = nullptr;
     for (size_t i = 0; i < entities.GetSize(); i++)
@@ -48,6 +49,7 @@ Component* Filters::FilterComponent(List<Component*>* target)
 
     std::vector<std::string> names;
     XnorFactory::FindAllChildClasses<Component>(&names);
+    std::ranges::sort(names);
 
     for (size_t i = 0; i < names.size(); i++)
     {
@@ -82,6 +84,7 @@ Component* Filters::FilterComponent(Component** target)
 
     std::vector<std::string> names;
     XnorFactory::FindAllChildClasses<Component>(&names);
+    std::ranges::sort(names);
 
     for (size_t i = 0; i < names.size(); i++)
     {

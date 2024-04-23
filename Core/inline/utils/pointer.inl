@@ -4,13 +4,13 @@ BEGIN_XNOR_CORE
 
 template <typename T>
 template <typename... Args>
-Pointer<T> Pointer<T>::Create(Args&&... args)  // NOLINT(cppcoreguidelines-missing-std-forward)
+Pointer<T> Pointer<T>::New(Args&&... args)  // NOLINT(cppcoreguidelines-missing-std-forward)
 {
     return Pointer(new ReferenceCounter<T>(std::forward<Args>(args)...), true);
 }
 
 template <typename T>
-Pointer<T> Pointer<T>::Create(Construct)
+Pointer<T> Pointer<T>::New()
 {
     return Pointer(new ReferenceCounter<T>, true);
 }

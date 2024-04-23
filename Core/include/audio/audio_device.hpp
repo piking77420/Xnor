@@ -20,7 +20,7 @@ public:
 
     XNOR_ENGINE ~AudioDevice();
 
-    DEFAULT_COPY_MOVE_OPERATIONS(AudioDevice)
+    DELETE_COPY_MOVE_OPERATIONS(AudioDevice)
 
     [[nodiscard]]
     XNOR_ENGINE std::string GetName() const;
@@ -28,8 +28,6 @@ public:
 private:
     ALCdevice* m_Handle = nullptr;
     std::string m_Name;
-
-    AudioContext* m_Context = nullptr;
 
     // AudioContext needs to access the handle of this class
     friend class AudioContext;

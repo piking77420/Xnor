@@ -1,12 +1,14 @@
 #include "rendering/rhi.hpp"
 
+#include <ranges>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "window.hpp"
 #include "magic_enum/magic_enum.hpp"
-#include "rendering/render_pass.hpp"
 #include "rendering/frame_buffer.hpp"
+#include "rendering/render_pass.hpp"
 #include "resource/shader.hpp"
 #include "utils/logger.hpp"
 
@@ -135,9 +137,37 @@ void Rhi::DestroyProgram(const uint32_t shaderId)
 	glDeleteProgram(shaderId);
 }
 
+uint32_t Rhi::ReloadProgram(const uint32_t oldShaderId, const std::vector<ShaderCode>& shaderCodes)
+{
+	auto&& node = m_ShaderMap.extract(oldShaderId);
+	if (node.empty() || !glIsProgram(oldShaderId))
+	{
+		Logger::LogWarning("Tried to reload an invalid shader");
+		return std::numeric_limits<uint32_t>::max();
+	}
+
+	glDeleteProgram(oldShaderId);
+	
+	const ShaderInternal& mapped = node.mapped();
+	const uint32_t result = CreateShaders(shaderCodes, ShaderCreateInfo{mapped.depthFunction, mapped.blendFunction, mapped.cullInfo});
+
+	UseShader(result);
+	for (auto&& uniform : mapped.uniformMap)
+	{
+		auto val = uniform.second;
+		SetUniform(val.type, &val.data, result, uniform.first.c_str());
+	}
+	UnuseShader();
+	
+	node.key() = result;
+	m_ShaderMap.insert(std::move(node));
+	
+	return result;
+}
+
 void Rhi::CheckCompilationError(const uint32_t shaderId, const std::string& type)
 {
-	int success;
+	int success = 0;
 	std::string infoLog(1024, '\0');
 
 	if (type != "PROGRAM")
@@ -251,40 +281,62 @@ void Rhi::UnuseShader()
 
 void Rhi::SetUniform(const UniformType::UniformType uniformType, const void* const data, const uint32_t shaderId, const char_t* const uniformKey)
 {
-	const GLint uniformLocation = GetUniformInMap(shaderId, uniformKey);
+	GpuUniform& uniform = GetUniformInMap(shaderId, uniformKey, uniformType);
 
+	const int32_t value = static_cast<int32_t>(uniform.shaderKey);
+	
+	const int32_t* i;
+	const bool_t* b;
+	const GLfloat* f;
+	
 	switch (uniformType)
 	{
 		case UniformType::Int:
-			glUniform1i(uniformLocation, *static_cast<const int32_t*>(data));
+			i = static_cast<const int32_t*>(data);
+			uniform.data.Int = *i;
+			glUniform1i(value, *i);
 			break;
 			
 		case UniformType::Bool:
-			glUniform1i(uniformLocation, *static_cast<const bool_t*>(data));
+			b = static_cast<const bool_t*>(data);
+			uniform.data.Int = *b;
+			glUniform1i(value, *b);
 			break;
 			
 		case UniformType::Float:
-			glUniform1f(uniformLocation, *static_cast<const GLfloat*>(data));
+			f = static_cast<const GLfloat*>(data);
+			uniform.data.Float = *f;
+			glUniform1f(value, *f);
 			break;
 
 		case UniformType::Vec2:
-			glUniform2fv(uniformLocation, 1, static_cast<const GLfloat*>(data));
+			f = static_cast<const GLfloat*>(data);
+			uniform.data.Vec2 = Vector2(f);
+			glUniform2fv(value, 1, f);
 			break;
 
 		case UniformType::Vec3:
-			glUniform3fv(uniformLocation, 1, static_cast<const GLfloat*>(data));
+			f = static_cast<const GLfloat*>(data);
+			uniform.data.Vec3 = Vector3(f);
+			glUniform3fv(value, 1, f);
 			break;
 			
 		case UniformType::Vec4:
-			glUniform4fv(uniformLocation, 1, static_cast<const GLfloat*>(data));
+			f = static_cast<const GLfloat*>(data);
+			uniform.data.Vec4 = Vector4(f);
+			glUniform4fv(value, 1, f);
 			break;
 			
 		case UniformType::Mat3:
-			glUniformMatrix3fv(uniformLocation, 1, GL_FALSE, static_cast<const GLfloat*>(data));
+			f = static_cast<const GLfloat*>(data);
+			uniform.data.Mat3 = Matrix3(f);
+			glUniformMatrix3fv(value, 1, GL_FALSE, f);
 			break;
 			
 		case UniformType::Mat4:
-			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, static_cast<const GLfloat*>(data));
+			f = static_cast<const GLfloat*>(data);
+			uniform.data.Mat4 = Matrix(f);
+			glUniformMatrix4fv(value, 1, GL_FALSE, f);
 			break;
 	}
 }
@@ -926,7 +978,7 @@ void Rhi::BindTexture(const uint32_t unit, const uint32_t textureId)
 
 uint32_t Rhi::CreateFrameBuffer()
 {
-	uint32_t frameBufferId;
+	uint32_t frameBufferId = 0;
 	glCreateFramebuffers(1, &frameBufferId);
 	return frameBufferId;
 }
@@ -1056,7 +1108,7 @@ void Rhi::GetPixelFromAttachement(const uint32_t attachmentIndex, const Vector2i
 
 void Rhi::SwapBuffers()
 {
-	glfwSwapBuffers(Window::GetHandle());
+	glfwSwapBuffers(glfwGetCurrentContext());
 }
 
 uint32_t Rhi::GetOpenglShaderType(const ShaderType::ShaderType shaderType)
@@ -1243,19 +1295,19 @@ uint32_t Rhi::GetOpenGlTextureFormat(const TextureFormat::TextureFormat textureF
 
 void Rhi::LogComputeShaderInfo()
 {
-	int32_t workGroupCount[3];
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &workGroupCount[0]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &workGroupCount[1]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &workGroupCount[2]);
+	std::array<int32_t, 3> workGroupCount{};
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, workGroupCount.data());
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, workGroupCount.data() + 1);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, workGroupCount.data() + 2);
 	Logger::LogDebug("Max work groups per compute shader x: {} y: {} x: {}", workGroupCount[0], workGroupCount[1], workGroupCount[2]);
 	
-	int32_t workGroupSize[3];
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &workGroupSize[0]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, &workGroupSize[1]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, &workGroupSize[2]);
+	std::array<int32_t, 3> workGroupSize{};
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, workGroupSize.data());
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, workGroupSize.data() + 1);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, workGroupSize.data() + 2);
 	Logger::LogDebug("Max work group sizes  x: {} y: {} x: {}", workGroupSize[0], workGroupSize[1], workGroupSize[2]); 
 
-	int32_t workGroupInvocation;
+	int32_t workGroupInvocation = 0;
 	glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &workGroupInvocation);
 	Logger::LogDebug("Max invocations count per work group: {} ", workGroupInvocation);
 }
@@ -1269,24 +1321,19 @@ void Rhi::IsShaderValid(const uint32_t shaderId)
 	}
 }
 
-int32_t Rhi::GetUniformInMap(const uint32_t shaderId, const char_t* const uniformKey)
+GpuUniform& Rhi::GetUniformInMap(const uint32_t shaderId, const char_t* const uniformKey, const UniformType::UniformType type)
 {
-	std::map<std::string, uint32_t>& shaderUniformMap = m_ShaderMap.at(shaderId).uniformMap;
+	auto& shaderUniformMap = m_ShaderMap.at(shaderId).uniformMap;
 
 	if (shaderUniformMap.contains(uniformKey))
-	{
-		return static_cast<int32_t>(shaderUniformMap[uniformKey]);
-	}
+		return shaderUniformMap[uniformKey];
 
 	const GLint location = glGetUniformLocation(shaderId, uniformKey);
 	if (location == NullUniformLocation)
-	{
 		Logger::LogWarning("No uniform with key [{}] in shader #{}", uniformKey, shaderId);
-	}
-		
-	shaderUniformMap[uniformKey] = location;
 
-	return location;
+	shaderUniformMap[uniformKey] = GpuUniform{type, static_cast<uint32_t>(location)};
+	return shaderUniformMap[uniformKey];
 }
 
 uint32_t Rhi::GetOpenglDataType(const DataType::DataType dataType)

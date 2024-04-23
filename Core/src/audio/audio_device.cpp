@@ -30,17 +30,8 @@ AudioDevice::AudioDevice(std::string&& name)
         Logger::LogError("Unable to open audio device {}", m_Name);
         return;
     }
-
-    m_Context = new AudioContext(*this);
-
-    DEBUG_LOG("Max mono source count: {}", m_Context->GetMaxSourceCount(AudioSourceType::Mono));
-    DEBUG_LOG("Max stereo source count: {}", m_Context->GetMaxSourceCount(AudioSourceType::Stereo));
 }
 
-AudioDevice::~AudioDevice()
-{
-    delete m_Context;
-    alcCloseDevice(m_Handle);
-}
+AudioDevice::~AudioDevice() { alcCloseDevice(m_Handle); }
 
 std::string AudioDevice::GetName() const { return m_Name; }

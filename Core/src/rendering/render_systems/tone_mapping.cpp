@@ -20,7 +20,7 @@ void ToneMapping::ComputeToneMaping(const Texture& imageWithoutToneMapping, cons
 void ToneMapping::InitializeResources()
 {
     m_Aces = ResourceManager::Get<Shader>("tone_mapper");
-    m_Aces->CreateInRhi();
+    m_Aces->CreateInInterface();
     m_Aces->Use();
     m_Aces->SetInt("beforeToneMappedImage", ToneMapedTextureBinding);
     m_Aces->SetInt("bloomBlur", 1);

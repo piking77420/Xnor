@@ -13,14 +13,14 @@ class UiWindow;
 class RenderWindow;
 class UserInput;
 
-class Editor : public XnorCore::Application
+class Editor final : public XnorCore::Application
 {
 public:
 	void CheckWindowResize() override;
 	
 	EditorData data;
 	
-	explicit Editor();
+	explicit Editor(int32_t argc, const char_t* const* argv);
 
 	~Editor() override;
 

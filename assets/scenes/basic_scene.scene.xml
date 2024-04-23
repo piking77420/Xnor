@@ -2,63 +2,12 @@
 <Scene>
 	<m_Entities>
 		<0>
-			<name>Directional</name>
-			<m_EntityId>73C3991F-64C8-43BE-BA-FB-8F-9C-A2-38-C9-75</m_EntityId>
+			<name>Plane</name>
+			<m_EntityId>6DA3A69E-26F1-49AD-85-36-F8-88-F7-71-8A-B0</m_EntityId>
 			<transform>
-				<m_Position>0 ; 0 ; 0</m_Position>
-				<m_EulerRotation>0 ; -0 ; -0.15658692</m_EulerRotation>
-				<m_Scale>1.0001354 ; 1.0000162 ; 1.0002595</m_Scale>
-			</transform>
-			<m_Components>
-				<0 typeName="DirectionalLight">
-					<color>1 ; 1 ; 1 ; 1</color>
-					<intensity>4.5</intensity>
-					<castShadow>true</castShadow>
-				</0>
-			</m_Components>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
-			<m_Children/>
-		</0>
-		<1>
-			<name>Sphere</name>
-			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
-			<transform>
-				<m_Position>10 ; 6 ; -1</m_Position>
+				<m_Position>0 ; 0 ; -1</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1.1 ; 1.0000228 ; 1.0000799</m_Scale>
-			</transform>
-			<m_Components>
-				<0 typeName="MeshRenderer">
-					<model>99097F3B-B578-4C0B-A2-64-E1-51-5A-41-BA-A</model>
-					<mesh>0-0-0-0-0-0-0-0-0-0-0</mesh>
-					<material>
-						<materialType>Opaque</materialType>
-						<albedoColor>1 ; 1 ; 1 ; 1</albedoColor>
-						<emissiveColor>0.867052 ; 0.867052 ; 0.867052 ; 1</emissiveColor>
-						<metallic>0</metallic>
-						<roughness>0</roughness>
-						<reflectance>0</reflectance>
-						<emissive>0</emissive>
-						<ambientOcclusion>0</ambientOcclusion>
-						<albedoTexture>D4DE5A31-2DD4-4EA2-A0-44-48-D2-C9-99-71-8B</albedoTexture>
-						<metallicTexture>92C273FA-1E2D-43AA-B8-CF-AE-D0-15-6F-57-87</metallicTexture>
-						<roughnessTexture>D951D7C1-D2F0-4849-86-EF-1-74-A-42-66-C9</roughnessTexture>
-						<normalTexture>D951D7C1-D2F0-4849-86-EF-1-74-A-42-66-C9</normalTexture>
-						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
-					</material>
-					<drawModelAabb>true</drawModelAabb>
-				</0>
-			</m_Components>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
-			<m_Children/>
-		</1>
-		<2>
-			<name>Plane0</name>
-			<m_EntityId>64BF291F-B391-4D92-86-EB-B9-E3-39-4F-9B-5C</m_EntityId>
-			<transform>
-				<m_Position>0 ; -20 ; 0</m_Position>
-				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>30 ; 1 ; 30</m_Scale>
+				<m_Scale>20 ; 0.21906261 ; 12</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">
@@ -77,6 +26,57 @@
 						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
 						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
 						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
+						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
+					</material>
+					<drawModelAabb>false</drawModelAabb>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</0>
+		<1>
+			<name>DirLight</name>
+			<m_EntityId>E3FC77C9-7C57-4EEB-AB-AD-6-5-5A-21-B6-BC</m_EntityId>
+			<transform>
+				<m_Position>0 ; 0 ; 0</m_Position>
+				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="DirectionalLight">
+					<color>1 ; 1 ; 1 ; 1</color>
+					<intensity>20.6</intensity>
+					<castShadow>true</castShadow>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</1>
+		<2>
+			<name>Cube</name>
+			<m_EntityId>9806BECA-30FC-44CE-96-82-A0-8F-41-A6-D2-77</m_EntityId>
+			<transform>
+				<m_Position>0 ; 4.0360193 ; 0</m_Position>
+				<m_EulerRotation>1.3904808 ; 0.33066612 ; 1.5116787</m_EulerRotation>
+				<m_Scale>1.0000013 ; 1.0000007 ; 1.0000013</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="MeshRenderer">
+					<model>99097F3B-B578-4C0B-A2-64-E1-51-5A-41-BA-A</model>
+					<mesh>0-0-0-0-0-0-0-0-0-0-0</mesh>
+					<material>
+						<materialType>Opaque</materialType>
+						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
+						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
+						<metallic>0</metallic>
+						<roughness>0</roughness>
+						<reflectance>0</reflectance>
+						<emissive>0</emissive>
+						<ambientOcclusion>0</ambientOcclusion>
+						<albedoTexture>D4DE5A31-2DD4-4EA2-A0-44-48-D2-C9-99-71-8B</albedoTexture>
+						<metallicTexture>FD729C73-1920-471A-A4-16-0-DF-BF-99-31-FC</metallicTexture>
+						<roughnessTexture>752FA041-11DC-4E70-84-39-C-FF-C0-DF-59-80</roughnessTexture>
+						<normalTexture>ADCBBC53-317F-46FB-A1-72-A2-88-43-7D-2E-58</normalTexture>
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>

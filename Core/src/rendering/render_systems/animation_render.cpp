@@ -27,7 +27,7 @@ void AnimationRender::InitResources()
     };
 
     m_SkinnedShader->SetFaceCullingInfo(cullInfo);
-    m_SkinnedShader->CreateInRhi();
+    m_SkinnedShader->CreateInInterface();
 }
 
 void AnimationRender::BeginFrame(const Scene& scene, const Renderer&)

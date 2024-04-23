@@ -12,7 +12,7 @@ PickingStrategy::PickingStrategy(Editor* editor)
     InitRendering(windowSize);
     
     m_PickingShader = XnorCore::ResourceManager::Get<XnorCore::Shader>("picking_shader");
-    m_PickingShader->CreateInRhi();
+    m_PickingShader->CreateInInterface();
 }
 
 PickingStrategy::~PickingStrategy()

@@ -195,8 +195,8 @@ namespace Utils
     template <typename Ret, typename... Args>
     [[nodiscard]]
     constexpr size_t FunctionAddress(std::function<Ret(Args...)> f);
-    
-   
+
+    int32_t TerminalCommand(const std::string& command, bool_t asynchronous = true);
 }
 
 END_XNOR_CORE
