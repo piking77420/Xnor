@@ -263,9 +263,6 @@ void Editor::MenuBar()
 				XnorCore::Serializer::EndDeserialization();
 			}
 
-			if (ImGui::MenuItem("Reload PBR"))
-				XnorCore::ResourceManager::Get<XnorCore::Shader>("deferred_opaque")->Recompile();
-
 			ImGui::EndMenu();
 		}
 		renderer.RenderMenu();
@@ -317,6 +314,20 @@ void Editor::Update()
 {
 	using namespace XnorCore;
 
+	List<Pointer<XnorCore::Shader>> shadersToReload;
+	std::mutex listMutex;
+	
+	FileSystemWatcher shaderWatcher("assets_internal/shaders");
+	shaderWatcher.recursive = true;
+	shaderWatcher.onModified +=
+		[&](const FswEventArgs& args)
+		{
+			listMutex.lock();
+			shadersToReload.Add(ResourceManager::Get<XnorCore::Shader>(args.path.stem().generic_string()));
+			listMutex.unlock();
+		};
+	shaderWatcher.Start();
+
 	Window::Show();
 	while (!Window::ShouldClose())
 	{
@@ -325,6 +336,11 @@ void Editor::Update()
 		Input::HandleEvent();
 		BeginFrame();
 		CheckWindowResize();
+
+		listMutex.lock();
+		shadersToReload.Iterate([](decltype(shadersToReload)::Type* const param){ (*param)->Recompile(); });
+		shadersToReload.Clear();
+		listMutex.unlock();
 		
 		renderer.BeginFrame(*World::scene);
 
@@ -339,6 +355,8 @@ void Editor::Update()
 		EndFrame();
 		renderer.SwapBuffers();
 	}
+
+	shaderWatcher.Stop();
 }
 
 void Editor::EndFrame()

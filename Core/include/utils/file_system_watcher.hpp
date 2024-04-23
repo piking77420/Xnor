@@ -7,7 +7,7 @@
 
 // ReSharper disable once CppInconsistentNaming
 // ReSharper disable once CppEnforceTypeAliasCodeStyle
-typedef unsigned long DWORD; // Windows type forward declaration
+typedef unsigned long DWORD; // Windows type forward declaration  // NOLINT(modernize-use-using)
 
 BEGIN_XNOR_CORE
 
@@ -45,10 +45,10 @@ END_ENUM
 class FileSystemWatcher
 {
 public:
-    Event<const FswEventArgs&> modified;
-    Event<const FswEventArgs&> created;
-    Event<const FswEventArgs&> deleted;
-    Event<const FswRenamedEventArgs&> renamed;
+    Event<const FswEventArgs&> onModified;
+    Event<const FswEventArgs&> onCreated;
+    Event<const FswEventArgs&> onDeleted;
+    Event<const FswRenamedEventArgs&> onRenamed;
 
     /// @brief Time between each update.
     std::chrono::milliseconds updateRate{750};
