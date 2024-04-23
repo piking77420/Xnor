@@ -12,6 +12,7 @@
 #include "scene/component/test_component.hpp"
 #include "serialization/serializer.hpp"
 #include "utils/coroutine.hpp"
+#include "windows/animation_montage_window.hpp"
 #include "windows/content_browser.hpp"
 #include "windows/editor_window.hpp"
 #include "windows/header_window.hpp"
@@ -76,26 +77,26 @@ Editor::~Editor()
 
 void Editor::CreateDefaultWindows()
 {
-	m_UiWindows.push_back(new Performance(this, 50));
-	m_UiWindows.push_back(new Inspector(this));
-	m_UiWindows.push_back(new HeaderWindow(this));
-	m_UiWindows.push_back(new Hierarchy(this));
-	m_UiWindows.push_back(new ContentBrowser(this, XnorCore::FileManager::Get<XnorCore::Directory>("assets")));
-
 	data.editorViewPort.isEditor = true;
 	data.editorViewPort.camera = &data.editorCam;
-	m_UiWindows.push_back(new RenderWindow(this,*gameViewPort));
-	m_UiWindows.push_back(new EditorWindow(this,data.editorViewPort));
 
 	if (XnorCore::FileManager::Contains(SerializedScenePath))
 		data.currentScene = XnorCore::FileManager::Get<XnorCore::File>(SerializedScenePath);
+
+	OpenWindow<Performance>(50);
+	OpenWindow<Inspector>();
+	OpenWindow<HeaderWindow>();
+	OpenWindow<Hierarchy>();
+	OpenWindow<ContentBrowser>(XnorCore::FileManager::Get<XnorCore::Directory>("assets"));
+	OpenWindow<RenderWindow>(*gameViewPort);
+	OpenWindow<EditorWindow>(data.editorViewPort);
 }
 
 void Editor::BeginDockSpace() const
 {
-	static bool dockspaceOpen = true;
-	static bool optFullscreenPersistant = true;
-	const bool optFullscreen = optFullscreenPersistant;
+	static bool_t dockspaceOpen = true;
+	static bool_t optFullscreenPersistant = true;
+	const bool_t optFullscreen = optFullscreenPersistant;
 	
 	ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
 	if (optFullscreen)
@@ -246,7 +247,6 @@ void Editor::MenuBar()
 			{
 				XnorCore::Serializer::StartSerialization(path);
 				XnorCore::Serializer::Serialize<XnorCore::Scene, true>(XnorCore::World::scene);
-				// XnorCore::Serializer::Serialize<XnorCore::TestComponent, true>(v[0]);
 				XnorCore::Serializer::EndSerialization();
 			}
 
@@ -258,7 +258,6 @@ void Editor::MenuBar()
 				XnorCore::World::scene = new XnorCore::Scene();
 				// Possible memory leak?
 				XnorCore::Serializer::Deserialize<XnorCore::Scene, true>(XnorCore::World::scene);
-				// XnorCore::Serializer::Deserialize<XnorCore::TestComponent, true>(v[0]);
 				XnorCore::Serializer::EndDeserialization();
 			}
 			

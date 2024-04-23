@@ -105,7 +105,6 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<CameraComponent>();
     RegisterType<SkinnedMeshRenderer>();
     RegisterType<TestComponentAnimation>();
-
     RegisterType<AudioListener>();
     RegisterType<AudioSource>();
 }

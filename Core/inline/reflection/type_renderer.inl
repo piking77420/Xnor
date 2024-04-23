@@ -182,7 +182,7 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
         // Get member type
         using MemberT = Meta::RemoveConstSpecifier<typename DescriptorT::value_type>;
 
-        // Shorthand for the notify change attribute
+        // Shorthand for the templated attributes
         using NotifyChangeT = Reflection::NotifyChange<ReflectT>;
         using ModifiedCallbackT = Reflection::ModifiedCallback<ReflectT>;
 

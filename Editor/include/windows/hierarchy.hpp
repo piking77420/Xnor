@@ -7,7 +7,7 @@
 
 BEGIN_XNOR_EDITOR
 
-class Hierarchy : public UiWindow
+class Hierarchy final : public UiWindow
 {
 public:
     using UiWindow::UiWindow;

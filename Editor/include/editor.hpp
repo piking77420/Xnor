@@ -5,21 +5,16 @@
 #include "application.hpp"
 #include "definitions.hpp"
 #include "editor_data.hpp"
-#include "editing/picking_strategy.hpp"
+#include "resource/animation_montage.hpp"
 
 BEGIN_XNOR_EDITOR
-
-class UiWindow;
+	class UiWindow;
 class RenderWindow;
 class UserInput;
 
 class Editor final : public XnorCore::Application
 {
-public:
-	void CheckWindowResize() override;
-	
-	EditorData data;
-	
+public:	
 	explicit Editor(int32_t argc, const char_t* const* argv);
 
 	~Editor() override;
@@ -27,6 +22,13 @@ public:
 	DEFAULT_COPY_MOVE_OPERATIONS(Editor)
 	
 	void Update() override;
+
+	void CheckWindowResize() override;
+
+	template <typename T, typename... Args>
+	void OpenWindow(Args&&... args);
+
+	EditorData data;
 
 	// TODO temp
 	static constexpr const char_t* SerializedScenePath = "assets/scenes/basic_scene.scene.xml";
@@ -53,6 +55,10 @@ private:
 	void SetupImGuiStyle() const;
 	
 	void MenuBar();
+
+	XnorCore::AnimationMontage montage;
 };
+
+#include "editor.inl"
 
 END_XNOR_EDITOR

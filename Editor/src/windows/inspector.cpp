@@ -5,7 +5,7 @@
 
 using namespace XnorEditor;
 
-Inspector::Inspector(Editor* editor)
+Inspector::Inspector(Editor* const editor)
     : UiWindow(editor, "Inspector")
 {
 }
@@ -20,7 +20,7 @@ void Inspector::Display()
         ImGui::Text("Nothing selected");
         return;
     }
-    
+
     ImGui::PushID(ptr);
 
     XnorCore::TypeRenderer::DisplayObject<XnorCore::Entity>(ptr);

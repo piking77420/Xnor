@@ -114,6 +114,7 @@
     <ClCompile Include="src\editor.cpp" />
     <ClCompile Include="src\editor_camera.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\windows\animation_montage_window.cpp" />
     <ClCompile Include="src\windows\content_browser.cpp" />
     <ClCompile Include="src\windows\editor_window.cpp" />
     <ClCompile Include="src\windows\header_window.cpp" />
@@ -135,6 +136,7 @@
     <ClInclude Include="include\editor.hpp" />
     <ClInclude Include="include\editor_camera.hpp" />
     <ClInclude Include="include\editor_data.hpp" />
+    <ClInclude Include="include\windows\animation_montage_window.hpp" />
     <ClInclude Include="include\windows\content_browser.hpp" />
     <ClInclude Include="include\windows\editor_window.hpp" />
     <ClInclude Include="include\windows\header_window.hpp" />
@@ -143,6 +145,7 @@
     <ClInclude Include="include\windows\render_window.hpp" />
     <ClInclude Include="include\windows\hierarchy.hpp" />
     <ClInclude Include="include\windows\ui_window.hpp" />
+    <ClInclude Include="inline\editor.inl" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

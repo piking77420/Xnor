@@ -15,7 +15,7 @@ using TypeDescriptor = refl::type_descriptor<T>;
 /// @brief refl::attr::usage::type shorthand
 ///
 /// Specifies that an attribute can only be used on a type
-using FieldType = refl::attr::usage::type;
+using TypeAttribute = refl::attr::usage::type;
 
 /// @brief refl::attr::usage::field shorthand
 ///
@@ -75,7 +75,7 @@ namespace Reflection
     template <typename T>
     struct ModifiedCallback : FieldAttribute
     {
-        using Type = void (*) (T*);
+        using Type = void(*)(T*);
         
         Type callback;
 
@@ -159,6 +159,10 @@ namespace Reflection
 
     /// @brief Display a field as read only
     struct ReadOnly : FieldAttribute
+    {
+    };
+    
+    struct OpenEditorWindow : TypeAttribute
     {
     };
 
