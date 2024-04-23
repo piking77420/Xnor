@@ -55,6 +55,7 @@ bool_t File::Load()
 void File::Unload()
 {
     delete[] m_Data;
+    m_Data = nullptr;
     m_Size = 0;
     
     m_Loaded = false;

@@ -167,5 +167,7 @@ DWORD FileSystemWatcher::NotifyFiltersToWindows(const ENUM_VALUE(FswNotifyFilter
     if (filters & FswNotifyFilters::FileName)
         result |= FILE_NOTIFY_CHANGE_FILE_NAME;
 
+    // TODO: Complete function
+
     return result;
 }

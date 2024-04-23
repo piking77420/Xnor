@@ -9,6 +9,7 @@
 #include "file/file_manager.hpp"
 #include "input/time.hpp"
 #include "resource/resource_manager.hpp"
+#include "resource/shader.hpp"
 #include "scene/component/test_component.hpp"
 #include "serialization/serializer.hpp"
 #include "utils/coroutine.hpp"
@@ -261,7 +262,10 @@ void Editor::MenuBar()
 				// XnorCore::Serializer::Deserialize<XnorCore::TestComponent, true>(v[0]);
 				XnorCore::Serializer::EndDeserialization();
 			}
-			
+
+			if (ImGui::MenuItem("Reload PBR"))
+				XnorCore::ResourceManager::Get<XnorCore::Shader>("deferred_opaque")->Recompile();
+
 			ImGui::EndMenu();
 		}
 		renderer.RenderMenu();

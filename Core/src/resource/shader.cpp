@@ -99,15 +99,18 @@ void Shader::DestroyInInterface()
 
 void Shader::Recompile()
 {
-    DestroyInInterface();
-
     for (Pointer<File>& file : m_Files)
     {
-        if (file)
-            file->Reload();
+        if (!file)
+            continue;
+        
+        file->Reload();
+        Load(file->GetData(), file->GetSize(), FileExtensionToType(file->GetExtension()));
     }
 
-    CreateInInterface();
+    std::vector<ShaderCode> code(m_Code.size());
+    std::ranges::copy(m_Code, code.begin());
+    m_Id = Rhi::ReloadProgram(m_Id, code);
 }
 
 void Shader::Unload()
