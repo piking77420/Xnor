@@ -45,7 +45,7 @@ public:
     /// @brief Computes the internal lights to send to the GPU
     /// @param scene Concerned scene
     /// @param renderer Concerned renderer
-    XNOR_ENGINE void BeginFrame(const Scene& scene, const Renderer& renderer);
+    XNOR_ENGINE void BeginFrame(const Scene& scene, const Viewport& viewport, Renderer& renderer);
     
     /// @brief End frame
     /// @param scene Concerned scene
@@ -122,13 +122,13 @@ private:
     
     XNOR_ENGINE void FecthLightInfo() const;
 
-    XNOR_ENGINE void ComputeShadow(const Scene& scene, const Renderer& renderer);
+    XNOR_ENGINE void ComputeShadow(const Scene& scene, const Viewport& viewport, Renderer& renderer);
 
-    XNOR_ENGINE void ComputeShadowDirLight(const Scene& scene, const Renderer& renderer);
+    XNOR_ENGINE void ComputeShadowDirLight(const Scene& scene, const Camera& viewPortCamera, Renderer& renderer);
 
-    XNOR_ENGINE void ComputeShadowSpotLight(const Scene& scene, const Renderer& renderer);
+    XNOR_ENGINE void ComputeShadowSpotLight(const Scene& scene, Renderer& renderer);
 
-    XNOR_ENGINE void ComputeShadowPointLight(const Scene& scene, const Renderer& renderer);
+    XNOR_ENGINE void ComputeShadowPointLight(const Scene& scene, Renderer& renderer);
     
     XNOR_ENGINE void GetDistanceFromCamera(std::map<float_t, GizmoLight>* sortedLight, const Camera& camera) const;
 

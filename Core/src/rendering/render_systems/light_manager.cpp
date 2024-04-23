@@ -38,14 +38,14 @@ void LightManager::InitResources()
 	m_ShadowFrameBufferPointLight->AttachTexture(*m_DepthBufferForPointLightPass, Attachment::Depth, 0);
 }
 
-void LightManager::BeginFrame(const Scene& scene, const Renderer& renderer)
+void LightManager::BeginFrame(const Scene& scene,const Viewport& viewport, Renderer& renderer)
 {
 	scene.GetAllComponentOfType<PointLight>(&m_PointLights);
 	scene.GetAllComponentOfType<SpotLight>(&m_SpotLights);
 	scene.GetAllComponentOfType<DirectionalLight>(&m_DirectionalLights);
 
 	FecthLightInfo();
-	ComputeShadow(scene, renderer);
+	ComputeShadow(scene, viewport, renderer);
 	Rhi::UpdateLight(*m_GpuLightData);
 }
 
@@ -184,10 +184,10 @@ void LightManager::FecthLightInfo() const
 	}
 }
 
-void LightManager::ComputeShadow(const Scene& scene, const Renderer& renderer)
+void LightManager::ComputeShadow(const Scene& scene, const Viewport& viewport, Renderer& renderer)
 {
 	m_ShadowMapShader->Use();
-	ComputeShadowDirLight(scene, renderer);
+	ComputeShadowDirLight(scene, *viewport.camera, renderer);
 	ComputeShadowSpotLight(scene, renderer);
 	m_ShadowMapShader->Unuse();
 	
@@ -196,7 +196,7 @@ void LightManager::ComputeShadow(const Scene& scene, const Renderer& renderer)
 	m_ShadowMapShaderPointLight->Unuse();
 }
 
-void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& renderer)
+void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPortCamera, Renderer& renderer)
 {
 	const Bound& rebderSceneAAbb = renderer.renderSceneAABB; 
 
@@ -213,30 +213,21 @@ void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& ren
 		Vector3 lightDir =  directionalLight->GetLightDirection();
 		Vector3 extendMax = Vector3(GetMax(rebderSceneAAbb.extents));
 		// Get Pos from scene aabb
-		Vector3 pos = renderer.renderSceneAABB.center + (extendMax * lightDir);//static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);
+		Vector3 pos = renderer.renderSceneAABB.center + (extendMax * -lightDir);//static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);
 		// Set the camera for dirlight as a orthographic
-		Camera cam;
-		cam.isOrthographic = true;
-		cam.position = pos;
-		cam.LookAt(cam.position + lightDir);
-		cam.near = directionalLight->near;
-		cam.far = directionalLight->far;
-		cam.leftRight = directionalLight->leftRight;
-		cam.bottomtop = directionalLight->bottomTop;
+
 		
 		// CacadeShadowMap // TODO Make it cleaner ,
 		std::vector<float_t> shadowCascadeLevels =
 			{
-			cam.far / 26.0f,
-			cam.far / 24.0f,
-			cam.far / 22.0f,
-			cam.far / 18.0f,
-			cam.far / 16.0f,
-			cam.far / 14.0f,
-			cam.far / 12.0f,
-			cam.far / 8.0f,
-			cam.far / 4.0f,
-			cam.far / 2.0f
+			viewPortCamera.far / 20.0f,
+			viewPortCamera.far / 18.0f,
+			viewPortCamera.far / 16.0f,
+			viewPortCamera.far / 14.0f,
+			viewPortCamera.far / 12.0f,
+			viewPortCamera.far / 8.0f,
+			viewPortCamera.far / 4.0f,
+			viewPortCamera.far / 2.0f
 			};
 		
 		
@@ -250,11 +241,20 @@ void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& ren
 		}
 
 		std::vector<Camera> cascadedCameras;
-		m_CascadeShadowMap.GetCascadeCameras(&cascadedCameras,cam,lightDir, shadowMapSize );
+		m_CascadeShadowMap.GetCascadeCameras(&cascadedCameras, viewPortCamera ,lightDir, shadowMapSize );
+
+		Camera camDirectional;
+		camDirectional.isOrthographic = true;
+		camDirectional.position = pos;
+		camDirectional.LookAt(camDirectional.position + lightDir);
+		camDirectional.near = directionalLight->near;
+		camDirectional.far = directionalLight->far;
+		camDirectional.leftRight = directionalLight->leftRight;
+		camDirectional.bottomtop = directionalLight->bottomTop;
 
 		for (size_t i = 0; i < cascadedCameras.size(); i++)
 		{
-			cascadedCameras[i].GetVp(shadowMap.GetSize(),&m_GpuLightData->dirLightSpaceMatrix[i]);
+			cascadedCameras[i].GetVp(shadowMap.GetSize(), &m_GpuLightData->dirLightSpaceMatrix[i]);
 			m_ShadowFrameBuffer->AttachTextureLayer(*m_DirectionalShadowMaps, Attachment::Depth, 0, static_cast<uint32_t>(i));
 			RenderPassBeginInfo renderPassBeginInfo =
 			{
@@ -273,7 +273,7 @@ void LightManager::ComputeShadowDirLight(const Scene& scene, const Renderer& ren
 	
 }
 
-void LightManager::ComputeShadowSpotLight(const Scene& scene, const Renderer& renderer)
+void LightManager::ComputeShadowSpotLight(const Scene& scene, Renderer& renderer)
 {
 	for (size_t i = 0; i < m_SpotLights.size(); i++)
 	{
@@ -303,7 +303,7 @@ void LightManager::ComputeShadowSpotLight(const Scene& scene, const Renderer& re
 	}
 }
 
-void LightManager::ComputeShadowPointLight(const Scene& scene, const Renderer& renderer)
+void LightManager::ComputeShadowPointLight(const Scene& scene, Renderer& renderer)
 {
 	Camera cam;
 	for (size_t i = 0; i < m_PointLights.size(); i++)

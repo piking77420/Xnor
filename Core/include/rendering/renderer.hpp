@@ -39,19 +39,11 @@ public:
 
     /// @brief Initializes the renderer
     XNOR_ENGINE void Initialize();
-    
-    /// @brief Update All the infos of the current frame lights, animation, etc...
-    /// @param scene The scene
-    XNOR_ENGINE void BeginFrame(const Scene& scene);
-
-    /// @brief stuff made at the end of the frame
-    /// @param scene The scene
-    XNOR_ENGINE void EndFrame(const Scene& scene);
 
     /// @brief Renders a scene on a viewport
     /// @param viewport Viewport target
     /// @param scene Scene to render
-    XNOR_ENGINE void RenderViewport(const Viewport& viewport, const Scene& scene) const;
+    XNOR_ENGINE void RenderViewport(const Viewport& viewport, const Scene& scene);
 
     /// @brief Renders a scene without shading , calling begin and endfrane 
     /// @param camera Camera
@@ -71,19 +63,19 @@ public:
     /// @param scene Scene to render
     /// @param drawEditorUi Whether to draw the editor only UI
     XNOR_ENGINE void RenderNonShadedPass(const Scene& scene, const Camera& camera, const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass, const
-                                         Pointer<Shader>& shaderToUse, bool_t drawEditorUi) const;
+                                         Pointer<Shader>& shaderToUse, bool_t drawEditorUi);
     
     /// @brief Swaps the front and back buffer.
     XNOR_ENGINE void SwapBuffers() const;
 
     XNOR_ENGINE void RenderMenu();
 private:
-    LightManager m_LightManager;
-    SkyboxRenderer m_SkyboxRenderer;
-    PostProcessPass m_PostProcessPass;
-    AnimationRender m_AnimationRender;
-    mutable Octree<const MeshRenderer> m_RenderOctree;
-    mutable std::vector<const MeshRenderer*> m_MeshRenderers;
+     LightManager m_LightManager;
+     SkyboxRenderer m_SkyboxRenderer;
+     PostProcessPass m_PostProcessPass;
+     AnimationRender m_AnimationRender;
+     Octree<const MeshRenderer> m_RenderOctree;
+     std::vector<const MeshRenderer*> m_MeshRenderers;
 
     mutable Frustum m_Frustum;
     
@@ -96,6 +88,14 @@ private:
     
     Pointer<Model> m_Quad;
     Pointer<Model> m_Cube;
+
+    /// @brief Update All the infos of the current frame lights, animation, etc...
+    /// @param scene The scene
+    XNOR_ENGINE void BeginFrame(const Scene& scene, const Viewport& viewport);
+
+    /// @brief stuff made at the end of the frame
+    /// @param scene The scene
+    XNOR_ENGINE void EndFrame(const Scene& scene);
     
     
     XNOR_ENGINE void BindCamera(const Camera& camera, Vector2i screenSize) const;
@@ -113,7 +113,7 @@ private:
     
     XNOR_ENGINE void DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) const;
 
-    XNOR_ENGINE void PrepareOctree() const;
+    XNOR_ENGINE void PrepareOctree();
 
 
 };

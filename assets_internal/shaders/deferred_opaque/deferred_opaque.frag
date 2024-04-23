@@ -207,7 +207,7 @@ float ShadowCalculationPointLight(vec3 LightToPixel, vec3 fragPos, int index)
     float currentDistance = length(LightToPixel);
     
     float shadow = 0.0;
-    float bias = 0.15;
+    float bias = 0.20;
     int samples = 20;
     float viewDistance = length(cameraPos - fragPos);
     float diskRadius = (1.0 + (viewDistance / far)) / 25.0;
@@ -219,7 +219,7 @@ float ShadowCalculationPointLight(vec3 LightToPixel, vec3 fragPos, int index)
         float distance = texture(pointLightCubemapArrayPixelDistance, vec4(textureUv.x, textureUv.y, textureUv.z , index)).r;
         
         if(distance + bias < currentDistance)
-        shadow += 1.0;
+            shadow += 1.0;
     }
     shadow /= float(samples);
     

@@ -35,24 +35,25 @@ void Renderer::Initialize()
     Rhi::PrepareRendering();
 }
 
-void Renderer::BeginFrame(const Scene& scene)
+void Renderer::BeginFrame(const Scene& scene, const Viewport& viewport) 
 {
     scene.GetAllComponentOfType<MeshRenderer>(&m_MeshRenderers);
     Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
-    m_LightManager.BeginFrame(scene, *this);
+    m_LightManager.BeginFrame(scene, viewport, *this);
     m_AnimationRender.BeginFrame(scene, *this);
     PrepareOctree();
 }
 
-void Renderer::EndFrame(const Scene& scene)
-{
+void Renderer::EndFrame(const Scene& scene) 
+{ 
     m_MeshRenderers.clear();
     m_LightManager.EndFrame(scene);
     m_AnimationRender.EndFrame();
 }
 
-void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene) const
+void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene) 
 {
+    BeginFrame(scene, viewport);
     BindCamera(*viewport.camera, viewport.viewPortSize);
     m_Frustum.UpdateFromCamera(*viewport.camera, viewport.GetAspect());
     
@@ -63,6 +64,8 @@ void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene) cons
     if (viewportData.usePostProcess)
         m_PostProcessPass.Compute(*viewport.viewportData.colorAttachment, *viewport.m_Image,
                                   viewportData.postprocessRendertarget);
+
+    EndFrame(scene);
 }
 
 void Renderer::ZPass(const Scene& scene, const Camera& camera,
@@ -195,7 +198,7 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
     Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 }
 
-void Renderer::PrepareOctree() const
+void Renderer::PrepareOctree()
 {
     std::vector<ObjectBounding<const MeshRenderer>> meshrenderWithAabb;
 
@@ -339,15 +342,14 @@ void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*
 
     for (const MeshRenderer* const meshRenderer : meshRenderers)
     {
-
-        
+        /*
         Bound aabb;
         meshRenderer->GetAABB(&aabb);
         
         if (!m_Frustum.IsOnFrustum(aabb))
         {
             continue;
-        }
+        }*/
 
         const Transform& transform = meshRenderer->GetEntity()->transform;
         ModelUniformData modelData;
@@ -374,7 +376,7 @@ void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*
 }
 
 void Renderer::RenderNonShadedPass(const Scene& scene, const Camera& camera, const RenderPassBeginInfo& renderPassBeginInfo,
-    const RenderPass& renderPass, const Pointer<Shader>& shaderToUse, bool_t drawEditorUi) const
+    const RenderPass& renderPass, const Pointer<Shader>& shaderToUse, bool_t drawEditorUi)
 {
     const Vector2i viewportSize = renderPassBeginInfo.renderAreaOffset + renderPassBeginInfo.renderAreaExtent;
     BindCamera(camera, viewportSize);

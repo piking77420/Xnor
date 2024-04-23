@@ -6,26 +6,26 @@
 using namespace XnorCore;
 
 
-void CascadeShadowMap::GetCascadeCameras(std::vector<Camera>* cameras, const Camera& baseCam, Vector3 lightDir,
+void CascadeShadowMap::GetCascadeCameras(std::vector<Camera>* cameras, const Camera& viewPortCamera, Vector3 lightDir,
     Vector2i screenSize)
 {
     cameras->resize(DirectionalCascadeLevel + 1);
     
     for (size_t i = 0; i < cameras->size(); ++i)
     {
-        cameras->at(i) = baseCam;
+        cameras->at(i) = viewPortCamera;
         
         if (i == 0)
         {
-            GetCamera(&cameras->at(i), baseCam.near, m_CascadeLevel[i],baseCam,lightDir,screenSize);
+            GetCamera(&cameras->at(i), viewPortCamera.near, m_CascadeLevel[i],viewPortCamera,lightDir,screenSize);
         }
         else if (i < m_CascadeLevel.size())
         {
-            GetCamera(&cameras->at(i), m_CascadeLevel[i - 1], m_CascadeLevel[i], baseCam,lightDir,screenSize);
+            GetCamera(&cameras->at(i), m_CascadeLevel[i - 1], m_CascadeLevel[i], viewPortCamera,lightDir,screenSize);
         }
         else
         {
-            GetCamera(&cameras->at(i), m_CascadeLevel[i - 1], baseCam.far,baseCam,lightDir,screenSize);
+            GetCamera(&cameras->at(i), m_CascadeLevel[i - 1], viewPortCamera.far, viewPortCamera,lightDir,screenSize);
 
         }
     }
@@ -91,7 +91,7 @@ void CascadeShadowMap::ComputeFrustumCorner(std::vector<Vector4>* frustumCornerW
 
 void CascadeShadowMap::GetCamera(Camera* cascadedCamera,const float_t cascadedNear, const float_t cascadedFar, const Camera& baseCamera, const Vector3 lightDir, const Vector2i screenSize)
 {
-    const Matrix proj = Matrix::Perspective(
+    const Matrix proj = Camera::Perspective(
             baseCamera.fov * Calc::Deg2Rad, static_cast<float_t>(screenSize.x) / static_cast<float_t>(screenSize.y), cascadedNear,
             cascadedFar);
     

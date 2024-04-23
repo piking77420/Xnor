@@ -85,7 +85,7 @@ void Editor::CreateDefaultWindows()
 
 	data.editorViewPort.isEditor = true;
 	data.editorViewPort.camera = &data.editorCam;
-	//m_UiWindows.push_back(new RenderWindow(this,*gameViewPort));
+	m_UiWindows.push_back(new RenderWindow(this,*gameViewPort));
 	m_UiWindows.push_back(new EditorWindow(this,data.editorViewPort));
 
 	if (XnorCore::FileManager::Contains(SerializedScenePath))
@@ -257,7 +257,6 @@ void Editor::MenuBar()
 				data.selectedEntity = nullptr;
 				
 				// End the current Frame
-				renderer.EndFrame(*XnorCore::World::scene);
 				delete XnorCore::World::scene;
 				
 				XnorCore::World::scene = new XnorCore::Scene();
@@ -330,9 +329,7 @@ void Editor::Update()
 		UpdateWindows();
 		WorldBehaviours();
 		
-		renderer.BeginFrame(*World::scene);
 		OnRenderingWindow();
-		renderer.EndFrame(*World::scene);
 
 		Coroutine::UpdateAll();
 		Input::Update();

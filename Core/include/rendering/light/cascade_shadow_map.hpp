@@ -18,7 +18,7 @@ public:
     
     DEFAULT_COPY_MOVE_OPERATIONS(CascadeShadowMap)
 
-    XNOR_ENGINE void GetCascadeCameras(std::vector<Camera>* cameras ,const Camera& baseCam, Vector3 lightDir, Vector2i screenSize);
+    XNOR_ENGINE void GetCascadeCameras(std::vector<Camera>* cameras ,const Camera&  viewPortCamera, Vector3 lightDir, Vector2i screenSize);
     
     XNOR_ENGINE void SetCascadeLevel(const std::vector<float_t>& cascadeLevel);
 
