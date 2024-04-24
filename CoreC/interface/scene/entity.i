@@ -38,6 +38,8 @@
         return false;
     }
 
+    public void AddComponent<T>() where T : Component, new() => GetComponents().Add(new T());
+
     public void RemoveComponent<T>() where T : Component
     {
         foreach (Component component in GetComponents())
@@ -49,6 +51,12 @@
             }
         }
     }
+
+    public static bool operator ==(Entity a, Entity b) => a.OperatorEq(b);
+
+    public static bool operator !=(Entity a, Entity b) => !(a == b);
 %}
+
+%csmethodmodifiers XnorCore::Entity::OperatorEq "private";
 
 %include "scene/entity.hpp"

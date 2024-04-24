@@ -59,7 +59,68 @@
     {
         get => CoreC.ComponentListGetItem(this, index);
     }
+
+    public void ForEach(Action<Component> action)
+    {
+        foreach (Component c in this)
+            action(c);
+    }
+
+    public Component Find(Predicate<Component> predicate)
+    {
+        foreach (Component c in this)
+        {
+            if (predicate(c))
+                return c;
+        }
+
+        return null;
+    }
+
+    public bool Exists(Predicate<Component> predicate)
+    {
+        foreach (Component c in this)
+        {
+            if (predicate(c))
+                return true;
+        }
+
+        return false;
+    }
 %}
+
+%ignore XnorCore::List<XnorCore::Component*>::Front;
+%ignore XnorCore::List<XnorCore::Component*>::Back;
+
+%ignore XnorCore::List<XnorCore::Component*>::Contains;
+
+%ignore XnorCore::List<XnorCore::Component*>::Add();
+%ignore XnorCore::List<XnorCore::Component*>::Fill;
+%ignore XnorCore::List<XnorCore::Component*>::Insert;
+%ignore XnorCore::List<XnorCore::Component*>::RemoveAt;
+%ignore XnorCore::List<XnorCore::Component*>::Clear;
+%ignore XnorCore::List<XnorCore::Component*>::Resize;
+
+%ignore XnorCore::List<XnorCore::Component*>::List;
+
+%ignore XnorCore::List::AddRange;
+%ignore XnorCore::List::RemoveRange;
+
+%ignore XnorCore::List::Iterate;
+%ignore XnorCore::List::Exists;
+%ignore XnorCore::List::Find;
+%ignore XnorCore::List::Sort;
+
+%ignore XnorCore::List::Begin();
+%ignore XnorCore::List::End();
+%ignore XnorCore::List::CBegin() const;
+%ignore XnorCore::List::CEnd() const;
+%ignore XnorCore::List::RBegin();
+%ignore XnorCore::List::REnd();
+%ignore XnorCore::List::CrBegin() const;
+%ignore XnorCore::List::CrEnd() const;
+%ignore XnorCore::List::begin();
+%ignore XnorCore::List::end();
 
 %include "utils/list.hpp"
 

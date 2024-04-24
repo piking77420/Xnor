@@ -252,10 +252,10 @@ template <typename T>
 typename List<T>::ConstIterator List<T>::CEnd() const { return m_Vector.cend(); }
 
 template <typename T>
-typename List<T>::ReverseIterator List<T>::RBegin() const { return m_Vector.rbegin(); }
+typename List<T>::ReverseIterator List<T>::RBegin() { return m_Vector.rbegin(); }
 
 template <typename T>
-typename List<T>::ReverseIterator List<T>::REnd() const { return m_Vector.rend(); }
+typename List<T>::ReverseIterator List<T>::REnd() { return m_Vector.rend(); }
 
 template <typename T>
 typename List<T>::ConstReverseIterator List<T>::CrBegin() const { return m_Vector.crbegin(); }

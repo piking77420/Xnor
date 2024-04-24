@@ -40,7 +40,10 @@ typedef float float_t;
 %csmethodmodifiers operator std::string "public override";
 %rename(ToString) operator std::string;
 
+// Ignore output stream operator
 %ignore operator<<;
+
+
 
 // These structs are used to copy data between C++ and C# value types
 %{
