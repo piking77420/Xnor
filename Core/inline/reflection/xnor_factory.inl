@@ -6,6 +6,7 @@
 
 #include <unordered_map>
 
+#include "application.hpp"
 #include "scene/component/script_component.hpp"
 
 BEGIN_XNOR_CORE
@@ -25,7 +26,7 @@ void XnorFactory::RegisterType()
     const std::string humanizedName = Utils::RemoveNamespaces(std::string(name));
     
     FactoryTypeInfo info = {
-        .displayFunc = [](void* const obj) -> void { TypeRenderer::DisplayObject<T>(static_cast<T*>(obj)); },
+        .displayFunc = [](void* const obj) -> void { TypeRenderer::DisplayObject<T, decltype(Application::TypeWindowBindings)>(static_cast<T*>(obj), Application::TypeWindowBindings); },
         .serializeFunc = [](void* const obj) -> void { Serializer::Serialize<T, false>(static_cast<T*>(obj)); },
         .deserializeFunc = [](void* const obj) -> void { Serializer::Deserialize<T, false>(static_cast<T*>(obj)); },
         .isConstructible = isConstructible,

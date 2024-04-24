@@ -10,17 +10,17 @@
 BEGIN_XNOR_CORE
 
 template <typename MemberT, typename T>
-template <typename ReflectT, typename DescriptorT>
-void TypeRendererImpl<MemberT, T>::Render(const TypeRenderer::Metadata<ReflectT, MemberT, DescriptorT>& metadata)
+template <typename ReflectT, typename DescriptorT, typename WindowBindingsT>
+void TypeRendererImpl<MemberT, T>::Render(const TypeRenderer::Metadata<ReflectT, MemberT, DescriptorT, WindowBindingsT>& metadata)
 {
     if constexpr (Reflection::IsReflected<MemberT>)
-        TypeRenderer::DisplayObject<MemberT>(metadata.obj);
+        TypeRenderer::DisplayObject<MemberT, WindowBindingsT>(metadata.obj, metadata.bindings);
     else
         Logger::LogError("Type doesn't have a TypeRenderImpl : {} of type {}", metadata.name, typeid(MemberT).name());
 }
 
-template <typename ReflectT, typename MemberT, typename DescriptorT>
-void TypeRenderer::DisplayGridPlotting(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
+template <typename ReflectT, typename MemberT, typename DescriptorT, typename WindowBindingsT>
+void TypeRenderer::DisplayGridPlotting(const Metadata<ReflectT, MemberT, DescriptorT, WindowBindingsT>& metadata)
 {
     const Reflection::GridPlotting& plotting = Reflection::GetAttribute<Reflection::GridPlotting, DescriptorT>();
     
@@ -76,8 +76,8 @@ void TypeRenderer::DisplayGridPlotting(const Metadata<ReflectT, MemberT, Descrip
     ImGui::SliderFloat("##v2x", &metadata.obj->x, plotting.minimum, plotting.maximum, "%.3f", ImGuiSliderFlags_AlwaysClamp);
 }
 
-template <typename ReflectT, typename MemberT, typename DescriptorT>
-void TypeRenderer::DisplayEnum(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
+template <typename ReflectT, typename MemberT, typename DescriptorT, typename WindowBindingsT>
+void TypeRenderer::DisplayEnum(const Metadata<ReflectT, MemberT, DescriptorT, WindowBindingsT>& metadata)
 {
     // Get an array of the enum names
     constexpr auto enumNames = magic_enum::enum_names<MemberT>();
@@ -95,8 +95,8 @@ void TypeRenderer::DisplayEnum(const Metadata<ReflectT, MemberT, DescriptorT>& m
     ImGui::Combo(metadata.name, reinterpret_cast<int32_t*>(metadata.obj), getter, names, static_cast<int32_t>(enumNames.size()));
 }
 
-template <typename ReflectT, typename MemberT, typename DescriptorT>
-void TypeRenderer::DisplayEnumFlag(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
+template <typename ReflectT, typename MemberT, typename DescriptorT, typename WindowBindingsT>
+void TypeRenderer::DisplayEnumFlag(const Metadata<ReflectT, MemberT, DescriptorT, WindowBindingsT>& metadata)
 {
     // Get an array of the enum names
     constexpr auto enumNames = magic_enum::enum_names<MemberT>();
@@ -150,8 +150,8 @@ void TypeRenderer::DisplayEnumFlag(const Metadata<ReflectT, MemberT, DescriptorT
     }
 }
 
-template <typename ReflectT>
-void TypeRenderer::DisplayObject(ReflectT* const obj)
+template <typename ReflectT, typename WindowBindingsT>
+void TypeRenderer::DisplayObject(ReflectT* const obj, const WindowBindingsT bindings)
 {
     // Get reflected data
     constexpr TypeDescriptor<ReflectT> desc = Reflection::GetTypeInfo<ReflectT>();
@@ -164,12 +164,12 @@ void TypeRenderer::DisplayObject(ReflectT* const obj)
     Utils::AlignImGuiCursor(textSize);
     ImGui::Text("%s", typeName.c_str());
 
-    DisplayFields<ReflectT, true>(obj);
-    DisplayFields<ReflectT, false>(obj);
+    DisplayFields<ReflectT, true>(obj, bindings);
+    DisplayFields<ReflectT, false>(obj, bindings);
 }
 
-template <typename ReflectT, bool_t IsStatic>
-void TypeRenderer::DisplayFields(ReflectT* const obj)
+template <typename ReflectT, bool_t IsStatic, typename WindowBindingsT>
+void TypeRenderer::DisplayFields(ReflectT* const obj, const WindowBindingsT bindings)
 {
     // Get reflected data
     constexpr TypeDescriptor<ReflectT> desc = Reflection::GetTypeInfo<ReflectT>();
@@ -217,7 +217,7 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
                 const MemberT oldValue = DescriptorT::get(obj);
 
                 // Display object
-                DisplayObjectInternal<ReflectT, MemberT, DescriptorT>(obj);
+                DisplayObjectInternal<ReflectT, MemberT, DescriptorT, WindowBindingsT>(obj, bindings);
 
                 // Get the new value
                 const MemberT newValue = DescriptorT::get(obj);
@@ -240,7 +240,7 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
             else
             {
                 // Don't need to notify, simply display the object
-                DisplayObjectInternal<ReflectT, MemberT, DescriptorT>(obj);
+                DisplayObjectInternal<ReflectT, MemberT, DescriptorT, WindowBindingsT>(obj, bindings);
             }
 
             ImGui::EndDisabled();
@@ -256,15 +256,15 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
     }
 }
 
-template <typename ReflectT, typename MemberT, typename DescriptorT>
-void TypeRenderer::DisplayObjectInternal(ReflectT* obj)
+template <typename ReflectT, typename MemberT, typename DescriptorT, typename WindowBindingsT>
+void TypeRenderer::DisplayObjectInternal(ReflectT* obj, const WindowBindingsT bindings)
 {
     // Get humanized variable name
     const std::string n = Utils::HumanizeVariableName(DescriptorT::name.c_str());
     const char_t* const name = n.c_str();
 
     // Construct metadata
-    const Metadata<ReflectT, MemberT, DescriptorT> metadata = {
+    const Metadata<ReflectT, MemberT, DescriptorT, WindowBindingsT> metadata = {
         .topLevelObj = obj,
         .name = name,
         .obj = [&]() -> MemberT*
@@ -273,27 +273,28 @@ void TypeRenderer::DisplayObjectInternal(ReflectT* obj)
                 return const_cast<MemberT*>(&DescriptorT::get());
             else
                 return const_cast<MemberT*>(&DescriptorT::get(obj));
-        }()
+        }(),
+        .bindings = bindings
     };
 
     ImGui::PushID(metadata.obj);
 
-    DisplaySimpleType<ReflectT, MemberT, DescriptorT>(metadata);
+    DisplaySimpleType<ReflectT, MemberT, DescriptorT, WindowBindingsT>(metadata);
 
     // Check for a tooltip
-    CheckDisplayTooltip<ReflectT, MemberT, DescriptorT>(metadata);
+    CheckDisplayTooltip<ReflectT, MemberT, DescriptorT, WindowBindingsT>(metadata);
 
     ImGui::PopID();
 }
 
-template <typename ReflectT, typename MemberT, typename DescriptorT>
-void TypeRenderer::DisplaySimpleType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata)
+template <typename ReflectT, typename MemberT, typename DescriptorT, typename WindowBindingsT>
+void TypeRenderer::DisplaySimpleType(const Metadata<ReflectT, MemberT, DescriptorT, WindowBindingsT>& metadata)
 {
     TypeRendererImpl<MemberT>::template Render<ReflectT, DescriptorT>(metadata);
 }
 
-template <typename ReflectT, typename MemberT, typename DescriptorT>
-void TypeRenderer::CheckDisplayTooltip(const Metadata<ReflectT, MemberT, DescriptorT>&)
+template <typename ReflectT, typename MemberT, typename DescriptorT, typename WindowBindingsT>
+void TypeRenderer::CheckDisplayTooltip(const Metadata<ReflectT, MemberT, DescriptorT, WindowBindingsT>&)
 {
     // Check if it has the attribute
     if constexpr (Reflection::HasAttribute<Reflection::Tooltip, DescriptorT>())

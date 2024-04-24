@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "rendering/renderer.hpp"
+#include "resource/animation_montage.hpp"
 #include "utils/event.hpp"
 
 /// @file application.hpp
@@ -43,6 +44,11 @@ public:
 
     /// @brief Should handle the window resize actions
     XNOR_ENGINE virtual void CheckWindowResize() = 0;
+
+    // TODO temp, move elsewhere
+    XNOR_ENGINE static constexpr auto TypeWindowBindings = std::make_tuple(
+        std::make_pair<AnimationMontage*, std::string_view>(nullptr, "AnimationMontageWindow")
+    );
     
 protected:
   
