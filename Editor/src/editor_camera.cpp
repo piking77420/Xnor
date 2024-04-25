@@ -27,13 +27,11 @@ void EditorCamera::UpdateCamera()
 
 void EditorCamera::CameraOnRightClick()
 {
-    if (!ImGui::IsWindowHovered())
-        return;
-    
     if (ImGui::IsMouseClicked(ImGuiMouseButton_Right))
     {
-        //XnorCore::Window::SetCursorHidden(true);
+        XnorCore::Window::SetCursorHidden(true);
         m_MouseDrag = ImGui::GetMousePos();
+        m_LowPassFilterDeltaMouse.Reset();
     }
 
     if (ImGui::IsMouseDown(ImGuiMouseButton_Right))
@@ -41,7 +39,7 @@ void EditorCamera::CameraOnRightClick()
         m_PreviousMouseDrag = m_MouseDrag;
         m_MouseDrag = ImGui::GetMousePos();
         ClampMouseToScreen(&m_MouseDrag, &m_PreviousMouseDrag);
-        
+
         
         m_MouseDelta = m_MouseDrag - m_PreviousMouseDrag;
         m_LowPassFilterDeltaMouse.AddSample({ m_MouseDelta.x, m_MouseDelta.y } );
@@ -51,7 +49,7 @@ void EditorCamera::CameraOnRightClick()
 
     if (ImGui::IsMouseReleased(ImGuiMouseButton_Right))
     {
-        //XnorCore::Window::SetCursorHidden(false);
+        XnorCore::Window::SetCursorHidden(false);
         m_MouseDrag = Vector2::Zero();
     }
     
@@ -112,8 +110,7 @@ void EditorCamera::OnMiddleButton()
 
     if (ImGui::IsMouseDown(ImGuiMouseButton_Middle))
     {
-        
-        const Vector3 vector = m_EditorRefCamera->right * io.MouseDelta.x + m_EditorRefCamera->up * io.MouseDelta.y;
+        const Vector3 vector = m_EditorRefCamera->right * -io.MouseDelta.x + m_EditorRefCamera->up * io.MouseDelta.y;
         AddMovement(vector * m_CameraSpeed);
     }
 
@@ -210,7 +207,7 @@ void EditorCamera::ClampMouseToScreen(Vector2* currentMousePos, Vector2* previou
     const Vector2 windowSpacing = ImGui::GetStyle().DisplayWindowPadding;
     bool_t changePos = false;
 
-    if (std::abs(mouseToWindow.x) > imguiHalfSize.x - windowSpacing.x)
+    if (std::abs(mouseToWindow.x) > imguiHalfSize.x - windowSpacing.x * 2.f)
     {
         // Swap Pos x
         mouseToWindow.x = -mouseToWindow.x;

@@ -1688,6 +1688,11 @@ uint32_t Rhi::CreateTexture(const TextureCreateInfo& textureCreateInfo)
 	AllocTexture(textureCreateInfo.textureType, textureId, textureCreateInfo);
 	ComputeTextureFiltering(textureCreateInfo.textureType, textureId, textureCreateInfo);
 	ComputeTextureWrapping(textureCreateInfo.textureType, textureId, textureCreateInfo);
+	
+	float_t aniso = 0.f;
+	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso); 
 	glGenerateTextureMipmap(textureId);
+	
 	return textureId;
 }

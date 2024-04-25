@@ -1,4 +1,6 @@
 ﻿#include "windows/editor_window.hpp"
+
+#include "utils/logger.hpp"
 #include "utils/utils.hpp"
 
 using namespace XnorEditor;
