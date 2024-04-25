@@ -13,20 +13,22 @@ class TestComponentAnimation final : public Component
     REFLECTABLE_IMPL(TestComponentAnimation)
 
 public:
+    XNOR_ENGINE TestComponentAnimation();
+    XNOR_ENGINE ~TestComponentAnimation() override;
+    
     DEFAULT_COPY_MOVE_OPERATIONS(TestComponentAnimation)
     
     XNOR_ENGINE void Begin() override;
 
     XNOR_ENGINE void Update() override;
 
-    XNOR_ENGINE TestComponentAnimation() = default;
-    XNOR_ENGINE ~TestComponentAnimation() override = default;
-
 private:
     SkinnedMeshRenderer* m_Renderer;
-    AnimationMontage m_Montage;
+    AnimationMontage* m_Montage;
 };
 
 END_XNOR_CORE
 
-REFL_AUTO(type(XnorCore::TestComponentAnimation, bases<XnorCore::Component>));
+REFL_AUTO(type(XnorCore::TestComponentAnimation, bases<XnorCore::Component>),
+    field(m_Montage)
+);

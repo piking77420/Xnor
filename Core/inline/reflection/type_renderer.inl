@@ -14,7 +14,7 @@ template <typename ReflectT, typename DescriptorT>
 void TypeRendererImpl<MemberT, T>::Render(const TypeRenderer::Metadata<ReflectT, MemberT, DescriptorT>& metadata)
 {
     if constexpr (Reflection::IsReflected<MemberT>)
-        TypeRenderer::DisplayObject<MemberT>(metadata.obj);
+        TypeRenderer::DisplayObject<MemberT>(metadata.obj, metadata.windowInfo);
     else
         Logger::LogError("Type doesn't have a TypeRenderImpl : {} of type {}", metadata.name, typeid(MemberT).name());
 }
@@ -151,25 +151,46 @@ void TypeRenderer::DisplayEnumFlag(const Metadata<ReflectT, MemberT, DescriptorT
 }
 
 template <typename ReflectT>
-void TypeRenderer::DisplayObject(ReflectT* const obj)
+std::pair<void*, const char_t*> TypeRenderer::DisplayObject(ReflectT* const obj, std::pair<void*, const char_t*>* windowInfo)
 {
+    std::pair<void*, const char_t*> infoLocal = std::make_pair<void*, const char_t*>(nullptr, "");
+    if (windowInfo == nullptr)
+    {
+        windowInfo = &infoLocal;
+    }
+    
     // Get reflected data
-    constexpr TypeDescriptor<ReflectT> desc = Reflection::GetTypeInfo<ReflectT>();
+    using DescriptorT = decltype(Reflection::GetTypeInfo<ReflectT>());
 
     // Humanized type name
-    const std::string typeName = Utils::RemoveNamespaces(desc.name.c_str());
+    const std::string typeName = Utils::RemoveNamespaces(DescriptorT::name.c_str());
 
     // Display the type name centered
     const float_t textSize = ImGui::CalcTextSize(typeName.c_str()).x;
     Utils::AlignImGuiCursor(textSize);
     ImGui::Text("%s", typeName.c_str());
 
-    DisplayFields<ReflectT, true>(obj);
-    DisplayFields<ReflectT, false>(obj);
+    if constexpr (Reflection::HasAttribute<Reflection::OpenEditorWindow, DescriptorT>())
+    {
+        constexpr Reflection::OpenEditorWindow window = Reflection::GetAttribute<Reflection::OpenEditorWindow, DescriptorT>();
+        if (ImGui::IsItemHovered())
+        {
+            if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            {
+                windowInfo->first = obj;
+                windowInfo->second = window.windowName;
+            }
+        }
+    }
+
+    DisplayFields<ReflectT, true>(obj, windowInfo);
+    DisplayFields<ReflectT, false>(obj, windowInfo);
+
+    return *windowInfo;
 }
 
 template <typename ReflectT, bool_t IsStatic>
-void TypeRenderer::DisplayFields(ReflectT* const obj)
+void TypeRenderer::DisplayFields(ReflectT* const obj, std::pair<void*, const char_t*>* const windowInfo)
 {
     // Get reflected data
     constexpr TypeDescriptor<ReflectT> desc = Reflection::GetTypeInfo<ReflectT>();
@@ -217,7 +238,7 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
                 const MemberT oldValue = DescriptorT::get(obj);
 
                 // Display object
-                DisplayObjectInternal<ReflectT, MemberT, DescriptorT>(obj);
+                DisplayObjectInternal<ReflectT, MemberT, DescriptorT>(obj, windowInfo);
 
                 // Get the new value
                 const MemberT newValue = DescriptorT::get(obj);
@@ -240,7 +261,7 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
             else
             {
                 // Don't need to notify, simply display the object
-                DisplayObjectInternal<ReflectT, MemberT, DescriptorT>(obj);
+                DisplayObjectInternal<ReflectT, MemberT, DescriptorT>(obj, windowInfo);
             }
 
             ImGui::EndDisabled();
@@ -257,7 +278,7 @@ void TypeRenderer::DisplayFields(ReflectT* const obj)
 }
 
 template <typename ReflectT, typename MemberT, typename DescriptorT>
-void TypeRenderer::DisplayObjectInternal(ReflectT* obj)
+void TypeRenderer::DisplayObjectInternal(ReflectT* obj, std::pair<void*, const char_t*>* const windowInfo)
 {
     // Get humanized variable name
     const std::string n = Utils::HumanizeVariableName(DescriptorT::name.c_str());
@@ -273,7 +294,8 @@ void TypeRenderer::DisplayObjectInternal(ReflectT* obj)
                 return const_cast<MemberT*>(&DescriptorT::get());
             else
                 return const_cast<MemberT*>(&DescriptorT::get(obj));
-        }()
+        }(),
+        .windowInfo = windowInfo
     };
 
     ImGui::PushID(metadata.obj);
@@ -298,7 +320,7 @@ void TypeRenderer::CheckDisplayTooltip(const Metadata<ReflectT, MemberT, Descrip
     // Check if it has the attribute
     if constexpr (Reflection::HasAttribute<Reflection::Tooltip, DescriptorT>())
     {
-        // Set tooltip        
+        // Set tooltip
         ImGui::SetItemTooltip("%s", Reflection::GetAttribute<Reflection::Tooltip, DescriptorT>().text);
     }
 }

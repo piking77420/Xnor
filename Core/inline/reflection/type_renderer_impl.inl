@@ -338,7 +338,8 @@ void TypeRendererImpl<Pointer<T>, Meta::EnableIf<Meta::IsBaseOf<Resource, T>>>::
         const TypeRenderer::Metadata<ReflectT, T, DescriptorT> metadataPtr = {
             .topLevelObj = metadata.topLevelObj,
             .name = metadata.name,
-            .obj = metadata.obj->Get()
+            .obj = metadata.obj->Get(),
+            .windowInfo = metadata.windowInfo
         };
 
         TypeRenderer::DisplaySimpleType<ReflectT, T, DescriptorT>(metadataPtr);
@@ -359,7 +360,8 @@ void TypeRendererImpl<T*, Meta::EnableIf<Meta::IsBaseOf<Resource, T>>>::Render(c
         const TypeRenderer::Metadata<ReflectT, T, DescriptorT> metadataPtr = {
             .topLevelObj = metadata.topLevelObj,
             .name = metadata.name,
-            .obj = *metadata.obj
+            .obj = *metadata.obj,
+            .windowInfo = metadata.windowInfo
         };
 
         TypeRenderer::DisplaySimpleType<ReflectT, T, DescriptorT>(metadataPtr);
@@ -428,7 +430,7 @@ void TypeRendererImpl<Component*>::Render(const TypeRenderer::Metadata<ReflectT,
 
     if (ImGui::CollapsingHeader(metadata.name))
     {
-        TypeRenderer::DisplayObjectUsingFactory(*metadata.obj, hash);
+        TypeRenderer::DisplayObjectUsingFactory(*metadata.obj, hash, metadata.windowInfo);
     }
 }
 
@@ -441,7 +443,8 @@ void TypeRendererImpl<T[N]>::Render(const TypeRenderer::Metadata<ReflectT, T[N],
         // Construct common metadata for the array type, this allows a range attribute to be used
         TypeRenderer::Metadata<ReflectT, T, DescriptorT> metadataArray = {
             .topLevelObj = metadata.topLevelObj,
-            .name = ""
+            .name = "",
+            .windowInfo = metadata.windowInfo
         };
         
         for (size_t i = 0; i < N; i++)
@@ -477,7 +480,8 @@ void TypeRendererImpl<List<T>>::Render(const TypeRenderer::Metadata<ReflectT, Li
         // Construct common metadata for the array type, this allows a range attribute to be used
         TypeRenderer::Metadata<ReflectT, T, DescriptorT> metadataArray = {
             .topLevelObj = metadata.topLevelObj,
-            .name = ""
+            .name = "",
+            .windowInfo = metadata.windowInfo
         };
 
         size_t listSize = metadata.obj->GetSize();
@@ -541,7 +545,8 @@ void TypeRendererImpl<List<Component*>>::Render(const TypeRenderer::Metadata<Ref
         // Construct common metadata for the array type, this allows a range attribute to be used
         TypeRenderer::Metadata<ReflectT, Component*, DescriptorT> metadataArray = {
             .topLevelObj = metadata.topLevelObj,
-            .name = ""
+            .name = "",
+            .windowInfo = metadata.windowInfo
         };
 
         size_t listSize = metadata.obj->GetSize();
@@ -603,14 +608,16 @@ void TypeRendererImpl<std::map<KeyT, T>>::Render(const TypeRenderer::Metadata<Re
         {
             .topLevelObj = metadata.topLevelObj,
             .name = metadata.name,
-            .obj = &it.first
+            .obj = &it.first,
+            .windowInfo = metadata.windowInfo
         };
     
         TypeRenderer::Metadata<ReflectT, T, DescriptorT> metadataMap =
         {
             .topLevelObj = metadata.topLevelObj,
             .name = metadata.name,
-            .obj = &it.second
+            .obj = &it.second,
+            .windowInfo = metadata.windowInfo
         };
 
         TypeRenderer::DisplaySimpleType<ReflectT, KeyT, DescriptorT>(metadataKey);

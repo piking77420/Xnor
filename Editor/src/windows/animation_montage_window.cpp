@@ -4,10 +4,15 @@
 using namespace XnorEditor;
 
 AnimationMontageWindow::AnimationMontageWindow(Editor* editor, XnorCore::AnimationMontage* montage)
-    : UiWindow(editor, "AnimationMontage"), m_Montage(montage)
+    : UiWindow(editor, "AnimationMontageEditor"), m_Montage(montage)
 {
 }
 
 void AnimationMontageWindow::Display()
 {
+}
+
+void AnimationMontageWindow::SetParam(void* param)
+{
+    m_Montage = static_cast<decltype(m_Montage)>(param);
 }

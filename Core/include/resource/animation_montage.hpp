@@ -55,6 +55,6 @@ private:
 
 END_XNOR_CORE
 
-REFL_AUTO(type(XnorCore::AnimationMontage, bases<XnorCore::Resource>, XnorCore::Reflection::OpenEditorWindow()),
+REFL_AUTO(type(XnorCore::AnimationMontage, bases<XnorCore::Resource>, XnorCore::Reflection::OpenEditorWindow("AnimationMontageEditor")),
     field(m_NotifiesTimeline)
 )

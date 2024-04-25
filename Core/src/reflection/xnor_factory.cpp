@@ -45,7 +45,7 @@ inline void* XnorFactory::CreateObject(const std::string& name)
     return it->second.createFunc();
 }
 
-inline void XnorFactory::DisplayObject(void* const obj, const size_t hash)
+inline void XnorFactory::DisplayObject(void* const obj, const size_t hash, std::pair<void*, const char_t*>* const windowInfo)
 {
     auto&& it = m_FactoryMapHash.find(hash);
 
@@ -55,7 +55,7 @@ inline void XnorFactory::DisplayObject(void* const obj, const size_t hash)
         return;
     }
 
-    it->second.displayFunc(obj);
+    it->second.displayFunc(obj, windowInfo);
 }
 
 void XnorFactory::SerializeObject(void* const obj, const size_t hash)

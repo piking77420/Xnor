@@ -17,7 +17,7 @@ class XnorFactory
     struct FactoryTypeInfo
     {
         std::function<void*()> createFunc;
-        std::function<void(void*)> displayFunc;
+        std::function<void(void*, std::pair<void*, const char_t*>*)> displayFunc;
         std::function<void(void*)> serializeFunc;
         std::function<void(void*)> deserializeFunc;
 
@@ -41,7 +41,8 @@ public:
     /// @brief Displays an object using the TypeRenderer via a hash code
     /// @param obj Current object
     /// @param hash Type hash code
-    XNOR_ENGINE static void DisplayObject(void* obj, size_t hash);
+    /// @param windowInfo Window info
+    XNOR_ENGINE static void DisplayObject(void* obj, size_t hash, std::pair<void*, const char_t*>* windowInfo);
 
     /// @brief Serialize an object via a hash code
     /// @param obj Current object

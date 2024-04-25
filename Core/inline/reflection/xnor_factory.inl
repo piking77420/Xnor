@@ -25,7 +25,7 @@ void XnorFactory::RegisterType()
     const std::string humanizedName = Utils::RemoveNamespaces(std::string(name));
     
     FactoryTypeInfo info = {
-        .displayFunc = [](void* const obj) -> void { TypeRenderer::DisplayObject<T>(static_cast<T*>(obj)); },
+        .displayFunc = [](void* const obj, std::pair<void*, const char_t*>* const windowInfo) -> void { TypeRenderer::DisplayObject<T>(static_cast<T*>(obj), windowInfo); },
         .serializeFunc = [](void* const obj) -> void { Serializer::Serialize<T, false>(static_cast<T*>(obj)); },
         .deserializeFunc = [](void* const obj) -> void { Serializer::Deserialize<T, false>(static_cast<T*>(obj)); },
         .isConstructible = isConstructible,

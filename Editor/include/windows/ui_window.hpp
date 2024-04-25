@@ -19,12 +19,17 @@ public:
     
     DEFAULT_COPY_MOVE_OPERATIONS(UiWindow)
 
-    ImGuiWindowFlags_ windowFlags = ImGuiWindowFlags_None;
+    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_None;
 
     [[nodiscard]]
-    const char_t* GetName() const;
+    const std::string& GetName() const;
     
     virtual void Display() = 0;
+
+    virtual void SetParam([[maybe_unused]] void* const param) {}
+
+    // Whenever the window need to render after the update of the world
+    virtual void OnApplicationRendering();
     
     [[nodiscard]]
     bool_t IsFocused() const;
@@ -37,8 +42,8 @@ public:
     
     void FetchInfo();
 
-    // Whenever the window need to render after the update of the world
-    virtual void OnApplicationRendering();
+    bool_t opened = true;
+    bool_t canClose = false;
 
 protected:
     std::string m_WindowTitle = "Untitled";

@@ -35,13 +35,18 @@ public:
         const char_t* name;
         /// @brief Member object
         MemberT* obj;
+
+        /// @brief Window opening info, contains a pointer to the selected element and the name of the window to open
+        std::pair<void*, const char_t*>* windowInfo;
     };
 
     /// @brief Displays an object
     /// @tparam ReflectT Object type
     /// @param obj Object pointer
+    /// @param windowInfo Window information, pass nullptr
+    /// @returns Window information
     template <typename ReflectT>
-    static void DisplayObject(ReflectT* obj);
+    static std::pair<void*, const char_t*> DisplayObject(ReflectT* obj, std::pair<void*, const char_t*>* windowInfo = nullptr);
     
     /// @brief Displays a grid plotting for a Vector2
     /// @tparam ReflectT Reflected top level type
@@ -78,14 +83,15 @@ public:
     /// @brief Displays an object via the Factory using its hash
     /// @param obj Object pointer
     /// @param hash Object hash
-    XNOR_ENGINE static void DisplayObjectUsingFactory(void* obj, size_t hash);
+    /// @param windowInfo Window info
+    XNOR_ENGINE static void DisplayObjectUsingFactory(void* obj, size_t hash, std::pair<void*, const char_t*>* windowInfo);
     
 private:
     template <typename ReflectT, typename MemberT, typename DescriptorT>
-    static void DisplayObjectInternal(ReflectT* obj);
+    static void DisplayObjectInternal(ReflectT* obj, std::pair<void*, const char_t*>* windowInfo);
 
     template <typename ReflectT, bool_t StaticT>
-    static void DisplayFields(ReflectT* obj);
+    static void DisplayFields(ReflectT* obj, std::pair<void*, const char_t*>* windowInfo);
 
     /// @brief Displays a tooltip if the member has one
     /// @tparam ReflectT Reflected top level type

@@ -8,7 +8,8 @@
 #include "resource/animation_montage.hpp"
 
 BEGIN_XNOR_EDITOR
-	class UiWindow;
+
+class UiWindow;
 class RenderWindow;
 class UserInput;
 
@@ -27,6 +28,11 @@ public:
 
 	template <typename T, typename... Args>
 	void OpenWindow(Args&&... args);
+
+	template <typename T, typename... Args>
+	void SetupWindow(Args&&... args);
+
+	void OpenCreatedWindow(const std::string& name, void* arg) const;
 
 	EditorData data;
 

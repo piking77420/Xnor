@@ -29,6 +29,18 @@ void Editor::CheckWindowResize()
 {
 }
 
+void Editor::OpenCreatedWindow(const std::string& name, void* const arg) const
+{
+	for (UiWindow* const w : m_UiWindows)
+	{
+		if (w->GetName() != name)
+			continue;
+
+		w->opened = true;
+		w->SetParam(arg);
+	}
+}
+
 Editor::Editor(const int32_t argc, const char_t* const* const argv)
 	: Application(std::forward<decltype(argc)>(argc), std::forward<decltype(argv)>(argv))
 {
@@ -90,6 +102,8 @@ void Editor::CreateDefaultWindows()
 	OpenWindow<ContentBrowser>(XnorCore::FileManager::Get<XnorCore::Directory>("assets"));
 	OpenWindow<RenderWindow>(*gameViewPort);
 	OpenWindow<EditorWindow>(data.editorViewPort);
+	
+	SetupWindow<AnimationMontageWindow>(nullptr);
 }
 
 void Editor::BeginDockSpace() const
@@ -272,9 +286,14 @@ void Editor::UpdateWindows()
 {
 	for (UiWindow* const w : m_UiWindows)
 	{
-		ImGui::Begin(w->GetName(), nullptr, w->windowFlags);
-		w->FetchInfo();
-		w->Display();
+		if (!w->opened)
+			continue;
+
+		if (ImGui::Begin(w->GetName().c_str(), w->canClose ? &w->opened : nullptr, w->windowFlags))
+		{
+			w->FetchInfo();
+			w->Display();
+		}
 		ImGui::End();
 	}
 

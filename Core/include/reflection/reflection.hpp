@@ -161,9 +161,16 @@ namespace Reflection
     struct ReadOnly : FieldAttribute
     {
     };
-    
+
+    /// @brief Binds a window to a type
     struct OpenEditorWindow : TypeAttribute
     {
+        /// @brief Window text
+        const char_t* windowName;
+
+        /// @brief Creates a tooltip from a string literal
+        /// @param name Window name
+        constexpr explicit OpenEditorWindow(const char_t* const name) : windowName(name) {}
     };
 
     template <typename T>
