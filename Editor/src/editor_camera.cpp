@@ -80,28 +80,34 @@ void EditorCamera::EditorCameraRotation()
 void EditorCamera::EditorCameraMovement()
 {
     const float_t cameraSpeed = m_CameraSpeed;
-
     Vector3 addVector;
 
-    if (ImGui::IsKeyDown(ImGuiKey_W))
-        addVector += m_EditorRefCamera->front * cameraSpeed;
-
-    if (ImGui::IsKeyDown(ImGuiKey_S))
-        addVector -= m_EditorRefCamera->front * cameraSpeed;
-
-    if (ImGui::IsKeyDown(ImGuiKey_A))
-        addVector -= m_EditorRefCamera->right * cameraSpeed;
-    
-    if (ImGui::IsKeyDown(ImGuiKey_D))
-        addVector += m_EditorRefCamera->right * cameraSpeed;
    
-    if (ImGui::IsKeyDown(ImGuiKey_Space))
-        addVector += Vector3::UnitY() * cameraSpeed;
-
+    if (ImGui::IsKeyDown(ImGuiKey_W))
+        addVector += m_EditorRefCamera->front;
+    if (ImGui::IsKeyDown(ImGuiKey_S))
+        addVector -= m_EditorRefCamera->front;
+    if(ImGui::IsKeyDown(ImGuiKey_A))
+        addVector -= m_EditorRefCamera->right;
+    if(ImGui::IsKeyDown(ImGuiKey_D))
+        addVector += m_EditorRefCamera->right;
+    if(ImGui::IsKeyDown(ImGuiKey_Space))
+        addVector += Vector3::UnitY();
     if (ImGui::IsKeyDown(ImGuiMod_Shift))
-        addVector -= Vector3::UnitY() * cameraSpeed;
+        addVector -= Vector3::UnitY();
 
-    AddMovement(addVector);
+    if (ImGui::IsKeyPressed(ImGuiKey_W,false) ||
+       ImGui::IsKeyPressed(ImGuiKey_S,false) ||
+       ImGui::IsKeyPressed(ImGuiKey_A,false) ||
+       ImGui::IsKeyPressed(ImGuiKey_D,false) ||
+       ImGui::IsKeyPressed(ImGuiKey_Space,false) ||
+       ImGui::IsKeyPressed(ImGuiMod_Shift,false))
+    {
+        addVector *= 1.5f;
+    }
+
+
+    AddMovement(addVector * cameraSpeed);
 }
 
 void EditorCamera::OnMiddleButton()
@@ -181,12 +187,14 @@ void EditorCamera::GoToObject()
 
 void EditorCamera::AddMovement(const Vector3& movement)
 {
-    if (movement == Vector3::Zero())
-        return;
-    
-    m_LowPassFilterMovment.AddSample((movement * m_CameraSpeed) * XnorCore::Time::GetDeltaTime<float_t>());
-    
-    m_EditorRefCamera->position = m_EditorRefCamera->position + m_LowPassFilterMovment.GetAvarage<Vector3>();
+   if (movement == Vector3::Zero())
+   {
+       return;
+   }
+
+    const float_t dt = XnorCore::Time::GetDeltaTime<float_t>();
+
+    m_EditorRefCamera->position += movement * dt;
     m_EditorRef->data.gotoObject = false;
 }
 

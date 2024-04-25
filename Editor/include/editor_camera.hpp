@@ -24,7 +24,7 @@ private:
     Editor* m_EditorRef = nullptr;
     XnorCore::Camera* m_EditorRefCamera = nullptr;
     float_t m_DistanceToStop = 0.f;
-
+    
     Vector2 m_MouseDrag;
     Vector2 m_PreviousMouseDrag;
     Vector2 m_MouseDelta;
@@ -32,7 +32,7 @@ private:
     float_t m_MouseSensitivity = 0.1f;
     float_t m_Yaw = -90.f;
     float_t m_Pitch = 0.f;
-    float_t m_CameraSpeed = 2.5f;
+    float_t m_CameraSpeed = 4.5f;
 
     bool_t m_IsMoving = false;
     bool_t m_FirstMove = false;
@@ -40,8 +40,6 @@ private:
     float_t m_MouseWheelZoom = 50.f;
 
     XnorCore::LowPassFilter <Vector2, 6> m_LowPassFilterDeltaMouse;
-    XnorCore::LowPassFilter <Vector3, 10> m_LowPassFilterMovment;
-    XnorCore::LowPassFilter <Vector2, 7> m_MousePosFilter;
     
     void CameraOnRightClick();
     
