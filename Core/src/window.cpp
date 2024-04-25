@@ -85,7 +85,7 @@ void Window::SetIcon(Texture& icon)
 
 void Window::SetCursorHidden(const bool_t value)
 {
-	glfwSetInputMode(m_Window, GLFW_CURSOR, value ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+	ShowCursor(!value);
 }
 
 void Window::SetCursorPosition(const Vector2 newPosition)
