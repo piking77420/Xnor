@@ -29,14 +29,14 @@ void EditorWindow::Display()
     if (DrawOnTopOfImage())
         return;
 
-    const bool isEditingTranform = EditTransform(); 
+    const bool_t isEditingTranform = EditTransform(); 
     
     if (IsFocused())
     {
         m_EditorCamera.UpdateCamera();
 
         if (!isEditingTranform)
-        SelectEntityOnScreen();
+            SelectEntityOnScreen();
     }
     m_EditorCamera.OnPressGoToObject();
 }

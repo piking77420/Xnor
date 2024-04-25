@@ -6,6 +6,7 @@
 #include "editor.hpp"
 #include "input/time.hpp"
 #include "scene/component/mesh_renderer.hpp"
+#include "utils/logger.hpp"
 #include "utils/utils.hpp"
 
 using namespace XnorEditor;
@@ -22,8 +23,6 @@ void EditorCamera::UpdateCamera()
     CameraOnRightClick();
     EditorCameraMovement();
     
-    const ImGuiIO& io = ImGui::GetIO();
-    m_LowPassFilterDeltaMouse.AddSample({ io.MouseDelta.x, io.MouseDelta.y } );
 }
 
 void EditorCamera::CameraOnRightClick()
@@ -33,26 +32,35 @@ void EditorCamera::CameraOnRightClick()
     
     if (ImGui::IsMouseClicked(ImGuiMouseButton_Right))
     {
-        XnorCore::Window::SetCursorHidden(true);
-        m_MouseDragStart = ImGui::GetMousePos();
+        //XnorCore::Window::SetCursorHidden(true);
+        m_MouseDrag = ImGui::GetMousePos();
     }
 
     if (ImGui::IsMouseDown(ImGuiMouseButton_Right))
     {
+        m_PreviousMouseDrag = m_MouseDrag;
+        m_MouseDrag = ImGui::GetMousePos();
+        ClampMouseToScreen(&m_MouseDrag, &m_PreviousMouseDrag);
+        
+        
+        m_MouseDelta = m_MouseDrag - m_PreviousMouseDrag;
+        m_LowPassFilterDeltaMouse.AddSample({ m_MouseDelta.x, m_MouseDelta.y } );
+
         EditorCameraRotation();
     }
 
     if (ImGui::IsMouseReleased(ImGuiMouseButton_Right))
     {
-        XnorCore::Window::SetCursorHidden(false);
+        //XnorCore::Window::SetCursorHidden(false);
+        m_MouseDrag = Vector2::Zero();
     }
-
+    
     
 }
 
 void EditorCamera::EditorCameraRotation()
 {
-   const Vector2 mousDelta = m_LowPassFilterDeltaMouse.GetAvarage<Vector2>();
+    const Vector2 mousDelta = m_LowPassFilterDeltaMouse.GetAvarage<Vector2>();
 
     m_Yaw += mousDelta.x;
     m_Pitch -= mousDelta.y; 
@@ -87,7 +95,7 @@ void EditorCamera::EditorCameraMovement()
         addVector -= m_EditorRefCamera->right * cameraSpeed;
     
     if (ImGui::IsKeyDown(ImGuiKey_D))
-        addVector +=  m_EditorRefCamera->right * cameraSpeed;
+        addVector += m_EditorRefCamera->right * cameraSpeed;
    
     if (ImGui::IsKeyDown(ImGuiKey_Space))
         addVector += Vector3::UnitY() * cameraSpeed;
@@ -178,10 +186,55 @@ void EditorCamera::AddMovement(const Vector3& movement)
 {
     if (movement == Vector3::Zero())
         return;
-
-    Vector3 currentPos =  m_EditorRefCamera->position;
-    Vector3 nextPos = m_EditorRefCamera->position + movement;
     
-    m_EditorRefCamera->position = Vector3::Lerp(m_EditorRefCamera->position,m_EditorRefCamera->position + movement,XnorCore::Time::GetDeltaTime() * m_CameraSpeed);
+    m_LowPassFilterMovment.AddSample((movement * m_CameraSpeed) * XnorCore::Time::GetDeltaTime<float_t>());
+    
+    m_EditorRefCamera->position = m_EditorRefCamera->position + m_LowPassFilterMovment.GetAvarage<Vector3>();
     m_EditorRef->data.gotoObject = false;
 }
+
+void EditorCamera::ClampMouseToScreen(Vector2* currentMousePos, Vector2* previousMousePos)
+{
+    if (currentMousePos == nullptr)
+        return;
+
+    // Get Info
+    const Vector2 imguiWindowPos = ImGui::GetWindowPos();
+    const Vector2 imguiHalfSize = ImGui::GetWindowSize() * 0.5f;
+    const Vector2 imguiWindowMid  = imguiWindowPos + imguiHalfSize;
+    
+    // Mouse Relative to window
+    Vector2 mouseToWindow = *currentMousePos - imguiWindowMid ;
+    Vector2 previousMouseToWindow = *previousMousePos - imguiWindowMid;
+
+    const Vector2 windowSpacing = ImGui::GetStyle().DisplayWindowPadding;
+    bool_t changePos = false;
+
+    if (std::abs(mouseToWindow.x) > imguiHalfSize.x - windowSpacing.x)
+    {
+        // Swap Pos x
+        mouseToWindow.x = -mouseToWindow.x;
+        previousMouseToWindow.x = -previousMouseToWindow.x;
+        changePos = true;
+    }
+
+    
+    if (std::abs(mouseToWindow.y) > imguiHalfSize.y - windowSpacing.y * 2.f)
+    {
+        // Swap Pos y
+        mouseToWindow.y = -mouseToWindow.y;
+        previousMouseToWindow.y = -previousMouseToWindow.y;
+        changePos = true;
+    }
+    
+    if (changePos)
+    {
+        *currentMousePos = mouseToWindow * 0.5f + imguiWindowMid;
+        *previousMousePos = previousMouseToWindow * 0.5f + imguiWindowMid;
+        
+        XnorCore::Window::SetCursorPosition(*currentMousePos);
+    }
+
+}
+
+

@@ -56,9 +56,9 @@
 			<name>Cube</name>
 			<m_EntityId>9806BECA-30FC-44CE-96-82-A0-8F-41-A6-D2-77</m_EntityId>
 			<transform>
-				<m_Position>0 ; 4.0360193 ; 0</m_Position>
-				<m_EulerRotation>1.3904808 ; 0.33066612 ; 1.5116787</m_EulerRotation>
-				<m_Scale>1.0000013 ; 1.0000007 ; 1.0000013</m_Scale>
+				<m_Position>-1.5149856 ; 4.0360184 ; 1.7266324</m_Position>
+				<m_EulerRotation>-2.559186 ; 1.1385105 ; -3.0284169</m_EulerRotation>
+				<m_Scale>1.0000114 ; 1.0000056 ; 1.0000062</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">
@@ -85,6 +85,24 @@
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
 		</2>
+		<3>
+			<name>Entity</name>
+			<m_EntityId>1DC36956-6123-4720-93-FF-B7-AB-1D-84-7B-60</m_EntityId>
+			<transform>
+				<m_Position>-4.0389705 ; 6.7387085 ; 3.6925738</m_Position>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="PointLight">
+					<color>1 ; 1 ; 1 ; 1</color>
+					<intensity>1000</intensity>
+					<castShadow>true</castShadow>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</3>
 	</m_Entities>
 </Scene>
 

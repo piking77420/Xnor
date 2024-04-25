@@ -20,19 +20,21 @@ public:
     ~LowPassFilter() = default;
 
     template<typename U>
-    U GetAvarage();
+    U GetAvarage() const;
     
     void AddSample(T sample);
+
+    void Reset();
 
 private:
     std::array<Type,size> m_Data;
     T m_Sum;
-    uint32_t m_CurrentFrameIndex;
+    size_t m_CurrentFrameIndex;
 };
 
 template <typename T, size_t size>
 template <typename U>
-U LowPassFilter<T, size>::GetAvarage()
+U LowPassFilter<T, size>::GetAvarage() const
 {
     static_assert(size != 0, "Size can't be equal to zero");
     
@@ -50,6 +52,17 @@ void LowPassFilter<T, size>::AddSample(T sample)
     if (m_CurrentFrameIndex >= size)
         m_CurrentFrameIndex = 0;
     
+}
+
+template <typename T, size_t size>
+void LowPassFilter<T, size>::Reset()
+{
+    for (T& t: m_Data)
+    {
+        t = {}; 
+    }
+    m_CurrentFrameIndex = 0;
+    m_Sum = {};
 }
 
 END_XNOR_CORE
