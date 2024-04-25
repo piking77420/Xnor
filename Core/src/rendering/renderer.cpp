@@ -55,14 +55,14 @@ void Renderer::EndFrame(const Scene& scene)
 
 void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene) const
 {
-	BindCamera(*viewport.camera,viewport.viewPortSize);
+	BindCamera(*viewport.camera, viewport.viewPortSize);
 	m_Frustum.UpdateFromCamera(*viewport.camera,viewport.GetAspect());
 	const ViewportData& viewportData = viewport.viewportData;
 	DeferedRenderring(*viewport.camera, m_MeshRenderers, scene.skybox, viewportData, viewport.viewPortSize);
 	ForwardPass(m_MeshRenderers, scene.skybox, viewport, viewport.viewPortSize, viewport.isEditor);
 	
 	if (viewportData.usePostProcess)
-		m_PostProcessPass.Compute(*viewport.viewportData.colorAttachment , *viewport.m_Image, viewportData.postprocessRendertarget);
+		m_PostProcessPass.Compute(*viewport.viewportData.colorAttachment , *viewport.image, viewportData.postprocessRendertarget);
 }
 
 void Renderer::RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass,

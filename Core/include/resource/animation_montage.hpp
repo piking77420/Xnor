@@ -29,8 +29,6 @@ public:
 
     DEFAULT_COPY_MOVE_OPERATIONS(AnimationMontage)
 
-    XNOR_ENGINE void BindRenderer(SkinnedMeshRenderer* renderer);
-
     XNOR_ENGINE void Start();
     XNOR_ENGINE void Update();
 
@@ -42,11 +40,11 @@ public:
     [[nodiscard]]
     XNOR_ENGINE bool_t HasEnded() const;
 
+    Pointer<Mesh> mesh;
+
 private:
     Timeline<> m_NotifiesTimeline;
     Timeline<> m_AnimationTimeline;
-
-    SkinnedMeshRenderer* m_MeshRenderer;
 
     bool_t m_Ended;
 

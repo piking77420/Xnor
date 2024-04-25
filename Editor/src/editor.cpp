@@ -103,7 +103,7 @@ void Editor::CreateDefaultWindows()
 	OpenWindow<RenderWindow>(*gameViewPort);
 	OpenWindow<EditorWindow>(data.editorViewPort);
 	
-	SetupWindow<AnimationMontageWindow>(nullptr);
+	SetupWindow<AnimationMontageWindow>();
 }
 
 void Editor::BeginDockSpace() const
@@ -312,7 +312,8 @@ void Editor::OnRenderingWindow()
 {
 	for (UiWindow* const w : m_UiWindows)
 	{
-		w->OnApplicationRendering();
+		if (w->opened)
+			w->OnApplicationRendering();
 	}
 }
 

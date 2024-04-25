@@ -2,11 +2,6 @@
 
 using namespace XnorCore;
 
-void AnimationMontage::BindRenderer(SkinnedMeshRenderer* renderer)
-{
-    m_MeshRenderer = renderer;
-}
-
 void AnimationMontage::Start()
 {
     m_NotifiesTimeline.Start();
@@ -30,7 +25,7 @@ void AnimationMontage::AddEvent(const float_t when, const FunctionT& function)
 
 void AnimationMontage::AddAnimation(const float_t when, const size_t animationId)
 {
-    const Animation* const anim = m_MeshRenderer->mesh->GetAnimation(animationId);
+    const Animation* const anim = mesh->GetAnimation(animationId);
 
     if (anim == nullptr)
     {
@@ -44,7 +39,7 @@ void AnimationMontage::AddAnimation(const float_t when, const size_t animationId
 
     m_AnimationTimeline.AddBeginEvent(when, [this, anim]() -> void
     {
-        m_MeshRenderer->StartAnimation(anim);
+        // m_MeshRenderer->StartAnimation(anim);
     });
 }
 
@@ -56,14 +51,14 @@ void AnimationMontage::AddAnimation(const float_t when, const Animation* animati
 
     m_AnimationTimeline.AddBeginEvent(when, [this, animation]() -> void
     {
-        m_MeshRenderer->StartAnimation(animation);
+        // m_MeshRenderer->StartAnimation(animation);
     });
 }
 
 void AnimationMontage::AddAnimationBlending(const float_t when, const size_t sourceAnimation, const size_t targetAnimation, const float_t duration)
 {
-    const Animation* const sourceAnim = m_MeshRenderer->mesh->GetAnimation(sourceAnimation);
-    const Animation* const targetAnim = m_MeshRenderer->mesh->GetAnimation(targetAnimation);
+    const Animation* const sourceAnim = mesh->GetAnimation(sourceAnimation);
+    const Animation* const targetAnim = mesh->GetAnimation(targetAnimation);
 
     if (sourceAnim == nullptr)
     {
@@ -83,13 +78,13 @@ void AnimationMontage::AddAnimationBlending(const float_t when, const size_t sou
 
     m_AnimationTimeline.AddBeginEvent(when, [&]() -> void
     {
-        m_MeshRenderer->StartAnimation(sourceAnim);
-        m_MeshRenderer->StartBlending(targetAnim);
+        // m_MeshRenderer->StartAnimation(sourceAnim);
+        // m_MeshRenderer->StartBlending(targetAnim);
     });
 
     m_AnimationTimeline.AddUpdateEvent(when, [&](const float_t deltaTime) -> void
     {
-        m_MeshRenderer->SetCrossFadeDelta(deltaTime);
+        // m_MeshRenderer->SetCrossFadeDelta(deltaTime);
     });
 }
 

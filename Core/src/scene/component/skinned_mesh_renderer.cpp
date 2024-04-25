@@ -13,12 +13,12 @@ void SkinnedMeshRenderer::Update()
     m_Animator.Animate();
 }
 
-void SkinnedMeshRenderer::StartAnimation(const Animation* animation)
+void SkinnedMeshRenderer::StartAnimation(const Animation* const animation)
 {
     m_Animator.Start(animation);
 }
 
-void SkinnedMeshRenderer::StartBlending(const Animation* target)
+void SkinnedMeshRenderer::StartBlending(const Animation* const target)
 {
     m_TargetAnimator.Start(target);
     m_Animator.StartBlending(&m_TargetAnimator);

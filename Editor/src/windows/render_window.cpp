@@ -19,12 +19,12 @@ RenderWindow::RenderWindow(Editor* editor, const std::string& title, XnorCore::V
 
 void RenderWindow::Display()
 {
-    ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_Viewport->m_Image->GetId()), ImGui::GetContentRegionAvail(),  ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_Viewport->image->GetId()), ImGui::GetContentRegionAvail(),  ImVec2(0, 1), ImVec2(1, 0));
 }
 
 void RenderWindow::OnApplicationRendering()
 {
-    bool_t isValid = m_Viewport->IsValid();
+    const bool_t isValid = m_Viewport->IsValid();
     
     if (!isValid || m_Viewport->viewPortSize != m_Size)
     {
@@ -32,7 +32,7 @@ void RenderWindow::OnApplicationRendering()
     }
 
     if (isValid)
-    m_Editor->renderer.RenderViewport(*m_Viewport, *XnorCore::World::scene);
+        m_Editor->renderer.RenderViewport(*m_Viewport, *XnorCore::World::scene);
 }
 
 

@@ -13,6 +13,8 @@
 
 BEGIN_XNOR_CORE
 
+class Mesh;
+
 class Skeleton final : public Resource
 {
 public:    
@@ -46,6 +48,8 @@ public:
 
     [[nodiscard]]
     XNOR_ENGINE const List<Bone>& GetBones() const;
+
+    Mesh* mesh;
 
 private:
     List<Bone> m_Bones;

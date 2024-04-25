@@ -214,10 +214,12 @@ public:
     /// @return Index of the element in the list (size_t max if not found)
     [[nodiscard]]
     size_t FindPosition(const std::function<bool_t(const T*)>& lambda) const;
+
     /// <p>The lambda returns bool_t, and has a pointer to the current element and its index as parameters</p>
     /// 
     /// @param lambda Function lambda
     /// @return Pointer to element
+    [[nodiscard]]
     T* Find(const std::function<bool_t(const T*, size_t)>& lambda);
 
     void Sort(std::function<bool_t(const T& left, const T& right)> predicate = std::less());
@@ -255,6 +257,7 @@ public:
     /// @return Element
     /// 
     /// @throw invalid_argument If index >= list size
+    [[nodiscard]]
     T& operator[](size_t index);
     
     /// @brief Gets an element of the list at a specified index
@@ -263,6 +266,7 @@ public:
     /// @return Element
     /// 
     /// @throw invalid_argument If index >= list size
+    [[nodiscard]]
     const T& operator[](size_t index) const;
 #endif
 
