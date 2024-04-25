@@ -14,6 +14,8 @@ public:
     explicit Inspector(Editor* editor);
     
     void Display() override;
+
+    // static constexpr auto TypeWindowBindings = std::make_tuple;
 };
 
 END_XNOR_EDITOR

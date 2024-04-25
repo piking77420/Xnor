@@ -22,8 +22,8 @@ void Inspector::Display()
     }
 
     ImGui::PushID(ptr);
-    
-    XnorCore::TypeRenderer::DisplayObject<XnorCore::Entity, decltype(XnorCore::Application::TypeWindowBindings)>(ptr, XnorCore::Application::TypeWindowBindings);
 
+    XnorCore::TypeRenderer::DisplayObject<XnorCore::Entity>(ptr);
+    
     ImGui::PopID();
 }

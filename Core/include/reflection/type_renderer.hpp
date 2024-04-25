@@ -25,7 +25,7 @@ public:
     /// @tparam ReflectT Reflected top level type
     /// @tparam MemberT Member type
     /// @tparam DescriptorT Field descriptor type
-    template <typename ReflectT, typename MemberT, typename DescriptorT, typename WindowBindingsT>
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
     struct Metadata
     {
         /// @brief Reflected top level object
@@ -35,49 +35,45 @@ public:
         const char_t* name;
         /// @brief Member object
         MemberT* obj;
-
-        WindowBindingsT bindings;
     };
 
     /// @brief Displays an object
     /// @tparam ReflectT Object type
-    /// @tparam ReflectT Object type
     /// @param obj Object pointer
-    /// @param bindings Object type
-    template <typename ReflectT, typename WindowBindingsT>
-    static void DisplayObject(ReflectT* obj, WindowBindingsT bindings);
+    template <typename ReflectT>
+    static void DisplayObject(ReflectT* obj);
     
     /// @brief Displays a grid plotting for a Vector2
     /// @tparam ReflectT Reflected top level type
     /// @tparam MemberT Member type
     /// @tparam DescriptorT Field descriptor type
     /// @param metadata Member metadata
-    template <typename ReflectT, typename MemberT, typename DescriptorT, typename WindowBindingsT>
-    static void DisplayGridPlotting(const Metadata<ReflectT, MemberT, DescriptorT, WindowBindingsT>& metadata);
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DisplayGridPlotting(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 
     /// @brief Displays an enum
     /// @tparam ReflectT Reflected top level type
     /// @tparam MemberT Member type
     /// @tparam DescriptorT Field descriptor type
     /// @param metadata Member metadata
-    template <typename ReflectT, typename MemberT, typename DescriptorT, typename WindowBindingsT>
-    static void DisplayEnum(const Metadata<ReflectT, MemberT, DescriptorT, WindowBindingsT>& metadata);
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DisplayEnum(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 
     /// @brief Displays an enum flag
     /// @tparam ReflectT Reflected top level type
     /// @tparam MemberT Member type
     /// @tparam DescriptorT Field descriptor type
     /// @param metadata Member metadata
-    template <typename ReflectT, typename MemberT, typename DescriptorT, typename WindowBindingsT>
-    static void DisplayEnumFlag(const Metadata<ReflectT, MemberT, DescriptorT, WindowBindingsT>& metadata);
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DisplayEnumFlag(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 
     /// @brief Displays a simple type (calls its TypeRendererImpl)
     /// @tparam ReflectT Reflected top level type
     /// @tparam MemberT Member type
     /// @tparam DescriptorT Field descriptor type
     /// @param metadata Member metadata
-    template <typename ReflectT, typename MemberT, typename DescriptorT, typename WindowBindingsT>
-    static void DisplaySimpleType(const Metadata<ReflectT, MemberT, DescriptorT, WindowBindingsT>& metadata);
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DisplaySimpleType(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 
     /// @brief Displays an object via the Factory using its hash
     /// @param obj Object pointer
@@ -85,19 +81,19 @@ public:
     XNOR_ENGINE static void DisplayObjectUsingFactory(void* obj, size_t hash);
     
 private:
-    template <typename ReflectT, typename MemberT, typename DescriptorT, typename WindowBindingsT>
-    static void DisplayObjectInternal(ReflectT* obj, WindowBindingsT bindings);
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void DisplayObjectInternal(ReflectT* obj);
 
-    template <typename ReflectT, bool_t StaticT, typename WindowBindingsT>
-    static void DisplayFields(ReflectT* obj, WindowBindingsT bindings);
+    template <typename ReflectT, bool_t StaticT>
+    static void DisplayFields(ReflectT* obj);
 
     /// @brief Displays a tooltip if the member has one
     /// @tparam ReflectT Reflected top level type
     /// @tparam MemberT Member type
     /// @tparam DescriptorT Field descriptor type
     /// @param metadata Member metadata
-    template <typename ReflectT, typename MemberT, typename DescriptorT, typename WindowBindingsT>
-    static void CheckDisplayTooltip(const Metadata<ReflectT, MemberT, DescriptorT, WindowBindingsT>& metadata);
+    template <typename ReflectT, typename MemberT, typename DescriptorT>
+    static void CheckDisplayTooltip(const Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 };
 
 /// @brief Implementation for a type renderer, template specialization can be used to provide a custom render behavior to a custom type
@@ -109,8 +105,8 @@ struct TypeRendererImpl
     /// @tparam ReflectT Reflected top level type
     /// @tparam DescriptorT Field descriptor type
     /// @param metadata Member metadata
-    template <typename ReflectT, typename DescriptorT, typename WindowBindingsT>
-    static void Render(const TypeRenderer::Metadata<ReflectT, MemberT, DescriptorT, WindowBindingsT>& metadata);
+    template <typename ReflectT, typename DescriptorT>
+    static void Render(const TypeRenderer::Metadata<ReflectT, MemberT, DescriptorT>& metadata);
 };
 
 END_XNOR_CORE
