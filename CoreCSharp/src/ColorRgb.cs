@@ -64,5 +64,15 @@ namespace Xnor.Core
         public ColorRgb(byte rgb) : this(rgb, rgb, rgb) { }
 
         public override string ToString() => $"R: {R}, G: {G}, B: {B}";
+    
+        public bool Equals(ColorRgb other) => CoreC.Equals(R, other.R) && CoreC.Equals(G, other.G) && CoreC.Equals(B, other.B);
+
+        public override bool Equals(object obj) => obj is ColorRgb other && Equals(other);
+
+        public override int GetHashCode() => HashCode.Combine(R, G, B);
+
+        public static bool operator ==(ColorRgb left, ColorRgb right) => left.Equals(right);
+
+        public static bool operator !=(ColorRgb left, ColorRgb right) => !left.Equals(right);
     }
 }

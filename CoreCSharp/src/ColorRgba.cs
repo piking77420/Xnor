@@ -72,5 +72,15 @@ namespace Xnor.Core
         public ColorRgba(byte rgb) : this(rgb, rgb, rgb) { }
         
         public override string ToString() => $"R: {R}, G: {G}, B: {B}, A: {A}";
+    
+        public bool Equals(ColorRgba other) => CoreC.Equals(R, other.R) && CoreC.Equals(G, other.G) && CoreC.Equals(B, other.B) && CoreC.Equals(A, other.A);
+
+        public override bool Equals(object obj) => obj is ColorRgba other && Equals(other);
+
+        public override int GetHashCode() => HashCode.Combine(R, G, B, A);
+
+        public static bool operator ==(ColorRgba left, ColorRgba right) => left.Equals(right);
+
+        public static bool operator !=(ColorRgba left, ColorRgba right) => !left.Equals(right);
     }
 }

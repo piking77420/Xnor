@@ -60,13 +60,13 @@
         get => CoreC.ComponentListGetItem(this, index);
     }
 
-    public void ForEach(Action<Component> action)
+    public void ForEach(global::System.Action<Component> action)
     {
         foreach (Component c in this)
             action(c);
     }
 
-    public Component Find(Predicate<Component> predicate)
+    public Component Find(global::System.Predicate<Component> predicate)
     {
         foreach (Component c in this)
         {
@@ -77,7 +77,7 @@
         return null;
     }
 
-    public bool Exists(Predicate<Component> predicate)
+    public bool Exists(global::System.Predicate<Component> predicate)
     {
         foreach (Component c in this)
         {
