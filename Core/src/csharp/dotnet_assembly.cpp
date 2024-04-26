@@ -1,6 +1,7 @@
 ﻿#include "csharp/dotnet_assembly.hpp"
 
 #include "reflection/dotnet_reflection.hpp"
+#include "rendering/light/point_light.hpp"
 #include "scene/component/script_component.hpp"
 #include "utils/logger.hpp"
 #include "world/world.hpp"
@@ -84,4 +85,5 @@ void DotnetAssembly::ProcessScriptComponent(Coral::Type& subclass)
     ScriptComponent* const ptr = instance.GetFieldValue<ScriptComponent*>("swigCPtr");
     ptr->Initialize(instance);
     entity->AddComponent(ptr);
+    entity->AddComponent<PointLight>();
 }

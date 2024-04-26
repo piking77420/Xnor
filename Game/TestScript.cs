@@ -32,15 +32,15 @@ namespace Game
         {
             if (light == null)
             {
-                if (!TryGetComponent(out PointLight pointLight))
+                if (!TryGetComponent(out light))
                     return;
-
-                light = pointLight;
             }
             
             // Dangerous
             // Only for limit testing
-            //entity.AddComponent(new PointLight());
+            entity.AddComponent(new PointLight());
+
+            light.intensity += 0.1f;
             
             color.H += intensity;
             if (color.H >= 1f)

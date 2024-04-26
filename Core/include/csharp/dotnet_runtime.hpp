@@ -17,7 +17,7 @@ class DotnetRuntime
     STATIC_CLASS(DotnetRuntime)
     
 public:
-    XNOR_ENGINE static inline constexpr const char_t* const AssembliesDirectory = "DotnetAssemblies";
+    XNOR_ENGINE static constexpr const char_t* const AssembliesDirectory = "DotnetAssemblies";
     
     /// @brief Initializes the .NET runtime.
     XNOR_ENGINE static bool_t Initialize();
@@ -37,20 +37,26 @@ public:
 
     /// @brief Unloads all loaded assemblies.
     ///
-    /// @param reloadContext Unloading all assemblies means unloading the AssemblyLoadContext. This parameter describes whether to reload the context afterwards.
+    /// @param reloadContext Unloading all assemblies means unloading the AssemblyLoadContext. This parameter describes whether to reload the context afterward.
     XNOR_ENGINE static void UnloadAllAssemblies(bool_t reloadContext = false);
 
     /// @brief Reloads all loaded assemblies.
     XNOR_ENGINE static void ReloadAllAssemblies();
 
     /// @brief Builds the Game .NET project.
-    XNOR_ENGINE static bool_t BuildGameProject();
+    XNOR_ENGINE static bool_t BuildGameProject(bool_t asynchronous = true);
+
+    /// @brief Asynchronously builds the Game .NET project and reloads the resulting assembly.
+    XNOR_ENGINE static void BuildAndReloadProject();
 
     /// @brief Returns whether the runtime is initialized.
     XNOR_ENGINE static bool_t GetInitialized();
 
+    /// @brief Returns whether a thread is currently building/reloading the .NET project.
+    XNOR_ENGINE static bool_t GetReloadingProject();
+
 private:
-    XNOR_ENGINE static inline constexpr int32_t DotnetVersion = 5;
+    XNOR_ENGINE static constexpr int32_t DotnetVersion = 5;
     
     static Coral::HostSettings m_Settings;
     
@@ -63,6 +69,10 @@ private:
     XNOR_ENGINE static inline std::vector<DotnetAssembly*> m_LoadedAssemblies;
     
     XNOR_ENGINE static inline std::filesystem::path m_AssembliesPath;
+
+    XNOR_ENGINE static inline bool_t m_ReloadingProjectAsync = false;
+
+    XNOR_ENGINE static inline std::thread m_ProjectReloadingThread;
 
     static bool CheckDotnetInstalled();
 

@@ -288,6 +288,8 @@ void Editor::UpdateWindows()
 		XnorCore::DotnetRuntime::BuildGameProject();
 	if (ImGui::Button("Reload C# Assemblies"))
 		XnorCore::DotnetRuntime::ReloadAllAssemblies();
+	if (ImGui::Button("Build and reload Game project"))
+		XnorCore::DotnetRuntime::BuildAndReloadProject();
 	ImGui::End();
 }
 

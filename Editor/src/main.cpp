@@ -1,4 +1,5 @@
 #include "editor.hpp"
+#include "reflection/dotnet_reflection.hpp"
 #include "reflection/xnor_factory.hpp"
 #include "utils/file_system_watcher.hpp"
 #include "utils/logger.hpp"
@@ -18,6 +19,7 @@ int32_t main(const int32_t argc, const char_t* const* const argv)
 
 	Logger::OpenDefaultFile();
 	XnorFactory::RegisterAllTypes();
+	DotnetReflection::RegisterAllTypes();
 
 	Editor editor(std::forward<decltype(argc)>(argc), std::forward<decltype(argv)>(argv));
 

@@ -2,7 +2,6 @@
 #pragma once
 
 #include "csharp/dotnet_runtime.hpp"
-#include "reflection/type_renderer.hpp"
 #include "serialization/serializer.hpp"
 
 BEGIN_XNOR_CORE

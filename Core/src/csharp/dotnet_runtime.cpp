@@ -129,7 +129,7 @@ void DotnetRuntime::ReloadAllAssemblies()
     }
 }
 
-bool_t DotnetRuntime::BuildGameProject()
+bool_t DotnetRuntime::BuildGameProject(const bool_t asynchronous)
 {
     constexpr const char_t* const gameProjectLocation = "Game";
     
@@ -144,9 +144,28 @@ bool_t DotnetRuntime::BuildGameProject()
     if (!exists(gameProjectDirectory / "Game.csproj"))
         return false;
 
-    Utils::TerminalCommand("dotnet build " + absolute(gameProjectDirectory).string());  // NOLINT(concurrency-mt-unsafe)
+    Logger::LogInfo("Building Game project");
+
+    Utils::TerminalCommand("dotnet build " + absolute(gameProjectDirectory).string() + " 1> nul", asynchronous);
 
     return true;
+}
+
+void DotnetRuntime::BuildAndReloadProject()
+{
+    m_ReloadingProjectAsync = true;
+
+    if (m_ProjectReloadingThread.joinable())
+        m_ProjectReloadingThread.join();
+
+    m_ProjectReloadingThread = std::thread(
+        []
+        {
+            BuildGameProject(false);
+            ReloadAllAssemblies();
+            m_ReloadingProjectAsync = false;
+        }
+    );
 }
 
 bool_t DotnetRuntime::GetInitialized()
@@ -154,10 +173,15 @@ bool_t DotnetRuntime::GetInitialized()
     return m_Initialized;
 }
 
+bool_t DotnetRuntime::GetReloadingProject()
+{
+    return m_ReloadingProjectAsync;
+}
+
 bool DotnetRuntime::CheckDotnetInstalled()
 {
     // Check if the dotnet command returns a non-zero exit code
-    return Utils::TerminalCommand("dotnet --info 1> nul", false) == 0;  // NOLINT(concurrency-mt-unsafe)
+    return Utils::TerminalCommand("dotnet --info 1> nul", false) == 0;
 }
 
 constexpr const char_t* const TempFile = "xnor_dotnet_list_runtimes.txt";
@@ -172,7 +196,7 @@ bool DotnetRuntime::CheckDotnetVersion()
 
     std::filesystem::path tempPath = std::filesystem::temp_directory_path() / TempFile;
     
-    Utils::TerminalCommand("dotnet --list-runtimes 1> \"" + tempPath.string() + '"', false);  // NOLINT(concurrency-mt-unsafe)
+    Utils::TerminalCommand("dotnet --list-runtimes 1> \"" + tempPath.string() + '"', false);
     
     File file(tempPath.string());
     
