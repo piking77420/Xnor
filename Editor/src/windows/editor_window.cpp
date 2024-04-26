@@ -19,25 +19,23 @@ void EditorWindow::Display()
 {
     RenderWindow::Display();
     m_PickingStrategy.ResizeHandle(m_Size);
-    
-    m_TransfromGizmo.SetRendering(
-        m_Editor->data.editorCam,
-        {static_cast<float_t>(m_Position.x), static_cast<float_t>(m_Position.y)},
-        m_Viewport->viewPortSize
-    );
+
+    const Vector2 position = { static_cast<float_t>(m_Position.x), static_cast<float_t>(m_Position.y) };
+    m_TransfromGizmo.SetRendering(m_Editor->data.editorCam, position, m_Viewport->viewPortSize);
 
     if (DrawOnTopOfImage())
         return;
 
-    const bool isEditingTranform = EditTransform(); 
+    const bool_t isEditingTranform = EditTransform(); 
     
     if (IsFocused())
     {
         m_EditorCamera.UpdateCamera();
 
         if (!isEditingTranform)
-        SelectEntityOnScreen();
+            SelectEntityOnScreen();
     }
+
     m_EditorCamera.OnPressGoToObject();
 }
 

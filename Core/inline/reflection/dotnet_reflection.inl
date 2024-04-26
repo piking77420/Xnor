@@ -2,7 +2,6 @@
 #pragma once
 
 #include "csharp/dotnet_runtime.hpp"
-#include "reflection/type_renderer.hpp"
 #include "serialization/serializer.hpp"
 
 BEGIN_XNOR_CORE
@@ -10,7 +9,7 @@ BEGIN_XNOR_CORE
 template <typename T>
 void DotnetReflection::RegisterBaseType(const std::string& typeName)
 {
-    DotnetTypeInfo info = {
+    const  DotnetTypeInfo info = {
         .createFunc = []() -> Coral::ManagedObject { return {}; },
         .displayFunc = [](void* const obj, const char_t* const name) -> void { DisplaySimpleType<T>(static_cast<T*>(obj), name); },
         .serializeFunc = [](const void* const) -> void {},

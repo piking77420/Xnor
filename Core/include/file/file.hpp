@@ -28,6 +28,7 @@ public:
         Skeleton,
         Font,
         Xml,
+        AnimationMontage,
         VertexShader,
         FragmentShader,
         GeometryShader,

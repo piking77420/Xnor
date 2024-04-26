@@ -9,8 +9,8 @@
 using namespace XnorCore;
 
 AnimationRender::AnimationRender()
+    : m_SkinnedMeshGpuData(new SkinnedMeshGpuData())
 {
-    m_SkinnedMeshGpuData = new SkinnedMeshGpuData;
 }
 
 AnimationRender::~AnimationRender()

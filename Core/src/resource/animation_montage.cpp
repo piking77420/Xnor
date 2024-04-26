@@ -1,4 +1,5 @@
 ﻿#include "resource/animation_montage.hpp"
+#include "scene/component/skinned_mesh_renderer.hpp"
 
 using namespace XnorCore;
 
@@ -9,12 +10,17 @@ void AnimationMontage::Start()
     m_Ended = false;
 }
 
-void AnimationMontage::Update()
+void AnimationMontage::Update(SkinnedMeshRenderer* renderer)
 {
     if (!m_Ended)
     {
         m_NotifiesTimeline.Update();
-        m_Ended = m_AnimationTimeline.Update();
+        m_Ended = m_AnimationTimeline.Update(std::forward<SkinnedMeshRenderer*>(renderer));
+
+        if (m_Ended && looping)
+        {
+            Start();            
+        }
     }
 }
 
@@ -25,21 +31,21 @@ void AnimationMontage::AddEvent(const float_t when, const FunctionT& function)
 
 void AnimationMontage::AddAnimation(const float_t when, const size_t animationId)
 {
-    const Animation* const anim = mesh->GetAnimation(animationId);
+    const Animation* const animation = mesh->GetAnimation(animationId);
 
-    if (anim == nullptr)
+    if (animation == nullptr)
     {
         Logger::LogError("Animation with id {} doesn't exist", animationId);
         return;
     }
 
-    UpdateTimelineDuration(anim->GetDuration());
+    UpdateTimelineDuration(animation->GetDuration());
 
-    m_AnimationTimeline.SetEventDuration(when, anim->GetDuration());
+    m_AnimationTimeline.SetEventDuration(when, animation->GetDuration());
 
-    m_AnimationTimeline.AddBeginEvent(when, [this, anim]() -> void
+    m_AnimationTimeline.AddBeginEvent(when, [this, animation](SkinnedMeshRenderer* const renderer) -> void
     {
-        // m_MeshRenderer->StartAnimation(anim);
+        renderer->StartAnimation(animation);
     });
 }
 
@@ -49,9 +55,9 @@ void AnimationMontage::AddAnimation(const float_t when, const Animation* animati
 
     m_AnimationTimeline.SetEventDuration(when, animation->GetDuration());
 
-    m_AnimationTimeline.AddBeginEvent(when, [this, animation]() -> void
+    m_AnimationTimeline.AddBeginEvent(when, [this, animation](SkinnedMeshRenderer* const renderer) -> void
     {
-        // m_MeshRenderer->StartAnimation(animation);
+        renderer->StartAnimation(animation);
     });
 }
 
@@ -76,15 +82,15 @@ void AnimationMontage::AddAnimationBlending(const float_t when, const size_t sou
 
     m_AnimationTimeline.SetEventDuration(when, duration);
 
-    m_AnimationTimeline.AddBeginEvent(when, [&]() -> void
+    m_AnimationTimeline.AddBeginEvent(when, [&](SkinnedMeshRenderer* const renderer) -> void
     {
-        // m_MeshRenderer->StartAnimation(sourceAnim);
-        // m_MeshRenderer->StartBlending(targetAnim);
+        renderer->StartAnimation(sourceAnim);
+        renderer->StartBlending(targetAnim);
     });
 
-    m_AnimationTimeline.AddUpdateEvent(when, [&](const float_t deltaTime) -> void
+    m_AnimationTimeline.AddUpdateEvent(when, [&](const float_t deltaTime, SkinnedMeshRenderer* const renderer) -> void
     {
-        // m_MeshRenderer->SetCrossFadeDelta(deltaTime);
+        renderer->SetCrossFadeDelta(deltaTime);
     });
 }
 

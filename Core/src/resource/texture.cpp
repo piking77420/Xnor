@@ -47,7 +47,7 @@ Texture::~Texture()
         Texture::Unload();
 }
 
-bool_t Texture::Load(const uint8_t* buffer, const int64_t length)
+bool_t Texture::Load(const uint8_t* const buffer, const int64_t length)
 {
     stbi_set_flip_vertically_on_load(loadData.flipVertically);
     

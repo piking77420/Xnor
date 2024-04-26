@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "definitions.hpp"
+#include "editor_camera.hpp"
 #include "windows/ui_window.hpp"
 
 BEGIN_XNOR_CORE
@@ -25,11 +26,12 @@ public:
 
 private:
     XnorCore::AnimationMontage* m_Montage = nullptr;
-    XnorCore::SkinnedMeshRenderer* m_SkinnedRenderer = nullptr;
+    XnorCore::SkinnedMeshRenderer* m_SkinnedRenderer = new XnorCore::SkinnedMeshRenderer();
 
     XnorCore::Viewport m_Viewport;
+    EditorCamera m_EditorCamera;
+    XnorCore::Camera m_Camera;
     XnorCore::Scene m_Scene;
-    XnorCore::Entity* m_Entity;
 };
 
 END_XNOR_EDITOR

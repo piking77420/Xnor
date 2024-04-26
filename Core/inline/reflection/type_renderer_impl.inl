@@ -3,7 +3,9 @@
 #pragma once
 
 #include "ImGui/imgui_stdlib.h"
+#include "reflection/dotnet_reflection.hpp"
 #include "reflection/filters.hpp"
+#include "scene/component/script_component.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -428,9 +430,19 @@ void TypeRendererImpl<Component*>::Render(const TypeRenderer::Metadata<ReflectT,
     
     const size_t hash = Utils::GetTypeHash<Component>(*metadata.obj);
 
-    if (ImGui::CollapsingHeader(metadata.name))
+    if (dynamic_cast<ScriptComponent*>(*metadata.obj) == nullptr)
     {
-        TypeRenderer::DisplayObjectUsingFactory(*metadata.obj, hash, metadata.windowInfo);
+        if (ImGui::CollapsingHeader(metadata.name))
+        {
+            TypeRenderer::DisplayObjectUsingFactory(*metadata.obj, hash, metadata.windowInfo);
+        }
+    }
+    else
+    {
+        if (ImGui::CollapsingHeader(metadata.name))
+        {
+            DotnetReflection::DisplayType(reinterpret_cast<ScriptComponent*>(*metadata.obj));
+        }
     }
 }
 

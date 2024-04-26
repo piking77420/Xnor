@@ -7,6 +7,7 @@
 
 #include "resource/resource_manager.hpp"
 #include "scene/entity.hpp"
+#include "scene/component/script_component.hpp"
 
 #include "utils/meta_programming.hpp"
 
@@ -85,7 +86,7 @@ public:
     /// @param hash Object hash
     /// @param windowInfo Window info
     XNOR_ENGINE static void DisplayObjectUsingFactory(void* obj, size_t hash, std::pair<void*, const char_t*>* windowInfo);
-    
+
 private:
     template <typename ReflectT, typename MemberT, typename DescriptorT>
     static void DisplayObjectInternal(ReflectT* obj, std::pair<void*, const char_t*>* windowInfo);

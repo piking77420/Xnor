@@ -3,6 +3,7 @@
 #include "core.hpp"
 #include "rendering/animator.hpp"
 #include "rendering/material.hpp"
+#include "resource/animation_montage.hpp"
 #include "resource/mesh.hpp"
 #include "resource/model.hpp"
 #include "scene/component.hpp"
@@ -33,11 +34,15 @@ public:
     XNOR_ENGINE void StartBlending(const Animation* target);
     XNOR_ENGINE void SetCrossFadeDelta(float_t delta);
 
+    XNOR_ENGINE void StartMontage(AnimationMontage* montage);
+
     XNOR_ENGINE const List<Matrix>& GetMatrices() const;
 
 private:
     Animator m_Animator;
     Animator m_TargetAnimator;
+
+    AnimationMontage* m_CurrentMontage;
 };
 
 END_XNOR_CORE

@@ -4,10 +4,11 @@
 #include "mesh.hpp"
 #include "resource.hpp"
 #include "rendering/animator.hpp"
-#include "scene/component/skinned_mesh_renderer.hpp"
 #include "utils/timeline.hpp"
 
 BEGIN_XNOR_CORE
+
+class SkinnedMeshRenderer;
 
 class AnimationMontage final : public Resource
 {
@@ -24,13 +25,19 @@ class AnimationMontage final : public Resource
     };
 
 public:
+    /// @brief Allowed extensions for models.
+    XNOR_ENGINE static inline constexpr std::array<const char_t*, 1> FileExtensions
+    {
+        ".am"
+    };
+    
     using Resource::Resource;
     XNOR_ENGINE ~AnimationMontage() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(AnimationMontage)
 
     XNOR_ENGINE void Start();
-    XNOR_ENGINE void Update();
+    XNOR_ENGINE void Update(SkinnedMeshRenderer* renderer);
 
     XNOR_ENGINE void AddEvent(float_t when, const FunctionT& function);
     XNOR_ENGINE void AddAnimation(float_t when, size_t animationId);
@@ -41,10 +48,11 @@ public:
     XNOR_ENGINE bool_t HasEnded() const;
 
     Pointer<Mesh> mesh;
+    bool_t looping;
 
 private:
     Timeline<> m_NotifiesTimeline;
-    Timeline<> m_AnimationTimeline;
+    Timeline<SkinnedMeshRenderer*> m_AnimationTimeline;
 
     bool_t m_Ended;
 
@@ -54,5 +62,7 @@ private:
 END_XNOR_CORE
 
 REFL_AUTO(type(XnorCore::AnimationMontage, bases<XnorCore::Resource>, XnorCore::Reflection::OpenEditorWindow("AnimationMontageEditor")),
-    field(m_NotifiesTimeline)
+    field(m_NotifiesTimeline),
+    field(m_AnimationTimeline),
+    field(mesh)
 )

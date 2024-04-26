@@ -3,7 +3,7 @@
 #include "core.hpp"
 #include "rendering/rhi_typedef.hpp"
 #include "resource/shader.hpp"
-#include "..\..\scene\component\skinned_mesh_renderer.hpp"
+#include "scene/component/skinned_mesh_renderer.hpp"
 
 BEGIN_XNOR_CORE
 

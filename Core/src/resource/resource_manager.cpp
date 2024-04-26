@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include "file/file_manager.hpp"
+#include "resource/animation_montage.hpp"
 #include "resource/audio_track.hpp"
 #include "resource/compute_shader.hpp"
 #include "resource/mesh.hpp"
@@ -43,6 +44,8 @@ void ResourceManager::LoadAll()
                 Load<Skeleton>(file, false);
             else if (std::ranges::find(AudioTrack::FileExtensions, file->GetExtension()) != AudioTrack::FileExtensions.end())
                 Load<AudioTrack>(file, false);
+            else if (std::ranges::find(AnimationMontage::FileExtensions, file->GetExtension()) != AnimationMontage::FileExtensions.end())
+                Load<AnimationMontage>(file, false);
         }
     );
 

@@ -2,6 +2,7 @@
 
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
+#include "resource/resource_manager.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -74,7 +75,7 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
             size = scene->mTextures[i]->mWidth;
         else
             size = static_cast<int64_t>(static_cast<uint64_t>(scene->mTextures[i]->mWidth) * static_cast<uint64_t>(scene->mTextures[i]->mHeight) * sizeof(aiTexel));
-    
+
         texture->Load(reinterpret_cast<const uint8_t*>(scene->mTextures[i]->pcData), size);
         texture->SetIsEmbedded();
 
@@ -91,6 +92,14 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
         m_Animations.Add(animation);
     }
 
+    if (textures.GetSize() >= 1)
+    {
+        aiString textureName;
+        scene->mMaterials[0]->GetTexture(aiTextureType_DIFFUSE, 0, &textureName);
+        
+        material.albedoTexture = Pointer<Texture>::New(*textures[0]);
+    }
+    
     return true;
 }
 
@@ -107,6 +116,8 @@ void Mesh::CreateInInterface()
 
     for (size_t i = 0; i < m_Animations.GetSize(); i++)
         m_Animations[i]->CreateInInterface();
+
+    m_LoadedInInterface = true;
 }
 
 Animation* Mesh::GetAnimation(const size_t id)

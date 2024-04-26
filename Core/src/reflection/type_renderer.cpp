@@ -1,4 +1,6 @@
 ﻿#include "reflection/type_renderer.hpp"
+
+#include "reflection/dotnet_reflection.hpp"
 #include "reflection/xnor_factory.hpp"
 
 using namespace XnorCore;

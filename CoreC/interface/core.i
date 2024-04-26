@@ -127,12 +127,12 @@ struct Data64
 #include "resource/cubemap.hpp"
 #include "resource/font.hpp"
 #include "resource/model.hpp"
-#include "resource/mesh.hpp"
+#include "resource/texture.hpp"
 #include "resource/animation.hpp"
+#include "resource/mesh.hpp"
 #include "resource/resource.hpp"
 #include "resource/resource_manager.hpp"
 #include "resource/shader.hpp"
-#include "resource/texture.hpp"
 
 #include "scene/component/camera_component.hpp"
 #include "scene/component/mesh_renderer.hpp"
@@ -194,17 +194,17 @@ struct Data64
 
 %include "resource/model.hpp"
 
+%include "resource/texture.hpp"
+%include "rendering/material.hpp"
+%include "rendering/bone.hpp"
+%include "resource/skeleton.hpp"
+%include "resource/animation.hpp"
+
 %include "resource/mesh.hpp"
 %include "resource/resource_manager.hpp"
 
 %include "resource/shader.hpp"
-%include "resource/texture.hpp"
 
-%include "rendering/material.hpp"
-%include "rendering/bone.hpp"
-
-%include "resource/skeleton.hpp"
-%include "resource/animation.hpp"
 %include "resource/mesh.hpp"
 
 %include "input/gamepad_input.hpp"

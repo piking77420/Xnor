@@ -26,10 +26,7 @@ void Inspector::Display()
     const std::pair<void*, const char_t*> windowInfo = XnorCore::TypeRenderer::DisplayObject<XnorCore::Entity>(ptr);
 
     if (windowInfo.first != nullptr)
-    {
         m_Editor->OpenCreatedWindow(windowInfo.second, windowInfo.first);
-        XnorCore::Logger::LogInfo("{} ; {}", windowInfo.first, windowInfo.second);
-    }
     
     ImGui::PopID();
 }

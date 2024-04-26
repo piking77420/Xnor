@@ -295,10 +295,10 @@ public:
     ConstIterator CEnd() const;
 
     [[nodiscard]]
-    ReverseIterator RBegin() const;
+    ReverseIterator RBegin();
 
     [[nodiscard]]
-    ReverseIterator REnd() const;
+    ReverseIterator REnd();
 
     [[nodiscard]]
     ConstReverseIterator CrBegin() const;

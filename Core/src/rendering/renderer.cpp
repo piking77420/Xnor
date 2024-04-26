@@ -39,12 +39,11 @@ void Renderer::Initialize()
 void Renderer::BeginFrame(const Scene& scene)
 {
 	m_LightManager.BeginFrame(scene, *this);
-	m_AnimationRender.BeginFrame(scene,*this);
+	m_AnimationRender.BeginFrame(scene, *this);
 	Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
 	scene.GetAllComponentOfType<MeshRenderer>(&m_MeshRenderers);
 	
 	PrepareOctree();
-	
 }
 
 void Renderer::EndFrame(const Scene& scene)
@@ -69,7 +68,7 @@ void Renderer::RenderNonShaded(const Camera& camera,const RenderPassBeginInfo& r
 	const Pointer<Shader>& shaderToUse, const Scene& scene,	const bool_t drawEditorUi
 ) const
 {
-	Vector2i viewportSize = renderPassBeginInfo.renderAreaOffset + renderPassBeginInfo.renderAreaExtent;
+	const Vector2i viewportSize = renderPassBeginInfo.renderAreaOffset + renderPassBeginInfo.renderAreaExtent;
 	std::vector<const MeshRenderer*> meshrenderers;
 	scene.GetAllComponentOfType<MeshRenderer>(&meshrenderers);
 	BindCamera(camera,viewportSize );

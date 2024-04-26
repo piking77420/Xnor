@@ -46,7 +46,7 @@ public:
 
     /// @brief Registers a script type type
     /// @param typeName C# type name
-    static void RegisterScriptType(const std::string& typeName);
+    XNOR_ENGINE static void RegisterScriptType(const std::string& typeName);
 
     /// @brief Displays a simple type
     /// @tparam T Type
@@ -56,13 +56,13 @@ public:
     static void DisplaySimpleType(T* obj, const char_t* name);
     
     /// @brief Helper function to register all the base types
-    static void RegisterAllTypes();
+    XNOR_ENGINE static void RegisterAllTypes();
 
     /// @brief Displays a type using the internal dotnet factory
     /// @param obj Object pointer
     /// @param name Field name
     /// @param typeName C# type name
-    static void DisplayType(void* obj, const char_t* name, const std::string& typeName);
+    XNOR_ENGINE static void DisplayType(void* obj, const char_t* name, const std::string& typeName);
 
     /// @brief Displays a script component type
     /// @param script Script component

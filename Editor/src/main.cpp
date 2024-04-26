@@ -17,6 +17,7 @@ int32_t main(const int32_t argc, const char_t* const* const argv)
 
 	Logger::OpenDefaultFile();
 	XnorFactory::RegisterAllTypes();
+	DotnetReflection::RegisterAllTypes();
 
 	Editor editor(std::forward<decltype(argc)>(argc), std::forward<decltype(argv)>(argv));
 

@@ -3,6 +3,7 @@
 #include <fstream>
 #include <ranges>
 
+#include "resource/animation_montage.hpp"
 #include "resource/compute_shader.hpp"
 #include "resource/font.hpp"
 #include "resource/mesh.hpp"
@@ -112,22 +113,24 @@ void File::UpdateUtilityValues()
     // Update file type from extension
     if (Utils::StringArrayContains(Texture::FileExtensions, m_Extension))
         m_Type = Type::Texture;
-    if (Utils::StringArrayContains(Model::FileExtensions, m_Extension))
+    else if (Utils::StringArrayContains(Model::FileExtensions, m_Extension))
         m_Type = Type::Model;
-    if (Utils::StringArrayContains(Mesh::FileExtensions, m_Extension))
+    else if (Utils::StringArrayContains(Mesh::FileExtensions, m_Extension))
         m_Type = Type::Mesh;
-    if (Utils::StringArrayContains(Skeleton::FileExtensions, m_Extension))
+    else if (Utils::StringArrayContains(Skeleton::FileExtensions, m_Extension))
         m_Type = Type::Skeleton;
-    if (Utils::StringArrayContains(Font::FileExtensions, m_Extension))
+    else if (Utils::StringArrayContains(Font::FileExtensions, m_Extension))
         m_Type = Type::Font;
-    if (Utils::StringEqualsIgnoreCase(m_Extension, ".xml"))
+    else if (Utils::StringEqualsIgnoreCase(m_Extension, ".xml"))
         m_Type = Type::Xml;
-    if (Utils::StringArrayContains(Shader::VertexFileExtensions, m_Extension))
+    else if (Utils::StringArrayContains(AnimationMontage::FileExtensions, m_Extension))
+        m_Type = Type::AnimationMontage;
+    else if (Utils::StringArrayContains(Shader::VertexFileExtensions, m_Extension))
         m_Type = Type::VertexShader;
-    if (Utils::StringArrayContains(Shader::FragmentFileExtensions, m_Extension))
+    else if (Utils::StringArrayContains(Shader::FragmentFileExtensions, m_Extension))
         m_Type = Type::FragmentShader;
-    if (Utils::StringArrayContains(Shader::GeometryFileExtensions, m_Extension))
+    else if (Utils::StringArrayContains(Shader::GeometryFileExtensions, m_Extension))
         m_Type = Type::GeometryShader;
-    if (Utils::StringArrayContains(ComputeShader::ComputeFileExtensions, m_Extension))
+    else if (Utils::StringArrayContains(ComputeShader::ComputeFileExtensions, m_Extension))
         m_Type = Type::ComputeShader;
 }
