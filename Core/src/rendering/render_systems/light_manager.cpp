@@ -211,9 +211,10 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 		const Vector2i shadowMapSize = shadowMap.GetSize(); 
 		
 		Vector3 lightDir =  -directionalLight->GetLightDirection();
-		Vector3 extendMax = Vector3(GetMax(rebderSceneAAbb.extents));
+		float_t lenghtAabb = rebderSceneAAbb.extents.Length();
 		// Get Pos from scene aabb
-		Vector3 pos = renderer.renderSceneAABB.center + (extendMax * lightDir);//static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);
+		Vector3 pos = renderer.renderSceneAABB.center + (lenghtAabb * -lightDir);//static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);
+		DrawGizmo::Sphere(pos);
 		
 		// CacadeShadowMap // TODO Make it cleaner ,
 		std::vector<float_t> shadowCascadeLevels =
@@ -226,7 +227,7 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 		
 		
 		m_CascadeShadowMap.SetCascadeLevel(shadowCascadeLevels);
-		m_CascadeShadowMap.SetZMultiplicator(extendMax.Length());//);
+		m_CascadeShadowMap.SetZMultiplicator(lenghtAabb);//);
 
 		// Handle float array padding
 		for (size_t k = 0; k < shadowCascadeLevels.size(); k++)
@@ -234,12 +235,13 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 			m_GpuLightData->directionalData->cascadePlaneDistance[k] = shadowCascadeLevels[k];
 		}
 
+		
 		Camera camDirectional;
 		camDirectional.isOrthographic = true;
 		camDirectional.position = pos;
 		camDirectional.LookAt(camDirectional.position + lightDir);
 		camDirectional.near = viewPortCamera.near;
-		camDirectional.far = viewPortCamera.far;
+		camDirectional.far = 1000000.f;
 		camDirectional.leftRight = directionalLight->leftRight;
 		camDirectional.bottomtop = directionalLight->bottomTop;
 		
@@ -523,14 +525,14 @@ void LightManager::InitShader()
 
 float_t LightManager::GetMax(Vector3 vec) const
 {
-	if (vec.x > vec.y && vec.x > vec.z)
-		return vec.x;
 
-	if (vec.y > vec.x && vec.y > vec.z)
-		return vec.y;
-	
-	if (vec.z > vec.y && vec.z > vec.x)
-		return vec.z;
+	float_t maxComponent = vec.x;
 
-	return vec.x;
+	if (vec.y > maxComponent)
+		maxComponent = vec.y;
+
+	if (vec.z > maxComponent)
+		maxComponent = vec.z;
+
+	return maxComponent;
 }

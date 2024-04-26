@@ -139,8 +139,7 @@ void Rhi::DestroyProgram(const uint32_t shaderId)
 
 uint32_t Rhi::ReloadProgram(const uint32_t oldShaderId, const std::vector<ShaderCode>& shaderCodes)
 {
-	auto&& node = m_ShaderMap.extract(oldShaderId);
-	if (node.empty() || !glIsProgram(oldShaderId))
+	if (!m_ShaderMap.contains(oldShaderId) || !glIsProgram(oldShaderId))
 	{
 		Logger::LogWarning("Tried to reload an invalid shader");
 		return std::numeric_limits<uint32_t>::max();
@@ -148,19 +147,17 @@ uint32_t Rhi::ReloadProgram(const uint32_t oldShaderId, const std::vector<Shader
 
 	glDeleteProgram(oldShaderId);
 	
-	const ShaderInternal& mapped = node.mapped();
-	const uint32_t result = CreateShaders(shaderCodes, ShaderCreateInfo{mapped.depthFunction, mapped.blendFunction, mapped.cullInfo});
+	const ShaderInternal oldData = m_ShaderMap[oldShaderId];
+	m_ShaderMap.erase(oldShaderId);
+	const uint32_t result = CreateShaders(shaderCodes, ShaderCreateInfo{oldData.depthFunction, oldData.blendFunction, oldData.cullInfo});
 
 	UseShader(result);
-	for (auto&& uniform : mapped.uniformMap)
+	for (auto&& uniform : oldData.uniformMap)
 	{
 		auto val = uniform.second;
 		SetUniform(val.type, &val.data, result, uniform.first.c_str());
 	}
 	UnuseShader();
-	
-	node.key() = result;
-	m_ShaderMap.insert(std::move(node));
 	
 	return result;
 }
@@ -168,14 +165,15 @@ uint32_t Rhi::ReloadProgram(const uint32_t oldShaderId, const std::vector<Shader
 void Rhi::CheckCompilationError(const uint32_t shaderId, const std::string& type)
 {
 	int success = 0;
-	std::string infoLog(1024, '\0');
+	constexpr uint32_t infoLogSize = 1024;
+	std::string infoLog(infoLogSize, '\0');
 
 	if (type != "PROGRAM")
 	{
 		glGetShaderiv(shaderId, GL_COMPILE_STATUS, &success);
 		if (!success)
 		{
-			glGetShaderInfoLog(shaderId, 1024, nullptr, infoLog.data());
+			glGetShaderInfoLog(shaderId, infoLogSize, nullptr, infoLog.data());
 			Logger::LogError("Error while compiling shader of type {}: {}", type, infoLog);
 		}
 	}
@@ -184,7 +182,7 @@ void Rhi::CheckCompilationError(const uint32_t shaderId, const std::string& type
 		glGetProgramiv(shaderId, GL_LINK_STATUS, &success);
 		if (!success)
 		{
-			glGetProgramInfoLog(shaderId, 1024, nullptr, infoLog.data());
+			glGetProgramInfoLog(shaderId, infoLogSize, nullptr, infoLog.data());
 			Logger::LogError("Error while linking shader program of type {}: {}", type, infoLog);
 		}
 	}

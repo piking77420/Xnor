@@ -206,6 +206,10 @@ void Renderer::PrepareOctree()
 {
     std::vector<ObjectBounding<const MeshRenderer>> meshrenderWithAabb;
 
+    // Reset AABB
+    renderSceneAABB.extents = Vector3::Zero();
+    renderSceneAABB.center = renderSceneAABB.extents;
+    
     for (uint32_t i = 0; i < World::scene->GetEntities().GetSize(); i++)
     {
         Entity& ent = *World::scene->GetEntities()[i];

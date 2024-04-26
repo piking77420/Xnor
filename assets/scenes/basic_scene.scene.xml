@@ -6,8 +6,8 @@
 			<m_EntityId>6DA3A69E-26F1-49AD-85-36-F8-88-F7-71-8A-B0</m_EntityId>
 			<transform>
 				<m_Position>3 ; 4 ; 1</m_Position>
-				<m_EulerRotation>-1.5411137e-08 ; -7.4505375e-09 ; -0.01712103</m_EulerRotation>
-				<m_Scale>182.36737 ; 0.2190678 ; 225.03452</m_Scale>
+				<m_EulerRotation>0.079551674 ; 0.036662307 ; -0.025978753</m_EulerRotation>
+				<m_Scale>62.771046 ; 0.21906766 ; 245.07964</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">
@@ -39,8 +39,8 @@
 			<m_EntityId>E3FC77C9-7C57-4EEB-AB-AD-6-5-5A-21-B6-BC</m_EntityId>
 			<transform>
 				<m_Position>0 ; 0 ; 0</m_Position>
-				<m_EulerRotation>-0.5544017 ; -0.01107912 ; 0.77402663</m_EulerRotation>
-				<m_Scale>1.0000027 ; 1.0000054 ; 1.0000021</m_Scale>
+				<m_EulerRotation>1.7334918 ; 0.2410201 ; 2.1772823</m_EulerRotation>
+				<m_Scale>1.0003135 ; 1.0000324 ; 1.0002418</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="DirectionalLight">
@@ -56,9 +56,9 @@
 			<name>Cube</name>
 			<m_EntityId>9806BECA-30FC-44CE-96-82-A0-8F-41-A6-D2-77</m_EntityId>
 			<transform>
-				<m_Position>3.153963 ; 12.420668 ; 2.594864</m_Position>
-				<m_EulerRotation>1.6578655 ; -0.6695386 ; 2.1304424</m_EulerRotation>
-				<m_Scale>1.000016 ; 1.0001824 ; 1.0000118</m_Scale>
+				<m_Position>-8.823358 ; 13.537407 ; 9.920641</m_Position>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
+				<m_Scale>1.0002136 ; 1.0003903 ; 1.0000945</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">

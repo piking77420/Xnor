@@ -95,11 +95,13 @@ void FileSystemWatcher::Run()
             
             overlapped.hEvent = CreateEventW(nullptr, FALSE, 0, nullptr);
             Windows::CheckError();
+
+            m_PathChanged = false;
         }
         
         constexpr size_t bufferSize = 1024;
         std::array<uint8_t, bufferSize> buffer{};
-        ReadDirectoryChangesW(file, buffer.data(), bufferSize, recursive, FILE_NOTIFY_CHANGE_CREATION | FILE_NOTIFY_CHANGE_FILE_NAME | FILE_NOTIFY_CHANGE_DIR_NAME | FILE_NOTIFY_CHANGE_LAST_WRITE, nullptr, &overlapped, nullptr);
+        ReadDirectoryChangesW(file, buffer.data(), bufferSize, recursive, NotifyFiltersToWindows(notifyFilters), nullptr, &overlapped, nullptr);
         Windows::SilenceError(); // Windows would return an error because the 0ms timeout of WaitForSingleObject expired
         
         m_CondVar.wait_for(lock, updateRate);
@@ -121,20 +123,20 @@ void FileSystemWatcher::Run()
                 const std::filesystem::path path = std::wstring_view(information->FileName, information->FileNameLength / sizeof(WCHAR));
 
                 // Because we watch the parent directory, we need to check if the changed entry is the correct one
-                if (absolute(path).string().starts_with(pathAbs))
+                if ((watchedPath / path).string().starts_with(pathAbs))
                 {
                     switch (information->Action)
                     {
                         case FILE_ACTION_ADDED:
-                            created({path});
+                            onCreated({path});
                             break;
 
                         case FILE_ACTION_REMOVED:
-                            deleted({path});
+                            onDeleted({path});
                             break;
 
                         case FILE_ACTION_MODIFIED:
-                            modified({path});
+                            onModified({path});
                             break;
 
                         case FILE_ACTION_RENAMED_OLD_NAME:
@@ -143,7 +145,7 @@ void FileSystemWatcher::Run()
 
                         case FILE_ACTION_RENAMED_NEW_NAME:
                             renamedArgs.path = path;
-                            renamed(renamedArgs);
+                            onRenamed(renamedArgs);
                             break;
 
                         default: ;
@@ -166,8 +168,20 @@ DWORD FileSystemWatcher::NotifyFiltersToWindows(const ENUM_VALUE(FswNotifyFilter
 
     if (filters & FswNotifyFilters::FileName)
         result |= FILE_NOTIFY_CHANGE_FILE_NAME;
-
-    // TODO: Complete function
+    if (filters & FswNotifyFilters::DirectoryName)
+        result |= FILE_NOTIFY_CHANGE_DIR_NAME;
+    if (filters & FswNotifyFilters::Attributes)
+        result |= FILE_NOTIFY_CHANGE_ATTRIBUTES;
+    if (filters & FswNotifyFilters::Size)
+        result |= FILE_NOTIFY_CHANGE_SIZE;
+    if (filters & FswNotifyFilters::LastWrite)
+        result |= FILE_NOTIFY_CHANGE_LAST_WRITE;
+    if (filters & FswNotifyFilters::LastAccess)
+        result |= FILE_NOTIFY_CHANGE_LAST_ACCESS;
+    if (filters & FswNotifyFilters::Creation)
+        result |= FILE_NOTIFY_CHANGE_CREATION;
+    if (filters & FswNotifyFilters::Security)
+        result |= FILE_NOTIFY_CHANGE_SECURITY;
 
     return result;
 }
