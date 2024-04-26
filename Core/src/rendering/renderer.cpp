@@ -38,7 +38,6 @@ void Renderer::Initialize()
 void Renderer::BeginFrame(const Scene& scene, const Viewport& viewport) 
 {
     scene.GetAllComponentOfType<MeshRenderer>(&m_MeshRenderers);
-    Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
     m_LightManager.BeginFrame(scene, viewport, *this);
     m_AnimationRender.BeginFrame(scene, *this);
     PrepareOctree();
@@ -53,6 +52,11 @@ void Renderer::EndFrame(const Scene& scene)
 
 void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene) 
 {
+    Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
+    
+    if (viewport.camera == nullptr)
+        return;
+    
     BeginFrame(scene, viewport);
     BindCamera(*viewport.camera, viewport.viewPortSize);
     m_Frustum.UpdateFromCamera(*viewport.camera, viewport.GetAspect());

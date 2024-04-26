@@ -42,12 +42,6 @@ void Viewport::Resize(const Vector2i newSize)
     Init(newSize);
 }
 
-
-bool_t Viewport::IsValid() const
-{
-    return camera != nullptr && frameBuffer != nullptr;  
-}
-
 float_t Viewport::GetAspect() const
 {
     return static_cast<float_t>(viewPortSize.x) / static_cast<float_t>(viewPortSize.y); 

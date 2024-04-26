@@ -25,7 +25,7 @@ static constexpr uint32_t MaxDirectionalLights = 1;
 
 static constexpr uint32_t MaxBones = 100;
 
-static constexpr size_t DirectionalCascadeLevel = 8;
+static constexpr size_t DirectionalCascadeLevel = 4;
 static constexpr size_t DirectionalCascadeLevelAllocation = 12;
 
 
@@ -556,9 +556,7 @@ struct ALIGNAS(16) DirectionalLightData
 
 	int32_t cascadeCount = DirectionalCascadeLevel;
 
-	// Vector4 for padding even if we want a float
 	float_t cascadePlaneDistance[DirectionalCascadeLevel];
-	
 };
 
 /// @brief Light UniformBuffer data

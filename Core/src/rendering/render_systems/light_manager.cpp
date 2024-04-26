@@ -210,29 +210,23 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 		const Texture& shadowMap = *m_DirectionalShadowMaps;
 		const Vector2i shadowMapSize = shadowMap.GetSize(); 
 		
-		Vector3 lightDir =  directionalLight->GetLightDirection();
+		Vector3 lightDir =  -directionalLight->GetLightDirection();
 		Vector3 extendMax = Vector3(GetMax(rebderSceneAAbb.extents));
 		// Get Pos from scene aabb
-		Vector3 pos = renderer.renderSceneAABB.center + (extendMax * -lightDir);//static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);
-		// Set the camera for dirlight as a orthographic
-
+		Vector3 pos = renderer.renderSceneAABB.center + (extendMax * lightDir);//static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);
 		
 		// CacadeShadowMap // TODO Make it cleaner ,
 		std::vector<float_t> shadowCascadeLevels =
 			{
-			viewPortCamera.far / 20.0f,
-			viewPortCamera.far / 18.0f,
-			viewPortCamera.far / 16.0f,
-			viewPortCamera.far / 14.0f,
-			viewPortCamera.far / 12.0f,
-			viewPortCamera.far / 8.0f,
-			viewPortCamera.far / 4.0f,
-			viewPortCamera.far / 2.0f
+			viewPortCamera.far / 50.f,
+			viewPortCamera.far / 25.f,
+			viewPortCamera.far / 10.f,
+			viewPortCamera.far / 2.f
 			};
 		
 		
 		m_CascadeShadowMap.SetCascadeLevel(shadowCascadeLevels);
-		m_CascadeShadowMap.SetZMultiplicator(renderer.renderSceneAABB.extents.Length());//);
+		m_CascadeShadowMap.SetZMultiplicator(extendMax.Length());//);
 
 		// Handle float array padding
 		for (size_t k = 0; k < shadowCascadeLevels.size(); k++)
@@ -240,18 +234,18 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 			m_GpuLightData->directionalData->cascadePlaneDistance[k] = shadowCascadeLevels[k];
 		}
 
-		std::vector<Camera> cascadedCameras;
-		m_CascadeShadowMap.GetCascadeCameras(&cascadedCameras, viewPortCamera ,lightDir, shadowMapSize );
-
 		Camera camDirectional;
 		camDirectional.isOrthographic = true;
 		camDirectional.position = pos;
 		camDirectional.LookAt(camDirectional.position + lightDir);
-		camDirectional.near = directionalLight->near;
-		camDirectional.far = directionalLight->far;
+		camDirectional.near = viewPortCamera.near;
+		camDirectional.far = viewPortCamera.far;
 		camDirectional.leftRight = directionalLight->leftRight;
 		camDirectional.bottomtop = directionalLight->bottomTop;
-
+		
+		std::vector<Camera> cascadedCameras;
+		m_CascadeShadowMap.GetCascadeCameras(&cascadedCameras, camDirectional ,lightDir, shadowMapSize );
+		
 		for (size_t i = 0; i < cascadedCameras.size(); i++)
 		{
 			cascadedCameras[i].GetVp(shadowMap.GetSize(), &m_GpuLightData->dirLightSpaceMatrix[i]);

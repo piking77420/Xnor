@@ -106,10 +106,8 @@ void CascadeShadowMap::GetCamera(Camera* cascadedCamera,const float_t cascadedNe
     {
         center += {v.x , v.y, v.z};
     }
-    center /= static_cast<float_t>(corners.size());
-
+    center /= corners.size();
     cascadedCamera->position = center;
-    cascadedCamera->LookAt(cascadedCamera->position + lightDir);
 
     const Matrix lightView = Matrix::LookAt(center + lightDir, center, Vector3::UnitY());
 
@@ -131,7 +129,6 @@ void CascadeShadowMap::GetCamera(Camera* cascadedCamera,const float_t cascadedNe
         maxZ = std::max(maxZ, trf.z);
     }
 
-    // TODO Tune this parameter according to the scene
     if (minZ < 0)
     {
         minZ *= m_ZMultiplicator;
@@ -150,9 +147,12 @@ void CascadeShadowMap::GetCamera(Camera* cascadedCamera,const float_t cascadedNe
     }
 
     cascadedCamera->near = minZ;
-    cascadedCamera->far =  maxZ;
+    cascadedCamera->far = maxZ ;
     
     cascadedCamera->leftRight = { minX , maxX };
     cascadedCamera->bottomtop = { minY, maxY };
+
+
+    cascadedCamera->LookAt(cascadedCamera->position + lightDir);
 }
 

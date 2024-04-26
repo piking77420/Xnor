@@ -5,9 +5,9 @@
 			<name>Plane</name>
 			<m_EntityId>6DA3A69E-26F1-49AD-85-36-F8-88-F7-71-8A-B0</m_EntityId>
 			<transform>
-				<m_Position>0 ; 0 ; -1</m_Position>
-				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>20 ; 0.21906261 ; 12</m_Scale>
+				<m_Position>3 ; 4 ; 1</m_Position>
+				<m_EulerRotation>-1.5411137e-08 ; -7.4505375e-09 ; -0.01712103</m_EulerRotation>
+				<m_Scale>182.36737 ; 0.2190678 ; 225.03452</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">
@@ -39,8 +39,8 @@
 			<m_EntityId>E3FC77C9-7C57-4EEB-AB-AD-6-5-5A-21-B6-BC</m_EntityId>
 			<transform>
 				<m_Position>0 ; 0 ; 0</m_Position>
-				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1 ; 1</m_Scale>
+				<m_EulerRotation>-0.5544017 ; -0.01107912 ; 0.77402663</m_EulerRotation>
+				<m_Scale>1.0000027 ; 1.0000054 ; 1.0000021</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="DirectionalLight">
@@ -56,9 +56,9 @@
 			<name>Cube</name>
 			<m_EntityId>9806BECA-30FC-44CE-96-82-A0-8F-41-A6-D2-77</m_EntityId>
 			<transform>
-				<m_Position>-1.5149856 ; 4.0360184 ; 1.7266324</m_Position>
-				<m_EulerRotation>-2.559186 ; 1.1385105 ; -3.0284169</m_EulerRotation>
-				<m_Scale>1.0000114 ; 1.0000056 ; 1.0000062</m_Scale>
+				<m_Position>3.153963 ; 12.420668 ; 2.594864</m_Position>
+				<m_EulerRotation>1.6578655 ; -0.6695386 ; 2.1304424</m_EulerRotation>
+				<m_Scale>1.000016 ; 1.0001824 ; 1.0000118</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">
@@ -85,24 +85,6 @@
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
 		</2>
-		<3>
-			<name>Entity</name>
-			<m_EntityId>1DC36956-6123-4720-93-FF-B7-AB-1D-84-7B-60</m_EntityId>
-			<transform>
-				<m_Position>-4.0389705 ; 6.7387085 ; 3.6925738</m_Position>
-				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1 ; 1</m_Scale>
-			</transform>
-			<m_Components>
-				<0 typeName="PointLight">
-					<color>1 ; 1 ; 1 ; 1</color>
-					<intensity>1000</intensity>
-					<castShadow>true</castShadow>
-				</0>
-			</m_Components>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
-			<m_Children/>
-		</3>
 	</m_Entities>
 </Scene>
 

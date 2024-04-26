@@ -33,7 +33,7 @@ void Camera::GetVp(const Vector2i screenSize, Matrix* matrix) const
 
 void Camera::LookAt(const Vector3& at)
 {
-	front = (at - position ).Normalized();
+	front = (at - position).Normalized();
 	right = Vector3::Cross(front, Vector3::UnitY()).Normalized();
 	up = Vector3::Cross(right, front).Normalized();
 }
