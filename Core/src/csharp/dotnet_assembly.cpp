@@ -52,7 +52,10 @@ bool_t DotnetAssembly::Load(Coral::AssemblyLoadContext& alc)
 void DotnetAssembly::ProcessTypes()
 {
     if (!xnorCoreAssembly)
+    {
+        Logger::LogWarning("Couldn't process {} .NET assembly types because the XNOR assembly hasn't been loaded yet", m_Name);
         return;
+    }
 
     const Coral::Type& scriptComponentType = xnorCoreAssembly->GetCoralAssembly()->GetType(XnorCoreNamespace + ".ScriptComponent");
     

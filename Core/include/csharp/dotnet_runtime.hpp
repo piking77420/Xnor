@@ -19,6 +19,10 @@ class DotnetRuntime
 public:
     XNOR_ENGINE static constexpr const char_t* const AssembliesDirectory = "DotnetAssemblies";
     
+    XNOR_ENGINE static constexpr const char_t* const CoreProjectLocation = "CoreCSharp";
+    
+    XNOR_ENGINE static constexpr const char_t* const GameProjectLocation = "Game";
+    
     /// @brief Initializes the .NET runtime.
     XNOR_ENGINE static bool_t Initialize();
 
@@ -53,7 +57,7 @@ public:
     XNOR_ENGINE static bool_t GetInitialized();
 
     /// @brief Returns whether a thread is currently building/reloading the .NET project.
-    XNOR_ENGINE static bool_t GetReloadingProject();
+    XNOR_ENGINE static bool_t IsReloadingProject();
 
 private:
     XNOR_ENGINE static constexpr int32_t DotnetVersion = 5;

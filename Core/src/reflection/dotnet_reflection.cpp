@@ -1,10 +1,11 @@
 #include "reflection/dotnet_reflection.hpp"
 
+#include <Maths/vector2i.hpp>
+
 #include "csharp/dotnet_assembly.hpp"
 #include "csharp/dotnet_runtime.hpp"
 #include "rendering/light/light.hpp"
 #include "utils/logger.hpp"
-#include "Maths/vector2i.hpp"
 
 using namespace XnorCore;
 
@@ -53,31 +54,39 @@ void DotnetReflection::RegisterAllTypes()
     RegisterBaseType<bool_t>("System.Boolean");
     RegisterBaseType<uint8_t>("System.Byte");
     RegisterBaseType<int8_t>("System.SByte");
-    RegisterBaseType<char_t>("System.Char");
-    RegisterBaseType<double_t>("System.Double");
-    RegisterBaseType<float_t>("System.Single");
+    RegisterBaseType<int16_t>("System.Int16");
+    RegisterBaseType<uint16_t>("System.UInt16");
     RegisterBaseType<int32_t>("System.Int32");
     RegisterBaseType<uint32_t>("System.UInt32");
     RegisterBaseType<int64_t>("System.Int64");
     RegisterBaseType<uint64_t>("System.UInt64");
-    RegisterBaseType<int16_t>("System.Int16");
-    RegisterBaseType<uint16_t>("System.UInt16");
+    RegisterBaseType<char_t>("System.Char");
+    RegisterBaseType<double_t>("System.Double");
+    RegisterBaseType<float_t>("System.Single");
 
-    RegisterBaseType<ColorHsva>(DotnetAssembly::XnorCoreNamespace + ".ColorHsva");
-    RegisterBaseType<Colorf>(DotnetAssembly::XnorCoreNamespace + ".Colorf");
-    RegisterBaseType<ColorRgb>(DotnetAssembly::XnorCoreNamespace + ".ColorRgb");
-    RegisterBaseType<ColorRgba>(DotnetAssembly::XnorCoreNamespace + ".ColorRgba");
+    static const std::string XnorCoreNamespace = DotnetAssembly::XnorCoreNamespace + '.';
 
-    RegisterBaseType<Vector2i>(DotnetAssembly::XnorCoreNamespace + ".Vector2i");
-    RegisterBaseType<Vector2>(DotnetAssembly::XnorCoreNamespace + ".Vector2");
-    RegisterBaseType<Vector3>(DotnetAssembly::XnorCoreNamespace + ".Vector3");
-    RegisterBaseType<Vector4>(DotnetAssembly::XnorCoreNamespace + ".Vector4");
+    RegisterBaseType<ColorHsva>(XnorCoreNamespace + "ColorHsva");
+    RegisterBaseType<Colorf>(XnorCoreNamespace + "Colorf");
+    RegisterBaseType<ColorRgb>(XnorCoreNamespace + "ColorRgb");
+    RegisterBaseType<ColorRgba>(XnorCoreNamespace + "ColorRgba");
 
-    RegisterCoreType<Light>(DotnetAssembly::XnorCoreNamespace + ".Light");
+    RegisterBaseType<Vector2i>(XnorCoreNamespace + "Vector2i");
+    RegisterBaseType<Vector2>(XnorCoreNamespace + "Vector2");
+    RegisterBaseType<Vector3>(XnorCoreNamespace + "Vector3");
+    RegisterBaseType<Vector4>(XnorCoreNamespace + "Vector4");
+
+    RegisterCoreType<Light>(XnorCoreNamespace + "Light");
 }
 
 void DotnetReflection::DisplayType(void* obj, const char_t* const name, const std::string& typeName)
 {
+    if (DotnetRuntime::IsReloadingProject())
+    {
+        ImGui::TextColored(static_cast<Vector4>(Colorf::Gray()), ".NET scripts are reloading...");
+        return;
+    }
+
     auto&& it = m_DotnetMap.find(typeName);
 
     if (it == m_DotnetMap.end())
@@ -91,6 +100,12 @@ void DotnetReflection::DisplayType(void* obj, const char_t* const name, const st
 
 void DotnetReflection::DisplayType(ScriptComponent* const script)
 {
+    if (DotnetRuntime::IsReloadingProject())
+    {
+        ImGui::TextColored(static_cast<Vector4>(Colorf::Gray()), ".NET scripts are reloading...");
+        return;
+    }
+    
     Coral::ManagedObject& obj = script->GetManagedObject();
 
     ImGui::PushID(script);

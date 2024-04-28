@@ -81,7 +81,7 @@ bool_t DotnetRuntime::LoadAssembly(const std::string& name)
     DotnetAssembly* const assembly = new DotnetAssembly(str);
     if (assembly->Load(m_Alc))
     {
-        //assembly->ProcessTypes();
+        assembly->ProcessTypes();
         m_LoadedAssemblies.push_back(assembly);
         return true;
     }
@@ -131,9 +131,7 @@ void DotnetRuntime::ReloadAllAssemblies()
 
 bool_t DotnetRuntime::BuildGameProject(const bool_t asynchronous)
 {
-    constexpr const char_t* const gameProjectLocation = "Game";
-    
-    const std::filesystem::path gameProjectDirectory = gameProjectLocation;
+    const std::filesystem::path gameProjectDirectory = GameProjectLocation;
 
     if (!exists(gameProjectDirectory))
         return false;
@@ -173,7 +171,7 @@ bool_t DotnetRuntime::GetInitialized()
     return m_Initialized;
 }
 
-bool_t DotnetRuntime::GetReloadingProject()
+bool_t DotnetRuntime::IsReloadingProject()
 {
     return m_ReloadingProjectAsync;
 }

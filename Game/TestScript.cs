@@ -38,7 +38,7 @@ namespace Game
             
             // Dangerous
             // Only for limit testing
-            entity.AddComponent(new PointLight());
+            //entity.AddComponent(new PointLight());
 
             light.intensity += 0.1f;
             
