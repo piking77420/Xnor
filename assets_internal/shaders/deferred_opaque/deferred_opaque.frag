@@ -103,7 +103,7 @@ const vec2 gridSamplingDiskVec2[20] = vec2[]
 float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
 {
     // select cascade layer
-    vec4 fragPosWorldSpaceView =  vec4(fragPosWorldSpace.xyz,1.0f);
+    vec4 fragPosWorldSpaceView = vec4(fragPosWorldSpace.xyz,1.0f);
     
     float depthValue = abs(fragPosWorldSpaceView.z);
 

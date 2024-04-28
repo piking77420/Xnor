@@ -106,10 +106,10 @@ void CascadeShadowMap::GetCamera(Camera* cascadedCamera,const float_t cascadedNe
     {
         center += {v.x , v.y, v.z};
     }
-    center /= corners.size();
+    center /= static_cast<float_t>(corners.size());
     cascadedCamera->position = center;
 
-    const Matrix lightView = Matrix::LookAt(center + lightDir, center, Vector3::UnitY());
+    const Matrix lightView = Matrix::LookAt(center, center + lightDir, Vector3::UnitY());
 
     float_t minX = std::numeric_limits<float_t>::max();
     float_t maxX = std::numeric_limits<float_t>::lowest();

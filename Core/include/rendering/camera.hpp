@@ -76,6 +76,8 @@ public:
 
 
 	static Matrix LookAtRH(Vector3 const& eye, Vector3 const& center, Vector3 const& up);
+
+	static Matrix Ortho(float_t left, float_t right, float_t bottom, float_t top, float_t zNear, float_t zFar);
 	
 
 };

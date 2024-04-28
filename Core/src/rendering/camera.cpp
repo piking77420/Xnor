@@ -13,7 +13,7 @@ void Camera::GetProjection(const Vector2i screenSize, Matrix* const matrix) cons
 		*matrix = Perspective(fov * Calc::Deg2Rad , ratio , near, far);
 		return;
 	}
-	Matrix::Orthographic(leftRight.x, leftRight.y, bottomtop.x, bottomtop.y, near ,far, matrix);
+	*matrix = Ortho(leftRight.x, leftRight.y, bottomtop.x, bottomtop.y, near ,far);
 }
 
 void Camera::GetView(Matrix* const matrix) const
@@ -57,7 +57,7 @@ Vector2i Camera::ProjectOn(const Vector3& vertex, const Vector2i screenSize, con
 
 Matrix Camera::Perspective(const float_t fovy, const float_t aspect, const float_t zNear, const float_t zFar)
 {
-	float_t const tanHalfFovy = tan(fovy * 0.5f);
+	float_t const tanHalfFovy = tanf(fovy / 2.f);
 
 	Matrix result;
 	result.m00 = 1.f / (aspect * tanHalfFovy);
@@ -89,4 +89,18 @@ Matrix Camera::LookAtRH(Vector3 const& eye, Vector3 const& center, Vector3 const
 	m.m23 =  Vector3::Dot(f, eye);
 	
 	return m;
+}
+
+Matrix Camera::Ortho(float_t left, float_t right, float_t bottom, float_t top, float_t zNear, float_t zFar)
+{
+	Matrix result = Matrix::Identity();
+
+	result.m00 = 2.f / (right - left);
+	result.m11 = 2.f / (top - bottom);
+	result.m22 = -2.f / (zFar - zNear);
+	result.m03 = -(right + left) / (right - left);
+	result.m13 = -(top + bottom) / (top - bottom);
+	result.m23 = -(zFar + zNear) / (zFar - zNear);
+
+	return result;
 }

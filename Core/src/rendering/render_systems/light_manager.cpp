@@ -211,7 +211,7 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 		const Vector2i shadowMapSize = shadowMap.GetSize(); 
 		
 		Vector3 lightDir =  -directionalLight->GetLightDirection();
-		float_t lenghtAabb = rebderSceneAAbb.extents.Length();
+		float_t lenghtAabb =  rebderSceneAAbb.extents.Length();
 		// Get Pos from scene aabb
 		Vector3 pos = renderer.renderSceneAABB.center + (lenghtAabb * -lightDir);//static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);
 		DrawGizmo::Sphere(pos);
