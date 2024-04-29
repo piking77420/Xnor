@@ -241,70 +241,33 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
     if (meshRenderers.empty())
         return;
 
-    /*
-    OctreeIterator<OctreeNode<const MeshRenderer>> it = m_RenderOctree.GetIterator();
     
+    const OctreeIterator<OctreeNode<const MeshRenderer>> it = m_RenderOctree.GetIterator();
+    int32_t drawcall = 0;
+
     while (true)
     {
         Bound bound = it.GetBound();
         // if we not see it 
-        if (m_Frustum.IsOnFrustum(bound))
-        {
-            // look if we see his parent
-            if (!it.ClimbTree())
-                break;
-        }
-        else
-        {
-            std::vector<const MeshRenderer*>* handles = nullptr;
-            it.GetHandles(&handles);
-            
-            // Draw handle
-            for (auto it = handles->begin(); it != handles->end(); it++)
-            {
-                const MeshRenderer* meshRenderer = *it;
+       if (m_Frustum.IsOnFrustum(bound))
+       {
+           while (!it.DownTree())
+           {
+               std::vector<const MeshRenderer*>* handels = nullptr;
+               it.GetHandles(&handels);
 
-                if (meshRenderer->material.materialType != materialType)
-                    continue;
+               // draw
 
-                Bound aabb;
-                meshRenderer->GetAABB(&aabb);
-                if (m_Frustum.IsOnFrustum(aabb))
-                {
-                    continue;
-                }
 
-                const Transform& transform = meshRenderer->GetEntity()->transform;
-                ModelUniformData modelData;
-                modelData.model = transform.worldMatrix;
+               while (!it.ClimbTree()) {}
+           }   
+       }
+       
+    }
 
-                try
-                {
-                    modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
-                }
-                catch (const std::invalid_argument&)
-                {
-                    modelData.normalInvertMatrix = Matrix::Identity();
-                }
+    Logger::LogInfo("DraCall {}",drawcall);
 
-                Rhi::UpdateModelUniform(modelData);
-
-                if (meshRenderer->model.IsValid())
-                {
-                    meshRenderer->material.BindMaterial();
-                    Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
-                }
-            }
-            
-            if (!it.DownTree())
-            {
-                if (!it.ClimbTree())
-                    break;
-            }
-        }
-    }*/
-
-   
+   /*
     for (const MeshRenderer* const meshRenderer : meshRenderers)
     {
         if (meshRenderer->material.materialType != materialType)
@@ -339,7 +302,7 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
             meshRenderer->material.BindMaterial();
             Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
         }
-    }
+    }*/
 }
 
 

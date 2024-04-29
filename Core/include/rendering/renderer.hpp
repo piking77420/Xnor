@@ -74,10 +74,10 @@ private:
      SkyboxRenderer m_SkyboxRenderer;
      PostProcessPass m_PostProcessPass;
      AnimationRender m_AnimationRender;
-     Octree<const MeshRenderer> m_RenderOctree;
+     mutable Octree<const MeshRenderer> m_RenderOctree;
      std::vector<const MeshRenderer*> m_MeshRenderers;
 
-    mutable Frustum m_Frustum;
+     mutable Frustum m_Frustum;
     
     Pointer<Shader> m_GBufferShader;
     Pointer<Shader> m_GBufferShaderLit;

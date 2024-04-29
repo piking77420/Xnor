@@ -52,39 +52,31 @@ public:
     } 
 
     ~OctreeIterator() = default;
-
+    
     // return true if we iterate to a children
     // return false if all the octan has been iterated
     bool_t DownTree() const
     {
-        uint32_t i = GetNextOctanToIterate();
-        if (i == AllOctanHasBeenIterated)
-        {
+        if (SetCurrentOctanState() == AllOctanHasBeenIterated)
             return false;
-        }
         
-        OctansState& octanState = GetCurrentOctanState();
-        // we update the stae octan
-        octanState = static_cast<OctansState>((octanState | 1 << i));
-
-        m_Ptr->GetChildNode(i, m_Ptr);
-        PushOctanState(OctansStateZero);
-
+        m_Ptr->SetPtrToChildNode(static_cast<size_t>(GetNextOctanToIterate()),&m_Ptr);
+        PushOctanState();
+        
         return true;
     }
 
+    // Return false if has no parent iterator = mother node
     bool_t ClimbTree() const
     {
-        // ptr point to the mother node so we end the iteration
         if (m_Ptr->parent == nullptr)
         {
             m_OctanState.pop();
             return false;
         }
-
-        // pop the state of the actual node
-        PopOctanState();
         m_Ptr = m_Ptr->parent;
+        m_OctanState.pop();
+        
         return true;
     }
     
@@ -102,14 +94,15 @@ private:
 
     void PushOctanState(OctansState octancState) const;
     
-    OctansState& GetCurrentOctanState() const;
+    OctansState& SetCurrentOctanState() const;
+    
     
     void PopOctanState() const;
 
     int32_t GetNextOctanToIterate() const;
 
-  
 };
+
 
 template <typename T>
 Bound OctreeIterator<T>::GetBound() const
@@ -136,7 +129,7 @@ void OctreeIterator<T>::PushOctanState(OctansState octancState) const
 }
 
 template <typename T>
-OctansState& OctreeIterator<T>::GetCurrentOctanState() const
+OctansState& OctreeIterator<T>::SetCurrentOctanState() const
 {
    return m_OctanState.top();
 }
@@ -150,7 +143,7 @@ void OctreeIterator<T>::PopOctanState() const
 template <typename T>
 int32_t OctreeIterator<T>::GetNextOctanToIterate() const
 {
-    OctansState currentOctanState = GetCurrentOctanState();
+    OctansState currentOctanState = SetCurrentOctanState();
     
     for (int32_t i = 0; i < 8; i++)
     {
