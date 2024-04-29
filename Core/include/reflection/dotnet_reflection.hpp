@@ -69,6 +69,12 @@ public:
     XNOR_ENGINE static void DisplayType(ScriptComponent* script);
 
 private:
+    static inline const std::array<std::string, 2> IgnoredFieldNames
+    {
+        "swigCPtr",
+        "swigCMemOwn"
+    };
+    
     static inline std::unordered_map<std::string, DotnetTypeInfo> m_DotnetMap; 
 };
 

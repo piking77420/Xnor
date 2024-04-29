@@ -112,6 +112,10 @@ void DotnetReflection::DisplayType(ScriptComponent* const script)
     for (Coral::FieldInfo& field : obj.GetType().GetFields())
     {
         const std::string fieldName = field.GetName();
+        
+        if (std::ranges::find(IgnoredFieldNames, fieldName) != IgnoredFieldNames.end())
+            continue;
+        
         const std::string typeName = field.GetType().GetFullName();
 
         void* const ptr = obj.GetFieldPointer<void>(fieldName);

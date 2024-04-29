@@ -10,6 +10,8 @@ namespace Game
 
         private Light light;
 
+        public float MyFloatVar = 3f;
+
         public TestScript()
         {
             Logger.LogTempDebug("Bobby was constructed!");
@@ -35,8 +37,6 @@ namespace Game
                 if (!TryGetComponent(out light))
                     return;
             }
-
-            if (light is CoreC) a;
             
             // Dangerous
             // Only for limit testing

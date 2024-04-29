@@ -89,4 +89,6 @@ void DotnetAssembly::ProcessScriptComponent(Coral::Type& subclass)
     ptr->Initialize(instance);
     entity->AddComponent(ptr);
     entity->AddComponent<PointLight>();
+
+    DotnetReflection::RegisterScriptType(subclass.GetFullName());
 }
