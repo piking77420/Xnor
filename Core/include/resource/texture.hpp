@@ -35,19 +35,12 @@ public:
     XNOR_ENGINE static inline LoadOptions defaultLoadOptions;
 
     /// @brief Allowed extensions for texture files
-    XNOR_ENGINE static inline constexpr std::array<const char_t*, 11> FileExtensions
+    XNOR_ENGINE static constexpr std::array<const char_t*, 4> FileExtensions
     {
         ".jpg",
         ".jpeg",
         ".png",
-        ".bmp",
-        ".hdr",
-        ".psd",
-        ".tga",
-        ".gif",
-        ".pic",
-        ".pgm",
-        ".ppm"
+        ".hdr"
     };
 
     /// @brief Options to use when loading this Texture.
@@ -140,6 +133,8 @@ public:
     /// @brief Gets the format
     /// @return Format
     XNOR_ENGINE TextureFormat::TextureFormat GetTextureFormat() const;
+    
+    XNOR_ENGINE bool_t Save() const override;
 
 private:
     uint8_t* m_Data = nullptr;

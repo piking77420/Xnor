@@ -31,7 +31,7 @@ public:
     
     /// @brief Creates the Resource corresponding to the given @p name without loading it.
     template <Concepts::ResourceT T>
-    static Pointer<T> Add(std::string name);
+    static Pointer<T> Add(const std::string& name);
     
     /// @brief Creates the Resource corresponding to the given @p file without loading it.
     template <Concepts::ResourceT T>

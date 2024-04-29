@@ -58,7 +58,7 @@ void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene) cons
 	BindCamera(*viewport.camera,viewport.viewPortSize);
 	m_Frustum.UpdateFromCamera(*viewport.camera,viewport.GetAspect());
 	const ViewportData& viewportData = viewport.viewportData;
-	DeferedRenderring(*viewport.camera, m_MeshRenderers, scene.skybox, viewportData, viewport.viewPortSize);
+	DeferredRendering(*viewport.camera, m_MeshRenderers, scene.skybox, viewportData, viewport.viewPortSize);
 	ForwardPass(m_MeshRenderers, scene.skybox, viewport, viewport.viewPortSize, viewport.isEditor);
 	
 	if (viewportData.usePostProcess)
@@ -90,9 +90,7 @@ void Renderer::SwapBuffers() const
 	Rhi::SwapBuffers();
 }
 
-
-
-void Renderer::DeferedRenderring(const Camera& camera,const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox, const ViewportData& viewportData, const Vector2i viewportSize) const 
+void Renderer::DeferredRendering(const Camera&, const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox, const ViewportData& viewportData, const Vector2i viewportSize) const 
 {
 	const RenderPassBeginInfo renderPassBeginInfo =
 	{

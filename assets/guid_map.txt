@@ -18,6 +18,7 @@ _shaders/skymap_shader;2AEC7A9-907-4DEA-B8-F0-3A-6F-DD-7B-7-8B
 assets/skybox/left.jpg;444226B2-9630-40CD-BD-E8-98-FD-AD-CB-45-46
 assets/textures/puresky.hdr;6291CF33-C815-4CCC-AB-FA-88-B1-B4-F8-F0-AD
 assets/skybox/top.jpg;6EA6AD9C-15DD-415F-87-AE-A7-F0-65-61-59-5
+U3DMesh;155C43F7-CEAE-403D-A5-67-B4-33-C5-EE-CC-62
 assets/textures/diamond_block.jpg;7587E9E6-C775-4518-93-22-41-74-BC-95-DD-3D
 assets/textures/pbr/stainless/used-stainless-steel2_roughness.png;752FA041-11DC-4E70-84-39-C-FF-C0-DF-59-80
 _shaders/gizmo_shader;1580D0FE-ADB6-4DB8-BF-2E-99-BA-A1-30-72-86
@@ -56,3 +57,4 @@ assets/sounds/metal-pipe.wav;DFE1D450-B4E3-49F1-B8-41-92-36-78-74-9C-54
 _shaders/up_sample;590ABFD0-76AD-4F2D-94-50-D4-C5-9A-B5-A6-6
 assets/models/Coyote-Walking.fbx;6C09C002-82DC-4AF6-9D-41-B6-3A-31-72-4D-63
 assets/models/Coyote-Running.fbx;6681D90B-EA9E-4F13-87-FE-89-A8-AC-E0-A2-85
+Cube;BF4A5B8F-DF43-4B3D-93-74-67-EA-78-C6-DC-3F

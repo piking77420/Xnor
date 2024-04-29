@@ -2,6 +2,7 @@
 
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
+#include "resource/resource_manager.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -39,11 +40,12 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
 
     for (uint32_t i = 0; i < scene->mNumMeshes; i++)
     {
-        Model* const model = new Model(scene->mMeshes[i]->mName.C_Str());
+        // TODO: mName will not be accurate
+        Pointer<Model> model = ResourceManager::Add<Model>(scene->mMeshes[i]->mName.C_Str());
 
         if (!model->Load(*scene->mMeshes[i]))
         {
-            delete model;
+            ResourceManager::Unload(model);
             return false;
         }
 
@@ -56,7 +58,7 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
         }
 
         // model->CreateInRhi();
-        models.Add(model);
+        //models.Add(model);
     }
 
     /*

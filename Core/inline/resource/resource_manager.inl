@@ -2,6 +2,7 @@
 
 #include <ranges>
 
+#include "file/file_manager.hpp"
 #include "resource/compute_shader.hpp"
 #include "resource/shader.hpp"
 #include "utils/formatter.hpp"
@@ -9,7 +10,7 @@
 BEGIN_XNOR_CORE
 
 template <Concepts::ResourceT T>
-Pointer<T> ResourceManager::Add(std::string name)
+Pointer<T> ResourceManager::Add(const std::string& name)
 {
     Logger::LogDebug("Adding resource {}", name);
 
@@ -18,8 +19,40 @@ Pointer<T> ResourceManager::Add(std::string name)
         Logger::LogWarning("This resource has already been added, consider using ResourceManager::Get instead");
         return GetNoCheck<T>(name);
     }
+
+    Pointer<T> result = AddNoCheck<T>(name);
+
+    Pointer<Resource>(result)->m_File = FileManager::Add(name);
     
-    return AddNoCheck<T>(std::forward<std::string>(name));
+    return result;
+}
+
+template <>
+inline Pointer<Shader> ResourceManager::Add<Shader>(const std::string& name)
+{
+    Logger::LogDebug("Adding shader {}", name);
+
+    if (Contains(name))
+    {
+        Logger::LogWarning("This shader has already been added, consider using ResourceManager::Get instead");
+        return GetNoCheck<Shader>(name);
+    }
+
+    return AddNoCheck<Shader>(name);
+}
+
+template <>
+inline Pointer<ComputeShader> ResourceManager::Add<ComputeShader>(const std::string& name)
+{
+    Logger::LogDebug("Adding compute shader {}", name);
+
+    if (Contains(name))
+    {
+        Logger::LogWarning("This compute shader has already been added, consider using ResourceManager::Get instead");
+        return GetNoCheck<ComputeShader>(name);
+    }
+
+    return AddNoCheck<ComputeShader>(name);
 }
 
 template <Concepts::ResourceT T>
@@ -86,7 +119,7 @@ inline Pointer<ComputeShader> ResourceManager::Get<ComputeShader>(const std::str
         if (Contains(ReservedShaderPrefix + name))
             return GetNoCheck<ComputeShader>(ReservedShaderPrefix + name);
         
-        Logger::LogError("Attempt to get an unknown resource: {}", name);
+        Logger::LogError("Attempt to get an unknown compute shader: {}", name);
         return nullptr;
     }
 
@@ -207,7 +240,7 @@ void ResourceManager::Unload(const Pointer<T>& resource)
 
     // If no resources were deleted
     if (oldSize == m_Resources.size())
-        Logger::LogWarning("Attempt to unload an unknown file entry: {}", static_cast<T*>(resource));
+        Logger::LogWarning("Attempt to unload an unknown file entry: {}", resource);
 }
 
 template <Concepts::ResourceT T>
