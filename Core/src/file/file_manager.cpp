@@ -105,7 +105,7 @@ Pointer<Directory> FileManager::AddDirectory(std::filesystem::path path)
 
 Pointer<Directory> FileManager::LoadDirectory(std::filesystem::path path)
 {
-    Logger::LogDebug("Loading directory {}...", path);
+    Logger::LogInfo("Loading directory {}...", path);
 
     auto&& start = std::chrono::system_clock::now();
 
@@ -224,7 +224,7 @@ void FileManager::Unload(const Pointer<Entry>& entry)
 
 void FileManager::UnloadAll()
 {
-    Logger::LogDebug("Unloading all FileManager entries ({})", m_Entries.size());
+    Logger::LogInfo("Unloading all FileManager entries ({})", m_Entries.size());
 
     auto&& start = std::chrono::system_clock::now();
     

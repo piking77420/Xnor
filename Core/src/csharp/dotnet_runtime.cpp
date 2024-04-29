@@ -144,9 +144,66 @@ bool_t DotnetRuntime::BuildGameProject(const bool_t asynchronous)
 
     Logger::LogInfo("Building Game project");
 
-    Utils::TerminalCommand("dotnet build " + absolute(gameProjectDirectory).string() + " 1> nul", asynchronous);
+    static constexpr const char_t* const TempFile = "xnor_dotnet_build.txt";
+    const std::filesystem::path tempPath = std::filesystem::temp_directory_path() / TempFile;
 
-    return true;
+    using namespace std::string_literals;
+
+    const int32_t commandResult = Utils::TerminalCommand("dotnet build "s + GameProjectBuildOptions + " \"" + absolute(gameProjectDirectory).string() + "\" 1> \"" + tempPath.string() + '"', asynchronous);
+
+    // In case a warning/error occured, read the output file to understand what happened
+    std::ifstream file(tempPath);
+    std::string line;
+
+    // Dotnet outputs look like this:
+    // <MSBuild version>
+    //   <Projects being restored>
+    //   <Projects being built>
+    //
+    // Build <succeeded/FAILED>
+    //
+    // <Warning list>
+    // <Error list>
+    //     <Total warning count>
+    //     <Total error count>
+    //
+    // <Time elapsed>
+    
+    while (!line.starts_with("Build succeeded") && !line.starts_with("Build FAILED"))
+        std::getline(file, line);
+
+    // Here we are right after the 'Build <succeeded/FAILED>' line
+
+    std::getline(file, line);
+
+    // This is the first potential warning/error line
+    std::getline(file, line);
+
+    std::vector<std::string> diagnostics;
+    while (!line.starts_with("    "))
+    {
+        diagnostics.push_back(line);
+        std::getline(file, line);
+    }
+
+    if (!diagnostics.empty())
+    {
+        for (auto&& str : diagnostics)
+            Logger::LogWarning("[.NET BUILD] {}", str);
+    }
+
+    file.close();
+
+    std::filesystem::remove(tempPath);
+
+    if (commandResult == 0)
+    {
+        Logger::LogInfo("Build succeeded");
+        return true;
+    }
+    
+    Logger::LogError("Build failed");
+    return false;
 }
 
 void DotnetRuntime::BuildAndReloadProject()
@@ -159,8 +216,8 @@ void DotnetRuntime::BuildAndReloadProject()
     m_ProjectReloadingThread = std::thread(
         []
         {
-            BuildGameProject(false);
-            ReloadAllAssemblies();
+            if (BuildGameProject(false))
+                ReloadAllAssemblies();
             m_ReloadingProjectAsync = false;
         }
     );
@@ -182,7 +239,6 @@ bool DotnetRuntime::CheckDotnetInstalled()
     return Utils::TerminalCommand("dotnet --info 1> nul", false) == 0;
 }
 
-constexpr const char_t* const TempFile = "xnor_dotnet_list_runtimes.txt";
 bool DotnetRuntime::CheckDotnetVersion()
 {
     // This function runs the 'dotnet --list-runtimes' command
@@ -192,7 +248,8 @@ bool DotnetRuntime::CheckDotnetVersion()
     // Once this is done, we know for sure that the C# assemblies can be executed and let
     // the system choose the right version
 
-    std::filesystem::path tempPath = std::filesystem::temp_directory_path() / TempFile;
+    static constexpr const char_t* const TempFile = "xnor_dotnet_list_runtimes.txt";
+    const std::filesystem::path tempPath = std::filesystem::temp_directory_path() / TempFile;
     
     Utils::TerminalCommand("dotnet --list-runtimes 1> \"" + tempPath.string() + '"', false);
     

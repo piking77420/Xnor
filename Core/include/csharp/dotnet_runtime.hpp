@@ -23,6 +23,8 @@ public:
     
     XNOR_ENGINE static constexpr const char_t* const GameProjectLocation = "Game";
     
+    XNOR_ENGINE static constexpr const char_t* const GameProjectBuildOptions = "--os windows --no-self-contained";
+    
     /// @brief Initializes the .NET runtime.
     XNOR_ENGINE static bool_t Initialize();
 

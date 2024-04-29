@@ -35,6 +35,8 @@ namespace Game
                 if (!TryGetComponent(out light))
                     return;
             }
+
+            if (light is CoreC) a;
             
             // Dangerous
             // Only for limit testing
