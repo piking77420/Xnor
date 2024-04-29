@@ -269,8 +269,9 @@ void Logger::PrintLog(const std::shared_ptr<LogEntry>& log)
         }
 
         m_LastLogCollapsed = false;
-        log->previousLog = nullptr; // We don't need the previous log if it isn't collapsed
     }
+    
+    log->previousLog.reset();
 }
 
 std::pair<std::string, const char_t*> Logger::BuildLogPrefix(const std::shared_ptr<LogEntry>& log)
