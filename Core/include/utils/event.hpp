@@ -16,7 +16,12 @@ BEGIN_XNOR_CORE
 ///
 /// It works by having an underlying list of functions that always return @c void and have the provided types as arguments
 /// The += and -= operators can be used to respectively add and remove events to the list
+///
+/// Event variables should always start with 'on', for example: onUpdate, onReload, onCollision, etc...
+/// 
 /// @tparam Args Event function arguments
+///
+/// @see <a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/event">C# events</a>
 template <typename... Args>
 class Event
 {
@@ -33,6 +38,9 @@ public:
 
     /// @brief Clears the event list
     void Clear();
+
+    /// @brief Invokes the currently registered events with the provided parameters. Effectively the same as calling Invoke.
+    void operator()(Args... args) const;
 
     /// @brief Adds a function to the event list
     /// @param func Function

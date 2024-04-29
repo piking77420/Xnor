@@ -67,6 +67,8 @@ public:
     /// @returns @c true if the loading succeeded, @c false otherwise.
     XNOR_ENGINE virtual bool_t Reload(bool_t reloadInInterface = true);
 
+    XNOR_ENGINE virtual bool_t Save() const;
+
     /// @brief Returns whether the Resource has already been loaded.
     [[nodiscard]]
     XNOR_ENGINE bool_t IsLoaded() const;
@@ -101,8 +103,16 @@ protected:
     std::string m_Name;
     /// @brief Guid of the resource
     Guid m_Guid;
+
+    Pointer<File> m_File;
+
+    // We need this in order to set m_File from the ResourceManager
+    // which is the only class that needs to modify this field
+    friend class ResourceManager;
 };
 
 END_XNOR_CORE
 
 REFL_AUTO(type(XnorCore::Resource))
+
+#include "file/file.hpp"

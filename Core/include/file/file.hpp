@@ -61,10 +61,17 @@ public:
     /// @brief Returns the Type of this File.
     XNOR_ENGINE Type GetType() const;
 
+    /// @brief Deletes the corresponding filesystem file.
+    XNOR_ENGINE void Delete() const;
+
     /// @brief Returns the name of this File without the file extension.
     [[nodiscard]]
     XNOR_ENGINE std::string GetNameNoExtension() const;
-    
+
+    /// @brief Returns the name of this File without the file extension.
+    [[nodiscard]]
+    XNOR_ENGINE std::string GetPathNoExtension() const;
+
     /// @brief Returns the file extension of this File.
     [[nodiscard]]
     XNOR_ENGINE std::string GetExtension() const;
@@ -99,6 +106,7 @@ protected:
 private:
     std::string m_NameNoExtension;
     std::string m_Extension;
+    std::string m_PathNoExtension;
     Type m_Type = Type::Unknown;
     
     int8_t* m_Data = nullptr;
@@ -108,10 +116,11 @@ private:
     Pointer<Resource> m_Resource;
 
     // We need this in order to set m_Resource from the ResourceManager
-    // which is the only class that needs modify this field
+    // which is the only class that needs to modify this field
     friend class ResourceManager;
 };
 
 END_XNOR_CORE
 
+// Voluntary include after the class definition because using Pointer<File> means we need to include File at some point
 #include "file/file.inl"

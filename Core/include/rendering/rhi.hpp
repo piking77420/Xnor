@@ -68,6 +68,8 @@ public:
 	/// @param shaderId Shader id
 	XNOR_ENGINE static void DestroyProgram(uint32_t shaderId);
 
+	XNOR_ENGINE static uint32_t ReloadProgram(uint32_t oldShaderId, const std::vector<ShaderCode>& shaderCodes);
+
 	/// @brief Checks for compilation errors for shaders
 	/// @param shaderId Shader id
 	/// @param type Type
@@ -307,14 +309,14 @@ private:
 		DepthFunction::DepthFunction depthFunction{};
 		BlendFunction blendFunction;
 		ShaderProgramCullInfo cullInfo;
-		std::map<std::string, uint32_t> uniformMap;
+		std::unordered_map<std::string, GpuUniform> uniformMap;
 	};
 
-	XNOR_ENGINE static inline UniformBuffer* m_CameraUniform;
-	XNOR_ENGINE static inline UniformBuffer* m_ModelUniform;
-	XNOR_ENGINE static inline UniformBuffer* m_LightUniform;
-	XNOR_ENGINE static inline UniformBuffer* m_MaterialUniform;
-	XNOR_ENGINE static inline UniformBuffer* m_AnimationBuffer;
+	XNOR_ENGINE static inline UniformBuffer* m_CameraUniform = nullptr;
+	XNOR_ENGINE static inline UniformBuffer* m_ModelUniform = nullptr;
+	XNOR_ENGINE static inline UniformBuffer* m_LightUniform = nullptr;
+	XNOR_ENGINE static inline UniformBuffer* m_MaterialUniform = nullptr;
+	XNOR_ENGINE static inline UniformBuffer* m_AnimationBuffer = nullptr;
 
 
 	XNOR_ENGINE static inline bool_t m_Blending = false;
@@ -330,7 +332,7 @@ private:
 	
 	XNOR_ENGINE static void IsShaderValid(uint32_t shaderId);
 	
-	XNOR_ENGINE static int32_t GetUniformInMap(uint32_t shaderId, const char_t* uniformKey);
+	XNOR_ENGINE static GpuUniform& GetUniformInMap(uint32_t shaderId, const char_t* uniformKey, UniformType::UniformType type);
 
 
 	// Texture 

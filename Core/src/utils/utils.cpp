@@ -1,5 +1,6 @@
 ﻿#include "utils/utils.hpp"
 
+#include <fstream>
 #include <regex>
 #include <ImGui/imgui.h>
 
@@ -153,4 +154,10 @@ bool_t Utils::StringEqualsIgnoreCase(const std::string& a, const std::string& b)
 int32_t Utils::TerminalCommand(const std::string& command, const bool_t asynchronous)
 {
     return std::system(((asynchronous ? "start /MIN " : "") + command).c_str());  // NOLINT(concurrency-mt-unsafe)
+}
+
+void Utils::CreateEmptyFile(const std::filesystem::path& path)
+{
+    // Creating a std::ofstream is the only necessary thing to do to create an empty file
+    std::ofstream(std::forward<decltype(path)>(path));
 }

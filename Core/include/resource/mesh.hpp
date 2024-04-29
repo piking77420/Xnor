@@ -28,8 +28,8 @@ public:
         ".dae"
     };
 
-    List<Model*> models;
-    List<Texture*> textures;
+    List<Pointer<Model>> models;
+    List<Pointer<Texture>> textures;
 
     Material material;
 

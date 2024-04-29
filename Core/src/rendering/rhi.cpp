@@ -1,12 +1,14 @@
 #include "rendering/rhi.hpp"
 
+#include <ranges>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "window.hpp"
 #include "magic_enum/magic_enum.hpp"
-#include "rendering/render_pass.hpp"
 #include "rendering/frame_buffer.hpp"
+#include "rendering/render_pass.hpp"
 #include "resource/shader.hpp"
 #include "utils/logger.hpp"
 
@@ -136,17 +138,43 @@ void Rhi::DestroyProgram(const uint32_t shaderId)
 	glDeleteProgram(shaderId);
 }
 
+uint32_t Rhi::ReloadProgram(const uint32_t oldShaderId, const std::vector<ShaderCode>& shaderCodes)
+{
+	if (!m_ShaderMap.contains(oldShaderId) || !glIsProgram(oldShaderId))
+	{
+		Logger::LogWarning("Tried to reload an invalid shader");
+		return std::numeric_limits<uint32_t>::max();
+	}
+
+	glDeleteProgram(oldShaderId);
+	
+	const ShaderInternal oldData = m_ShaderMap[oldShaderId];
+	m_ShaderMap.erase(oldShaderId);
+	const uint32_t result = CreateShaders(shaderCodes, ShaderCreateInfo{oldData.depthFunction, oldData.blendFunction, oldData.cullInfo});
+
+	UseShader(result);
+	for (auto&& uniform : oldData.uniformMap)
+	{
+		auto val = uniform.second;
+		SetUniform(val.type, &val.data, result, uniform.first.c_str());
+	}
+	UnuseShader();
+	
+	return result;
+}
+
 void Rhi::CheckCompilationError(const uint32_t shaderId, const std::string& type)
 {
 	int success = 0;
-	std::string infoLog(1024, '\0');
+	constexpr uint32_t infoLogSize = 1024;
+	std::string infoLog(infoLogSize, '\0');
 
 	if (type != "PROGRAM")
 	{
 		glGetShaderiv(shaderId, GL_COMPILE_STATUS, &success);
 		if (!success)
 		{
-			glGetShaderInfoLog(shaderId, 1024, nullptr, infoLog.data());
+			glGetShaderInfoLog(shaderId, infoLogSize, nullptr, infoLog.data());
 			Logger::LogError("Error while compiling shader of type {}: {}", type, infoLog);
 		}
 	}
@@ -155,7 +183,7 @@ void Rhi::CheckCompilationError(const uint32_t shaderId, const std::string& type
 		glGetProgramiv(shaderId, GL_LINK_STATUS, &success);
 		if (!success)
 		{
-			glGetProgramInfoLog(shaderId, 1024, nullptr, infoLog.data());
+			glGetProgramInfoLog(shaderId, infoLogSize, nullptr, infoLog.data());
 			Logger::LogError("Error while linking shader program of type {}: {}", type, infoLog);
 		}
 	}
@@ -252,40 +280,62 @@ void Rhi::UnuseShader()
 
 void Rhi::SetUniform(const UniformType::UniformType uniformType, const void* const data, const uint32_t shaderId, const char_t* const uniformKey)
 {
-	const GLint uniformLocation = GetUniformInMap(shaderId, uniformKey);
+	GpuUniform& uniform = GetUniformInMap(shaderId, uniformKey, uniformType);
 
+	const int32_t value = static_cast<int32_t>(uniform.shaderKey);
+	
+	const int32_t* i;
+	const bool_t* b;
+	const GLfloat* f;
+	
 	switch (uniformType)
 	{
 		case UniformType::Int:
-			glUniform1i(uniformLocation, *static_cast<const int32_t*>(data));
+			i = static_cast<const int32_t*>(data);
+			uniform.data.Int = *i;
+			glUniform1i(value, *i);
 			break;
 			
 		case UniformType::Bool:
-			glUniform1i(uniformLocation, *static_cast<const bool_t*>(data));
+			b = static_cast<const bool_t*>(data);
+			uniform.data.Int = *b;
+			glUniform1i(value, *b);
 			break;
 			
 		case UniformType::Float:
-			glUniform1f(uniformLocation, *static_cast<const GLfloat*>(data));
+			f = static_cast<const GLfloat*>(data);
+			uniform.data.Float = *f;
+			glUniform1f(value, *f);
 			break;
 
 		case UniformType::Vec2:
-			glUniform2fv(uniformLocation, 1, static_cast<const GLfloat*>(data));
+			f = static_cast<const GLfloat*>(data);
+			uniform.data.Vec2 = Vector2(f);
+			glUniform2fv(value, 1, f);
 			break;
 
 		case UniformType::Vec3:
-			glUniform3fv(uniformLocation, 1, static_cast<const GLfloat*>(data));
+			f = static_cast<const GLfloat*>(data);
+			uniform.data.Vec3 = Vector3(f);
+			glUniform3fv(value, 1, f);
 			break;
 			
 		case UniformType::Vec4:
-			glUniform4fv(uniformLocation, 1, static_cast<const GLfloat*>(data));
+			f = static_cast<const GLfloat*>(data);
+			uniform.data.Vec4 = Vector4(f);
+			glUniform4fv(value, 1, f);
 			break;
 			
 		case UniformType::Mat3:
-			glUniformMatrix3fv(uniformLocation, 1, GL_FALSE, static_cast<const GLfloat*>(data));
+			f = static_cast<const GLfloat*>(data);
+			uniform.data.Mat3 = Matrix3(f);
+			glUniformMatrix3fv(value, 1, GL_FALSE, f);
 			break;
 			
 		case UniformType::Mat4:
-			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, static_cast<const GLfloat*>(data));
+			f = static_cast<const GLfloat*>(data);
+			uniform.data.Mat4 = Matrix(f);
+			glUniformMatrix4fv(value, 1, GL_FALSE, f);
 			break;
 	}
 }
@@ -1270,24 +1320,19 @@ void Rhi::IsShaderValid(const uint32_t shaderId)
 	}
 }
 
-int32_t Rhi::GetUniformInMap(const uint32_t shaderId, const char_t* const uniformKey)
+GpuUniform& Rhi::GetUniformInMap(const uint32_t shaderId, const char_t* const uniformKey, const UniformType::UniformType type)
 {
-	std::map<std::string, uint32_t>& shaderUniformMap = m_ShaderMap.at(shaderId).uniformMap;
+	auto& shaderUniformMap = m_ShaderMap.at(shaderId).uniformMap;
 
 	if (shaderUniformMap.contains(uniformKey))
-	{
-		return static_cast<int32_t>(shaderUniformMap[uniformKey]);
-	}
+		return shaderUniformMap[uniformKey];
 
 	const GLint location = glGetUniformLocation(shaderId, uniformKey);
 	if (location == NullUniformLocation)
-	{
 		Logger::LogWarning("No uniform with key [{}] in shader #{}", uniformKey, shaderId);
-	}
-		
-	shaderUniformMap[uniformKey] = location;
 
-	return location;
+	shaderUniformMap[uniformKey] = GpuUniform{type, static_cast<uint32_t>(location)};
+	return shaderUniformMap[uniformKey];
 }
 
 uint32_t Rhi::GetOpenglDataType(const DataType::DataType dataType)

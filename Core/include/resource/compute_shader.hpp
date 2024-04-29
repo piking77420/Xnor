@@ -23,7 +23,7 @@ class ComputeShader : public Resource
 {
 public:
     /// @brief Allowed extensions for compute shaders
-    XNOR_ENGINE static inline constexpr std::array<const char_t*, 2> ComputeFileExtensions
+    XNOR_ENGINE static constexpr std::array<const char_t*, 2> ComputeFileExtensions
     {
         ".comp",
         ".compute"

@@ -9,11 +9,12 @@ using namespace XnorCore;
 
 Mesh::~Mesh()
 {
-    for (uint32_t i = 0; i < models.GetSize(); i++)
+    /*for (uint32_t i = 0; i < models.GetSize(); i++)
         delete models[i];
 
     for (uint32_t i = 0; i < textures.GetSize(); i++)
         delete textures[i];
+    */
 
     for (uint32_t i = 0; i < m_Skeletons.GetSize(); i++)
         delete m_Skeletons[i];
@@ -38,13 +39,15 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
         return false;
     }
 
+    const std::string folderPath = m_File->GetPathNoExtension() + '\\';
+    FileManager::AddDirectory(folderPath);
     for (uint32_t i = 0; i < scene->mNumMeshes; i++)
     {
-        Model* const model = new Model(scene->mMeshes[i]->mName.C_Str());
+        Pointer<Model> model = ResourceManager::Add<Model>(folderPath + std::string(scene->mMeshes[i]->mName.C_Str()) + std::string(".obj"));
 
         if (!model->Load(*scene->mMeshes[i]))
         {
-            delete model;
+            ResourceManager::Unload(model);
             return false;
         }
 
@@ -68,7 +71,7 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
 
     for (uint32_t i = 0; i < scene->mNumTextures; i++)
     {
-        Texture* const texture = new Texture(scene->mTextures[i]->mFilename.C_Str());
+        Pointer<Texture> texture = ResourceManager::Add<Texture>(folderPath + std::string(scene->mTextures[i]->mFilename.C_Str()));
 
         int64_t size = 0;
         if (scene->mTextures[i]->mHeight == 0)
@@ -78,6 +81,7 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
 
         texture->Load(reinterpret_cast<const uint8_t*>(scene->mTextures[i]->pcData), size);
         texture->SetIsEmbedded();
+        (void)texture->Save();
 
         textures.Add(texture);
     }

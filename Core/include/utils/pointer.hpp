@@ -51,8 +51,6 @@ BEGIN_XNOR_CORE
 /// Pointer::ToStrongReference(), or by creating a copy using @ref Pointer::Pointer(const Pointer&, bool) "the copy constructor"
 /// and giving a @c true value to the second argument.
 ///
-/// @todo Reference variadic-template function
-///
 /// @tparam T The type to point to. Most of the time, this shouldn't be a pointer type.
 /// 
 /// @see <a href="https://en.cppreference.com/book/intro/smart_pointers">Smart Pointers</a>

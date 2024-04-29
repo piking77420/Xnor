@@ -20,7 +20,7 @@ public:
 
     XNOR_ENGINE ~AudioDevice();
 
-    DEFAULT_COPY_MOVE_OPERATIONS(AudioDevice)
+    DELETE_COPY_MOVE_OPERATIONS(AudioDevice)
 
     [[nodiscard]]
     XNOR_ENGINE std::string GetName() const;

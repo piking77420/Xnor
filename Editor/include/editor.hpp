@@ -5,7 +5,8 @@
 #include "application.hpp"
 #include "definitions.hpp"
 #include "editor_data.hpp"
-#include "resource/animation_montage.hpp"
+#include "editing/picking_strategy.hpp"
+#include "utils/file_system_watcher.hpp"
 
 BEGIN_XNOR_EDITOR
 

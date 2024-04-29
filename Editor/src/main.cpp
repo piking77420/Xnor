@@ -1,5 +1,6 @@
 #include "editor.hpp"
 #include "reflection/xnor_factory.hpp"
+#include "utils/file_system_watcher.hpp"
 #include "utils/logger.hpp"
 #include "utils/windows.hpp"
 

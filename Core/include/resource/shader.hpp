@@ -18,7 +18,6 @@ BEGIN_XNOR_CORE
 /// @brief Encapsulates a GPU shader
 class Shader final : public Resource
 {
-private:
 	ShaderPipeline::ShaderPipeline ShaderTypeToShaderPipeline(ShaderType::ShaderType shaderType);
 
 	ShaderType::ShaderType ShaderPipelineToShaderType(ShaderPipeline::ShaderPipeline shaderPipeline);

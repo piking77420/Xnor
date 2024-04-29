@@ -81,7 +81,7 @@ bool_t Model::Load(const aiMesh& loadedData)
             const float_t totalWeight = m_Vertices[i].boneWeight[0] + m_Vertices[i].boneWeight[1] + m_Vertices[i].boneWeight[2] + m_Vertices[i].boneWeight[3];
 
             if (!Calc::Equals(totalWeight, 1.f))
-                Logger::LogError("{} ; {}", i, totalWeight);
+                Logger::LogError("Invalid bone weight : {} ; {}", i, totalWeight);
         }
     }
 

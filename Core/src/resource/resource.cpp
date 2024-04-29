@@ -26,6 +26,8 @@ bool_t Resource::Load(const Pointer<File>& file)
 {
     if (!file->GetLoaded())
         Logger::LogWarning("Tried to load resource {} with an unloaded file: {}", m_Name, file->GetPath());
+
+    m_File = file;
     
     return Load(file->GetData<uint8_t>(), file->GetSize());
 }
@@ -77,6 +79,11 @@ bool_t Resource::Reload(const Pointer<File>& file, const bool_t reloadInInterfac
 bool_t Resource::Reload(const bool_t reloadInInterface)
 {
     return Reload(FileManager::Get(m_Name), reloadInInterface);
+}
+
+bool_t Resource::Save() const
+{
+    return false;
 }
 
 bool_t Resource::IsLoaded() const

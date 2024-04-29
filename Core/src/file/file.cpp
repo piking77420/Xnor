@@ -3,12 +3,14 @@
 #include <fstream>
 #include <ranges>
 
+#include "file/file_manager.hpp"
 #include "resource/animation_montage.hpp"
 #include "resource/compute_shader.hpp"
 #include "resource/font.hpp"
 #include "resource/mesh.hpp"
 #include "resource/model.hpp"
 #include "resource/resource.hpp"
+#include "resource/resource_manager.hpp"
 #include "resource/shader.hpp"
 #include "resource/skeleton.hpp"
 #include "resource/texture.hpp"
@@ -20,6 +22,9 @@ using namespace XnorCore;
 File::File(std::filesystem::path&& filepath)
     : Entry(std::move(filepath))
 {
+    if (!exists(m_Path))
+        Utils::CreateEmptyFile(m_Path);
+    
     if (!is_regular_file(m_Path))
         throw std::invalid_argument("Path does not point to a file");
 
@@ -56,6 +61,7 @@ bool_t File::Load()
 void File::Unload()
 {
     delete[] m_Data;
+    m_Data = nullptr;
     m_Size = 0;
     
     m_Loaded = false;
@@ -76,9 +82,27 @@ File::Type File::GetType() const
     return m_Type;
 }
 
+void File::Delete() const
+{
+    // We need copies of these variables because they may otherwise be destroyed by FileManager::Unload
+    const std::filesystem::path path = m_Path;
+    const Pointer<Resource> resource = m_Resource;
+    
+    FileManager::Unload(path);
+    std::filesystem::remove(path);
+
+    if (resource)
+        ResourceManager::Unload(resource);
+}
+
 std::string File::GetNameNoExtension() const
 {
     return m_NameNoExtension;
+}
+
+std::string File::GetPathNoExtension() const
+{
+    return m_PathNoExtension;
 }
 
 std::string File::GetExtension() const
@@ -106,9 +130,12 @@ Pointer<Resource> File::GetResource() const
 void File::UpdateUtilityValues()
 {
     Entry::UpdateUtilityValues();
-    
+
+    std::filesystem::path path = m_Path;
+
     m_NameNoExtension = m_Path.stem().generic_string();
     m_Extension = m_Path.extension().string();
+    m_PathNoExtension = path.replace_extension().string();
 
     // Update file type from extension
     if (Utils::StringArrayContains(Texture::FileExtensions, m_Extension))

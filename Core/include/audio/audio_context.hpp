@@ -24,7 +24,7 @@ public:
 
     XNOR_ENGINE ~AudioContext();
 
-    DEFAULT_COPY_MOVE_OPERATIONS(AudioContext)
+    DELETE_COPY_MOVE_OPERATIONS(AudioContext)
 
     XNOR_ENGINE void MakeCurrent() const;
 
