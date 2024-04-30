@@ -54,13 +54,17 @@ void Frustum::UpdateCameraOrthoGraphic(const Camera& camera, float_t aspect)
     const float_t halfVSide = camera.far * 0.5f;
     const float_t halfHSide = halfVSide * aspect;
 
-    const Vector3 frontMultNear = camera.near * camera.front;
     const Vector3 frontMultFar = camera.far * camera.front;
-
-    plane[Near] = { camera.position + frontMultNear, camera.front };
-    plane[Far] = { camera.position + frontMultFar, -camera.front };
-    plane[Right] = { camera.position + camera.right * halfHSide, camera.right };
-    plane[Left] = { camera.position - camera.right * halfHSide, -camera.right };
-    plane[Top] = { camera.position + camera.up * halfVSide, camera.up };
-    plane[Bottom] = { camera.position - camera.up * halfVSide, -camera.up };
+    
+    plane[Near] = Plane(camera.position + camera.near * camera.front, camera.front);
+    
+    plane[Far] = Plane(camera.position + frontMultFar, -camera.front);
+    
+    plane[Right] = Plane(camera.position,Vector3::Cross(frontMultFar - camera.right * halfHSide, camera.up));
+    
+    plane[Left] = Plane(camera.position,Vector3::Cross(camera.up,frontMultFar + (camera.right * halfHSide)));
+    
+    plane[Top] = Plane(camera.position, Vector3::Cross(camera.right, frontMultFar - (camera.up * halfVSide)));
+    
+    plane[Bottom] = Plane(camera.position, Vector3::Cross(frontMultFar + (camera.up * halfVSide), camera.right));
 }

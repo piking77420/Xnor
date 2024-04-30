@@ -38,9 +38,9 @@ void Renderer::Initialize()
 void Renderer::BeginFrame(const Scene& scene, const Viewport& viewport) 
 {
     scene.GetAllComponentOfType<MeshRenderer>(&m_MeshRenderers);
+    PrepareOctree();
     m_LightManager.BeginFrame(scene, viewport, *this);
     m_AnimationRender.BeginFrame(scene, *this);
-    PrepareOctree();
 }
 
 void Renderer::EndFrame(const Scene& scene) 
@@ -56,13 +56,14 @@ void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene)
     
     if (viewport.camera == nullptr)
         return;
+
     
     BeginFrame(scene, viewport);
     BindCamera(*viewport.camera, viewport.viewPortSize);
     m_Frustum.UpdateFromCamera(*viewport.camera, viewport.GetAspect());
     
     const ViewportData& viewportData = viewport.viewportData;
-    DeferedRenderring(*viewport.camera, m_MeshRenderers, scene.skybox, viewportData, viewport.viewPortSize);
+    DeferedRenderring(scene.skybox, viewportData, viewport.viewPortSize);
     ForwardPass(m_MeshRenderers, scene.skybox, viewport, viewport.viewPortSize, viewport.isEditor);
 
     if (viewportData.usePostProcess)
@@ -88,9 +89,7 @@ void Renderer::SwapBuffers() const
 }
 
 
-void Renderer::DeferedRenderring(const Camera& camera, const std::vector<const MeshRenderer*>& meshRenderers,
-                                 const Skybox& skybox, const ViewportData& viewportData,
-                                 const Vector2i viewportSize) const
+void Renderer::DeferedRenderring(const Skybox& skybox, const ViewportData& viewportData, const Vector2i viewportSize) const
 {
     const RenderPassBeginInfo renderPassBeginInfo =
     {
@@ -105,7 +104,7 @@ void Renderer::DeferedRenderring(const Camera& camera, const std::vector<const M
 
     // Draw Simple Mesh
     m_GBufferShader->Use();
-    DrawMeshRendersByType(meshRenderers, MaterialType::Opaque);
+    DrawMeshRendersByType(MaterialType::Opaque);
     m_GBufferShader->Unuse();
     // DrawSkinnedMesh
     m_AnimationRender.RenderAnimation();
@@ -156,7 +155,7 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
     viewportData.colorPass.BeginRenderPass(renderPassBeginInfoLit);
 
     m_Forward->Use();
-    DrawMeshRendersByType(meshRenderers, MaterialType::Lit);
+    DrawMeshRendersByType(MaterialType::Lit);
     m_Forward->Unuse();
 
     if (isEditor)
@@ -205,122 +204,118 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 void Renderer::PrepareOctree()
 {
     std::vector<ObjectBounding<const MeshRenderer>> meshrenderWithAabb;
+    
 
     // Reset AABB
     renderSceneAABB.extents = Vector3::Zero();
     renderSceneAABB.center = renderSceneAABB.extents;
     
-    for (uint32_t i = 0; i < World::scene->GetEntities().GetSize(); i++)
+    for (uint32_t i = 0; i < m_MeshRenderers.size(); i++)
     {
-        Entity& ent = *World::scene->GetEntities()[i];
 
-        const MeshRenderer* meshRenderer = nullptr;
-        if (ent.TryGetComponent(&meshRenderer))
-        {
-            if (!meshRenderer->model.IsValid())
-                continue;
+        const MeshRenderer* meshRenderer = m_MeshRenderers[i];
+     
+        if (!meshRenderer->model.IsValid())
+            continue;
 
-            Bound bound = bound.GetAabbFromTransform(meshRenderer->model->GetAabb(), meshRenderer->entity->transform);
-            renderSceneAABB.Encapsulate(bound);
+        Bound bound = bound.GetAabbFromTransform(meshRenderer->model->GetAabb(), meshRenderer->entity->transform);
+        renderSceneAABB.Encapsulate(bound);
 
-            ObjectBounding<const MeshRenderer> data;
-            data.bound = bound;
-            data.handle = meshRenderer;
-            meshrenderWithAabb.emplace_back(data);
-        }
+        ObjectBounding<const MeshRenderer> data;
+        data.bound = bound;
+        data.handle = meshRenderer;
+        meshrenderWithAabb.emplace_back(data);
+        
     }
     m_RenderOctree.Update(meshrenderWithAabb);
 }
 
 
-void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& meshRenderers,
-                                     const MaterialType materialType) const
+void Renderer::DrawMeshRendersByType(const MaterialType materialType) const
 {
     Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
     
-    if (meshRenderers.empty())
+    if (m_RenderOctree.GetHandleSize() == 0)
         return;
-
     
     const OctreeIterator<OctreeNode<const MeshRenderer>> it = m_RenderOctree.GetIterator();
-    int32_t drawcall = 0;
+    int drawCall = 0;
 
     while (true)
     {
         Bound bound = it.GetBound();
         // if we not see it 
-       if (m_Frustum.IsOnFrustum(bound))
-       {
-           while (!it.DownTree())
-           {
-               std::vector<const MeshRenderer*>* handels = nullptr;
-               it.GetHandles(&handels);
+        if (m_Frustum.IsOnFrustum(bound))
+        {
+           
+            std::vector<const MeshRenderer*>* handle = nullptr;
+            it.GetHandles(&handle);
+            
+#pragma region Draw
+            // draw
+            for (const MeshRenderer* const meshRenderer : *handle)
+            {
+                if (meshRenderer->material.materialType != materialType)
+                    continue;
+                
+                Bound aabb;
+                meshRenderer->GetAABB(&aabb);
+        
+                if (!m_Frustum.IsOnFrustum(aabb))
+                {
+                    continue;
+                }
+        
+                const Transform& transform = meshRenderer->GetEntity()->transform;
+                ModelUniformData modelData;
+                modelData.model = transform.worldMatrix;
+        
+                try
+                {
+                    modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
+                }
+                catch (const std::invalid_argument&)
+                {
+                    modelData.normalInvertMatrix = Matrix::Identity();
+                }
+        
 
-               // draw
+                if (meshRenderer->model.IsValid())
+                {
+                    Rhi::UpdateModelUniform(modelData);
+                    meshRenderer->material.BindMaterial();
+                    Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
+                    drawCall++;
+                }
+#pragma endregion Draw
 
-
-               while (!it.ClimbTree()) {}
-           }   
-       }
-       
+                   
+            }   
+        }
+        if (!it.Iterate())
+            break;
     }
 
-    Logger::LogInfo("DraCall {}",drawcall);
-
-   /*
-    for (const MeshRenderer* const meshRenderer : meshRenderers)
-    {
-        if (meshRenderer->material.materialType != materialType)
-            continue;
-
-        
-        Bound aabb;
-        meshRenderer->GetAABB(&aabb);
-        
-        if (!m_Frustum.IsOnFrustum(aabb))
-        {
-            continue;
-        }
-        
-        const Transform& transform = meshRenderer->GetEntity()->transform;
-        ModelUniformData modelData;
-        modelData.model = transform.worldMatrix;
-        
-        try
-        {
-            modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
-        }
-        catch (const std::invalid_argument&)
-        {
-            modelData.normalInvertMatrix = Matrix::Identity();
-        }
-        
-        Rhi::UpdateModelUniform(modelData);
-
-        if (meshRenderer->model.IsValid())
-        {
-            meshRenderer->material.BindMaterial();
-            Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
-        }
-    }*/
+    
+    Logger::LogInfo("Log  DrawCall {} ",drawCall);
 }
 
 
-void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*>& meshRenderers,
-                                           const Scene& scene) const
+
+void Renderer::DrawAllMeshRendersNonShaded(const Camera& camera, const Scene& scene) const
 {
     Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 
-    for (const MeshRenderer* const meshRenderer : meshRenderers)
+    for (const MeshRenderer* const meshRenderer : m_MeshRenderers)
     {
-        /*
+        
         Bound aabb;
         meshRenderer->GetAABB(&aabb);
         
-        if (!m_Frustum.IsOnFrustum(aabb))
+        if (!m_Frustum.IsOnFrustum(aabb) )
         {
             continue;
-        }*/
+        }
 
         const Transform& transform = meshRenderer->GetEntity()->transform;
         ModelUniformData modelData;
@@ -353,7 +348,7 @@ void Renderer::RenderNonShadedPass(const Scene& scene, const Camera& camera, con
     BindCamera(camera, viewportSize);
     m_Frustum.UpdateFromCamera(camera, static_cast<float_t>(viewportSize.x) / static_cast<float_t>(viewportSize.y));
     renderPass.BeginRenderPass(renderPassBeginInfo);
-    DrawAllMeshRendersNonShaded(m_MeshRenderers, scene);
+    DrawAllMeshRendersNonShaded(camera, scene);
 
     if (drawEditorUi)
     {

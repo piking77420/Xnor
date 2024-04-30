@@ -54,7 +54,7 @@ public:
     
     bool_t GetChildNode(uint8_t octan,const OctreeNode<T>* outNode) const;
     
-    bool_t SetPtrToChildNode(size_t bitIndex, OctreeNode<T>** outNode) const;
+    bool_t SetPtrToChildNode(uint32_t bitIndex, OctreeNode<T>** outNode) const;
 
     void Clear();
 
@@ -222,7 +222,7 @@ bool_t OctreeNode<T>::GetChildNode(uint8_t octan, const OctreeNode<T>* outNode) 
 }
 
 template <typename T>
-bool_t OctreeNode<T>::SetPtrToChildNode(size_t bitIndex, OctreeNode<T>** outNode) const
+bool_t OctreeNode<T>::SetPtrToChildNode(uint32_t bitIndex, OctreeNode<T>** outNode) const
 {
     if (IsOctanValid(m_ActiveOctans, bitIndex))
     {

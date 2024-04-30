@@ -32,6 +32,11 @@ public:
     
     void Draw();
 
+    size_t GetHandleSize() const
+    {
+        return m_HandleSize;
+    }
+
     const OctreeIterator<OctreeNode<const T>> GetIterator() const
     {
         return OctreeIterator<OctreeNode<const T>>(&m_MotherNode);
@@ -48,12 +53,15 @@ private:
     void Clear();
     
     OctreeNode<T> m_MotherNode;
+
+    size_t m_HandleSize;
 };
 
 template <class T>
 void Octree<T>::Update(std::vector<ObjectBounding<T>>& data)
 {
     Clear();
+    m_HandleSize = data.size();
 
     // Get the bounding box who contain all the data
     for (ObjectBounding<T>& element : data)

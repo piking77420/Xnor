@@ -241,7 +241,7 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 		camDirectional.position = pos;
 		camDirectional.LookAt(camDirectional.position + lightDir);
 		camDirectional.near = viewPortCamera.near;
-		camDirectional.far = 1000000.f;
+		camDirectional.far = directionalLight->far;
 		camDirectional.leftRight = directionalLight->leftRight;
 		camDirectional.bottomtop = directionalLight->bottomTop;
 		
