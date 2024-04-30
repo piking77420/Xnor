@@ -198,12 +198,12 @@ void ContentBrowser::DisplayEntry(
     bool_t pushedStyleVar = false;
     if (m_SelectedEntry == entry)
     {
-        ImGui::PushStyleColor(ImGuiCol_ChildBg, XnorCore::Utils::ToImCol(SelectedEntryColor));
+        ImGui::PushStyleColor(ImGuiCol_ChildBg, static_cast<Vector4>(SelectedEntryColor));
         pushedStyleVar = true;
     }
     else if (m_HoveredEntry == entry)
     {
-        ImGui::PushStyleColor(ImGuiCol_ChildBg, XnorCore::Utils::ToImCol(HoveredEntryColor));
+        ImGui::PushStyleColor(ImGuiCol_ChildBg, static_cast<Vector4>(HoveredEntryColor));
         pushedStyleVar = true;
     }
 

@@ -13,7 +13,7 @@ void TestComponent::Begin()
 
     m_Light = GetEntity()->GetComponent<Light>();
 
-    m_Color = static_cast<ColorHsva>(ColorRgb::Red());
+    m_Color = ColorHsva::Red();
 }
 
 void TestComponent::Update()
@@ -30,7 +30,7 @@ void TestComponent::Update()
 
     m_Color.h += 0.01f;
 
-    m_Light->color = static_cast<Colorf>(m_Color);
+    m_Light->color = static_cast<Color>(m_Color);
 }
 
 Coroutine TestComponent::FlashRoutine()

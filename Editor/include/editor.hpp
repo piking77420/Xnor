@@ -9,7 +9,8 @@
 #include "utils/file_system_watcher.hpp"
 
 BEGIN_XNOR_EDITOR
-	class UiWindow;
+
+class UiWindow;
 class RenderWindow;
 class UserInput;
 

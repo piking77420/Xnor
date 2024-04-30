@@ -57,30 +57,6 @@ namespace Utils
     /// @param alignment In window alignment, 0.5f by default to center the object
     XNOR_ENGINE void AlignImGuiCursor(float_t objectWidth, float_t alignment = 0.5f);
 
-    /// @brief Converts a ColorRgb to an ImVec4
-    /// @param color ColorRgb to convert
-    /// @return ImVec4 representation
-    [[nodiscard]]
-    XNOR_ENGINE constexpr ImVec4 ToImCol(ColorRgb color);
-
-    /// @brief Converts a Colorf to an ImVec4
-    /// @param color Colorf to convert
-    /// @return ImVec4 representation
-    [[nodiscard]]
-    XNOR_ENGINE constexpr ImVec4 ToImCol(const Colorf& color);
-
-    /// @brief Converts a ColorHsv to an ImVec4
-    /// @param color ColorHsv to convert
-    /// @return ImVec4 representation
-    [[nodiscard]]
-    XNOR_ENGINE constexpr ImVec4 ToImCol(ColorHsva color);
-
-    /// @brief Converts an ImVec4 to a Colorf
-    /// @param color ImVec4 to convert
-    /// @return Colorf representation
-    [[nodiscard]]
-    XNOR_ENGINE constexpr Colorf FromImCol(const ImVec4& color);
-
     /// @brief Humanizes the provided string
     ///
     /// The process converts a PascalCase styled word to a humanized version that puts spaces between each words and adds an uppercase at the very beginning

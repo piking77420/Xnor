@@ -12,8 +12,8 @@ class ContentBrowser : public UiWindow
     static void BeginDragDrop(const XnorCore::Pointer<XnorCore::File>& file);
     
 public:
-    static constexpr XnorCore::Colorf SelectedEntryColor = XnorCore::Colorf(0.5f, 0.5f, 0.5f);
-    static constexpr XnorCore::Colorf HoveredEntryColor = SelectedEntryColor * 0.5f;
+    static constexpr XnorCore::Color SelectedEntryColor = XnorCore::Color(0.5f, 0.5f, 0.5f);
+    static constexpr XnorCore::Color HoveredEntryColor = SelectedEntryColor * 0.5f;
     static constexpr uint8_t MaxEntryTextLines = 3;
     
     using UiWindow::UiWindow;

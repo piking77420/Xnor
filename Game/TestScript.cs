@@ -41,6 +41,9 @@ namespace Game
             // Dangerous
             // Only for limit testing
             //entity.AddComponent(new PointLight());
+            
+            // Generate both compilation errors and warnings
+            //if (light is CoreC) a;
 
             light.intensity += 0.1f;
             
@@ -48,7 +51,7 @@ namespace Game
             if (color.H >= 1f)
                 color.H = 0f;
 
-            light.color = (Colorf) color;
+            light.color = (Color) color;
 
             transform.SetPositionX(MathF.Cos(Time.GetTotalTime()) * 2f);
             transform.SetPositionZ(MathF.Sin(Time.GetTotalTime()) * 2f);

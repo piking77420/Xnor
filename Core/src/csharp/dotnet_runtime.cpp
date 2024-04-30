@@ -5,8 +5,8 @@
 #include "file/file.hpp"
 
 #include "application.hpp"
+#include "csharp/dotnet_constants.hpp"
 #include "reflection/dotnet_reflection.hpp"
-#include "utils/formatter.hpp"
 #include "utils/message_box.hpp"
 
 using namespace XnorCore;
@@ -40,7 +40,7 @@ bool_t DotnetRuntime::Initialize()
         throw std::runtime_error("Invalid .NET version");
     }
 
-    m_AssembliesPath = Application::executablePath.parent_path() / AssembliesDirectory;
+    m_AssembliesPath = Application::executablePath.parent_path() / Dotnet::AssembliesDirectory;
     m_Settings.CoralDirectory = m_AssembliesPath.string();
     
     if (!m_Runtime.Initialize(m_Settings))
@@ -131,7 +131,7 @@ void DotnetRuntime::ReloadAllAssemblies()
 
 bool_t DotnetRuntime::BuildGameProject(const bool_t asynchronous)
 {
-    const std::filesystem::path gameProjectDirectory = GameProjectLocation;
+    const std::filesystem::path gameProjectDirectory = Dotnet::GameProjectLocation;
 
     if (!exists(gameProjectDirectory))
         return false;
@@ -149,7 +149,7 @@ bool_t DotnetRuntime::BuildGameProject(const bool_t asynchronous)
 
     using namespace std::string_literals;
 
-    const int32_t commandResult = Utils::TerminalCommand("dotnet build "s + GameProjectBuildOptions + " \"" + absolute(gameProjectDirectory).string() + "\" 1> \"" + tempPath.string() + '"', asynchronous);
+    const int32_t commandResult = Utils::TerminalCommand("dotnet build "s + Dotnet::GameProjectBuildOptions + " \"" + absolute(gameProjectDirectory).string() + "\" 1> \"" + tempPath.string() + '"', asynchronous);
 
     // In case a warning/error occured, read the output file to understand what happened
     std::ifstream file(tempPath);

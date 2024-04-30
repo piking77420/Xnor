@@ -396,15 +396,7 @@ void Serializer::DeserializeSimpleType(const Metadata<ReflectT, MemberT, Descrip
     {
         sscanf_s(value, "%f ; %f ; %f ; %f", &metadata.obj->X(), &metadata.obj->Y(), &metadata.obj->Z(), &metadata.obj->W());
     }
-    else if constexpr (Meta::IsSame<MemberT, ColorRgb>)
-    {
-        sscanf_s(value, "%hhu ; %hhu ; %hhu", &metadata.obj->r, &metadata.obj->g, &metadata.obj->b);
-    }
-    else if constexpr (Meta::IsSame<MemberT, ColorRgba>)
-    {
-        sscanf_s(value, "%hhu ; %hhu ; %hhu ; %hhu", &metadata.obj->r, &metadata.obj->g, &metadata.obj->b, &metadata.obj->a);
-    }
-    else if constexpr (Meta::IsSame<MemberT, Colorf>)
+    else if constexpr (Meta::IsSame<MemberT, Color>)
     {
         sscanf_s(value, "%f ; %f ; %f ; %f", &metadata.obj->r, &metadata.obj->g, &metadata.obj->b, &metadata.obj->a);
     }

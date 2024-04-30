@@ -147,19 +147,19 @@ void OctreeNode<T>::CreateBoundChild(Octans octans, Bound* outBound)
 template <class T>
 void OctreeNode<T>::Draw()
 {
-    Colorf color = Colorf::Green();
+    Color color = Color::Green();
     for (size_t i = 0; i < m_Child.size(); i++)
     {
         if (m_ActiveOctans & (1 << i))
         {
             if (!m_Child[i]->m_Handels.empty())//)m_Child[i]->m_ObjectBounding.handle != nullptr)
             {
-                color = Colorf::Blue();
+                color = Color::Blue();
                 break;
             }
         }
     }
-    DrawGizmo::Rectangle(m_BoudingBox.center, m_BoudingBox.extents, m_Handels.empty()  ? color : Colorf::Red());
+    DrawGizmo::Rectangle(m_BoudingBox.center, m_BoudingBox.extents, m_Handels.empty()  ? color : Color::Red());
 
     for (size_t i = 0; i < m_Child.size(); i++)
     {

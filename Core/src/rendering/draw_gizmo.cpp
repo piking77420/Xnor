@@ -17,17 +17,17 @@ DrawGizmo::DrawGizmo()
     m_GizmoShader = ResourceManager::Get<Shader>("gizmo_shader");
 }
 
-void DrawGizmo::Sphere(Vector3 position, float_t radius, Colorf color)
+void DrawGizmo::Sphere(Vector3 position, float_t radius, Color color)
 {
     m_GizmoSphereVector.push_back({ position, radius, color });
 }
 
-void DrawGizmo::Rectangle(Vector3 position, Vector3 size, Colorf color)
+void DrawGizmo::Rectangle(Vector3 position, Vector3 size, Color color)
 {
     m_GizmoRectangleVector.push_back({ position, size, color });
 }
 
-void DrawGizmo::Capsule(Vector3 position, float_t height, float_t radius, Colorf color)
+void DrawGizmo::Capsule(Vector3 position, float_t height, float_t radius, Color color)
 {
     m_GizmoCapsuleVector.push_back({ position, height, radius, color });
 }

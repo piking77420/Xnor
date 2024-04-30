@@ -19,7 +19,7 @@ public:
     
     DEFAULT_COPY_MOVE_OPERATIONS(UiWindow)
 
-    ImGuiWindowFlags_ windowFlags = ImGuiWindowFlags_None;
+    ImGuiWindowFlags_ windowFlags = ImGuiWindowFlags_NoFocusOnAppearing;
 
     [[nodiscard]]
     const char* GetName() const;

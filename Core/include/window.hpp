@@ -52,6 +52,9 @@ public:
 	/// @brief Displays the window
 	static void Show();
 
+	/// @brief Hides the window
+	static void Hide();
+
 	/// @brief Sets the icon for the window
 	/// @param icon Icon
 	static void SetIcon(Texture& icon);

@@ -67,9 +67,7 @@ void DotnetReflection::RegisterAllTypes()
     static const std::string XnorCoreNamespace = DotnetAssembly::XnorCoreNamespace + '.';
 
     RegisterBaseType<ColorHsva>(XnorCoreNamespace + "ColorHsva");
-    RegisterBaseType<Colorf>(XnorCoreNamespace + "Colorf");
-    RegisterBaseType<ColorRgb>(XnorCoreNamespace + "ColorRgb");
-    RegisterBaseType<ColorRgba>(XnorCoreNamespace + "ColorRgba");
+    RegisterBaseType<Color>(XnorCoreNamespace + "Colorf");
 
     RegisterBaseType<Vector2i>(XnorCoreNamespace + "Vector2i");
     RegisterBaseType<Vector2>(XnorCoreNamespace + "Vector2");
@@ -83,7 +81,7 @@ void DotnetReflection::DisplayType(void* obj, const char_t* const name, const st
 {
     if (DotnetRuntime::IsReloadingProject())
     {
-        ImGui::TextColored(static_cast<Vector4>(Colorf::Gray()), ".NET scripts are reloading...");
+        ImGui::TextColored(static_cast<Vector4>(Color::Gray()), ".NET scripts are reloading...");
         return;
     }
 
@@ -102,7 +100,7 @@ void DotnetReflection::DisplayType(ScriptComponent* const script)
 {
     if (DotnetRuntime::IsReloadingProject())
     {
-        ImGui::TextColored(static_cast<Vector4>(Colorf::Gray()), ".NET scripts are reloading...");
+        ImGui::TextColored(static_cast<Vector4>(Color::Gray()), ".NET scripts are reloading...");
         return;
     }
     

@@ -14,6 +14,7 @@
 #include "serialization/serializer.hpp"
 #include "utils/coroutine.hpp"
 #include "windows/content_browser.hpp"
+#include "windows/debug_console.hpp"
 #include "windows/editor_window.hpp"
 #include "windows/header_window.hpp"
 #include "windows/hierarchy.hpp"
@@ -85,8 +86,9 @@ void Editor::CreateDefaultWindows()
 
 	data.editorViewPort.isEditor = true;
 	data.editorViewPort.camera = &data.editorCam;
-	m_UiWindows.push_back(new RenderWindow(this,*gameViewPort));
-	m_UiWindows.push_back(new EditorWindow(this,data.editorViewPort));
+	m_UiWindows.push_back(new RenderWindow(this, *gameViewPort));
+	m_UiWindows.push_back(new EditorWindow(this, data.editorViewPort));
+	m_UiWindows.push_back(new DebugConsole(this));
 
 	if (XnorCore::FileManager::Contains(SerializedScenePath))
 		data.currentScene = XnorCore::FileManager::Get<XnorCore::File>(SerializedScenePath);
@@ -357,6 +359,7 @@ void Editor::Update()
 		EndFrame();
 		renderer.SwapBuffers();
 	}
+	Window::Hide();
 
 	shaderWatcher.Stop();
 }

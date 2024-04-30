@@ -85,25 +85,13 @@ void DotnetReflection::DisplaySimpleType(T* const obj, const char_t* const name)
     }
     else if constexpr (Meta::IsSame<T, ColorHsva>)
     {
-        Colorf tmp = static_cast<Colorf>(*obj);
+        Color tmp = static_cast<Color>(*obj);
         ImGui::ColorPicker4(name, &tmp.r, ImGuiColorEditFlags_DisplayHSV);
         *obj = static_cast<ColorHsva>(tmp);
     }
-    else if constexpr (Meta::IsSame<T, Colorf>)
+    else if constexpr (Meta::IsSame<T, Color>)
     {
         ImGui::ColorPicker4(name, reinterpret_cast<float_t*>(obj));
-    }
-    else if constexpr (Meta::IsSame<T, ColorRgb>)
-    {
-        Colorf tmp = static_cast<Colorf>(*obj);
-        ImGui::ColorPicker4(name, &tmp.r, ImGuiColorEditFlags_DisplayHex);
-        *obj = static_cast<ColorRgb>(tmp);
-    }
-    else if constexpr (Meta::IsSame<T, ColorRgba>)
-    {
-        Colorf tmp = static_cast<Colorf>(*obj);
-        ImGui::ColorPicker4(name, &tmp.r, ImGuiColorEditFlags_DisplayHex);
-        *obj = static_cast<ColorRgba>(tmp);
     }
     else if constexpr (Meta::IsSame<T, Vector2i>)
     {
