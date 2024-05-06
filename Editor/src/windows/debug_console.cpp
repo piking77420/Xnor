@@ -18,18 +18,8 @@ void DebugConsole::Display()
 }
 
 int scroll;
-void DebugConsole::DisplayHeader()
+void DebugConsole::DisplayHeader() const
 {
-    if (ImGui::BeginCombo("Log level", magic_enum::enum_name(minimumLogLevel).data()))
-    {
-        for (auto&& level : magic_enum::enum_values<XnorCore::Logger::LogLevel>())
-        {
-            if (ImGui::Selectable(magic_enum::enum_name(level).data()))
-                minimumLogLevel = level;
-        }
-        ImGui::EndCombo();
-    }
-
     scroll = 0;
     if (ImGui::Button("Scroll up"))
         scroll = -1;
@@ -38,14 +28,50 @@ void DebugConsole::DisplayHeader()
         scroll = 1;
 }
 
-void DebugConsole::DisplayLogs() const
+void DebugConsole::DisplayLogs()
 {
-    ImGui::BeginChild("Logs", Vector2(-1.f), ImGuiChildFlags_Border | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY);
-
+    if (!ImGui::BeginTable("Logs", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY))
+        return;
+    
+    auto logList = XnorCore::Logger::GetLogList();
+    
     if (scroll == -1)
         ImGui::SetScrollHereY(0.f);
+    
+    ImGui::TableSetupColumn("Level");
+    ImGui::TableSetupColumn("Message");
+    ImGui::TableSetupScrollFreeze(0, 1);
 
-    auto logList = XnorCore::Logger::GetLogList();
+    // Custom header for ComboBox in the Level header
+    ImGui::TableNextRow(ImGuiTableRowFlags_Headers);
+
+    // Level header
+    ImGui::TableSetColumnIndex(0);
+    ImGui::PushID(0);
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+    if (ImGui::BeginCombo("##level", magic_enum::enum_name(minimumLogLevel).data()))
+    {
+        for (auto&& level : magic_enum::enum_values<XnorCore::Logger::LogLevel>())
+        {
+            if (ImGui::Selectable(magic_enum::enum_name(level).data()))
+            {
+                minimumLogLevel = level;
+                scroll = 1;
+            }
+        }
+        ImGui::EndCombo();
+    }
+    ImGui::PopStyleVar();
+    ImGui::SameLine();
+    ImGui::Text("(%llu)", std::ranges::count_if(logList, [this] (auto&& val) -> bool_t { return val->level >= minimumLogLevel; }));
+    ImGui::PopID();
+
+    // Message header
+    ImGui::TableSetColumnIndex(1);
+    ImGui::PushID(1);
+    ImGui::TableHeader(ImGui::TableGetColumnName(1)); // Retrieve name passed to TableSetupColumn()
+    ImGui::PopID();
+    
     for (decltype(logList)::const_iterator it = logList.cbegin(); it != logList.cend(); it++)
     {
         const auto& log = *it;
@@ -66,7 +92,7 @@ void DebugConsole::DisplayLogs() const
         if (sameLastLogs > 0 && it + 1 != logList.cend())
             continue;
 
-        std::string message = log->message;
+        std::string message;
 
         XnorCore::Color color;
         std::string prefix;
@@ -74,44 +100,49 @@ void DebugConsole::DisplayLogs() const
         {
             case XnorCore::Logger::LogLevel::TemporaryDebug:
                 color = XnorCore::Color::LightGreen();
-                prefix = "Temporary Debug:";
-                message = log->file + '(' + std::to_string(log->line) + "): " + message;
-                break;
+            prefix = "Temporary Debug";
+            message = log->file + '(' + std::to_string(log->line) + "): ";
+            break;
                 
             case XnorCore::Logger::LogLevel::Debug:
                 color = XnorCore::Color::DarkGray();
-                prefix = "Debug:";
-                break;
+            prefix = "Debug";
+            break;
                 
             case XnorCore::Logger::LogLevel::Info:
                 color = XnorCore::Color::White();
-                prefix = "Info:";
-                break;
+            prefix = "Info";
+            break;
                 
             case XnorCore::Logger::LogLevel::Warning:
                 color = XnorCore::Color::Orange();
-                prefix = "Warning:";
-                break;
+            prefix = "Warning";
+            break;
                 
             case XnorCore::Logger::LogLevel::Error:
                 color = XnorCore::Color::Red();
-                prefix = "Error:";
-                break;
+            prefix = "Error";
+            break;
                 
             case XnorCore::Logger::LogLevel::Fatal:
                 color = XnorCore::Color::DarkRed();
-                prefix = "Fatal:";
-                break;
+            prefix = "Fatal";
+            break;
         }
 
         if (oldSameLastLogs > 0)
             message = std::format("[...and {} more]", oldSameLastLogs);
+        else
+            message += log->message;
 
-        ImGui::TextColored(static_cast<Vector4>(color), "%s %s", prefix.c_str(), message.c_str());
+        ImGui::TableNextColumn();
+        ImGui::TextColored(static_cast<Vector4>(color), "%s", prefix.c_str());
+        ImGui::TableNextColumn();
+        ImGui::TextColored(static_cast<Vector4>(color), "%s", message.c_str());
     }
-    
+
     if (scroll == 1)
         ImGui::SetScrollHereY(1.f);
 
-    ImGui::EndChild();
+    ImGui::EndTable();
 }

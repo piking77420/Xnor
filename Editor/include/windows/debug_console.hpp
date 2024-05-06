@@ -18,9 +18,9 @@ public:
 private:
     size_t m_LastLogCount = 0;
     
-    void DisplayHeader();
+    void DisplayHeader() const;
 
-    void DisplayLogs() const;
+    void DisplayLogs();
 };
 
 END_XNOR_EDITOR
