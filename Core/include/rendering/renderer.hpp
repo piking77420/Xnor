@@ -103,7 +103,8 @@ private:
     
     XNOR_ENGINE void DrawAllMeshRendersNonShaded(const Camera& camera, const Scene& scene) const;
 
-    XNOR_ENGINE void DeferedRenderring(const Scene& scene, const ViewportData& viewportData, const Vector2i viewportSize) const;
+    XNOR_ENGINE void DeferedRenderring(const Camera& camera, const Scene& scene, const ViewportData&
+                                       viewportData, const Vector2i viewportSize) const;
     
     XNOR_ENGINE void ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers, const Scene& scene,
         const Viewport& viewport, Vector2i viewportSize, bool_t isEditor) const;

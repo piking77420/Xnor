@@ -52,23 +52,17 @@ void Renderer::EndFrame(const Scene& scene)
 
 void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene)
 {
-    Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
+    BeginFrame(scene,viewport);
+    
+	BindCamera(*viewport.camera,viewport.viewPortSize);
+	m_Frustum.UpdateFromCamera(*viewport.camera,viewport.GetAspect());
+	const ViewportData& viewportData = viewport.viewportData;
+	DeferedRenderring(*viewport.camera, scene, viewportData, viewport.viewPortSize);
+	ForwardPass(m_MeshRenderers, scene, viewport, viewport.viewPortSize, viewport.isEditor);
+	
+	if (viewportData.usePostProcess)
+		m_PostProcessPass.Compute(*viewport.viewportData.colorAttachment , *viewport.m_Image, viewportData.postprocessRendertarget);
 
-    if (viewport.camera == nullptr)
-        return;
-
-
-    BeginFrame(scene, viewport);
-    BindCamera(*viewport.camera, viewport.viewPortSize);
-    m_Frustum.UpdateFromCamera(*viewport.camera, viewport.GetAspect());
-
-    const ViewportData& viewportData = viewport.viewportData;
-    DeferedRenderring(scene, viewportData, viewport.viewPortSize);
-    ForwardPass(m_MeshRenderers, scene, viewport, viewport.viewPortSize, viewport.isEditor);
-
-    if (viewportData.usePostProcess)
-        m_PostProcessPass.Compute(*viewport.viewportData.colorAttachment, *viewport.m_Image,
-                                  viewportData.postprocessRendertarget);
 
     EndFrame(scene);
 }
@@ -90,8 +84,8 @@ void Renderer::SwapBuffers() const
 }
 
 
-void Renderer::DeferedRenderring(const Scene& scene, const ViewportData& viewportData,
-                                 const Vector2i viewportSize) const
+
+void Renderer::DeferedRenderring(const Camera& camera, const Scene& scene, const ViewportData& viewportData, const Vector2i viewportSize) const 
 {
     const RenderPassBeginInfo renderPassBeginInfo =
     {
