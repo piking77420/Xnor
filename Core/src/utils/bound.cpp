@@ -27,7 +27,7 @@ Vector3 Bound::GetSize() const
     return extents * 2.f; 
 }
 
-void Bound::SetMinMax(Vector3 newmin, Vector3 newMax)
+void Bound::SetMinMax(const Vector3 newmin, const Vector3 newMax)
 {
     extents = (newMax - newmin) * 0.5f;
     center = newmin + extents;
@@ -70,7 +70,7 @@ bool_t Bound::Countain(const Bound& otherBound) const
     return xInside && yInside && zInside;
 }
 
-bool_t Bound:: IsOnPlane(const Plane& plane) const
+bool_t Bound::IsOnPlane(const Plane& plane) const
 {
     // Compute the projection interval radius of b onto L(t) = b.c + t * p.n
     const float_t r = extents.x * std::abs(plane.normal.x) +
@@ -78,7 +78,6 @@ bool_t Bound:: IsOnPlane(const Plane& plane) const
 
     return -r <= plane.GetSignedDistanceToPlane(center);
 }
-
     
 void Bound::Encapsulate(const Bound& encapsulateBound)
 {
@@ -99,7 +98,7 @@ void Bound::Encapsulate(Vector3 point)
     const float_t maxY = std::max(max.y, point.y);
     const float_t maxZ = std::max(max.z, point.z);
 
-    SetMinMax( { minX, minY, minZ }, { maxX, maxY, maxZ });
+    SetMinMax({ minX, minY, minZ }, { maxX, maxY, maxZ });
 }
 
 Bound Bound::ReturnAabbFromMatrix(const Bound& bound,const Matrix& matrix, const Vector3 center)
@@ -108,14 +107,14 @@ Bound Bound::ReturnAabbFromMatrix(const Bound& bound,const Matrix& matrix, const
     const Vector3 up =  static_cast<Vector3>(matrix[1]) * bound.extents.y;
     const Vector3 forward =  static_cast<Vector3>(matrix[2]) * bound.extents.z;
     
-    const float_t newExtendX = std::abs(Vector3::Dot(Vector3::UnitX(),right))  + 
-       std::abs(Vector3::Dot(Vector3::UnitX(),up))  +  std::abs(Vector3::Dot(Vector3::UnitX(),forward));
+    const float_t newExtendX = std::abs(Vector3::Dot(Vector3::UnitX(),right)) +
+       std::abs(Vector3::Dot(Vector3::UnitX(),up)) + std::abs(Vector3::Dot(Vector3::UnitX(),forward));
 
-    const float_t newExtendY = std::abs(Vector3::Dot(Vector3::UnitY(),right))  + 
-       std::abs(Vector3::Dot(Vector3::UnitY(),up))  +  std::abs(Vector3::Dot(Vector3::UnitY(),forward));
+    const float_t newExtendY = std::abs(Vector3::Dot(Vector3::UnitY(),right)) +
+       std::abs(Vector3::Dot(Vector3::UnitY(),up)) + std::abs(Vector3::Dot(Vector3::UnitY(),forward));
 
-    const float_t newExtendZ = std::abs(Vector3::Dot(Vector3::UnitZ(),right))  + 
-       std::abs(Vector3::Dot(Vector3::UnitZ(),up))  +  std::abs(Vector3::Dot(Vector3::UnitZ(),forward));
+    const float_t newExtendZ = std::abs(Vector3::Dot(Vector3::UnitZ(),right)) +
+       std::abs(Vector3::Dot(Vector3::UnitZ(),up)) + std::abs(Vector3::Dot(Vector3::UnitZ(),forward));
 
-    return Bound(center, Vector3(newExtendX,newExtendY,newExtendZ) * 2.f);
+    return Bound(center, Vector3(newExtendX, newExtendY, newExtendZ) * 2.f);
 }

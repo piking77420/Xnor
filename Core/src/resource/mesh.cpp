@@ -43,13 +43,16 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
     FileManager::AddDirectory(folderPath);
     for (uint32_t i = 0; i < scene->mNumMeshes; i++)
     {
-        Pointer<Model> model = ResourceManager::Add<Model>(folderPath + std::string(scene->mMeshes[i]->mName.C_Str()) + std::string(".obj"));
+        const std::string fullName = folderPath + std::string(scene->mMeshes[i]->mName.C_Str()) + std::string(".obj");
+        Pointer<Model> model = ResourceManager::Add<Model>(fullName);
 
         if (!model->Load(*scene->mMeshes[i]))
         {
             ResourceManager::Unload(model);
             return false;
         }
+
+        // model->Save();
 
         if (scene->mMeshes[i]->HasBones())
         {
@@ -71,7 +74,21 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
 
     for (uint32_t i = 0; i < scene->mNumTextures; i++)
     {
-        Pointer<Texture> texture = ResourceManager::Add<Texture>(folderPath + std::string(scene->mTextures[i]->mFilename.C_Str()));
+        const std::string fileName = std::string(scene->mTextures[i]->mFilename.C_Str());
+        const std::string fullName = folderPath + fileName;
+
+        if (FileManager::Contains(fullName))
+        {
+            
+        }
+        
+        const size_t pos = fileName.find_first_of('\\');
+        if (pos != std::string::npos)
+        {
+            const std::string subFolder = folderPath + fileName.substr(0, pos);
+            FileManager::AddDirectory(subFolder);
+        }
+        Pointer<Texture> texture = ResourceManager::Add<Texture>(fullName);
 
         int64_t size = 0;
         if (scene->mTextures[i]->mHeight == 0)
@@ -81,7 +98,7 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
 
         texture->Load(reinterpret_cast<const uint8_t*>(scene->mTextures[i]->pcData), size);
         texture->SetIsEmbedded();
-        (void)texture->Save();
+        texture->Save();
 
         textures.Add(texture);
     }

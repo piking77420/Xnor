@@ -101,11 +101,13 @@ public:
     /// @copydoc XnorCore::Resource::CreateInInterface
     XNOR_ENGINE void CreateInInterface() override;
 
-    /// @copydoc XnorCore::Resource::DestroyInRhi
+    /// @copydoc XnorCore::Resource::DestroyInInterface
     XNOR_ENGINE void DestroyInInterface() override;
     
     /// @copydoc XnorCore::Resource::Unload
     XNOR_ENGINE void Unload() override;
+
+    XNOR_ENGINE bool_t Save() const override;
 
     /// @brief Gets the id of the model
     /// @return Model id

@@ -42,7 +42,7 @@ public:
 
     bool_t Countain(const Bound& otherBound) const;
 
-    bool_t IsOnPlane(const Plane& frustum) const;
+    bool_t IsOnPlane(const Plane& plane) const;
 
     void Encapsulate(const Bound& plane);
 
