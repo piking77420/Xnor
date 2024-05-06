@@ -3,11 +3,13 @@
 #include <fstream>
 #include <ranges>
 
+#include "file/file_manager.hpp"
 #include "resource/compute_shader.hpp"
 #include "resource/font.hpp"
 #include "resource/mesh.hpp"
 #include "resource/model.hpp"
 #include "resource/resource.hpp"
+#include "resource/resource_manager.hpp"
 #include "resource/shader.hpp"
 #include "resource/skeleton.hpp"
 #include "resource/texture.hpp"
@@ -19,6 +21,9 @@ using namespace XnorCore;
 File::File(std::filesystem::path&& filepath)
     : Entry(std::move(filepath))
 {
+    if (!exists(m_Path))
+        Utils::CreateEmptyFile(m_Path);
+    
     if (!is_regular_file(m_Path))
         throw std::invalid_argument("Path does not point to a file");
 
@@ -74,6 +79,19 @@ void File::OpenFile() const
 File::Type File::GetType() const
 {
     return m_Type;
+}
+
+void File::Delete() const
+{
+    // We need copies of these variables because they may otherwise be destroyed by FileManager::Unload
+    const std::filesystem::path path = m_Path;
+    const Pointer<Resource> resource = m_Resource;
+    
+    FileManager::Unload(path);
+    std::filesystem::remove(path);
+
+    if (resource)
+        ResourceManager::Unload(resource);
 }
 
 std::string File::GetNameNoExtension() const

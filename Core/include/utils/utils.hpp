@@ -173,6 +173,8 @@ namespace Utils
     constexpr size_t FunctionAddress(std::function<Ret(Args...)> f);
 
     XNOR_ENGINE int32_t TerminalCommand(const std::string& command, bool_t asynchronous = true);
+
+    XNOR_ENGINE void CreateEmptyFile(const std::filesystem::path& path);
 }
 
 END_XNOR_CORE

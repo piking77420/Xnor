@@ -60,6 +60,9 @@ public:
     /// @brief Returns the Type of this File.
     XNOR_ENGINE Type GetType() const;
 
+    /// @brief Deletes the corresponding filesystem file.
+    XNOR_ENGINE void Delete() const;
+
     /// @brief Returns the name of this File without the file extension.
     [[nodiscard]]
     XNOR_ENGINE std::string GetNameNoExtension() const;
@@ -107,10 +110,11 @@ private:
     Pointer<Resource> m_Resource;
 
     // We need this in order to set m_Resource from the ResourceManager
-    // which is the only class that needs modify this field
+    // which is the only class that needs to modify this field
     friend class ResourceManager;
 };
 
 END_XNOR_CORE
 
+// Voluntary include after the class definition because using Pointer<File> means we need to include File at some point
 #include "file/file.inl"
