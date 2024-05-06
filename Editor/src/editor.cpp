@@ -268,7 +268,9 @@ void Editor::MenuBar()
 
 			ImGui::EndMenu();
 		}
-		renderer.RenderMenu();
+		if (XnorCore::World::scene != nullptr)
+			renderer.RenderMenu(*XnorCore::World::scene);
+		
 		ImGui::EndMainMenuBar();
 	}
 }

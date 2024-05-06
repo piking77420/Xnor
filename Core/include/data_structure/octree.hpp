@@ -48,7 +48,11 @@ public:
         return OctreeIterator<OctreeNode<T>>(&m_MotherNode);
     }
 
-
+    Bound GetMotherBound() const
+    {
+        return m_MotherNode.boudingBox;        
+    }
+    
 private:
     void Clear();
     
@@ -62,6 +66,8 @@ void Octree<T>::Update(std::vector<ObjectBounding<T>>& data)
 {
     Clear();
     m_HandleSize = data.size();
+    // Reset mother bound
+    m_MotherNode.boudingBox = Bound();
 
     // Get the bounding box who contain all the data
     for (ObjectBounding<T>& element : data)

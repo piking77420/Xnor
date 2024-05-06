@@ -6,20 +6,20 @@
 
 using namespace XnorCore;
 
-void Renderer::RenderMenu()
+void Renderer::RenderMenu(const Scene& scene)
 {
     if (ImGui::BeginMenu("CurrentScene"))
     {
-        if (ImGui::Checkbox("DrawScene Octree", &m_RenderOctree.draw))
+        if (ImGui::Checkbox("DrawScene Octree", &scene.renderOctree.draw))
         {
         }
 
         ImGui::EndMenu();
     }
 
-    if (m_RenderOctree.draw)
+    if (scene.renderOctree.draw)
     {
-        m_RenderOctree.Draw();
+        scene.renderOctree.Draw();
     }
 }
 
@@ -35,36 +35,36 @@ void Renderer::Initialize()
     Rhi::PrepareRendering();
 }
 
-void Renderer::BeginFrame(const Scene& scene, const Viewport& viewport) 
+void Renderer::BeginFrame(const Scene& scene, const Viewport& viewport)
 {
     scene.GetAllComponentOfType<MeshRenderer>(&m_MeshRenderers);
-    PrepareOctree();
+    PrepareOctree(scene);
     m_LightManager.BeginFrame(scene, viewport, *this);
     m_AnimationRender.BeginFrame(scene, *this);
 }
 
-void Renderer::EndFrame(const Scene& scene) 
-{ 
+void Renderer::EndFrame(const Scene& scene)
+{
     m_MeshRenderers.clear();
     m_LightManager.EndFrame(scene);
     m_AnimationRender.EndFrame();
 }
 
-void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene) 
+void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene)
 {
     Rhi::ClearBuffer(static_cast<BufferFlag::BufferFlag>(BufferFlag::ColorBit | BufferFlag::DepthBit));
-    
+
     if (viewport.camera == nullptr)
         return;
 
-    
+
     BeginFrame(scene, viewport);
     BindCamera(*viewport.camera, viewport.viewPortSize);
     m_Frustum.UpdateFromCamera(*viewport.camera, viewport.GetAspect());
-    
+
     const ViewportData& viewportData = viewport.viewportData;
-    DeferedRenderring(scene.skybox, viewportData, viewport.viewPortSize);
-    ForwardPass(m_MeshRenderers, scene.skybox, viewport, viewport.viewPortSize, viewport.isEditor);
+    DeferedRenderring(scene, viewportData, viewport.viewPortSize);
+    ForwardPass(m_MeshRenderers, scene, viewport, viewport.viewPortSize, viewport.isEditor);
 
     if (viewportData.usePostProcess)
         m_PostProcessPass.Compute(*viewport.viewportData.colorAttachment, *viewport.m_Image,
@@ -74,8 +74,9 @@ void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene)
 }
 
 void Renderer::ZPass(const Scene& scene, const Camera& camera,
-    const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass, const Pointer<Shader>& shaderToUse,
-    bool_t drawEditorUi)
+                     const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass,
+                     const Pointer<Shader>& shaderToUse,
+                     bool_t drawEditorUi)
 {
     scene.GetAllComponentOfType<MeshRenderer>(&m_MeshRenderers);
     RenderNonShadedPass(scene, camera, renderPassBeginInfo, renderPass, shaderToUse, drawEditorUi);
@@ -89,7 +90,8 @@ void Renderer::SwapBuffers() const
 }
 
 
-void Renderer::DeferedRenderring(const Skybox& skybox, const ViewportData& viewportData, const Vector2i viewportSize) const
+void Renderer::DeferedRenderring(const Scene& scene, const ViewportData& viewportData,
+                                 const Vector2i viewportSize) const
 {
     const RenderPassBeginInfo renderPassBeginInfo =
     {
@@ -104,7 +106,7 @@ void Renderer::DeferedRenderring(const Skybox& skybox, const ViewportData& viewp
 
     // Draw Simple Mesh
     m_GBufferShader->Use();
-    DrawMeshRendersByType(MaterialType::Opaque);
+    DrawMeshRendersByType(MaterialType::Opaque, scene);
     m_GBufferShader->Unuse();
     // DrawSkinnedMesh
     m_AnimationRender.RenderAnimation();
@@ -126,19 +128,19 @@ void Renderer::DeferedRenderring(const Skybox& skybox, const ViewportData& viewp
 
     // Set G buffer Shader Info
     viewportData.BindDescriptor();
-    skybox.BindDesriptorSet();
+    scene.skybox.BindDesriptorSet();
     m_LightManager.BindShadowMap();
 
     Rhi::DrawModel(DrawMode::Triangles, m_Quad->GetId());
 
-    skybox.UnbindDesriptorSet();
+    scene.skybox.UnbindDesriptorSet();
     viewportData.UnbindDescriptor();
     viewportData.colorPass.EndRenderPass();
 
     m_GBufferShaderLit->Unuse();
 }
 
-void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox,
+void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers, const Scene& scene,
                            const Viewport& viewport, const Vector2i viewportSize, const bool_t isEditor) const
 {
     const ViewportData& viewportData = viewport.viewportData;
@@ -155,7 +157,7 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
     viewportData.colorPass.BeginRenderPass(renderPassBeginInfoLit);
 
     m_Forward->Use();
-    DrawMeshRendersByType(MaterialType::Lit);
+    DrawMeshRendersByType(MaterialType::Lit, scene);
     m_Forward->Unuse();
 
     if (isEditor)
@@ -163,7 +165,7 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
         DrawAabb(meshRenderers);
     }
 
-    m_SkyboxRenderer.DrawSkymap(m_Cube, skybox);
+    m_SkyboxRenderer.DrawSkymap(m_Cube, scene.skybox);
 
     if (isEditor)
     {
@@ -201,45 +203,33 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
     Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 }
 
-void Renderer::PrepareOctree()
+void Renderer::PrepareOctree(const Scene& scene)
 {
     std::vector<ObjectBounding<const MeshRenderer>> meshrenderWithAabb;
-    
 
-    // Reset AABB
-    renderSceneAABB.extents = Vector3::Zero();
-    renderSceneAABB.center = renderSceneAABB.extents;
-    
     for (uint32_t i = 0; i < m_MeshRenderers.size(); i++)
     {
-
         const MeshRenderer* meshRenderer = m_MeshRenderers[i];
-     
+
         if (!meshRenderer->model.IsValid())
             continue;
 
         Bound bound = bound.GetAabbFromTransform(meshRenderer->model->GetAabb(), meshRenderer->entity->transform);
-        renderSceneAABB.Encapsulate(bound);
-
         ObjectBounding<const MeshRenderer> data;
         data.bound = bound;
         data.handle = meshRenderer;
         meshrenderWithAabb.emplace_back(data);
-        
     }
-    m_RenderOctree.Update(meshrenderWithAabb);
+    scene.renderOctree.Update(meshrenderWithAabb);
 }
 
 
-void Renderer::DrawMeshRendersByType(const MaterialType materialType) const
+void Renderer::DrawMeshRendersByType(const MaterialType materialType, const Scene& scene) const
 {
     Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
-    
-    if (m_RenderOctree.GetHandleSize() == 0)
-        return;
-    
-    const OctreeIterator<OctreeNode<const MeshRenderer>> it = m_RenderOctree.GetIterator();
-    int drawCall = 0;
+
+
+    const OctreeIterator<OctreeNode<const MeshRenderer>> it = scene.renderOctree.GetIterator();
 
     while (true)
     {
@@ -247,29 +237,28 @@ void Renderer::DrawMeshRendersByType(const MaterialType materialType) const
         // if we not see it 
         if (m_Frustum.IsOnFrustum(bound))
         {
-           
             std::vector<const MeshRenderer*>* handle = nullptr;
             it.GetHandles(&handle);
-            
+
 #pragma region Draw
             // draw
             for (const MeshRenderer* const meshRenderer : *handle)
             {
                 if (meshRenderer->material.materialType != materialType)
                     continue;
-                
+
                 Bound aabb;
                 meshRenderer->GetAABB(&aabb);
-        
+
                 if (!m_Frustum.IsOnFrustum(aabb))
                 {
                     continue;
                 }
-        
+
                 const Transform& transform = meshRenderer->GetEntity()->transform;
                 ModelUniformData modelData;
                 modelData.model = transform.worldMatrix;
-        
+
                 try
                 {
                     modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
@@ -278,71 +267,117 @@ void Renderer::DrawMeshRendersByType(const MaterialType materialType) const
                 {
                     modelData.normalInvertMatrix = Matrix::Identity();
                 }
-        
+
 
                 if (meshRenderer->model.IsValid())
                 {
                     Rhi::UpdateModelUniform(modelData);
                     meshRenderer->material.BindMaterial();
                     Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
-                    drawCall++;
                 }
 #pragma endregion Draw
-
-                   
-            }   
+            }
         }
         if (!it.Iterate())
             break;
     }
-
-    
-    Logger::LogInfo("Log  DrawCall {} ",drawCall);
 }
-
 
 
 void Renderer::DrawAllMeshRendersNonShaded(const Camera& camera, const Scene& scene) const
 {
     Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
-
-    for (const MeshRenderer* const meshRenderer : m_MeshRenderers)
+    const OctreeIterator<OctreeNode<const MeshRenderer>> it = scene.renderOctree.GetIterator();
+    if (!camera.isOrthographic)
     {
-        
-        Bound aabb;
-        meshRenderer->GetAABB(&aabb);
-        
-        if (!m_Frustum.IsOnFrustum(aabb) )
-        {
-            continue;
-        }
+#pragma region Draw OctreeFrustum
 
-        const Transform& transform = meshRenderer->GetEntity()->transform;
-        ModelUniformData modelData;
-        modelData.model = transform.worldMatrix;
-        // +1 to avoid the black color of the attachment be a valid index  
-        modelData.meshRenderIndex = scene.GetEntityIndex(meshRenderer->GetEntity()) + 1;
-
-        try
+        while (true)
         {
-            modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
-        }
-        catch (const std::invalid_argument&)
-        {
-            modelData.normalInvertMatrix = Matrix::Identity();
-        }
+            Bound bound = it.GetBound();
+            // if we not see it 
+            if (m_Frustum.IsOnFrustum(bound))
+            {
+                std::vector<const MeshRenderer*>* handle = nullptr;
+                it.GetHandles(&handle);
+
+                // draw
+                for (const MeshRenderer* const meshRenderer : *handle)
+                {
+                    Bound aabb;
+                    meshRenderer->GetAABB(&aabb);
+
+                    if (!m_Frustum.IsOnFrustum(aabb))
+                    {
+                        continue;
+                    }
+
+                    const Transform& transform = meshRenderer->GetEntity()->transform;
+                    ModelUniformData modelData;
+                    modelData.model = transform.worldMatrix;
+                    // +1 to avoid the black color of the attachment be a valid index  
+                    modelData.meshRenderIndex = scene.GetEntityIndex(meshRenderer->GetEntity()) + 1;
+
+                    try
+                    {
+                        modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
+                    }
+                    catch (const std::invalid_argument&)
+                    {
+                        modelData.normalInvertMatrix = Matrix::Identity();
+                    }
 
 
-        if (meshRenderer->model.IsValid())
-        {
-            Rhi::UpdateModelUniform(modelData);
-            Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
+                    if (meshRenderer->model.IsValid())
+                    {
+                        Rhi::UpdateModelUniform(modelData);
+                        Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
+                    }
+                }
+            }
+            if (!it.Iterate())
+                break;
         }
+#pragma endregion Draw OctreeFrustum
     }
+    else
+    {
+#pragma region Draw iteration
+
+        for (const MeshRenderer* mesh : m_MeshRenderers)
+        {
+            const Transform& transform = mesh->GetEntity()->transform;
+            ModelUniformData modelData;
+            modelData.model = transform.worldMatrix;
+            // +1 to avoid the black color of the attachment be a valid index  
+            modelData.meshRenderIndex = scene.GetEntityIndex(mesh->GetEntity()) + 1;
+
+            try
+            {
+                modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
+            }
+            catch (const std::invalid_argument&)
+            {
+                modelData.normalInvertMatrix = Matrix::Identity();
+            }
+
+
+            if (mesh->model.IsValid())
+            {
+                Rhi::UpdateModelUniform(modelData);
+                Rhi::DrawModel(DrawMode::Triangles, mesh->model->GetId());
+            }
+        }
+#pragma endregion Draw iteration
+    }
+
+    
 }
 
-void Renderer::RenderNonShadedPass(const Scene& scene, const Camera& camera, const RenderPassBeginInfo& renderPassBeginInfo,
-    const RenderPass& renderPass, const Pointer<Shader>& shaderToUse, bool_t drawEditorUi)
+void Renderer::RenderNonShadedPass(const Scene& scene, const Camera& camera,
+                                   const RenderPassBeginInfo& renderPassBeginInfo,
+                                   const RenderPass& renderPass, const Pointer<Shader>& shaderToUse,
+                                   bool_t drawEditorUi)
 {
     const Vector2i viewportSize = renderPassBeginInfo.renderAreaOffset + renderPassBeginInfo.renderAreaExtent;
     BindCamera(camera, viewportSize);
@@ -360,11 +395,10 @@ void Renderer::RenderNonShadedPass(const Scene& scene, const Camera& camera, con
 
 void Renderer::BindCamera(const Camera& camera, const Vector2i screenSize) const
 {
-    
     CameraUniformData cam;
     camera.GetView(&cam.view);
     camera.GetProjection(screenSize, &cam.projection);
-    
+
     cam.cameraPos = camera.position;
     cam.near = camera.near;
     cam.far = camera.far;

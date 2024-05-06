@@ -31,7 +31,7 @@ void RenderWindow::OnApplicationRendering()
             m_Viewport->Resize(m_Size);
     }
 
-    if (m_Viewport->frameBuffer)
+    if (m_Viewport->frameBuffer && m_Viewport->camera != nullptr)
         m_Editor->renderer.RenderViewport(*m_Viewport, *XnorCore::World::scene);
 }
 

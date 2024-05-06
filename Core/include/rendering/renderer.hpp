@@ -29,9 +29,7 @@ class Renderer
 public:
     /// @brief Clear color
     Vector4 clearColor = Vector4(0.f);
-
-    mutable Bound renderSceneAABB;
-
+    
     XNOR_ENGINE Renderer() = default;
     XNOR_ENGINE ~Renderer() = default;
 
@@ -68,13 +66,12 @@ public:
     /// @brief Swaps the front and back buffer.
     XNOR_ENGINE void SwapBuffers() const;
 
-    XNOR_ENGINE void RenderMenu();
+    XNOR_ENGINE void RenderMenu(const Scene& scene);
 private:
      LightManager m_LightManager;
      SkyboxRenderer m_SkyboxRenderer;
      PostProcessPass m_PostProcessPass;
      AnimationRender m_AnimationRender;
-     mutable Octree<const MeshRenderer> m_RenderOctree;
      std::vector<const MeshRenderer*> m_MeshRenderers;
 
      mutable Frustum m_Frustum;
@@ -102,18 +99,18 @@ private:
     
     XNOR_ENGINE void InitResources();
     
-    XNOR_ENGINE void DrawMeshRendersByType(MaterialType materialType) const;
+    XNOR_ENGINE void DrawMeshRendersByType(MaterialType materialType , const Scene& scene) const;
     
     XNOR_ENGINE void DrawAllMeshRendersNonShaded(const Camera& camera, const Scene& scene) const;
 
-    XNOR_ENGINE void DeferedRenderring(const Skybox& skybox, const ViewportData& viewportData, Vector2i viewportSize) const;
+    XNOR_ENGINE void DeferedRenderring(const Scene& scene, const ViewportData& viewportData, const Vector2i viewportSize) const;
     
-    XNOR_ENGINE void ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers, const Skybox& skybox,
+    XNOR_ENGINE void ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers, const Scene& scene,
         const Viewport& viewport, Vector2i viewportSize, bool_t isEditor) const;
     
     XNOR_ENGINE void DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) const;
 
-    XNOR_ENGINE void PrepareOctree();
+    XNOR_ENGINE void PrepareOctree(const Scene& scene);
 
 
 };

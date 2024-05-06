@@ -5,9 +5,9 @@
 			<name>Plane</name>
 			<m_EntityId>6DA3A69E-26F1-49AD-85-36-F8-88-F7-71-8A-B0</m_EntityId>
 			<transform>
-				<m_Position>0 ; 0 ; 0</m_Position>
-				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
-				<m_Scale>2 ; 0.21906766 ; 2</m_Scale>
+				<m_Position>-0.055340767 ; -0.11400783 ; 1.2978716</m_Position>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
+				<m_Scale>9.046956 ; 0.21906766 ; 10.267566</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">
@@ -39,8 +39,8 @@
 			<m_EntityId>E3FC77C9-7C57-4EEB-AB-AD-6-5-5A-21-B6-BC</m_EntityId>
 			<transform>
 				<m_Position>0 ; 0 ; 0</m_Position>
-				<m_EulerRotation>1.7639455 ; 0.28306493 ; 2.185173</m_EulerRotation>
-				<m_Scale>1.000332 ; 1.0000345 ; 1.0002563</m_Scale>
+				<m_EulerRotation>2.3563516 ; 0.8171413 ; 2.5130105</m_EulerRotation>
+				<m_Scale>1.0003467 ; 1.0000334 ; 1.0002688</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="DirectionalLight">
@@ -56,9 +56,9 @@
 			<name>Cube</name>
 			<m_EntityId>9806BECA-30FC-44CE-96-82-A0-8F-41-A6-D2-77</m_EntityId>
 			<transform>
-				<m_Position>0 ; 1 ; 0</m_Position>
-				<m_EulerRotation>6.879321e-06 ; -1.0465056 ; -2.1916728e-06</m_EulerRotation>
-				<m_Scale>1.0002148 ; 1.0003903 ; 1.0000937</m_Scale>
+				<m_Position>-0.13779879 ; 1.4774313 ; 5.046684</m_Position>
+				<m_EulerRotation>0.7433206 ; -1.3335273 ; -0.46460128</m_EulerRotation>
+				<m_Scale>1.0002156 ; 1.0003899 ; 1.000094</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">
@@ -86,10 +86,10 @@
 			<m_Children/>
 		</2>
 		<3>
-			<name>Entity</name>
+			<name>Problem</name>
 			<m_EntityId>D0AC1766-219F-4D5C-8F-56-4-93-FB-5-31-3B</m_EntityId>
 			<transform>
-				<m_Position>-3 ; 7 ; -2</m_Position>
+				<m_Position>-4.746106 ; 6 ; 11.403919</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
@@ -112,7 +112,7 @@
 						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
-					<drawModelAabb>false</drawModelAabb>
+					<drawModelAabb>true</drawModelAabb>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -122,7 +122,7 @@
 			<name>Entity</name>
 			<m_EntityId>BD35680F-B4E4-4DB9-BE-33-33-4-61-C7-D9-BA</m_EntityId>
 			<transform>
-				<m_Position>1 ; 5 ; 3</m_Position>
+				<m_Position>2 ; 6 ; 14</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
@@ -155,7 +155,7 @@
 			<name>Entity3</name>
 			<m_EntityId>B8614EF0-5599-4937-AA-CA-35-68-82-B7-A5-B8</m_EntityId>
 			<transform>
-				<m_Position>-2 ; 7 ; 0</m_Position>
+				<m_Position>4.1839156 ; 4 ; 4.061965</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>0.5 ; 0.5 ; 0.5</m_Scale>
 			</transform>
@@ -184,6 +184,24 @@
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
 		</5>
+		<6>
+			<name>PointLight</name>
+			<m_EntityId>36B8144F-CFD-4078-B2-F1-E6-9C-5C-FA-8C-DB</m_EntityId>
+			<transform>
+				<m_Position>4.5734615 ; 5.470377 ; 1.7590468</m_Position>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="PointLight">
+					<color>1 ; 1 ; 1 ; 1</color>
+					<intensity>1000</intensity>
+					<castShadow>true</castShadow>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</6>
 	</m_Entities>
 </Scene>
 

@@ -78,7 +78,7 @@ void OctreeNode<T>::AddObject(ObjectBounding<T>& objectBounding)
 template <class T>
 bool_t OctreeNode<T>::IsOctanValid(Octans octans, int32_t bitIndex)
 {
-    return octans & (1 << bitIndex);
+    return (octans & (1 << bitIndex));
 }
 
 template <class T>

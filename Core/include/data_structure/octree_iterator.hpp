@@ -20,16 +20,16 @@ enum class State
 // if byte at 1 then has been iterated
 enum OctansState : uint8_t
 {
-     OctansStateZero = 0x00,// 0b00000000
-     OctansStateQ1 = 0x01, // 0b00000001
-     OctansStateQ2 = 0x02, // 0b00000010
-     OctansStateQ3 = 0x04, // 0b00000100
-     OctansStateQ4 = 0x08, // 0b00001000
-     OctansStateQ5 = 0x10, // 0b00010000
-     OctansStateQ6 = 0x20, // 0b00100000
-     OctansStateQ7 = 0x40, // 0b01000000
-     OctansStateQ8 = 0x80, // 0b10000000
-     OctansStateFill = 0xFF
+    OctansStateZero = 0b00000000, // 0b00000000
+   OctansStateQ1 = 0b00000001,   // 0b00000001
+   OctansStateQ2 = 0b00000010,   // 0b00000010
+   OctansStateQ3 = 0b00000100,   // 0b00000100
+   OctansStateQ4 = 0b00001000,   // 0b00001000
+   OctansStateQ5 = 0b00010000,   // 0b00010000
+   OctansStateQ6 = 0b00100000,   // 0b00100000
+   OctansStateQ7 = 0b01000000,   // 0b01000000
+   OctansStateQ8 = 0b10000000,   // 0b10000000
+   OctansStateFill = 0b11111111  // 0b11111111
 };
 
 
@@ -47,43 +47,30 @@ public:
     
     OctreeIterator(PtrType ptr) : m_Ptr(ptr)
     {
-        PushOctanState(OctansStateZero);
+       //m_OctanState.push(OctansStateZero);
     } 
 
     ~OctreeIterator() = default;
 
     bool_t Iterate() const
     {
-        OctansState& state = GetCurrentOctanState();
-        int32_t indexBit = GetNextOctanToIterate(state);
-
-
-        if (state != OctansStateFill)
-        {
-            m_Ptr->SetPtrToChildNode(indexBit,&m_Ptr);
-            DownTree(indexBit);
-            
-            return true;
-        }
-        
         // found a valid octant in parent 
         while (true)
         {
-            if (!ClimbTree())
-                return false;
-            
-            state = GetCurrentOctanState();
-            indexBit = GetNextOctanToIterate(state);
-            
-            if (state != OctansStateFill)
+            OctansState& state = GetCurrentOctanState();
+            const uint32_t indexBit = GetNextOctanToIterate(state);
+            // IDK let this c++ skill issue
+            GetCurrentOctanState() = state;
+
+            if (indexBit != -1)
             {
-                m_Ptr->SetPtrToChildNode(indexBit, &m_Ptr);
                 DownTree(indexBit);
-            
                 return true;
             }
 
-        
+            if (!ClimbTree())
+                return false;
+            
         }
         
         // trying climbing but ptr is mother node
@@ -100,14 +87,14 @@ public:
 private:
     // return true if we iterate to a children
     // return false if all the octan has been iterated
-    void DownTree(uint32_t childindex) const
+    __forceinline void DownTree(const uint32_t childindex) const
     {
         PushOctanState(OctansState::OctansStateZero);
         m_Ptr->SetPtrToChildNode(static_cast<size_t>(childindex),&m_Ptr);
     }
 
     // Return false if has no parent iterator = mother node
-    bool_t ClimbTree() const
+    __forceinline  bool_t ClimbTree() const
     {
         if (m_Ptr->parent == nullptr)
         {
@@ -133,7 +120,7 @@ private:
     
     void PopOctanState() const;
 
-    int32_t GetNextOctanToIterate(OctansState& state) const;
+    uint32_t GetNextOctanToIterate(OctansState& state) const;
 
 };
 
@@ -165,6 +152,11 @@ void OctreeIterator<T>::PushOctanState(OctansState octancState) const
 template <typename T>
 OctansState& OctreeIterator<T>::GetCurrentOctanState() const
 {
+    if (m_OctanState.size() == 0)
+    {
+        m_OctanState.push(OctansState::OctansStateZero);
+    }
+    
    return m_OctanState.top();
 }
 
@@ -175,14 +167,15 @@ void OctreeIterator<T>::PopOctanState() const
 }
 
 template <typename T>
-int32_t OctreeIterator<T>::GetNextOctanToIterate(OctansState& state) const
+uint32_t OctreeIterator<T>::GetNextOctanToIterate(OctansState& state) const
 {
-    for (int32_t i = 0; i < 8; i++)
+    for (uint32_t i = 0; i < 8; i++)
     {
         if ((state & (1 << i)))
             continue;
         
         state = static_cast<OctansState>((state | 1 << i));
+        
         // Check if is valid if true return the octan else set the bit has been iterate but continue to iterate in order to found a valid octan
         if (T::IsOctanValid(m_Ptr->GetActiveOctans(),i))
         {
@@ -191,7 +184,7 @@ int32_t OctreeIterator<T>::GetNextOctanToIterate(OctansState& state) const
         
     }
     
-    return -1;
+    return static_cast<uint32_t>(-1);
 }
 
 

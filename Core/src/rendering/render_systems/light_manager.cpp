@@ -198,7 +198,7 @@ void LightManager::ComputeShadow(const Scene& scene, const Viewport& viewport, R
 
 void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPortCamera, Renderer& renderer)
 {
-	const Bound& rebderSceneAAbb = renderer.renderSceneAABB; 
+	const Bound& sceneAAbb = scene.renderOctree.GetMotherBound(); 
 
 	for (const DirectionalLight* const directionalLight : m_DirectionalLights)
 	{
@@ -211,9 +211,9 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 		const Vector2i shadowMapSize = shadowMap.GetSize(); 
 		
 		Vector3 lightDir =  -directionalLight->GetLightDirection();
-		float_t lenghtAabb =  rebderSceneAAbb.extents.Length();
+		float_t lenghtAabb =  sceneAAbb.extents.Length();
 		// Get Pos from scene aabb
-		Vector3 pos = renderer.renderSceneAABB.center + (lenghtAabb * -lightDir);//static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);
+		Vector3 pos = sceneAAbb.center + (lenghtAabb * -lightDir);//static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);
 		DrawGizmo::Sphere(pos);
 		
 		// CacadeShadowMap // TODO Make it cleaner ,
