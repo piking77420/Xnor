@@ -29,11 +29,19 @@ public:
 	
 	void Update() override;
 
+	void BuildAndReloadCode();
+
+	void StartPlaying();
+
+	void StopPlaying();
+
 	// TODO temp
 	static constexpr const char_t* SerializedScenePath = "assets/scenes/basic_scene.scene.xml";
 
 private:
 	std::vector<UiWindow*> m_UiWindows;
+
+    std::filesystem::path m_SerializedScenePath;
 
 	void UpdateWindows();
 

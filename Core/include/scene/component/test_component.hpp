@@ -54,7 +54,7 @@ private:
     float_t m_Array[2][3];
     List<int32_t> m_List;
 
-    ENUM_VALUE(Key) m_Key;
+    ENUM_VALUE(Key) m_Key = Key::Space;
 
     Coroutine FlashRoutine();
 

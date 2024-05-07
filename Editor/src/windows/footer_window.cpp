@@ -40,7 +40,7 @@ void FooterWindow::Display()
         ImGui::BeginDisabled();
     
     if (ImGui::ImageButton(XnorCore::Utils::IntToPointer<ImTextureID>(m_BuildTexture->GetId()), { 25.f, 25.f }))
-        XnorCore::DotnetRuntime::BuildAndReloadProject();
+        m_Editor->BuildAndReloadCode();
     
     if (reloadingProject)
         ImGui::EndDisabled();

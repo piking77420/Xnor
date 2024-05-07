@@ -2,6 +2,7 @@
 
 #include <ImGui/imgui.h>
 
+#include "csharp/dotnet_runtime.hpp"
 #include "world/world.hpp"
 #include "file/file_manager.hpp"
 #include "resource/resource_manager.hpp"
@@ -51,11 +52,16 @@ void HeaderWindow::DisplayOnEditor()
     const ImVec2 currentImagePos = { m_ImagePos[0].x,m_ImagePos[0].y };
     ImGui::SetCursorPos(currentImagePos);
 
+    const bool_t disabled = !XnorCore::World::scene || XnorCore::DotnetRuntime::IsReloadingProject();
+
+    if (disabled)
+        ImGui::BeginDisabled();
+
     if (ImGui::ImageButton(XnorCore::Utils::IntToPointer<ImTextureID>(m_PlayButton->GetId()), { m_ImageSize, m_ImageSize }))
-    {
-        XnorCore::World::isPlaying = true;
-        XnorCore::World::hasStarted = false;
-    }
+        m_Editor->StartPlaying();
+
+    if (disabled)
+        ImGui::EndDisabled();
 }
 
 void HeaderWindow::DisplayOnPlay()
@@ -74,33 +80,5 @@ void HeaderWindow::DisplayOnPlay()
     ImGui::SetCursorPos(currentImagePos);
     
     if (ImGui::ImageButton(XnorCore::Utils::IntToPointer<ImTextureID>(m_StopButton->GetId()), { m_ImageSize, m_ImageSize }))
-    {
-        XnorCore::Coroutine::StopAll();
-        
-        std::string path;
-        if (m_Editor->data.currentScene == nullptr)
-        {
-            if (!std::filesystem::exists("assets/scenes"))
-                std::filesystem::create_directories("assets/scenes");
-
-            path = Editor::SerializedScenePath;
-        }
-        else
-        {
-            path = m_Editor->data.currentScene->GetPathString();
-        }
-
-        m_Editor->data.selectedEntity = nullptr;
-        delete XnorCore::World::scene;
-        XnorCore::World::scene = new XnorCore::Scene();
-
-        XnorCore::Serializer::StartDeserialization(path);
-        XnorCore::Serializer::Deserialize<XnorCore::Scene, true>(XnorCore::World::scene);
-        XnorCore::Serializer::EndDeserialization();
-
-        XnorCore::World::isPlaying = false;
-        XnorCore::World::hasStarted = false;
-
-        m_Editor->renderer.BeginFrame(*XnorCore::World::scene);
-    }
+        m_Editor->StopPlaying();
 }

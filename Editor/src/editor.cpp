@@ -274,6 +274,43 @@ void Editor::MenuBar()
 	}
 }
 
+void Editor::BuildAndReloadCode()
+{
+	if (XnorCore::World::isPlaying)
+		StopPlaying();
+	XnorCore::DotnetRuntime::BuildAndReloadProject();
+}
+
+void Editor::StartPlaying()
+{
+	m_SerializedScenePath = std::filesystem::temp_directory_path() / "xnor_current.scene.xml";
+	XnorCore::Serializer::StartSerialization(m_SerializedScenePath.string());
+	XnorCore::Serializer::Serialize<XnorCore::Scene, true>(XnorCore::World::scene);
+	XnorCore::Serializer::EndSerialization();
+	XnorCore::World::isPlaying = true;
+	XnorCore::World::hasStarted = false;
+}
+
+void Editor::StopPlaying()
+{
+	XnorCore::Coroutine::StopAll();
+
+	data.selectedEntity = nullptr;
+	delete XnorCore::World::scene;
+	XnorCore::World::scene = new XnorCore::Scene();
+
+	XnorCore::Serializer::StartDeserialization(m_SerializedScenePath.string());
+	XnorCore::Serializer::Deserialize<XnorCore::Scene, true>(XnorCore::World::scene);
+	XnorCore::Serializer::EndDeserialization();
+
+	std::filesystem::remove(m_SerializedScenePath);
+
+	XnorCore::World::isPlaying = false;
+	XnorCore::World::hasStarted = false;
+
+	renderer.BeginFrame(*XnorCore::World::scene);
+}
+
 void Editor::UpdateWindows()
 {
 	for (UiWindow* const w : m_UiWindows)
