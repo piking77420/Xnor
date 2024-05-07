@@ -6,22 +6,23 @@
 
 using namespace XnorCore;
 
-VBO::VBO()
-{
-    glGenBuffers(1, &m_Id);
-}
-
 VBO::~VBO()
 {
     if (glIsBuffer(m_Id))
     glDeleteBuffers(1, &m_Id);
 }
 
-void VBO::Allocate(const size_t size, const void* const data)
+void VBO::Allocate(const size_t size, const void* const data , const BufferUsage bufferUsage)
 {
     glGenBuffers(1, &m_Id);
-    glNamedBufferData(GL_ARRAY_BUFFER,size,data, GL_STATIC_DRAW);
+    glNamedBufferData(GL_ARRAY_BUFFER, static_cast<uint32_t>(size),data, Rhi::BufferUsageToOpenglUsage(bufferUsage));
 }
+
+void VBO::UpdateData(const size_t offset, const size_t size, const void* const data)
+{
+    glNamedBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
+}
+
 
 void VBO::ComputeDivisor(const VBODescriptor& vbodescriptor)
 {
@@ -40,5 +41,15 @@ void VBO::ComputeDivisor(const VBODescriptor& vbodescriptor)
         glVertexAttribDivisor(attributeDivisor.index, attributeDivisor.divisor);
     }
     
+}
+
+void VBO::BindBuffer() const
+{
+    glBindBuffer(GL_ARRAY_BUFFER,m_Id);
+}
+
+void VBO::UnBind() const
+{
+    glBindBuffer(GL_ARRAY_BUFFER,0);
 }
 

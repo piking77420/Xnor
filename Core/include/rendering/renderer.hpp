@@ -7,6 +7,8 @@
 #include "material.hpp"
 #include "viewport.hpp"
 #include "render_systems/animation_render.hpp"
+#include "render_systems/font_pass.hpp"
+#include "render_systems/gui_pass.hpp"
 #include "render_systems/light_manager.hpp"
 #include "render_systems/skybox_renderer.hpp"
 #include "resource/model.hpp"
@@ -72,19 +74,21 @@ private:
      SkyboxRenderer m_SkyboxRenderer;
      PostProcessPass m_PostProcessPass;
      AnimationRender m_AnimationRender;
+     FontPass m_FontPass;
+     GuiPass m_GuiPass;
+    
      std::vector<const MeshRenderer*> m_MeshRenderers;
-
      mutable Frustum m_Frustum;
     
-    Pointer<Shader> m_GBufferShader;
-    Pointer<Shader> m_GBufferShaderLit;
+     Pointer<Shader> m_GBufferShader;
+     Pointer<Shader> m_GBufferShaderLit;
     
-    Pointer<Shader> m_Forward;
-    Pointer<Shader> m_DrawTextureToScreenShader;
-    Pointer<Shader> m_GizmoShader;
+     Pointer<Shader> m_Forward;
+     Pointer<Shader> m_DrawTextureToScreenShader;
+     Pointer<Shader> m_GizmoShader;
     
-    Pointer<Model> m_Quad;
-    Pointer<Model> m_Cube;
+     Pointer<Model> m_Quad;
+     Pointer<Model> m_Cube;
 
     /// @brief Update All the infos of the current frame lights, animation, etc...
     /// @param scene The scene

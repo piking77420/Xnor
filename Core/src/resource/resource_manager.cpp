@@ -7,6 +7,7 @@
 #include "file/file_manager.hpp"
 #include "resource/audio_track.hpp"
 #include "resource/compute_shader.hpp"
+#include "resource/font.hpp"
 #include "resource/mesh.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
@@ -43,6 +44,8 @@ void ResourceManager::LoadAll()
                 Load<Skeleton>(file, false);
             else if (std::ranges::find(AudioTrack::FileExtensions, file->GetExtension()) != AudioTrack::FileExtensions.end())
                 Load<AudioTrack>(file, false);
+            else if (std::ranges::find(Font::FileExtensions, file->GetExtension()) != Font::FileExtensions.end())
+                Load<Font>(file, false);
         }
     );
 

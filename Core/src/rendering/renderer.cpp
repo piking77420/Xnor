@@ -153,19 +153,18 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
     m_Forward->Use();
     DrawMeshRendersByType(MaterialType::Lit, scene);
     m_Forward->Unuse();
-
-    if (isEditor)
-    {
-        DrawAabb(meshRenderers);
-    }
-
-    m_SkyboxRenderer.DrawSkymap(m_Cube, scene.skybox);
-
+    
     if (isEditor)
     {
         m_LightManager.DrawLightGizmo(*viewport.camera, *World::scene);
+        DrawAabb(meshRenderers);
     }
-
+    else
+    {
+        m_FontPass.RenderFont(scene,viewport);
+    }
+    
+    m_SkyboxRenderer.DrawSkymap(m_Cube, scene.skybox);
     viewportData.colorPass.EndRenderPass();
 }
 

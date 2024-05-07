@@ -759,6 +759,24 @@ struct VBODescriptor
 
 };
 
+enum class DataAlignement
+{
+	Pack,
+	UnPack
+};
 
+enum class BufferUsage
+{
+	StreamDraw,
+	StreamRead,
+	StreamCopy,
+	StaticDraw,
+	StaticRead,
+	StaticCopy,
+	DynamicDraw,
+	DrawRead,
+	ReadCopy,
+	
+};
 
 END_XNOR_CORE

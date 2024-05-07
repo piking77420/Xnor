@@ -9,6 +9,7 @@
 #include "magic_enum/magic_enum.hpp"
 #include "rendering/frame_buffer.hpp"
 #include "rendering/render_pass.hpp"
+#include "resource/resource_manager.hpp"
 #include "resource/shader.hpp"
 #include "utils/logger.hpp"
 
@@ -24,12 +25,6 @@ void Rhi::SetViewport(const Vector2i screenOffset, const Vector2i screenSize)
 	glViewport(screenOffset.x, screenOffset.y, screenSize.x, screenSize.y);
 }
 
-void Rhi::DrawQuad(const uint32_t quadId)
-{
-	const ModelInternal model = m_ModelMap.at(quadId);
-	glBindVertexArray(model.vao);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-}
 
 void Rhi::BeginRenderPassInternal(const RenderPassBeginInfo& beginInfo)
 {
@@ -129,6 +124,12 @@ void Rhi::DrawModel(DrawMode::DrawMode drawMode,const uint32_t modelId)
 	
 	
 	glDrawElements(DrawModeToOpengl(drawMode), static_cast<GLsizei>(model.nbrOfIndicies), GL_UNSIGNED_INT, nullptr);
+}
+
+void Rhi::DrawArray(DrawMode::DrawMode drawMode,uint32_t first, uint32_t count)
+{
+	glDrawArrays(GL_TRIANGLES, first, count);
+
 }
 
 void Rhi::DestroyProgram(const uint32_t shaderId)
@@ -1407,6 +1408,58 @@ uint32_t Rhi::DrawModeToOpengl(DrawMode::DrawMode drawMode)
 		
 	}
 
+}
+
+void Rhi::SetPixelStore(const DataAlignement alignement, const int32_t value)
+{
+	GLuint alignementOpengl {};
+	switch (alignement)
+	{
+	case DataAlignement::Pack:
+		alignementOpengl = GL_PACK_ALIGNMENT;
+		break;
+	case DataAlignement::UnPack:
+		alignementOpengl = GL_UNPACK_ALIGNMENT;
+		break;
+	}
+
+	glPixelStorei(alignementOpengl, value);
+}
+
+uint32_t Rhi::BufferUsageToOpenglUsage(BufferUsage usage)
+{
+	switch (usage)
+	{
+	case BufferUsage::StreamDraw:
+		return GL_STREAM_DRAW;
+		
+	case BufferUsage::StreamRead:
+		return GL_STREAM_READ;
+		
+	case BufferUsage::StreamCopy:
+		return GL_STREAM_COPY;
+		
+	case BufferUsage::StaticDraw:
+		return GL_STATIC_DRAW;
+		
+	case BufferUsage::StaticRead:
+		return GL_STATIC_READ;
+		
+	case BufferUsage::StaticCopy:
+		return GL_STATIC_COPY;
+		
+	case BufferUsage::DynamicDraw:
+		return GL_DYNAMIC_DRAW;
+		
+	case BufferUsage::DrawRead:
+		return GL_DYNAMIC_READ;
+		
+	case BufferUsage::ReadCopy:
+		return GL_DYNAMIC_COPY;
+		
+	}
+
+	return GL_DYNAMIC_DRAW;
 }
 
 void Rhi::OpenglDebugCallBack(const uint32_t source, const uint32_t type, const uint32_t id, const uint32_t severity, const int32_t, const char_t* const message, const void* const)
