@@ -1,9 +1,10 @@
 ﻿#pragma once
+#include "gui_component.hpp"
 #include "resource/font.hpp"
 #include "scene/component.hpp"
 
 BEGIN_XNOR_CORE
-class TexteComponent : public Component
+class TexteComponent : public GuiComponent
 {
 public:
     XnorCore::Pointer<XnorCore::Font> font;
@@ -11,9 +12,7 @@ public:
     std::string text;
 
     XnorCore::Colorf color;
-
-    Vector2 screenSpaceTransform;
-
+    
     float_t police;
 
     DEFAULT_COPY_MOVE_OPERATIONS(TexteComponent)

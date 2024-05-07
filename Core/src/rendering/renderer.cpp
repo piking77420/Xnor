@@ -32,6 +32,7 @@ void Renderer::Initialize()
     m_LightManager.InitResources();
     m_PostProcessPass.Init();
     m_AnimationRender.InitResources();
+    m_GuiPass.Init();
     Rhi::PrepareRendering();
 }
 
@@ -153,18 +154,19 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
     m_Forward->Use();
     DrawMeshRendersByType(MaterialType::Lit, scene);
     m_Forward->Unuse();
-    
+    m_SkyboxRenderer.DrawSkymap(m_Cube, scene.skybox);
+
     if (isEditor)
     {
-        m_LightManager.DrawLightGizmo(*viewport.camera, *World::scene);
         DrawAabb(meshRenderers);
+        m_LightManager.DrawLightGizmo(*viewport.camera, *World::scene);
     }
     else
     {
         m_FontPass.RenderFont(scene,viewport);
+        m_GuiPass.RenderGui(scene,viewport);
     }
-    
-    m_SkyboxRenderer.DrawSkymap(m_Cube, scene.skybox);
+
     viewportData.colorPass.EndRenderPass();
 }
 

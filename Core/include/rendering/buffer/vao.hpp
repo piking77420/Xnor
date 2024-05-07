@@ -9,7 +9,9 @@ public:
 
     DEFAULT_COPY_MOVE_OPERATIONS(VAO)
 
-    VAO();
+    void Init();
+
+    VAO() = default;
 
     ~VAO();
 
@@ -18,7 +20,7 @@ public:
     void UnBindBuffer() const;
 
 private:
-    uint32_t m_Id;
+    uint32_t m_Id = 0;
 };
 
 END_XNOR_CORE

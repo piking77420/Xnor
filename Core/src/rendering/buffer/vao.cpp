@@ -14,12 +14,13 @@ void VAO::UnBindBuffer() const
     glBindVertexArray(0);
 }
 
-VAO::VAO()
+void VAO::Init()
 {
     glGenVertexArrays(1, &m_Id);
 }
 
 VAO::~VAO()
 {
-    glDeleteBuffers(1, &m_Id);
+    if (glIsBuffer(m_Id))
+        glDeleteBuffers(1, &m_Id);
 }

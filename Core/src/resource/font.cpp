@@ -20,6 +20,7 @@ bool_t Font::Load(const Pointer<File>& file)
 
 void Font::CreateInInterface()
 {
+    /*
     FT_Library ft;
     if (FT_Init_FreeType(&ft))
     {
@@ -72,7 +73,7 @@ void Font::CreateInInterface()
 
     FT_Done_Face(face);
     FT_Done_FreeType(ft);
-    m_LoadedInInterface = true;
+    m_LoadedInInterface = true;*/
 
 }
 

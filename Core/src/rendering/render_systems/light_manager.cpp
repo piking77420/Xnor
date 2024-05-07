@@ -278,11 +278,14 @@ void LightManager::ComputeShadowSpotLight(const Scene& scene, Renderer& renderer
 		
 		Camera cam;
 		cam.position = m_SpotLights[i]->entity->transform.GetPosition();
-		cam.LookAt(cam.position + m_SpotLights[i]->GetLightDirection());
+		cam.front = m_SpotLights[i]->GetLightDirection();
+		cam.up = Vector3::UnitY();
+		cam.right = Vector3::Cross(cam.front, cam.up).Normalized();
 		cam.near = m_SpotLights[i]->near;
 		cam.far = m_SpotLights[i]->far;
 		cam.GetVp(SpotLightShadowMapSize, &m_GpuLightData->spotlightSpaceMatrix[i]);
-		
+
+	
 		
 		m_ShadowFrameBuffer->AttachTextureLayer(*m_SpotLightShadowMapTextureArray, Attachment::Depth, 0, static_cast<uint32_t>(i));
 

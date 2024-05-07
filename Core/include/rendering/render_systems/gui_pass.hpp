@@ -2,6 +2,7 @@
 #include "core.hpp"
 #include "resource/shader.hpp"
 #include "scene/scene.hpp"
+#include "scene/component/button.hpp"
 #include "utils/pointer.hpp"
 
 BEGIN_XNOR_CORE
@@ -12,14 +13,22 @@ public:
 
     XNOR_ENGINE ~GuiPass() = default;
     
-    XNOR_ENGINE void RenderGui(const Scene& scene);
+    XNOR_ENGINE void RenderGui(const Scene& scene, const Viewport& viewport) const;
+
+    XNOR_ENGINE void Init();
     
 private:
-    Pointer<Shader> GuiShader;
+    Pointer<Shader> m_GuiShader;
+
+    Pointer<Model> m_Quad;
+
+    mutable std::vector<const Button*> m_Buttons;
+
+    mutable std::vector<const Image*> m_Images;
 
     XNOR_ENGINE void RenderButton();
-
-    XNOR_ENGINE void RenderImage();
+    
+    XNOR_ENGINE void RenderImage() const;
 };
 
 END_XNOR_CORE

@@ -9,9 +9,10 @@ using namespace XnorCore;
 
 void FontPass::InitResources()
 {
+    return;
     m_FontShader = ResourceManager::Get<Shader>("font_shader");
 
-    BlendFunction blendFunction = {.isBlending = true, .sValue = BlendValue::SrcColor, .dValue = BlendValue::OneMinusSrcAlpha, .blendEquation = BlendEquation::Add};
+    constexpr BlendFunction blendFunction = {.isBlending = true, .sValue = BlendValue::SrcColor, .dValue = BlendValue::OneMinusSrcAlpha, .blendEquation = BlendEquation::Add};
     
     m_FontShader->SetBlendFunction(blendFunction);
     m_FontShader->CreateInInterface();
@@ -20,6 +21,7 @@ void FontPass::InitResources()
     m_FontShader->SetInt("text",CharBindIndex);
     m_FontShader->Unuse();
 
+    m_vaoQuad.Init();
     m_vaoQuad.BindBuffer();
     
     
@@ -48,8 +50,12 @@ void FontPass::InitResources()
 
 void FontPass::RenderFont(const Scene& scene, const Viewport& viewport) const
 {
+    
     std::vector<const TexteComponent*> textComponents;
     scene.GetAllComponentOfType<TexteComponent>(&textComponents);
+
+    if (textComponents.empty())
+        return;
 
     const Vector2i screenSize = viewport.viewPortSize;
     
@@ -59,7 +65,7 @@ void FontPass::RenderFont(const Scene& scene, const Viewport& viewport) const
     {
         const std::string& text = texteComponent->text;
         m_vaoQuad.BindBuffer();
-        Vector2 charPos = texteComponent->screenSpaceTransform; 
+        Vector2 charPos = texteComponent->screenTransform; 
         
         for (const char_t c : text)
         {
@@ -83,7 +89,7 @@ void FontPass::RenderFont(const Scene& scene, const Viewport& viewport) const
             m_vboQuad.UpdateData(0, sizeof(vertices),vertices);
             
             m_FontShader->SetVec3("color",static_cast<Vector3>(texteComponent->color));
-            const Matrix ortho = Camera::Ortho(0.f,screenSize.x,0.f,screenSize.y,0.1f,1000.f);
+            const Matrix ortho = Camera::Ortho(0.f, static_cast<float_t>(screenSize.x),0.f,static_cast<float_t>(screenSize.y),0.1f,1000.f);
             m_FontShader->SetMat4("projection",ortho);
             
             
