@@ -16,6 +16,7 @@
 #include "windows/content_browser.hpp"
 #include "windows/debug_console.hpp"
 #include "windows/editor_window.hpp"
+#include "windows/footer_window.hpp"
 #include "windows/header_window.hpp"
 #include "windows/hierarchy.hpp"
 #include "windows/inspector.hpp"
@@ -89,6 +90,7 @@ void Editor::CreateDefaultWindows()
 	m_UiWindows.push_back(new RenderWindow(this, *gameViewPort));
 	m_UiWindows.push_back(new EditorWindow(this, data.editorViewPort));
 	m_UiWindows.push_back(new DebugConsole(this));
+	m_UiWindows.push_back(new FooterWindow(this));
 
 	if (XnorCore::FileManager::Contains(SerializedScenePath))
 		data.currentScene = XnorCore::FileManager::Get<XnorCore::File>(SerializedScenePath);
@@ -286,12 +288,6 @@ void Editor::UpdateWindows()
 	ImGui::Begin("Debug");
 	if (ImGui::Button("Create C# TestScript entity"))
 		XnorCore::DotnetRuntime::GetAssembly("Game")->ProcessTypes();
-	if (ImGui::Button("Build C# Project"))
-		XnorCore::DotnetRuntime::BuildGameProject();
-	if (ImGui::Button("Reload C# Assemblies"))
-		XnorCore::DotnetRuntime::ReloadAllAssemblies();
-	if (ImGui::Button("Build and reload Game project"))
-		XnorCore::DotnetRuntime::BuildAndReloadProject();
 	ImGui::End();
 }
 

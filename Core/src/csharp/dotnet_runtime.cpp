@@ -63,6 +63,9 @@ bool_t DotnetRuntime::Initialize()
 void DotnetRuntime::Shutdown()
 {
     Logger::LogInfo("Shutting down .NET runtime");
+    
+    if (m_ProjectReloadingThread.joinable())
+        m_ProjectReloadingThread.join();
 
     if (!m_LoadedAssemblies.empty())
         UnloadAllAssemblies();
@@ -118,11 +121,23 @@ void DotnetRuntime::ReloadAllAssemblies()
 {
     std::vector<std::string> assemblies;
     std::ranges::transform(m_LoadedAssemblies, std::back_inserter(assemblies), [](const decltype(m_LoadedAssemblies)::value_type& loadedAssembly) { return loadedAssembly->GetName(); });
+
+    m_ProjectReloadingProgress += 0.05f;
+    
     UnloadAllAssemblies(true);
+
+    m_ProjectReloadingProgress += 0.05f;
+    
+    const float_t remainingProgress = 1.f - m_ProjectReloadingProgress;
+    const size_t assemblyCount = assemblies.size();
     
     for (auto&& assembly : assemblies)
     {
-        if (LoadAssembly(assembly))
+        const bool_t loadResult = LoadAssembly(assembly);
+
+        m_ProjectReloadingProgress += remainingProgress / static_cast<float_t>(assemblyCount);
+        
+        if (loadResult)
             continue;
 
         Logger::LogWarning("Couldn't reload assembly {}", assembly);
@@ -147,9 +162,11 @@ bool_t DotnetRuntime::BuildGameProject(const bool_t asynchronous)
     static constexpr const char_t* const TempFile = "xnor_dotnet_build.txt";
     const std::filesystem::path tempPath = std::filesystem::temp_directory_path() / TempFile;
 
-    using namespace std::string_literals;
+    m_ProjectReloadingProgress = 0.1f;
 
-    const int32_t commandResult = Utils::TerminalCommand("dotnet build "s + Dotnet::GameProjectBuildOptions + " \"" + absolute(gameProjectDirectory).string() + "\" 1> \"" + tempPath.string() + '"', asynchronous);
+    const int32_t commandResult = Utils::TerminalCommand(std::string("dotnet build ") + Dotnet::GameProjectBuildOptions + " \"" + absolute(gameProjectDirectory).string() + "\" 1> \"" + tempPath.string() + '"', asynchronous);
+
+    m_ProjectReloadingProgress = 0.5f;
 
     // In case a warning/error occured, read the output file to understand what happened
     std::ifstream file(tempPath);
@@ -189,7 +206,12 @@ bool_t DotnetRuntime::BuildGameProject(const bool_t asynchronous)
     if (!diagnostics.empty())
     {
         for (auto&& str : diagnostics)
-            Logger::LogWarning("[.NET BUILD] {}", str);
+        {
+            if (str.find(": warning") != std::string::npos)
+                Logger::LogWarning("[.NET BUILD] {}", str);
+            else
+                Logger::LogError("[.NET BUILD] {}", str);
+        }
     }
 
     file.close();
@@ -198,9 +220,13 @@ bool_t DotnetRuntime::BuildGameProject(const bool_t asynchronous)
 
     if (commandResult == 0)
     {
+        m_ProjectReloadingProgress = 0.6f;
+
         Logger::LogInfo("Build succeeded");
         return true;
     }
+
+    m_ProjectReloadingProgress = 1.f;
     
     Logger::LogError("Build failed");
     return false;
@@ -209,6 +235,7 @@ bool_t DotnetRuntime::BuildGameProject(const bool_t asynchronous)
 void DotnetRuntime::BuildAndReloadProject()
 {
     m_ReloadingProjectAsync = true;
+    m_ProjectReloadingProgress = 0.f;
 
     if (m_ProjectReloadingThread.joinable())
         m_ProjectReloadingThread.join();
@@ -218,20 +245,20 @@ void DotnetRuntime::BuildAndReloadProject()
         {
             if (BuildGameProject(false))
                 ReloadAllAssemblies();
+            else
+                Logger::LogError("Couldn't build {} .NET project", Dotnet::GameProjectName);
+            
+            m_ProjectReloadingProgress = 1.f;
             m_ReloadingProjectAsync = false;
         }
     );
 }
 
-bool_t DotnetRuntime::GetInitialized()
-{
-    return m_Initialized;
-}
+bool_t DotnetRuntime::GetInitialized() { return m_Initialized; }
 
-bool_t DotnetRuntime::IsReloadingProject()
-{
-    return m_ReloadingProjectAsync;
-}
+bool_t DotnetRuntime::IsReloadingProject() { return m_ReloadingProjectAsync; }
+
+float_t DotnetRuntime::GetProjectReloadingProgress() { return m_ProjectReloadingProgress; }
 
 bool DotnetRuntime::CheckDotnetInstalled()
 {

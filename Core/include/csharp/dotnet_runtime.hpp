@@ -53,6 +53,9 @@ public:
     /// @brief Returns whether a thread is currently building/reloading the .NET project.
     XNOR_ENGINE static bool_t IsReloadingProject();
 
+    /// @brief Returns the current building/reloading progress of the .NET project. Only valid if @c IsReloadingProject() returns @c true
+    XNOR_ENGINE static float_t GetProjectReloadingProgress();
+
 private:
     XNOR_ENGINE static constexpr int32_t DotnetVersion = 5;
     
@@ -69,6 +72,9 @@ private:
     XNOR_ENGINE static inline std::filesystem::path m_AssembliesPath;
 
     XNOR_ENGINE static inline bool_t m_ReloadingProjectAsync = false;
+
+    /// @brief Project reloading progress between 0 and 1. Only valid if @c m_ReloadingProjectAsync is @c true
+    XNOR_ENGINE static inline float_t m_ProjectReloadingProgress = 0.f;
 
     XNOR_ENGINE static inline std::thread m_ProjectReloadingThread;
 

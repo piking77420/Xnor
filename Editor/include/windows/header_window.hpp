@@ -24,7 +24,7 @@ private:
     void DisplayOnEditor();
     void DisplayOnPlay();
 
-    Vector2 m_ImagePos[2];
+    std::array<Vector2, 2> m_ImagePos;
     float_t m_ImageSize = 1.f;
     
     XnorCore::Pointer<XnorCore::Texture> m_PauseButton;

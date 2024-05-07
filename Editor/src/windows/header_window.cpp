@@ -15,23 +15,24 @@ using namespace XnorEditor;
 HeaderWindow::HeaderWindow(Editor* editor)
     : UiWindow(editor, "Header")
 {
+    windowFlags |= ImGuiWindowFlags_NoScrollbar;
+    
     m_PauseButton = XnorCore::ResourceManager::Get<XnorCore::Texture>("assets_internal/editor/ui/pause_button.png");
     m_PlayButton = XnorCore::ResourceManager::Get<XnorCore::Texture>("assets_internal/editor/ui/play_button.png");
     m_StopButton = XnorCore::ResourceManager::Get<XnorCore::Texture>("assets_internal/editor/ui/stop_button.png");
-    windowFlags = ImGuiWindowFlags_NoScrollbar;
 }
 
 void HeaderWindow::Display()
 {
     // Value to offset the little gray image from imgui
-    constexpr size_t nbrOfImages = 2;
+    constexpr size_t imageCount = 2;
 
     m_ImageSize = TileBaseSize;
     
-    for (size_t i = 0; i < nbrOfImages; i++)
+    for (size_t i = 0; i < imageCount; i++)
     {
         constexpr float_t constantOffsetValue = 1.5f;
-        const float_t offSet = m_ImageSize * static_cast<float_t>(nbrOfImages - (i + 1)) * constantOffsetValue;
+        const float_t offSet = m_ImageSize * static_cast<float_t>(imageCount - (i + 1)) * constantOffsetValue;
         const float_t x = (static_cast<float_t>(m_Size.x) - m_ImageSize) * 0.5f;
         const float_t y = (static_cast<float_t>(m_Size.y) - m_ImageSize) * 0.5f;
 
@@ -47,8 +48,8 @@ void HeaderWindow::Display()
 
 void HeaderWindow::DisplayOnEditor()
 {
-    const ImVec2 currentimagePos = { m_ImagePos[0].x,m_ImagePos[0].y };
-    ImGui::SetCursorPos(currentimagePos);
+    const ImVec2 currentImagePos = { m_ImagePos[0].x,m_ImagePos[0].y };
+    ImGui::SetCursorPos(currentImagePos);
 
     if (ImGui::ImageButton(XnorCore::Utils::IntToPointer<ImTextureID>(m_PlayButton->GetId()), { m_ImageSize, m_ImageSize }))
     {
@@ -59,9 +60,9 @@ void HeaderWindow::DisplayOnEditor()
 
 void HeaderWindow::DisplayOnPlay()
 {
-    ImVec2 currentimagePos = { m_ImagePos[1].x, m_ImagePos[1].y };
+    ImVec2 currentImagePos = { m_ImagePos[1].x, m_ImagePos[1].y };
 
-    ImGui::SetCursorPos(currentimagePos);
+    ImGui::SetCursorPos(currentImagePos);
 
     if (ImGui::ImageButton(XnorCore::Utils::IntToPointer<ImTextureID>(m_PauseButton->GetId()), { m_ImageSize, m_ImageSize }))
     {
@@ -69,8 +70,8 @@ void HeaderWindow::DisplayOnPlay()
         return;
     }
     
-    currentimagePos = { m_ImagePos[0].x, m_ImagePos[0].y };
-    ImGui::SetCursorPos(currentimagePos);
+    currentImagePos = { m_ImagePos[0].x, m_ImagePos[0].y };
+    ImGui::SetCursorPos(currentImagePos);
     
     if (ImGui::ImageButton(XnorCore::Utils::IntToPointer<ImTextureID>(m_StopButton->GetId()), { m_ImageSize, m_ImageSize }))
     {
