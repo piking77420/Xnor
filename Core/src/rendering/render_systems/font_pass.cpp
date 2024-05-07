@@ -70,7 +70,7 @@ void FontPass::RenderFont(const Scene& scene, const Viewport& viewport) const
             const float_t w = character.size.x * texteComponent->police;
             const float_t h = character.size.y * texteComponent->police;
             
-            float_t vertices[6][4] = {
+            const float_t vertices[6][4] = {
                 { xpos,     ypos + h,   0.0f, 0.0f },            
                 { xpos,     ypos,       0.0f, 1.0f },
                 { xpos + w, ypos,       1.0f, 1.0f },
@@ -79,18 +79,18 @@ void FontPass::RenderFont(const Scene& scene, const Viewport& viewport) const
                 { xpos + w, ypos,       1.0f, 1.0f },
                 { xpos + w, ypos + h,   1.0f, 0.0f }           
             };
-            character.texture.BindTexture(CharBindIndex);
+            character.texture->BindTexture(CharBindIndex);
             m_vboQuad.UpdateData(0, sizeof(vertices),vertices);
             
             m_FontShader->SetVec3("color",static_cast<Vector3>(texteComponent->color));
-            Matrix ortho = Camera::Ortho(0.f,screenSize.x,0.f,screenSize.y,0.1f,1000.f);
+            const Matrix ortho = Camera::Ortho(0.f,screenSize.x,0.f,screenSize.y,0.1f,1000.f);
             m_FontShader->SetMat4("projection",ortho);
             
             
             
             Rhi::DrawArray(DrawMode::Triangles,0,6);
             
-            character.texture.UnbindTexture(CharBindIndex);
+            character.texture->UnbindTexture(CharBindIndex);
             charPos.x += (character.advance >> 6) * texteComponent->police; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
 
         }

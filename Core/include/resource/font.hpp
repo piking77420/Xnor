@@ -23,7 +23,7 @@ public:
 
     struct Character
     {
-        Texture texture;
+        Texture* texture {nullptr};
         Vector2i size;       // Size of glyph
         Vector2i bearing;    // Offset from baseline to left/top of glyph
         uint32_t advance;

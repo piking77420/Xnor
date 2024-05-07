@@ -18,7 +18,7 @@ public:
     /// @param size Data size
     /// @param data Data
     /// @param bufferUsage how the buffer will be use
-    void Allocate(size_t size, const void* const data = nullptr, BufferUsage usage);
+    void Allocate(size_t size, const void* const data, BufferUsage usage);
 
     void UpdateData(size_t offset, size_t size, const void* const data = nullptr);
     

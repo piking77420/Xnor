@@ -9,6 +9,11 @@ void VAO::BindBuffer() const
     glBindVertexArray(m_Id);
 }
 
+void VAO::UnBindBuffer() const
+{
+    glBindVertexArray(0);
+}
+
 VAO::VAO()
 {
     glGenVertexArrays(1, &m_Id);
