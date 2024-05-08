@@ -5,17 +5,24 @@
 
 using namespace XnorEditor;
 
+void RenderWindow::FetchInfo()
+{
+    UiWindow::FetchInfo();
+    XnorCore::Input::UpdateBindedWindowInfo(m_InputBindId, GetBindWindoInfo());
+}
+
 RenderWindow::RenderWindow(Editor* editor, XnorCore::Viewport& viewport)
-    : UiWindow(editor, "Game Preview"), m_Viewport(&viewport)
+    : UiWindow(editor, "Game Preview"), m_Viewport(&viewport), m_InputBindId(XnorCore::Input::GetBindingId())
 {
     m_Viewport->Init(XnorCore::Window::GetSize());
 }
 
 RenderWindow::RenderWindow(Editor* editor, const std::string& title, XnorCore::Viewport& viewport)
-    : UiWindow(editor, title) , m_Viewport(&viewport)
+    : UiWindow(editor, title) , m_Viewport(&viewport), m_InputBindId(XnorCore::Input::GetBindingId())
 {
     m_Viewport->Init(XnorCore::Window::GetSize());
 }
+
 
 void RenderWindow::Display()
 {
@@ -33,6 +40,20 @@ void RenderWindow::OnApplicationRendering()
 
     if (m_Viewport->frameBuffer && m_Viewport->camera != nullptr)
         m_Editor->renderer.RenderViewport(*m_Viewport, *XnorCore::World::scene);
+}
+
+XnorCore::Input::BindedWindowInfo RenderWindow::GetBindWindoInfo() const
+{
+    auto& style = ImGui::GetStyle();
+    const Vector2 windowPadding = style.WindowPadding * 0.5f;
+    const Vector2 framePadding = style.FramePadding * 0.5f;
+    constexpr float_t TiletBarOffSet = 15.f; 
+    
+    Vector2 pos = static_cast<Vector2>(m_Position);
+    pos.x += windowPadding.x;
+    pos.y += windowPadding.y + framePadding.y + TiletBarOffSet;
+
+    return {pos, static_cast<Vector2>(m_Size), m_Viewport->isEditor};    
 }
 
 

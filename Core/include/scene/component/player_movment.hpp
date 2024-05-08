@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "core.hpp"
+#include "physics/components/collider.hpp"
 #include "scene/component.hpp"
 
 BEGIN_XNOR_CORE
@@ -9,8 +10,9 @@ private:
     REFLECTABLE_IMPL(PlayerMovment)
 
 public:
-
     float_t speed = 1.f;
+
+    Collider* collider;
     
     DEFAULT_COPY_MOVE_OPERATIONS(PlayerMovment)
 
@@ -19,6 +21,8 @@ public:
     ~PlayerMovment() = default;
 
     void Update() override;
+
+    void Begin() override;
 private:
     void Movement();
     

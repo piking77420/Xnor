@@ -19,6 +19,13 @@ class Input
     STATIC_CLASS(Input)
     
 public:
+    struct BindedWindowInfo
+    {
+        Vector2 windowPos;
+        Vector2 windowSize;
+        bool_t isEditor = false;
+    };
+    
     /// @brief Whether the mouse is locked
     XNOR_ENGINE static inline bool_t mouseLocked = false;
     
@@ -56,7 +63,16 @@ public:
     /// @brief Updates the input manager
     XNOR_ENGINE static void Update();
 
+    // Retrun A array indexOf WindowInfo
+    XNOR_ENGINE static uint32_t GetBindingId();
+
+    XNOR_ENGINE static void UpdateBindedWindowInfo(uint32_t binding, BindedWindowInfo windowInfo);
+    
+    XNOR_ENGINE static void GetWindowBindedInfo(std::vector<BindedWindowInfo>* BindedWindowsInfo);
 private:
+    XNOR_ENGINE static inline std::vector<BindedWindowInfo> m_BindedWindowInfo;
+
+    
     using KeyStatuses = std::array<bool_t, KeyStatus::Count>;
     using MouseStatuses = std::array<bool_t, MouseButtonStatus::Count>;
 

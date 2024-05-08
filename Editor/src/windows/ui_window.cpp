@@ -45,3 +45,4 @@ void UiWindow::FetchInfo()
 void UiWindow::OnApplicationRendering()
 {
 }
+

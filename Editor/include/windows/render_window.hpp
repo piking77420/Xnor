@@ -10,10 +10,11 @@ BEGIN_XNOR_EDITOR
 class RenderWindow : public UiWindow
 {
 public:
-    explicit RenderWindow(Editor* editor, XnorCore::Viewport& viewport);
     
-    explicit RenderWindow(Editor* editor, const std::string& title, XnorCore::Viewport& viewport);
+    explicit RenderWindow(Editor* editor, XnorCore::Viewport& viewport);
 
+    explicit RenderWindow(Editor* editor, const std::string& title, XnorCore::Viewport& viewport);
+    
     ~RenderWindow() override = default;
     
     DEFAULT_COPY_MOVE_OPERATIONS(RenderWindow);
@@ -22,8 +23,14 @@ public:
 
     void OnApplicationRendering() override;
 
+    void FetchInfo() override;
+
+    XnorCore::Input::BindedWindowInfo GetBindWindoInfo() const;
+
 protected:
     XnorCore::Viewport* m_Viewport = nullptr;
+
+    uint32_t m_InputBindId = -1;
 };
 
 END_XNOR_EDITOR

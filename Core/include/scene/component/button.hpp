@@ -5,17 +5,23 @@
 #include "Maths/vector2i.hpp"
 
 BEGIN_XNOR_CORE
-class Button : public GuiComponent
+class Button : public Component
 {
+    REFLECTABLE_IMPL(Button)
 public:
     Image* componentTarget { nullptr };
 
-    ~Button() override;
+    ~Button() override = default;
 
     void Update() override;
     
 private:
-    
+    void ButtonUpdate() const;
 };
 
 END_XNOR_CORE
+
+REFL_AUTO(
+    type(XnorCore::Button, bases<XnorCore::Component>)
+    //field(componentTarget)
+);

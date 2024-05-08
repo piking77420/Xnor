@@ -143,7 +143,7 @@ void Editor::SetupImGuiStyle() const
 	style.Alpha = 1.0f;
 	style.DisabledAlpha = 0.6000000238418579f;
 	style.WindowPadding = ImVec2(8.0f, 8.0f);
-	style.WindowRounding = 0.0f;
+	style.WindowRounding = 0.5f;
 	style.WindowBorderSize = 1.0f;
 	style.WindowMinSize = ImVec2(32.0f, 32.0f);
 	style.WindowTitleAlign = ImVec2(0.0f, 0.5f);
@@ -343,7 +343,6 @@ void Editor::Update()
 		BeginFrame();
 		CheckWindowResize();
 
-		Input::GetMousePosition<Vector2>();
 		listMutex.lock();
 		shadersToReload.Iterate([](decltype(shadersToReload)::Type* const param){ (*param)->Recompile(); });
 		shadersToReload.Clear();

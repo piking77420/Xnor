@@ -38,6 +38,7 @@ void Renderer::Initialize()
 
 void Renderer::BeginFrame(const Scene& scene, const Viewport& viewport)
 {
+    Rhi::ClearBuffer(BufferFlag::ColorBit);
     scene.GetAllComponentOfType<MeshRenderer>(&m_MeshRenderers);
     PrepareOctree(scene);
     m_LightManager.BeginFrame(scene, viewport, *this);

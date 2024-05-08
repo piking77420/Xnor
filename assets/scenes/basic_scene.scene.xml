@@ -130,14 +130,14 @@
 			<name>PointLight</name>
 			<m_EntityId>A284C848-DC61-4853-A4-48-15-9D-CE-5D-73-BD</m_EntityId>
 			<transform>
-				<m_Position>-1 ; 3 ; -3</m_Position>
+				<m_Position>-0.022478878 ; 3 ; 1.4140348</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="PointLight">
-					<color>0 ; 1 ; 0.7218044 ; 1</color>
-					<intensity>100</intensity>
+					<color>1 ; 0 ; 0.19799805 ; 1</color>
+					<intensity>380</intensity>
 					<castShadow>true</castShadow>
 				</0>
 				<1 typeName="TestComponent">
@@ -167,7 +167,7 @@
 			<name>SpotLight</name>
 			<m_EntityId>8B8B51F5-90F0-405B-BE-3C-56-93-F2-7-34-F2</m_EntityId>
 			<transform>
-				<m_Position>0 ; 5 ; -4</m_Position>
+				<m_Position>-0.022478878 ; 5 ; 1.4140348</m_Position>
 				<m_EulerRotation>2.1487358 ; -0.03379201 ; 0.0065374174</m_EulerRotation>
 				<m_Scale>0.9999989 ; 1.0002674 ; 1.0002551</m_Scale>
 			</transform>
@@ -175,8 +175,8 @@
 				<0 typeName="SpotLight">
 					<cutOff>12.5</cutOff>
 					<outerCutOff>15</outerCutOff>
-					<color>1 ; 1 ; 1 ; 1</color>
-					<intensity>10000</intensity>
+					<color>1 ; 0 ; 0.19799805 ; 1</color>
+					<intensity>380</intensity>
 					<castShadow>true</castShadow>
 				</0>
 				<1 typeName="TestComponent">
@@ -198,7 +198,7 @@
 			<name>Capsule</name>
 			<m_EntityId>3843FD98-4FF2-4459-98-DA-67-D9-98-57-38-14</m_EntityId>
 			<transform>
-				<m_Position>-0.49245134 ; 1.2824633 ; 4.8032417</m_Position>
+				<m_Position>-1.0172284 ; 0.9799998 ; 3.9186933</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
@@ -209,7 +209,7 @@
 					<constraints>ConstraintRotation</constraints>
 					<m_IsStatic>false</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
-					<m_IsActive>false</m_IsActive>
+					<m_IsActive>true</m_IsActive>
 				</0>
 				<1 typeName="TestComponentPhysics">
 					<m_JumpForce>1000</m_JumpForce>
@@ -295,9 +295,10 @@
 			<m_Components>
 				<0 typeName="Image">
 					<image>73588105-EF48-4133-86-87-48-7F-A1-DA-91-AE</image>
-					<screenTransform>31.7 ; 29.6</screenTransform>
-					<size>20 ; 20</size>
+					<screenTransform>107.8 ; 76.6</screenTransform>
+					<size>20.5 ; 20</size>
 				</0>
+				<1 typeName="Button"/>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>

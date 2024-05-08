@@ -12,6 +12,12 @@ void PlayerMovment::Update()
     Movement();
 }
 
+void PlayerMovment::Begin()
+{
+    Component::Begin();
+    collider = entity->GetComponent<Collider>();
+}
+
 void PlayerMovment::Movement()
 {
     float_t scalar = Time::GetDeltaTime() * speed;
@@ -28,13 +34,15 @@ void PlayerMovment::Movement()
 
     if (Input::GetKey(Key::D))
         vec -= entity->transform.GetRight();
-
-    entity->transform.SetPosition(entity->transform.GetPosition() + vec * scalar); 
+    
+    collider->AddForce(vec * scalar);
+    
 }
 
 void PlayerMovment::CameraMovement()
 {
     Vector3 eulerRotation;
+
     
     
 }

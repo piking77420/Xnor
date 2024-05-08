@@ -9,6 +9,7 @@
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
 #include "rendering/light/spot_light.hpp"
+#include "scene/component/button.hpp"
 #include "scene/component/camera_component.hpp"
 #include "scene/component/gui_component.hpp"
 #include "scene/component/image.hpp"
@@ -115,6 +116,7 @@ void XnorFactory::RegisterAllTypes()
     // GUI
     RegisterType<GuiComponent>();
     RegisterType<Image>();
+    RegisterType<Button>();
 }
 
 std::string XnorFactory::GetTypeName(const size_t hash)

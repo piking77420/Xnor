@@ -35,19 +35,17 @@ public:
     [[nodiscard]]
     Vector2i GetSize() const;
     
-    void FetchInfo();
+    virtual void FetchInfo();
 
     // Whenever the window need to render after the update of the world
     virtual void OnApplicationRendering();
-
 protected:
     std::string m_WindowTitle = "Untitled";
     
-    bool m_IsFocused;
+    bool_t m_IsFocused;
     Vector2i m_Position;
     Vector2i m_Size;
-
-
+    
     Editor* m_Editor;
 };
 
