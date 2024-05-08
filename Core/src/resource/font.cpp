@@ -11,6 +11,7 @@
 using namespace XnorCore;
 
 
+
 bool_t Font::Load(const Pointer<File>& file)
 {
     bool_t returnValue = false;

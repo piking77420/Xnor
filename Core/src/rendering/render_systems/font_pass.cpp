@@ -89,7 +89,7 @@ void FontPass::RenderFont(const Scene& scene, const Viewport& viewport) const
             m_vboQuad.UpdateData(0, sizeof(vertices),vertices);
             
             m_FontShader->SetVec3("color",static_cast<Vector3>(texteComponent->color));
-            const Matrix ortho = Camera::Ortho(0.f, static_cast<float_t>(screenSize.x),0.f,static_cast<float_t>(screenSize.y),0.1f,1000.f);
+            const Matrix ortho = Matrix::Orthographic(0.f, static_cast<float_t>(screenSize.x),0.f,static_cast<float_t>(screenSize.y),0.1f,1000.f);
             m_FontShader->SetMat4("projection",ortho);
             
             

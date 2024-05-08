@@ -6,14 +6,14 @@
 			<m_EntityId>73C3991F-64C8-43BE-BA-FB-8F-9C-A2-38-C9-75</m_EntityId>
 			<transform>
 				<m_Position>0 ; 1 ; -2</m_Position>
-				<m_EulerRotation>-0.20254321 ; -0.80089265 ; 0.63451445</m_EulerRotation>
-				<m_Scale>1.0000008 ; 0.99999976 ; 0.99999994</m_Scale>
+				<m_EulerRotation>-0.20254232 ; -0.8008912 ; 1.2284114</m_EulerRotation>
+				<m_Scale>1.0000018 ; 1.0000001 ; 1</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="DirectionalLight">
 					<color>1 ; 1 ; 1 ; 1</color>
 					<intensity>4.5</intensity>
-					<castShadow>false</castShadow>
+					<castShadow>true</castShadow>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -64,7 +64,7 @@
 			<name>Sphere</name>
 			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
 			<transform>
-				<m_Position>-6 ; 1 ; -6</m_Position>
+				<m_Position>-6 ; 0.058427572 ; -6</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
@@ -130,14 +130,14 @@
 			<name>PointLight</name>
 			<m_EntityId>A284C848-DC61-4853-A4-48-15-9D-CE-5D-73-BD</m_EntityId>
 			<transform>
-				<m_Position>-5 ; 3 ; -3</m_Position>
+				<m_Position>-1 ; 3 ; -3</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="PointLight">
-					<color>0 ; 0 ; 0 ; 1</color>
-					<intensity>10000</intensity>
+					<color>0 ; 1 ; 0.7218044 ; 1</color>
+					<intensity>100</intensity>
 					<castShadow>true</castShadow>
 				</0>
 				<1 typeName="TestComponent">
@@ -198,15 +198,15 @@
 			<name>Capsule</name>
 			<m_EntityId>3843FD98-4FF2-4459-98-DA-67-D9-98-57-38-14</m_EntityId>
 			<transform>
-				<m_Position>0 ; 2 ; 1</m_Position>
-				<m_EulerRotation>0.6981317 ; -0 ; 0</m_EulerRotation>
+				<m_Position>-0.49245134 ; 1.2824633 ; 4.8032417</m_Position>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="CapsuleCollider">
 					<height>1</height>
 					<radius>1</radius>
-					<constraints/>
+					<constraints>ConstraintRotation</constraints>
 					<m_IsStatic>false</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
 					<m_IsActive>false</m_IsActive>
@@ -239,6 +239,9 @@
 					<dopplerEffect>true</dopplerEffect>
 					<m_Volume>1</m_Volume>
 				</4>
+				<5 typeName="PlayerMovment">
+					<speed>1.4</speed>
+				</5>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
@@ -247,9 +250,9 @@
 			<name>VikingRoom</name>
 			<m_EntityId>924CE8D3-CDEA-4D8A-86-BE-50-D-74-E7-AF-38</m_EntityId>
 			<transform>
-				<m_Position>1 ; 0 ; -6</m_Position>
-				<m_EulerRotation>-1.716861 ; 1.225529 ; -0.06609928</m_EulerRotation>
-				<m_Scale>1.0000046 ; 1.0000085 ; 1.0000095</m_Scale>
+				<m_Position>1 ; -0.6811248 ; -6</m_Position>
+				<m_EulerRotation>1.4891161 ; 0.097306624 ; -3.11912</m_EulerRotation>
+				<m_Scale>1.0000691 ; 1.0000364 ; 1.0000256</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">
@@ -285,15 +288,15 @@
 			<name>Image</name>
 			<m_EntityId>8D6CCF25-11EC-4D98-93-B1-9-52-18-49-EE-18</m_EntityId>
 			<transform>
-				<m_Position>0 ; 0 ; 0</m_Position>
+				<m_Position>0 ; 6.7 ; 0</m_Position>
 				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="Image">
-					<image>8F6DD5BC-E9BE-4E2A-A7-3-67-3A-42-CD-57-B6</image>
-					<screenTransform>6.2 ; 4.1</screenTransform>
-					<size>100 ; 100</size>
+					<image>73588105-EF48-4133-86-87-48-7F-A1-DA-91-AE</image>
+					<screenTransform>31.7 ; 29.6</screenTransform>
+					<size>20 ; 20</size>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>

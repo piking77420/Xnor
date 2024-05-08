@@ -11,7 +11,8 @@ public:
     Image* componentTarget { nullptr };
 
     ~Button() override;
-    
+
+    void Update() override;
     
 private:
     

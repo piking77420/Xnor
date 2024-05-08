@@ -13,6 +13,7 @@
 #include "scene/component/gui_component.hpp"
 #include "scene/component/image.hpp"
 #include "scene/component/mesh_renderer.hpp"
+#include "scene/component/player_movment.hpp"
 #include "scene/component/script_component.hpp"
 #include "scene/component/skinned_mesh_render.hpp"
 #include "scene/component/test_component.hpp"
@@ -105,6 +106,8 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<TestComponentPhysics>();
     RegisterType<CameraComponent>();
     RegisterType<SkinnedMeshRender>();
+    RegisterType<PlayerMovment>();
+
 
     RegisterType<AudioListener>();
     RegisterType<AudioSource>();

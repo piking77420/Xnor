@@ -49,6 +49,7 @@ Editor::Editor(const int32_t argc, const char_t* const* const argv)
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 	io.Fonts->AddFontDefault();
@@ -342,6 +343,7 @@ void Editor::Update()
 		BeginFrame();
 		CheckWindowResize();
 
+		Input::GetMousePosition<Vector2>();
 		listMutex.lock();
 		shadersToReload.Iterate([](decltype(shadersToReload)::Type* const param){ (*param)->Recompile(); });
 		shadersToReload.Clear();

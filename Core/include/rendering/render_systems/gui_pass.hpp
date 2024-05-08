@@ -13,7 +13,7 @@ public:
 
     XNOR_ENGINE ~GuiPass() = default;
     
-    XNOR_ENGINE void RenderGui(const Scene& scene, const Viewport& viewport) const;
+    XNOR_ENGINE void RenderGui(const Scene& scene, Vector2i viewPortSize) const;
 
     XNOR_ENGINE void Init();
     
@@ -25,10 +25,8 @@ private:
     mutable std::vector<const Button*> m_Buttons;
 
     mutable std::vector<const Image*> m_Images;
-
-    XNOR_ENGINE void RenderButton();
     
-    XNOR_ENGINE void RenderImage() const;
+    XNOR_ENGINE void RenderImage(const Vector2i viewPortSize) const;
 };
 
 END_XNOR_CORE

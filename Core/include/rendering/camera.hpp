@@ -62,6 +62,11 @@ public:
 	/// @brief Makes the camera look at a specific position
 	/// @param at Where
 	void LookAt(const Vector3& at);
+	
+	/// @brief Makes the camera look at a specific position
+	/// @param at Where
+	/// @param upVector custom UpVector
+	void LookAt(const Vector3& at,const Vector3& upVector);
 
 	/// @brief Projects a 3D position onto the 2D screen coords space
 	/// @param vertex 3D position
@@ -73,12 +78,8 @@ public:
 	
 	// fov in rad
 	static Matrix Perspective(float_t fovy, float_t aspect, float_t zNear, float_t zFar);
-
-
-	static Matrix LookAtRH(Vector3 const& eye, Vector3 const& center, Vector3 const& up);
-
-	static Matrix Ortho(float_t left, float_t right, float_t bottom, float_t top, float_t zNear, float_t zFar);
 	
+	static Matrix LookAtRH(Vector3 const& eye, Vector3 const& center, Vector3 const& up);
 
 };
 

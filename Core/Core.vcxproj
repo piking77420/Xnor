@@ -49,7 +49,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY;JPH_DEBUG_RENDERER;JPH_FLOATING_POINT_EXCEPTIONS_ENABLED;JPH_PROFILE_ENABLED</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY;JPH_DEBUG_RENDERER;JPH_FLOATING_POINT_EXCEPTIONS_ENABLED;JPH_PROFILE_ENABLED;DLL_EXPORT;FT2_BUILD_LIBRARY</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;include;inline;externals\inline;..\CoreLibs\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -73,7 +73,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY;DLL_EXPORT;FT2_BUILD_LIBRARY</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;include;inline;externals\inline;..\CoreLibs\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -129,6 +129,7 @@
     <ClInclude Include="include\scene\component\button.hpp" />
     <ClInclude Include="include\scene\component\gui_component.hpp" />
     <ClInclude Include="include\scene\component\image.hpp" />
+    <ClInclude Include="include\scene\component\player_movment.hpp" />
     <ClInclude Include="include\scene\component\skinned_mesh_render.hpp" />
     <ClInclude Include="include\resource\audio_track.hpp" />
     <ClInclude Include="include\scene\component\test_component_physics.hpp" />
@@ -726,6 +727,7 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="src\scene\component\mesh_renderer.cpp" />
+    <ClCompile Include="src\scene\component\player_movment.cpp" />
     <ClCompile Include="src\scene\component\script_component.cpp" />
     <ClCompile Include="src\scene\component\skinned_mesh_render.cpp" />
     <ClCompile Include="src\scene\component\test_component.cpp" />

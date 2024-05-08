@@ -13,7 +13,7 @@ void Camera::GetProjection(const Vector2i screenSize, Matrix* const matrix) cons
 		*matrix = Perspective(fov * Calc::Deg2Rad , ratio , near, far);
 		return;
 	}
-	*matrix = Ortho(leftRight.x, leftRight.y, bottomtop.x, bottomtop.y, near ,far);
+	Matrix::Orthographic(leftRight.x, leftRight.y, bottomtop.x, bottomtop.y, near ,far, matrix);
 }
 
 void Camera::GetView(Matrix* const matrix) const
@@ -35,6 +35,13 @@ void Camera::LookAt(const Vector3& at)
 {
 	front = (at - position).Normalized();
 	right = Vector3::Cross(Vector3::UnitY(),front).Normalized();
+	up = Vector3::Cross(front ,right).Normalized();
+}
+
+void Camera::LookAt(const Vector3& at, const Vector3& upVector)
+{
+	front = (at - position).Normalized();
+	right = Vector3::Cross(upVector,front).Normalized();
 	up = Vector3::Cross(front ,right).Normalized();
 }
 
@@ -89,18 +96,4 @@ Matrix Camera::LookAtRH(Vector3 const& eye, Vector3 const& center, Vector3 const
 	m.m23 =  Vector3::Dot(f, eye);
 	
 	return m;
-}
-
-Matrix Camera::Ortho(float_t left, float_t right, float_t bottom, float_t top, float_t zNear, float_t zFar)
-{
-	Matrix result = Matrix::Identity();
-
-	result.m00 = 2.f / (right - left);
-	result.m11 = 2.f / (top - bottom);
-	result.m22 = -2.f / (zFar - zNear);
-	result.m03 = -(right + left) / (right - left);
-	result.m13 = -(top + bottom) / (top - bottom);
-	result.m23 = -(zFar + zNear) / (zFar - zNear);
-
-	return result;
 }

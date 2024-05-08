@@ -131,15 +131,15 @@ bool_t Transform::GetChanged() const
 
 Vector3 Transform::GetRight() const
 {
-    return (worldMatrix * Vector3::UnitX());
+    return (Matrix3(worldMatrix) * Vector3::UnitX()).Normalized();
 }
 
 Vector3 Transform::GetUp() const
 {
-    return (worldMatrix * Vector3::UnitY());
+    return (Matrix3(worldMatrix) * Vector3::UnitY()).Normalized();
 }
 
 Vector3 Transform::GetForward() const
 {
-    return (worldMatrix * Vector3::UnitZ());
+    return (Matrix3(worldMatrix) * Vector3::UnitZ()).Normalized();
 }

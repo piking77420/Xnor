@@ -164,7 +164,7 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
     else
     {
         m_FontPass.RenderFont(scene,viewport);
-        m_GuiPass.RenderGui(scene,viewport);
+        m_GuiPass.RenderGui(scene,viewport.viewPortSize);
     }
 
     viewportData.colorPass.EndRenderPass();
@@ -383,6 +383,7 @@ void Renderer::RenderNonShadedPass(const Scene& scene, const Camera& camera,
     if (drawEditorUi)
     {
         m_LightManager.DrawLightGizmoWithShader(camera, scene, shaderToUse);
+        m_GuiPass.RenderGui(scene,viewportSize);
     }
 
     renderPass.EndRenderPass();

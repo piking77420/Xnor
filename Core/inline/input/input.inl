@@ -1,5 +1,6 @@
 #pragma once
 
+#include "utils/logger.hpp"
 #include "utils/meta_programming.hpp"
 
 BEGIN_XNOR_CORE

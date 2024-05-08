@@ -62,26 +62,26 @@ private:
 
     static constexpr uint32_t GamepadMax = 15;
     
-    static inline std::array<KeyStatuses, Key::Count - 1> m_Keyboard;
+    XNOR_ENGINE static inline std::array<KeyStatuses, Key::Count - 1> m_Keyboard;
 
-    static inline std::array<MouseStatuses, MouseButton::Count - 1> m_Mouse;
+    XNOR_ENGINE static inline std::array<MouseStatuses, MouseButton::Count - 1> m_Mouse;
     
-    static inline std::array<GamepadInput, GamepadMax> m_Gamepads;
+    XNOR_ENGINE static inline std::array<GamepadInput, GamepadMax> m_Gamepads;
 
     // For each Status
     using GamepadButtonStatuses = std::array<bool_t, static_cast<uint8_t>(GamepadButtonStatus::Count)>;
     // For each Button
     using GamepadButtons = std::array<GamepadButtonStatuses, static_cast<uint32_t>(GamepadButton::Count)>;
     // For each Gamepad
-    static inline std::array<GamepadButtons, GamepadMax> m_GamepadsButton;
+    XNOR_ENGINE static inline std::array<GamepadButtons, GamepadMax> m_GamepadsButton;
     
-    static inline Vector2 m_LastMousePosition;
+    XNOR_ENGINE static inline Vector2 m_LastMousePosition;
     
-    static inline Vector2 m_MousePosition;
+    XNOR_ENGINE static inline Vector2 m_MousePosition;
     
-    static inline Vector2 m_MouseDelta;
+    XNOR_ENGINE static inline Vector2 m_MouseDelta;
 
-    static inline GLFWwindow* m_WindowHandle = nullptr;
+    XNOR_ENGINE static inline GLFWwindow* m_WindowHandle = nullptr;
 
     static void HandleKeyboard(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
     
