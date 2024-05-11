@@ -50,9 +50,6 @@ TEST(Coroutine, General)
 
 TEST(Coroutine, Manager)
 {
-    // We need GLFW here for the Time::Update function which itself is needed for the Coroutine::UpdateAll function
-    Window::Initialize();
-    
     const Guid id = Coroutine::Start(WaitRoutine());
     
     DEBUG_LOG("First outside log");
@@ -64,6 +61,4 @@ TEST(Coroutine, Manager)
     }
 
     DEBUG_LOG("Second outside log");
-
-    Window::Shutdown();
 }

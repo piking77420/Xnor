@@ -48,11 +48,11 @@
   <PropertyGroup Label="UserMacros" />
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)Core\externals\libs\lib\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)Core\externals\libs\static\$(Configuration)\</OutDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)Core\externals\libs\lib\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)Core\externals\libs\static\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -71,10 +71,10 @@
     </Link>
     <Lib>
       <AdditionalDependencies>toolbox.lib;glfw3.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>libs\lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>libs\static\$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(ProjectDir)libs\lib\$(Configuration)\*.pdb" "$(OutDir)"</Command>
+      <Command>xcopy /Y "$(ProjectDir)libs\static\$(Configuration)\*.pdb" "$(OutDir)"</Command>
       <Message>Copy externals PDB files</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -98,10 +98,10 @@
     </Link>
     <Lib>
       <AdditionalDependencies>toolbox.lib;glfw3.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>libs\lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>libs\static\$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(ProjectDir)libs\lib\$(Configuration)\*.pdb" "$(OutDir)"</Command>
+      <Command>xcopy /Y "$(ProjectDir)libs\static\$(Configuration)\*.pdb" "$(OutDir)"</Command>
       <Message>Copy externals PDB files</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>

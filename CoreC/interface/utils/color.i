@@ -6,7 +6,7 @@
 %ignore XnorCore::ColorHsva;
 
 %cs_struct2(XnorCore::Color, Data16, Color);
-%cs_struct2(XnorCore::ColorHsva, Data4, ColorHsva);
+%cs_struct2(XnorCore::ColorHsva, Data16, ColorHsva);
 
 namespace XnorCore
 {

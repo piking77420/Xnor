@@ -2,7 +2,7 @@
 
 TEST(Pointer, Basics)
 {
-    const Pointer<int> ptr = Pointer<int>::Create(0);
+    const Pointer<int> ptr = Pointer<int>::New(0);
 
     EXPECT_EQ(ptr.GetReferenceCounter()->GetStrong(), 1);
     EXPECT_EQ(ptr.GetReferenceCounter()->GetWeak(), 0);
@@ -15,7 +15,7 @@ TEST(Pointer, WeakReferences)
     Pointer<int> weakRef;
 
     {
-        const Pointer<int> ptr = Pointer<int>::Create(2);
+        const Pointer<int> ptr = Pointer<int>::New(2);
 
         weakRef = ptr;
 
@@ -51,7 +51,7 @@ TEST(Pointer, StrongReferences)
     Pointer<int> strongRef;
 
     {
-        const Pointer<int> ptr = Pointer<int>::Create(-17);
+        const Pointer<int> ptr = Pointer<int>::New(-17);
 
         strongRef = ptr.CreateStrongReference();
 

@@ -180,7 +180,7 @@ const char_t* Serializer::ReadElementValue(const std::string& name)
 
     if (!vElem)
     {
-        Logger::LogInfo("Couldn't find element named : {}", name);
+        Logger::LogDebug("Couldn't find element named : {}", name);
         return nullptr;
     }
 

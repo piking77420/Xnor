@@ -30,10 +30,10 @@ struct B : A
 
 TEST(Utils, DynamicPointerCast)
 {
-    Pointer<B> b = Pointer<B>::Create(Construct{});
+    Pointer<B> b = Pointer<B>::New();
     EXPECT_EQ(b->i, 2);
     const Pointer<A> a = Utils::DynamicPointerCast<A>(b);
     EXPECT_EQ(a->i, 2);
-    b = Utils::DynamicPointerCast<B>(Pointer<A>::Create(Construct{}));
+    b = Utils::DynamicPointerCast<B>(Pointer<A>::New());
     EXPECT_FALSE(b.IsValid());
 }

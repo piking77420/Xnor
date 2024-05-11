@@ -58,12 +58,12 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\static\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib;OpenAL32.lib</AdditionalDependencies>
       <AdditionalOptions>/WHOLEARCHIVE:CoreLibs.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y "externals\libs\dll\$(Configuration)\*" "$(OutDir)"</Command>
+      <Command>xcopy /Y "externals\libs\dynamic\$(Configuration)\*" "$(OutDir)"</Command>
       <Message>Copy external DLL files</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -84,12 +84,12 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);%(AdditionalLibraryDirectories);$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\static\$(Configuration);%(AdditionalLibraryDirectories);$(OutDir)</AdditionalLibraryDirectories>
       <AdditionalDependencies>;opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib;OpenAL32.lib</AdditionalDependencies>
       <AdditionalOptions>/WHOLEARCHIVE:CoreLibs.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y "externals\libs\dll\$(Configuration)\*" "$(OutDir)"</Command>
+      <Command>xcopy /Y "externals\libs\dynamic\$(Configuration)\*" "$(OutDir)"</Command>
       <Message>Copy external DLL files</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>

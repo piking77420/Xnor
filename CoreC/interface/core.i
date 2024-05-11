@@ -43,8 +43,6 @@ typedef float float_t;
 // Ignore output stream operator
 %ignore operator<<;
 
-
-
 // These structs are used to copy data between C++ and C# value types
 %{
 struct Data4

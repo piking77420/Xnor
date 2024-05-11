@@ -58,3 +58,4 @@ _shaders/up_sample;590ABFD0-76AD-4F2D-94-50-D4-C5-9A-B5-A6-6
 assets/models/Coyote-Walking.fbx;6C09C002-82DC-4AF6-9D-41-B6-3A-31-72-4D-63
 assets/models/Coyote-Running.fbx;6681D90B-EA9E-4F13-87-FE-89-A8-AC-E0-A2-85
 Cube;BF4A5B8F-DF43-4B3D-93-74-67-EA-78-C6-DC-3F
+assets/sounds/fazbear.wav;DC7765A-C607-4D03-AC-9-93-56-7-16-28-EA
