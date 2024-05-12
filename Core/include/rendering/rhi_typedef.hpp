@@ -749,14 +749,30 @@ struct AttributeDivisor
 	uint32_t divisor = 0;
 };
 
-struct VBODescriptor
+struct VertexAttributeBinding
 {
-	VertexAttributePointer* vertexAttributesPointer = nullptr;
-	size_t vboAttributePointerSize = 0;
+	uint32_t attribindex = 0;
+	uint32_t bindingindex = 0;
+};
 
-	AttributeDivisor* attributesDivisorPointer = nullptr;
-	size_t attributesDivisorPointerSize = 0;
+struct VertexAttribFormat
+{
+	 uint32_t attribindex = 0;
+	 uint32_t size = 0;
+	 DataType::DataType type = DataType::Float;
+	 bool_t normalized = false;
+	 uint32_t relativeoffset = 0;
+};
 
+struct VAODescriptor
+{
+	VertexAttributeBinding* vertexAttributeBindings = nullptr;
+	size_t VertexAttributeBindingSize = 0;
+	
+	VertexAttribFormat* vertexAttribFormats = nullptr;
+	size_t vertexAttribFormatsSize = 0;
+
+	uint32_t vboId = 0;
 };
 
 enum class DataAlignement

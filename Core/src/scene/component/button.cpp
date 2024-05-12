@@ -43,7 +43,7 @@ void Button::ButtonUpdate() const
         
         if (yAxis && xAxis)
         {
-            Logger::LogDebug("Press Button !!");
+            onClick.Invoke();
         }
         
     }

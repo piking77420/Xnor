@@ -164,7 +164,6 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
     }
     else
     {
-        m_FontPass.RenderFont(scene,viewport);
         m_GuiPass.RenderGui(scene,viewport.viewPortSize);
     }
 

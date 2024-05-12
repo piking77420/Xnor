@@ -30,7 +30,7 @@ void Font::CreateInInterface()
     }
 
     FT_Face face;
-    if (FT_New_Face(ft, "fonts/arial.ttf", 0, &face))
+    if (FT_New_Face(ft, this->m_File->GetPath().generic_string().c_str(), 0, &face))
     {
         Logger::LogError("Error freetype : Failed to load font");
         return;
@@ -49,7 +49,7 @@ void Font::CreateInInterface()
         }
 
         TextureCreateInfo createInfo =
-            {
+        {
             .textureType = TextureType::Texture2D,
             .datas = {face->glyph->bitmap.buffer},
             .mipMaplevel = 1,
@@ -60,7 +60,7 @@ void Font::CreateInInterface()
             .format = TextureFormat::Red,
             .internalFormat = TextureInternalFormat::R8,
             .dataType = DataType::UnsignedByte,
-            };
+        };
 
         Character character;
         character.texture = new Texture(createInfo);
@@ -74,8 +74,8 @@ void Font::CreateInInterface()
 
     FT_Done_Face(face);
     FT_Done_FreeType(ft);
-    m_LoadedInInterface = true;*/
-
+    m_LoadedInInterface = true;
+    */
 }
 
 void Font::DestroyInInterface()

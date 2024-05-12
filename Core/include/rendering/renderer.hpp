@@ -7,7 +7,6 @@
 #include "material.hpp"
 #include "viewport.hpp"
 #include "render_systems/animation_render.hpp"
-#include "render_systems/font_pass.hpp"
 #include "render_systems/gui_pass.hpp"
 #include "render_systems/light_manager.hpp"
 #include "render_systems/skybox_renderer.hpp"
@@ -74,7 +73,6 @@ private:
      SkyboxRenderer m_SkyboxRenderer;
      PostProcessPass m_PostProcessPass;
      AnimationRender m_AnimationRender;
-     FontPass m_FontPass;
      GuiPass m_GuiPass;
     
      std::vector<const MeshRenderer*> m_MeshRenderers;

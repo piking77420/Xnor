@@ -3,6 +3,7 @@
 #include "gui_component.hpp"
 #include "image.hpp"
 #include "Maths/vector2i.hpp"
+#include "utils/event.hpp"
 
 BEGIN_XNOR_CORE
 class Button : public Component
@@ -14,6 +15,8 @@ public:
     ~Button() override = default;
 
     void Update() override;
+
+    Event<> onClick;
     
 private:
     void ButtonUpdate() const;
@@ -22,6 +25,6 @@ private:
 END_XNOR_CORE
 
 REFL_AUTO(
-    type(XnorCore::Button, bases<XnorCore::Component>)
-    //field(componentTarget)
+    type(XnorCore::Button, bases<XnorCore::Component>),
+    field(onClick,XnorCore::Reflection::NotSerializable())
 );

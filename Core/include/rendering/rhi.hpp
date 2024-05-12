@@ -58,6 +58,7 @@ public:
 	/// @brief Draws a model
 	/// @param modelId Model id
 	XNOR_ENGINE static void DrawModel(DrawMode::DrawMode drawMode, uint32_t modelId);
+	
 
 	XNOR_ENGINE static void DrawArray(DrawMode::DrawMode drawMode,uint32_t first, uint32_t count);
 

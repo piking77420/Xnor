@@ -53,10 +53,10 @@ uint32_t Rhi::CreateModel(const std::vector<Vertex>& vertices, const std::vector
 	glCreateBuffers(1, &modelInternal.vbo);
 	glCreateBuffers(1, &modelInternal.ebo);
 
-	GLintptr offset = static_cast<GLintptr>(vertices.size() * sizeof(Vertex));
-	glNamedBufferData(modelInternal.vbo, offset, vertices.data(), GL_STATIC_DRAW);
-	offset = static_cast<GLintptr>(indices.size() * sizeof(uint32_t));
-	glNamedBufferData(modelInternal.ebo, offset, indices.data(), GL_STATIC_DRAW);
+	GLintptr size = static_cast<GLintptr>(vertices.size() * sizeof(Vertex));
+	glNamedBufferData(modelInternal.vbo, size, vertices.data(), GL_STATIC_DRAW);
+	size = static_cast<GLintptr>(indices.size() * sizeof(uint32_t));
+	glNamedBufferData(modelInternal.ebo, size, indices.data(), GL_STATIC_DRAW);
 
 	// Position
 	glEnableVertexArrayAttrib(modelInternal.vao, 0);
@@ -128,8 +128,7 @@ void Rhi::DrawModel(DrawMode::DrawMode drawMode,const uint32_t modelId)
 
 void Rhi::DrawArray(DrawMode::DrawMode drawMode,uint32_t first, uint32_t count)
 {
-	glDrawArrays(GL_TRIANGLES, first, count);
-
+	glDrawArrays(DrawModeToOpengl(drawMode), static_cast<GLint>(first),  static_cast<GLint>(count));
 }
 
 void Rhi::DestroyProgram(const uint32_t shaderId)
