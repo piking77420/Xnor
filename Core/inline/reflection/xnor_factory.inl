@@ -37,6 +37,12 @@ void XnorFactory::RegisterType()
     else
         info.createFunc = []() -> void* { return nullptr; };
 
+    if constexpr (Meta::IsSame<T, ScriptComponent>)
+    {
+        info.serializeFunc = [](void* const obj) -> void { DotnetReflection::SerializeScript(static_cast<ScriptComponent*>(obj)); };
+        info.deserializeFunc = [](void* const obj) -> void { DotnetReflection::DeserializeScript(static_cast<ScriptComponent*>(obj)); };
+    }
+
     refl::util::for_each(refl::util::reflect_types(DescriptorT::declared_bases), [&]<typename ParentT>(const ParentT)
     {
         info.parentClasses.push_back(Utils::GetTypeHash<typename ParentT::type>());
@@ -67,14 +73,14 @@ inline bool_t XnorFactory::IsChildOf(const size_t typeHash, const size_t parentH
 }
 
 template <typename T>
-void XnorFactory::FindAllChildClasses(std::vector<std::string>* names)
+void XnorFactory::FindAllChildClasses(List<std::string>* names)
 {
     const size_t hash = Utils::GetTypeHash<T>();
 
     for (auto&& it : m_FactoryMapHash)
     {
         if (IsChildOf(it.first, hash))
-            names->push_back(it.second.name);
+            names->Add(it.second.name);
     }
 }
 

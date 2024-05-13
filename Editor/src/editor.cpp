@@ -276,7 +276,7 @@ void Editor::MenuBar()
 
 void Editor::BuildAndReloadCode()
 {
-	if (XnorCore::World::isPlaying)
+	if (XnorCore::World::isPlaying) // TODO: isPlaying is false when paused
 		StopPlaying();
 	XnorCore::DotnetRuntime::BuildAndReloadProject();
 }
@@ -320,12 +320,6 @@ void Editor::UpdateWindows()
 		w->Display();
 		ImGui::End();
 	}
-
-	// TEMPORARY
-	ImGui::Begin("Debug");
-	if (ImGui::Button("Create C# TestScript entity"))
-		XnorCore::DotnetRuntime::GetAssembly("Game")->ProcessTypes();
-	ImGui::End();
 }
 
 void Editor::OnRenderingWindow()

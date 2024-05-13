@@ -12,7 +12,7 @@ using namespace XnorCore;
 void DotnetReflection::PrintTypes()
 {
     const Coral::ManagedAssembly* const coreAssembly = DotnetAssembly::xnorCoreAssembly->GetCoralAssembly();
-    const Coral::ManagedAssembly* const gameAssembly = DotnetRuntime::GetAssembly("Game")->GetCoralAssembly();
+    const Coral::ManagedAssembly* const gameAssembly = DotnetRuntime::GetGameAssembly()->GetCoralAssembly();
 
     RegisterAllTypes();
 
@@ -34,19 +34,41 @@ void DotnetReflection::PrintTypes()
 
 void DotnetReflection::RegisterScriptType(const std::string& typeName)
 {
-    const Coral::ManagedAssembly* const gameAssembly = DotnetRuntime::GetAssembly("Game")->GetCoralAssembly();
+    const Coral::ManagedAssembly* const gameAssembly = DotnetRuntime::GetGameAssembly()->GetCoralAssembly();
 
     Coral::Type& type = gameAssembly->GetType(typeName);
     DotnetTypeInfo info = {
         .createFunc = [&]() -> Coral::ManagedObject { return type.CreateInstance(); },
-        .displayFunc = [](void* const, const char_t* const) -> void {},
-        .serializeFunc = [](const void* const) -> void {},
+        .displayFunc = [&, tName = typeName](void* const value, const char_t* fieldName) -> void { DisplayExternalType(value, fieldName, tName); },
+        .serializeFunc = [&, tName = typeName](void* const value, const std::string& fieldName) -> void { SerializeExternalType(value, fieldName, tName); },
         .deserializeFunc = [](void* const) -> void {},
         .name = typeName,
         .isScriptType = true
     };
 
     m_DotnetMap.emplace(typeName, info);
+}
+
+void DotnetReflection::RegisterEnumType(const std::string& typeName, const std::string& assemblyName)
+{
+    const Coral::ManagedAssembly* const gameAssembly = DotnetRuntime::GetAssembly(assemblyName)->GetCoralAssembly();
+
+    Coral::Type& type = gameAssembly->GetType(typeName);
+    DotnetTypeInfo info = {
+        .createFunc = [&]() -> Coral::ManagedObject { return type.CreateInstance(); },
+        .displayFunc = [&, tName = typeName](void* const value, const char_t* fieldName) -> void { DisplayExternalType(value, fieldName, tName); },
+        .serializeFunc = [&, tName = typeName](void* const value, const std::string& fieldName) -> void { SerializeExternalType(value, fieldName, tName); },
+        .deserializeFunc = [](void* const) -> void {},
+        .name = typeName,
+        .isScriptType = false
+    };
+
+    m_DotnetMap.emplace(typeName, info);
+}
+
+void DotnetReflection::UnregisterScriptType(const std::string& typeName)
+{
+    m_DotnetMap.erase(m_DotnetMap.find(typeName));
 }
 
 void DotnetReflection::RegisterAllTypes()
@@ -89,7 +111,7 @@ void DotnetReflection::DisplayType(void* obj, const char_t* const name, const st
 
     if (it == m_DotnetMap.end())
     {
-        Logger::LogError("[C# Refl] : Couldn't find type named {}", typeName);
+        Logger::LogError("[C# Refl] Couldn't find type named {}", typeName);
         return;
     }
 
@@ -110,8 +132,8 @@ void DotnetReflection::DisplayType(ScriptComponent* const script)
     for (Coral::FieldInfo& field : obj.GetType().GetFields())
     {
         const std::string fieldName = field.GetName();
-        
-        if (std::ranges::find(IgnoredFieldNames, fieldName) != IgnoredFieldNames.end())
+
+        if (Utils::ArrayContains(IgnoredFieldNames, fieldName))
             continue;
         
         const std::string typeName = field.GetType().GetFullName();
@@ -123,4 +145,95 @@ void DotnetReflection::DisplayType(ScriptComponent* const script)
         ImGui::PopID();
     }
     ImGui::PopID();
+}
+
+void DotnetReflection::GetScriptTypes(List<std::string>* const list)
+{
+    for (DotnetTypeInfo& typeInfo : m_DotnetMap | std::views::values)
+    {
+        if (typeInfo.isScriptType)
+            list->Add(typeInfo.name);
+    }
+}
+
+ScriptComponent* DotnetReflection::CreateInstance(const std::string& typeName)
+{
+    auto&& obj = m_DotnetMap[typeName].createFunc();
+    ScriptComponent* component = obj.GetFieldValue<ScriptComponent*>("swigCPtr");
+    component->Initialize(obj);
+    return component;
+}
+
+void DotnetReflection::SerializeType(void* const value, const std::string& fieldName, const std::string& typeName)
+{
+    auto&& it = m_DotnetMap.find(typeName);
+
+    if (it == m_DotnetMap.end())
+    {
+        Logger::LogError("[C# Refl] Couldn't find type named {}", typeName);
+        return;
+    }
+
+    it->second.serializeFunc(value, fieldName);
+}
+
+void DotnetReflection::SerializeExternalType(void* value, const std::string& fieldName, const std::string& typeName)
+{
+    const Coral::Type& type = DotnetRuntime::GetGameAssembly()->GetCoralAssembly()->GetType(typeName);
+    
+    if (type.IsEnum())
+    {
+        Serializer::AddSimpleValue(fieldName, *static_cast<int32_t* const>(value));
+    }
+}
+
+void DotnetReflection::DisplayExternalType(void* const value, const char_t* const fieldName, const std::string& typeName)
+{
+    const Coral::Type& type = DotnetRuntime::GetGameAssembly()->GetCoralAssembly()->GetType(typeName);
+    
+    if (type.IsEnum())
+    {
+        int32_t* const val = static_cast<int32_t* const>(value);
+        
+        std::vector<Coral::String> enumNames;
+        type.GetEnumNames(enumNames);
+        
+        std::vector<int32_t> enumValues;
+        type.GetEnumValues(enumValues);
+
+        if (ImGui::BeginCombo(fieldName, enumNames[std::distance(enumValues.begin(), std::ranges::find(enumValues, *val))].Data()))
+        {
+            for (size_t i = 0; i < enumNames.size(); i++)
+            {
+                if (ImGui::Selectable(enumNames[i].Data()))
+                    *val = enumValues[i];
+            }
+            ImGui::EndCombo();
+        }
+    }
+}
+
+void DotnetReflection::SerializeScript(const ScriptComponent* const script)
+{
+    const Coral::ManagedObject& obj = script->GetManagedObject();
+    const Coral::Type& type = obj.GetType();
+
+    Serializer::AddAttribute("managedType", type.GetFullName());
+    for (Coral::FieldInfo& field : type.GetFields())
+    {
+        const std::string fieldName = field.GetName();
+
+        if (Utils::ArrayContains(IgnoredFieldNames, fieldName))
+            continue;
+        
+        const std::string typeName = field.GetType().GetFullName();
+
+        void* const ptr = const_cast<Coral::ManagedObject&>(obj).GetFieldPointer<void>(fieldName);
+
+        SerializeType(ptr, fieldName, typeName);
+    }
+}
+
+void DotnetReflection::DeserializeScript(ScriptComponent* const script)
+{
 }

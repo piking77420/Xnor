@@ -10,7 +10,9 @@ namespace Dotnet
     
     constexpr const char_t* const AssembliesDirectory = "DotnetAssemblies";
     
-    constexpr const char_t* const CoreProjectLocation = "CoreCSharp";
+    constexpr const char_t* const CoreProjectName = "CoreCSharp";
+    
+    constexpr const char_t* const CoreProjectLocation = CoreProjectName;
     
     constexpr const char_t* const GameProjectLocation = GameProjectName;
     

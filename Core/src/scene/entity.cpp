@@ -1,6 +1,7 @@
 ﻿#include "scene/entity.hpp"
 
 #include "scene/component.hpp"
+#include "scene/component/script_component.hpp"
 #include "serialization/serializer.hpp"
 #include "utils/logger.hpp"
 #include "world/scene_graph.hpp"
@@ -15,8 +16,15 @@ Entity::Entity(const Guid& entiyId)
 Entity::~Entity()
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
-        delete m_Components[i];
-    
+    {
+        Component* component = m_Components[i];
+        ScriptComponent* script = dynamic_cast<ScriptComponent*>(component);
+        if (script)
+            script->GetManagedObject().Destroy();
+        else
+            delete component;
+    }
+
     m_Components.Clear();
 }
 

@@ -26,3 +26,8 @@ Coral::ManagedObject& ScriptComponent::GetManagedObject()
 {
     return m_ManagedObject;
 }
+
+const Coral::ManagedObject& ScriptComponent::GetManagedObject() const
+{
+    return m_ManagedObject;
+}

@@ -88,6 +88,8 @@ public:
     /// @param obj Object pointer
     template <typename ReflectT, bool_t IsRoot>
     static void Deserialize(ReflectT* obj);
+
+    static void AddAttribute(const std::string& name, const std::string& value);
     
 private:
     XNOR_ENGINE static inline std::string m_CurrentFilePath;

@@ -711,11 +711,11 @@ fabric.properties
 !**/externals/**
 !CoreLibs/libs/**
 
-Core/externals/libs/lib/Debug/CoreLibs.lib
-Core/externals/libs/lib/Debug/CoreLibs.pdb
-Core/externals/libs/lib/Debug/CoreLibs.idb
-Core/externals/libs/lib/Release/CoreLibs.lib
-Core/externals/libs/lib/Release/CoreLibs.pdb
+Core/externals/libs/static/Debug/CoreLibs.lib
+Core/externals/libs/static/Debug/CoreLibs.pdb
+Core/externals/libs/static/Debug/CoreLibs.idb
+Core/externals/libs/static/Release/CoreLibs.lib
+Core/externals/libs/static/Release/CoreLibs.pdb
 
 !assets/**
 !assets_internal/**

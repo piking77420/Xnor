@@ -6,6 +6,7 @@
 #include "core.hpp"
 #include "Coral/ManagedObject.hpp"
 #include "scene/component/script_component.hpp"
+#include "utils/list.hpp"
 
 /// @file dotnet_reflection.hpp
 /// @brief Defines the XnorCore::DotnetReflection class.
@@ -17,15 +18,15 @@ class DotnetReflection
 {
     STATIC_CLASS(DotnetReflection)
 
-    struct DotnetTypeInfo
+    struct DotnetTypeInfo final
     {
         std::function<Coral::ManagedObject()> createFunc;
         std::function<void(void*, const char_t*)> displayFunc;
-        std::function<void(void*)> serializeFunc;
+        std::function<void(void*, const std::string&)> serializeFunc;
         std::function<void(void*)> deserializeFunc;
 
         std::string name;
-        bool_t isScriptType;
+        bool_t isScriptType = false;
     };
 
 public:
@@ -44,9 +45,15 @@ public:
     template <typename T>
     static void RegisterCoreType(const std::string& typeName);
 
-    /// @brief Registers a script type type
+    /// @brief Registers a script type
     /// @param typeName C# type name
     XNOR_ENGINE static void RegisterScriptType(const std::string& typeName);
+    
+    XNOR_ENGINE static void RegisterEnumType(const std::string& typeName, const std::string& assemblyName);
+
+    /// @brief Unregisters a script type
+    /// @param typeName C# type name
+    XNOR_ENGINE static void UnregisterScriptType(const std::string& typeName);
 
     /// @brief Displays a simple type
     /// @tparam T Type
@@ -68,6 +75,15 @@ public:
     /// @param script Script component
     XNOR_ENGINE static void DisplayType(ScriptComponent* script);
 
+    XNOR_ENGINE static void GetScriptTypes(List<std::string>* list);
+
+    [[nodiscard]]
+    XNOR_ENGINE static ScriptComponent* CreateInstance(const std::string& typeName);
+    
+    XNOR_ENGINE static void SerializeScript(const ScriptComponent* script);
+
+    XNOR_ENGINE static void DeserializeScript(ScriptComponent* script);
+
 private:
     static inline const std::array<std::string, 2> IgnoredFieldNames
     {
@@ -75,7 +91,19 @@ private:
         "swigCMemOwn"
     };
     
-    static inline std::unordered_map<std::string, DotnetTypeInfo> m_DotnetMap; 
+    static inline std::unordered_map<std::string, DotnetTypeInfo> m_DotnetMap;
+
+    XNOR_ENGINE static void SerializeType(void* value, const std::string& fieldName, const std::string& typeName);
+
+    XNOR_ENGINE static void SerializeExternalType(void* value, const std::string& fieldName, const std::string& typeName);
+    
+    XNOR_ENGINE static void DisplayExternalType(void* value, const char_t* fieldName, const std::string& typeName);
+
+    template <typename T>
+    static void SerializeSimpleType(T* obj, const std::string& name);
+
+    template <typename T>
+    static void DeserializeSimpleType(T* obj);
 };
 
 END_XNOR_CORE

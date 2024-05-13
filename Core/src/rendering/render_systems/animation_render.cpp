@@ -32,7 +32,7 @@ void AnimationRender::InitResources()
 
 void AnimationRender::BeginFrame(const Scene& scene, const Renderer&)
 {
-    scene.GetAllComponentOfType<SkinnedMeshRender>(&m_SkinnedRender);
+    scene.GetAllComponentsOfType<SkinnedMeshRender>(&m_SkinnedRender);
 }
 
 void AnimationRender::RenderAnimation() const

@@ -11,7 +11,6 @@
 #include "resource/resource_manager.hpp"
 #include "scene/component.hpp"
 #include "utils/guid.hpp"
-#include "utils/logger.hpp"
 #include "utils/meta_programming.hpp"
 #include "world/world.hpp"
 
@@ -479,18 +478,7 @@ void Serializer::DeserializeXnorPointer(const Metadata<ReflectT, MemberT, Descri
         return;
     }
 
-    Pointer<PtrT> res = ResourceManager::Get<PtrT>(guid);
-
-    if (res == nullptr)
-    {
-        Logger::LogError("Resource with guid {} wasn't found (deserializing {})", static_cast<std::string>(guid), metadata.name);
-    }
-    else
-    {
-        Logger::LogInfo("Resource with guid {} was found (deserializing {}, {})", static_cast<std::string>(guid), metadata.name, res->GetName());
-    }
-
-    *metadata.obj = res;
+    *metadata.obj = ResourceManager::Get<PtrT>(guid);
 }
 
 template <typename ReflectT, typename MemberT, typename DescriptorT>

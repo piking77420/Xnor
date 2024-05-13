@@ -31,13 +31,13 @@ public:
     /// @tparam ComponentT Component type
     /// @param components Result components
     template <class ComponentT>
-    void GetAllComponentOfType(std::vector<const ComponentT*>* components) const;
+    void GetAllComponentsOfType(std::vector<const ComponentT*>* components) const;
 
     /// @brief Gets all of the specified Component in every entity in the scene
     /// @tparam ComponentT Component type
     /// @param components Result components
     template <class ComponentT>
-    void GetAllComponentOfType(std::vector<ComponentT*>* components);
+    void GetAllComponentsOfType(std::vector<ComponentT*>* components);
 
     /// @brief Begins the scene
     XNOR_ENGINE void Begin();

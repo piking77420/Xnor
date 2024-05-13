@@ -40,9 +40,9 @@ void LightManager::InitResources()
 
 void LightManager::BeginFrame(const Scene& scene, const Renderer& renderer)
 {
-	scene.GetAllComponentOfType<PointLight>(&m_PointLights);
-	scene.GetAllComponentOfType<SpotLight>(&m_SpotLights);
-	scene.GetAllComponentOfType<DirectionalLight>(&m_DirectionalLights);
+	scene.GetAllComponentsOfType<PointLight>(&m_PointLights);
+	scene.GetAllComponentsOfType<SpotLight>(&m_SpotLights);
+	scene.GetAllComponentsOfType<DirectionalLight>(&m_DirectionalLights);
 
 	FecthLightInfo();
 	ComputeShadow(scene, renderer);

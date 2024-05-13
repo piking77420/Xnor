@@ -21,7 +21,7 @@ bool_t DotnetAssembly::Load(Coral::AssemblyLoadContext& alc)
     switch (m_Assembly->GetLoadStatus())
     {
         case Coral::AssemblyLoadStatus::Success:
-            if (m_Assembly->GetName() == "CoreCSharp")
+            if (m_Assembly->GetName() == Dotnet::CoreProjectName)
                 xnorCoreAssembly = this;
             return true;
         
@@ -62,7 +62,9 @@ void DotnetAssembly::ProcessTypes()
     for (auto&& type : m_Assembly->GetTypes())
     {
         if (type->IsSubclassOf(scriptComponentType))
-            ProcessScriptComponent(*type);
+            DotnetReflection::RegisterScriptType(type->GetFullName());
+        else if (type->IsEnum())
+            DotnetReflection::RegisterEnumType(type->GetFullName(), m_Name);
     }
 }
 
@@ -81,14 +83,7 @@ const std::string& DotnetAssembly::GetName() const
     return m_Name;
 }
 
-void DotnetAssembly::ProcessScriptComponent(Coral::Type& subclass)
+void DotnetAssembly::ProcessScriptComponent(const Coral::Type& subclass)
 {
-    /*Entity* const entity = World::scene->CreateEntity(static_cast<std::string>(subclass.GetFullName()) + " Entity");
-    auto&& instance = subclass.CreateInstance();
-    ScriptComponent* const ptr = instance.GetFieldValue<ScriptComponent*>("swigCPtr");
-    ptr->Initialize(instance);
-    entity->AddComponent(ptr);
-    entity->AddComponent<PointLight>();*/
-
-    //DotnetReflection::RegisterScriptType(subclass.GetFullName());
+    DotnetReflection::RegisterScriptType(subclass.GetFullName());
 }

@@ -29,10 +29,18 @@ public:
     XNOR_ENGINE void Update() override;
 
     /// @brief Returns the .NET ManagedObject linked to this ScriptComponent
+    [[nodiscard]]
     XNOR_ENGINE Coral::ManagedObject& GetManagedObject();
+
+    /// @brief Returns the .NET ManagedObject linked to this ScriptComponent
+    [[nodiscard]]
+    XNOR_ENGINE const Coral::ManagedObject& GetManagedObject() const;
     
 private:
     Coral::ManagedObject m_ManagedObject;
+
+    // The DotnetRuntime class needs to have access to the m_ManagedObject field
+    friend class DotnetRuntime;
 #endif
 };
 

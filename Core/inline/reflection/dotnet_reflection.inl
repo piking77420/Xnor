@@ -12,8 +12,8 @@ void DotnetReflection::RegisterBaseType(const std::string& typeName)
     DotnetTypeInfo info = {
         .createFunc = []() -> Coral::ManagedObject { return {}; },
         .displayFunc = [](void* const obj, const char_t* const name) -> void { DisplaySimpleType<T>(static_cast<T*>(obj), name); },
-        .serializeFunc = [](const void* const) -> void {},
-        .deserializeFunc = [](void* const) -> void {},
+        .serializeFunc = [](void* const value, const std::string& fieldName) -> void { SerializeSimpleType<T>(static_cast<T*>(value), fieldName); },
+        .deserializeFunc = [](void* const value) -> void { DeserializeSimpleType(value); },
         .name = typeName,
         .isScriptType = false
     };
@@ -27,7 +27,7 @@ void DotnetReflection::RegisterCoreType(const std::string& typeName)
     DotnetTypeInfo info = {
         .createFunc = []() -> Coral::ManagedObject { return {}; },
         .displayFunc = [](void* const, const char_t* const name) -> void { ImGui::Text("%s", name); },
-        .serializeFunc = [](void* const) -> void { },
+        .serializeFunc = [](void* const, const std::string&) -> void { },
         .deserializeFunc = [](void* const) -> void { },
         .name = typeName,
         .isScriptType = false
@@ -109,6 +109,34 @@ void DotnetReflection::DisplaySimpleType(T* const obj, const char_t* const name)
     {
         ImGui::DragFloat4(name, obj->Raw(), .1f);
     }
+}
+
+template <typename T>
+void DotnetReflection::SerializeSimpleType(T* const obj, const std::string& name)
+{
+    if constexpr (Meta::IsNativeType<T> || Meta::IsMathType<T> || Meta::IsColorType<T> || Meta::IsSame<T, std::string>)
+    {
+        Serializer::AddSimpleValue(name, *obj);
+    }
+    else if constexpr (Meta::IsEnum<T>)
+    {
+        // TODO constexpr bool_t isEnumFlag = Reflection::HasAttribute<Reflection::EnumFlags, DescriptorT>();
+        constexpr auto enumNames = magic_enum::enum_names<T>();
+    
+        if constexpr (false)
+        {
+            Serializer::AddSimpleValue<std::string>(name, magic_enum::enum_flags_name<T>(*obj, '|').data());
+        }
+        else
+        {
+            Serializer::AddSimpleValue<std::string>(name, magic_enum::enum_name<T>(*obj).data());
+        }
+    }
+}
+
+template <typename T>
+void DotnetReflection::DeserializeSimpleType(T* const obj)
+{
 }
 
 END_XNOR_CORE

@@ -5,12 +5,21 @@ namespace Game
 {
     public class TestScript : ScriptComponent
     {
+        public enum TestEnum
+        {
+            First,
+            Second,
+            Third
+        }
+        
         private ColorHsva color;
         private float intensity;
 
         private Light light;
 
         public float MyFloatVar = 3f;
+
+        public TestEnum MyEnumVar = TestEnum.Second;
 
         public TestScript()
         {

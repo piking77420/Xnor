@@ -84,8 +84,8 @@ bool_t DotnetRuntime::LoadAssembly(const std::string& name)
     DotnetAssembly* const assembly = new DotnetAssembly(str);
     if (assembly->Load(m_Alc))
     {
-        assembly->ProcessTypes();
         m_LoadedAssemblies.push_back(assembly);
+        assembly->ProcessTypes();
         return true;
     }
     
@@ -101,6 +101,11 @@ DotnetAssembly* DotnetRuntime::GetAssembly(const std::string& name)
     }
 
     return nullptr;
+}
+
+DotnetAssembly* DotnetRuntime::GetGameAssembly()
+{
+    return GetAssembly(Dotnet::GameProjectName);
 }
 
 void DotnetRuntime::UnloadAllAssemblies(const bool_t reloadContext)
@@ -162,7 +167,7 @@ bool_t DotnetRuntime::BuildGameProject(const bool_t asynchronous)
     static constexpr const char_t* const TempFile = "xnor_dotnet_build.txt";
     const std::filesystem::path tempPath = std::filesystem::temp_directory_path() / TempFile;
 
-    m_ProjectReloadingProgress = 0.1f;
+    m_ProjectReloadingProgress = 0.2f;
 
     const int32_t commandResult = Utils::TerminalCommand(std::string("dotnet build ") + Dotnet::GameProjectBuildOptions + " \"" + absolute(gameProjectDirectory).string() + "\" 1> \"" + tempPath.string() + '"', asynchronous);
 
@@ -243,10 +248,42 @@ void DotnetRuntime::BuildAndReloadProject()
     m_ProjectReloadingThread = std::thread(
         []
         {
+            std::vector<ScriptComponent*> scripts;
+            World::scene->GetAllComponentsOfType(&scripts);
+            std::vector<std::string> types(scripts.size());
+
+            for (size_t i = 0; i < scripts.size(); i++)
+            {
+                auto&& managedObject = scripts[i]->m_ManagedObject;
+                types[i] = managedObject.GetType().GetFullName();
+                managedObject.Destroy();
+            }
+            
+            m_ProjectReloadingProgress = 0.1f;
+            
             if (BuildGameProject(false))
+            {
                 ReloadAllAssemblies();
+
+                m_ProjectReloadingProgress = 0.9f;
+
+                const DotnetAssembly* const game = GetGameAssembly();
+
+                auto&& gameTypes = game->GetCoralAssembly()->GetTypes();
+                for (size_t i = 0; i < scripts.size(); i++)
+                {
+                    auto&& it = std::ranges::find_if(gameTypes, [&] (const Coral::Type* const type) -> bool_t { return type->GetFullName() == types[i]; });
+                    if (it != gameTypes.end())
+                    {
+                        auto&& type = *it;
+                        scripts[i]->m_ManagedObject = type->CreateInstance();
+                    }
+                }
+            }
             else
+            {
                 Logger::LogError("Couldn't build {} .NET project", Dotnet::GameProjectName);
+            }
             
             m_ProjectReloadingProgress = 1.f;
             m_ReloadingProjectAsync = false;
@@ -260,13 +297,13 @@ bool_t DotnetRuntime::IsReloadingProject() { return m_ReloadingProjectAsync; }
 
 float_t DotnetRuntime::GetProjectReloadingProgress() { return m_ProjectReloadingProgress; }
 
-bool DotnetRuntime::CheckDotnetInstalled()
+bool_t DotnetRuntime::CheckDotnetInstalled()
 {
     // Check if the dotnet command returns a non-zero exit code
     return Utils::TerminalCommand("dotnet --info 1> nul", false) == 0;
 }
 
-bool DotnetRuntime::CheckDotnetVersion()
+bool_t DotnetRuntime::CheckDotnetVersion()
 {
     // This function runs the 'dotnet --list-runtimes' command
     // This prints a list of all installed .NET runtimes on the current machine

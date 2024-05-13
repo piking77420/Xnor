@@ -27,16 +27,13 @@ void Serializer::OpenFileToRead(const std::string& filePath)
     m_XmlDoc = CreateXMLFromFile(m_File, error);
 }
 
-void Serializer::SerializeObjectUsingFactory(void* obj, const size_t hash)
+void Serializer::SerializeObjectUsingFactory(void* const obj, const size_t hash)
 {
-    std::string error;
-    
-    XMLAttributte* const attribute = CreateAttribute(m_XmlDoc, "typeName", XnorFactory::GetTypeName(hash), error);
-    AddAttributeToElement(m_ElementsStack.top(), attribute, error);
+    AddAttribute("typeName", XnorFactory::GetTypeName(hash));
     XnorFactory::SerializeObject(obj, hash);
 }
 
-void Serializer::DeserializeObjectUsingFactory(void* obj, const size_t hash)
+void Serializer::DeserializeObjectUsingFactory(void* const obj, const size_t hash)
 {
     XnorFactory::DeserializeObject(obj, hash);
 }
@@ -139,6 +136,14 @@ void Serializer::EndXmlElement()
     }
 }
 
+void Serializer::AddAttribute(const std::string& name, const std::string& value)
+{
+    std::string error;
+    
+    XMLAttributte* const attribute = CreateAttribute(m_XmlDoc, name, value, error);
+    AddAttributeToElement(m_ElementsStack.top(), attribute, error);
+}
+
 void Serializer::AddElementToDoc()
 {
     std::string error;
@@ -180,7 +185,7 @@ const char_t* Serializer::ReadElementValue(const std::string& name)
 
     if (!vElem)
     {
-        Logger::LogDebug("Couldn't find element named : {}", name);
+        // Logger::LogDebug("Couldn't find element named : {}", name);
         return nullptr;
     }
 

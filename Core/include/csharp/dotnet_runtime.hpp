@@ -33,6 +33,9 @@ public:
     /// @brief Returns the loaded assembly with the given @p name.
     XNOR_ENGINE static DotnetAssembly* GetAssembly(const std::string& name);
 
+    /// @brief Returns the loaded Game assembly.
+    XNOR_ENGINE static DotnetAssembly* GetGameAssembly();
+
     /// @brief Unloads all loaded assemblies.
     ///
     /// @param reloadContext Unloading all assemblies means unloading the AssemblyLoadContext. This parameter describes whether to reload the context afterward.
@@ -78,9 +81,9 @@ private:
 
     XNOR_ENGINE static inline std::thread m_ProjectReloadingThread;
 
-    static bool CheckDotnetInstalled();
+    static bool_t CheckDotnetInstalled();
 
-    static bool CheckDotnetVersion();
+    static bool_t CheckDotnetVersion();
 
     static void CoralMessageCallback(std::string_view message, Coral::MessageLevel level);
     

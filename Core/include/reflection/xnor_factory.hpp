@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core.hpp"
+#include "utils/list.hpp"
 
 #include <functional>
 
@@ -71,7 +72,7 @@ public:
     /// @tparam T Parent type
     /// @param names Output names
     template <typename T>
-    static void FindAllChildClasses(std::vector<std::string>* names);
+    static void FindAllChildClasses(List<std::string>* names);
 
     /// @brief Prints the contents of the factory
     XNOR_ENGINE static void Print();
