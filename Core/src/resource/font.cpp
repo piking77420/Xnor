@@ -3,25 +3,17 @@
 #include "utils/logger.hpp"
 
 #include <ft2build.h>
-#include <freetype/freetype.h>
+#include FT_FREETYPE_H
+
 
 #include "rendering/rhi.hpp"
 
 
 using namespace XnorCore;
 
-
-
-bool_t Font::Load(const Pointer<File>& file)
-{
-    bool_t returnValue = false;
-    
-    return returnValue;
-}
-
 void Font::CreateInInterface()
 {
-    /*
+    
     FT_Library ft;
     if (FT_Init_FreeType(&ft))
     {
@@ -30,7 +22,8 @@ void Font::CreateInInterface()
     }
 
     FT_Face face;
-    if (FT_New_Face(ft, this->m_File->GetPath().generic_string().c_str(), 0, &face))
+    const std::string stringPath = m_File->GetPath().generic_string();
+    if (FT_New_Face(ft, stringPath.c_str(), 0, &face))
     {
         Logger::LogError("Error freetype : Failed to load font");
         return;
@@ -75,7 +68,7 @@ void Font::CreateInInterface()
     FT_Done_Face(face);
     FT_Done_FreeType(ft);
     m_LoadedInInterface = true;
-    */
+    
 }
 
 void Font::DestroyInInterface()

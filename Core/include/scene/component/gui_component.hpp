@@ -10,7 +10,7 @@ class GuiComponent : public Component
 public:
     Vector2 screenTransform;
 
-    Vector2 size;
+    Vector2 size = { 1.f, 1.f };
 
     DEFAULT_COPY_MOVE_OPERATIONS(GuiComponent)
     

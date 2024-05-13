@@ -123,20 +123,22 @@ void GuiPass::RenderText() const
     {
         if (!texteComponent->font.IsValid())
             continue;
-        
+
+        m_FontShader->SetVec3("textColor",static_cast<Vector3>(texteComponent->color));
+        float_t x = texteComponent->screenTransform.x;
+        const float_t y = texteComponent->screenTransform.y;
         
         for (std::string::const_iterator c = texteComponent->text.begin(); c != texteComponent->text.end(); c++)
         {
             const XnorCore::Font::Character& ch = texteComponent->font->GetGlyphByChar(*c);
 
-            float_t x = texteComponent->screenTransform.x;
-            const float_t y = texteComponent->screenTransform.y;
+   
 
-            const float_t xPos = x + static_cast<float_t>(ch.bearing.x) * texteComponent->police;
-            const float_t yPos = y - static_cast<float_t>(ch.size.y - ch.bearing.y) * texteComponent->police;
+            const float_t xPos = (x + static_cast<float_t>(ch.bearing.x) * texteComponent->police) * texteComponent->size.x;
+            const float_t yPos = (y - static_cast<float_t>(ch.size.y - ch.bearing.y) * texteComponent->police) * texteComponent->size.y;
 
-            const float_t w = static_cast<float_t>(ch.size.x) * texteComponent->police;
-            const float_t h = static_cast<float_t>(ch.size.y) * texteComponent->police;
+            const float_t w = (static_cast<float_t>(ch.size.x) * texteComponent->police) * texteComponent->size.x;
+            const float_t h = (static_cast<float_t>(ch.size.y) * texteComponent->police ) * texteComponent->size.y;
             // update VBO for each character
             const float_t vertices[6][4] = {
                 { xPos,     yPos + h,   0.0f, 0.0f },            

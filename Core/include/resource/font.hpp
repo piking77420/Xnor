@@ -40,8 +40,6 @@ public:
     XNOR_ENGINE ~Font() override = default;
 
     XNOR_ENGINE Font() = default;
-    
-    XNOR_ENGINE bool_t Load(const Pointer<File>& file) override;
 
     XNOR_ENGINE void CreateInInterface() override;
     

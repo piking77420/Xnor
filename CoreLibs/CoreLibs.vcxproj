@@ -71,7 +71,7 @@
     </Link>
     <Lib>
       <AdditionalDependencies>toolbox.lib;glfw3.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>libs\lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>libs\lib\$(Configuration);libs\$(Configuration)</AdditionalLibraryDirectories>
     </Lib>
     <PostBuildEvent>
       <Command>xcopy /Y "$(ProjectDir)libs\lib\$(Configuration)\*.pdb" "$(OutDir)"</Command>

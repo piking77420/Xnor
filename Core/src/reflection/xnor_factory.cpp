@@ -19,6 +19,7 @@
 #include "scene/component/skinned_mesh_render.hpp"
 #include "scene/component/test_component.hpp"
 #include "scene/component/test_component_physics.hpp"
+#include "scene/component/texte_component.hpp"
 
 using namespace XnorCore;
 
@@ -117,6 +118,8 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<GuiComponent>();
     RegisterType<Image>();
     RegisterType<Button>();
+    RegisterType<TexteComponent>();
+
 }
 
 std::string XnorFactory::GetTypeName(const size_t hash)

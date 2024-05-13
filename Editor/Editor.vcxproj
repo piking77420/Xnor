@@ -60,7 +60,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;MATH_TOOLBOX_DLL_IMPORT;MATH_DEFINE_FORMATTER;JPH_SHARED_LIBRARY;%(PreprocessorDefinitions);DLL_IMPORT;DLL_IMPORT</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;MATH_TOOLBOX_DLL_IMPORT;MATH_DEFINE_FORMATTER;JPH_SHARED_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>include;externals\include;..\Core\include;..\Core\externals\include;..\Core\inline;inline;..\Core\externals\inline;..\CoreLibs\include</AdditionalIncludeDirectories>
@@ -87,7 +87,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;MATH_TOOLBOX_DLL_IMPORT;MATH_DEFINE_FORMATTER;JPH_SHARED_LIBRARY;%(PreprocessorDefinitions);GLFW_DLL;DLL_IMPORT;DLL_IMPORT</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;MATH_TOOLBOX_DLL_IMPORT;MATH_DEFINE_FORMATTER;JPH_SHARED_LIBRARY;%(PreprocessorDefinitions);GLFW_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>include;externals\include;..\Core\include;..\Core\externals\include;..\Core\inline;inline;..\Core\externals\inline;..\CoreLibs\include</AdditionalIncludeDirectories>

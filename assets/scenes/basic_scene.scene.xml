@@ -14,6 +14,7 @@
 					<color>1 ; 1 ; 1 ; 1</color>
 					<intensity>4.5</intensity>
 					<castShadow>true</castShadow>
+					<enable>true</enable>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -47,6 +48,7 @@
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
+					<enable>true</enable>
 				</0>
 				<1 typeName="BoxCollider">
 					<center>0 ; 0 ; 0</center>
@@ -55,6 +57,7 @@
 					<m_IsStatic>true</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
 					<m_IsActive>false</m_IsActive>
+					<enable>true</enable>
 				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -88,6 +91,7 @@
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
+					<enable>true</enable>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -121,6 +125,7 @@
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
+					<enable>true</enable>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -139,6 +144,7 @@
 					<color>1 ; 0 ; 0.19799805 ; 1</color>
 					<intensity>380</intensity>
 					<castShadow>true</castShadow>
+					<enable>true</enable>
 				</0>
 				<1 typeName="TestComponent">
 					<TestComponent>
@@ -158,6 +164,7 @@
 						<m_Duration>0</m_Duration>
 						<m_Time>0</m_Time>
 					</m_Timeline>
+					<enable>true</enable>
 				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -178,6 +185,7 @@
 					<color>1 ; 0 ; 0.19799805 ; 1</color>
 					<intensity>380</intensity>
 					<castShadow>true</castShadow>
+					<enable>true</enable>
 				</0>
 				<1 typeName="TestComponent">
 					<m_Rotate>true</m_Rotate>
@@ -189,6 +197,7 @@
 						<m_Duration>0</m_Duration>
 						<m_Time>0</m_Time>
 					</m_Timeline>
+					<enable>true</enable>
 				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -210,9 +219,11 @@
 					<m_IsStatic>false</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
 					<m_IsActive>true</m_IsActive>
+					<enable>true</enable>
 				</0>
 				<1 typeName="TestComponentPhysics">
 					<m_JumpForce>1000</m_JumpForce>
+					<enable>true</enable>
 				</1>
 				<2 typeName="MeshRenderer">
 					<model>29075914-46D0-4C58-B8-37-A9-2A-1F-15-91-D1</model>
@@ -233,14 +244,19 @@
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
+					<enable>true</enable>
 				</2>
-				<3 typeName="CameraComponent"/>
+				<3 typeName="CameraComponent">
+					<enable>true</enable>
+				</3>
 				<4 typeName="AudioListener">
 					<dopplerEffect>true</dopplerEffect>
 					<m_Volume>1</m_Volume>
+					<enable>true</enable>
 				</4>
 				<5 typeName="PlayerMovment">
 					<speed>1.4</speed>
+					<enable>true</enable>
 				</5>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -274,11 +290,13 @@
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
+					<enable>true</enable>
 				</0>
 				<1 typeName="AudioSource">
 					<audioTrack>61B61790-1047-476F-8F-FF-D4-6-2A-BC-85-14</audioTrack>
 					<m_Volume>0.149</m_Volume>
 					<m_Pitch>1</m_Pitch>
+					<enable>true</enable>
 				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -297,12 +315,37 @@
 					<image>73588105-EF48-4133-86-87-48-7F-A1-DA-91-AE</image>
 					<screenTransform>107.8 ; 76.6</screenTransform>
 					<size>20.5 ; 20</size>
+					<enable>true</enable>
 				</0>
-				<1 typeName="Button"/>
+				<1 typeName="Button">
+					<enable>true</enable>
+				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
 		</8>
+		<9>
+			<name>Text</name>
+			<m_EntityId>E471477C-C2FE-4C72-BC-68-3E-1E-12-20-53-FF</m_EntityId>
+			<transform>
+				<m_Position>0 ; 0 ; 0</m_Position>
+				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="TexteComponent">
+					<font>20CC62DB-6AB3-4DA5-99-FC-66-3B-74-32-49-4C</font>
+					<text>cacaca</text>
+					<color>0.902439 ; 0.08529152 ; 0.08529152 ; 1</color>
+					<police>1</police>
+					<screenTransform>600 ; 300</screenTransform>
+					<size>1 ; 1</size>
+					<enable>true</enable>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</9>
 	</m_Entities>
 </Scene>
 

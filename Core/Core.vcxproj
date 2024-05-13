@@ -49,7 +49,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY;JPH_DEBUG_RENDERER;JPH_FLOATING_POINT_EXCEPTIONS_ENABLED;JPH_PROFILE_ENABLED;DLL_EXPORT;FT2_BUILD_LIBRARY</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY;JPH_DEBUG_RENDERER;JPH_FLOATING_POINT_EXCEPTIONS_ENABLED;JPH_PROFILE_ENABLED</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;include;inline;externals\inline;..\CoreLibs\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -59,7 +59,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib;OpenAL32.lib</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib;OpenAL32.lib;freetype.lib</AdditionalDependencies>
       <AdditionalOptions>/WHOLEARCHIVE:CoreLibs.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
@@ -73,7 +73,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY;DLL_EXPORT;FT2_BUILD_LIBRARY</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;include;inline;externals\inline;..\CoreLibs\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -85,7 +85,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);%(AdditionalLibraryDirectories);$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>;opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib;OpenAL32.lib</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib;OpenAL32.lib;freetype.lib</AdditionalDependencies>
       <AdditionalOptions>/WHOLEARCHIVE:CoreLibs.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>

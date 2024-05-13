@@ -62,5 +62,5 @@ assets/models/Coyote-Walking.fbx;6C09C002-82DC-4AF6-9D-41-B6-3A-31-72-4D-63
 assets/models/Coyote-Running.fbx;6681D90B-EA9E-4F13-87-FE-89-A8-AC-E0-A2-85
 Cube;BF4A5B8F-DF43-4B3D-93-74-67-EA-78-C6-DC-3F
 assets/models/planet.obj;9E82856F-3966-469A-80-DB-35-73-D6-E5-2-DE
-assets/fonts/Halo3.ttf;75FE9551-F79-4376-92-34-21-FC-DE-27-27-CE
 assets/ui/slider.png;C8618642-8806-471A-B2-4D-5E-52-D1-49-0-71
+assets/fonts/Antonio-Bold.ttf;20CC62DB-6AB3-4DA5-99-FC-66-3B-74-32-49-4C
