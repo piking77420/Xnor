@@ -131,6 +131,9 @@ void DotnetReflection::DisplayType(ScriptComponent* const script)
     ImGui::PushID(script);
     for (Coral::FieldInfo& field : obj.GetType().GetFields())
     {
+        if (field.GetAccessibility() != Coral::TypeAccessibility::Public)
+            continue;
+        
         const std::string fieldName = field.GetName();
 
         if (Utils::ArrayContains(IgnoredFieldNames, fieldName))
@@ -194,18 +197,22 @@ void DotnetReflection::DisplayExternalType(void* const value, const char_t* cons
     if (type.IsEnum())
     {
         int32_t* const val = static_cast<int32_t* const>(value);
-        
+
+        // TODO: Can be improved a lot by using cache
         std::vector<Coral::String> enumNames;
         type.GetEnumNames(enumNames);
+
+        std::vector<std::string> enumNamesStr(enumNames.size());
+        std::ranges::transform(enumNames, enumNamesStr.begin(), [](const Coral::String& str) -> std::string { return str; });
         
         std::vector<int32_t> enumValues;
         type.GetEnumValues(enumValues);
 
-        if (ImGui::BeginCombo(fieldName, enumNames[std::distance(enumValues.begin(), std::ranges::find(enumValues, *val))].Data()))
+        if (ImGui::BeginCombo(fieldName, enumNamesStr[std::distance(enumValues.begin(), std::ranges::find(enumValues, *val))].c_str()))
         {
-            for (size_t i = 0; i < enumNames.size(); i++)
+            for (size_t i = 0; i < enumNamesStr.size(); i++)
             {
-                if (ImGui::Selectable(enumNames[i].Data()))
+                if (ImGui::Selectable(enumNamesStr[i].c_str()))
                     *val = enumValues[i];
             }
             ImGui::EndCombo();
@@ -221,6 +228,9 @@ void DotnetReflection::SerializeScript(const ScriptComponent* const script)
     Serializer::AddAttribute("managedType", type.GetFullName());
     for (Coral::FieldInfo& field : type.GetFields())
     {
+        if (field.GetAccessibility() != Coral::TypeAccessibility::Public)
+            continue;
+        
         const std::string fieldName = field.GetName();
 
         if (Utils::ArrayContains(IgnoredFieldNames, fieldName))
