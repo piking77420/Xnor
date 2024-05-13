@@ -12,13 +12,13 @@ void RenderWindow::FetchInfo()
 }
 
 RenderWindow::RenderWindow(Editor* editor, XnorCore::Viewport& viewport)
-    : UiWindow(editor, "Game Preview"), m_Viewport(&viewport), m_InputBindId(XnorCore::Input::GetBindingId())
+    : UiWindow(editor, "Game Preview"), m_Viewport(&viewport)
 {
     m_Viewport->Init(XnorCore::Window::GetSize());
 }
 
 RenderWindow::RenderWindow(Editor* editor, const std::string& title, XnorCore::Viewport& viewport)
-    : UiWindow(editor, title) , m_Viewport(&viewport), m_InputBindId(XnorCore::Input::GetBindingId())
+    : UiWindow(editor, title) , m_Viewport(&viewport)
 {
     m_Viewport->Init(XnorCore::Window::GetSize());
 }
@@ -52,8 +52,18 @@ XnorCore::Input::BindedWindowInfo RenderWindow::GetBindWindoInfo() const
     Vector2 pos = static_cast<Vector2>(m_Position);
     pos.x += windowPadding.x;
     pos.y += windowPadding.y + framePadding.y + TiletBarOffSet;
+    
+    const XnorCore::Input::BindedWindowInfo windowInfo =
+           {
+        .windowPos = static_cast<Vector2>(m_Position),
+        .windowSize = static_cast<Vector2>(m_Size),
+        .isEditor = m_Viewport->isEditor,
+        .isRendering = true
+        };
+    
+   
+    return windowInfo;
 
-    return {pos, static_cast<Vector2>(m_Size), m_Viewport->isEditor};    
 }
 
 

@@ -6,7 +6,7 @@
 #include "rendering/draw_gizmo.hpp"
 
 BEGIN_XNOR_EDITOR
-    class EditorWindow : public RenderWindow
+class EditorWindow : public RenderWindow
 {
 public:
     void OnApplicationRendering() override;

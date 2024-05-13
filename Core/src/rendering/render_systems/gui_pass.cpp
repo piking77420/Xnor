@@ -9,11 +9,9 @@ using namespace XnorCore;
 void GuiPass::RenderGui(const Scene& scene, const Vector2i viewPortSize) const
 {
     scene.GetAllComponentOfType<Image>(&m_Images);
-    scene.GetAllComponentOfType<Slider>(&m_Slider);
     scene.GetAllComponentOfType<TexteComponent>(&m_TextComponents);
 
     m_GuiShader->Use();
-    UpdateSlider(viewPortSize);
     const Matrix matrixProj = Matrix::Orthographic(0.f, static_cast<float_t>(viewPortSize.x), 0.f,static_cast<float_t>(viewPortSize.y),0.1f, 1000.f);
     m_GuiShader->SetMat4("projection",matrixProj);
     RenderImage(viewPortSize);
@@ -56,8 +54,8 @@ void GuiPass::Init()
 
 void GuiPass::InitSliderQuad()
 {
-    m_QuadVao.Init();
-    m_QuadVbo.Init();
+    m_FontQuadVao.Init();
+    m_FontQuadVbo.Init();
     const Vector4 vertices[6] = {
         // Vertex coordinates   // Texture coordinates
         {0.5f,  0.5f,      1.0f, 1.0f}, 
@@ -69,7 +67,7 @@ void GuiPass::InitSliderQuad()
         {-0.5f,  0.5f,      0.0f, 1.0f}
     };
     constexpr size_t size = sizeof(vertices);
-    m_QuadVbo.Allocate(size , &vertices[0].x, BufferUsage::DynamicDraw);
+    m_FontQuadVbo.Allocate(size , &vertices[0].x, BufferUsage::DynamicDraw);
     
     VertexAttributeBinding vertexAttributeBinding =
     {
@@ -92,11 +90,11 @@ void GuiPass::InitSliderQuad()
         .VertexAttributeBindingSize = 1,
         .vertexAttribFormats = &vertexAttribFormat,
         .vertexAttribFormatsSize = 1,
-        .vboId = m_QuadVbo.GetId()
+        .vboId = m_FontQuadVbo.GetId()
     };
     
  
-    m_QuadVao.ComputeDescriptor(vboDescriptor);
+    m_FontQuadVao.ComputeDescriptor(vboDescriptor);
 }
 
 void GuiPass::ResetQuad() const
@@ -111,13 +109,13 @@ void GuiPass::ResetQuad() const
         {-0.5f, -0.5f,      0.0f, 0.0f}, 
         {-0.5f,  0.5f,      0.0f, 1.0f}
     };
-    m_QuadVbo.UpdateData(0,sizeof(vertices),&vertices);
+    m_FontQuadVbo.UpdateData(0,sizeof(vertices),&vertices);
     
 }
 
 void GuiPass::RenderText() const
 {
-    m_QuadVao.BindBuffer();
+    m_FontQuadVao.BindBuffer();
     
     for(const TexteComponent* texteComponent : m_TextComponents)
     {
@@ -131,9 +129,7 @@ void GuiPass::RenderText() const
         for (std::string::const_iterator c = texteComponent->text.begin(); c != texteComponent->text.end(); c++)
         {
             const XnorCore::Font::Character& ch = texteComponent->font->GetGlyphByChar(*c);
-
-   
-
+            
             const float_t xPos = (x + static_cast<float_t>(ch.bearing.x) * texteComponent->police) * texteComponent->size.x;
             const float_t yPos = (y - static_cast<float_t>(ch.size.y - ch.bearing.y) * texteComponent->police) * texteComponent->size.y;
 
@@ -152,7 +148,7 @@ void GuiPass::RenderText() const
 
             ch.texture->BindTexture(0);
             
-            m_QuadVbo.UpdateData(0,sizeof(vertices),vertices);
+            m_FontQuadVbo.UpdateData(0,sizeof(vertices),vertices);
             
             Rhi::DrawArray(DrawMode::Triangles,0,6);
 
@@ -161,7 +157,7 @@ void GuiPass::RenderText() const
 
     }
     
-    m_QuadVao.UnBindBuffer();
+    m_FontQuadVao.UnBindBuffer();
 }
 
 
@@ -173,18 +169,6 @@ void GuiPass::RenderImage(const Vector2i viewPortSize) const
     }
 }
 
-void GuiPass::UpdateSlider(Vector2i viewPortSize) const
-{
-    m_QuadVao.BindBuffer();
-    
-    for(const Slider* slider : m_Slider)
-    {
-        
-        
-    }
-    
-    m_QuadVao.UnBindBuffer();
-}
 
 void GuiPass::DrawImage(const Image* imagComponent, Vector2i viewPortSize) const
 {

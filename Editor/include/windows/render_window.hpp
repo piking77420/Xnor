@@ -25,12 +25,11 @@ public:
 
     void FetchInfo() override;
 
-    XnorCore::Input::BindedWindowInfo GetBindWindoInfo() const;
+    XnorCore::Input::BindedWindowInfo GetBindWindoInfo() const override;
 
 protected:
     XnorCore::Viewport* m_Viewport = nullptr;
 
-    uint32_t m_InputBindId = -1;
 };
 
 END_XNOR_EDITOR

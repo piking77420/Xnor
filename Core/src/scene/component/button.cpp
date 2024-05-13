@@ -14,7 +14,7 @@ void Button::Update()
 
 void Button::ButtonUpdate() const
 {
-    if (!Input::GetMouseButton(MouseButton::Left))
+    if (!Input::GetMouseButton(MouseButton::Left, MouseButtonStatus::Pressed))
         return;
 
     if (componentTarget == nullptr)
@@ -28,6 +28,9 @@ void Button::ButtonUpdate() const
     // Look for each window if we ckeck on the boutton bounding box
     for (const Input::BindedWindowInfo& windowInfo : windowBindedInfos)
     {
+        if (!windowInfo.isRendering)
+            continue;
+        
         if (windowInfo.isEditor)
             continue;
         

@@ -83,11 +83,6 @@ void Input::HandleMouseButton(GLFWwindow*, const int32_t mouseButton, const int3
     }
 }
 
-void Input::MouseCursorPos(GLFWwindow*, const double_t xpos, const double_t ypos)
-{
-    //m_MousePosition = Vector2(static_cast<float_t>(xpos), static_cast<float_t>(ypos));
-}
-
 void Input::HandleJoyStickCallBack(const int32_t jid, const int32_t event)
 {
     switch (event)
@@ -159,7 +154,6 @@ void Input::ResetKey()
 {
     glfwSetKeyCallback(m_WindowHandle, HandleKeyboard);
     glfwSetMouseButtonCallback(m_WindowHandle, HandleMouseButton);
-    //glfwSetCursorPosCallback(m_WindowHandle, MouseCursorPos);
 
 
     KeyStatuses defaultKeys;
@@ -233,13 +227,21 @@ void Input::GetWindowBindedInfo(std::vector<BindedWindowInfo>* BindedWindowsInfo
     *BindedWindowsInfo = m_BindedWindowInfo;
 }
 
+void Input::BindWindow(uint32_t bindInd)
+{
+    if (m_BindedWindowInfo.size() > bindInd)
+        return;
+
+    currentBindedWindow = bindInd;
+}
+
 void Input::Initialize()
 {
     GLFWwindow* const windowPtr = glfwGetCurrentContext();
 
     glfwSetKeyCallback(windowPtr, HandleKeyboard);
     glfwSetMouseButtonCallback(windowPtr, HandleMouseButton);
-    glfwSetCursorPosCallback(windowPtr, MouseCursorPos);
+    //glfwSetCursorPosCallback(windowPtr, MouseCursorPos);
     glfwSetJoystickCallback(HandleJoyStickCallBack);
 
     KeyStatuses defaultKeys;
