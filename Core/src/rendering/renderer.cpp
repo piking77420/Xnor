@@ -164,7 +164,7 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
     }
     else
     {
-        m_GuiPass.RenderGui(scene,viewport.viewPortSize);
+        m_GuiPass.RenderGui(scene, viewport.viewPortSize, viewport.GetAspect());
     }
 
     viewportData.colorPass.EndRenderPass();
@@ -375,15 +375,16 @@ void Renderer::RenderNonShadedPass(const Scene& scene, const Camera& camera,
                                    bool_t drawEditorUi)
 {
     const Vector2i viewportSize = renderPassBeginInfo.renderAreaOffset + renderPassBeginInfo.renderAreaExtent;
+    const float_t aspect =  static_cast<float_t>(viewportSize.x) / static_cast<float_t>(viewportSize.y);
     BindCamera(camera, viewportSize);
-    m_Frustum.UpdateFromCamera(camera, static_cast<float_t>(viewportSize.x) / static_cast<float_t>(viewportSize.y));
+    m_Frustum.UpdateFromCamera(camera,aspect);
     renderPass.BeginRenderPass(renderPassBeginInfo);
     DrawAllMeshRendersNonShaded(camera, scene);
 
     if (drawEditorUi)
     {
         m_LightManager.DrawLightGizmoWithShader(camera, scene, shaderToUse);
-        m_GuiPass.RenderGui(scene,viewportSize);
+        m_GuiPass.RenderGui(scene,viewportSize,aspect);
     }
 
     renderPass.EndRenderPass();

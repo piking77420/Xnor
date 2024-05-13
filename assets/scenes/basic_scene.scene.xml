@@ -335,10 +335,10 @@
 			<m_Components>
 				<0 typeName="TexteComponent">
 					<font>20CC62DB-6AB3-4DA5-99-FC-66-3B-74-32-49-4C</font>
-					<text>cacaca</text>
-					<color>0.902439 ; 0.08529152 ; 0.08529152 ; 1</color>
+					<text>Health 100</text>
+					<color>0.57012194 ; 0.045192584 ; 0.045192584 ; 1</color>
 					<police>1</police>
-					<screenTransform>600 ; 300</screenTransform>
+					<screenTransform>0 ; 0</screenTransform>
 					<size>1 ; 1</size>
 					<enable>true</enable>
 				</0>

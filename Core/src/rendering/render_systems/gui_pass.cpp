@@ -6,21 +6,25 @@
 
 using namespace XnorCore;
 
-void GuiPass::RenderGui(const Scene& scene, const Vector2i viewPortSize) const
+void GuiPass::RenderGui(const Scene& scene, const Vector2i& viewPortSizei, float_t aspect) const
 {
+    const Vector2 viewPortSize = static_cast<Vector2>(viewPortSizei);
+    
     scene.GetAllComponentOfType<Image>(&m_Images);
     scene.GetAllComponentOfType<TexteComponent>(&m_TextComponents);
+    const Matrix matrixProj = Matrix::Orthographic(0.f, viewPortSize.x, 0.f,viewPortSize.y,0.1f, 1000.f);
 
+    m_FontShader->Use();
+    m_FontShader->SetMat4("projection",matrixProj); 
+    RenderText(viewPortSize, aspect);
+    m_FontShader->Unuse();
+    
     m_GuiShader->Use();
-    const Matrix matrixProj = Matrix::Orthographic(0.f, static_cast<float_t>(viewPortSize.x), 0.f,static_cast<float_t>(viewPortSize.y),0.1f, 1000.f);
     m_GuiShader->SetMat4("projection",matrixProj);
     RenderImage(viewPortSize);
     m_GuiShader->Unuse();
 
-    m_FontShader->Use();
-    m_FontShader->SetMat4("projection",matrixProj); 
-    RenderText();
-    m_FontShader->Unuse();
+
 }
 
 void GuiPass::Init()
@@ -113,29 +117,36 @@ void GuiPass::ResetQuad() const
     
 }
 
-void GuiPass::RenderText() const
+void GuiPass::RenderText(const Vector2 viewPortSize, float_t aspect) const
 {
     m_FontQuadVao.BindBuffer();
+
     
     for(const TexteComponent* texteComponent : m_TextComponents)
     {
+        if (!texteComponent->enable)
+            continue;
+        
         if (!texteComponent->font.IsValid())
             continue;
 
         m_FontShader->SetVec3("textColor",static_cast<Vector3>(texteComponent->color));
         float_t x = texteComponent->screenTransform.x;
         const float_t y = texteComponent->screenTransform.y;
-        
+
+        // update VBO for each character
         for (std::string::const_iterator c = texteComponent->text.begin(); c != texteComponent->text.end(); c++)
         {
             const XnorCore::Font::Character& ch = texteComponent->font->GetGlyphByChar(*c);
-            
-            const float_t xPos = (x + static_cast<float_t>(ch.bearing.x) * texteComponent->police) * texteComponent->size.x;
-            const float_t yPos = (y - static_cast<float_t>(ch.size.y - ch.bearing.y) * texteComponent->police) * texteComponent->size.y;
 
-            const float_t w = (static_cast<float_t>(ch.size.x) * texteComponent->police) * texteComponent->size.x;
-            const float_t h = (static_cast<float_t>(ch.size.y) * texteComponent->police ) * texteComponent->size.y;
-            // update VBO for each character
+            const Vector2 scale = texteComponent->police * texteComponent->size;
+            
+            const float_t xPos = x + (static_cast<float_t>(ch.bearing.x) * scale.x);
+            const float_t yPos = y - (static_cast<float_t>(ch.size.y - ch.bearing.y) * scale.y);
+
+            const float_t w = (static_cast<float_t>(ch.size.x) * scale.x);
+            const float_t h = (static_cast<float_t>(ch.size.y) * scale.y );
+            
             const float_t vertices[6][4] = {
                 { xPos,     yPos + h,   0.0f, 0.0f },            
                 { xPos,     yPos,       0.0f, 1.0f },
@@ -161,7 +172,7 @@ void GuiPass::RenderText() const
 }
 
 
-void GuiPass::RenderImage(const Vector2i viewPortSize) const
+void GuiPass::RenderImage(Vector2 viewPortSize) const
 {
     for(const Image* image : m_Images)
     {
@@ -170,7 +181,7 @@ void GuiPass::RenderImage(const Vector2i viewPortSize) const
 }
 
 
-void GuiPass::DrawImage(const Image* imagComponent, Vector2i viewPortSize) const
+void GuiPass::DrawImage(const Image* imagComponent, Vector2 viewPortSize) const
 {
     if (!imagComponent->enable)
         return;
@@ -179,7 +190,7 @@ void GuiPass::DrawImage(const Image* imagComponent, Vector2i viewPortSize) const
         return;
 
     imagComponent->image->BindTexture(0);
-    Vector3 pos = static_cast<Vector3>(imagComponent->screenTransform);
+    Vector3 pos = static_cast<Vector3>(imagComponent->screenTransform * viewPortSize);
     pos.z = -1.f;
     pos.y = static_cast<float_t>(viewPortSize.y) - pos.y; // Flip y axis to mach mouse position
     m_GuiShader->SetMat4("model",Matrix::Trs(pos,Quaternion::Identity(),static_cast<Vector3>(imagComponent->size)));
