@@ -4,8 +4,14 @@ using namespace  XnorCore;
 
 void MeshRenderer::GetAABB(Bound* bound) const
 {
-    if (!model.IsValid())
-        return;
-            
-    *bound = Bound::GetAabbFromTransform(model->GetAabb(),GetTransform());
+    *bound = Bound();
+    
+    for (size_t i = 0; i < mesh->models.GetSize(); i++)
+    {
+        const Pointer<Model>& model = mesh->models[i];
+        
+       bound->Encapsulate(model->GetAabb());
+    }
+    
+    *bound = Bound::GetAabbFromTransform(*bound,GetTransform());
 }

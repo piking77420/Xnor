@@ -17,10 +17,7 @@ class MeshRenderer : public Component
     REFLECTABLE_IMPL(MeshRenderer)
     
 public:
-
-    /// @brief @ref Model of the mesh
-    Pointer<Model> model;
-
+    
     /// @brief @ref Mesh
     Pointer<Mesh> mesh;
 
@@ -45,7 +42,7 @@ END_XNOR_CORE
 /// @private
 REFL_AUTO(
     type(XnorCore::MeshRenderer, bases<XnorCore::Component>),
-    field(model),
+    //field(model),
     field(mesh),
     field(material),
     field(drawModelAabb)

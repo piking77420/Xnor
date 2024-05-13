@@ -23,7 +23,6 @@ Mesh::~Mesh()
         delete m_Animations[i];
 
     models.Clear();
-    textures.Clear();
     m_Skeletons.Clear();
     m_Animations.Clear();
 }
@@ -99,8 +98,6 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
         texture->Load(reinterpret_cast<const uint8_t*>(scene->mTextures[i]->pcData), size);
         texture->SetIsEmbedded();
         texture->Save();
-
-        textures.Add(texture);
     }
 
     for (uint32_t i = 0; i < scene->mNumAnimations; i++)
@@ -113,13 +110,14 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
         m_Animations.Add(animation);
     }
 
+    /*
     if (textures.GetSize() >= 1)
     {
         aiString textureName;
         scene->mMaterials[0]->GetTexture(aiTextureType_DIFFUSE, 0, &textureName);
         
         material.albedoTexture = Pointer<Texture>::New(*textures[0]);
-    }
+    }*/
     
     return true;
 }
@@ -128,10 +126,7 @@ void Mesh::CreateInInterface()
 {
     for (size_t i = 0; i < models.GetSize(); i++)
         models[i]->CreateInInterface();
-
-    for (size_t i = 0; i < textures.GetSize(); i++)
-        textures[i]->CreateInInterface();
-
+    
     for (size_t i = 0; i < m_Skeletons.GetSize(); i++)
         m_Skeletons[i]->CreateInInterface();
 

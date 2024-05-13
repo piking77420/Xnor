@@ -29,7 +29,8 @@ void MeshCollider::Begin()
         .isStatic = m_IsStatic
     };
 
-    m_BodyId = PhysicsWorld::CreateConvexHull(info, renderer->model->GetVertices());
+    // TODO do it for each models
+    m_BodyId = PhysicsWorld::CreateConvexHull(info, renderer->mesh->models[0]->GetVertices());
 }
 
 void MeshCollider::Update()

@@ -182,19 +182,25 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 
 	for (const MeshRenderer* const meshRenderer : meshRenderers)
 	{
-		if (!meshRenderer->model.IsValid())
+		if (!meshRenderer->mesh.IsValid())
 			continue;
 
 		if (!meshRenderer->drawModelAabb)
 			continue;
 
-		const Transform& transform =  meshRenderer->GetEntity()->transform;
-		const Bound&& modelAabb = Bound::GetAabbFromTransform( meshRenderer->model->GetAabb(), transform);
-		const Matrix&& trsAabb = Matrix::Trs(modelAabb.center, Quaternion::Identity(), modelAabb.extents);
-		modelData.model = trsAabb;
-		Rhi::UpdateModelUniform(modelData);
+		for (size_t i = 0; i < meshRenderer->mesh->models.GetSize(); i++)
+		{
+			const Pointer<Model>& model = meshRenderer->mesh->models[i];
+			const Transform& transform =  meshRenderer->GetEntity()->transform;
+			const Bound&& modelAabb = Bound::GetAabbFromTransform( model->GetAabb(), transform);
+			const Matrix&& trsAabb = Matrix::Trs(modelAabb.center, Quaternion::Identity(), modelAabb.extents);
+			modelData.model = trsAabb;
+			Rhi::UpdateModelUniform(modelData);
 
-		Rhi::DrawModel(DrawMode::Triangles, m_Cube->GetId());
+			Rhi::DrawModel(DrawMode::Triangles, m_Cube->GetId());
+		}
+		
+		
 	}
 	
 	m_GizmoShader->Unuse();
@@ -212,10 +218,11 @@ void Renderer::PrepareOctree() const
 		const MeshRenderer* meshRenderer = nullptr;
 		if (ent.TryGetComponent(&meshRenderer))
 		{
-			if (!meshRenderer->model.IsValid())
+			if (!meshRenderer->mesh.IsValid())
 				continue;
 
-			Bound bound = bound.GetAabbFromTransform(meshRenderer->model->GetAabb(), meshRenderer->entity->transform);
+			Bound bound;
+			meshRenderer->GetAABB(&bound);
 
 			ObjectBounding<const MeshRenderer> data;
 			data.bound = bound;
@@ -235,105 +242,89 @@ void Renderer::DrawMeshRendersByType(const std::vector<const MeshRenderer*>& mes
 	{
 		if (meshRenderer->material.materialType != materialType)
 			continue;
-
 		
-		Bound aabb;
-		meshRenderer->GetAABB(&aabb);
-		if (m_Frustum.IsOnFrustum(aabb))
-		{
+		if (!meshRenderer->mesh.IsValid())
 			continue;
-		}
 		
 		
-		const Transform& transform = meshRenderer->GetEntity()->transform;
-		ModelUniformData modelData;
-		modelData.model = transform.worldMatrix;
-		
-		try
+		for (size_t i = 0; i < meshRenderer->mesh->models.GetSize(); i++)
 		{
-			modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
-		}
-		catch (const std::invalid_argument&)
-		{
-			modelData.normalInvertMatrix = Matrix::Identity();
-		}
+			const Pointer<Model>& model = meshRenderer->mesh->models[i];
+			Bound aabb;
+			meshRenderer->GetAABB(&aabb);
+			if (m_Frustum.IsOnFrustum(aabb))
+			{
+				continue;
+			}
 		
-		Rhi::UpdateModelUniform(modelData);
+		
+			const Transform& transform = meshRenderer->GetEntity()->transform;
+			ModelUniformData modelData;
+			modelData.model = transform.worldMatrix;
+		
+			try
+			{
+				modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
+			}
+			catch (const std::invalid_argument&)
+			{
+				modelData.normalInvertMatrix = Matrix::Identity();
+			}
+		
+			Rhi::UpdateModelUniform(modelData);
 
-		if (meshRenderer->model.IsValid())
-		{
-			meshRenderer->material.BindMaterial();
-			Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
+			if (model.IsValid())
+			{
+				meshRenderer->material.BindMaterial();
+				Rhi::DrawModel(DrawMode::Triangles, model->GetId());
+			}
 		}
+		
 	}
 }
 
-void Renderer::DrawAllMeshRenders(const std::vector<const MeshRenderer*>& meshRenderers, const Scene& scene) const
-{
-	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 
-	for (const MeshRenderer* const meshRenderer : meshRenderers)
-	{
-		const Transform& transform = meshRenderer->GetEntity()->transform;
-		ModelUniformData modelData;
-		modelData.model = transform.worldMatrix;
-		// +1 to avoid the black color of the attachment be a valid index  
-		modelData.meshRenderIndex = scene.GetEntityIndex(meshRenderer->GetEntity()) + 1;
-		
-		try
-		{
-			modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
-		}
-		catch (const std::invalid_argument&)
-		{
-			modelData.normalInvertMatrix = Matrix::Identity();
-		}
-		
-		Rhi::UpdateModelUniform(modelData);
-
-		if (meshRenderer->model.IsValid())
-		{
-			meshRenderer->material.BindMaterial();
-			Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
-		}
-	}
-}
 
 void Renderer::DrawAllMeshRendersNonShaded(const std::vector<const MeshRenderer*>& meshRenderers, const Scene& scene) const
 {
 	Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
-
 	for (const MeshRenderer* const meshRenderer : meshRenderers)
 	{
-		
-		Bound aabb;
-		meshRenderer->GetAABB(&aabb);
-		if (m_Frustum.IsOnFrustum(aabb))
+		for (size_t i = 0; i < meshRenderer->mesh->models.GetSize(); i++)
 		{
-			continue;
+			const Pointer<Model>& model = meshRenderer->mesh->models[i];
+			
+			Bound aabb;
+			meshRenderer->GetAABB(&aabb);
+			if (m_Frustum.IsOnFrustum(aabb))
+			{
+				continue;
+			}
+		
+		
+			const Transform& transform = meshRenderer->GetEntity()->transform;
+			ModelUniformData modelData;
+			modelData.model = transform.worldMatrix;
+			// +1 to not let 0 index be a correct value in the frame buffer
+			modelData.meshRenderIndex = scene.GetEntityIndex(meshRenderer->entity) + 1;
+			
+			try
+			{
+				modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
+			}
+			catch (const std::invalid_argument&)
+			{
+				modelData.normalInvertMatrix = Matrix::Identity();
+			}
+		
+			Rhi::UpdateModelUniform(modelData);
+
+			if (model.IsValid())
+			{
+				Rhi::DrawModel(DrawMode::Triangles, model->GetId());
+			}
 		}
 		
-		const Transform& transform = meshRenderer->GetEntity()->transform;
-		ModelUniformData modelData;
-		modelData.model = transform.worldMatrix;
-		// +1 to avoid the black color of the attachment be a valid index  
-		modelData.meshRenderIndex = scene.GetEntityIndex(meshRenderer->GetEntity()) + 1;
-		
-		try
-		{
-			modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
-		}
-		catch (const std::invalid_argument&)
-		{
-			modelData.normalInvertMatrix = Matrix::Identity();
-		}
-		
-		Rhi::UpdateModelUniform(modelData);
-		
-		if (meshRenderer->model.IsValid())
-		{
-			Rhi::DrawModel(DrawMode::Triangles, meshRenderer->model->GetId());
-		}
 	}
 }
 

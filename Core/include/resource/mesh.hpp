@@ -29,7 +29,6 @@ public:
     };
 
     List<Pointer<Model>> models;
-    List<Pointer<Texture>> textures;
 
     Material material;
 
@@ -58,7 +57,6 @@ private:
 
 END_XNOR_CORE
 
-REFL_AUTO(type(XnorCore::Mesh, bases<XnorCore::Resource>),
-    field(material),
-    field(m_Animations)
+REFL_AUTO(
+    type(XnorCore::Mesh, bases<XnorCore::Resource>) // to do list of model
 )
