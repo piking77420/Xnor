@@ -305,14 +305,14 @@ void Editor::StopPlaying()
 	XnorCore::Coroutine::StopAll();
 
 	data.selectedEntity = nullptr;
-	delete XnorCore::World::scene;
-	XnorCore::World::scene = new XnorCore::Scene;
-	XnorCore::World::scene->Initialize();
 
 	DeserializeScene();
 
+	XnorCore::World::scene->Initialize();
 	XnorCore::World::isPlaying = false;
 	XnorCore::World::hasStarted = false;
+	
+	renderer.BeginFrame(*XnorCore::World::scene);
 
 	m_GamePlaying = false;
 }
@@ -398,9 +398,6 @@ void Editor::UpdateWindows()
 
 void Editor::OnRenderingWindow()
 {
-	if (m_CurrentAsyncActionThread.joinable() || m_Deserializing)
-		return;
-	
 	for (UiWindow* const w : m_UiWindows)
 	{
 		w->OnApplicationRendering();
@@ -449,21 +446,29 @@ void Editor::Update()
 		shadersToReload.Iterate([](decltype(shadersToReload)::Type* const param){ (*param)->Recompile(); });
 		shadersToReload.Clear();
 		listMutex.unlock();
-		
-		renderer.BeginFrame(*World::scene);
+
+		const bool_t deserializingScene = m_CurrentAsyncActionThread.joinable() || m_Deserializing;
+
+		if (!deserializingScene)
+			renderer.BeginFrame(*World::scene);
 
 		UpdateWindows();
 		WorldBehaviours();
-		OnRenderingWindow();
+		if (!deserializingScene)
+		{
+			OnRenderingWindow();
 		
-		renderer.EndFrame(*World::scene);
+			renderer.EndFrame(*World::scene);
+		}
 
 		Coroutine::UpdateAll();
 		Input::Update();
 		EndFrame();
 		renderer.SwapBuffers();
 
-		if (m_CurrentAsyncActionThread.joinable() && !(m_Deserializing || m_Serializing || m_ReloadingScripts))
+		// If a thread has been used to asynchronously either serialize the scene, deserialize it, or reload the scripts, and the thread hasn't been joined yet
+		// This is basically executed if the thread finished executing
+		if (m_CurrentAsyncActionThread.joinable() && !(m_Serializing || m_Deserializing || m_ReloadingScripts))
 		{
 			World::scene->Initialize();
 			renderer.BeginFrame(*World::scene);

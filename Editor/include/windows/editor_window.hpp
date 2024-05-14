@@ -2,11 +2,13 @@
 
 #include "editor_camera.hpp"
 #include "render_window.hpp"
+#include "editing/picking_strategy.hpp"
 #include "editing/transform_gizmo.hpp"
 #include "rendering/draw_gizmo.hpp"
 
 BEGIN_XNOR_EDITOR
-    class EditorWindow : public RenderWindow
+
+class EditorWindow : public RenderWindow
 {
 public:
     void OnApplicationRendering() override;

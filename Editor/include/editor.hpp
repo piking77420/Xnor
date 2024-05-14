@@ -5,7 +5,6 @@
 #include "application.hpp"
 #include "definitions.hpp"
 #include "editor_data.hpp"
-#include "editing/picking_strategy.hpp"
 #include "utils/file_system_watcher.hpp"
 
 BEGIN_XNOR_EDITOR
