@@ -8,6 +8,8 @@ BEGIN_XNOR_EDITOR
 class FooterWindow : public UiWindow
 {
 public:
+    static constexpr std::chrono::duration<float_t> FadeOutDuration{2.f};
+    
     explicit FooterWindow(Editor* editor);
 
     void Display() override;

@@ -2,16 +2,8 @@
 
 #include <format>
 
-#undef APIENTRY
+#include "utils/windows.hpp"
 
-// ReSharper disable once CppInconsistentNaming
-#define XMLDocument XMLDocument_dont_care
-#include <windows.h>
-#undef XMLDocument
-
-#undef min
-#undef max
-#undef APIENTRY
 #include <psapi.h>
 
 #include "screen.hpp"

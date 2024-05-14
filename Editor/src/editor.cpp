@@ -275,12 +275,14 @@ void Editor::BuildAndReloadCodeAsync()
 	
 	m_ReloadingScripts = true;
 
+	// This should never happen, but we check it anyway because it would cause a crash if it did
 	if (m_CurrentAsyncActionThread.joinable())
 		m_CurrentAsyncActionThread.join();
 
 	m_CurrentAsyncActionThread = std::thread(
 		[this, stoppedPlaying]
 		{
+			// If we stopped playing, the scene just got deserialized, so no need to serialize it again
 			if (!stoppedPlaying)
 				SerializeScene();
 			XnorCore::DotnetRuntime::BuildAndReloadProject();
@@ -453,9 +455,10 @@ void Editor::Update()
 			renderer.BeginFrame(*World::scene);
 
 		UpdateWindows();
-		WorldBehaviours();
+		
 		if (!deserializingScene)
 		{
+			WorldBehaviours();
 			OnRenderingWindow();
 		
 			renderer.EndFrame(*World::scene);

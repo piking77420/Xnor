@@ -65,6 +65,7 @@ private:
 	bool_t m_Deserializing = false;
 	bool_t m_ReloadingScripts = false;
 
+	/// @brief This thread is used both for serializing the scene, deserializing it, and reloading scripts
 	std::thread m_CurrentAsyncActionThread;
 
 	bool_t m_GamePlaying = false;
