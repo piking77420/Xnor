@@ -16,14 +16,7 @@ Entity::Entity(const Guid& entiyId)
 Entity::~Entity()
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
-    {
-        Component* component = m_Components[i];
-        ScriptComponent* script = dynamic_cast<ScriptComponent*>(component);
-        if (script)
-            script->GetManagedObject().Destroy();
-        else
-            delete component;
-    }
+        m_Components[i]->Destroy();
 
     m_Components.Clear();
 }

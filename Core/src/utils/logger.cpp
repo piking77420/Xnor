@@ -232,8 +232,6 @@ void Logger::Run()
     }
 
     m_Logs.clear();
-
-    m_Mutex.unlock();
 }
 
 void Logger::PushLog(const std::shared_ptr<LogEntry>& log)

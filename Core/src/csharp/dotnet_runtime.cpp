@@ -234,7 +234,7 @@ bool_t DotnetRuntime::BuildGameProject(const bool_t asynchronous)
     return false;
 }
 
-void DotnetRuntime::BuildAndReloadProject()
+void DotnetRuntime::BuildAndReloadProject(const bool_t recreateScriptInstances)
 {
     m_ReloadingProject = true;
     m_ProjectReloadingProgress = 0.f;
@@ -245,9 +245,9 @@ void DotnetRuntime::BuildAndReloadProject()
 
     for (size_t i = 0; i < scripts.size(); i++)
     {
-        auto&& managedObject = scripts[i]->m_ManagedObject;
-        types[i] = managedObject.GetType().GetFullName();
-        managedObject.Destroy();
+        ScriptComponent* const script = scripts[i];
+        types[i] = script->m_ManagedObject.GetType().GetFullName();
+        // script->Destroy(); // FIXME: This line causes the crash
     }
     
     m_ProjectReloadingProgress = 0.1f;
@@ -258,16 +258,17 @@ void DotnetRuntime::BuildAndReloadProject()
 
         m_ProjectReloadingProgress = 0.9f;
 
-        const DotnetAssembly* const game = GetGameAssembly();
-
-        auto&& gameTypes = game->GetCoralAssembly()->GetTypes();
-        for (size_t i = 0; i < scripts.size(); i++)
+        if (recreateScriptInstances)
         {
-            auto&& it = std::ranges::find_if(gameTypes, [&] (const Coral::Type* const type) -> bool_t { return type->GetFullName() == types[i]; });
-            if (it != gameTypes.end())
+            auto&& gameTypes = GetGameAssembly()->GetCoralAssembly()->GetTypes();
+            for (size_t i = 0; i < scripts.size(); i++)
             {
-                auto&& type = *it;
-                scripts[i]->m_ManagedObject = type->CreateInstance();
+                auto&& it = std::ranges::find_if(gameTypes, [&] (const Coral::Type* const type) -> bool_t { return type->GetFullName() == types[i]; });
+                if (it != gameTypes.end())
+                {
+                    auto&& type = *it;
+                    scripts[i]->m_ManagedObject = type->CreateInstance();
+                }
             }
         }
     }

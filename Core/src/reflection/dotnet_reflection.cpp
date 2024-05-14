@@ -286,7 +286,7 @@ void DotnetReflection::SerializeScript(const ScriptComponent* const script)
     const Coral::ManagedObject& obj = script->GetManagedObject();
     const Coral::Type& type = obj.GetType();
 
-    auto name = type.GetFullName();
+    const auto name = type.GetFullName();
     Serializer::AddAttribute("managedType", name);
     for (Coral::FieldInfo& field : type.GetFields())
     {

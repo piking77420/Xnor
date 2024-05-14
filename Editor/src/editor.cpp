@@ -248,7 +248,9 @@ void Editor::MenuBar()
 				path = data.currentScene->GetPathString();
 			}
 
-			if (m_ReloadingScripts)
+			const bool_t saveLoadDisabled = m_ReloadingScripts || m_GamePlaying;
+
+			if (saveLoadDisabled)
 				ImGui::BeginDisabled();
 
 			if (ImGui::MenuItem("Save"))
@@ -257,7 +259,7 @@ void Editor::MenuBar()
 			if (ImGui::MenuItem("Load"))
 				DeserializeSceneAsync(path);
 
-			if (m_ReloadingScripts)
+			if (saveLoadDisabled)
 				ImGui::EndDisabled();
 
 			ImGui::EndMenu();
@@ -285,7 +287,7 @@ void Editor::BuildAndReloadCodeAsync()
 			// If we stopped playing, the scene just got deserialized, so no need to serialize it again
 			if (!stoppedPlaying)
 				SerializeScene();
-			XnorCore::DotnetRuntime::BuildAndReloadProject();
+			XnorCore::DotnetRuntime::BuildAndReloadProject(false);
 			DeserializeScene();
 			
 			m_ReloadingScripts = false;
@@ -321,6 +323,8 @@ void Editor::StopPlaying()
 
 void Editor::SerializeScene(const std::string& filepath)
 {
+	XnorCore::Logger::LogInfo("Saving scene");
+	
 	if (filepath.empty())
 		m_SerializedScenePath = std::filesystem::temp_directory_path() / "xnor_current.scene.xml";
 	else
@@ -343,6 +347,8 @@ void Editor::SerializeSceneAsync(const std::string& filepath)
 
 void Editor::DeserializeScene(const std::string& filepath)
 {
+	XnorCore::Logger::LogInfo("Loading scene");
+	
 	if (filepath.empty())
 		m_SerializedScenePath = std::filesystem::temp_directory_path() / "xnor_current.scene.xml";
 	else

@@ -47,8 +47,9 @@ public:
     /// @brief Builds the Game .NET project.
     XNOR_ENGINE static bool_t BuildGameProject(bool_t asynchronous = true);
 
-    /// @brief Asynchronously builds the Game .NET project and reloads the resulting assembly.
-    XNOR_ENGINE static void BuildAndReloadProject();
+    /// @brief Builds the Game .NET project and reloads the resulting assembly. This can be quite long, consider calling this function on a worker thread.
+    /// @param recreateScriptInstances Whether to recreate the .NET ScriptComponent instances after the reload.
+    XNOR_ENGINE static void BuildAndReloadProject(bool_t recreateScriptInstances = true);
 
     /// @brief Returns whether the runtime is initialized.
     XNOR_ENGINE static bool_t GetInitialized();
