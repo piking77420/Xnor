@@ -60,6 +60,7 @@ Application::Application(const int32_t, const char_t* const* const argv)
 	}
 
 	World::scene = new Scene;
+	World::scene->Initialize();
 
 	if (!DotnetRuntime::LoadAssembly("Game"))
 		Logger::LogWarning("Couldn't load assembly Game.dll");

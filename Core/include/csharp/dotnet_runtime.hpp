@@ -74,12 +74,10 @@ private:
     
     XNOR_ENGINE static inline std::filesystem::path m_AssembliesPath;
 
-    XNOR_ENGINE static inline bool_t m_ReloadingProjectAsync = false;
+    XNOR_ENGINE static inline bool_t m_ReloadingProject = false;
 
-    /// @brief Project reloading progress between 0 and 1. Only valid if @c m_ReloadingProjectAsync is @c true
+    /// @brief Project reloading progress between 0 and 1. Only valid if @c m_ReloadingProject is @c true
     XNOR_ENGINE static inline float_t m_ProjectReloadingProgress = 0.f;
-
-    XNOR_ENGINE static inline std::thread m_ProjectReloadingThread;
 
     static bool_t CheckDotnetInstalled();
 

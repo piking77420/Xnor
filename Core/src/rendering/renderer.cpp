@@ -44,7 +44,6 @@ void Renderer::BeginFrame(const Scene& scene)
 	scene.GetAllComponentsOfType<MeshRenderer>(&m_MeshRenderers);
 	
 	PrepareOctree();
-	
 }
 
 void Renderer::EndFrame(const Scene& scene)
@@ -204,7 +203,7 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 
 void Renderer::PrepareOctree() const
 {
-	std::vector<ObjectBounding<const MeshRenderer>> meshrenderWithAabb;
+	std::vector<ObjectBounding<const MeshRenderer>> meshRendererWithAabb;
 	
 	for (uint32_t i = 0; i < World::scene->GetEntities().GetSize();i++)
 	{
@@ -221,10 +220,10 @@ void Renderer::PrepareOctree() const
 			ObjectBounding<const MeshRenderer> data;
 			data.bound = bound;
 			data.handle = meshRenderer;
-			meshrenderWithAabb.emplace_back(data);
+			meshRendererWithAabb.emplace_back(data);
 		}
 	}
-	m_RenderOctree.Update(meshrenderWithAabb);
+	m_RenderOctree.Update(meshRendererWithAabb);
 }
 
 

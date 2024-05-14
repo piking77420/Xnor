@@ -31,7 +31,7 @@ protected:
 
 private:
     EditorCamera m_EditorCamera;
-    TransfromGizmo m_TransfromGizmo;
+    TransfromGizmo m_TransformGizmo;
     XnorCore::DrawGizmo m_DrawGizmo;
 };
 

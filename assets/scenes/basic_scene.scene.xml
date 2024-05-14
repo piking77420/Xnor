@@ -154,11 +154,16 @@
 					<m_Radius>1</m_Radius>
 					<m_TestEntity>0-0-0-0-0-0-0-0-0-0-0</m_TestEntity>
 					<m_GridPlottingTest>0 ; 0</m_GridPlottingTest>
+					<m_Key>Space</m_Key>
 					<m_Timeline>
 						<m_Duration>0</m_Duration>
 						<m_Time>0</m_Time>
 					</m_Timeline>
 				</1>
+				<2 typeName="ScriptComponent" managedType="Game.TestScript">
+					<MyFloatVar>2</MyFloatVar>
+					<MyEnumVar>Third</MyEnumVar>
+				</2>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
@@ -185,6 +190,7 @@
 					<m_Radius>1</m_Radius>
 					<m_TestEntity>0-0-0-0-0-0-0-0-0-0-0</m_TestEntity>
 					<m_GridPlottingTest>0 ; 0</m_GridPlottingTest>
+					<m_Key>Space</m_Key>
 					<m_Timeline>
 						<m_Duration>0</m_Duration>
 						<m_Time>0</m_Time>

@@ -23,7 +23,7 @@ class DotnetReflection
         std::function<Coral::ManagedObject()> createFunc;
         std::function<void(void*, const char_t*)> displayFunc;
         std::function<void(void*, const std::string&)> serializeFunc;
-        std::function<void(void*)> deserializeFunc;
+        std::function<void(void*, const std::string&)> deserializeFunc;
 
         std::string name;
         bool_t isScriptType = false;
@@ -95,15 +95,19 @@ private:
 
     XNOR_ENGINE static void SerializeType(void* value, const std::string& fieldName, const std::string& typeName);
 
+    XNOR_ENGINE static void DeserializeType(void* value, const std::string& fieldName, const std::string& typeName);
+
     XNOR_ENGINE static void SerializeExternalType(void* value, const std::string& fieldName, const std::string& typeName);
+
+    XNOR_ENGINE static void DeserializeExternalType(void* value, const std::string& fieldName, const std::string& typeName);
     
     XNOR_ENGINE static void DisplayExternalType(void* value, const char_t* fieldName, const std::string& typeName);
 
     template <typename T>
-    static void SerializeSimpleType(T* obj, const std::string& name);
+    static void SerializeSimpleType(T* obj, const std::string& fieldName);
 
     template <typename T>
-    static void DeserializeSimpleType(T* obj);
+    static void DeserializeSimpleType(T* obj, const std::string& fieldName);
 };
 
 END_XNOR_CORE

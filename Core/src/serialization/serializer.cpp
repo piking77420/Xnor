@@ -38,9 +38,9 @@ void Serializer::DeserializeObjectUsingFactory(void* const obj, const size_t has
     XnorFactory::DeserializeObject(obj, hash);
 }
 
-void* Serializer::CreateObjectUsingFactory(const std::string& name)
+void* Serializer::CreateObjectUsingFactory(const std::string& name, const std::string& managedTypeName)
 {
-    return XnorFactory::CreateObject(name);
+    return XnorFactory::CreateObject(name, managedTypeName);
 }
 
 void Serializer::StartSerialization(const std::string& filePath)

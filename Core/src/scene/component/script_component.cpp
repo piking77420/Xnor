@@ -2,14 +2,14 @@
 
 using namespace XnorCore;
 
-ScriptComponent::~ScriptComponent()
-{
-    m_ManagedObject.Destroy();
-}
-
 void ScriptComponent::Initialize(const Coral::ManagedObject& managedObject)
 {
     m_ManagedObject = managedObject;
+}
+
+void ScriptComponent::Destroy()
+{
+    m_ManagedObject.Destroy();
 }
 
 void ScriptComponent::Begin()

@@ -35,6 +35,9 @@ public:
     /// @brief Called after the physics update
     virtual void PostPhysics() {}
 
+    /// @brief Deletes this Component. This is only used for polymorphism purposes with the ScriptComponent type.
+    virtual void Destroy();
+
     /// @brief Get the Entity on which this Component is attached
     [[nodiscard]]
     const Entity* GetEntity() const;

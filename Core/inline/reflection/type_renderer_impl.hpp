@@ -490,6 +490,7 @@ void TypeRendererImpl<List<Component*>>::Render(const TypeRenderer::Metadata<Ref
             // Button to delete the current element
             if (ImGui::Button("-"))
             {
+                (*metadata.obj)[i]->Destroy();
                 metadata.obj->RemoveAt(i);
                 --listSize;
 

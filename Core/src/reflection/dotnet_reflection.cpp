@@ -41,7 +41,7 @@ void DotnetReflection::RegisterScriptType(const std::string& typeName)
         .createFunc = [&]() -> Coral::ManagedObject { return type.CreateInstance(); },
         .displayFunc = [&, tName = typeName](void* const value, const char_t* fieldName) -> void { DisplayExternalType(value, fieldName, tName); },
         .serializeFunc = [&, tName = typeName](void* const value, const std::string& fieldName) -> void { SerializeExternalType(value, fieldName, tName); },
-        .deserializeFunc = [](void* const) -> void {},
+        .deserializeFunc = [&, tName = typeName](void* const value, const std::string& fieldName) -> void { DeserializeExternalType(value, fieldName, tName); },
         .name = typeName,
         .isScriptType = true
     };
@@ -58,7 +58,7 @@ void DotnetReflection::RegisterEnumType(const std::string& typeName, const std::
         .createFunc = [&]() -> Coral::ManagedObject { return type.CreateInstance(); },
         .displayFunc = [&, tName = typeName](void* const value, const char_t* fieldName) -> void { DisplayExternalType(value, fieldName, tName); },
         .serializeFunc = [&, tName = typeName](void* const value, const std::string& fieldName) -> void { SerializeExternalType(value, fieldName, tName); },
-        .deserializeFunc = [](void* const) -> void {},
+        .deserializeFunc = [&, tName = typeName](void* const value, const std::string& fieldName) -> void { DeserializeExternalType(value, fieldName, tName); },
         .name = typeName,
         .isScriptType = false
     };
@@ -180,13 +180,74 @@ void DotnetReflection::SerializeType(void* const value, const std::string& field
     it->second.serializeFunc(value, fieldName);
 }
 
-void DotnetReflection::SerializeExternalType(void* value, const std::string& fieldName, const std::string& typeName)
+void DotnetReflection::DeserializeType(void* const value, const std::string& fieldName, const std::string& typeName)
+{
+    auto&& it = m_DotnetMap.find(typeName);
+
+    if (it == m_DotnetMap.end())
+    {
+        Logger::LogError("[C# Refl] Couldn't find type named {}", typeName);
+        return;
+    }
+
+    it->second.deserializeFunc(value, fieldName);
+}
+
+void DotnetReflection::SerializeExternalType(void* const value, const std::string& fieldName, const std::string& typeName)
 {
     const Coral::Type& type = DotnetRuntime::GetGameAssembly()->GetCoralAssembly()->GetType(typeName);
     
     if (type.IsEnum())
     {
-        Serializer::AddSimpleValue(fieldName, *static_cast<int32_t* const>(value));
+        // TODO: Can be improved a lot by using cache
+        std::vector<Coral::String> enumNames;
+        type.GetEnumNames(enumNames);
+
+        std::vector<std::string> enumNamesStr(enumNames.size());
+        std::ranges::transform(enumNames, enumNamesStr.begin(), [](const Coral::String& str) -> std::string { return str; });
+        
+        std::vector<int32_t> enumValues;
+        type.GetEnumValues(enumValues);
+
+        const int32_t val = *static_cast<int32_t* const>(value);
+        for (size_t i = 0; i < enumNamesStr.size(); i++)
+        {
+            if (enumValues[i] == val)
+            {
+                Serializer::AddSimpleValue(fieldName, enumNamesStr[i]);
+                break;
+            }
+        }
+    }
+}
+
+void DotnetReflection::DeserializeExternalType(void* const value, const std::string& fieldName, const std::string& typeName)
+{
+    const Coral::Type& type = DotnetRuntime::GetGameAssembly()->GetCoralAssembly()->GetType(typeName);
+    
+    if (type.IsEnum())
+    {
+        const char_t* const xmlValue = Serializer::ReadElementValue(fieldName);
+        
+        // TODO: Can be improved a lot by using cache
+        std::vector<Coral::String> enumNames;
+        type.GetEnumNames(enumNames);
+
+        std::vector<std::string> enumNamesStr(enumNames.size());
+        std::ranges::transform(enumNames, enumNamesStr.begin(), [](const Coral::String& str) -> std::string { return str; });
+        
+        std::vector<int32_t> enumValues;
+        type.GetEnumValues(enumValues);
+
+        int32_t* const val = static_cast<int32_t* const>(value);
+        for (size_t i = 0; i < enumNamesStr.size(); i++)
+        {
+            if (enumNamesStr[i] == xmlValue)
+            {
+                *val = enumValues[i];
+                break;
+            }
+        }
     }
 }
 
@@ -225,7 +286,8 @@ void DotnetReflection::SerializeScript(const ScriptComponent* const script)
     const Coral::ManagedObject& obj = script->GetManagedObject();
     const Coral::Type& type = obj.GetType();
 
-    Serializer::AddAttribute("managedType", type.GetFullName());
+    auto name = type.GetFullName();
+    Serializer::AddAttribute("managedType", name);
     for (Coral::FieldInfo& field : type.GetFields())
     {
         if (field.GetAccessibility() != Coral::TypeAccessibility::Public)
@@ -246,4 +308,23 @@ void DotnetReflection::SerializeScript(const ScriptComponent* const script)
 
 void DotnetReflection::DeserializeScript(ScriptComponent* const script)
 {
+    Coral::ManagedObject& obj = script->GetManagedObject();
+    const Coral::Type& type = obj.GetType();
+    
+    for (Coral::FieldInfo& field : type.GetFields())
+    {
+        if (field.GetAccessibility() != Coral::TypeAccessibility::Public)
+            continue;
+        
+        const std::string fieldName = field.GetName();
+
+        if (Utils::ArrayContains(IgnoredFieldNames, fieldName))
+            continue;
+        
+        const std::string typeName = field.GetType().GetFullName();
+
+        void* const ptr = obj.GetFieldPointer<void>(fieldName);
+
+        DeserializeType(ptr, fieldName, typeName);
+    }
 }

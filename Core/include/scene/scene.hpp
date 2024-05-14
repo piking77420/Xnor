@@ -22,7 +22,7 @@ public:
     /// @brief Skybox handler
     Skybox skybox;
     
-    XNOR_ENGINE Scene();
+    XNOR_ENGINE Scene() = default;
     XNOR_ENGINE ~Scene();
 
     DEFAULT_COPY_MOVE_OPERATIONS(Scene)
@@ -38,6 +38,8 @@ public:
     /// @param components Result components
     template <class ComponentT>
     void GetAllComponentsOfType(std::vector<ComponentT*>* components);
+
+    XNOR_ENGINE void Initialize();
 
     /// @brief Begins the scene
     XNOR_ENGINE void Begin();

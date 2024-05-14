@@ -64,9 +64,6 @@ void DotnetRuntime::Shutdown()
 {
     Logger::LogInfo("Shutting down .NET runtime");
     
-    if (m_ProjectReloadingThread.joinable())
-        m_ProjectReloadingThread.join();
-
     if (!m_LoadedAssemblies.empty())
         UnloadAllAssemblies();
     if (m_Initialized)
@@ -239,61 +236,53 @@ bool_t DotnetRuntime::BuildGameProject(const bool_t asynchronous)
 
 void DotnetRuntime::BuildAndReloadProject()
 {
-    m_ReloadingProjectAsync = true;
+    m_ReloadingProject = true;
     m_ProjectReloadingProgress = 0.f;
 
-    if (m_ProjectReloadingThread.joinable())
-        m_ProjectReloadingThread.join();
+    std::vector<ScriptComponent*> scripts;
+    World::scene->GetAllComponentsOfType(&scripts);
+    std::vector<std::string> types(scripts.size());
 
-    m_ProjectReloadingThread = std::thread(
-        []
+    for (size_t i = 0; i < scripts.size(); i++)
+    {
+        auto&& managedObject = scripts[i]->m_ManagedObject;
+        types[i] = managedObject.GetType().GetFullName();
+        managedObject.Destroy();
+    }
+    
+    m_ProjectReloadingProgress = 0.1f;
+    
+    if (BuildGameProject(false))
+    {
+        ReloadAllAssemblies();
+
+        m_ProjectReloadingProgress = 0.9f;
+
+        const DotnetAssembly* const game = GetGameAssembly();
+
+        auto&& gameTypes = game->GetCoralAssembly()->GetTypes();
+        for (size_t i = 0; i < scripts.size(); i++)
         {
-            std::vector<ScriptComponent*> scripts;
-            World::scene->GetAllComponentsOfType(&scripts);
-            std::vector<std::string> types(scripts.size());
-
-            for (size_t i = 0; i < scripts.size(); i++)
+            auto&& it = std::ranges::find_if(gameTypes, [&] (const Coral::Type* const type) -> bool_t { return type->GetFullName() == types[i]; });
+            if (it != gameTypes.end())
             {
-                auto&& managedObject = scripts[i]->m_ManagedObject;
-                types[i] = managedObject.GetType().GetFullName();
-                managedObject.Destroy();
+                auto&& type = *it;
+                scripts[i]->m_ManagedObject = type->CreateInstance();
             }
-            
-            m_ProjectReloadingProgress = 0.1f;
-            
-            if (BuildGameProject(false))
-            {
-                ReloadAllAssemblies();
-
-                m_ProjectReloadingProgress = 0.9f;
-
-                const DotnetAssembly* const game = GetGameAssembly();
-
-                auto&& gameTypes = game->GetCoralAssembly()->GetTypes();
-                for (size_t i = 0; i < scripts.size(); i++)
-                {
-                    auto&& it = std::ranges::find_if(gameTypes, [&] (const Coral::Type* const type) -> bool_t { return type->GetFullName() == types[i]; });
-                    if (it != gameTypes.end())
-                    {
-                        auto&& type = *it;
-                        scripts[i]->m_ManagedObject = type->CreateInstance();
-                    }
-                }
-            }
-            else
-            {
-                Logger::LogError("Couldn't build {} .NET project", Dotnet::GameProjectName);
-            }
-            
-            m_ProjectReloadingProgress = 1.f;
-            m_ReloadingProjectAsync = false;
         }
-    );
+    }
+    else
+    {
+        Logger::LogError("Couldn't build {} .NET project", Dotnet::GameProjectName);
+    }
+    
+    m_ProjectReloadingProgress = 1.f;
+    m_ReloadingProject = false;
 }
 
 bool_t DotnetRuntime::GetInitialized() { return m_Initialized; }
 
-bool_t DotnetRuntime::IsReloadingProject() { return m_ReloadingProjectAsync; }
+bool_t DotnetRuntime::IsReloadingProject() { return m_ReloadingProject; }
 
 float_t DotnetRuntime::GetProjectReloadingProgress() { return m_ProjectReloadingProgress; }
 

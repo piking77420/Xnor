@@ -18,9 +18,9 @@ void FooterWindow::Display()
 {
     ImGui::Text("XNOR > %s", XnorCore::Dotnet::GameProjectName);
 
-    const bool_t reloadingProject = XnorCore::DotnetRuntime::IsReloadingProject();
+    const bool_t reloadingScripts = m_Editor->IsReloadingScripts();
 
-    if (reloadingProject)
+    if (reloadingScripts)
     {
         constexpr const char_t* const reloadingProjectText = "Reloading .NET project";
         ImGui::SameLine();
@@ -36,12 +36,12 @@ void FooterWindow::Display()
 
     ImGui::SameLine();
     
-    if (reloadingProject)
+    if (reloadingScripts)
         ImGui::BeginDisabled();
     
     if (ImGui::ImageButton(XnorCore::Utils::IntToPointer<ImTextureID>(m_BuildTexture->GetId()), { 25.f, 25.f }))
-        m_Editor->BuildAndReloadCode();
+        m_Editor->BuildAndReloadCodeAsync();
     
-    if (reloadingProject)
+    if (reloadingScripts)
         ImGui::EndDisabled();
 }

@@ -23,7 +23,15 @@ void Inspector::Display()
     
     ImGui::PushID(ptr);
 
+    const bool_t serializing = m_Editor->IsSerializing() || m_Editor->IsDeserializing();
+
+    if (serializing)
+        ImGui::BeginDisabled();
+
     XnorCore::TypeRenderer::DisplayObject<XnorCore::Entity>(ptr);
+
+    if (serializing)
+        ImGui::EndDisabled();
     
     ImGui::PopID();
 }

@@ -52,7 +52,7 @@ void HeaderWindow::DisplayOnEditor()
     const ImVec2 currentImagePos = { m_ImagePos[0].x,m_ImagePos[0].y };
     ImGui::SetCursorPos(currentImagePos);
 
-    const bool_t disabled = !XnorCore::World::scene || XnorCore::DotnetRuntime::IsReloadingProject();
+    const bool_t disabled = !XnorCore::World::scene || m_Editor->IsReloadingScripts();
 
     if (disabled)
         ImGui::BeginDisabled();

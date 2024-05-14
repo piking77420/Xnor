@@ -17,7 +17,7 @@ class XnorFactory
 
     struct FactoryTypeInfo
     {
-        std::function<void*()> createFunc;
+        std::function<void*(const std::string&)> createFunc;
         std::function<void(void*)> displayFunc;
         std::function<void(void*)> serializeFunc;
         std::function<void(void*)> deserializeFunc;
@@ -61,9 +61,10 @@ public:
 
     /// @brief Creates an object via a type name
     /// @param name Type name
+    /// @param managedTypeName
     /// @returns Created instance (@c nullptr if can't create)
     [[nodiscard]]
-    XNOR_ENGINE static void* CreateObject(const std::string& name);
+    XNOR_ENGINE static void* CreateObject(const std::string& name, const std::string& managedTypeName = "");
 
     /// @brief Helper function to register all the XnorCore types
     XNOR_ENGINE static void RegisterAllTypes();

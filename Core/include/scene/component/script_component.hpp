@@ -19,10 +19,11 @@ class ScriptComponent : public Component
 public:
     ScriptComponent() = default;
 
-    XNOR_ENGINE ~ScriptComponent() override;
-
     /// @brief Initializes this ScriptComponent with the given ManagedObject, effectively linking it with its instantiated .NET version.
     XNOR_ENGINE void Initialize(const Coral::ManagedObject& managedObject);
+
+    /// @brief Destroys this ScriptComponent in the .NET garbage collector.
+    XNOR_ENGINE void Destroy() override;
 
     XNOR_ENGINE void Begin() override;
 

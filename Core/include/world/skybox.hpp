@@ -17,10 +17,10 @@ BEGIN_XNOR_CORE
 /// @brief A wrapper for a skybox
 class Skybox
 {
-    constexpr static inline Vector2i EnvironementCubeMapSize { 512, 512 };
-    constexpr static inline Vector2i IradianceCubeSize { 32, 32 };
-    constexpr static inline Vector2i PrefilterMapSize { 128, 128 };
-    constexpr static inline uint32_t MaxMinMapLevel = 5;
+    constexpr static Vector2i EnvironementCubeMapSize { 512, 512 };
+    constexpr static Vector2i IradianceCubeSize { 32, 32 };
+    constexpr static Vector2i PrefilterMapSize { 128, 128 };
+    constexpr static uint32_t MaxMinMapLevel = 5;
 
 public:
     XNOR_ENGINE Skybox() = default;

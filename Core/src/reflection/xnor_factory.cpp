@@ -28,10 +28,10 @@ inline void* XnorFactory::CreateObject(const size_t hash)
         return nullptr;
     }
 
-    return it->second.createFunc();
+    return it->second.createFunc("");
 }
 
-inline void* XnorFactory::CreateObject(const std::string& name)
+inline void* XnorFactory::CreateObject(const std::string& name, const std::string& managedTypeName)
 {
     auto&& it = m_FactoryMapName.find(name);
 
@@ -41,7 +41,7 @@ inline void* XnorFactory::CreateObject(const std::string& name)
         return nullptr;
     }
 
-    return it->second.createFunc();
+    return it->second.createFunc(managedTypeName);
 }
 
 inline void XnorFactory::DisplayObject(void* const obj, const size_t hash)
