@@ -41,7 +41,7 @@ public:
 
     XNOR_ENGINE void AddEvent(float_t when, const FunctionT& function);
     XNOR_ENGINE void AddAnimation(float_t when, size_t animationId);
-    XNOR_ENGINE void AddAnimation(float_t when, const Animation* animation);
+    XNOR_ENGINE void AddAnimation(float_t when, const Pointer<Animation>& animation);
     XNOR_ENGINE void AddAnimationBlending(float_t when, size_t sourceAnimation, size_t targetAnimation, float_t duration);
 
     [[nodiscard]]

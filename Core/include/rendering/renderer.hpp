@@ -80,8 +80,8 @@ private:
     Pointer<Shader> m_DrawTextureToScreenShader;
     Pointer<Shader> m_GizmoShader;
     
-    Pointer<Model> m_Quad;
-    Pointer<Model> m_Cube;
+    Pointer<Mesh> m_Quad;
+    Pointer<Mesh> m_Cube;
 
     mutable std::vector<const MeshRenderer*> m_MeshRenderers;
     

@@ -6,12 +6,12 @@
 
 using namespace XnorCore;
 
-Animator::Animator(const Animation* animation)
+Animator::Animator(const Pointer<Animation>& animation)
     : m_Animation(animation), m_FrameCount(animation->GetFrameCount())
 {
 }
 
-void Animator::Start(const Animation* animation)
+void Animator::Start(const Pointer<Animation>& animation)
 {
     m_Animation = animation;
     m_FrameCount = animation->GetFrameCount();
@@ -27,11 +27,9 @@ void Animator::Animate()
     if (!m_Animation)
         return;
     
-    const Skeleton* const skeleton = m_Animation->GetSkeleton();
-    
-    if (!skeleton)
+    if (!m_Animation->skeleton)
         return;
-
+    
     UpdateTime();
 
     size_t nextFrame = m_CurrentFrame;
@@ -50,7 +48,7 @@ void Animator::Animate()
     if (m_PlaySpeed < 0)
         t = 1 - t;
 
-    const List<Bone>& bones = skeleton->GetBones();
+    const List<Bone>& bones = m_Animation->skeleton->GetBones();
     List<Matrix> currentMatrices(bones.GetSize());
 
     if (m_BlendTarget)
@@ -100,6 +98,14 @@ void Animator::SetCrossFadeDelta(const float_t delta)
 
 const List<Matrix>& Animator::GetMatrices() const
 {
+    if (!m_Animation || !m_Animation->skeleton)
+    {
+        for (size_t i = 0; i < m_FinalMatrices.GetSize();i++)
+            m_FinalMatrices[i] = Matrix::Identity();
+        
+        return m_FinalMatrices;
+    }
+    
     return m_FinalMatrices;
 }
 

@@ -97,7 +97,7 @@ private:
     float_t m_MinScalarFactor = 10.f;
     float_t m_MaxScalarFactor = m_ScaleFactor;
     Pointer<Shader> m_EditorUi;
-    Pointer<Model> m_Quad;
+    Pointer<Mesh> m_Quad;
     
     RenderPass m_ShadowRenderPass;
     Framebuffer* m_ShadowFrameBuffer {nullptr};

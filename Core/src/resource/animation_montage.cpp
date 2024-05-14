@@ -31,7 +31,7 @@ void AnimationMontage::AddEvent(const float_t when, const FunctionT& function)
 
 void AnimationMontage::AddAnimation(const float_t when, const size_t animationId)
 {
-    const Animation* const animation = mesh->GetAnimation(animationId);
+    Pointer<Animation> animation = mesh->GetAnimation(animationId);
 
     if (animation == nullptr)
     {
@@ -43,13 +43,13 @@ void AnimationMontage::AddAnimation(const float_t when, const size_t animationId
 
     m_AnimationTimeline.SetEventDuration(when, animation->GetDuration());
 
-    m_AnimationTimeline.AddBeginEvent(when, [this, animation](SkinnedMeshRenderer* const renderer) -> void
-    {
-        renderer->StartAnimation(animation);
-    });
+    //m_AnimationTimeline.AddBeginEvent(when, [this, animation](SkinnedMeshRenderer* const renderer) -> void
+    //{
+      //  renderer->StartAnimation(animation);
+    //});
 }
 
-void AnimationMontage::AddAnimation(const float_t when, const Animation* animation)
+void AnimationMontage::AddAnimation(const float_t when, const Pointer<Animation>& animation)
 {
     UpdateTimelineDuration(animation->GetDuration());
 
@@ -63,8 +63,8 @@ void AnimationMontage::AddAnimation(const float_t when, const Animation* animati
 
 void AnimationMontage::AddAnimationBlending(const float_t when, const size_t sourceAnimation, const size_t targetAnimation, const float_t duration)
 {
-    const Animation* const sourceAnim = mesh->GetAnimation(sourceAnimation);
-    const Animation* const targetAnim = mesh->GetAnimation(targetAnimation);
+     const Pointer<Animation> sourceAnim = mesh->GetAnimation(sourceAnimation);
+     const Pointer<Animation> targetAnim = mesh->GetAnimation(targetAnimation);
 
     if (sourceAnim == nullptr)
     {

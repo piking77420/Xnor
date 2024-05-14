@@ -99,7 +99,7 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 		}
 		
 		Rhi::UpdateModelUniform(modelData);
-		Rhi::DrawModel(DrawMode::Triangles, m_Quad->GetId());
+		Rhi::DrawModel(DrawMode::Triangles, m_Quad->models[0]->GetId());
 	}
 
 	shader->Unuse();

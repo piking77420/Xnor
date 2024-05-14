@@ -17,31 +17,7 @@ Model::~Model()
     Rhi::DestroyModel(m_ModelId);
 }
 
-bool_t Model::Load(const uint8_t* buffer, const int64_t length)
-{
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFileFromMemory(buffer, length, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FindInvalidData | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace);
 
-    if (!scene)
-    {
-        Logger::LogError("An error occured while loading model: {}. Assimp error: {}", m_Name, importer.GetErrorString());
-        return false;
-    }
-
-    if (!scene->HasMeshes())
-    {
-        Logger::LogError("Invalid mesh format, should contain a model: {}", m_Name);
-        return false;
-    }
-
-    if (scene->mNumMeshes > 1)
-    {
-        Logger::LogError("Invalid mesh format, should only contain a single model: {}", m_Name);
-        return false;
-    }
-
-    return Load(*scene->mMeshes[0]);
-}
 
 bool_t Model::Load(const aiMesh& loadedData)
 {

@@ -39,6 +39,14 @@ void Scene::PostPhysics()
     }
 }
 
+void Scene::OnRendering()
+{
+    for (size_t i = 0; i < m_Entities.GetSize(); i++)
+    {
+        m_Entities[i]->OnRendering();
+    }
+}
+
 Entity* Scene::GetEntityById(const Guid& xnorGuid)
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)

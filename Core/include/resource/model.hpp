@@ -20,6 +20,7 @@ BEGIN_XNOR_CORE
 class Model final : public Resource
 {
 public:
+    /*
     /// @brief Allowed extensions for models.
     XNOR_ENGINE static inline constexpr std::array<const char_t*, 56> FileExtensions
     {
@@ -79,7 +80,7 @@ public:
         ".x3d",
         ".xgl",
         ".zgl"
-    };
+    };*/
     
     // Use the base class' constructors
     using Resource::Resource;
@@ -91,9 +92,6 @@ public:
 
     /// @brief Destroys this Model.
     XNOR_ENGINE ~Model() override;
-
-    /// @copydoc XnorCore::Resource::Load(const uint8_t* buffer, int64_t length)
-    XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;
 
     /// @brief Loads a Model from assimp loaded data.
     XNOR_ENGINE bool_t Load(const aiMesh& loadedData);

@@ -29,11 +29,12 @@ public:
     XNOR_ENGINE void EndFrame();
 
 private:
-    SkinnedMeshGpuData* m_SkinnedMeshGpuData;
+    SkinnedMeshGpuData* m_SkinnedMeshGpuData = nullptr;
 
     Pointer<Shader> m_SkinnedShader;
 
     std::vector<const SkinnedMeshRenderer*> m_SkinnedRender;
+    
 };
 
 

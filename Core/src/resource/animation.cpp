@@ -7,9 +7,9 @@
 
 using namespace XnorCore;
 
-void Animation::BindSkeleton(const Skeleton* const skeleton)
+void Animation::BindSkeleton(Pointer<Skeleton> skeleton)
 {
-    m_Skeleton = skeleton;
+    skeleton = skeleton;
 }
 
 bool_t Animation::Load(const uint8_t* const, const int64_t)
@@ -52,10 +52,6 @@ bool_t Animation::Load(const aiAnimation& loadedData)
     return true;
 }
 
-const Skeleton* Animation::GetSkeleton() const
-{
-    return m_Skeleton;
-}
 
 float_t Animation::GetDuration() const
 {

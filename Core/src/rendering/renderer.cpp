@@ -129,7 +129,7 @@ void Renderer::DeferredRendering(const Camera&, const std::vector<const MeshRend
 	skybox.BindDesriptorSet();
 	m_LightManager.BindShadowMap();
 	
-	Rhi::DrawModel(DrawMode::Triangles, m_Quad->GetId());
+	Rhi::DrawModel(DrawMode::Triangles, m_Cube->models[0]->GetId());
 	
 	skybox.UnbindDesriptorSet();
 	viewportData.UnbindDescriptor();
@@ -197,7 +197,7 @@ void Renderer::DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) c
 			modelData.model = trsAabb;
 			Rhi::UpdateModelUniform(modelData);
 
-			Rhi::DrawModel(DrawMode::Triangles, m_Cube->GetId());
+			Rhi::DrawModel(DrawMode::Triangles, m_Cube->models[0]->GetId());
 		}
 		
 		

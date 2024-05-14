@@ -52,6 +52,13 @@ void Entity::PostPhysics()
     }
 }
 
+void Entity::OnRendering()
+{
+    for (size_t i = 0; i < m_Components.GetSize(); i++)
+        m_Components[i]->OnRendering();
+    
+}
+
 void Entity::AddComponent(Component* const component)
 {
     component->entity = this;

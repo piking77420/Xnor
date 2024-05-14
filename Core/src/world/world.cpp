@@ -18,3 +18,8 @@ void World::Update()
     scene->PostPhysics();
 }
 
+void World::OnRendering()
+{
+    scene->OnRendering();
+}
+

@@ -77,7 +77,7 @@ void SkyBoxParser::ComputeIrradiance(const Cubemap& irradianceInput, const Cubem
         m_FrameBuffer->AttachTexture(irradianceOutput, Attachment::Color00, static_cast<CubeMapFace>(i));
         m_RenderPass.BeginRenderPass(renderPassBeginInfo);
 
-        Rhi::DrawModel(DrawMode::Triangles, m_Cube->GetId());
+        Rhi::DrawModel(DrawMode::Triangles, m_Cube->models[0]->GetId());
 
         m_RenderPass.EndRenderPass();
     }
@@ -116,7 +116,7 @@ void SkyBoxParser::ComputePreFiltering(const Cubemap& environementMap, const Cub
             Rhi::ClearBuffer(BufferFlag::DepthBit);
             m_PrefilterShader->SetMat4("view", captureViews[i]);
             
-            Rhi::DrawModel(DrawMode::Triangles, m_Cube->GetId());
+            Rhi::DrawModel(DrawMode::Triangles, m_Cube->models[0]->GetId());
         }
     }
     m_RenderPass.EndRenderPass();
@@ -139,7 +139,7 @@ void SkyBoxParser::PreComputeBrdf(const Vector2i environementMapSize, const Text
     m_PreComputeBrdr->Use();
     m_RenderPass.BeginRenderPass(renderPassBeginInfo);
 
-    Rhi::DrawModel(DrawMode::Triangles, m_Quad->GetId());
+    Rhi::DrawModel(DrawMode::Triangles, m_Quad->models[0]->GetId());
 
     m_RenderPass.EndRenderPass();
     m_PreComputeBrdr->Unuse();
@@ -175,7 +175,7 @@ void SkyBoxParser::Compute(const Texture& equirectangularMap, const Cubemap& cub
         m_FrameBuffer->AttachTexture(cubemap, Attachment::Color00, static_cast<CubeMapFace>(i));
         m_RenderPass.BeginRenderPass(renderPassBeginInfo);
 
-        Rhi::DrawModel(DrawMode::Triangles, m_Cube->GetId());
+        Rhi::DrawModel(DrawMode::Triangles, m_Cube->models[0]->GetId());
 
         m_RenderPass.EndRenderPass();
     }

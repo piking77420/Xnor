@@ -35,6 +35,8 @@ public:
     /// @brief Called after the physics update
     virtual void PostPhysics() {}
 
+    virtual void OnRendering() {} 
+
     /// @brief Get the Entity on which this Component is attached
     [[nodiscard]]
     const Entity* GetEntity() const;

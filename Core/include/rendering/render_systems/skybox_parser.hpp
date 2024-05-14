@@ -3,6 +3,7 @@
 #include "core.hpp"
 #include "rendering/render_pass.hpp"
 #include "resource/cubemap.hpp"
+#include "resource/mesh.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
 #include "resource/texture.hpp"
@@ -47,8 +48,8 @@ public:
     XNOR_ENGINE void PreComputeBrdf(Vector2i environementMapSize, const Texture& brdfTexture);
 
 private:
-    Pointer<Model> m_Cube;
-    Pointer<Model> m_Quad;
+    Pointer<Mesh> m_Cube;
+    Pointer<Mesh> m_Quad;
 
     Framebuffer* m_FrameBuffer = nullptr;
     RenderPass m_RenderPass;

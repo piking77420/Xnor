@@ -140,8 +140,6 @@ void File::UpdateUtilityValues()
     // Update file type from extension
     if (Utils::StringArrayContains(Texture::FileExtensions, m_Extension))
         m_Type = Type::Texture;
-    else if (Utils::StringArrayContains(Model::FileExtensions, m_Extension))
-        m_Type = Type::Model;
     else if (Utils::StringArrayContains(Mesh::FileExtensions, m_Extension))
         m_Type = Type::Mesh;
     else if (Utils::StringArrayContains(Skeleton::FileExtensions, m_Extension))

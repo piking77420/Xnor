@@ -22,16 +22,15 @@ class Mesh final : public Resource
     
 public:
     /// @brief Allowed extensions for meshes.
-    XNOR_ENGINE static constexpr std::array<const char_t*, 2> FileExtensions
+    XNOR_ENGINE static constexpr std::array<const char_t*, 3> FileExtensions
     {
+        ".obj",
         ".fbx",
         ".dae"
     };
 
     List<Pointer<Model>> models;
-
-    Material material;
-
+    
     // Use the base class' constructors
     using Resource::Resource;
 
@@ -48,11 +47,12 @@ public:
     /// @copydoc XnorCore::Resource::CreateInInterface()
     XNOR_ENGINE void CreateInInterface() override;
 
-    XNOR_ENGINE Animation* GetAnimation(size_t id);
+    [[nodiscard]]
+    XNOR_ENGINE Pointer<Animation> GetAnimation(size_t id);
 
 private:
-    List<Animation*> m_Animations;
-    List<Skeleton*> m_Skeletons;
+    List<Pointer<Animation>> m_Animations;
+    List<Pointer<Skeleton>> m_Skeletons;
 };
 
 END_XNOR_CORE

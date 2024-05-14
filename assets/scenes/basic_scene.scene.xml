@@ -16,16 +16,16 @@
 			<m_Children/>
 		</0>
 		<1>
-			<name>Entity</name>
+			<name>Coyote</name>
 			<m_EntityId>8040FE69-891C-4879-AA-DF-E1-FB-2A-E2-13-C6</m_EntityId>
 			<transform>
 				<m_Position>1 ; 0 ; 0</m_Position>
-				<m_EulerRotation>-1.8151414 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>3 ; 3.9999998 ; 0.9999999</m_Scale>
+				<m_EulerRotation>-0.2642707 ; -0.0032773651 ; -0.043526243</m_EulerRotation>
+				<m_Scale>0.2 ; 0.2 ; 0.2</m_Scale>
 			</transform>
 			<m_Components>
-				<0 typeName="MeshRenderer">
-					<mesh>829E41A8-B6DD-406F-B2-49-29-75-9B-2C-E3-11</mesh>
+				<0 typeName="SkinnedMeshRenderer">
+					<mesh>6681D90B-EA9E-4F13-87-FE-89-A8-AC-E0-A2-85</mesh>
 					<material>
 						<materialType>Opaque</materialType>
 						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
@@ -35,13 +35,19 @@
 						<reflectance>0</reflectance>
 						<emissive>0</emissive>
 						<ambientOcclusion>0</ambientOcclusion>
-						<albedoTexture>D4DE5A31-2DD4-4EA2-A0-44-48-D2-C9-99-71-8B</albedoTexture>
+						<albedoTexture>7587E9E6-C775-4518-93-22-41-74-BC-95-DD-3D</albedoTexture>
 						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
 						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
 						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
+					<m_Animator>
+						<m_Animation>A27F86D8-AF2B-45B7-95-98-BB-3B-B6-9F-EB-17</m_Animation>
+						<m_CurrentFrame>0</m_CurrentFrame>
+						<m_PlaySpeed>1</m_PlaySpeed>
+						<m_CrossFadeT>0</m_CrossFadeT>
+					</m_Animator>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>

@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "rendering/frame_buffer.hpp"
+#include "resource/mesh.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
 
@@ -35,7 +36,7 @@ public:
 private:
     Pointer<Shader> m_Aces = nullptr;
 
-    Pointer<Model> m_Quad = nullptr;
+    Pointer<Mesh> m_Quad = nullptr;
 };
 
 END_XNOR_CORE

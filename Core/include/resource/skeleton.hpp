@@ -49,7 +49,7 @@ public:
     [[nodiscard]]
     XNOR_ENGINE const List<Bone>& GetBones() const;
 
-    Mesh* mesh;
+    Mesh* mesh = nullptr;
 
 private:
     List<Bone> m_Bones;

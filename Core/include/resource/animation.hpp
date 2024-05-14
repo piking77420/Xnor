@@ -26,6 +26,8 @@ public:
         float_t time{};
     };
 
+    Pointer<Skeleton> skeleton;
+
     /// @brief Allowed extensions for animations.
     XNOR_ENGINE static inline constexpr std::array<const char_t*, 0> FileExtensions
     {
@@ -39,17 +41,16 @@ public:
     
     DEFAULT_COPY_MOVE_OPERATIONS(Animation)
 
+    XNOR_ENGINE Animation() = default;
+
     XNOR_ENGINE ~Animation() override = default;
 
-    XNOR_ENGINE void BindSkeleton(const Skeleton* skeleton);
+    XNOR_ENGINE void BindSkeleton(Pointer<Skeleton> skeleton);
 
     /// @copydoc XnorCore::Resource::Load(const uint8_t* buffer, int64_t length)
     XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;
 
     XNOR_ENGINE bool_t Load(const aiAnimation& loadedData);
-
-    [[nodiscard]]
-    XNOR_ENGINE const Skeleton* GetSkeleton() const;
 
     [[nodiscard]]
     XNOR_ENGINE float_t GetDuration() const;
@@ -73,12 +74,12 @@ private:
     size_t m_FrameCount;
     std::unordered_map<std::string, List<KeyFrame>> m_KeyFrames;
 
-    const Skeleton* m_Skeleton;
 };
 
 END_XNOR_CORE
 
 REFL_AUTO(type(XnorCore::Animation, bases<XnorCore::Resource>),
+    field(skeleton),
     field(m_Duration, XnorCore::Reflection::ReadOnly()),
     field(m_Framerate, XnorCore::Reflection::ReadOnly())
 )

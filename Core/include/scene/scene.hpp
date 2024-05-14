@@ -51,6 +51,8 @@ public:
     /// @brief Called after the physics update
     XNOR_ENGINE void PostPhysics();
 
+    XNOR_ENGINE void OnRendering();
+
     /// @brief Tries to find an entity in the scene via a Guid
     /// @param xnorGuid Guid
     /// @return Entity, can be @c nullptr

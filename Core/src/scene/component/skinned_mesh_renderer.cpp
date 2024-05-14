@@ -8,7 +8,7 @@ void SkinnedMeshRenderer::Begin()
 {
 }
 
-void SkinnedMeshRenderer::Update()
+void SkinnedMeshRenderer::OnRendering()
 {
     if (m_CurrentMontage)
     {
@@ -18,14 +18,14 @@ void SkinnedMeshRenderer::Update()
     m_Animator.Animate();
 }
 
-void SkinnedMeshRenderer::StartAnimation(const Animation* const animation)
+void SkinnedMeshRenderer::StartAnimation(const Pointer<Animation>& animation)
 {
     m_Animator.Start(animation);
 }
 
-void SkinnedMeshRenderer::StartBlending(const Animation* const target)
+void SkinnedMeshRenderer::StartBlending(const Pointer<Animation>& animation)
 {
-    m_TargetAnimator.Start(target);
+    m_TargetAnimator.Start(animation);
     m_Animator.StartBlending(&m_TargetAnimator);
 }
 

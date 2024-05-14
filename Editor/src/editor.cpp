@@ -400,7 +400,8 @@ void Editor::WorldBehaviours()
 			XnorCore::World::Begin();
 			XnorCore::World::hasStarted = true;
 		}
-		
 		XnorCore::World::Update();
 	}
+	XnorCore::World::OnRendering();
+
 }

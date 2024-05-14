@@ -9,22 +9,7 @@ using namespace XnorCore;
 
 Mesh::~Mesh()
 {
-    /*for (uint32_t i = 0; i < models.GetSize(); i++)
-        delete models[i];
-
-    for (uint32_t i = 0; i < textures.GetSize(); i++)
-        delete textures[i];
-    */
-
-    for (uint32_t i = 0; i < m_Skeletons.GetSize(); i++)
-        delete m_Skeletons[i];
-
-    for (uint32_t i = 0; i < m_Animations.GetSize(); i++)
-        delete m_Animations[i];
-
     models.Clear();
-    m_Skeletons.Clear();
-    m_Animations.Clear();
 }
 
 bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
@@ -42,7 +27,9 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
     FileManager::AddDirectory(folderPath);
     for (uint32_t i = 0; i < scene->mNumMeshes; i++)
     {
-        const std::string fullName = folderPath + std::string(scene->mMeshes[i]->mName.C_Str()) + std::string(".obj");
+        const std::string meshName = scene->mMeshes[i]->mName.C_Str();
+        const std::string fullName = folderPath + std::string(meshName) + std::string(".obj");
+        
         Pointer<Model> model = ResourceManager::Add<Model>(fullName);
 
         if (!model->Load(*scene->mMeshes[i]))
@@ -55,8 +42,8 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
 
         if (scene->mMeshes[i]->HasBones())
         {
-            Skeleton* const skeleton = new Skeleton();
-
+            Pointer<Skeleton> skeleton = ResourceManager::Add<Skeleton>(std::string(scene->mAnimations[i]->mName.C_Str()) + ".skel");
+            
             skeleton->Load(*scene->mMeshes[i]);
 
             if (i < scene->mNumAnimations)
@@ -64,9 +51,9 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
 
             skeleton->ReorderBones();
             skeleton->mesh = this;
-            
+
             m_Skeletons.Add(skeleton);
-        }
+        }   
 
         models.Add(model);
     }
@@ -102,10 +89,11 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
 
     for (uint32_t i = 0; i < scene->mNumAnimations; i++)
     {
-        Animation* const animation = new Animation(scene->mAnimations[i]->mName.C_Str());
-
+        Pointer<Animation> animation = ResourceManager::Add<Animation>(std::string(scene->mAnimations[i]->mName.C_Str()) + ".anim");
+        
         animation->Load(*scene->mAnimations[i]);
-        animation->BindSkeleton(m_Skeletons[0]);
+        if (m_Skeletons.GetSize() != 0)
+            animation->BindSkeleton(m_Skeletons[0]);
 
         m_Animations.Add(animation);
     }
@@ -127,16 +115,10 @@ void Mesh::CreateInInterface()
     for (size_t i = 0; i < models.GetSize(); i++)
         models[i]->CreateInInterface();
     
-    for (size_t i = 0; i < m_Skeletons.GetSize(); i++)
-        m_Skeletons[i]->CreateInInterface();
-
-    for (size_t i = 0; i < m_Animations.GetSize(); i++)
-        m_Animations[i]->CreateInInterface();
-
     m_LoadedInInterface = true;
 }
 
-Animation* Mesh::GetAnimation(const size_t id)
+Pointer<Animation> Mesh::GetAnimation(const size_t id)
 {
     if (id >= m_Animations.GetSize())
         return nullptr;
