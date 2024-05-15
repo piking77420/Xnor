@@ -161,6 +161,7 @@
 					</m_Timeline>
 				</1>
 				<2 typeName="ScriptComponent" managedType="Game.TestScript">
+					<Intensity>28.003</Intensity>
 					<MyFloatVar>2</MyFloatVar>
 					<MyEnumVar>Third</MyEnumVar>
 				</2>

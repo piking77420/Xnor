@@ -13,7 +13,7 @@ namespace Game
         }
         
         private ColorHsva color;
-        private float intensity;
+        public float Intensity;
 
         private Light light;
 
@@ -24,7 +24,7 @@ namespace Game
         public TestScript()
         {
             Logger.LogTempDebug("Bobby was constructed!");
-            intensity = 1f / 360f;
+            Intensity = 1f / 360f;
         }
 
         ~TestScript()
@@ -56,7 +56,7 @@ namespace Game
 
             light.intensity += 0.1f;
             
-            color.H += intensity;
+            color.H += Intensity;
             if (color.H >= 1f)
                 color.H = 0f;
 

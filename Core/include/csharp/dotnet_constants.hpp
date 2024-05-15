@@ -16,7 +16,7 @@ namespace Dotnet
     
     constexpr const char_t* const GameProjectLocation = GameProjectName;
     
-    constexpr const char_t* const GameProjectBuildOptions = "--os windows --no-self-contained";
+    constexpr const char_t* const GameProjectBuildOptions = "--no-self-contained";
 }
 
 END_XNOR_CORE

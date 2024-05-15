@@ -166,6 +166,8 @@ bool_t DotnetRuntime::BuildGameProject(const bool_t asynchronous)
 
     m_ProjectReloadingProgress = 0.2f;
 
+    Utils::TerminalCommand(std::string("dotnet clean ")+ " \"" + absolute(gameProjectDirectory).string() + '"');
+
     const int32_t commandResult = Utils::TerminalCommand(std::string("dotnet build ") + Dotnet::GameProjectBuildOptions + " \"" + absolute(gameProjectDirectory).string() + "\" 1> \"" + tempPath.string() + '"', asynchronous);
 
     m_ProjectReloadingProgress = 0.5f;
