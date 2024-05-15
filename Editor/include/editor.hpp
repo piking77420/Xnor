@@ -63,6 +63,9 @@ public:
 	[[nodiscard]]
 	bool_t IsReloadingScripts() const;
 
+	[[nodiscard]]
+	bool_t IsGamePlaying() const;
+
 private:
 	std::vector<UiWindow*> m_UiWindows;
 

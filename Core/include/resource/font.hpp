@@ -7,8 +7,6 @@
 #include "texture.hpp"
 #include "resource/resource.hpp"
 
-
-
 BEGIN_XNOR_CORE
 
 /// @brief Holds the necessary information to draw text using a Font.
@@ -16,7 +14,7 @@ class Font : public Resource
 {
 public:
     /// @brief Allowed extensions for font files
-    XNOR_ENGINE static inline constexpr std::array<const char_t*, 1> FileExtensions
+    XNOR_ENGINE static constexpr std::array<const char_t*, 1> FileExtensions
     {
         ".ttf"
     };
@@ -48,7 +46,7 @@ public:
     XNOR_ENGINE const Character& GetGlyphByChar(char_t characters) const ;
     
 private:
-    std::map<char_t,Character> m_Characters;
+    std::map<char_t, Character> m_Characters;
 };
 
 END_XNOR_CORE

@@ -92,10 +92,10 @@ namespace XnorCore {}
 /// 
 /// @param type The type to default the copy and move operations of.
 #define DEFAULT_COPY_MOVE_OPERATIONS(type)         \
-    type(const type& other) = default;             \
-    type(type&& other) = default;                  \
-    type& operator=(const type& other) = default;  \
-    type& operator=(type&& other) = default;
+    type(const type& other) noexcept = default;             \
+    type(type&& other) noexcept = default;                  \
+    type& operator=(const type& other) noexcept = default;  \
+    type& operator=(type&& other) noexcept = default;
 
 /// @brief Deletes the copy and move operations of a given @p type.
 /// 

@@ -312,11 +312,15 @@ void Editor::StartPlaying()
 	XnorCore::World::isPlaying = true;
 	XnorCore::World::hasStarted = false;
 
+	XnorCore::Logger::LogInfo("Starting game");
+
 	m_GamePlaying = true;
 }
 
 void Editor::StopPlaying()
 {
+	XnorCore::Logger::LogInfo("Stopping game");
+
 	XnorCore::Coroutine::StopAll();
 
 	data.selectedEntity = nullptr;
@@ -398,20 +402,13 @@ void Editor::DeserializeSceneAsync(const std::string& filepath)
 	m_CurrentAsyncActionThread = std::thread([this, path = filepath] { DeserializeScene(path); });
 }
 
-bool_t Editor::IsSerializing() const
-{
-	return m_Serializing;
-}
+bool_t Editor::IsSerializing() const { return m_Serializing; }
 
-bool_t Editor::IsDeserializing() const
-{
-	return m_Deserializing;
-}
+bool_t Editor::IsDeserializing() const { return m_Deserializing; }
 
-bool_t Editor::IsReloadingScripts() const
-{
-	return m_ReloadingScripts;
-}
+bool_t Editor::IsReloadingScripts() const { return m_ReloadingScripts; }
+
+bool_t Editor::IsGamePlaying() const { return m_GamePlaying; }
 
 void Editor::UpdateWindows()
 {

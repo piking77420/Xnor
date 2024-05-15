@@ -18,6 +18,13 @@ public:
 
 private:
     XnorCore::Pointer<XnorCore::Texture> m_BuildTexture;
+    
+    XnorCore::Pointer<XnorCore::Texture> m_LastBuildSuccessTexture;
+    XnorCore::Pointer<XnorCore::Texture> m_LastBuildWarningTexture;
+    XnorCore::Pointer<XnorCore::Texture> m_LastBuildErrorTexture;
+
+    ImFont* m_ProjectTextFont = nullptr;
+    
     XnorCore::FileSystemWatcher m_ScriptsWatcher;
 
     bool_t scriptsUpToDate = true;
