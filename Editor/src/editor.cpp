@@ -100,13 +100,13 @@ void Editor::CreateDefaultWindows()
 	if (XnorCore::FileManager::Contains(SerializedScenePath))
 		data.currentScene = XnorCore::FileManager::Get<XnorCore::File>(SerializedScenePath);
 
+	OpenWindow<EditorWindow>(data.editorViewPort);
+	OpenWindow<RenderWindow>(*gameViewPort);
 	OpenWindow<Performance>(50);
 	OpenWindow<Inspector>();
 	OpenWindow<HeaderWindow>();
 	OpenWindow<Hierarchy>();
 	OpenWindow<ContentBrowser>(XnorCore::FileManager::Get<XnorCore::Directory>("assets"));
-	OpenWindow<RenderWindow>(*gameViewPort);
-	OpenWindow<EditorWindow>(data.editorViewPort);
 	OpenWindow<DebugConsole>();
 	OpenWindow<FooterWindow>();
 	
@@ -422,8 +422,8 @@ void Editor::UpdateWindows()
 	{
 		if (!w->opened)
 			continue;
-
-		if (ImGui::Begin(w->GetName().c_str(), w->canClose ? &w->opened : nullptr, w->windowFlags))
+		
+		if (ImGui::Begin(w->GetName().c_str(), w->canClose ? &w->opened : nullptr , w->windowFlags))
 		{
 			w->FetchInfo();
 			w->Display();

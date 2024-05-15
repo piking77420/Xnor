@@ -322,7 +322,7 @@ void MeshesDrawer::PrepareOctree(const Scene& scene)
 {
     std::vector<ObjectBounding<const StaticMeshRenderer>> meshrenderWithAabb;
 	
-    for (uint32_t i = 0; i < World::scene->GetEntities().GetSize();i++)
+    for (uint32_t i = 0; i < scene.GetEntities().GetSize();i++)
     {
         const Entity& ent = *scene.GetEntities()[i];
 

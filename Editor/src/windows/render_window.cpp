@@ -31,6 +31,8 @@ void RenderWindow::Display()
 
 void RenderWindow::OnApplicationRendering()
 {
+    if (m_Size == Vector2i::Zero())
+        return;
     
     if (m_Viewport->frameBuffer == nullptr || m_Viewport->viewPortSize != m_Size)
     {
@@ -55,7 +57,7 @@ XnorCore::Input::BindedWindowInfo RenderWindow::GetBindWindoInfo() const
     
     const XnorCore::Input::BindedWindowInfo windowInfo =
            {
-        .windowPos = static_cast<Vector2>(m_Position),
+        .windowPos = static_cast<Vector2>(pos),
         .windowSize = static_cast<Vector2>(m_Size),
         .isEditor = m_Viewport->isEditor,
         .isRendering = true
