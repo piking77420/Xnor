@@ -62,7 +62,7 @@ void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene)
 	BindCamera(*viewport.camera,viewport.viewPortSize);
 	m_Frustum.UpdateFromCamera(*viewport.camera,viewport.GetAspect());
 	const ViewportData& viewportData = viewport.viewportData;
-	DeferedRenderring(*viewport.camera, scene, viewportData, viewport.viewPortSize);
+	DeferredRendering(scene, viewportData, viewport.viewPortSize);
 	ForwardPass(m_MeshRenderers, scene, viewport, viewport.viewPortSize, viewport.isEditor);
 	
 	if (viewportData.usePostProcess)
@@ -90,7 +90,7 @@ void Renderer::SwapBuffers() const
 
 
 
-void Renderer::DeferedRenderring(const Camera& camera, const Scene& scene, const ViewportData& viewportData, const Vector2i viewportSize) const 
+void Renderer::DeferredRendering(const Scene& scene, const ViewportData& viewportData, const Vector2i viewportSize) const 
 {
     const RenderPassBeginInfo renderPassBeginInfo =
     {
@@ -167,7 +167,7 @@ void Renderer::ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers
     }
     else
     {
-        m_GuiPass.RenderGui(scene, viewport.viewPortSize, viewport.GetAspect());
+        m_GuiPass.RenderGui(scene, viewport.viewPortSize);
     }
 
     viewportData.colorPass.EndRenderPass();
@@ -387,7 +387,7 @@ void Renderer::RenderNonShadedPass(const Scene& scene, const Camera& camera,
     if (drawEditorUi)
     {
         m_LightManager.DrawLightGizmoWithShader(camera, scene, shaderToUse);
-        m_GuiPass.RenderGui(scene,viewportSize,aspect);
+        m_GuiPass.RenderGui(scene,viewportSize);
     }
 
     renderPass.EndRenderPass();

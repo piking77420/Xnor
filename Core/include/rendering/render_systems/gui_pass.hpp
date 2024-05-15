@@ -20,7 +20,7 @@ public:
 
     DEFAULT_COPY_MOVE_OPERATIONS(GuiPass)
     
-    XNOR_ENGINE void RenderGui(const Scene& scene, const Vector2i& viewportSize, float_t aspect) const;
+    XNOR_ENGINE void RenderGui(const Scene& scene, const Vector2i& viewportSize) const;
 
     XNOR_ENGINE void Init();
     
@@ -43,7 +43,7 @@ private:
 
     XNOR_ENGINE void ResetQuad() const;
 
-    XNOR_ENGINE void RenderText(Vector2 viewPortSize, float_t aspect) const;
+    XNOR_ENGINE void RenderText() const;
     
     XNOR_ENGINE void RenderImage(Vector2 viewPortSize) const;
     

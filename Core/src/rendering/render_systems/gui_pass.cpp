@@ -6,7 +6,7 @@
 
 using namespace XnorCore;
 
-void GuiPass::RenderGui(const Scene& scene, const Vector2i& viewportSize, const float_t aspect) const
+void GuiPass::RenderGui(const Scene& scene, const Vector2i& viewportSize) const
 {
     const Vector2 size = static_cast<Vector2>(viewportSize);
     
@@ -16,7 +16,7 @@ void GuiPass::RenderGui(const Scene& scene, const Vector2i& viewportSize, const 
 
     m_FontShader->Use();
     m_FontShader->SetMat4("projection", matrixProj); 
-    RenderText(size, aspect);
+    RenderText();
     m_FontShader->Unuse();
     
     m_GuiShader->Use();
@@ -116,7 +116,7 @@ void GuiPass::ResetQuad() const
     m_FontQuadVbo.UpdateData(0,sizeof(vertices),&vertices);
 }
 
-void GuiPass::RenderText(const Vector2 viewPortSize, float_t aspect) const
+void GuiPass::RenderText() const
 {
     m_FontQuadVao.BindBuffer();
 
