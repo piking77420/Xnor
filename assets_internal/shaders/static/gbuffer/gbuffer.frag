@@ -108,6 +108,6 @@ void main()
     }
 
     gMetallicRoughessReflectance = vec3(gMetallicRoughessReflectance.r, gMetallicRoughessReflectance.g, reflectance);
-    gAmbiantOcclusion = vec2(ambiantOccusion,0);
+    gAmbiantOcclusion = vec2(currentOcclusion,0);
     gEmissive = vec4(emissiveColor,emissive);
 }

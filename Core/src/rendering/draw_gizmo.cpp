@@ -62,16 +62,19 @@ void DrawGizmo::DrawGizmos(const Viewport& viewport, const Entity* selectedEntit
 
 void DrawGizmo::DrawCollider(const Entity& entity)
 {
+
     std::vector<const Collider*> entityCollider;
     entity.GetComponents<Collider>(&entityCollider);
 
     if (entityCollider.empty())
         return;
 
+    m_GizmoShader->SetVec3("color",static_cast<Vector3>(Color::Green()));
+
     Pointer<Mesh> mesh;
     const Collider* collider = entityCollider[0];
     Matrix colliderMatrix;
-    
+
     if (dynamic_cast<const SphereCollider*>(collider))
     {
         mesh = m_Sphere;
@@ -118,7 +121,7 @@ void DrawGizmo::DrawSphere()
 
     for (GizmoSphere& gizmo : m_GizmoSphereVector)
     {
-        //m_GizmoShader->SetVec3("color",static_cast<Vector3>(gizmo.color));
+        m_GizmoShader->SetVec3("color",static_cast<Vector3>(gizmo.color));
         modelData.model = Matrix::Trs(gizmo.position, Quaternion::Identity(), Vector3(gizmo.radius));
         Rhi::UpdateModelUniform(modelData);
         Rhi::DrawModel(DrawMode::Triangles, m_Sphere->models[0]->GetId());
