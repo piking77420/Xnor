@@ -130,7 +130,7 @@ void Serializer::Deserialize(ReflectT* const obj)
 
         for (auto&& it : m_GuidEntityMap)
         {
-            *it.second = World::scene->GetEntityById(it.first);
+            *it.second = World::scene->FindEntityById(it.first);
         }
     }
 }

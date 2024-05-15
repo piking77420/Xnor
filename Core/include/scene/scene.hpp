@@ -59,7 +59,13 @@ public:
     /// @param xnorGuid Guid
     /// @return Entity, can be @c nullptr
     [[nodiscard]]
-    XNOR_ENGINE Entity* GetEntityById(const Guid& xnorGuid);
+    XNOR_ENGINE Entity* FindEntityById(const Guid& xnorGuid);
+
+    /// @brief Tries to find an entity in the scene via a Guid
+    /// @param name Entity name
+    /// @return Entity, can be @c nullptr
+    [[nodiscard]]
+    XNOR_ENGINE Entity* FindEntityByName(const std::string& name);
 
     /// @brief Creates a new entity in the scene
     /// @param name Entity name

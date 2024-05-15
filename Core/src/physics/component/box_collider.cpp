@@ -1,7 +1,7 @@
-#include "physics/components/box_collider.hpp"
+#include "physics/component/box_collider.hpp"
 
 #include "physics/physics_world.hpp"
-#include "physics/components/collider.hpp"
+#include "physics/component/collider.hpp"
 #include "scene/entity.hpp"
 #include "serialization/serializer.hpp"
 

@@ -1,4 +1,4 @@
-#include "physics/components/collider.hpp"
+#include "physics/component/collider.hpp"
 
 #include "input/input.hpp"
 #include "physics/physics_world.hpp"
@@ -31,7 +31,7 @@ void Collider::PrePhysics()
     if (m_IsActive)
     {
         PhysicsWorld::SetPosition(m_BodyId, entity->transform.GetPosition());
-        PhysicsWorld::SetRotation(m_BodyId, entity->transform.GetRotation());
+        PhysicsWorld::SetRotation(m_BodyId, entity->transform.GetRotation().Normalized());
     }
 }
 

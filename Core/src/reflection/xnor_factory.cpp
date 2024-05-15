@@ -2,10 +2,10 @@
 
 #include "audio/component/audio_listener.hpp"
 #include "audio/component/audio_source.hpp"
-#include "physics/components/box_collider.hpp"
-#include "physics/components/capsule_collider.hpp"
-#include "physics/components/collider.hpp"
-#include "physics/components/sphere_collider.hpp"
+#include "physics/component/box_collider.hpp"
+#include "physics/component/capsule_collider.hpp"
+#include "physics/component/collider.hpp"
+#include "physics/component/sphere_collider.hpp"
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
 #include "rendering/light/spot_light.hpp"
@@ -14,7 +14,6 @@
 #include "scene/component/gui_component.hpp"
 #include "scene/component/image.hpp"
 #include "scene/component/mesh_renderer.hpp"
-#include "scene/component/player_movement.hpp"
 #include "scene/component/script_component.hpp"
 #include "scene/component/skinned_mesh_render.hpp"
 #include "scene/component/test_component.hpp"
@@ -108,8 +107,6 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<TestComponentPhysics>();
     RegisterType<CameraComponent>();
     RegisterType<SkinnedMeshRender>();
-    RegisterType<PlayerMovement>();
-
 
     RegisterType<AudioListener>();
     RegisterType<AudioSource>();
@@ -119,7 +116,6 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<Image>();
     RegisterType<Button>();
     RegisterType<TextComponent>();
-
 }
 
 std::string XnorFactory::GetTypeName(const size_t hash)

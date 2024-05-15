@@ -1,14 +1,12 @@
-#include "physics/components/sphere_collider.hpp"
+#include "physics/component/capsule_collider.hpp"
 
 #include "physics/physics_world.hpp"
-#include "physics/components/collider.hpp"
+#include "physics/component/collider.hpp"
 #include "scene/entity.hpp"
-#include "serialization/serializer.hpp"
 
 using namespace XnorCore;
 
-
-void SphereCollider::Begin()
+void CapsuleCollider::Begin()
 {
     const Transform& t = entity->transform;
 
@@ -21,10 +19,10 @@ void SphereCollider::Begin()
         .isStatic = m_IsStatic
     };
 
-    m_BodyId = PhysicsWorld::CreateSphere(info, radius);
+    m_BodyId = PhysicsWorld::CreateCapsule(info, height, radius);
 }
 
-void SphereCollider::Update()
+void CapsuleCollider::Update()
 {
     Collider::Update();
 }

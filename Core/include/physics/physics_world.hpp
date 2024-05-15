@@ -5,15 +5,16 @@
 #include <unordered_map>
 
 #include <Jolt/Jolt.h>
+#include <Jolt/Core/JobSystemThreadPool.h>
+#include <Jolt/Physics/PhysicsSystem.h>
 
-#include "components/collider.hpp"
-#include "Jolt/Physics/PhysicsSystem.h"
-#include "Jolt/Core/JobSystemThreadPool.h"
-#include "Maths/quaternion.hpp"
-#include "physics/broad_phase_layer_interface.hpp"
+#include <Maths/quaternion.hpp>
+#include <Maths/vector3.hpp>
+
 #include "physics/body_activation_listener.hpp"
+#include "physics/broad_phase_layer_interface.hpp"
 #include "physics/contact_listener.hpp"
-#include "Maths/vector3.hpp"
+#include "physics/component/collider.hpp"
 #include "rendering/vertex.hpp"
 
 /// @file physics_world.hpp

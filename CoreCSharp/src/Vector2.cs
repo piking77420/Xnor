@@ -44,6 +44,18 @@ namespace Xnor.Core
         }
 
         public Vector2(float xy) : this(xy, xy) { }
+
+        public float SquaredLength => X * X + Y * Y;
+
+        public float Length => MathF.Sqrt(SquaredLength);
+
+        public Vector2 Normalized()
+        {
+            float invLength = 1f / Length;
+            return new(X * invLength, Y * invLength);
+        }
+        
+        public override string ToString() => $"X: {X}, Y: {Y}";
     
         public bool Equals(Vector2 other) => CoreC.Equals(X, other.X) && CoreC.Equals(Y, other.Y);
 

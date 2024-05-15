@@ -69,24 +69,28 @@ void Transform::SetRotation(const Quaternion& newRotation)
 {
     m_Changed = true;
     m_Rotation = newRotation;
+    m_EulerRotation = Quaternion::ToEuler(m_Rotation);
 }
 
 void Transform::SetRotationX(const float_t newRotationX)
 {
     m_Changed = true;
     m_Rotation.X() = newRotationX;
+    m_EulerRotation = Quaternion::ToEuler(m_Rotation);
 }
 
 void Transform::SetRotationY(const float_t newRotationY)
 {
     m_Changed = true;
     m_Rotation.Y() = newRotationY;
+    m_EulerRotation = Quaternion::ToEuler(m_Rotation);
 }
 
 void Transform::SetRotationZ(const float_t newRotationZ)
 {
     m_Changed = true;
     m_Rotation.Z() = newRotationZ;
+    m_EulerRotation = Quaternion::ToEuler(m_Rotation);
 }
 
 void Transform::SetRotationW(const float_t newRotationW)

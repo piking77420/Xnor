@@ -21,7 +21,7 @@ class DotnetReflection
     struct DotnetTypeInfo final
     {
         std::function<Coral::ManagedObject()> createFunc;
-        std::function<void(void*, const char_t*)> displayFunc;
+        std::function<void(ScriptComponent*, void*, const char_t*)> displayFunc;
         std::function<void(void*, const std::string&)> serializeFunc;
         std::function<void(void*, const std::string&)> deserializeFunc;
 
@@ -57,19 +57,21 @@ public:
 
     /// @brief Displays a simple type
     /// @tparam T Type
+    /// @param script Script component
     /// @param obj Object pointer
     /// @param name Field name
     template <typename T>
-    static void DisplaySimpleType(T* obj, const char_t* name);
+    static void DisplaySimpleType(ScriptComponent* script, T* obj, const char_t* name);
     
     /// @brief Helper function to register all the base types
     XNOR_ENGINE static void RegisterAllTypes();
 
     /// @brief Displays a type using the internal dotnet factory
+    /// @param script Script component
     /// @param obj Object pointer
     /// @param name Field name
     /// @param typeName C# type name
-    XNOR_ENGINE static void DisplayType(void* obj, const char_t* name, const std::string& typeName);
+    XNOR_ENGINE static void DisplayType(ScriptComponent* script, void* obj, const char_t* name, const std::string& typeName);
 
     /// @brief Displays a script component type
     /// @param script Script component

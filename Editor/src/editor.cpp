@@ -260,6 +260,9 @@ void Editor::MenuBar()
 			if (ImGui::MenuItem("Load"))
 				DeserializeSceneAsync(path);
 
+			if (ImGui::MenuItem("Load backup"))
+				DeserializeSceneAsync();
+
 			if (saveLoadDisabled)
 				ImGui::EndDisabled();
 
@@ -356,6 +359,9 @@ void Editor::DeserializeScene(const std::string& filepath)
 	else
 		m_SerializedScenePath = filepath;
 
+	if (!exists(m_SerializedScenePath))
+		return;
+
 	m_Deserializing = true;
 	
 	XnorCore::Serializer::StartDeserialization(m_SerializedScenePath.string());
@@ -369,7 +375,7 @@ void Editor::DeserializeScene(const std::string& filepath)
 	XnorCore::Serializer::EndDeserialization();
 	
 	if (selectedEntityId != XnorCore::Guid::Empty())
-		data.selectedEntity = XnorCore::World::scene->GetEntityById(selectedEntityId);
+		data.selectedEntity = XnorCore::World::scene->FindEntityById(selectedEntityId);
 
 	m_Deserializing = false;
 }

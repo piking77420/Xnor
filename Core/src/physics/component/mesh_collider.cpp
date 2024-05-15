@@ -1,4 +1,4 @@
-#include "physics/components/mesh_collider.hpp"
+#include "physics/component/mesh_collider.hpp"
 
 #include <utils/logger.hpp>
 

@@ -2,7 +2,7 @@
 
 #include "core.hpp"
 #include "scene/component.hpp"
-#include "physics/components/collider.hpp"
+#include "physics/component/collider.hpp"
 
 /// @file sphere_collider.hpp
 /// @brief Defines the XnorCore::BoxCollider class

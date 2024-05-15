@@ -3,6 +3,7 @@
 #pragma once
 
 #include "csharp/dotnet_runtime.hpp"
+#include "reflection/filters.hpp"
 #include "serialization/serializer.hpp"
 
 BEGIN_XNOR_CORE
@@ -12,7 +13,7 @@ void DotnetReflection::RegisterBaseType(const std::string& typeName)
 {
     DotnetTypeInfo info = {
         .createFunc = []() -> Coral::ManagedObject { return {}; },
-        .displayFunc = [](void* const obj, const char_t* const name) -> void { DisplaySimpleType<T>(static_cast<T*>(obj), name); },
+        .displayFunc = [](ScriptComponent* const script, void* const obj, const char_t* const name) -> void { DisplaySimpleType<T>(script, static_cast<T*>(obj), name); },
         .serializeFunc = [](void* const value, const std::string& fieldName) -> void { SerializeSimpleType<T>(static_cast<T*>(value), fieldName); },
         .deserializeFunc = [](void* const value, const std::string& fieldName) -> void { DeserializeSimpleType<T>(static_cast<T*>(value), fieldName); },
         .name = typeName,
@@ -27,9 +28,9 @@ void DotnetReflection::RegisterCoreType(const std::string& typeName)
 {
     DotnetTypeInfo info = {
         .createFunc = []() -> Coral::ManagedObject { return {}; },
-        .displayFunc = [](void* const, const char_t* const name) -> void { ImGui::Text("%s", name); },
-        .serializeFunc = {},
-        .deserializeFunc = {},
+        .displayFunc = [](ScriptComponent* const script, void* const obj, const char_t* const name) -> void { DisplaySimpleType<T>(script, static_cast<T*>(obj), name); },
+        .serializeFunc = [](void*, const std::string&) -> void {},
+        .deserializeFunc = [](void*, const std::string&) -> void {},
         .name = typeName,
         .isScriptType = false
     };
@@ -38,7 +39,7 @@ void DotnetReflection::RegisterCoreType(const std::string& typeName)
 }
 
 template <typename T>
-void DotnetReflection::DisplaySimpleType(T* const obj, const char_t* const name)
+void DotnetReflection::DisplaySimpleType([[maybe_unused]] ScriptComponent* const script, T* const obj, const char_t* const name)
 {
     if constexpr (Meta::IsSame<T, bool_t>)
     {
@@ -109,6 +110,34 @@ void DotnetReflection::DisplaySimpleType(T* const obj, const char_t* const name)
     else if constexpr (Meta::IsSame<T, Vector4>)
     {
         ImGui::DragFloat4(name, obj->Raw(), .1f);
+    }
+    else if constexpr (Meta::IsSame<T, Entity>)
+    {
+        // Handle an entity pointer
+
+        ImGui::Text("%s", name);
+        ImGui::SameLine();
+
+        Entity** e = reinterpret_cast<Entity**>(obj);
+        
+        // Display entity name
+        if (*e != nullptr)
+            ImGui::Text("%s", (*e)->name.c_str());
+        else
+            ImGui::Text("No entity");
+    }
+    else if constexpr (Meta::IsBaseOf<Component, T>)
+    {
+        ImGui::Text("%s", name);
+        ImGui::SameLine();
+
+        Component** e = reinterpret_cast<Component**>(obj);
+        
+        // Display entity name
+        if (*e != nullptr)
+            ImGui::Text("%s", (*e)->entity->name.c_str());
+        else
+            ImGui::Text("No entity");
     }
 }
 

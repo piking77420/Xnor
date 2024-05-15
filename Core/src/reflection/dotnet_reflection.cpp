@@ -4,6 +4,7 @@
 
 #include "csharp/dotnet_assembly.hpp"
 #include "csharp/dotnet_runtime.hpp"
+#include "physics/component/capsule_collider.hpp"
 #include "rendering/light/light.hpp"
 #include "utils/logger.hpp"
 
@@ -39,7 +40,7 @@ void DotnetReflection::RegisterScriptType(const std::string& typeName)
     Coral::Type& type = gameAssembly->GetType(typeName);
     DotnetTypeInfo info = {
         .createFunc = [&]() -> Coral::ManagedObject { return type.CreateInstance(); },
-        .displayFunc = [&, tName = typeName](void* const value, const char_t* fieldName) -> void { DisplayExternalType(value, fieldName, tName); },
+        .displayFunc = [&, tName = typeName](ScriptComponent* const, void* const value, const char_t* fieldName) -> void { DisplayExternalType(value, fieldName, tName); },
         .serializeFunc = [&, tName = typeName](void* const value, const std::string& fieldName) -> void { SerializeExternalType(value, fieldName, tName); },
         .deserializeFunc = [&, tName = typeName](void* const value, const std::string& fieldName) -> void { DeserializeExternalType(value, fieldName, tName); },
         .name = typeName,
@@ -56,7 +57,7 @@ void DotnetReflection::RegisterEnumType(const std::string& typeName, const std::
     Coral::Type& type = gameAssembly->GetType(typeName);
     DotnetTypeInfo info = {
         .createFunc = [&]() -> Coral::ManagedObject { return type.CreateInstance(); },
-        .displayFunc = [&, tName = typeName](void* const value, const char_t* fieldName) -> void { DisplayExternalType(value, fieldName, tName); },
+        .displayFunc = [&, tName = typeName](ScriptComponent* const, void* const value, const char_t* fieldName) -> void { DisplayExternalType(value, fieldName, tName); },
         .serializeFunc = [&, tName = typeName](void* const value, const std::string& fieldName) -> void { SerializeExternalType(value, fieldName, tName); },
         .deserializeFunc = [&, tName = typeName](void* const value, const std::string& fieldName) -> void { DeserializeExternalType(value, fieldName, tName); },
         .name = typeName,
@@ -97,9 +98,11 @@ void DotnetReflection::RegisterAllTypes()
     RegisterBaseType<Vector4>(XnorCoreNamespace + "Vector4");
 
     RegisterCoreType<Light>(XnorCoreNamespace + "Light");
+    RegisterCoreType<Entity>(XnorCoreNamespace + "Entity");
+    RegisterCoreType<CapsuleCollider>(XnorCoreNamespace + "CapsuleCollider");
 }
 
-void DotnetReflection::DisplayType(void* obj, const char_t* const name, const std::string& typeName)
+void DotnetReflection::DisplayType(ScriptComponent* const script, void* obj, const char_t* const name, const std::string& typeName)
 {
     if (DotnetRuntime::IsReloadingProject())
     {
@@ -115,7 +118,7 @@ void DotnetReflection::DisplayType(void* obj, const char_t* const name, const st
         return;
     }
 
-    it->second.displayFunc(obj, name);
+    it->second.displayFunc(script, obj, name);
 }
 
 void DotnetReflection::DisplayType(ScriptComponent* const script)
@@ -144,7 +147,7 @@ void DotnetReflection::DisplayType(ScriptComponent* const script)
         void* const ptr = obj.GetFieldPointer<void>(fieldName);
 
         ImGui::PushID(ptr);
-        DisplayType(ptr, fieldName.c_str(), typeName);
+        DisplayType(script, ptr, fieldName.c_str(), typeName);
         ImGui::PopID();
     }
     ImGui::PopID();

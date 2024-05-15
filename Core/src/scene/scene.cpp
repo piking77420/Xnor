@@ -44,22 +44,31 @@ void Scene::PrePhysics()
 void Scene::PostPhysics()
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)
-    {
         m_Entities[i]->PostPhysics();
-    }
 }
 
-Entity* Scene::GetEntityById(const Guid& xnorGuid)
+Entity* Scene::FindEntityById(const Guid& xnorGuid)
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)
     {
         if (m_Entities[i]->GetGuid() == xnorGuid)
-        {
             return m_Entities[i];
-        }
     }
 
     Logger::LogWarning("No entity with id {} in scene", static_cast<std::string>(xnorGuid));
+
+    return nullptr;
+}
+
+Entity* Scene::FindEntityByName(const std::string& name)
+{
+    for (size_t i = 0; i < m_Entities.GetSize(); i++)
+    {
+        if (m_Entities[i]->name == name)
+            return m_Entities[i];
+    }
+
+    Logger::LogWarning("No entity with name {} in scene", name);
 
     return nullptr;
 }

@@ -1,9 +1,11 @@
 #pragma once
 
 #include "core.hpp"
-#include "components/collider.hpp"
-#include "jolt/Jolt.h"
-#include "Jolt/Physics/Collision/ContactListener.h"
+
+#include <Jolt/Jolt.h>
+#include <Jolt/Physics/Collision/ContactListener.h>
+
+#include "physics/component/collider.hpp"
 
 BEGIN_XNOR_CORE
 

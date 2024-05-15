@@ -167,11 +167,6 @@
 					</m_Timeline>
 					<enable>true</enable>
 				</1>
-				<2 typeName="ScriptComponent" managedType="Game.TestScript">
-					<Intensity>28.003</Intensity>
-					<MyFloatVar>2</MyFloatVar>
-					<MyEnumVar>Third</MyEnumVar>
-				</2>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
@@ -211,105 +206,6 @@
 			<m_Children/>
 		</5>
 		<6>
-			<name>Capsule</name>
-			<m_EntityId>3843FD98-4FF2-4459-98-DA-67-D9-98-57-38-14</m_EntityId>
-			<transform>
-				<m_Position>-1.0172284 ; 0.9799998 ; 3.9186933</m_Position>
-				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1 ; 1</m_Scale>
-			</transform>
-			<m_Components>
-				<0 typeName="CapsuleCollider">
-					<height>1</height>
-					<radius>1</radius>
-					<constraints>ConstraintRotation</constraints>
-					<m_IsStatic>false</m_IsStatic>
-					<m_IsTrigger>false</m_IsTrigger>
-					<m_IsActive>true</m_IsActive>
-					<enable>true</enable>
-				</0>
-				<1 typeName="TestComponentPhysics">
-					<m_JumpForce>1000</m_JumpForce>
-					<enable>true</enable>
-				</1>
-				<2 typeName="MeshRenderer">
-					<model>29075914-46D0-4C58-B8-37-A9-2A-1F-15-91-D1</model>
-					<mesh>0-0-0-0-0-0-0-0-0-0-0</mesh>
-					<material>
-						<materialType>Opaque</materialType>
-						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
-						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
-						<metallic>0</metallic>
-						<roughness>0</roughness>
-						<reflectance>0</reflectance>
-						<emissive>0</emissive>
-						<ambientOcclusion>0</ambientOcclusion>
-						<albedoTexture>7587E9E6-C775-4518-93-22-41-74-BC-95-DD-3D</albedoTexture>
-						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
-						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
-						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
-						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
-					</material>
-					<drawModelAabb>false</drawModelAabb>
-					<enable>true</enable>
-				</2>
-				<3 typeName="CameraComponent">
-					<enable>true</enable>
-				</3>
-				<4 typeName="AudioListener">
-					<dopplerEffect>true</dopplerEffect>
-					<m_Volume>1</m_Volume>
-					<enable>true</enable>
-				</4>
-				<5 typeName="PlayerMovement">
-					<speed>1.4</speed>
-					<enable>true</enable>
-				</5>
-			</m_Components>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
-			<m_Children/>
-		</6>
-		<7>
-			<name>VikingRoom</name>
-			<m_EntityId>924CE8D3-CDEA-4D8A-86-BE-50-D-74-E7-AF-38</m_EntityId>
-			<transform>
-				<m_Position>1 ; -0.6811248 ; -6</m_Position>
-				<m_EulerRotation>1.4891161 ; 0.097306624 ; -3.11912</m_EulerRotation>
-				<m_Scale>1.0000691 ; 1.0000364 ; 1.0000256</m_Scale>
-			</transform>
-			<m_Components>
-				<0 typeName="MeshRenderer">
-					<model>7D4A901C-2429-4A7D-B2-98-A0-92-E4-79-B4-BE</model>
-					<mesh>0-0-0-0-0-0-0-0-0-0-0</mesh>
-					<material>
-						<materialType>Opaque</materialType>
-						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
-						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
-						<metallic>0</metallic>
-						<roughness>0</roughness>
-						<reflectance>0</reflectance>
-						<emissive>0</emissive>
-						<ambientOcclusion>0</ambientOcclusion>
-						<albedoTexture>E01B5F33-4744-4694-92-4-19-7E-C7-F2-98-A1</albedoTexture>
-						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
-						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
-						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
-						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
-					</material>
-					<drawModelAabb>false</drawModelAabb>
-					<enable>true</enable>
-				</0>
-				<1 typeName="AudioSource">
-					<audioTrack>61B61790-1047-476F-8F-FF-D4-6-2A-BC-85-14</audioTrack>
-					<m_Volume>0.149</m_Volume>
-					<m_Pitch>1</m_Pitch>
-					<enable>true</enable>
-				</1>
-			</m_Components>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
-			<m_Children/>
-		</7>
-		<8>
 			<name>Image</name>
 			<m_EntityId>8D6CCF25-11EC-4D98-93-B1-9-52-18-49-EE-18</m_EntityId>
 			<transform>
@@ -319,7 +215,7 @@
 			</transform>
 			<m_Components>
 				<0 typeName="Image">
-					<image>73588105-EF48-4133-86-87-48-7F-A1-DA-91-AE</image>
+					<image>0-0-0-0-0-0-0-0-0-0-0</image>
 					<screenTransform>107.8 ; 76.6</screenTransform>
 					<size>20.5 ; 20</size>
 					<enable>true</enable>
@@ -330,8 +226,8 @@
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
-		</8>
-		<9>
+		</6>
+		<7>
 			<name>Text</name>
 			<m_EntityId>E471477C-C2FE-4C72-BC-68-3E-1E-12-20-53-FF</m_EntityId>
 			<transform>
@@ -341,14 +237,63 @@
 			</transform>
 			<m_Components>
 				<0 typeName="TextComponent">
-					<font>20CC62DB-6AB3-4DA5-99-FC-66-3B-74-32-49-4C</font>
+					<font>0-0-0-0-0-0-0-0-0-0-0</font>
 					<text>Health 100</text>
 					<color>0.57012194 ; 0.045192584 ; 0.045192584 ; 1</color>
-					<police>1</police>
+					<fontSize>1</fontSize>
 					<screenTransform>0 ; 0</screenTransform>
 					<size>1 ; 1</size>
 					<enable>true</enable>
 				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</7>
+		<8>
+			<name>Player</name>
+			<m_EntityId>873D1C72-ACA1-47D6-AC-9C-8F-E1-81-B6-B6-B4</m_EntityId>
+			<transform>
+				<m_Position>0 ; 0 ; 0</m_Position>
+				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="ScriptComponent" managedType="Game.Player">
+					<MovementSpeed>3</MovementSpeed>
+				</0>
+				<1 typeName="CapsuleCollider">
+					<height>1</height>
+					<radius>1</radius>
+					<constraints>ConstraintRotation</constraints>
+					<m_IsStatic>false</m_IsStatic>
+					<m_IsTrigger>false</m_IsTrigger>
+					<m_IsActive>false</m_IsActive>
+					<enable>true</enable>
+				</1>
+				<2 typeName="AudioListener">
+					<dopplerEffect>true</dopplerEffect>
+					<m_Volume>1</m_Volume>
+					<enable>true</enable>
+				</2>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</8>
+		<9>
+			<name>Camera</name>
+			<m_EntityId>55E1E12F-7B57-4A4E-A6-92-63-AC-40-AA-B3-36</m_EntityId>
+			<transform>
+				<m_Position>0 ; 0 ; 0</m_Position>
+				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="CameraComponent">
+					<enable>true</enable>
+				</0>
+				<1 typeName="ScriptComponent" managedType="Game.PlayerCamera">
+					<ViewAngle>0 ; 0</ViewAngle>
+				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>

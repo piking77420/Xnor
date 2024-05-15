@@ -1,9 +1,9 @@
 ﻿#include "rendering/draw_gizmo.hpp"
 
-#include "physics/components/box_collider.hpp"
-#include "physics/components/capsule_collider.hpp"
-#include "physics/components/collider.hpp"
-#include "physics/components/sphere_collider.hpp"
+#include "physics/component/box_collider.hpp"
+#include "physics/component/capsule_collider.hpp"
+#include "physics/component/collider.hpp"
+#include "physics/component/sphere_collider.hpp"
 #include "rendering/rhi.hpp"
 #include "resource/resource_manager.hpp"
 

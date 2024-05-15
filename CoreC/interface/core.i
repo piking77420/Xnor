@@ -91,6 +91,10 @@ struct Data64
 
 #include "csharp/dotnet_utils.hpp"
 
+#include "audio/audio_buffer.hpp"
+#include "audio/component/audio_listener.hpp"
+#include "audio/component/audio_source.hpp"
+
 #include "file/directory.hpp"
 #include "file/entry.hpp"
 #include "file/file.hpp"
@@ -125,8 +129,17 @@ struct Data64
 #include "rendering/viewport_data.hpp"
 #include "rendering/plane.hpp"
 
+#include "physics/data/collision_data.hpp"
+
+#include "physics/component/collider.hpp"
+#include "physics/component/box_collider.hpp"
+#include "physics/component/capsule_collider.hpp"
+#include "physics/component/mesh_collider.hpp"
+#include "physics/component/sphere_collider.hpp"
+
 #include "resource/cubemap.hpp"
 #include "resource/font.hpp"
+#include "resource/audio_track.hpp"
 #include "resource/model.hpp"
 #include "resource/mesh.hpp"
 #include "resource/animation.hpp"
@@ -148,6 +161,7 @@ struct Data64
 #include "utils/color.hpp"
 #include "utils/formatter.hpp"
 #include "utils/guid.hpp"
+#include "utils/event.hpp"
 #include "utils/list.hpp"
 #include "utils/logger.hpp"
 #include "utils/meta_programming.hpp"
@@ -175,6 +189,7 @@ struct Data64
 %include "utils/guid.hpp"
 
 %include "utils/list.i"
+%include "utils/event.i"
 
 %include "resource/resource.hpp"
 
@@ -225,8 +240,23 @@ struct Data64
 
 %include "rendering/material.hpp"
 
+%include "audio/audio_buffer.hpp"
+
+%include "resource/audio_track.hpp"
+
+%include "audio/component/audio_listener.hpp"
+%include "audio/component/audio_source.hpp"
+
+%include "physics/data/collision_data.hpp"
+
+%include "physics/component/collider.hpp"
+%include "physics/component/box_collider.hpp"
+%include "physics/component/capsule_collider.hpp"
+%include "physics/component/mesh_collider.hpp"
+%include "physics/component/sphere_collider.hpp"
+
 %include "scene/component/mesh_renderer.hpp"
-%include "scene/component/script_component.hpp"
+%include "scene/component/script_component.i"
 
 %include "scene/entity.i"
 

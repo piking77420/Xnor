@@ -1,20 +1,21 @@
 #include "physics/physics_world.hpp"
 
 #include <cstdarg>
+
 #include <Jolt/Jolt.h>
+#include <Jolt/RegisterTypes.h>
+#include <Jolt/Core/Factory.h>
+#include <Jolt/Core/TempAllocator.h>
+#include <Jolt/Physics/Body/BodyCreationSettings.h>
+#include <Jolt/Physics/Collision/CastResult.h>
+#include <Jolt/Physics/Collision/RayCast.h>
+#include <Jolt/Physics/Collision/Shape/BoxShape.h>
+#include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
+#include <Jolt/Physics/Collision/Shape/ConvexHullShape.h>
+#include <Jolt/Physics/Collision/Shape/SphereShape.h>
 
 #include "input/time.hpp"
-#include "Jolt/RegisterTypes.h"
-#include "Jolt/Core/Factory.h"
-#include "Jolt/Core/TempAllocator.h"
-#include "Jolt/Physics/Collision/Shape/BoxShape.h"
 #include "utils/logger.hpp"
-#include "Jolt/Physics/Collision/Shape/SphereShape.h"
-#include "jolt/Physics/Body/BodyCreationSettings.h"
-#include "Jolt/Physics/Collision/CastResult.h"
-#include "Jolt/Physics/Collision/Shape/CapsuleShape.h"
-#include "Jolt/Physics/Collision/Shape/ConvexHullShape.h"
-#include "jolt/Physics/Collision/RayCast.h"
 
 using namespace XnorCore;
 

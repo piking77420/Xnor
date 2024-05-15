@@ -40,6 +40,8 @@ namespace Xnor.Core
         }
 
         public Vector2i(int xy) : this(xy, xy) { }
+        
+        public override string ToString() => $"X: {X}, Y: {Y}";
     
         public bool Equals(Vector2i other) => X == other.X && Y == other.Y;
 
