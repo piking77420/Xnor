@@ -6,7 +6,7 @@
 using namespace XnorEditor;
 
 AnimationMontageWindow::AnimationMontageWindow(Editor* editor)
-    : UiWindow(editor, "AnimationMontageEditor"), m_EditorCamera(*editor, m_Camera)
+    : RenderWindow(editor,"AnimationMontageEditor",m_Viewport), m_EditorCamera(*editor, m_Camera)
 {
     m_Viewport.camera = &m_Camera;
     m_Scene.CreateEntity("Montage");
@@ -31,22 +31,7 @@ void AnimationMontageWindow::Display()
     ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_Viewport.image->GetId()), ImGui::GetContentRegionAvail(),  ImVec2(0, 1), ImVec2(1, 0));
 }
 
-void AnimationMontageWindow::OnApplicationRendering()
-{
-    const bool_t isValid = m_Viewport.IsValid();
 
-    if (!isValid || m_Viewport.viewPortSize != m_Size)
-    {
-        m_Viewport.Resize(m_Size);
-    }
-
-    if (isValid)
-    {
-        m_Editor->renderer.BeginFrame(m_Scene);
-        m_Editor->renderer.RenderViewport(m_Viewport, m_Scene);
-        m_Editor->renderer.EndFrame(m_Scene);
-    }
-}
 
 void AnimationMontageWindow::SetParam(void* const param)
 {

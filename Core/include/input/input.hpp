@@ -19,6 +19,15 @@ class Input
     STATIC_CLASS(Input)
     
 public:
+    struct BindedWindowInfo
+    {
+        Vector2 windowPos;
+        Vector2 windowSize;
+        
+        bool_t isEditor = false;
+        bool_t isRendering = false;
+    };
+    
     /// @brief Whether the mouse is locked
     XNOR_ENGINE static inline bool_t mouseLocked = false;
     
@@ -56,38 +65,49 @@ public:
     /// @brief Updates the input manager
     XNOR_ENGINE static void Update();
 
+    // Retrun A array indexOf WindowInfo
+    XNOR_ENGINE static uint32_t GetBindingId();
+
+    XNOR_ENGINE static void UpdateBindedWindowInfo(uint32_t binding, BindedWindowInfo windowInfo);
+    
+    XNOR_ENGINE static void GetWindowBindedInfo(std::vector<BindedWindowInfo>* BindedWindowsInfo);
+
+    XNOR_ENGINE static void BindWindow(uint32_t bindInd);
+    
 private:
     using KeyStatuses = std::array<bool_t, KeyStatus::Count>;
     using MouseStatuses = std::array<bool_t, MouseButtonStatus::Count>;
+    
+    XNOR_ENGINE static inline std::vector<BindedWindowInfo> m_BindedWindowInfo;
+    
+    XNOR_ENGINE static inline uint32_t currentBindedWindow = 0;
 
     static constexpr uint32_t GamepadMax = 15;
     
-    static inline std::array<KeyStatuses, Key::Count - 1> m_Keyboard;
+    XNOR_ENGINE static inline std::array<KeyStatuses, Key::Count - 1> m_Keyboard;
 
-    static inline std::array<MouseStatuses, MouseButton::Count - 1> m_Mouse;
+    XNOR_ENGINE static inline std::array<MouseStatuses, MouseButton::Count - 1> m_Mouse;
     
-    static inline std::array<GamepadInput, GamepadMax> m_Gamepads;
+    XNOR_ENGINE static inline std::array<GamepadInput, GamepadMax> m_Gamepads;
 
     // For each Status
     using GamepadButtonStatuses = std::array<bool_t, static_cast<uint8_t>(GamepadButtonStatus::Count)>;
     // For each Button
     using GamepadButtons = std::array<GamepadButtonStatuses, static_cast<uint32_t>(GamepadButton::Count)>;
     // For each Gamepad
-    static inline std::array<GamepadButtons, GamepadMax> m_GamepadsButton;
+    XNOR_ENGINE static inline std::array<GamepadButtons, GamepadMax> m_GamepadsButton;
     
-    static inline Vector2 m_LastMousePosition;
+    XNOR_ENGINE static inline Vector2 m_LastMousePosition;
     
-    static inline Vector2 m_MousePosition;
+    XNOR_ENGINE static inline Vector2 m_MousePosition;
     
-    static inline Vector2 m_MouseDelta;
+    XNOR_ENGINE static inline Vector2 m_MouseDelta;
 
-    static inline GLFWwindow* m_WindowHandle = nullptr;
+    XNOR_ENGINE static inline GLFWwindow* m_WindowHandle = nullptr;
 
     static void HandleKeyboard(GLFWwindow* window, int32_t key, int32_t scancode, int32_t action, int32_t mods);
     
     static void HandleMouseButton(GLFWwindow* window, int32_t mouseButton, int32_t action, int32_t mods);
-    
-    static void MouseCursorPos(GLFWwindow* window, double_t xpos, double_t ypos);
     
     static void HandleJoyStickCallBack(int32_t jid, int32_t event);
     

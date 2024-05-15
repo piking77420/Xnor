@@ -44,7 +44,7 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
         {
             Pointer<Skeleton> skeleton = ResourceManager::Add<Skeleton>(std::string(scene->mAnimations[i]->mName.C_Str()) + ".skel");
             
-            skeleton->Load(*scene->mMeshes[i]);
+            skeleton->Load(*scene->mMeshes[i], *scene->mRootNode);
 
             if (i < scene->mNumAnimations)
                 skeleton->Load(*scene, *scene->mAnimations[i]);
@@ -58,9 +58,11 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
         models.Add(model);
     }
 
+    /*
     for (uint32_t i = 0; i < scene->mNumTextures; i++)
     {
-        const std::string fileName = std::string(scene->mTextures[i]->mFilename.C_Str());
+        std::string fileName = GetTextureFileName(folderPath,scene->mTextures[i]->mFilename.C_Str(),scene->mTextures[i]->achFormatHint, i);
+    
         const std::string fullName = folderPath + fileName;
 
         if (FileManager::Contains(fullName))
@@ -72,7 +74,7 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
         if (pos != std::string::npos)
         {
             const std::string subFolder = folderPath + fileName.substr(0, pos);
-            FileManager::AddDirectory(subFolder);
+            //FileManager::AddDirectory(subFolder);
         }
         Pointer<Texture> texture = ResourceManager::Add<Texture>(fullName);
 
@@ -85,7 +87,7 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
         texture->Load(reinterpret_cast<const uint8_t*>(scene->mTextures[i]->pcData), size);
         texture->SetIsEmbedded();
         texture->Save();
-    }
+    }*/
 
     for (uint32_t i = 0; i < scene->mNumAnimations; i++)
     {
@@ -124,4 +126,22 @@ Pointer<Animation> Mesh::GetAnimation(const size_t id)
         return nullptr;
     
     return m_Animations[id];
+}
+
+std::string Mesh::GetTextureFileName(const std::string& baseFileName, const std::string& fileName, const std::string& textureFormat, size_t index)
+{
+    std::string returnName;
+    std::string baseNameCopy = baseFileName;
+    
+    baseNameCopy.pop_back();
+
+    const size_t last =  baseNameCopy.find_last_of('\\') + 1;
+        
+    for (size_t i = 0; i < baseNameCopy.size();i++)
+        returnName.push_back(baseNameCopy[i]);
+
+    returnName += ("texture_" + std::to_string(index));
+    returnName.push_back('.');
+
+    return returnName + textureFormat;
 }

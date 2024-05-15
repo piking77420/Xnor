@@ -99,7 +99,5 @@ void HeaderWindow::DisplayOnPlay()
 
         XnorCore::World::isPlaying = false;
         XnorCore::World::hasStarted = false;
-
-        m_Editor->renderer.BeginFrame(*XnorCore::World::scene);
     }
 }

@@ -5,9 +5,9 @@
 #include <fstream>
 
 #include "file/file_manager.hpp"
-#include "resource/animation_montage.hpp"
 #include "resource/audio_track.hpp"
 #include "resource/compute_shader.hpp"
+#include "resource/font.hpp"
 #include "resource/mesh.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
@@ -42,8 +42,8 @@ void ResourceManager::LoadAll()
                 Load<Skeleton>(file, false);
             else if (std::ranges::find(AudioTrack::FileExtensions, file->GetExtension()) != AudioTrack::FileExtensions.end())
                 Load<AudioTrack>(file, false);
-            else if (std::ranges::find(AnimationMontage::FileExtensions, file->GetExtension()) != AnimationMontage::FileExtensions.end())
-                Load<AnimationMontage>(file, false);
+            else if (std::ranges::find(Font::FileExtensions, file->GetExtension()) != Font::FileExtensions.end())
+                Load<Font>(file, false);
         }
     );
 
@@ -91,8 +91,6 @@ void ResourceManager::LoadAll()
         m_Resources.size() - oldResourceCount,
         std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start)
     );
-
-    
 }
 
 void ResourceManager::LoadGuidMap()
@@ -134,7 +132,7 @@ void ResourceManager::SaveGuidMap()
 {
     std::ofstream file(GuidMapFilePath);
 
-    for (const std::pair<const Guid, std::string>& res : m_GuidMap)
+    for (auto&& res : m_GuidMap)
     {
         file << res.second << ";" << static_cast<std::string>(res.first) << '\n';
     }

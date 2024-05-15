@@ -2,30 +2,74 @@
 <Scene>
 	<m_Entities>
 		<0>
-			<name>Entity</name>
-			<m_EntityId>70BF3D6B-58D2-44CE-B7-2A-FC-9D-40-33-A4-1B</m_EntityId>
+			<name>DirLight</name>
+			<m_EntityId>731E7C30-D410-464E-A1-2E-F2-96-6D-B-A9-26</m_EntityId>
 			<transform>
 				<m_Position>0 ; 0 ; 0</m_Position>
-				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1 ; 1</m_Scale>
+				<m_EulerRotation>-1.4239025 ; 0.55712134 ; -0.89285564</m_EulerRotation>
+				<m_Scale>1.0000129 ; 1.000014 ; 1.000004</m_Scale>
 			</transform>
 			<m_Components>
-				<0 typeName="CameraComponent"/>
+				<0 typeName="DirectionalLight">
+					<color>0.34617347 ; 0.29127857 ; 0.94840294 ; 1</color>
+					<intensity>1000</intensity>
+					<castShadow>true</castShadow>
+					<enable>true</enable>
+				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
 		</0>
 		<1>
-			<name>Coyote</name>
-			<m_EntityId>8040FE69-891C-4879-AA-DF-E1-FB-2A-E2-13-C6</m_EntityId>
+			<name>Skinned</name>
+			<m_EntityId>36B93AC1-3137-40E9-B6-6B-5D-91-A5-BD-85-F0</m_EntityId>
 			<transform>
-				<m_Position>1 ; 0 ; 0</m_Position>
-				<m_EulerRotation>-0.2642707 ; -0.0032773651 ; -0.043526243</m_EulerRotation>
-				<m_Scale>0.2 ; 0.2 ; 0.2</m_Scale>
+				<m_Position>0 ; 0 ; 0</m_Position>
+				<m_EulerRotation>1.4247574e-06 ; -0.016623018 ; 2.4498402e-05</m_EulerRotation>
+				<m_Scale>0.2000034 ; 0.2 ; 0.2000034</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="SkinnedMeshRenderer">
-					<mesh>6681D90B-EA9E-4F13-87-FE-89-A8-AC-E0-A2-85</mesh>
+					<mesh>0-0-0-0-0-0-0-0-0-0-0</mesh>
+					<material>
+						<materialType>Opaque</materialType>
+						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
+						<emissiveColor>0.17277494 ; 0.22113019 ; 0.1922596 ; 1</emissiveColor>
+						<metallic>0</metallic>
+						<roughness>0</roughness>
+						<reflectance>0</reflectance>
+						<emissive>0</emissive>
+						<ambientOcclusion>0</ambientOcclusion>
+						<albedoTexture>D8D16D87-4CDF-4223-94-C6-11-18-61-A0-E4-4</albedoTexture>
+						<metallicTexture>92C273FA-1E2D-43AA-B8-CF-AE-D0-15-6F-57-87</metallicTexture>
+						<roughnessTexture>752FA041-11DC-4E70-84-39-C-FF-C0-DF-59-80</roughnessTexture>
+						<normalTexture>299972BB-7B3B-4960-86-88-77-D3-1B-94-D1-19</normalTexture>
+						<ambientOcclusionTexture>5880DD9A-CFA7-4B8E-AE-20-A0-F0-D9-B9-9D-3C</ambientOcclusionTexture>
+					</material>
+					<drawModelAabb>false</drawModelAabb>
+					<m_Animator>
+						<m_Animation>0-0-0-0-0-0-0-0-0-0-0</m_Animation>
+						<m_CurrentFrame>266</m_CurrentFrame>
+						<m_PlaySpeed>1</m_PlaySpeed>
+						<m_CrossFadeT>0</m_CrossFadeT>
+					</m_Animator>
+					<enable>true</enable>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</1>
+		<2>
+			<name>Pyramid</name>
+			<m_EntityId>F6CB05B7-4CF5-4472-AB-57-E1-52-D-70-5D-C5</m_EntityId>
+			<transform>
+				<m_Position>83 ; 0 ; -30</m_Position>
+				<m_EulerRotation>3.1415906 ; 1.0643021 ; 3.1415906</m_EulerRotation>
+				<m_Scale>10.000037 ; 10 ; 10.000037</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="MeshRenderer">
+					<mesh>B172EA85-F1FC-45BC-AB-DF-B6-51-1C-86-7E-5A</mesh>
 					<material>
 						<materialType>Opaque</materialType>
 						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
@@ -35,37 +79,14 @@
 						<reflectance>0</reflectance>
 						<emissive>0</emissive>
 						<ambientOcclusion>0</ambientOcclusion>
-						<albedoTexture>7587E9E6-C775-4518-93-22-41-74-BC-95-DD-3D</albedoTexture>
+						<albedoTexture>5880DD9A-CFA7-4B8E-AE-20-A0-F0-D9-B9-9D-3C</albedoTexture>
 						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
 						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
 						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
-					<m_Animator>
-						<m_Animation>A27F86D8-AF2B-45B7-95-98-BB-3B-B6-9F-EB-17</m_Animation>
-						<m_CurrentFrame>0</m_CurrentFrame>
-						<m_PlaySpeed>1</m_PlaySpeed>
-						<m_CrossFadeT>0</m_CrossFadeT>
-					</m_Animator>
-				</0>
-			</m_Components>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
-			<m_Children/>
-		</1>
-		<2>
-			<name>DirLight</name>
-			<m_EntityId>9AA2DEA7-BA8-4057-A2-DA-4D-9E-2B-46-31-9D</m_EntityId>
-			<transform>
-				<m_Position>0 ; 0 ; 0</m_Position>
-				<m_EulerRotation>-0.46004194 ; 0.4443587 ; -0.8561931</m_EulerRotation>
-				<m_Scale>0.9999999 ; 0.99999994 ; 0.9999998</m_Scale>
-			</transform>
-			<m_Components>
-				<0 typeName="DirectionalLight">
-					<color>1 ; 1 ; 1 ; 1</color>
-					<intensity>1</intensity>
-					<castShadow>true</castShadow>
+					<enable>true</enable>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>

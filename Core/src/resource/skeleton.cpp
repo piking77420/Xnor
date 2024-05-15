@@ -22,7 +22,7 @@ bool_t Skeleton::Load(const uint8_t* const buffer, const int64_t length)
 
     if (scene->mNumMeshes >= 1 && scene->mMeshes[0]->HasBones())
     {
-        return Load(*scene->mMeshes[0]);
+        return Load(*scene->mMeshes[0], *scene->mRootNode);
     }
 
     if (!scene->hasSkeletons())
@@ -58,7 +58,7 @@ bool_t Skeleton::Load(const aiSkeleton& loadedData)
     return true;
 }
 
-inline bool_t Skeleton::Load(const aiMesh& loadedData)
+inline bool_t Skeleton::Load(const aiMesh& loadedData, const aiNode& rootNode)
 {
     const size_t numBones = loadedData.mNumBones;
     
@@ -81,18 +81,41 @@ inline bool_t Skeleton::Load(const aiMesh& loadedData)
         boneInfo[i] = bone->mNode;
     }
 
+    // skip root node
     for (size_t i = 0; i < numBones; i++)
     {
         const aiBone* const bone = loadedData.mBones[i];
-
-        for (int32_t j = 0; j < static_cast<int32_t>(numBones); j++)
+        const aiNode* node = rootNode.FindNode(bone->mName);
+        
+        if (loadedData.mBones[i]->mNode == nullptr)
         {
-            if (bone->mNode->mParent == boneInfo[j])
+            if (node->mParent == nullptr)
+                continue;
+            
+            const std::string parentName = node->mParent->mName.C_Str();
+
+            // ParentPos in boneList
+            const size_t parentPosition = m_Bones.FindPosition([parentName](const Bone* const b) -> bool_t { return b->name == parentName; });
+            
+            if (parentPosition == std::numeric_limits<size_t>::max())
+                continue;
+    
+            m_Bones[i].parentId = static_cast<uint32_t>(parentPosition);
+            m_Bones[parentPosition].children.Add(static_cast<int32_t>(i));
+        }
+        else
+        {
+            
+            for (int32_t j = 0; j < static_cast<int32_t>(numBones); j++)
             {
-                m_Bones[i].parentId = j;
-                m_Bones[j].children.Add(static_cast<int32_t>(i));
-                break;
+                if (bone->mNode->mParent == boneInfo[j])
+                {
+                    m_Bones[i].parentId = j;
+                    m_Bones[j].children.Add(static_cast<int32_t>(i));
+                    break;
+                }
             }
+
         }
     }
 

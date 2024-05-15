@@ -6,6 +6,8 @@
 #include "scene/entity.hpp"
 
 #include <vector>
+
+#include "octree_iterator.hpp"
 #include "stack"
 #include "octree_node.hpp"
 
@@ -30,32 +32,55 @@ public:
     
     void Draw();
 
-    
+    size_t GetHandleSize() const
+    {
+        return m_HandleSize;
+    }
 
+    const OctreeIterator<OctreeNode<const T>> GetIterator() const
+    {
+        return OctreeIterator<OctreeNode<const T>>(&m_MotherNode);
+    }
+
+
+    OctreeIterator<OctreeNode<T>> GetIterator()
+    {
+        return OctreeIterator<OctreeNode<T>>(&m_MotherNode);
+    }
+
+    Bound GetMotherBound() const
+    {
+        return m_MotherNode.boudingBox;        
+    }
+    
 private:
     void Clear();
     
     OctreeNode<T> m_MotherNode;
+
+    size_t m_HandleSize;
 };
 
 template <class T>
 void Octree<T>::Update(std::vector<ObjectBounding<T>>& data)
 {
     Clear();
+    m_HandleSize = data.size();
+    // Reset mother bound
+    m_MotherNode.boudingBox = Bound();
 
     // Get the bounding box who contain all the data
     for (ObjectBounding<T>& element : data)
     {
-        m_MotherNode.GetBound().Encapsulate(element.bound);
+        m_MotherNode.boudingBox.Encapsulate(element.bound);
     }
 
     // normalize the mother box with his max to be a cube
-    const Vector3 previousSize = m_MotherNode.GetBound().GetSize();
+    const Vector3 previousSize = m_MotherNode.boudingBox.GetSize();
     const float_t maxSize = std::max( { previousSize.x , previousSize.y ,previousSize.z });
     const Vector3 size = Vector3(maxSize) * 0.5f;
-    m_MotherNode.GetBound().SetMinMax(m_MotherNode.GetBound().center - size,m_MotherNode.GetBound().center + size);
+    m_MotherNode.boudingBox.SetMinMax(m_MotherNode.boudingBox.center - size,m_MotherNode.boudingBox.center + size);
     
-
     for (ObjectBounding<T>& element : data)
     {
         m_MotherNode.AddObject(element);

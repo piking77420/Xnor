@@ -20,14 +20,21 @@ enum Octans : uint8_t
 };
 
 
-template<class T>
+template <typename T>
 class OctreeNode
 {
 public:
+    using Type = T;
 
     static constexpr size_t NbrOfChild = 8;
 
     static bool_t IsOctanValid(Octans octans, int32_t bitIndex);
+
+    std::vector<T*> handles;
+
+    Bound boudingBox;
+    
+    OctreeNode* parent = nullptr;
     
     DEFAULT_COPY_MOVE_OPERATIONS(OctreeNode)
     
@@ -42,23 +49,21 @@ public:
     void AddObject(ObjectBounding<T>& objectBounding);
 
     void Draw();
-
-    Bound GetBound() const;
-
+    
     Octans GetActiveOctans() const;
+    
+    bool_t GetChildNode(uint8_t octan,const OctreeNode<T>* outNode) const;
+    
+    bool_t SetPtrToChildNode(uint32_t bitIndex, OctreeNode<T>** outNode) const;
 
-    
-    bool_t GetChildNode(int32_t octan,const OctreeNode<T>* outNode) const;
-    
     void Clear();
-   
+
+    bool_t IsOctanNull() const;
+
 private:    
     Octans m_ActiveOctans = Zero;
-    std::array<OctreeNode*,NbrOfChild> m_Child;
-    OctreeNode* m_Parent = nullptr;
+    std::array<OctreeNode*, NbrOfChild> m_Child;
     
-    Bound m_BoudingBox;
-    std::vector<T*> m_Handels;
     
     void DivideAndAdd(ObjectBounding<T>& objectBounding);
 };
@@ -73,14 +78,26 @@ void OctreeNode<T>::AddObject(ObjectBounding<T>& objectBounding)
 template <class T>
 bool_t OctreeNode<T>::IsOctanValid(Octans octans, int32_t bitIndex)
 {
-    return octans & (1 << bitIndex);
+    return (octans & (1 << bitIndex));
+}
+
+template <class T>
+bool_t OctreeNode<T>::IsOctanNull() const
+{
+    for (size_t i = 0; i < NbrOfChild; i++)
+    {
+        if (IsOctanValid(m_ActiveOctans,i))
+            return false;
+    }
+
+    return true;
 }
 
 template <class T>
 OctreeNode<T>::OctreeNode(ObjectBounding<T> objectBounding)
 {
-    m_BoudingBox = objectBounding.bound;
-    m_Handels.push_back(objectBounding.handle);
+    boudingBox = objectBounding.bound;
+    handles.push_back(objectBounding.handle);
 }
 
 
@@ -100,10 +117,10 @@ template <class T>
 void OctreeNode<T>::CreateBoundChild(Octans octans, Bound* outBound)
 {
     
-    const float_t quarter = m_BoudingBox.GetSize().x * 0.25f;
-    const Vector3 childLength = m_BoudingBox.GetSize() * 0.5f;
+    const float_t quarter = boudingBox.GetSize().x * 0.25f;
+    const Vector3 childLength = boudingBox.GetSize() * 0.5f;
     const Vector3 childSize = Vector3(childLength);
-    const Vector3 center = m_BoudingBox.center;
+    const Vector3 center = boudingBox.center;
     
     switch (octans)
     {
@@ -152,14 +169,14 @@ void OctreeNode<T>::Draw()
     {
         if (m_ActiveOctans & (1 << i))
         {
-            if (!m_Child[i]->m_Handels.empty())//)m_Child[i]->m_ObjectBounding.handle != nullptr)
+            if (!m_Child[i]->handles.empty())//)m_Child[i]->m_ObjectBounding.handle != nullptr)
             {
                 color = Colorf::Blue();
                 break;
             }
         }
     }
-    DrawGizmo::Rectangle(m_BoudingBox.center, m_BoudingBox.extents, m_Handels.empty()  ? color : Colorf::Red());
+    DrawGizmo::Rectangle(boudingBox.center, boudingBox.extents, handles.empty()  ? color : Colorf::Red());
 
     for (size_t i = 0; i < m_Child.size(); i++)
     {
@@ -170,11 +187,6 @@ void OctreeNode<T>::Draw()
     }
 }
 
-template <class T>
-Bound OctreeNode<T>::GetBound() const
-{
-    return m_BoudingBox;
-}
 
 template <class T>
 Octans OctreeNode<T>::GetActiveOctans() const
@@ -194,16 +206,27 @@ void OctreeNode<T>::Clear()
     }
 
     m_ActiveOctans = Zero;
-    m_Handels.clear();
-    m_BoudingBox = Bound();
+    handles.clear();
+    boudingBox = Bound();
 }
 
 template <class T>
-bool_t OctreeNode<T>::GetChildNode(int32_t octan, const OctreeNode<T>* outNode) const
+bool_t OctreeNode<T>::GetChildNode(uint8_t octan, const OctreeNode<T>* outNode) const
 {
-    if (IsOctanValid(octan))
+    if (IsOctanValid(m_ActiveOctans, octan))
     {
         outNode = m_Child.at(octan);
+        return true;
+    }
+    return false;
+}
+
+template <typename T>
+bool_t OctreeNode<T>::SetPtrToChildNode(uint32_t bitIndex, OctreeNode<T>** outNode) const
+{
+    if (IsOctanValid(m_ActiveOctans, bitIndex))
+    {
+        *outNode = m_Child.at(bitIndex);
         return true;
     }
     return false;
@@ -214,12 +237,12 @@ template <class T>
 void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
 {
     // If current bound is less than min size return 
-    if (m_BoudingBox.GetSize().x < objectBounding.bound.GetSize().x)
+    if (boudingBox.GetSize().x < objectBounding.bound.GetSize().x)
     {
-        m_BoudingBox = objectBounding.bound;
-        m_Handels.push_back(objectBounding.handle);
+        handles.push_back(objectBounding.handle);
         return;
     }
+    
     bool_t hasDivide = false;
     
     for (size_t i = 0 ; i < m_Child.size(); i++)
@@ -233,25 +256,14 @@ void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
         {
             m_ActiveOctans = static_cast<Octans>(m_ActiveOctans | (1 << i));
             
-            ObjectBounding<T> childrenData;
-            childrenData.bound = octanbound;
-            childrenData.handle = objectBounding.handle;
-            
             if (m_Child[i] == nullptr)
-            {
-                m_Child[i] = new OctreeNode(childrenData);
-            }
-            else
-            {
-                m_Child[i]->m_BoudingBox = childrenData.bound;
-                m_Child[i]->m_Handels.push_back(childrenData.handle);
-            }
-            
-            m_Child[i]->m_Parent = this;
+                m_Child[i] = new OctreeNode();
+
+            m_Child[i]->boudingBox = octanbound;
+            m_Child[i]->parent = this;
             // try adding the current object bound in the valid octan
             hasDivide = true;
             m_Child[i]->AddObject(objectBounding);
-            std::erase(m_Handels,objectBounding.handle);
             break;
             
         }
@@ -259,7 +271,7 @@ void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
     }
 
     if (!hasDivide)
-        m_Handels.push_back(objectBounding.handle);
+        handles.push_back(objectBounding.handle);
     
 }
 

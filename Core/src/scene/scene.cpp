@@ -127,12 +127,11 @@ Scene::Scene()
 {
     // TODO Make menue to selelect skybox
     skybox.Initialize();
-    Pointer<Texture> texture = ResourceManager::Get<Texture>("assets/textures/puresky.hdr");
+    Pointer<Texture> texture = ResourceManager::Get<Texture>("assets/textures/ssl.hdr");
     texture->loadData.flipVertically = true;
     texture->Reload();
     skybox.LoadFromHdrTexture(texture);
 }
-
 Scene::~Scene()
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)

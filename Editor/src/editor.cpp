@@ -62,6 +62,7 @@ Editor::Editor(const int32_t argc, const char_t* const* const argv)
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 	io.Fonts->AddFontDefault();
@@ -157,7 +158,7 @@ void Editor::SetupImGuiStyle() const
 	style.Alpha = 1.0f;
 	style.DisabledAlpha = 0.6000000238418579f;
 	style.WindowPadding = ImVec2(8.0f, 8.0f);
-	style.WindowRounding = 0.0f;
+	style.WindowRounding = 0.5f;
 	style.WindowBorderSize = 1.0f;
 	style.WindowMinSize = ImVec2(32.0f, 32.0f);
 	style.WindowTitleAlign = ImVec2(0.0f, 0.5f);
@@ -269,7 +270,10 @@ void Editor::MenuBar()
 			{
 				XnorCore::Serializer::StartDeserialization(path);
 				data.selectedEntity = nullptr;
+				
+				// End the current Frame
 				delete XnorCore::World::scene;
+				
 				XnorCore::World::scene = new XnorCore::Scene();
 				// Possible memory leak?
 				XnorCore::Serializer::Deserialize<XnorCore::Scene, true>(XnorCore::World::scene);
@@ -278,7 +282,9 @@ void Editor::MenuBar()
 
 			ImGui::EndMenu();
 		}
-		renderer.RenderMenu();
+		if (XnorCore::World::scene != nullptr)
+			renderer.RenderMenu(*XnorCore::World::scene);
+		
 		ImGui::EndMainMenuBar();
 	}
 }
@@ -361,13 +367,10 @@ void Editor::Update()
 		shadersToReload.Clear();
 		listMutex.unlock();
 		
-		renderer.BeginFrame(*World::scene);
-
 		UpdateWindows();
 		WorldBehaviours();
-		OnRenderingWindow();
 		
-		renderer.EndFrame(*World::scene);
+		OnRenderingWindow();
 
 		Coroutine::UpdateAll();
 		Input::Update();
@@ -399,7 +402,7 @@ void Editor::WorldBehaviours()
 		{
 			XnorCore::World::Begin();
 			XnorCore::World::hasStarted = true;
-		}
+			}
 		XnorCore::World::Update();
 	}
 	XnorCore::World::OnRendering();

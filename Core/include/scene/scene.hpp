@@ -21,6 +21,8 @@ class Scene
 public:
     /// @brief Skybox handler
     Skybox skybox;
+
+    mutable Octree<const MeshRenderer> renderOctree;
     
     XNOR_ENGINE Scene();
     XNOR_ENGINE ~Scene();

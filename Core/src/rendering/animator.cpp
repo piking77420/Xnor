@@ -3,6 +3,7 @@
 #include "input/time.hpp"
 #include "utils/utils.hpp"
 #include "resource/animation.hpp"
+#include "utils/logger.hpp"
 
 using namespace XnorCore;
 
@@ -30,6 +31,8 @@ void Animator::Animate()
     if (!m_Animation->skeleton)
         return;
     
+    m_FrameCount = m_Animation->GetFrameCount();
+
     UpdateTime();
 
     size_t nextFrame = m_CurrentFrame;
@@ -60,10 +63,17 @@ void Animator::Animate()
     for (size_t i = 0; i < bones.GetSize(); i++)
     {
         const Bone& bone = bones[i];
+
+        if (bone.id >= currentMatrices.GetSize())
+            continue;
+
         const List<Animation::KeyFrame>& keyFrames = m_Animation->GetBoneKeyFrame(bone);
 
         const size_t frame = Utils::RemapValue(m_CurrentFrame, Vector2i(0, static_cast<int32_t>(m_FrameCount)), Vector2i(0, static_cast<int32_t>(keyFrames.GetSize())));
+        nextFrame = (frame + 1) % keyFrames.GetSize();
 
+        Logger::LogInfo("Current frame = {} ; Next frame = {}", frame, nextFrame);
+        
         m_Positions[i] = Vector3::Lerp(keyFrames[frame].translation, keyFrames[nextFrame].translation, t);
         m_Rotations[i] = Quaternion::Slerp(keyFrames[frame].rotation, keyFrames[nextFrame].rotation, t);
 

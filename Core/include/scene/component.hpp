@@ -17,6 +17,8 @@ class XNOR_ENGINE Component
     REFLECTABLE_IMPL(Component)
 
 public:
+    bool_t enable = true;
+    
     Component() = default;
 
     virtual ~Component() = 0;
@@ -80,4 +82,4 @@ private:
 END_XNOR_CORE
 
 /// @private
-REFL_AUTO(type(XnorCore::Component));
+REFL_AUTO(type(XnorCore::Component), field(enable));

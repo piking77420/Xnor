@@ -14,12 +14,12 @@ class UiWindow
 {
 public:
     UiWindow(Editor* editor, std::string title);
-
+    
     virtual ~UiWindow() = default;
     
     DEFAULT_COPY_MOVE_OPERATIONS(UiWindow)
 
-    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_None;
+    ImGuiWindowFlags_ windowFlags = ImGuiWindowFlags_None;
 
     [[nodiscard]]
     const std::string& GetName() const;
@@ -27,12 +27,9 @@ public:
     virtual void Display() = 0;
 
     virtual void SetParam([[maybe_unused]] void* const param) {}
-
-    // Whenever the window need to render after the update of the world
-    virtual void OnApplicationRendering();
     
     [[nodiscard]]
-    bool_t IsFocused() const;
+    bool IsFocused() const;
     
     [[nodiscard]]
     Vector2i GetPosition() const;
@@ -40,18 +37,24 @@ public:
     [[nodiscard]]
     Vector2i GetSize() const;
     
-    void FetchInfo();
+    virtual void FetchInfo();
+
+    // Whenever the window need to render after the update of the world
+    virtual void OnApplicationRendering();
+
+    virtual XnorCore::Input::BindedWindowInfo GetBindWindoInfo() const;
 
     bool_t opened = true;
     bool_t canClose = false;
 
 protected:
     std::string m_WindowTitle = "Untitled";
+    uint32_t m_InputBindId = 0;
     
     bool_t m_IsFocused;
     Vector2i m_Position;
     Vector2i m_Size;
-
+    
     Editor* m_Editor;
 };
 

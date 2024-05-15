@@ -22,11 +22,13 @@ class Mesh final : public Resource
     
 public:
     /// @brief Allowed extensions for meshes.
-    XNOR_ENGINE static constexpr std::array<const char_t*, 3> FileExtensions
+    XNOR_ENGINE static constexpr std::array<const char_t*, 5> FileExtensions
     {
         ".obj",
         ".fbx",
-        ".dae"
+        ".dae",
+        ".glb",
+        ".gltf"
     };
 
     List<Pointer<Model>> models;
@@ -53,6 +55,8 @@ public:
 private:
     List<Pointer<Animation>> m_Animations;
     List<Pointer<Skeleton>> m_Skeletons;
+
+    static std::string GetTextureFileName(const std::string& baseFileName,const std::string& fileName, const std::string& textureFormat, size_t index);
 };
 
 END_XNOR_CORE

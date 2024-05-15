@@ -25,6 +25,10 @@ static constexpr uint32_t MaxDirectionalLights = 1;
 
 static constexpr uint32_t MaxBones = 100;
 
+static constexpr size_t DirectionalCascadeLevel = 4;
+static constexpr size_t DirectionalCascadeLevelAllocation = 12;
+
+
 /// @brief Polygon rasterization mode
 /// @see <a href="https://registry.khronos.org/OpenGL-Refpages/gl4/html/glPolygonMode.xhtml">OpenGL specification</a>
 BEGIN_ENUM(PolygonMode)
@@ -149,7 +153,7 @@ BEGIN_ENUM(TextureWrapping)
 	/// @brief Uses the last valid border pixel of the texture
 	ClampToEdge,
 	/// @brief Samples a user given pixel
-	ClampToBorder
+	ClampToBorder,
 }
 END_ENUM
 
@@ -535,12 +539,6 @@ struct ALIGNAS(16) SpotLightData
 	
 	/// @brief CastShadow
 	int32_t isCastingShadow = 0;
-
-	/// @brief Cringe padding even with alignas(16) skill issue
-	float_t padding[3];
-	
-	/// @brief LightSpaceMatrix for shadowMapping
-	Matrix lightSpaceMatrix;
 };
 
 /// @brief Directional light UniformBuffer data
@@ -556,8 +554,9 @@ struct ALIGNAS(16) DirectionalLightData
 	/// @brief CastShadow
 	int32_t isDirlightCastingShadow = 0;
 
-	/// @brief Light space matrix
-	Matrix lightSpaceMatrix;
+	int32_t cascadeCount = DirectionalCascadeLevel;
+
+	float_t cascadePlaneDistance[DirectionalCascadeLevel];
 };
 
 /// @brief Light UniformBuffer data
@@ -574,8 +573,13 @@ struct ALIGNAS(16) GpuLightData
 	SpotLightData spotLightData[MaxSpotLights];
 	/// @brief Directional light data
 	DirectionalLightData directionalData[MaxDirectionalLights];
-};
+	
+	/// @brief LightSpaceMatrix for shadowMapping
+	Matrix spotlightSpaceMatrix[MaxSpotLights];
 
+	/// @brief Light space matrix
+	Matrix dirLightSpaceMatrix[DirectionalCascadeLevelAllocation];
+};
 
 /// @brief UniformBuffer data for animation
 struct ALIGNAS(16) SkinnedMeshGpuData
@@ -745,16 +749,50 @@ struct AttributeDivisor
 	uint32_t divisor = 0;
 };
 
-struct VBODescriptor
+struct VertexAttributeBinding
 {
-	VertexAttributePointer* vertexAttributesPointer = nullptr;
-	size_t vboAttributePointerSize = 0;
-
-	AttributeDivisor* attributesDivisorPointer = nullptr;
-	size_t attributesDivisorPointerSize = 0;
-
+	uint32_t attribindex = 0;
+	uint32_t bindingindex = 0;
 };
 
+struct VertexAttribFormat
+{
+	 uint32_t attribindex = 0;
+	 uint32_t size = 0;
+	 DataType::DataType type = DataType::Float;
+	 bool_t normalized = false;
+	 uint32_t relativeoffset = 0;
+};
 
+struct VAODescriptor
+{
+	VertexAttributeBinding* vertexAttributeBindings = nullptr;
+	size_t VertexAttributeBindingSize = 0;
+	
+	VertexAttribFormat* vertexAttribFormats = nullptr;
+	size_t vertexAttribFormatsSize = 0;
+
+	uint32_t vboId = 0;
+};
+
+enum class DataAlignement
+{
+	Pack,
+	UnPack
+};
+
+enum class BufferUsage
+{
+	StreamDraw,
+	StreamRead,
+	StreamCopy,
+	StaticDraw,
+	StaticRead,
+	StaticCopy,
+	DynamicDraw,
+	DrawRead,
+	ReadCopy,
+	
+};
 
 END_XNOR_CORE

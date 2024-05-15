@@ -25,7 +25,7 @@ void AnimationRender::InitResources()
     {
         .enableCullFace = true,
         .cullFace = CullFace::Front,
-        .frontFace = FrontFace::CCW
+        .frontFace = FrontFace::CW
     };
 
     m_SkinnedShader->SetFaceCullingInfo(cullInfo);

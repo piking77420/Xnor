@@ -2,7 +2,9 @@
 
 #include "definitions.hpp"
 #include "editor_camera.hpp"
+#include "render_window.hpp"
 #include "windows/ui_window.hpp"
+#include "windows/render_window.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -12,17 +14,16 @@ END_XNOR_CORE
 
 BEGIN_XNOR_EDITOR
 
-class AnimationMontageWindow final : public UiWindow
+class AnimationMontageWindow final : public RenderWindow
 {
 public:
-    using UiWindow::UiWindow;
+    using RenderWindow::RenderWindow;
 
     explicit AnimationMontageWindow(Editor* editor);
 
     void Display() override;
-    void OnApplicationRendering() override;
 
-    void SetParam(void* param) override;
+    void SetParam(void* param);
 
 private:
     XnorCore::AnimationMontage* m_Montage = nullptr;

@@ -40,6 +40,9 @@ public:
     bool_t IsOnFrustum(const Bound& bound) const;
 
 private:
+    void UpdateCameraPerspective(const Camera& camera, float_t aspect);
+
+    void UpdateCameraOrthoGraphic(const Camera& camera, float_t aspect);
 };
 
 END_XNOR_CORE

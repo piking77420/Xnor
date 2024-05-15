@@ -40,7 +40,7 @@ public:
     XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;
 
     XNOR_ENGINE bool_t Load(const aiSkeleton& loadedData);
-    XNOR_ENGINE bool_t Load(const aiMesh& loadedData);
+    XNOR_ENGINE bool_t Load(const aiMesh& loadedData, const aiNode& rootNode);
     XNOR_ENGINE bool_t Load(const aiScene& scene, const aiAnimation& loadedData);
 
     /// @brief Re-orders how the bones are stored in order to have the parents first and the children after

@@ -9,13 +9,17 @@
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
 #include "rendering/light/spot_light.hpp"
+#include "scene/component/button.hpp"
 #include "scene/component/camera_component.hpp"
-#include "scene/component/mesh_renderer.hpp"
-#include "scene/component/script_component.hpp"
-#include "..\..\include\scene\component\skinned_mesh_renderer.hpp"
+#include "scene/component/gui_component.hpp"
+#include "scene/component/image.hpp"
+#include "scene/component/player_movment.hpp"
+#include "scene/component/skinned_mesh_renderer.hpp"
 #include "scene/component/test_component.hpp"
 #include "scene/component/test_component_animation.hpp"
 #include "scene/component/test_component_physics.hpp"
+#include "scene/component/texte_component.hpp"
+
 
 using namespace XnorCore;
 
@@ -58,6 +62,7 @@ inline void XnorFactory::DisplayObject(void* const obj, const size_t hash, std::
     it->second.displayFunc(obj, windowInfo);
 }
 
+
 void XnorFactory::SerializeObject(void* const obj, const size_t hash)
 {
     auto&& it = m_FactoryMapHash.find(hash);
@@ -90,6 +95,11 @@ void XnorFactory::RegisterAllTypes()
     // It'll probably stay this way for the classes internal to Core, and as for the user scripts generated from the editor, a solution will be found at a later date probably
     
     RegisterType<Component>();
+    
+    RegisterType<SkinnedMeshRenderer>();
+    RegisterType<TestComponentAnimation>();
+
+    
     RegisterType<MeshRenderer>();
     RegisterType<DirectionalLight>();
     RegisterType<TestComponent>();
@@ -103,10 +113,18 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<CapsuleCollider>();
     RegisterType<TestComponentPhysics>();
     RegisterType<CameraComponent>();
-    RegisterType<SkinnedMeshRenderer>();
-    RegisterType<TestComponentAnimation>();
+    RegisterType<PlayerMovment>();
+
+
     RegisterType<AudioListener>();
     RegisterType<AudioSource>();
+
+    // GUI
+    RegisterType<GuiComponent>();
+    RegisterType<Image>();
+    RegisterType<Button>();
+    RegisterType<TexteComponent>();
+
 }
 
 std::string XnorFactory::GetTypeName(const size_t hash)

@@ -1,9 +1,13 @@
 #version 460 core
+#extension GL_NV_uniform_buffer_std430_layout : enable
 
 out vec4 FragColor;
 
 const int MaxSpotLight = 100;
 const int MaxPointLight = 100;
+const int DirectionalCascadeLevel = 4;
+const int DirectionalCascadeLevelAllocation = 12;
+
 const float PI = 3.14159265359;
 const float InvPI = 1/PI;
 
@@ -25,7 +29,6 @@ struct SpotLightData
     vec3 direction;
     float outerCutOff;
     bool isCastShadow;
-    mat4 lightSpaceMatrix;
 };
 
 struct DirectionalData
@@ -34,16 +37,20 @@ struct DirectionalData
     float intensity;
     vec3 direction;
     bool isDirlightCastShadow;
-    mat4 lightSpaceMatrix;
+    int cascadeCount;
+    float cascadePlaneDistance[DirectionalCascadeLevel];
 };
 
-layout (std140, binding = 2) uniform LightData
+layout (std430, binding = 2) uniform LightData
 {
     int nbrOfPointLight;
     int nbrOfSpotLight;
     PointLightData pointLightData[MaxPointLight];
     SpotLightData spotLightData[MaxSpotLight];
     DirectionalData directionalData;
+
+    mat4 spothLightlightSpaceMatrix[MaxSpotLight];
+    mat4 dirLightSpaceMatrix[DirectionalCascadeLevelAllocation];
 };
 layout (std140, binding = 0) uniform CameraUniform
 {
@@ -67,7 +74,7 @@ uniform samplerCube irradianceMap;
 uniform samplerCube prefilterMap;
 uniform sampler2D brdfLUT;
 
-uniform sampler2D dirLightShadowMap;
+uniform sampler2DArray dirLightShadowMap;
 uniform sampler2DArray spotLightShadowArray;
 
 uniform samplerCubeArray pointLightCubemapArrayPixelDistance;
@@ -93,37 +100,68 @@ const vec2 gridSamplingDiskVec2[20] = vec2[]
 );
 
 
-float ShadowCalculation(vec4 fragPosLightSpace, vec3 n, vec3 l)
+float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
 {
+    // select cascade layer
+    vec4 fragPosWorldSpaceView = vec4(fragPosWorldSpace.xyz,1.0f);
+    
+    float depthValue = abs(fragPosWorldSpaceView.z);
+
+    int layer = -1;
+    
+    for (int i = 0; i < directionalData.cascadeCount; ++i)
+    {
+        if (depthValue < directionalData.cascadePlaneDistance[i])
+        {
+            layer = i;
+            break;
+        }
+    }
+    if (layer == -1)
+    {
+        layer = directionalData.cascadeCount;
+    }
+    
+
+    vec4 fragPosLightSpace = dirLightSpaceMatrix[layer] * vec4(fragPosWorldSpace.xyz, 1.0);
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
-    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float closestDepth = texture(dirLightShadowMap, projCoords.xy).r;
+
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
+
+    // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
+    if (currentDepth > 1.0)
+    {
+        return 0.0;
+    }
+    float bias = max(0.05 * (1.0 - dot(normalize(n), normalize(l))), 0.005);
+    
     // calculate bias (based on depth map resolution and slope)
-    vec3 normal = normalize(n);
-    vec3 lightDir = normalize(l);
-    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
-    // check whether current frag pos is in shadow
-    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
-    // PCF
-    vec2 texelSize = 1.0 / textureSize(dirLightShadowMap, 0);
+    const float biasModifier = 0.5f;
+    if (layer == directionalData.cascadeCount)
+    {
+        bias *= 1 / (far * biasModifier);
+    }
+    else
+    {
+        bias *= 1 / (directionalData.cascadePlaneDistance[layer] * biasModifier);
+    }
+
+    // PCF  
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / vec2(textureSize(dirLightShadowMap, 0));
     for(int x = -1; x <= 1; ++x)
     {
         for(int y = -1; y <= 1; ++y)
         {
-            float pcfDepth = texture(dirLightShadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
-            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
+            float pcfDepth = texture(dirLightShadowMap, vec3(projCoords.xy + vec2(x, y) * texelSize, layer)).r;
+            shadow += (currentDepth - bias) > pcfDepth ? 1.0 : 0.0;
         }
     }
     shadow /= 9.0;
-
-    // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
-    if(projCoords.z > 1.0)
-    shadow = 0.0;
 
     return shadow;
 }
@@ -141,7 +179,7 @@ float ShadowCalculationSpolight(vec4 fragPosLightSpace, vec3 n, vec3 l, int inde
     // calculate bias (based on depth map resolution and slope)
     vec3 normal = normalize(n);
     vec3 lightDir = normalize(l);
-    float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.00005);
+    float bias = max(0.00005 * (1.0 - dot(normal, lightDir)), 0.0000005f);
     // check whether current frag pos is in shadow
     float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
     // PCF
@@ -167,10 +205,9 @@ float ShadowCalculationSpolight(vec4 fragPosLightSpace, vec3 n, vec3 l, int inde
 float ShadowCalculationPointLight(vec3 LightToPixel, vec3 fragPos, int index)
 {
     float currentDistance = length(LightToPixel);
-    LightToPixel.y = -LightToPixel.y;
     
     float shadow = 0.0;
-    float bias = 0.15;
+    float bias = 0.20;
     int samples = 20;
     float viewDistance = length(cameraPos - fragPos);
     float diskRadius = (1.0 + (viewDistance / far)) / 25.0;
@@ -182,7 +219,7 @@ float ShadowCalculationPointLight(vec3 LightToPixel, vec3 fragPos, int index)
         float distance = texture(pointLightCubemapArrayPixelDistance, vec4(textureUv.x, textureUv.y, textureUv.z , index)).r;
         
         if(distance + bias < currentDistance)
-        shadow += 1.0;
+            shadow += 1.0;
     }
     shadow /= float(samples);
     
@@ -231,7 +268,7 @@ vec3 ComputeIbl(float roughness,vec3 kD, float ao,vec3 albedo, vec3 N , vec3 R ,
 
     return ambient;
 }
-
+    
 
 vec3 ComputeSpotLight(vec3 baseColor,vec4 fragPos,vec3 v, vec3 n, float roughness, float metallic, vec3 f0)
 {
@@ -276,7 +313,7 @@ vec3 ComputeSpotLight(vec3 baseColor,vec4 fragPos,vec3 v, vec3 n, float roughnes
         
         if (light.isCastShadow) 
         {
-            float shadow = ShadowCalculationSpolight(light.lightSpaceMatrix * fragPos, n, l, i);
+            float shadow = ShadowCalculationSpolight(spothLightlightSpaceMatrix[i] * fragPos, n, l, i);
             Lo *= ( 1.0 - shadow );
         }
         outLo += Lo;
@@ -340,8 +377,8 @@ vec3 ComputePointLight(vec3 baseColor,vec3 fragPos,vec3 v, vec3 n, float roughne
 
 void main()
 {
-    vec3 fragPos = texture(gPosition, texCoords).rgb;
     vec4 fragPosVec4 = texture(gPosition, texCoords);
+    vec3 fragPos = fragPosVec4.xyz;
 
     vec3 normal = texture(gNormal, texCoords).rgb;
     vec3 albedo =  pow(texture(gAlbedoSpec, texCoords).rgb,vec3(2.2));
@@ -394,7 +431,7 @@ void main()
     vec3 LoDir = (kD * albedo * InvPI + specular) * radiance * NdotL;
     if (directionalData.isDirlightCastShadow)
     {
-        float shadow = ShadowCalculation(directionalData.lightSpaceMatrix * fragPosVec4,n,l);
+        float shadow = DirLightShadowCalculation(fragPosVec4, n, l);
         LoDir *= (1.0-shadow);
     }
     
