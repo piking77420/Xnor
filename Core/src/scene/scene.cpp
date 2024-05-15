@@ -7,6 +7,16 @@
 
 using namespace XnorCore;
 
+void Scene::Initialize()
+{
+    // TODO Make menu to select skybox
+    skybox.Initialize();
+    Pointer<Texture> texture = ResourceManager::Get<Texture>("assets/textures/puresky.hdr");
+    texture->loadData.flipVertically = true;
+    texture->Reload();
+    skybox.LoadFromHdrTexture(texture);
+}
+
 void Scene::Begin()
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)
@@ -34,9 +44,7 @@ void Scene::PrePhysics()
 void Scene::PostPhysics()
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)
-    {
         m_Entities[i]->PostPhysics();
-    }
 }
 
 void Scene::OnRendering()
@@ -47,17 +55,28 @@ void Scene::OnRendering()
     }
 }
 
-Entity* Scene::GetEntityById(const Guid& xnorGuid)
+Entity* Scene::FindEntityById(const Guid& xnorGuid)
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)
     {
         if (m_Entities[i]->GetGuid() == xnorGuid)
-        {
             return m_Entities[i];
-        }
     }
 
     Logger::LogWarning("No entity with id {} in scene", static_cast<std::string>(xnorGuid));
+
+    return nullptr;
+}
+
+Entity* Scene::FindEntityByName(const std::string& name)
+{
+    for (size_t i = 0; i < m_Entities.GetSize(); i++)
+    {
+        if (m_Entities[i]->name == name)
+            return m_Entities[i];
+    }
+
+    Logger::LogWarning("No entity with name {} in scene", name);
 
     return nullptr;
 }
@@ -123,15 +142,6 @@ void Scene::DestroyEntityChildren(Entity* const entity)
     entity->m_Children.Clear();
 }
 
-Scene::Scene()
-{
-    // TODO Make menue to selelect skybox
-    skybox.Initialize();
-    Pointer<Texture> texture = ResourceManager::Get<Texture>("assets/textures/ssl.hdr");
-    texture->loadData.flipVertically = true;
-    texture->Reload();
-    skybox.LoadFromHdrTexture(texture);
-}
 Scene::~Scene()
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)

@@ -5,8 +5,8 @@
 #include "file/file.hpp"
 
 #include "application.hpp"
+#include "csharp/dotnet_constants.hpp"
 #include "reflection/dotnet_reflection.hpp"
-#include "utils/formatter.hpp"
 #include "utils/message_box.hpp"
 
 using namespace XnorCore;
@@ -40,7 +40,7 @@ bool_t DotnetRuntime::Initialize()
         throw std::runtime_error("Invalid .NET version");
     }
 
-    m_AssembliesPath = Application::executablePath.parent_path() / AssembliesDirectory;
+    m_AssembliesPath = Application::executablePath.parent_path() / Dotnet::AssembliesDirectory;
     m_Settings.CoralDirectory = m_AssembliesPath.string();
     
     if (!m_Runtime.Initialize(m_Settings))
@@ -63,7 +63,7 @@ bool_t DotnetRuntime::Initialize()
 void DotnetRuntime::Shutdown()
 {
     Logger::LogInfo("Shutting down .NET runtime");
-
+    
     if (!m_LoadedAssemblies.empty())
         UnloadAllAssemblies();
     if (m_Initialized)
@@ -81,8 +81,8 @@ bool_t DotnetRuntime::LoadAssembly(const std::string& name)
     DotnetAssembly* const assembly = new DotnetAssembly(str);
     if (assembly->Load(m_Alc))
     {
-        //assembly->ProcessTypes();
         m_LoadedAssemblies.push_back(assembly);
+        assembly->ProcessTypes();
         return true;
     }
     
@@ -98,6 +98,11 @@ DotnetAssembly* DotnetRuntime::GetAssembly(const std::string& name)
     }
 
     return nullptr;
+}
+
+DotnetAssembly* DotnetRuntime::GetGameAssembly()
+{
+    return GetAssembly(Dotnet::GameProjectName);
 }
 
 void DotnetRuntime::UnloadAllAssemblies(const bool_t reloadContext)
@@ -118,22 +123,32 @@ void DotnetRuntime::ReloadAllAssemblies()
 {
     std::vector<std::string> assemblies;
     std::ranges::transform(m_LoadedAssemblies, std::back_inserter(assemblies), [](const decltype(m_LoadedAssemblies)::value_type& loadedAssembly) { return loadedAssembly->GetName(); });
+
+    m_ProjectReloadingProgress += 0.05f;
+    
     UnloadAllAssemblies(true);
+
+    m_ProjectReloadingProgress += 0.05f;
+    
+    const float_t remainingProgress = 1.f - m_ProjectReloadingProgress;
+    const size_t assemblyCount = assemblies.size();
     
     for (auto&& assembly : assemblies)
     {
-        if (LoadAssembly(assembly))
+        const bool_t loadResult = LoadAssembly(assembly);
+
+        m_ProjectReloadingProgress += remainingProgress / static_cast<float_t>(assemblyCount);
+        
+        if (loadResult)
             continue;
 
         Logger::LogWarning("Couldn't reload assembly {}", assembly);
     }
 }
 
-bool_t DotnetRuntime::BuildGameProject()
+bool_t DotnetRuntime::BuildGameProject(const bool_t asynchronous)
 {
-    constexpr const char_t* const gameProjectLocation = "Game";
-    
-    const std::filesystem::path gameProjectDirectory = gameProjectLocation;
+    const std::filesystem::path gameProjectDirectory = Dotnet::GameProjectLocation;
 
     if (!exists(gameProjectDirectory))
         return false;
@@ -144,24 +159,143 @@ bool_t DotnetRuntime::BuildGameProject()
     if (!exists(gameProjectDirectory / "Game.csproj"))
         return false;
 
-    Utils::TerminalCommand("dotnet build " + absolute(gameProjectDirectory).string());  // NOLINT(concurrency-mt-unsafe)
+    Logger::LogInfo("Building Game project");
 
-    return true;
+    static constexpr const char_t* const TempFile = "xnor_dotnet_build.txt";
+    const std::filesystem::path tempPath = std::filesystem::temp_directory_path() / TempFile;
+
+    m_ProjectReloadingProgress = 0.2f;
+
+    Utils::TerminalCommand(std::string("dotnet clean ")+ " \"" + absolute(gameProjectDirectory).string() + '"');
+
+    const int32_t commandResult = Utils::TerminalCommand(std::string("dotnet build ") + Dotnet::GameProjectBuildOptions + " \"" + absolute(gameProjectDirectory).string() + "\" 1> \"" + tempPath.string() + '"', asynchronous);
+
+    m_ProjectReloadingProgress = 0.5f;
+
+    // In case a warning/error occured, read the output file to understand what happened
+    std::ifstream file(tempPath);
+    std::string line;
+
+    // Dotnet outputs look like this:
+    // <MSBuild version>
+    //   <Projects being restored>
+    //   <Projects being built>
+    //
+    // Build <succeeded/FAILED>
+    //
+    // <Warning list>
+    // <Error list>
+    //     <Total warning count>
+    //     <Total error count>
+    //
+    // <Time elapsed>
+    
+    while (!line.starts_with("Build succeeded") && !line.starts_with("Build FAILED"))
+        std::getline(file, line);
+
+    // Here we are right after the 'Build <succeeded/FAILED>' line
+
+    std::getline(file, line);
+
+    // This is the first potential warning/error line
+    std::getline(file, line);
+
+    std::vector<std::string> diagnostics;
+    while (!line.starts_with("    "))
+    {
+        diagnostics.push_back(line);
+        std::getline(file, line);
+    }
+
+    if (!diagnostics.empty())
+    {
+        for (auto&& str : diagnostics)
+        {
+            if (str.find(": warning") != std::string::npos)
+                Logger::LogWarning("[.NET BUILD] {}", str);
+            else
+                Logger::LogError("[.NET BUILD] {}", str);
+        }
+    }
+
+    file.close();
+
+    std::filesystem::remove(tempPath);
+
+    if (commandResult == 0)
+    {
+        m_ProjectReloadingProgress = 0.6f;
+
+        Logger::LogInfo("Build succeeded");
+        return true;
+    }
+
+    m_ProjectReloadingProgress = 1.f;
+    
+    Logger::LogError("Build failed");
+    return false;
 }
 
-bool_t DotnetRuntime::GetInitialized()
+void DotnetRuntime::BuildAndReloadProject(const bool_t recreateScriptInstances)
 {
-    return m_Initialized;
+    m_ReloadingProject = true;
+    m_ProjectReloadingProgress = 0.f;
+
+    std::vector<ScriptComponent*> scripts;
+    World::scene->GetAllComponentsOfType(&scripts);
+    std::vector<std::string> types(scripts.size());
+
+    for (size_t i = 0; i < scripts.size(); i++)
+    {
+        ScriptComponent* const script = scripts[i];
+        types[i] = script->m_ManagedObject.GetType().GetFullName();
+        // script->Destroy(); // FIXME: This line causes the crash
+    }
+    
+    m_ProjectReloadingProgress = 0.1f;
+    
+    if (BuildGameProject(false))
+    {
+        ReloadAllAssemblies();
+
+        m_ProjectReloadingProgress = 0.9f;
+
+        if (recreateScriptInstances)
+        {
+            auto&& gameTypes = GetGameAssembly()->GetCoralAssembly()->GetTypes();
+            for (size_t i = 0; i < scripts.size(); i++)
+            {
+                auto&& it = std::ranges::find_if(gameTypes, [&] (const Coral::Type* const type) -> bool_t { return type->GetFullName() == types[i]; });
+                if (it != gameTypes.end())
+                {
+                    auto&& type = *it;
+                    scripts[i]->m_ManagedObject = type->CreateInstance();
+                }
+            }
+        }
+    }
+    else
+    {
+        Logger::LogError("Couldn't build {} .NET project", Dotnet::GameProjectName);
+    }
+    
+    m_ProjectReloadingProgress = 1.f;
+    m_ReloadingProject = false;
 }
 
-bool DotnetRuntime::CheckDotnetInstalled()
+bool_t DotnetRuntime::GetInitialized() { return m_Initialized; }
+
+bool_t DotnetRuntime::IsReloadingProject() { return m_ReloadingProject; }
+
+float_t DotnetRuntime::GetProjectReloadingProgress() { return m_ProjectReloadingProgress; }
+
+bool_t DotnetRuntime::CheckDotnetInstalled()
 {
     // Check if the dotnet command returns a non-zero exit code
-    return Utils::TerminalCommand("dotnet --info 1> nul", false) == 0;  // NOLINT(concurrency-mt-unsafe)
+    return Utils::TerminalCommand("dotnet --info 1> nul", false) == 0;
 }
 
-constexpr const char_t* const TempFile = "xnor_dotnet_list_runtimes.txt";
-bool DotnetRuntime::CheckDotnetVersion()
+bool_t DotnetRuntime::CheckDotnetVersion()
 {
     // This function runs the 'dotnet --list-runtimes' command
     // This prints a list of all installed .NET runtimes on the current machine
@@ -170,9 +304,10 @@ bool DotnetRuntime::CheckDotnetVersion()
     // Once this is done, we know for sure that the C# assemblies can be executed and let
     // the system choose the right version
 
-    std::filesystem::path tempPath = std::filesystem::temp_directory_path() / TempFile;
+    static constexpr const char_t* const TempFile = "xnor_dotnet_list_runtimes.txt";
+    const std::filesystem::path tempPath = std::filesystem::temp_directory_path() / TempFile;
     
-    Utils::TerminalCommand("dotnet --list-runtimes 1> \"" + tempPath.string() + '"', false);  // NOLINT(concurrency-mt-unsafe)
+    Utils::TerminalCommand("dotnet --list-runtimes 1> \"" + tempPath.string() + '"', false);
     
     File file(tempPath.string());
     

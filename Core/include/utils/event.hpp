@@ -17,7 +17,7 @@ BEGIN_XNOR_CORE
 /// It works by having an underlying list of functions that always return @c void and have the provided types as arguments
 /// The += and -= operators can be used to respectively add and remove events to the list
 ///
-/// Event variables should always start with 'on', for example: onUpdate, onReload, onCollision, etc...
+/// Event variable names should always start with 'on', for example: onUpdate, onReload, onCollision, etc...
 /// 
 /// @tparam Args Event function arguments
 ///

@@ -56,7 +56,7 @@ private:
     List<Pointer<Animation>> m_Animations;
     List<Pointer<Skeleton>> m_Skeletons;
 
-    static std::string GetTextureFileName(const std::string& baseFileName,const std::string& fileName, const std::string& textureFormat, size_t index);
+    static std::string GetTextureFileName(const std::string& baseFileName, const std::string& textureFormat, size_t index);
 
     bool_t LoadMesh(const aiScene& scene, Pointer<Skeleton>* outSkeleton);
 

@@ -24,7 +24,7 @@ public:
 
     mutable Octree<const StaticMeshRenderer> renderOctree;
     
-    XNOR_ENGINE Scene();
+    XNOR_ENGINE Scene() = default;
     XNOR_ENGINE ~Scene();
 
     DEFAULT_COPY_MOVE_OPERATIONS(Scene)
@@ -33,13 +33,15 @@ public:
     /// @tparam ComponentT Component type
     /// @param components Result components
     template <class ComponentT>
-    void GetAllComponentOfType(std::vector<const ComponentT*>* components) const;
+    void GetAllComponentsOfType(std::vector<const ComponentT*>* components) const;
 
     /// @brief Gets all of the specified Component in every entity in the scene
     /// @tparam ComponentT Component type
     /// @param components Result components
     template <class ComponentT>
-    void GetAllComponentOfType(std::vector<ComponentT*>* components);
+    void GetAllComponentsOfType(std::vector<ComponentT*>* components);
+
+    XNOR_ENGINE void Initialize();
 
     /// @brief Begins the scene
     XNOR_ENGINE void Begin();
@@ -59,7 +61,13 @@ public:
     /// @param xnorGuid Guid
     /// @return Entity, can be @c nullptr
     [[nodiscard]]
-    XNOR_ENGINE Entity* GetEntityById(const Guid& xnorGuid);
+    XNOR_ENGINE Entity* FindEntityById(const Guid& xnorGuid);
+
+    /// @brief Tries to find an entity in the scene via a Guid
+    /// @param name Entity name
+    /// @return Entity, can be @c nullptr
+    [[nodiscard]]
+    XNOR_ENGINE Entity* FindEntityByName(const std::string& name);
 
     /// @brief Creates a new entity in the scene
     /// @param name Entity name

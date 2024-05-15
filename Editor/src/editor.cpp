@@ -15,7 +15,9 @@
 #include "utils/coroutine.hpp"
 #include "windows/animation_montage_window.hpp"
 #include "windows/content_browser.hpp"
+#include "windows/debug_console.hpp"
 #include "windows/editor_window.hpp"
+#include "windows/footer_window.hpp"
 #include "windows/header_window.hpp"
 #include "windows/hierarchy.hpp"
 #include "windows/inspector.hpp"
@@ -74,12 +76,13 @@ Editor::Editor(const int32_t argc, const char_t* const* const argv)
 
 	SetupImGuiStyle();
 	CreateDefaultWindows();
-
-	XnorCore::World::scene = new XnorCore::Scene();
 }
 
 Editor::~Editor()
 {
+	if (m_CurrentAsyncActionThread.joinable())
+		m_CurrentAsyncActionThread.join();
+
 	for (const UiWindow* w : m_UiWindows)
 		delete w;
 	
@@ -104,8 +107,10 @@ void Editor::CreateDefaultWindows()
 	OpenWindow<ContentBrowser>(XnorCore::FileManager::Get<XnorCore::Directory>("assets"));
 	OpenWindow<RenderWindow>(*gameViewPort);
 	OpenWindow<EditorWindow>(data.editorViewPort);
+	OpenWindow<DebugConsole>();
+	OpenWindow<FooterWindow>();
 	
-	SetupWindow<AnimationMontageWindow>();
+	//SetupWindow<AnimationMontageWindow>();
 }
 
 void Editor::BeginDockSpace() const
@@ -259,34 +264,156 @@ void Editor::MenuBar()
 				path = data.currentScene->GetPathString();
 			}
 
+			const bool_t saveLoadDisabled = m_ReloadingScripts || m_GamePlaying;
+
+			if (saveLoadDisabled)
+				ImGui::BeginDisabled();
+
 			if (ImGui::MenuItem("Save"))
-			{
-				XnorCore::Serializer::StartSerialization(path);
-				XnorCore::Serializer::Serialize<XnorCore::Scene, true>(XnorCore::World::scene);
-				XnorCore::Serializer::EndSerialization();
-			}
+				SerializeSceneAsync(path);
 
 			if (ImGui::MenuItem("Load"))
-			{
-				XnorCore::Serializer::StartDeserialization(path);
-				data.selectedEntity = nullptr;
-				
-				// End the current Frame
-				delete XnorCore::World::scene;
-				
-				XnorCore::World::scene = new XnorCore::Scene();
-				// Possible memory leak?
-				XnorCore::Serializer::Deserialize<XnorCore::Scene, true>(XnorCore::World::scene);
-				XnorCore::Serializer::EndDeserialization();
-			}
+				DeserializeSceneAsync(path);
+
+			if (ImGui::MenuItem("Load backup"))
+				DeserializeSceneAsync();
+
+			if (saveLoadDisabled)
+				ImGui::EndDisabled();
 
 			ImGui::EndMenu();
 		}
+		
 		if (XnorCore::World::scene != nullptr)
 			renderer.RenderMenu(*XnorCore::World::scene);
 		
 		ImGui::EndMainMenuBar();
 	}
+}
+
+void Editor::BuildAndReloadCodeAsync()
+{
+	const bool_t stoppedPlaying = m_GamePlaying;
+	if (m_GamePlaying)
+		StopPlaying();
+	
+	m_ReloadingScripts = true;
+
+	// This should never happen, but we check it anyway because it would cause a crash if it did
+	if (m_CurrentAsyncActionThread.joinable())
+		m_CurrentAsyncActionThread.join();
+
+	m_CurrentAsyncActionThread = std::thread(
+		[this, stoppedPlaying]
+		{
+			// If we stopped playing, the scene just got deserialized, so no need to serialize it again
+			if (!stoppedPlaying)
+				SerializeScene();
+			XnorCore::DotnetRuntime::BuildAndReloadProject(false);
+			DeserializeScene();
+			
+			m_ReloadingScripts = false;
+		}
+	);
+}
+
+void Editor::StartPlaying()
+{
+	SerializeScene();
+	XnorCore::World::isPlaying = true;
+	XnorCore::World::hasStarted = false;
+
+	m_GamePlaying = true;
+}
+
+void Editor::StopPlaying()
+{
+	XnorCore::Coroutine::StopAll();
+
+	data.selectedEntity = nullptr;
+
+	DeserializeScene();
+
+	XnorCore::World::scene->Initialize();
+	XnorCore::World::isPlaying = false;
+	XnorCore::World::hasStarted = false;
+	
+	m_GamePlaying = false;
+}
+
+void Editor::SerializeScene(const std::string& filepath)
+{
+	XnorCore::Logger::LogInfo("Saving scene");
+	
+	if (filepath.empty())
+		m_SerializedScenePath = std::filesystem::temp_directory_path() / "xnor_current.scene.xml";
+	else
+		m_SerializedScenePath = filepath;
+
+	m_Serializing = true;
+	
+	XnorCore::Serializer::StartSerialization(m_SerializedScenePath.string());
+	XnorCore::Serializer::Serialize<XnorCore::Scene, true>(XnorCore::World::scene);
+	XnorCore::Serializer::EndSerialization();
+
+	m_Serializing = false;
+}
+
+void Editor::SerializeSceneAsync(const std::string& filepath)
+{
+	m_Serializing = true;
+	m_CurrentAsyncActionThread = std::thread([this, path = filepath] { SerializeScene(path); });
+}
+
+void Editor::DeserializeScene(const std::string& filepath)
+{
+	XnorCore::Logger::LogInfo("Loading scene");
+	
+	if (filepath.empty())
+		m_SerializedScenePath = std::filesystem::temp_directory_path() / "xnor_current.scene.xml";
+	else
+		m_SerializedScenePath = filepath;
+
+	if (!exists(m_SerializedScenePath))
+		return;
+
+	m_Deserializing = true;
+	
+	XnorCore::Serializer::StartDeserialization(m_SerializedScenePath.string());
+	const XnorCore::Guid selectedEntityId = data.selectedEntity ? data.selectedEntity->GetGuid() : XnorCore::Guid::Empty();
+	
+	delete XnorCore::World::scene;
+	XnorCore::World::scene = new XnorCore::Scene;
+	
+	// Possible memory leak?
+	XnorCore::Serializer::Deserialize<XnorCore::Scene, true>(XnorCore::World::scene);
+	XnorCore::Serializer::EndDeserialization();
+	
+	if (selectedEntityId != XnorCore::Guid::Empty())
+		data.selectedEntity = XnorCore::World::scene->FindEntityById(selectedEntityId);
+
+	m_Deserializing = false;
+}
+
+void Editor::DeserializeSceneAsync(const std::string& filepath)
+{
+	m_Deserializing = true;
+	m_CurrentAsyncActionThread = std::thread([this, path = filepath] { DeserializeScene(path); });
+}
+
+bool_t Editor::IsSerializing() const
+{
+	return m_Serializing;
+}
+
+bool_t Editor::IsDeserializing() const
+{
+	return m_Deserializing;
+}
+
+bool_t Editor::IsReloadingScripts() const
+{
+	return m_ReloadingScripts;
 }
 
 void Editor::UpdateWindows()
@@ -303,16 +430,6 @@ void Editor::UpdateWindows()
 		}
 		ImGui::End();
 	}
-
-	// TEMPORARY
-	ImGui::Begin("Debug");
-	if (ImGui::Button("Create C# TestScript entity"))
-		XnorCore::DotnetRuntime::GetAssembly("Game")->ProcessTypes();
-	if (ImGui::Button("Build C# Project"))
-		XnorCore::DotnetRuntime::BuildGameProject();
-	if (ImGui::Button("Reload C# Assemblies"))
-		XnorCore::DotnetRuntime::ReloadAllAssemblies();
-	ImGui::End();
 }
 
 void Editor::OnRenderingWindow()
@@ -366,17 +483,31 @@ void Editor::Update()
 		shadersToReload.Iterate([](decltype(shadersToReload)::Type* const param){ (*param)->Recompile(); });
 		shadersToReload.Clear();
 		listMutex.unlock();
-		
+
+		const bool_t deserializingScene = m_CurrentAsyncActionThread.joinable() || m_Deserializing;
+
 		UpdateWindows();
-		WorldBehaviours();
 		
-		OnRenderingWindow();
+		if (!deserializingScene)
+		{
+			WorldBehaviours();
+			OnRenderingWindow();
+		}
 
 		Coroutine::UpdateAll();
 		Input::Update();
 		EndFrame();
 		renderer.SwapBuffers();
+
+		// If a thread has been used to asynchronously either serialize the scene, deserialize it, or reload the scripts, and the thread hasn't been joined yet
+		// This is basically executed if the thread finished executing
+		if (m_CurrentAsyncActionThread.joinable() && !(m_Serializing || m_Deserializing || m_ReloadingScripts))
+		{
+			World::scene->Initialize();
+			m_CurrentAsyncActionThread.join();
+		}
 	}
+	Window::Hide();
 
 	shaderWatcher.Stop();
 }

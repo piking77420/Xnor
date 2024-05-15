@@ -4,7 +4,7 @@
 #include "rendering/light/light.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/entity.hpp"
-#include "..\..\..\include\scene\component\skinned_mesh_renderer.hpp"
+#include "scene/component/skinned_mesh_renderer.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -21,7 +21,7 @@ void TestComponent::Begin()
         smr->StartBlending(ResourceManager::Get<Mesh>("assets/models/Coyote-Walking.fbx")->GetAnimation(0));
     }
 
-    m_Color = static_cast<ColorHsva>(ColorRgb::Red());
+    m_Color = ColorHsva::Red();
 }
 
 void TestComponent::Update()
@@ -38,7 +38,7 @@ void TestComponent::Update()
 
     m_Color.h += 0.01f;
 
-    m_Light->color = static_cast<Colorf>(m_Color);
+    m_Light->color = static_cast<Color>(m_Color);
 }
 
 Coroutine TestComponent::FlashRoutine()

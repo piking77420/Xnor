@@ -1,9 +1,9 @@
 ﻿#include "rendering/draw_gizmo.hpp"
 
-#include "physics/components/box_collider.hpp"
-#include "physics/components/capsule_collider.hpp"
-#include "physics/components/collider.hpp"
-#include "physics/components/sphere_collider.hpp"
+#include "physics/component/box_collider.hpp"
+#include "physics/component/capsule_collider.hpp"
+#include "physics/component/collider.hpp"
+#include "physics/component/sphere_collider.hpp"
 #include "rendering/rhi.hpp"
 #include "resource/resource_manager.hpp"
 
@@ -17,17 +17,17 @@ DrawGizmo::DrawGizmo()
     m_GizmoShader = ResourceManager::Get<Shader>("gizmo_shader");
 }
 
-void DrawGizmo::Sphere(Vector3 position, float_t radius, Colorf color)
+void DrawGizmo::Sphere(Vector3 position, float_t radius, Color color)
 {
     m_GizmoSphereVector.push_back({ position, radius, color });
 }
 
-void DrawGizmo::Rectangle(Vector3 position, Vector3 size, Colorf color)
+void DrawGizmo::Rectangle(Vector3 position, Vector3 size, Color color)
 {
     m_GizmoRectangleVector.push_back({ position, size, color });
 }
 
-void DrawGizmo::Capsule(Vector3 position, float_t height, float_t radius, Colorf color)
+void DrawGizmo::Capsule(Vector3 position, float_t height, float_t radius, Color color)
 {
     m_GizmoCapsuleVector.push_back({ position, height, radius, color });
 }

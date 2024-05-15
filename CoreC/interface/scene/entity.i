@@ -38,6 +38,8 @@
         return false;
     }
 
+    public void AddComponent<T>() where T : Component, new() => GetComponents().Add(new T());
+
     public void RemoveComponent<T>() where T : Component
     {
         foreach (Component component in GetComponents())
@@ -49,6 +51,18 @@
             }
         }
     }
+    
+    public bool Equals(Entity other) => OperatorEq(other);
+
+    public override bool Equals(object obj) => obj is Entity other && Equals(other);
+
+    public override int GetHashCode() => throw new global::System.NotImplementedException("Cannot get the hash code of a native object");
+
+    public static bool operator ==(Entity left, Entity right) => left.Equals(right);
+
+    public static bool operator !=(Entity left, Entity right) => !left.Equals(right);
 %}
+
+%csmethodmodifiers XnorCore::Entity::operator== "private";
 
 %include "scene/entity.hpp"

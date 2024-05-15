@@ -1,4 +1,5 @@
 #include "editor.hpp"
+#include "reflection/dotnet_reflection.hpp"
 #include "reflection/xnor_factory.hpp"
 #include "utils/file_system_watcher.hpp"
 #include "utils/logger.hpp"

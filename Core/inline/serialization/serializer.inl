@@ -10,8 +10,8 @@
 #include "reflection/reflection.hpp"
 #include "resource/resource_manager.hpp"
 #include "scene/component.hpp"
+#include "scene/component/script_component.hpp"
 #include "utils/guid.hpp"
-#include "utils/logger.hpp"
 #include "utils/meta_programming.hpp"
 #include "world/world.hpp"
 
@@ -130,7 +130,7 @@ void Serializer::Deserialize(ReflectT* const obj)
 
         for (auto&& it : m_GuidEntityMap)
         {
-            *it.second = World::scene->GetEntityById(it.first);
+            *it.second = World::scene->FindEntityById(it.first);
         }
     }
 }
@@ -396,21 +396,13 @@ void Serializer::DeserializeSimpleType(const Metadata<ReflectT, MemberT, Descrip
     {
         sscanf_s(value, "%f ; %f ; %f ; %f", &metadata.obj->X(), &metadata.obj->Y(), &metadata.obj->Z(), &metadata.obj->W());
     }
-    else if constexpr (Meta::IsSame<MemberT, ColorRgb>)
-    {
-        sscanf_s(value, "%hhu ; %hhu ; %hhu", &metadata.obj->r, &metadata.obj->g, &metadata.obj->b);
-    }
-    else if constexpr (Meta::IsSame<MemberT, ColorRgba>)
-    {
-        sscanf_s(value, "%hhu ; %hhu ; %hhu ; %hhu", &metadata.obj->r, &metadata.obj->g, &metadata.obj->b, &metadata.obj->a);
-    }
-    else if constexpr (Meta::IsSame<MemberT, Colorf>)
+    else if constexpr (Meta::IsSame<MemberT, Color>)
     {
         sscanf_s(value, "%f ; %f ; %f ; %f", &metadata.obj->r, &metadata.obj->g, &metadata.obj->b, &metadata.obj->a);
     }
     else if constexpr (Meta::IsSame<MemberT, ColorHsva>)
     {
-        sscanf_s(value, "%hhu ; %hhu ; %hhu ; %hhu", &metadata.obj->h, &metadata.obj->s, &metadata.obj->v, &metadata.obj->a);
+        sscanf_s(value, "%f ; %f ; %f ; %f", &metadata.obj->h, &metadata.obj->s, &metadata.obj->v, &metadata.obj->a);
     }
     else if constexpr (Meta::IsEnum<MemberT>)
     {
@@ -543,6 +535,9 @@ void Serializer::DeserializeListType(const Metadata<ReflectT, MemberT, Descripto
 
     ReadElement(metadata.name);
 
+    if constexpr (Meta::IsSame<ListT, Component*>)
+        metadata.obj->Iterate([](Component** const obj) { (*obj)->Destroy(); });
+
     metadata.obj->Clear();
 
     const XMLElement* const parent = m_ElementsStack.top();
@@ -555,7 +550,14 @@ void Serializer::DeserializeListType(const Metadata<ReflectT, MemberT, Descripto
 
         if constexpr (Meta::IsAbstract<PtrT>)
         {
-            ListT const ptr = static_cast<ListT>(CreateObjectUsingFactory(std::string(child->first_attribute("typeName")->value())));
+            std::string&& typeName = std::string(child->first_attribute("typeName")->value());
+            std::string managedTypeName;
+
+            // If typeName == "ScriptComponent"
+            if (typeName == Utils::RemoveNamespaces(decltype(Reflection::GetTypeInfo<ScriptComponent>())::name.c_str()))
+                managedTypeName = child->first_attribute("managedType")->value();
+            
+            ListT const ptr = static_cast<ListT>(CreateObjectUsingFactory(typeName, managedTypeName));
             metadata.obj->Add(ptr);
             if constexpr (Meta::IsSame<PtrT, Component>)
                  ptr->entity = metadata.topLevelObj;

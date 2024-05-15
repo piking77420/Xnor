@@ -16,7 +16,7 @@ class Light : public Component
     
 public:
     /// @brief Color of the light
-    Colorf color = Colorf(1.f, 1.f, 1.f);
+    Color color = Color(1.f, 1.f, 1.f);
     
     /// @brief Intensity of the light
     float_t intensity = 1.f;

@@ -6,6 +6,7 @@
 #include <thread>
 
 #include "core.hpp"
+#include "csharp/dotnet_constants.hpp"
 #include "utils/concepts.hpp"
 #include "utils/ts_queue.hpp"
 
@@ -47,7 +48,7 @@ BEGIN_XNOR_CORE
 class Logger final
 {
     STATIC_CLASS(Logger)
-    
+
 public:
     /// @brief Describes the severity of a log.
     enum class LogLevel
@@ -55,12 +56,12 @@ public:
         /// @brief Log intended for temporary debugging only.
         ///
         /// Preceded by '[TEMP DEBUG]' and appears green in the console.
-        /// Temporary debug logs are not printed in the log file by default and they are only printed in the console if in a debug build.
+        /// Temporary debug logs are not printed in the log file by default, and they are only printed in the console if in a debug build.
         TemporaryDebug,
         /// @brief Log intended for debugging only.
         ///
         /// Preceded by '[DEBUG]' and appears gray in the console.
-        /// Debug logs are not printed in the log file by default and they are only printed in the console if in a debug build.
+        /// Debug logs are not printed in the log file by default, and they are only printed in the console if in a debug build.
         Debug,
         /// @brief Log intended for general information.
         ///
@@ -81,10 +82,46 @@ public:
         /// After such a log, the program is not intended to continue to function normally and should instead exit ASAP.
         Fatal
     };
+    
+private:
+    struct LogEntry
+    {
+        std::string message;
+        LogLevel level;
+        std::chrono::system_clock::time_point time;
+        
+        bool_t printToConsole, printToFile;
+        
+        std::string file;
+        int32_t line = -1;
+        
+        bool_t sameAsPrevious = false;
 
+        /// @brief Whether the log was made from a .NET call
+        bool_t fromDotnet = false;
+
+        std::shared_ptr<LogEntry> previousLog = nullptr;
+
+        XNOR_ENGINE LogEntry();
+
+        XNOR_ENGINE LogEntry(std::string&& message, LogLevel level);
+
+        XNOR_ENGINE LogEntry(std::string&& message, LogLevel level, const std::string& file, int32_t line);
+
+        XNOR_ENGINE LogEntry(std::string&& message, LogLevel level, std::chrono::system_clock::time_point timePoint);
+
+        XNOR_ENGINE LogEntry(std::string&& message, LogLevel level, std::chrono::system_clock::duration duration);
+
+        XNOR_ENGINE bool_t operator==(const LogEntry& other) const;
+    };
+
+    // We thought about using std::list here instead but because the allocations are made on the logger thread anyway we can make it a std::vector
+    XNOR_ENGINE static inline std::vector<std::shared_ptr<LogEntry>> m_Logs;
+    
+public:
     /// @brief The minimum necessary LogLevel for a log to be printed in the console.
     ///
-    /// Defaults to LogLevel::Debug in a debug build, or LogLevel::Info otherwise.
+    /// Defaults to LogLevel::TemporaryDebug in a debug build, or LogLevel::Info otherwise.
     XNOR_ENGINE static inline LogLevel minimumConsoleLevel =
 #ifdef _DEBUG
         LogLevel::TemporaryDebug;
@@ -94,7 +131,7 @@ public:
     
     /// @brief The minimum necessary LogLevel for a log to be printed in the log file.
     ///
-    /// Defaults to LogLevel::Warning.
+    /// Defaults to LogLevel::Info.
     XNOR_ENGINE static inline LogLevel minimumFileLevel = LogLevel::Info;
 
     /// @brief Logs a message using the specified format string, arguments and LogLevel.
@@ -187,32 +224,10 @@ public:
     /// This function doesn't do anything if the logger has already been stopped.
     XNOR_ENGINE static void Stop();
 
+    XNOR_ENGINE static const decltype(m_Logs)& GetLogList();
+
 private:
-    struct LogEntry
-    {
-        std::string message;
-        LogLevel level;
-        std::chrono::system_clock::time_point time;
-        bool_t printToConsole, printToFile;
-        std::string file;
-        int32_t line = -1;
-
-        std::shared_ptr<LogEntry> previousLog = nullptr;
-
-        XNOR_ENGINE LogEntry();
-
-        XNOR_ENGINE LogEntry(std::string&& message, LogLevel level);
-
-        XNOR_ENGINE LogEntry(std::string&& message, LogLevel level, const std::string& file, int32_t line);
-
-        XNOR_ENGINE LogEntry(std::string&& message, LogLevel level, std::chrono::system_clock::time_point timePoint);
-
-        XNOR_ENGINE LogEntry(std::string&& message, LogLevel level, std::chrono::system_clock::duration duration);
-
-        XNOR_ENGINE bool_t operator==(const LogEntry& other) const;
-    };
-
-    XNOR_ENGINE static inline TsQueue<std::shared_ptr<LogEntry>> m_Logs;
+    XNOR_ENGINE static inline TsQueue<std::shared_ptr<LogEntry>> m_NewLogs;
 
     XNOR_ENGINE static inline std::shared_ptr<LogEntry> m_LastLog;
 
@@ -235,6 +250,10 @@ private:
     XNOR_ENGINE static inline std::filesystem::path m_Filepath;
 
     XNOR_ENGINE static inline uint32_t m_LogIndex = 0;
+
+    XNOR_ENGINE static inline const std::string DotnetLogPrefix = "[" + std::string(Dotnet::GameProjectName) + "] ";
+
+    XNOR_ENGINE static void PushLog(const std::shared_ptr<LogEntry>& log);
 
     /// @brief Prints a log to the console and the logging file.
     XNOR_ENGINE static void PrintLog(const std::shared_ptr<LogEntry>& log);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "physics/components/collider.hpp"
+#include "physics/component/collider.hpp"
 #include "scene/component.hpp"
 
 BEGIN_XNOR_CORE

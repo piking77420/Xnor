@@ -275,14 +275,18 @@ public:
     [[nodiscard]]
     const T& Front() const;
 
+#ifndef SWIG
     [[nodiscard]]
     T& Front();
+#endif
 
     [[nodiscard]]
     const T& Back() const;
 
+#ifndef SWIG
     [[nodiscard]]
     T& Back();
+#endif
 
     [[nodiscard]]
     Iterator Begin();
@@ -308,9 +312,13 @@ public:
     [[nodiscard]]
     ConstReverseIterator CrEnd() const;
 
+    /// @private
+    /// Necessary when using range-for loops
     [[nodiscard]]
     Iterator begin();
 
+    /// @private
+    /// Necessary when using range-for loops
     [[nodiscard]]
     Iterator end();
 

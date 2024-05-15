@@ -99,7 +99,7 @@ Pointer<Animation> Mesh::GetAnimation(const size_t id)
     return m_Animations[id];
 }
 
-std::string Mesh::GetTextureFileName(const std::string& baseFileName, const std::string& fileName, const std::string& textureFormat, size_t index)
+std::string Mesh::GetTextureFileName(const std::string& baseFileName, const std::string& textureFormat, size_t index)
 {
     std::string returnName;
     std::string baseNameCopy = baseFileName;

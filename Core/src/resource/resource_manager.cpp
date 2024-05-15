@@ -85,7 +85,7 @@ void ResourceManager::LoadAll()
         }
     }
 
-    Logger::LogInfo(
+    Logger::LogDebug(
         "Successfully loaded {} files in {} resources. Took {}",
         files.size(),
         m_Resources.size() - oldResourceCount,

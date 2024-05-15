@@ -21,6 +21,11 @@ void Hierarchy::Display()
   
     const XnorCore::List<XnorCore::Entity*>& entities = scene.GetEntities();
 
+    const bool_t serializing = m_Editor->IsSerializing() || m_Editor->IsDeserializing();
+
+    if (serializing)
+        ImGui::BeginDisabled();
+
     if (ImGui::TreeNodeEx("Entities", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_FramePadding))
     {
         if (ImGui::BeginPopupContextItem())
@@ -57,6 +62,9 @@ void Hierarchy::Display()
     
     CheckDeleteEntity(scene);
     CheckUnselectEntity();
+
+    if (serializing)
+        ImGui::EndDisabled();
 }
 
 void Hierarchy::DisplayEntity(XnorCore::Scene& scene, XnorCore::Entity* const entity)

@@ -56,7 +56,7 @@ namespace Concepts
 
     /// @brief Concept that forces a type to be a color, e.g. one of: ColorRgb, ColorRgba, Colorf or ColorHsv
     template <class T>
-    concept ColorT = std::is_same_v<ColorRgb, T> || std::is_same_v<ColorRgb, T> || std::is_same_v<ColorRgba, T> || std::is_same_v<Colorf, T> || std::is_same_v<ColorHsva, T>;
+    concept ColorT = std::is_same_v<Color, T> || std::is_same_v<ColorHsva, T>;
 
     /// @brief Concept that forces a type to be a raw pointer
     template <typename T>

@@ -28,6 +28,11 @@ public:
     /// @return Selected value
     XNOR_ENGINE static Entity* FilterEntity(Entity** target);
 
+    /// @brief Handles the entity filter
+    /// @param target Target entity
+    /// @return Selected value
+    XNOR_ENGINE static Entity* FilterEntity();
+
     /// @brief Handles the component filter (with a List)
     /// @param target Target list
     /// @return Selected value

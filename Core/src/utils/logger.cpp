@@ -41,7 +41,7 @@ void Logger::OpenFile(const std::filesystem::path &filepath)
 
     LogInfo("Logging to file: {}", filepath);
     // Prevent this log from being printed to the file
-    m_Logs.Back()->printToFile = false;
+    m_NewLogs.Back()->printToFile = false;
 
     LogInfo("Starting logging #{}", m_LogIndex);
 }
@@ -93,7 +93,7 @@ void Logger::CloseFile()
 
 void Logger::Synchronize()
 {
-    if (m_Logs.Empty())
+    if (m_NewLogs.Empty())
         return;
     
     m_Synchronizing = true;
@@ -129,6 +129,8 @@ void Logger::Stop()
     
     CloseFile();
 }
+
+const decltype(Logger::m_Logs)& Logger::GetLogList() { return m_Logs; }
 
 Logger::LogEntry::LogEntry()
     : level(LogLevel::Info)
@@ -196,12 +198,26 @@ void Logger::Run()
     m_Thread.detach();
 
     std::unique_lock lock(m_Mutex);
-    while (m_Running || !m_Logs.Empty())
+    while (m_Running || !m_NewLogs.Empty())
     {
-        m_CondVar.wait(lock, [] { return !m_Logs.Empty() || !m_Running || m_Synchronizing; });
+        m_CondVar.wait(lock, [] { return !m_NewLogs.Empty() || !m_Running || m_Synchronizing; });
 
-        while (!m_Logs.Empty())
-            PrintLog(m_Logs.Pop());
+        m_Logs.reserve(m_Logs.size() + m_NewLogs.Count());
+
+        while (!m_NewLogs.Empty())
+        {
+            auto&& log = m_NewLogs.Pop();
+
+            // Check if the log is equal to the previous one
+            if (log->previousLog && *log->previousLog == *log)
+                log->sameAsPrevious = true;
+            
+            // Add the log to the list
+            m_Logs.push_back(log);
+
+            // Print the log to the console and/or the file
+            PrintLog(log);
+        }
 
         // As we don't use std::endl for newlines, make sure to flush the streams before going back to sleep
         std::cout.flush();
@@ -214,6 +230,22 @@ void Logger::Run()
             m_CondVar.notify_one();
         }
     }
+
+    m_Logs.clear();
+}
+
+void Logger::PushLog(const std::shared_ptr<LogEntry>& log)
+{
+    // Kinda hardcoded but at least it works
+    if (log->message.starts_with(DotnetLogPrefix))
+        log->fromDotnet = true;
+    
+    m_NewLogs.Push(log);
+    if (m_LastLog)
+        log->previousLog = m_LastLog;
+    m_LastLog = log;
+    
+    m_CondVar.notify_one();
 }
 
 void Logger::PrintLog(const std::shared_ptr<LogEntry>& log)
@@ -222,7 +254,7 @@ void Logger::PrintLog(const std::shared_ptr<LogEntry>& log)
     static decltype(sameLastLogs) oldSameLastLogs;
     
     oldSameLastLogs = sameLastLogs;
-    if (log->previousLog && *log->previousLog == *log)
+    if (log->sameAsPrevious)
         sameLastLogs++;
     else
         sameLastLogs = 0;
@@ -269,8 +301,9 @@ void Logger::PrintLog(const std::shared_ptr<LogEntry>& log)
         }
 
         m_LastLogCollapsed = false;
-        log->previousLog = nullptr; // We don't need the previous log if it isn't collapsed
     }
+    
+    log->previousLog.reset();
 }
 
 std::pair<std::string, const char_t*> Logger::BuildLogPrefix(const std::shared_ptr<LogEntry>& log)
@@ -285,7 +318,13 @@ std::pair<std::string, const char_t*> Logger::BuildLogPrefix(const std::shared_p
     {
         case LogLevel::TemporaryDebug:
             color = ANSI_COLOR_GREEN;
-            baseMessage = time + "[TEMP DEBUG] " + log->file + "(" + std::to_string(log->line) + "): ";
+            baseMessage = time + "[TEMP DEBUG] ";
+            if (log->fromDotnet)
+            {
+                baseMessage += DotnetLogPrefix;
+                log->message.erase(0, DotnetLogPrefix.size());
+            }
+            baseMessage += log->file + "(" + std::to_string(log->line) + "): ";
             break;
         
         case LogLevel::Debug:

@@ -57,12 +57,11 @@ void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene)
 	BindCamera(*viewport.camera,viewport.viewPortSize);
 	m_Frustum.UpdateFromCamera(*viewport.camera,viewport.GetAspect());
 	const ViewportData& viewportData = viewport.viewportData;
-	DeferedRenderring(*viewport.camera, scene, viewportData, viewport.viewPortSize);
+	DeferredRendering(*viewport.camera, scene, viewportData, viewport.viewPortSize);
 	ForwardPass(scene, viewport, viewport.viewPortSize, viewport.isEditor);
 	
 	if (viewportData.usePostProcess)
 		postProcessPass.Compute(*viewport.viewportData.colorAttachment , *viewport.image, viewportData.postprocessRendertarget);
-
 
     EndFrame(scene);
 }
@@ -75,15 +74,12 @@ void Renderer::ZPass(const Scene& scene, const Camera& camera,
     RenderNonShadedPass(scene, camera, renderPassBeginInfo, renderPass, shaderToUseStatic, shaderToUseSkinned, drawEditorUi);
 }
 
-
 void Renderer::SwapBuffers() const
 {
     Rhi::SwapBuffers();
 }
 
-
-
-void Renderer::DeferedRenderring(const Camera& camera, const Scene& scene, const ViewportData& viewportData, const Vector2i viewportSize) const 
+void Renderer::DeferredRendering(const Camera& camera, const Scene& scene, const ViewportData& viewportData, const Vector2i viewportSize) const 
 {
     const RenderPassBeginInfo renderPassBeginInfo =
     {
@@ -98,7 +94,7 @@ void Renderer::DeferedRenderring(const Camera& camera, const Scene& scene, const
 
     // Draw Simple Mesh
     m_GBufferShader->Use();
-    meshesDrawer.RenderStaticMesh(MaterialType::Opaque,camera,m_Frustum,scene);
+    meshesDrawer.RenderStaticMesh(MaterialType::Opaque, camera, m_Frustum,scene);
     m_GBufferShader->Unuse();
     
     // DrawSkinnedMesh
@@ -114,7 +110,6 @@ void Renderer::DeferedRenderring(const Camera& camera, const Scene& scene, const
         .clearBufferFlags = BufferFlag::ColorBit,
         .clearColor = clearColor
     };
-
 
     viewportData.colorPass.BeginRenderPass(renderPassBeginInfoLit);
     m_GBufferShaderLit->Use();
@@ -160,13 +155,13 @@ void Renderer::ForwardPass(const Scene& scene,
     }
     else
     {
-        guiPass.RenderGui(scene, viewport.viewPortSize, viewport.GetAspect());
+        guiPass.RenderGui(scene, viewport.viewPortSize);
     }
 
     viewportData.colorPass.EndRenderPass();
 }
 
-void Renderer::DrawAabb(const std::vector<const StaticMeshRenderer*>& meshRenderers) const
+void Renderer::DrawAabb(const std::vector<const StaticMeshRenderer*>& /*meshRenderers*/) const
 {
     /*
     m_GizmoShader->Use();
@@ -291,7 +286,7 @@ void Renderer::RenderNonShadedPass(const Scene& scene, const Camera& camera,
     if (drawEditorUi)
     {
         lightManager.DrawLightGizmoWithShader(camera, scene, shaderToUseStatic);
-        guiPass.RenderGui(scene,viewportSize,aspect);
+        guiPass.RenderGui(scene, viewportSize);
     }
     shaderToUseStatic->Unuse();
     

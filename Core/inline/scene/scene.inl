@@ -3,7 +3,7 @@
 BEGIN_XNOR_CORE
 
 template <class ComponentT>
-void Scene::GetAllComponentOfType(std::vector<const ComponentT*>* const components) const
+void Scene::GetAllComponentsOfType(std::vector<const ComponentT*>* const components) const
 {
     components->clear();
     
@@ -18,7 +18,7 @@ void Scene::GetAllComponentOfType(std::vector<const ComponentT*>* const componen
 }
 
 template <class ComponentT>
-void Scene::GetAllComponentOfType(std::vector<ComponentT*>* const components)
+void Scene::GetAllComponentsOfType(std::vector<ComponentT*>* const components)
 {
     components->clear();
     

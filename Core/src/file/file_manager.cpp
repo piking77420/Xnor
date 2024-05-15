@@ -8,7 +8,7 @@ Pointer<File> FileManager::Add(std::filesystem::path path)
 
     if (Contains(path))
     {
-        Logger::LogWarning("This file has already been added, consider using FileManager::Get instead");
+        Logger::LogWarning("The file {} has already been added, consider using FileManager::Get instead", path);
         return static_cast<Pointer<File>>(m_Entries.at(path));
     }
 
@@ -79,7 +79,7 @@ Pointer<Directory> FileManager::AddDirectory(std::filesystem::path path)
 
     if (Contains(path))
     {
-        Logger::LogWarning("This directory has already been added, consider using FileManager::Get instead");
+        Logger::LogWarning("The directory {} has already been added, consider using FileManager::Get instead", path);
         return static_cast<Pointer<Directory>>(m_Entries.at(path));
     }
 
@@ -105,7 +105,7 @@ Pointer<Directory> FileManager::AddDirectory(std::filesystem::path path)
 
 Pointer<Directory> FileManager::LoadDirectory(std::filesystem::path path)
 {
-    Logger::LogDebug("Loading directory {}...", path);
+    Logger::LogInfo("Loading directory {}...", path);
 
     auto&& start = std::chrono::system_clock::now();
 
@@ -114,7 +114,7 @@ Pointer<Directory> FileManager::LoadDirectory(std::filesystem::path path)
         Pointer<Directory> directory = static_cast<Pointer<Directory>>(m_Entries.at(path));
         const bool loaded = directory->GetLoaded();
         Logger::LogWarning(
-            "This directory has already been {}, consider using FileManager::Get instead{}",
+            "The directory {} has already been {}, consider using FileManager::Get instead{}", path,
             loaded ? "loaded" : "added but isn't loaded",
             loaded ? "" : ". Loading it"
         );
@@ -224,7 +224,7 @@ void FileManager::Unload(const Pointer<Entry>& entry)
 
 void FileManager::UnloadAll()
 {
-    Logger::LogDebug("Unloading all FileManager entries ({})", m_Entries.size());
+    Logger::LogInfo("Unloading all FileManager entries ({})", m_Entries.size());
 
     auto&& start = std::chrono::system_clock::now();
     

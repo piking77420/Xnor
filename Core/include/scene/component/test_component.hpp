@@ -4,6 +4,7 @@
 
 #include "core.hpp"
 #include "transform.hpp"
+#include "input/keyboard_input.hpp"
 #include "reflection/reflection.hpp"
 #include "rendering/light/light.hpp"
 #include "scene/component.hpp"
@@ -53,6 +54,8 @@ private:
     float_t m_Array[2][3];
     List<int32_t> m_List;
 
+    ENUM_VALUE(Key) m_Key = Key::Space;
+
     Coroutine FlashRoutine();
 
     Timeline<float_t> m_Timeline;
@@ -72,5 +75,6 @@ REFL_AUTO(
     field(m_GridPlottingTest, XnorCore::Reflection::GridPlotting(0, 1)),
     field(m_Array, XnorCore::Reflection::NotSerializable()),
     field(m_List, XnorCore::Reflection::NotSerializable()),
+    field(m_Key),
     field(m_Timeline)
 );

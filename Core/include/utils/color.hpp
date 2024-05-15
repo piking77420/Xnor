@@ -15,240 +15,582 @@
 
 BEGIN_XNOR_CORE
 
-struct ColorRgba;
 struct ColorHsva;
-struct Colorf;
 
-/// @brief The ColorRgb struct represents a color in RGB color space.
-///
-/// It uses values from 0 to 255 (0xFF).
-struct XNOR_ENGINE ColorRgb
-{
-    /// @brief Constant for white
-    /// @return Color
-    [[nodiscard]]
-    static constexpr ColorRgb White();
-    
-    /// @brief Constant for gray
-    /// @return Color
-    [[nodiscard]]
-    static constexpr ColorRgb Gray();
-    
-    /// @brief Constant for black
-    /// @return Color
-    [[nodiscard]]
-    static constexpr ColorRgb Black();
-    
-    /// @brief Constant for red
-    /// @return Color
-    [[nodiscard]]
-    static constexpr ColorRgb Red();
-    
-    /// @brief Constant for green
-    /// @return Color
-    [[nodiscard]]
-    static constexpr ColorRgb Green();
-    
-    /// @brief Constant for blue
-    /// @return Color
-    [[nodiscard]]
-    static constexpr ColorRgb Blue();
-    
-    /// @brief Constant for yellow
-    /// @return Color
-    [[nodiscard]]
-    static constexpr ColorRgb Yellow();
-    
-    /// @brief Constant for cyan
-    /// @return Color
-    [[nodiscard]]
-    static constexpr ColorRgb LightBlue();
-    
-    /// @brief Constant for magenta
-    /// @return Color
-    [[nodiscard]]
-    static constexpr ColorRgb Magenta();
-
-    /// @brief Red component
-    uint8_t r = 0;
-    /// @brief Green component
-    uint8_t g = 0;
-    /// @brief Blue component
-    uint8_t b = 0;
-
-    [[nodiscard]]
-    ColorRgb() = default;
-
-    /// @brief Constructs a color using a 32 bit RGB constant, ignoring the last 8 bits
-    /// 
-    /// @param rgb R G B, with each component taking 8 bits and in this order
-    [[nodiscard]]
-    constexpr explicit ColorRgb(const uint32_t rgb)
-        : r(static_cast<uint8_t>(rgb >> 24)), g(static_cast<uint8_t>(rgb >> 16)), b(static_cast<uint8_t>(rgb >> 8)) {}
-
-    /// @brief Constructs a color with each specified component
-    /// 
-    /// @param r Red component
-    /// @param g Green component
-    /// @param b Blue component
-    [[nodiscard]]
-    constexpr ColorRgb(const uint8_t r, const uint8_t g, const uint8_t b)
-    : r(r), g(g), b(b) {}
-
-    /// @brief Converts the ColorRgb to a ColorRgba
-    [[nodiscard]]
-    constexpr explicit operator ColorRgba() const;
-
-    /// @brief Converts the ColorRgb to a ColorHsv
-    [[nodiscard]]
-    constexpr explicit operator ColorHsva() const;
-    
-    /// @brief Converts the ColorRgb to a Colorf
-    [[nodiscard]]
-    constexpr explicit operator Colorf() const;
-};
-
-/// @brief The ColorRgba struct represents a color in RGBA color space.
-///
-/// It uses values from 0 to 255 (0xFF). The default alpha value is 255.
-struct XNOR_ENGINE ColorRgba
-{
-    /// @brief Constant for white
-    /// @return Color
-    [[nodiscard]]
-    static constexpr ColorRgba White();
-    
-    /// @brief Constant for gray
-    /// @return Color
-    [[nodiscard]]
-    static constexpr ColorRgba Gray();
-    
-    /// @brief Constant for black
-    /// @return Color
-    [[nodiscard]]
-    static constexpr ColorRgba Black();
-    
-    /// @brief Constant for red
-    /// @return Color
-    [[nodiscard]]
-    static constexpr ColorRgba Red();
-    
-    /// @brief Constant for green
-    /// @return Color
-    [[nodiscard]]
-    static constexpr ColorRgba Green();
-    
-    /// @brief Constant for blue
-    /// @return Color
-    [[nodiscard]]
-    static constexpr ColorRgba Blue();
-    
-    /// @brief Constant for yellow
-    /// @return Color
-    [[nodiscard]]
-    static constexpr ColorRgba Yellow();
-    
-    /// @brief Constant for cyan
-    /// @return Color
-    [[nodiscard]]
-    static constexpr ColorRgba LightBlue();
-    
-    /// @brief Constant for magenta
-    /// @return Color
-    [[nodiscard]]
-    static constexpr ColorRgba Magenta();
-    
-    /// @brief Red component
-    uint8_t r = 0;
-    /// @brief Green component
-    uint8_t g = 0;
-    /// @brief Blue component
-    uint8_t b = 0;
-    /// @brief Alpha component
-    uint8_t a = 0xFF;
-
-    [[nodiscard]]
-    ColorRgba() = default;
-
-    /// @brief Constructs a color using a 32 bit RGBA constant
-    /// 
-    /// @param rgba R G B A, with each component taking 8 bits and in this order
-    [[nodiscard]]
-    constexpr explicit ColorRgba(const uint32_t rgba)
-        : r(static_cast<uint8_t>(rgba >> 24)), g(static_cast<uint8_t>(rgba >> 16)), b(static_cast<uint8_t>(rgba >> 8)), a(static_cast<uint8_t>(rgba)) {}
-
-    /// @brief Constructs a color with each specified component
-    /// 
-    /// @param r Red component
-    /// @param g Green component
-    /// @param b Blue component
-    /// @param a Alpha component
-    [[nodiscard]]
-    constexpr ColorRgba(const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a = 0xFF)
-    : r(r), g(g), b(b), a(a) {}
-
-    /// @brief Converts the ColorRgba to a ColorRgb
-    [[nodiscard]]
-    constexpr explicit operator ColorRgb() const;
-
-    /// @brief Converts the ColorRgba to a ColorHsv
-    [[nodiscard]]
-    constexpr explicit operator ColorHsva() const;
-    
-    /// @brief Converts the ColorRgba to a Colorf
-    [[nodiscard]]
-    constexpr explicit operator Colorf() const;
-};
-
-/// @brief The Colorf struct represents a color in RGBA color space.
+/// @brief The Color struct represents a color in RGBA color space.
 /// 
-/// It uses values from 0 to 1. The default alpha value is 1.
-struct XNOR_ENGINE Colorf
+/// It uses @c float values from 0 to 1. The default alpha value is 1.
+struct XNOR_ENGINE Color
 {
-    /// @brief Constant for white
-    /// @return Color
-    [[nodiscard]]
-    static constexpr Colorf White();
+    // Constants taken from https://github.com/MonoGame/MonoGame/blob/develop/MonoGame.Framework/Color.cs
+
+    /// @brief Constant forTransparent.
+    /// @return The Transparent color.
+    static constexpr Color Transparent();
     
-    /// @brief Constant for gray
-    /// @return Color
-    [[nodiscard]]
-    static constexpr Colorf Gray();
+    /// @brief Constant for Alice Blue.
+    /// @return The Alice Blue color.
+    static constexpr Color AliceBlue();
     
-    /// @brief Constant for black
-    /// @return Color
-    [[nodiscard]]
-    static constexpr Colorf Black();
+    /// @brief Constant for Antique White.
+    /// @return The Antique White color.
+    static constexpr Color AntiqueWhite();
     
-    /// @brief Constant for red
-    /// @return Color
-    [[nodiscard]]
-    static constexpr Colorf Red();
+    /// @brief Constant for Aqua.
+    /// @return The Aqua color.
+    static constexpr Color Aqua();
     
-    /// @brief Constant for green
-    /// @return Color
-    [[nodiscard]]
-    static constexpr Colorf Green();
+    /// @brief Constant for Aquamarine.
+    /// @return The Aquamarine color.
+    static constexpr Color Aquamarine();
     
-    /// @brief Constant for blue
-    /// @return Color
-    [[nodiscard]]
-    static constexpr Colorf Blue();
+    /// @brief Constant for Azure.
+    /// @return The Azure color.
+    static constexpr Color Azure();
     
-    /// @brief Constant for yellow
-    /// @return Color
-    [[nodiscard]]
-    static constexpr Colorf Yellow();
+    /// @brief Constant for Beige.
+    /// @return The Beige color.
+    static constexpr Color Beige();
     
-    /// @brief Constant for cyan
-    /// @return Color
-    [[nodiscard]]
-    static constexpr Colorf LightBlue();
+    /// @brief Constant for Bisque.
+    /// @return The Bisque color.
+    static constexpr Color Bisque();
     
-    /// @brief Constant for magenta
-    /// @return Color
-    [[nodiscard]]
-    static constexpr Colorf Magenta();
+    /// @brief Constant for Black.
+    /// @return The Black color.
+    static constexpr Color Black();
+    
+    /// @brief Constant for Blanched Almond.
+    /// @return The Blanched Almond color.
+    static constexpr Color BlanchedAlmond();
+    
+    /// @brief Constant for Blue.
+    /// @return The Blue color.
+    static constexpr Color Blue();
+    
+    /// @brief Constant for Blue Violet.
+    /// @return The Blue Violet color.
+    static constexpr Color BlueViolet();
+    
+    /// @brief Constant for Brown.
+    /// @return The Brown color.
+    static constexpr Color Brown();
+    
+    /// @brief Constant for Burly Wood.
+    /// @return The Burly Wood color.
+    static constexpr Color BurlyWood();
+    
+    /// @brief Constant for Cadet Blue.
+    /// @return The Cadet Blue color.
+    static constexpr Color CadetBlue();
+    
+    /// @brief Constant for Chartreuse.
+    /// @return The Chartreuse color.
+    static constexpr Color Chartreuse();
+    
+    /// @brief Constant for Chocolate.
+    /// @return The Chocolate color.
+    static constexpr Color Chocolate();
+    
+    /// @brief Constant for Coral.
+    /// @return The Coral color.
+    static constexpr Color Coral();
+    
+    /// @brief Constant for Cornflower Blue.
+    /// @return The Cornflower Blue color.
+    static constexpr Color CornflowerBlue();
+    
+    /// @brief Constant for Cornsilk.
+    /// @return The Cornsilk color.
+    static constexpr Color Cornsilk();
+    
+    /// @brief Constant for Crimson.
+    /// @return The Crimson color.
+    static constexpr Color Crimson();
+    
+    /// @brief Constant for Cyan.
+    /// @return The Cyan color.
+    static constexpr Color Cyan();
+    
+    /// @brief Constant for Dark Blue.
+    /// @return The Dark Blue color.
+    static constexpr Color DarkBlue();
+    
+    /// @brief Constant for Dark Cyan.
+    /// @return The Dark Cyan color.
+    static constexpr Color DarkCyan();
+    
+    /// @brief Constant for Dark Goldenrod.
+    /// @return The Dark Goldenrod color.
+    static constexpr Color DarkGoldenrod();
+    
+    /// @brief Constant for Dark Gray.
+    /// @return The Dark Gray color.
+    static constexpr Color DarkGray();
+    
+    /// @brief Constant for Dark Green.
+    /// @return The Dark Green color.
+    static constexpr Color DarkGreen();
+    
+    /// @brief Constant for Dark Khaki.
+    /// @return The Dark Khaki color.
+    static constexpr Color DarkKhaki();
+    
+    /// @brief Constant for Dark Magenta.
+    /// @return The Dark Magenta color.
+    static constexpr Color DarkMagenta();
+    
+    /// @brief Constant for Dark Olive Green.
+    /// @return The Dark Olive Green color.
+    static constexpr Color DarkOliveGreen();
+    
+    /// @brief Constant for Dark Orange.
+    /// @return The Dark Orange color.
+    static constexpr Color DarkOrange();
+    
+    /// @brief Constant for Dark Orchid.
+    /// @return The Dark Orchid color.
+    static constexpr Color DarkOrchid();
+    
+    /// @brief Constant for Dark Red.
+    /// @return The Dark Red color.
+    static constexpr Color DarkRed();
+    
+    /// @brief Constant for Dark Salmon.
+    /// @return The Dark Salmon color.
+    static constexpr Color DarkSalmon();
+    
+    /// @brief Constant for Dark Sea Green.
+    /// @return The Dark Sea Green color.
+    static constexpr Color DarkSeaGreen();
+    
+    /// @brief Constant for Dark Slate Blue.
+    /// @return The Dark Slate Blue color.
+    static constexpr Color DarkSlateBlue();
+    
+    /// @brief Constant for Dark Slate Gray.
+    /// @return The Dark Slate Gray color.
+    static constexpr Color DarkSlateGray();
+    
+    /// @brief Constant for Dark Turquoise.
+    /// @return The Dark Turquoise color.
+    static constexpr Color DarkTurquoise();
+    
+    /// @brief Constant for Dark Violet.
+    /// @return The Dark Violet color.
+    static constexpr Color DarkViolet();
+    
+    /// @brief Constant for Deep Pink.
+    /// @return The Deep Pink color.
+    static constexpr Color DeepPink();
+    
+    /// @brief Constant for Deep Sky Blue.
+    /// @return The Deep Sky Blue color.
+    static constexpr Color DeepSkyBlue();
+    
+    /// @brief Constant for Dim Gray.
+    /// @return The Dim Gray color.
+    static constexpr Color DimGray();
+    
+    /// @brief Constant for Dodger Blue.
+    /// @return The Dodger Blue color.
+    static constexpr Color DodgerBlue();
+    
+    /// @brief Constant for Firebrick.
+    /// @return The Firebrick color.
+    static constexpr Color Firebrick();
+    
+    /// @brief Constant for Floral White.
+    /// @return The Floral White color.
+    static constexpr Color FloralWhite();
+    
+    /// @brief Constant for Forest Green.
+    /// @return The Forest Green color.
+    static constexpr Color ForestGreen();
+    
+    /// @brief Constant for Fuchsia.
+    /// @return The Fuchsia color.
+    static constexpr Color Fuchsia();
+    
+    /// @brief Constant for Gainsboro.
+    /// @return The Gainsboro color.
+    static constexpr Color Gainsboro();
+    
+    /// @brief Constant for Ghost White.
+    /// @return The Ghost White color.
+    static constexpr Color GhostWhite();
+    
+    /// @brief Constant for Gold.
+    /// @return The Gold color.
+    static constexpr Color Gold();
+    
+    /// @brief Constant for Goldenrod.
+    /// @return The Goldenrod color.
+    static constexpr Color Goldenrod();
+    
+    /// @brief Constant for Gray.
+    /// @return The Gray color.
+    static constexpr Color Gray();
+    
+    /// @brief Constant for Green.
+    /// @return The Green color.
+    static constexpr Color Green();
+    
+    /// @brief Constant for Green Yellow.
+    /// @return The Green Yellow color.
+    static constexpr Color GreenYellow();
+    
+    /// @brief Constant for Honeydew.
+    /// @return The Honeydew color.
+    static constexpr Color Honeydew();
+    
+    /// @brief Constant for Hot Pink.
+    /// @return The Hot Pink color.
+    static constexpr Color HotPink();
+    
+    /// @brief Constant for Indian Red.
+    /// @return The Indian Red color.
+    static constexpr Color IndianRed();
+    
+    /// @brief Constant for Indigo.
+    /// @return The Indigo color.
+    static constexpr Color Indigo();
+    
+    /// @brief Constant for Ivory.
+    /// @return The Ivory color.
+    static constexpr Color Ivory();
+    
+    /// @brief Constant for Khaki.
+    /// @return The Khaki color.
+    static constexpr Color Khaki();
+    
+    /// @brief Constant for Lavender.
+    /// @return The Lavender color.
+    static constexpr Color Lavender();
+    
+    /// @brief Constant for Lavender Blush.
+    /// @return The Lavender Blush color.
+    static constexpr Color LavenderBlush();
+    
+    /// @brief Constant for Lawn Green.
+    /// @return The Lawn Green color.
+    static constexpr Color LawnGreen();
+    
+    /// @brief Constant for Lemon Chiffon.
+    /// @return The Lemon Chiffon color.
+    static constexpr Color LemonChiffon();
+    
+    /// @brief Constant for Light Blue.
+    /// @return The Light Blue color.
+    static constexpr Color LightBlue();
+    
+    /// @brief Constant for Light Coral.
+    /// @return The Light Coral color.
+    static constexpr Color LightCoral();
+    
+    /// @brief Constant for Light Cyan.
+    /// @return The Light Cyan color.
+    static constexpr Color LightCyan();
+    
+    /// @brief Constant for Light Goldenrod Yellow.
+    /// @return The Light Goldenrod Yellow color.
+    static constexpr Color LightGoldenrodYellow();
+    
+    /// @brief Constant for Light Gray.
+    /// @return The Light Gray color.
+    static constexpr Color LightGray();
+    
+    /// @brief Constant for Light Green.
+    /// @return The Light Green color.
+    static constexpr Color LightGreen();
+    
+    /// @brief Constant for Light Pink.
+    /// @return The Light Pink color.
+    static constexpr Color LightPink();
+    
+    /// @brief Constant for Light Salmon.
+    /// @return The Light Salmon color.
+    static constexpr Color LightSalmon();
+    
+    /// @brief Constant for Light Sea Green.
+    /// @return The Light Sea Green color.
+    static constexpr Color LightSeaGreen();
+    
+    /// @brief Constant for Light Sky Blue.
+    /// @return The Light Sky Blue color.
+    static constexpr Color LightSkyBlue();
+    
+    /// @brief Constant for Light Slate Gray.
+    /// @return The Light Slate Gray color.
+    static constexpr Color LightSlateGray();
+    
+    /// @brief Constant for Light Steel Blue.
+    /// @return The Light Steel Blue color.
+    static constexpr Color LightSteelBlue();
+    
+    /// @brief Constant for Light Yellow.
+    /// @return The Light Yellow color.
+    static constexpr Color LightYellow();
+    
+    /// @brief Constant for Lime.
+    /// @return The Lime color.
+    static constexpr Color Lime();
+    
+    /// @brief Constant for Lime Green.
+    /// @return The Lime Green color.
+    static constexpr Color LimeGreen();
+    
+    /// @brief Constant for Linen.
+    /// @return The Linen color.
+    static constexpr Color Linen();
+    
+    /// @brief Constant for Magenta.
+    /// @return The Magenta color.
+    static constexpr Color Magenta();
+    
+    /// @brief Constant for Maroon.
+    /// @return The Maroon color.
+    static constexpr Color Maroon();
+    
+    /// @brief Constant for Medium Aquamarine.
+    /// @return The Medium Aquamarine color.
+    static constexpr Color MediumAquamarine();
+    
+    /// @brief Constant for Medium Blue.
+    /// @return The Medium Blue color.
+    static constexpr Color MediumBlue();
+    
+    /// @brief Constant for Medium Orchid.
+    /// @return The Medium Orchid color.
+    static constexpr Color MediumOrchid();
+    
+    /// @brief Constant for Medium Purple.
+    /// @return The Medium Purple color.
+    static constexpr Color MediumPurple();
+    
+    /// @brief Constant for Medium Sea Green.
+    /// @return The Medium Sea Green color.
+    static constexpr Color MediumSeaGreen();
+    
+    /// @brief Constant for Medium Slate Blue.
+    /// @return The Medium Slate Blue color.
+    static constexpr Color MediumSlateBlue();
+    
+    /// @brief Constant for Medium Spring Green.
+    /// @return The Medium Spring Green color.
+    static constexpr Color MediumSpringGreen();
+    
+    /// @brief Constant for Medium Turquoise.
+    /// @return The Medium Turquoise color.
+    static constexpr Color MediumTurquoise();
+    
+    /// @brief Constant for Medium Violet Red.
+    /// @return The Medium Violet Red color.
+    static constexpr Color MediumVioletRed();
+    
+    /// @brief Constant for Midnight Blue.
+    /// @return The Midnight Blue color.
+    static constexpr Color MidnightBlue();
+    
+    /// @brief Constant for Mint Cream.
+    /// @return The Mint Cream color.
+    static constexpr Color MintCream();
+    
+    /// @brief Constant for Misty Rose.
+    /// @return The Misty Rose color.
+    static constexpr Color MistyRose();
+    
+    /// @brief Constant for Moccasin.
+    /// @return The Moccasin color.
+    static constexpr Color Moccasin();
+    
+    /// @brief Constant for MonoGame Orange.
+    /// @return The MonoGame Orange color.
+    static constexpr Color MonoGameOrange();
+    
+    /// @brief Constant for Navajo White.
+    /// @return The Navajo White color.
+    static constexpr Color NavajoWhite();
+    
+    /// @brief Constant for Navy.
+    /// @return The Navy color.
+    static constexpr Color Navy();
+    
+    /// @brief Constant for Old Lace.
+    /// @return The Old Lace color.
+    static constexpr Color OldLace();
+    
+    /// @brief Constant for Olive.
+    /// @return The Olive color.
+    static constexpr Color Olive();
+    
+    /// @brief Constant for Olive Drab.
+    /// @return The Olive Drab color.
+    static constexpr Color OliveDrab();
+    
+    /// @brief Constant for Orange.
+    /// @return The Orange color.
+    static constexpr Color Orange();
+    
+    /// @brief Constant for Orange Red.
+    /// @return The Orange Red color.
+    static constexpr Color OrangeRed();
+    
+    /// @brief Constant for Orchid.
+    /// @return The Orchid color.
+    static constexpr Color Orchid();
+    
+    /// @brief Constant for Pale Goldenrod.
+    /// @return The Pale Goldenrod color.
+    static constexpr Color PaleGoldenrod();
+    
+    /// @brief Constant for Pale Green.
+    /// @return The Pale Green color.
+    static constexpr Color PaleGreen();
+    
+    /// @brief Constant for Pale Turquoise.
+    /// @return The Pale Turquoise color.
+    static constexpr Color PaleTurquoise();
+    
+    /// @brief Constant for Pale Violet Red.
+    /// @return The Pale Violet Red color.
+    static constexpr Color PaleVioletRed();
+    
+    /// @brief Constant for Papaya Whip.
+    /// @return The Papaya Whip color.
+    static constexpr Color PapayaWhip();
+    
+    /// @brief Constant for Peach Puff.
+    /// @return The Peach Puff color.
+    static constexpr Color PeachPuff();
+    
+    /// @brief Constant for Peru.
+    /// @return The Peru color.
+    static constexpr Color Peru();
+    
+    /// @brief Constant for Pink.
+    /// @return The Pink color.
+    static constexpr Color Pink();
+    
+    /// @brief Constant for Plum.
+    /// @return The Plum color.
+    static constexpr Color Plum();
+    
+    /// @brief Constant for Powder Blue.
+    /// @return The Powder Blue color.
+    static constexpr Color PowderBlue();
+    
+    /// @brief Constant for Purple.
+    /// @return The Purple color.
+    static constexpr Color Purple();
+    
+    /// @brief Constant for Red.
+    /// @return The Red color.
+    static constexpr Color Red();
+    
+    /// @brief Constant for Rosy Brown.
+    /// @return The Rosy Brown color.
+    static constexpr Color RosyBrown();
+    
+    /// @brief Constant for Royal Blue.
+    /// @return The Royal Blue color.
+    static constexpr Color RoyalBlue();
+    
+    /// @brief Constant for Saddle Brown.
+    /// @return The Saddle Brown color.
+    static constexpr Color SaddleBrown();
+    
+    /// @brief Constant for Salmon.
+    /// @return The Salmon color.
+    static constexpr Color Salmon();
+    
+    /// @brief Constant for Sandy Brown.
+    /// @return The Sandy Brown color.
+    static constexpr Color SandyBrown();
+    
+    /// @brief Constant for Sea Green.
+    /// @return The Sea Green color.
+    static constexpr Color SeaGreen();
+    
+    /// @brief Constant for SeaShell.
+    /// @return The SeaShell color.
+    static constexpr Color SeaShell();
+    
+    /// @brief Constant for Sienna.
+    /// @return The Sienna color.
+    static constexpr Color Sienna();
+    
+    /// @brief Constant for Silver.
+    /// @return The Silver color.
+    static constexpr Color Silver();
+    
+    /// @brief Constant for Sky Blue.
+    /// @return The Sky Blue color.
+    static constexpr Color SkyBlue();
+    
+    /// @brief Constant for Slate Blue.
+    /// @return The Slate Blue color.
+    static constexpr Color SlateBlue();
+    
+    /// @brief Constant for Slate Gray.
+    /// @return The Slate Gray color.
+    static constexpr Color SlateGray();
+    
+    /// @brief Constant for Snow.
+    /// @return The Snow color.
+    static constexpr Color Snow();
+    
+    /// @brief Constant for Spring Green.
+    /// @return The Spring Green color.
+    static constexpr Color SpringGreen();
+    
+    /// @brief Constant for Steel Blue.
+    /// @return The Steel Blue color.
+    static constexpr Color SteelBlue();
+    
+    /// @brief Constant for Tan.
+    /// @return The Tan color.
+    static constexpr Color Tan();
+    
+    /// @brief Constant for Teal.
+    /// @return The Teal color.
+    static constexpr Color Teal();
+    
+    /// @brief Constant for Thistle.
+    /// @return The Thistle color.
+    static constexpr Color Thistle();
+    
+    /// @brief Constant for Tomato.
+    /// @return The Tomato color.
+    static constexpr Color Tomato();
+    
+    /// @brief Constant for Turquoise.
+    /// @return The Turquoise color.
+    static constexpr Color Turquoise();
+    
+    /// @brief Constant for Violet.
+    /// @return The Violet color.
+    static constexpr Color Violet();
+    
+    /// @brief Constant for Wheat.
+    /// @return The Wheat color.
+    static constexpr Color Wheat();
+    
+    /// @brief Constant for White.
+    /// @return The White color.
+    static constexpr Color White();
+    
+    /// @brief Constant for White Smoke.
+    /// @return The White Smoke color.
+    static constexpr Color WhiteSmoke();
+    
+    /// @brief Constant for Yellow.
+    /// @return The Yellow color.
+    static constexpr Color Yellow();
+    
+    /// @brief Constant for Yellow Green.
+    /// @return The Yellow Green color.
+    static constexpr Color YellowGreen();
     
     /// @brief Red component
     float_t r = 0.f;
@@ -260,7 +602,7 @@ struct XNOR_ENGINE Colorf
     float_t a = 1.f;
 
     [[nodiscard]]
-    Colorf() = default;
+    Color() = default;
 
     /// @brief Constructs a color with each specified component
     /// 
@@ -269,16 +611,8 @@ struct XNOR_ENGINE Colorf
     /// @param b Blue component
     /// @param a Alpha component
     [[nodiscard]]
-    constexpr Colorf(const float_t r, const float_t g, const float_t b, const float_t a = 1.f)
+    constexpr Color(const float_t r, const float_t g, const float_t b, const float_t a = 1.f)
     : r(r), g(g), b(b), a(a) {}
-
-    /// @brief Converts the Colorf to a ColorRgb
-    [[nodiscard]]
-    constexpr explicit operator ColorRgb() const;
-
-    /// @brief Converts the Colorf to a ColorRgba
-    [[nodiscard]]
-    constexpr explicit operator ColorRgba() const;
 
     /// @brief Converts the Colorf to a ColorHsv
     [[nodiscard]]
@@ -363,117 +697,46 @@ struct XNOR_ENGINE ColorHsva
     [[nodiscard]]
     constexpr ColorHsva(const float_t h, const float_t s, const float_t v, const float_t a = 1.f)
     : h(h), s(s), v(v), a(a) {}
-
-    /// @brief Converts the ColorHsv to a ColorRgb
-    [[nodiscard]]
-    constexpr explicit operator ColorRgb() const;
-
-    /// @brief Converts the ColorHsv to a ColorRgba
-    [[nodiscard]]
-    constexpr explicit operator ColorRgba() const;
     
     /// @brief Converts the ColorHsv to a Colorf
     [[nodiscard]]
-    constexpr explicit operator Colorf() const;
+    constexpr explicit operator Color() const;
 };
-
-/// @brief Adds 2 ColorRgb, caps at the max value of the components and doesn't allow overflow
-/// @param c1 A
-/// @param c2 B
-/// @return A + B
-[[nodiscard]]
-constexpr ColorRgb operator+(ColorRgb c1, ColorRgb c2);
-
-/// @brief Multiplies 2 ColorRgb, caps at the max value of the components and doesn't allow overflow
-/// @param c1 A
-/// @param c2 B
-/// @return A * B
-[[nodiscard]]
-constexpr ColorRgb operator*(ColorRgb c1, ColorRgb c2);
-
-/// @brief Compares 2 ColorRgb component-wise
-/// @param c1 A
-/// @param c2 B
-/// @return A == B
-[[nodiscard]]
-constexpr bool_t operator==(ColorRgb c1, ColorRgb c2);
-
-/// @brief Compares 2 ColorRgb component-wise
-/// @param c1 A
-/// @param c2 B
-/// @return A != B
-[[nodiscard]]
-constexpr bool_t operator!=(ColorRgb c1, ColorRgb c2);
-
-/// @brief Adds 2 ColorRgba, caps at the max value of the components and doesn't allow overflow
-/// @param c1 A
-/// @param c2 B
-/// @return A + B
-[[nodiscard]]
-constexpr ColorRgba operator+(ColorRgba c1, ColorRgba c2);
-
-/// @brief Multiplies 2 ColorRgba, caps at the max value of the components and doesn't allow overflow
-/// @param c1 A
-/// @param c2 B
-/// @return A + B
-[[nodiscard]]
-constexpr ColorRgba operator*(ColorRgba c1, ColorRgba c2);
-
-/// @brief Multiplies the alpha component of a ColorRgba
-/// @param color Color
-/// @param alphaFactor Alpha factor
-/// @return Color.a * alphaFactor
-[[nodiscard]]
-constexpr ColorRgba operator*(ColorRgba color, float_t alphaFactor);
-
-/// @brief Compares 2 ColorRgba component-wise
-/// @param c1 A
-/// @param c2 B
-/// @return A == B
-[[nodiscard]]
-constexpr bool_t operator==(ColorRgba c1, ColorRgba c2);
-
-/// @brief Compares 2 ColorRgba component-wise
-/// @param c1 A
-/// @param c2 B
-/// @return A != B
-[[nodiscard]]
-constexpr bool_t operator!=(ColorRgba c1, ColorRgba c2);
 
 /// @brief Adds 2 Colorf, caps at @c 1.f
 /// @param c1 A
 /// @param c2 B
 /// @return A + B
 [[nodiscard]]
-constexpr Colorf operator+(const Colorf& c1, const Colorf& c2);
+constexpr Color operator+(const Color& c1, const Color& c2);
 
 /// @brief Multiplies 2 Colorf
 /// @param c1 A
 /// @param c2 B
 /// @return A * B
 [[nodiscard]]
-constexpr Colorf operator*(const Colorf& c1, const Colorf& c2);
+constexpr Color operator*(const Color& c1, const Color& c2);
 
 /// @brief Multiplies the alpha component of a Colorf
 /// @param color Color
 /// @param alphaFactor Alpha factor
 /// @return Color.a * alphaFactor
 [[nodiscard]]
-constexpr Colorf operator*(Colorf color, float_t alphaFactor);
+constexpr Color operator*(Color color, float_t alphaFactor);
 
 /// @brief Compares 2 Colorf component-wise
 /// @param c1 A
 /// @param c2 B
 /// @return A == B
 [[nodiscard]]
-constexpr bool_t operator==(const Colorf& c1, const Colorf& c2);
+constexpr bool_t operator==(const Color& c1, const Color& c2);
 
 /// @brief Compares 2 Colorf component-wise
 /// @param c1 A
 /// @param c2 B
 /// @return A != B
 [[nodiscard]]
-constexpr bool_t operator!=(const Colorf& c1, const Colorf& c2);
+constexpr bool_t operator!=(const Color& c1, const Color& c2);
 
 /// @brief Multiplies the alpha component of a ColorHsva
 /// @param color Color
@@ -501,69 +764,7 @@ END_XNOR_CORE
 #ifndef SWIG
 /// @private
 template <>
-struct std::formatter<XnorCore::ColorRgb>
-{
-    template <class ParseContext>
-    constexpr typename ParseContext::iterator parse(ParseContext& ctx)
-    {
-        auto it = ctx.begin();
-        if (it == ctx.end())
-            return it;
- 
-        if (*it != '}')
-            throw std::format_error("Invalid format args for ColorRgb");
- 
-        return it;
-    }
-
-    template <class FmtContext>
-    typename FmtContext::iterator format(XnorCore::ColorRgb c, FmtContext& ctx) const
-    {
-        std::ostringstream out;
-
-        out << std::vformat("{:" + m_Format + "} ; {:" + m_Format + "} ; {:" + m_Format + '}', std::make_format_args(c.r, c.g, c.b));
-
-        return std::ranges::copy(std::move(out).str(), ctx.out()).out;
-    }
-
-private:
-    std::string m_Format;
-};
-
-/// @private
-template <>
-struct std::formatter<XnorCore::ColorRgba>
-{
-    template <class ParseContext>
-    constexpr typename ParseContext::iterator parse(ParseContext& ctx)
-    {
-        auto it = ctx.begin();
-        if (it == ctx.end())
-            return it;
- 
-        if (*it != '}')
-            throw std::format_error("Invalid format args for ColorRgba");
- 
-        return it;
-    }
-
-    template <class FmtContext>
-    typename FmtContext::iterator format(XnorCore::ColorRgba c, FmtContext& ctx) const
-    {
-        std::ostringstream out;
-
-        out << std::vformat("{:" + m_Format + "} ; {:" + m_Format + "} ; {:" + m_Format + "} ; {:" + m_Format + '}', std::make_format_args(c.r, c.g, c.b, c.a));
-
-        return std::ranges::copy(std::move(out).str(), ctx.out()).out;
-    }
-
-private:
-    std::string m_Format;
-};
-
-/// @private
-template <>
-struct std::formatter<XnorCore::Colorf>
+struct std::formatter<XnorCore::Color>
 {
     template <class ParseContext>
     constexpr typename ParseContext::iterator parse(ParseContext& ctx)
@@ -579,7 +780,7 @@ struct std::formatter<XnorCore::Colorf>
     }
 
     template <class FmtContext>
-    typename FmtContext::iterator format(XnorCore::Colorf c, FmtContext& ctx) const
+    typename FmtContext::iterator format(XnorCore::Color c, FmtContext& ctx) const
     {
         std::ostringstream out;
 

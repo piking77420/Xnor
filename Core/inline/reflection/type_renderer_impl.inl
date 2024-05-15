@@ -100,10 +100,8 @@ TYPE_RENDERER_IMPL(Vector2i)
 TYPE_RENDERER_IMPL(Vector3)
 TYPE_RENDERER_IMPL(Vector4)
 TYPE_RENDERER_IMPL(Quaternion)
-TYPE_RENDERER_IMPL(Colorf)
-TYPE_RENDERER_IMPL(ColorRgb)
+TYPE_RENDERER_IMPL(Color)
 TYPE_RENDERER_IMPL(ColorHsva)
-TYPE_RENDERER_IMPL(ColorRgba)
 TYPE_RENDERER_IMPL(std::string)
 
 
@@ -235,33 +233,17 @@ void TypeRendererImpl<Quaternion>::Render(const TypeRenderer::Metadata<ReflectT,
 }
 
 template <typename ReflectT, typename DescriptorT>
-void TypeRendererImpl<Colorf>::Render(const TypeRenderer::Metadata<ReflectT, Colorf, DescriptorT>& metadata)
+void TypeRendererImpl<Color>::Render(const TypeRenderer::Metadata<ReflectT, Color, DescriptorT>& metadata)
 {
     ImGui::ColorPicker4(metadata.name, reinterpret_cast<float_t*>(metadata.obj));
 }
 
 template <typename ReflectT, typename DescriptorT>
-void TypeRendererImpl<ColorRgb>::Render(const TypeRenderer::Metadata<ReflectT, ColorRgb, DescriptorT>& metadata)
-{
-    Colorf tmp = static_cast<Colorf>(*metadata.obj);
-    ImGui::ColorPicker4(metadata.name, &tmp.r, ImGuiColorEditFlags_DisplayHex);
-    *metadata.obj = static_cast<ColorRgb>(tmp);
-}
-
-template <typename ReflectT, typename DescriptorT>
 void TypeRendererImpl<ColorHsva>::Render(const TypeRenderer::Metadata<ReflectT, ColorHsva, DescriptorT>& metadata)
 {
-    Colorf tmp = static_cast<Colorf>(*metadata.obj);
+    Color tmp = static_cast<Color>(*metadata.obj);
     ImGui::ColorPicker4(metadata.name, &tmp.r, ImGuiColorEditFlags_DisplayHSV);
     *metadata.obj = static_cast<ColorHsva>(tmp);
-}
-
-template <typename ReflectT, typename DescriptorT>
-void TypeRendererImpl<ColorRgba>::Render(const TypeRenderer::Metadata<ReflectT, ColorRgba, DescriptorT>& metadata)
-{
-    Colorf tmp = static_cast<Colorf>(*metadata.obj);
-    ImGui::ColorPicker4(metadata.name, &tmp.r, ImGuiColorEditFlags_DisplayHex);
-    *metadata.obj = static_cast<ColorRgba>(tmp);
 }
 
 template <typename ReflectT, typename DescriptorT>
@@ -570,6 +552,7 @@ void TypeRendererImpl<List<Component*>>::Render(const TypeRenderer::Metadata<Ref
             // Button to delete the current element
             if (ImGui::Button("-"))
             {
+                (*metadata.obj)[i]->Destroy();
                 metadata.obj->RemoveAt(i);
                 --listSize;
 

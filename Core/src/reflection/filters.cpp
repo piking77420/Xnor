@@ -38,6 +38,38 @@ Entity* Filters::FilterEntity(Entity** target)
     return e;
 }
 
+Entity* Filters::FilterEntity()
+{
+    if (!ImGui::BeginPopupModal("Entity"))
+        return nullptr;
+
+    m_TextFilter.Draw();
+    List<Entity*> entities = World::scene->GetEntities();
+    entities.Sort([](const Entity* const left, const Entity* const right) -> bool_t { return left->name < right->name; });
+
+    Entity* e = nullptr;
+    for (size_t i = 0; i < entities.GetSize(); i++)
+    {
+        const char_t* const name = entities[i]->name.c_str();
+        if (m_TextFilter.PassFilter(name) && ImGui::Selectable(name))
+        {
+            e = entities[i];
+            break;
+        }
+    }
+
+    if (e != nullptr)
+    {
+        ImGui::CloseCurrentPopup();
+    }
+
+    if (ImGui::IsKeyPressed(ImGuiKey_Escape))
+        ImGui::CloseCurrentPopup();
+    
+    ImGui::EndPopup();
+    return e;
+}
+
 Component* Filters::FilterComponent(List<Component*>* target)
 {
     if (!ImGui::BeginPopupModal("Component"))
@@ -47,15 +79,30 @@ Component* Filters::FilterComponent(List<Component*>* target)
 
     Component* c = nullptr;
 
-    std::vector<std::string> names;
+    List<std::string> names;
     XnorFactory::FindAllChildClasses<Component>(&names);
-    std::ranges::sort(names);
+    names.Sort();
 
-    for (size_t i = 0; i < names.size(); i++)
+    for (size_t i = 0; i < names.GetSize(); i++)
     {
         if (m_TextFilter.PassFilter(names[i].c_str()) && ImGui::Selectable(names[i].c_str()))
         {
             c = static_cast<Component*>(XnorFactory::CreateObject(names[i]));
+            break;
+        }
+    }
+
+    ImGui::Separator();
+
+    names.Clear();
+    DotnetReflection::GetScriptTypes(&names);
+    names.Sort();
+
+    for (size_t i = 0; i < names.GetSize(); i++)
+    {
+        if (m_TextFilter.PassFilter(names[i].c_str()) && ImGui::Selectable(names[i].c_str()))
+        {
+            c = DotnetReflection::CreateInstance(names[i]);
             break;
         }
     }
@@ -82,11 +129,11 @@ Component* Filters::FilterComponent(Component** target)
 
     Component* c = nullptr;
 
-    std::vector<std::string> names;
+    List<std::string> names;
     XnorFactory::FindAllChildClasses<Component>(&names);
-    std::ranges::sort(names);
+    names.Sort();
 
-    for (size_t i = 0; i < names.size(); i++)
+    for (size_t i = 0; i < names.GetSize(); i++)
     {
         if (m_TextFilter.PassFilter(names[i].c_str()) && ImGui::Selectable(names[i].c_str()))
         {

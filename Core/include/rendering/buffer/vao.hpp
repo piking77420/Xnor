@@ -21,7 +21,7 @@ public:
 
     uint32_t GetId() const;
 
-    void ComputeDescriptor(const VAODescriptor& vaoDescriptor) const;
+    void ComputeDescriptor(const VaoDescriptor& vaoDescriptor) const;
 
 private:
     uint32_t m_Id = 0;

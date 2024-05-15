@@ -46,6 +46,18 @@ namespace Xnor.Core
         }
 
         public Vector3(float xyz) : this(xyz, xyz, xyz) { }
+
+        public float SquaredLength => X * X + Y * Y + Z * Z;
+
+        public float Length => MathF.Sqrt(SquaredLength);
+
+        public Vector3 Normalized()
+        {
+            float invLength = 1f / Length;
+            return new(X * invLength, Y * invLength, Z * invLength);
+        }
+        
+        public override string ToString() => $"X: {X}, Y: {Y}, Z: {Z}";
     
         public bool Equals(Vector3 other) => CoreC.Equals(X, other.X) && CoreC.Equals(Y, other.Y) && CoreC.Equals(Z, other.Z);
 

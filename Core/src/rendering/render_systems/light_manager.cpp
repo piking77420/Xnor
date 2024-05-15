@@ -40,9 +40,9 @@ void LightManager::InitResources()
 
 void LightManager::BeginFrame(const Scene& scene,const Viewport& viewport, Renderer& renderer)
 {
-	scene.GetAllComponentOfType<PointLight>(&m_PointLights);
-	scene.GetAllComponentOfType<SpotLight>(&m_SpotLights);
-	scene.GetAllComponentOfType<DirectionalLight>(&m_DirectionalLights);
+	scene.GetAllComponentsOfType<PointLight>(&m_PointLights);
+	scene.GetAllComponentsOfType<SpotLight>(&m_SpotLights);
+	scene.GetAllComponentsOfType<DirectionalLight>(&m_DirectionalLights);
 
 	FecthLightInfo();
 	ComputeShadow(scene, viewport, renderer);
@@ -56,9 +56,9 @@ void LightManager::EndFrame(const Scene&)
 
 void LightManager::DrawLightGizmo(const Camera& camera, const Scene& scene) const
 {
-	scene.GetAllComponentOfType<PointLight>(&m_PointLights);
-	scene.GetAllComponentOfType<SpotLight>(&m_SpotLights);
-	scene.GetAllComponentOfType<DirectionalLight>(&m_DirectionalLights);
+	scene.GetAllComponentsOfType<PointLight>(&m_PointLights);
+	scene.GetAllComponentsOfType<SpotLight>(&m_SpotLights);
+	scene.GetAllComponentsOfType<DirectionalLight>(&m_DirectionalLights);
 	DrawLightGizmoWithShader(camera, scene, m_RenderingLightStruct.editorUi);
 }
 
@@ -279,7 +279,7 @@ void LightManager::ComputeShadowSpotLight(const Scene& scene, Renderer& renderer
 		cam.right = Vector3::Cross(cam.front, cam.up).Normalized();
 		cam.near = m_SpotLights[i]->near;
 		cam.far = m_SpotLights[i]->far;
-		cam.GetVp(SpotLightShadowMapSize, &m_GpuLightData->spotlightSpaceMatrix[i]);
+		cam.GetVp(SpotLightShadowMapSize, &m_GpuLightData->spotLightSpaceMatrix[i]);
 
 	
 		

@@ -2,38 +2,37 @@
 
 #include "core.hpp"
 #include "rendering/rhi_typedef.hpp"
-#include "vao.hpp"
 
 BEGIN_XNOR_CORE
-class XNOR_ENGINE VBO
+
+class XNOR_ENGINE Vbo
 {
 public:
-
-    VBO() = default;
+    Vbo() = default;
     
-    ~VBO();
+    ~Vbo();
 
-    DEFAULT_COPY_MOVE_OPERATIONS(VBO)
+    DEFAULT_COPY_MOVE_OPERATIONS(Vbo)
     
     /// @brief Allocates a vertex buffer on the GPU
     /// @param size Data size
     /// @param data Data
-    /// @param bufferUsage how the buffer will be use
-    void Allocate(size_t size, const void* const data, BufferUsage usage);
+    /// @param usage How the buffer will be used
+    void Allocate(size_t size, const void* data, BufferUsage usage);
 
-    void UpdateData(size_t offset, size_t size, const void* const data = nullptr);
+    void UpdateData(size_t offset, size_t size, const void* data = nullptr);
     
     void BindBuffer() const;
 
     void UnBind() const;
 
+    [[nodiscard]]
     uint32_t GetId() const;
 
     void Init();
 
 private:
     uint32_t m_Id = 0;
-    
 };
 
 END_XNOR_CORE

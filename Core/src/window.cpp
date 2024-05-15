@@ -63,6 +63,11 @@ void Window::Show()
 	glfwShowWindow(m_Window);
 }
 
+void Window::Hide()
+{
+	glfwHideWindow(m_Window);
+}
+
 void Window::SetIcon(Texture& icon)
 {
 	if (icon.GetChannels() != 4)

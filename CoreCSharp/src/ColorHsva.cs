@@ -22,11 +22,7 @@ namespace Xnor.Core
 
         public static ColorHsva operator *(ColorHsva color, float alphaFactor) => new(color.H, color.S, color.V, Math.Clamp(color.A * alphaFactor, 0f, 1f));
 
-        public static explicit operator ColorRgb(ColorHsva color) => (ColorRgb) (ColorRgba) color;
-
-        public static explicit operator ColorRgba(ColorHsva color) => (ColorRgba) (Colorf) color;
-
-        public static explicit operator Colorf(ColorHsva color)
+        public static explicit operator Color(ColorHsva color)
         {
             if (CoreC.IsZero(color.S)) // Grayscale
                 return new(color.V, color.V, color.V, color.A);

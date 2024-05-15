@@ -21,16 +21,16 @@ uint32_t VAO::GetId() const
     return m_Id;
 }
 
-void VAO::ComputeDescriptor(const VAODescriptor& vaoDescriptor) const
+void VAO::ComputeDescriptor(const VaoDescriptor& vaoDescriptor) const
 {
-    for (size_t i = 0; i < vaoDescriptor.VertexAttributeBindingSize; i++)
+    for (size_t i = 0; i < vaoDescriptor.vertexAttributeBindingSize; i++)
     {
         const VertexAttributeBinding& vertexAttributeBinding = vaoDescriptor.vertexAttributeBindings[i];
 
         const VertexAttribFormat& vertexAttribFormats = vaoDescriptor.vertexAttribFormats[i];
         glEnableVertexArrayAttrib(m_Id,static_cast<uint32_t>(i));
-        glVertexArrayAttribBinding(m_Id, vertexAttributeBinding.attribindex, vertexAttributeBinding.bindingindex);
-        glVertexArrayAttribFormat(m_Id, vertexAttribFormats.attribindex, static_cast<int32_t>(vertexAttribFormats.size), Rhi::GetOpenglDataType(vertexAttribFormats.type), vertexAttribFormats.normalized, vertexAttribFormats.relativeoffset);
+        glVertexArrayAttribBinding(m_Id, vertexAttributeBinding.attribIndex, vertexAttributeBinding.bindingIndex);
+        glVertexArrayAttribFormat(m_Id, vertexAttribFormats.attribIndex, static_cast<int32_t>(vertexAttribFormats.size), Rhi::GetOpenglDataType(vertexAttribFormats.type), vertexAttribFormats.normalized, vertexAttribFormats.relativeOffset);
     }
     
     glVertexArrayVertexBuffer(m_Id, 0, vaoDescriptor.vboId, 0, vaoDescriptor.vertexAttribFormats[0].size * 4);

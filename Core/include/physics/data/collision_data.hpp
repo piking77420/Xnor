@@ -1,7 +1,8 @@
 #pragma once
 
 #include "core.hpp"
-#include "Maths/vector3.hpp"
+
+#include <Maths/vector3.hpp>
 
 /// @file collision_data.hpp
 /// @brief Defines the XnorCore::CollisionData struct

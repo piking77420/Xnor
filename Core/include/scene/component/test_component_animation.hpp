@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "skinned_mesh_renderer.hpp"
-#include "physics/components/collider.hpp"
+#include "physics/component/collider.hpp"
 #include "resource/animation_montage.hpp"
 #include "scene/component.hpp"
 

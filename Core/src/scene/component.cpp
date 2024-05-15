@@ -6,6 +6,11 @@ using namespace XnorCore;
 
 Component::~Component() = default;
 
+void Component::Destroy()
+{
+    delete this;
+}
+
 const Entity* Component::GetEntity() const
 {
     return entity;

@@ -28,8 +28,8 @@
 	using StringView = std::string_view;
 #endif
 
-#define CORAL_DOTNET_TARGET_VERSION_MAJOR 8
-#define CORAL_DOTNET_TARGET_VERSION_MAJOR_STR '8'
+#define CORAL_DOTNET_TARGET_VERSION_MAJOR 5
+#define CORAL_DOTNET_TARGET_VERSION_MAJOR_STR '5'
 #define CORAL_UNMANAGED_CALLERS_ONLY ((const CharType*)-1)
 
 namespace Coral {

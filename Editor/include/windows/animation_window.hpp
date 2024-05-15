@@ -3,13 +3,14 @@
 #include "definitions.hpp"
 #include "editor_camera.hpp"
 #include "ui_window.hpp"
+#include "windows/render_window.hpp"
 
 BEGIN_XNOR_EDITOR
 
-class AnimationWindow final : public UiWindow
+class AnimationWindow final : public RenderWindow
 {
 public:
-    using UiWindow::UiWindow;
+    using RenderWindow::RenderWindow;
 
     explicit AnimationWindow(Editor* editor);
 
@@ -20,7 +21,7 @@ public:
 
 private:
     XnorCore::Animation* m_Animation = nullptr;
-    XnorCore::SkinnedMeshRenderer* m_SkinnedRenderer = new XnorCore::SkinnedMeshRenderer();
+    XnorCore::SkinnedMeshRenderer* m_SkinnedRenderer = new XnorCore::SkinnedMeshRenderer;
 
     XnorCore::Viewport m_Viewport;
     EditorCamera m_EditorCamera;

@@ -2,7 +2,7 @@
 
 #include "input/input.hpp"
 #include "input/time.hpp"
-#include "physics/components/collider.hpp"
+#include "physics/component/collider.hpp"
 #include "scene/entity.hpp"
 #include "utils/logger.hpp"
 

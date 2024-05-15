@@ -21,20 +21,23 @@ void EditorWindow::Display()
 {
     RenderWindow::Display();
     m_PickingStrategy.ResizeHandle(m_Size);
-
-    const Vector2 position = { static_cast<float_t>(m_Position.x), static_cast<float_t>(m_Position.y) };
-    m_TransfromGizmo.SetRendering(m_Editor->data.editorCam, position, m_Viewport->viewPortSize);
+    
+    m_TransformGizmo.SetRendering(
+        m_Editor->data.editorCam,
+        {static_cast<float_t>(m_Position.x), static_cast<float_t>(m_Position.y)},
+        m_Viewport->viewPortSize
+    );
 
     if (DrawOnTopOfImage())
         return;
 
-    const bool_t isEditingTranform = EditTransform(); 
+    const bool_t isEditingTransform = EditTransform(); 
     
     if (IsFocused())
     {
         m_EditorCamera.UpdateCamera();
 
-        if (!isEditingTranform)
+        if (!isEditingTransform)
             SelectEntityOnScreen();
     }
 
@@ -47,7 +50,7 @@ bool EditorWindow::DrawOnTopOfImage()
     ImGui::SetCursorPos({25, 25});
     if (ImGui::Button("Translation", {25, 25}))
     {
-        m_TransfromGizmo.currentGizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+        m_TransformGizmo.currentGizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
         ImGui::PopStyleVar();
         return true;
     }
@@ -56,14 +59,14 @@ bool EditorWindow::DrawOnTopOfImage()
     ImGui::SetCursorPos({50, 25});
     if (ImGui::Button("Rotation", {25, 25}))
     {
-        m_TransfromGizmo.currentGizmoOperation = ImGuizmo::OPERATION::ROTATE;
+        m_TransformGizmo.currentGizmoOperation = ImGuizmo::OPERATION::ROTATE;
         return true;
     }
 
     ImGui::SetCursorPos({75, 25});
     if (ImGui::Button("Scale", {25, 25}))
     {
-        m_TransfromGizmo.currentGizmoOperation = ImGuizmo::OPERATION::SCALE;
+        m_TransformGizmo.currentGizmoOperation = ImGuizmo::OPERATION::SCALE;
         return true;
     }
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.f);
@@ -71,7 +74,7 @@ bool EditorWindow::DrawOnTopOfImage()
     ImGui::SetCursorPos({ImGui::GetWindowWidth() - 50, 25});
     if (ImGui::Button("Snap", {25, 25}))
     {
-        m_TransfromGizmo.useSnap = !m_TransfromGizmo.useSnap;
+        m_TransformGizmo.useSnap = !m_TransformGizmo.useSnap;
         ImGui::PopStyleVar();
         return true;
     }
@@ -84,7 +87,7 @@ bool EditorWindow::EditTransform()
     if (!m_Editor->data.selectedEntity)
         return false;
 
-    return m_TransfromGizmo.Manipulate(*m_Editor->data.selectedEntity);
+    return m_TransformGizmo.Manipulate(*m_Editor->data.selectedEntity);
 }
 
 void EditorWindow::SelectEntityOnScreen()

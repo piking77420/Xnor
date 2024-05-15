@@ -575,7 +575,7 @@ struct ALIGNAS(16) GpuLightData
 	DirectionalLightData directionalData[MaxDirectionalLights];
 	
 	/// @brief LightSpaceMatrix for shadowMapping
-	Matrix spotlightSpaceMatrix[MaxSpotLights];
+	Matrix spotLightSpaceMatrix[MaxSpotLights];
 
 	/// @brief Light space matrix
 	Matrix dirLightSpaceMatrix[DirectionalCascadeLevelAllocation];
@@ -751,31 +751,31 @@ struct AttributeDivisor
 
 struct VertexAttributeBinding
 {
-	uint32_t attribindex = 0;
-	uint32_t bindingindex = 0;
+	uint32_t attribIndex = 0;
+	uint32_t bindingIndex = 0;
 };
 
 struct VertexAttribFormat
 {
-	 uint32_t attribindex = 0;
+	 uint32_t attribIndex = 0;
 	 uint32_t size = 0;
 	 DataType::DataType type = DataType::Float;
 	 bool_t normalized = false;
-	 uint32_t relativeoffset = 0;
+	 uint32_t relativeOffset = 0;
 };
 
-struct VAODescriptor
+struct VaoDescriptor
 {
-	VertexAttributeBinding* vertexAttributeBindings = nullptr;
-	size_t VertexAttributeBindingSize = 0;
+	const VertexAttributeBinding* vertexAttributeBindings = nullptr;
+	size_t vertexAttributeBindingSize = 0;
 	
-	VertexAttribFormat* vertexAttribFormats = nullptr;
+	const VertexAttribFormat* vertexAttribFormats = nullptr;
 	size_t vertexAttribFormatsSize = 0;
 
 	uint32_t vboId = 0;
 };
 
-enum class DataAlignement
+enum class DataAlignment
 {
 	Pack,
 	UnPack
@@ -792,7 +792,6 @@ enum class BufferUsage
 	DynamicDraw,
 	DrawRead,
 	ReadCopy,
-	
 };
 
 END_XNOR_CORE

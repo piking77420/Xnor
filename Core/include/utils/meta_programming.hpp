@@ -199,7 +199,7 @@ namespace Meta
     /// 
     /// @tparam T Type
     template <typename T>
-    constexpr bool_t IsColorType = IsAny<T, Colorf, ColorRgb, ColorHsva, ColorRgba>;
+    constexpr bool_t IsColorType = IsAny<T, Color, ColorHsva>;
 }
 
 END_XNOR_CORE;

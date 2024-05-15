@@ -39,6 +39,9 @@ public:
 
     virtual void OnRendering() {} 
 
+    /// @brief Deletes this Component. This is only used for polymorphism purposes with the ScriptComponent type.
+    virtual void Destroy();
+
     /// @brief Get the Entity on which this Component is attached
     [[nodiscard]]
     const Entity* GetEntity() const;

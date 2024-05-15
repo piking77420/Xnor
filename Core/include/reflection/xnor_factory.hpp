@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core.hpp"
+#include "utils/list.hpp"
 
 #include <functional>
 
@@ -16,7 +17,7 @@ class XnorFactory
 
     struct FactoryTypeInfo
     {
-        std::function<void*()> createFunc;
+        std::function<void*(const std::string&)> createFunc;
         std::function<void(void*, std::pair<void*, const char_t*>*)> displayFunc;
         std::function<void(void*)> serializeFunc;
         std::function<void(void*)> deserializeFunc;
@@ -61,9 +62,10 @@ public:
 
     /// @brief Creates an object via a type name
     /// @param name Type name
+    /// @param managedTypeName
     /// @returns Created instance (@c nullptr if can't create)
     [[nodiscard]]
-    XNOR_ENGINE static void* CreateObject(const std::string& name);
+    XNOR_ENGINE static void* CreateObject(const std::string& name, const std::string& managedTypeName = "");
 
     /// @brief Helper function to register all the XnorCore types
     XNOR_ENGINE static void RegisterAllTypes();
@@ -72,7 +74,7 @@ public:
     /// @tparam T Parent type
     /// @param names Output names
     template <typename T>
-    static void FindAllChildClasses(std::vector<std::string>* names);
+    static void FindAllChildClasses(List<std::string>* names);
 
     /// @brief Prints the contents of the factory
     XNOR_ENGINE static void Print();

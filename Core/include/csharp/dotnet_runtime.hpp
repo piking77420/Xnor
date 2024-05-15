@@ -17,8 +17,6 @@ class DotnetRuntime
     STATIC_CLASS(DotnetRuntime)
     
 public:
-    XNOR_ENGINE static inline constexpr const char_t* const AssembliesDirectory = "DotnetAssemblies";
-    
     /// @brief Initializes the .NET runtime.
     XNOR_ENGINE static bool_t Initialize();
 
@@ -35,22 +33,35 @@ public:
     /// @brief Returns the loaded assembly with the given @p name.
     XNOR_ENGINE static DotnetAssembly* GetAssembly(const std::string& name);
 
+    /// @brief Returns the loaded Game assembly.
+    XNOR_ENGINE static DotnetAssembly* GetGameAssembly();
+
     /// @brief Unloads all loaded assemblies.
     ///
-    /// @param reloadContext Unloading all assemblies means unloading the AssemblyLoadContext. This parameter describes whether to reload the context afterwards.
+    /// @param reloadContext Unloading all assemblies means unloading the AssemblyLoadContext. This parameter describes whether to reload the context afterward.
     XNOR_ENGINE static void UnloadAllAssemblies(bool_t reloadContext = false);
 
     /// @brief Reloads all loaded assemblies.
     XNOR_ENGINE static void ReloadAllAssemblies();
 
     /// @brief Builds the Game .NET project.
-    XNOR_ENGINE static bool_t BuildGameProject();
+    XNOR_ENGINE static bool_t BuildGameProject(bool_t asynchronous = true);
+
+    /// @brief Builds the Game .NET project and reloads the resulting assembly. This can be quite long, consider calling this function on a worker thread.
+    /// @param recreateScriptInstances Whether to recreate the .NET ScriptComponent instances after the reload.
+    XNOR_ENGINE static void BuildAndReloadProject(bool_t recreateScriptInstances = true);
 
     /// @brief Returns whether the runtime is initialized.
     XNOR_ENGINE static bool_t GetInitialized();
 
+    /// @brief Returns whether a thread is currently building/reloading the .NET project.
+    XNOR_ENGINE static bool_t IsReloadingProject();
+
+    /// @brief Returns the current building/reloading progress of the .NET project. Only valid if @c IsReloadingProject() returns @c true
+    XNOR_ENGINE static float_t GetProjectReloadingProgress();
+
 private:
-    XNOR_ENGINE static inline constexpr int32_t DotnetVersion = 5;
+    XNOR_ENGINE static constexpr int32_t DotnetVersion = 5;
     
     static Coral::HostSettings m_Settings;
     
@@ -64,9 +75,14 @@ private:
     
     XNOR_ENGINE static inline std::filesystem::path m_AssembliesPath;
 
-    static bool CheckDotnetInstalled();
+    XNOR_ENGINE static inline bool_t m_ReloadingProject = false;
 
-    static bool CheckDotnetVersion();
+    /// @brief Project reloading progress between 0 and 1. Only valid if @c m_ReloadingProject is @c true
+    XNOR_ENGINE static inline float_t m_ProjectReloadingProgress = 0.f;
+
+    static bool_t CheckDotnetInstalled();
+
+    static bool_t CheckDotnetVersion();
 
     static void CoralMessageCallback(std::string_view message, Coral::MessageLevel level);
     

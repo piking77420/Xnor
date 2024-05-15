@@ -7,40 +7,40 @@
 
 using namespace XnorCore;
 
-VBO::~VBO()
+Vbo::~Vbo()
 {
     if (glIsBuffer(m_Id))
     glDeleteBuffers(1, &m_Id);
 }
 
-void VBO::  Allocate(const size_t size, const void* const data , const BufferUsage bufferUsage)
+void Vbo::  Allocate(const size_t size, const void* const data , const BufferUsage bufferUsage)
 {
     glNamedBufferData(m_Id, static_cast<uint32_t>(size), data, Rhi::BufferUsageToOpenglUsage(bufferUsage));
     
 }
 
-void VBO::UpdateData(const size_t offset, const size_t size, const void* const data)
+void Vbo::UpdateData(const size_t offset, const size_t size, const void* const data)
 {
     glNamedBufferSubData(m_Id, offset, size, data);
 }
 
 
-void VBO::BindBuffer() const
+void Vbo::BindBuffer() const
 {
     glBindBuffer(GL_ARRAY_BUFFER,m_Id);
 }
 
-void VBO::UnBind() const
+void Vbo::UnBind() const
 {
     glBindBuffer(GL_ARRAY_BUFFER,0);
 }
 
-uint32_t VBO::GetId() const
+uint32_t Vbo::GetId() const
 {
     return m_Id;
 }
 
-void VBO::Init()
+void Vbo::Init()
 {
     glCreateBuffers(1, &m_Id);
 }

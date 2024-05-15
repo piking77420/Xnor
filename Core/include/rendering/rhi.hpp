@@ -292,7 +292,7 @@ public:
 
 	XNOR_ENGINE static uint32_t DrawModeToOpengl(DrawMode::DrawMode drawMode);
 
-	XNOR_ENGINE static void SetPixelStore(DataAlignement alignement, int32_t value);
+	XNOR_ENGINE static void SetPixelStore(DataAlignment alignement, int32_t value);
 
 	XNOR_ENGINE static uint32_t BufferUsageToOpenglUsage(BufferUsage usage);
 

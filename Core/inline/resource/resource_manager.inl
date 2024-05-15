@@ -16,7 +16,7 @@ Pointer<T> ResourceManager::Add(const std::string& name)
 
     if (Contains(name))
     {
-        Logger::LogWarning("This resource has already been added, consider using ResourceManager::Get instead");
+        Logger::LogWarning("The resource {} has already been added, consider using ResourceManager::Get instead", name);
         return GetNoCheck<T>(name);
     }
 
@@ -34,7 +34,7 @@ inline Pointer<Shader> ResourceManager::Add<Shader>(const std::string& name)
 
     if (Contains(name))
     {
-        Logger::LogWarning("This shader has already been added, consider using ResourceManager::Get instead");
+        Logger::LogWarning("The shader {} has already been added, consider using ResourceManager::Get instead", name);
         return GetNoCheck<Shader>(name);
     }
 
@@ -48,7 +48,7 @@ inline Pointer<ComputeShader> ResourceManager::Add<ComputeShader>(const std::str
 
     if (Contains(name))
     {
-        Logger::LogWarning("This compute shader has already been added, consider using ResourceManager::Get instead");
+        Logger::LogWarning("The compute shader {} has already been added, consider using ResourceManager::Get instead", name);
         return GetNoCheck<ComputeShader>(name);
     }
 

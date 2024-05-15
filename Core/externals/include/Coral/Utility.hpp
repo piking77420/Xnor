@@ -76,5 +76,4 @@ namespace Coral {
 	{
 		(AddToArrayI<TArgs, TIndices>(InArgumentsArr, InParameterTypes, std::forward<TArgs>(InArgs)), ...);
 	}
-
 }

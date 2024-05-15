@@ -23,7 +23,7 @@ public:
 
     void Display() override;
 
-    void SetParam(void* param);
+    void SetParam(void* param) override;
 
 private:
     XnorCore::AnimationMontage* m_Montage = nullptr;

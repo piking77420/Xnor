@@ -48,8 +48,8 @@ private:
     std::string m_Filepath;
 
     std::string m_Name;
-    
-    void ProcessScriptComponent(Coral::Type& subclass);
+
+    static void ProcessScriptComponent(const Coral::Type& subclass);
 };
 
 END_XNOR_CORE

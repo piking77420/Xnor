@@ -4,11 +4,12 @@
 #include "reflection/type_renderer.hpp"
 #include "resource/animation_montage.hpp"
 #include "resource/resource_manager.hpp"
+#include "windows/render_window.hpp"
 
 using namespace XnorEditor;
 
 AnimationWindow::AnimationWindow(Editor* editor)
-    : UiWindow(editor, "AnimationEditor"), m_EditorCamera(*editor, m_Camera)
+    : RenderWindow(editor, "AnimationEditor", m_Viewport), m_EditorCamera(*editor, m_Camera)
 {
     m_Viewport.camera = &m_Camera;
     m_Scene.CreateEntity("Montage");
@@ -39,25 +40,13 @@ void AnimationWindow::Display()
 
 void AnimationWindow::OnApplicationRendering()
 {
-    const bool_t isValid = m_Viewport.IsValid();
-
-    if (!isValid || m_Viewport.viewPortSize != m_Size)
-    {
-        m_Viewport.Resize(m_Size);
-    }
-
-    if (isValid)
-    {
-        m_Editor->renderer.BeginFrame(m_Scene);
-        m_Editor->renderer.RenderViewport(m_Viewport, m_Scene);
-        m_Editor->renderer.EndFrame(m_Scene);
-    }
+    RenderWindow::OnApplicationRendering();
 }
 
 void AnimationWindow::SetParam(void* const param)
 {
     m_Animation = static_cast<decltype(m_Animation)>(param);
 
-    m_SkinnedRenderer->mesh = m_Animation->skeleton->mesh;
-    m_SkinnedRenderer->StartAnimation(m_Animation);
+    /*m_SkinnedRenderer->mesh = m_Animation->skeleton->mesh;
+    m_SkinnedRenderer->StartAnimation(m_Animation);*/
 }

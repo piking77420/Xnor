@@ -7,22 +7,6 @@ BEGIN_XNOR_CORE
 template <Concepts::PointerT PtrT, Concepts::IntegralT IntT>
 constexpr PtrT Utils::IntToPointer(const IntT number) { return reinterpret_cast<PtrT>(reinterpret_cast<uint8_t*>(1) + static_cast<const size_t>(number) - 1); }
 
-constexpr ImVec4 Utils::ToImCol(const ColorRgb color)
-{
-    const Colorf c = static_cast<Colorf>(color);
-    return ImVec4(c.r, c.g, c.b, c.a);
-}
-
-constexpr ImVec4 Utils::ToImCol(const Colorf& color) { return ImVec4(color.r, color.g, color.b, color.a); }
-
-constexpr ImVec4 Utils::ToImCol(const ColorHsva color)
-{
-    const Colorf c = static_cast<Colorf>(static_cast<ColorRgb>(color));
-    return ImVec4(c.r, c.g, c.b, c.a);
-}
-
-constexpr Colorf Utils::FromImCol(const ImVec4& color) { return Colorf(color.x, color.y, color.z, color.w); }
-
 constexpr std::string Utils::RemoveNamespaces(const std::string& str)
 {
     const size_t pos = str.find_last_of(':');

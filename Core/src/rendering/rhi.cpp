@@ -1410,15 +1410,15 @@ uint32_t Rhi::DrawModeToOpengl(DrawMode::DrawMode drawMode)
 
 }
 
-void Rhi::SetPixelStore(const DataAlignement alignement, const int32_t value)
+void Rhi::SetPixelStore(const DataAlignment alignement, const int32_t value)
 {
 	GLuint alignementOpengl {};
 	switch (alignement)
 	{
-	case DataAlignement::Pack:
+	case DataAlignment::Pack:
 		alignementOpengl = GL_PACK_ALIGNMENT;
 		break;
-	case DataAlignement::UnPack:
+	case DataAlignment::UnPack:
 		alignementOpengl = GL_UNPACK_ALIGNMENT;
 		break;
 	}

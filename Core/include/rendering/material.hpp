@@ -42,9 +42,9 @@ public:
     Pointer<Texture> ambientOcclusionTexture;
 
     /// @brief Albedo color
-    Colorf albedoColor;
+    Color albedoColor;
     /// @brief Emissive color
-    Colorf emissiveColor;
+    Color emissiveColor;
     
     /// @brief Metallic parameter
     float_t metallic = 0.f;

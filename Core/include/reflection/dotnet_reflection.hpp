@@ -6,6 +6,7 @@
 #include "core.hpp"
 #include "Coral/ManagedObject.hpp"
 #include "scene/component/script_component.hpp"
+#include "utils/list.hpp"
 
 /// @file dotnet_reflection.hpp
 /// @brief Defines the XnorCore::DotnetReflection class.
@@ -17,15 +18,15 @@ class DotnetReflection
 {
     STATIC_CLASS(DotnetReflection)
 
-    struct DotnetTypeInfo
+    struct DotnetTypeInfo final
     {
         std::function<Coral::ManagedObject()> createFunc;
-        std::function<void(void*, const char_t*)> displayFunc;
-        std::function<void(void*)> serializeFunc;
-        std::function<void(void*)> deserializeFunc;
+        std::function<void(ScriptComponent*, void*, const char_t*)> displayFunc;
+        std::function<void(void*, const std::string&)> serializeFunc;
+        std::function<void(void*, const std::string&)> deserializeFunc;
 
         std::string name;
-        bool_t isScriptType;
+        bool_t isScriptType = false;
     };
 
 public:
@@ -44,32 +45,71 @@ public:
     template <typename T>
     static void RegisterCoreType(const std::string& typeName);
 
-    /// @brief Registers a script type type
+    /// @brief Registers a script type
     /// @param typeName C# type name
     XNOR_ENGINE static void RegisterScriptType(const std::string& typeName);
+    
+    XNOR_ENGINE static void RegisterEnumType(const std::string& typeName, const std::string& assemblyName);
+
+    /// @brief Unregisters a script type
+    /// @param typeName C# type name
+    XNOR_ENGINE static void UnregisterScriptType(const std::string& typeName);
 
     /// @brief Displays a simple type
     /// @tparam T Type
+    /// @param script Script component
     /// @param obj Object pointer
     /// @param name Field name
     template <typename T>
-    static void DisplaySimpleType(T* obj, const char_t* name);
+    static void DisplaySimpleType(ScriptComponent* script, T* obj, const char_t* name);
     
     /// @brief Helper function to register all the base types
     XNOR_ENGINE static void RegisterAllTypes();
 
     /// @brief Displays a type using the internal dotnet factory
+    /// @param script Script component
     /// @param obj Object pointer
     /// @param name Field name
     /// @param typeName C# type name
-    XNOR_ENGINE static void DisplayType(void* obj, const char_t* name, const std::string& typeName);
+    XNOR_ENGINE static void DisplayType(ScriptComponent* script, void* obj, const char_t* name, const std::string& typeName);
 
     /// @brief Displays a script component type
     /// @param script Script component
     XNOR_ENGINE static void DisplayType(ScriptComponent* script);
 
+    XNOR_ENGINE static void GetScriptTypes(List<std::string>* list);
+
+    [[nodiscard]]
+    XNOR_ENGINE static ScriptComponent* CreateInstance(const std::string& typeName);
+    
+    XNOR_ENGINE static void SerializeScript(const ScriptComponent* script);
+
+    XNOR_ENGINE static void DeserializeScript(ScriptComponent* script);
+
 private:
-    static inline std::unordered_map<std::string, DotnetTypeInfo> m_DotnetMap; 
+    static inline const std::array<std::string, 2> IgnoredFieldNames
+    {
+        "swigCPtr",
+        "swigCMemOwn"
+    };
+    
+    static inline std::unordered_map<std::string, DotnetTypeInfo> m_DotnetMap;
+
+    XNOR_ENGINE static void SerializeType(void* value, const std::string& fieldName, const std::string& typeName);
+
+    XNOR_ENGINE static void DeserializeType(void* value, const std::string& fieldName, const std::string& typeName);
+
+    XNOR_ENGINE static void SerializeExternalType(void* value, const std::string& fieldName, const std::string& typeName);
+
+    XNOR_ENGINE static void DeserializeExternalType(void* value, const std::string& fieldName, const std::string& typeName);
+    
+    XNOR_ENGINE static void DisplayExternalType(void* value, const char_t* fieldName, const std::string& typeName);
+
+    template <typename T>
+    static void SerializeSimpleType(T* obj, const std::string& fieldName);
+
+    template <typename T>
+    static void DeserializeSimpleType(T* obj, const std::string& fieldName);
 };
 
 END_XNOR_CORE

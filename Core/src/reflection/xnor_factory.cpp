@@ -2,10 +2,10 @@
 
 #include "audio/component/audio_listener.hpp"
 #include "audio/component/audio_source.hpp"
-#include "physics/components/box_collider.hpp"
-#include "physics/components/capsule_collider.hpp"
-#include "physics/components/collider.hpp"
-#include "physics/components/sphere_collider.hpp"
+#include "physics/component/box_collider.hpp"
+#include "physics/component/capsule_collider.hpp"
+#include "physics/component/collider.hpp"
+#include "physics/component/sphere_collider.hpp"
 #include "rendering/light/directional_light.hpp"
 #include "rendering/light/point_light.hpp"
 #include "rendering/light/spot_light.hpp"
@@ -13,12 +13,11 @@
 #include "scene/component/camera_component.hpp"
 #include "scene/component/gui_component.hpp"
 #include "scene/component/image.hpp"
-#include "scene/component/player_movment.hpp"
 #include "scene/component/skinned_mesh_renderer.hpp"
 #include "scene/component/test_component.hpp"
 #include "scene/component/test_component_animation.hpp"
 #include "scene/component/test_component_physics.hpp"
-#include "scene/component/texte_component.hpp"
+#include "scene/component/text_component.hpp"
 
 
 using namespace XnorCore;
@@ -33,10 +32,10 @@ inline void* XnorFactory::CreateObject(const size_t hash)
         return nullptr;
     }
 
-    return it->second.createFunc();
+    return it->second.createFunc("");
 }
 
-inline void* XnorFactory::CreateObject(const std::string& name)
+inline void* XnorFactory::CreateObject(const std::string& name, const std::string& managedTypeName)
 {
     auto&& it = m_FactoryMapName.find(name);
 
@@ -46,7 +45,7 @@ inline void* XnorFactory::CreateObject(const std::string& name)
         return nullptr;
     }
 
-    return it->second.createFunc();
+    return it->second.createFunc(managedTypeName);
 }
 
 inline void XnorFactory::DisplayObject(void* const obj, const size_t hash, std::pair<void*, const char_t*>* const windowInfo)
@@ -98,7 +97,6 @@ void XnorFactory::RegisterAllTypes()
     
     RegisterType<SkinnedMeshRenderer>();
     RegisterType<TestComponentAnimation>();
-
     
     RegisterType<StaticMeshRenderer>();
     RegisterType<DirectionalLight>();
@@ -113,8 +111,6 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<CapsuleCollider>();
     RegisterType<TestComponentPhysics>();
     RegisterType<CameraComponent>();
-    RegisterType<PlayerMovment>();
-
 
     RegisterType<AudioListener>();
     RegisterType<AudioSource>();
@@ -123,8 +119,7 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<GuiComponent>();
     RegisterType<Image>();
     RegisterType<Button>();
-    RegisterType<TexteComponent>();
-
+    RegisterType<TextComponent>();
 }
 
 std::string XnorFactory::GetTypeName(const size_t hash)

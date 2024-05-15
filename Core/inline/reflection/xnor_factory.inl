@@ -20,7 +20,7 @@ void XnorFactory::RegisterType()
         return;
 
     using DescriptorT = decltype(Reflection::GetTypeInfo<T>());
-
+    
     constexpr const char_t* const name = DescriptorT::name.c_str();
     const std::string humanizedName = Utils::RemoveNamespaces(std::string(name));
     
@@ -33,9 +33,22 @@ void XnorFactory::RegisterType()
     };
 
     if constexpr (isConstructible)
-        info.createFunc = []() -> void* { return new T(); };
+        info.createFunc = [](const std::string&) -> void* { return new T(); };
     else
-        info.createFunc = []() -> void* { return nullptr; };
+        info.createFunc = [](const std::string&) -> void* { return nullptr; };
+
+    if constexpr (Meta::IsSame<T, ScriptComponent>)
+    {
+        info.createFunc = [](const std::string& managedTypeName) -> void*
+        {
+            Coral::ManagedObject&& instance = DotnetRuntime::GetGameAssembly()->GetCoralAssembly()->GetType(managedTypeName).CreateInstance();
+            ScriptComponent* const script = instance.GetFieldValue<ScriptComponent*>("swigCPtr");
+            script->Initialize(instance);
+            return script;
+        };
+        info.serializeFunc = [](void* const obj) -> void { DotnetReflection::SerializeScript(static_cast<ScriptComponent*>(obj)); };
+        info.deserializeFunc = [](void* const obj) -> void { DotnetReflection::DeserializeScript(static_cast<ScriptComponent*>(obj)); };
+    }
 
     refl::util::for_each(refl::util::reflect_types(DescriptorT::declared_bases), [&]<typename ParentT>(const ParentT)
     {
@@ -67,14 +80,14 @@ inline bool_t XnorFactory::IsChildOf(const size_t typeHash, const size_t parentH
 }
 
 template <typename T>
-void XnorFactory::FindAllChildClasses(std::vector<std::string>* names)
+void XnorFactory::FindAllChildClasses(List<std::string>* names)
 {
     const size_t hash = Utils::GetTypeHash<T>();
 
     for (auto&& it : m_FactoryMapHash)
     {
         if (IsChildOf(it.first, hash))
-            names->push_back(it.second.name);
+            names->Add(it.second.name);
     }
 }
 

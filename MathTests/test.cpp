@@ -124,7 +124,7 @@ namespace TestVector2
     }
 
 #ifdef MATH_DEFINE_FORMATTER
-    TEST(Vector2, ForMatrixting)
+    TEST(Vector2, Formatting)
     {
         EXPECT_EQ(std::format("{0:06.3f}", UnitX), "01.000 ; 00.000");
     }
@@ -198,7 +198,7 @@ namespace TestVector2i
     }
 
 #ifdef MATH_DEFINE_FORMATTER
-    TEST(Vector2i, ForMatrixting)
+    TEST(Vector2i, Formatting)
     {
         EXPECT_EQ(std::format("{0:02d}", UnitX), "01 ; 00");
     }
@@ -284,7 +284,7 @@ namespace TestVector3
     }
 
 #ifdef MATH_DEFINE_FORMATTER
-    TEST(Vector3, ForMatrixting)
+    TEST(Vector3, Formatting)
     {
         EXPECT_EQ(std::format("{0:06.3f}", UnitX), "01.000 ; 00.000 ; 00.000");
     }
@@ -371,7 +371,7 @@ namespace TestVector4
     }
 
 #ifdef MATH_DEFINE_FORMATTER
-    TEST(Vector4, ForMatrixting)
+    TEST(Vector4, Formatting)
     {
         EXPECT_EQ(std::format("{0:06.3f}", UnitX), "01.000 ; 00.000 ; 00.000 ; 00.000");
     }
@@ -488,7 +488,7 @@ namespace TestQuaternion
     }
 
 #ifdef MATH_DEFINE_FORMATTER
-    TEST(Quaternion, ForMatrixting)
+    TEST(Quaternion, Formatting)
     {
         EXPECT_EQ(std::format("{0:06.3f}", UnitX), "01.000 ; 00.000 ; 00.000 ; 00.000");
     }
@@ -598,7 +598,7 @@ namespace TestMatrix3
     }
 
 #ifdef MATH_DEFINE_FORMATTER
-    TEST(Matrix3, ForMatrixting)
+    TEST(Matrix3, Formatting)
     {
         EXPECT_EQ(std::format("{0:06.3f}", Identity), "[ 01.000 ; 00.000 ; 00.000 ] [ 00.000 ; 01.000 ; 00.000 ] [ 00.000 ; 00.000 ; 01.000 ]");
         EXPECT_EQ(std::format("{0:m06.3f}", Identity), "[ 01.000 ; 00.000 ; 00.000 ]\n[ 00.000 ; 01.000 ; 00.000 ]\n[ 00.000 ; 00.000 ; 01.000 ]");
@@ -725,10 +725,10 @@ namespace TestMatrix
     }
 
 #ifdef MATH_DEFINE_FORMATTER
-    TEST(Matrix, ForMatrixting)
+    TEST(Matrix, Formatting)
     {
-        EXPECT_EQ(std::format("{0:06.3f}", Identity), "[ 01.000 ; 00.000 ; 00.000 ; 00.000 ] [ 00.000 ; 01.000 ; 00.000 ; 00.000 ] [ 00.000 ; 00.000 ; 01.000 ; 00.000 ] [ 00.000 ; 00.000 ; 00.000 ; 01.000 ]");
-        EXPECT_EQ(std::format("{0:m06.3f}", Identity), "[ 01.000 ; 00.000 ; 00.000 ; 00.000 ]\n[ 00.000 ; 01.000 ; 00.000 ; 00.000 ]\n[ 00.000 ; 00.000 ; 01.000 ; 00.000 ]\n[ 00.000 ; 00.000 ; 00.000 ; 01.000 ]");
+        EXPECT_EQ(std::format("{0:m06.3f}", Identity), "[ 01.000 ; 00.000 ; 00.000 ; 00.000 ] [ 00.000 ; 01.000 ; 00.000 ; 00.000 ] [ 00.000 ; 00.000 ; 01.000 ; 00.000 ] [ 00.000 ; 00.000 ; 00.000 ; 01.000 ]");
+        EXPECT_EQ(std::format("{0:06.3f}", Identity), "[ 01.000 ; 00.000 ; 00.000 ; 00.000 ]\n[ 00.000 ; 01.000 ; 00.000 ; 00.000 ]\n[ 00.000 ; 00.000 ; 01.000 ; 00.000 ]\n[ 00.000 ; 00.000 ; 00.000 ; 01.000 ]");
     }
 #endif
 }

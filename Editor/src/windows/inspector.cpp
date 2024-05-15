@@ -15,7 +15,7 @@ void Inspector::Display()
     XnorCore::Entity* const ptr = m_Editor->data.selectedEntity;
     
     // Check if an entity was selected
-    if (!ptr)
+    if (!ptr || m_Editor->IsSerializing() || m_Editor->IsDeserializing())
     {
         ImGui::Text("Nothing selected");
         return;

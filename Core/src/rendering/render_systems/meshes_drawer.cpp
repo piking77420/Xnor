@@ -34,9 +34,9 @@ void MeshesDrawer::InitResources()
 
 void MeshesDrawer::BeginFrame(const Scene& scene, const Renderer&)
 {
-    scene.GetAllComponentOfType<SkinnedMeshRenderer>(&m_SkinnedRender);
-    scene.GetAllComponentOfType<StaticMeshRenderer>(&m_StaticMeshs);
-    PrepareOctree(scene);   
+    scene.GetAllComponentsOfType<SkinnedMeshRenderer>(&m_SkinnedRender);
+    scene.GetAllComponentsOfType<StaticMeshRenderer>(&m_StaticMeshs);
+    PrepareOctree(scene);
 }
 
 void MeshesDrawer::RenderAnimation() const

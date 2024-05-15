@@ -31,7 +31,7 @@ void Font::CreateInInterface()
     FT_Set_Pixel_Sizes(face, 0, 48);  
 
    
-    Rhi::SetPixelStore(DataAlignement::UnPack,1);
+    Rhi::SetPixelStore(DataAlignment::UnPack,1);
     
     for (uint8_t c = 0; c < 128; c++)
     {
@@ -63,7 +63,7 @@ void Font::CreateInInterface()
         m_Characters.emplace(c,character);
     }
     
-    Rhi::SetPixelStore(DataAlignement::UnPack,4);
+    Rhi::SetPixelStore(DataAlignment::UnPack,4);
 
     FT_Done_Face(face);
     FT_Done_FreeType(ft);
