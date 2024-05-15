@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 
 #include "utils/logger.hpp"
+#include "utils/windows.hpp"
 
 using namespace XnorCore;
 
@@ -89,12 +90,12 @@ void Window::SetIcon(Texture& icon)
 
 void Window::SetCursorHidden(const bool_t value)
 {
-	glfwSetInputMode(m_Window, GLFW_CURSOR, value ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+	ShowCursor(!value);
 }
 
 void Window::SetCursorPosition(const Vector2 newPosition)
 {
-	glfwSetCursorPos(m_Window, newPosition.x, newPosition.y);
+	SetCursorPos(static_cast<int32_t>(newPosition.x),static_cast<int32_t>(newPosition.y));
 }
 
 void Window::GlfwResizeFramebuffer(GLFWwindow*, const int32_t width, const int32_t height)

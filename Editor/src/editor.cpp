@@ -51,6 +51,7 @@ Editor::Editor(const int32_t argc, const char_t* const* const argv)
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+	
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 	io.Fonts->AddFontDefault();
@@ -147,7 +148,7 @@ void Editor::SetupImGuiStyle() const
 	style.Alpha = 1.0f;
 	style.DisabledAlpha = 0.6000000238418579f;
 	style.WindowPadding = ImVec2(8.0f, 8.0f);
-	style.WindowRounding = 0.0f;
+	style.WindowRounding = 0.5f;
 	style.WindowBorderSize = 1.0f;
 	style.WindowMinSize = ImVec2(32.0f, 32.0f);
 	style.WindowTitleAlign = ImVec2(0.0f, 0.5f);
@@ -264,7 +265,10 @@ void Editor::MenuBar()
 
 			ImGui::EndMenu();
 		}
-		renderer.RenderMenu();
+		
+		if (XnorCore::World::scene != nullptr)
+			renderer.RenderMenu(*XnorCore::World::scene);
+		
 		ImGui::EndMainMenuBar();
 	}
 }
@@ -316,8 +320,6 @@ void Editor::StopPlaying()
 	XnorCore::World::isPlaying = false;
 	XnorCore::World::hasStarted = false;
 	
-	renderer.BeginFrame(*XnorCore::World::scene);
-
 	m_GamePlaying = false;
 }
 
@@ -457,17 +459,12 @@ void Editor::Update()
 
 		const bool_t deserializingScene = m_CurrentAsyncActionThread.joinable() || m_Deserializing;
 
-		if (!deserializingScene)
-			renderer.BeginFrame(*World::scene);
-
 		UpdateWindows();
 		
 		if (!deserializingScene)
 		{
 			WorldBehaviours();
 			OnRenderingWindow();
-		
-			renderer.EndFrame(*World::scene);
 		}
 
 		Coroutine::UpdateAll();
@@ -480,7 +477,6 @@ void Editor::Update()
 		if (m_CurrentAsyncActionThread.joinable() && !(m_Serializing || m_Deserializing || m_ReloadingScripts))
 		{
 			World::scene->Initialize();
-			renderer.BeginFrame(*World::scene);
 			m_CurrentAsyncActionThread.join();
 		}
 	}

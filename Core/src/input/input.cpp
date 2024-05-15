@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 
 #include "utils/logger.hpp"
+#include "utils/windows.hpp"
 
 using namespace XnorCore;
 
@@ -82,11 +83,6 @@ void Input::HandleMouseButton(GLFWwindow*, const int32_t mouseButton, const int3
     }
 }
 
-void Input::MouseCursorPos(GLFWwindow*, const double_t xpos, const double_t ypos)
-{
-    m_MousePosition = Vector2(static_cast<float_t>(xpos), static_cast<float_t>(ypos));
-}
-
 void Input::HandleJoyStickCallBack(const int32_t jid, const int32_t event)
 {
     switch (event)
@@ -158,7 +154,7 @@ void Input::ResetKey()
 {
     glfwSetKeyCallback(m_WindowHandle, HandleKeyboard);
     glfwSetMouseButtonCallback(m_WindowHandle, HandleMouseButton);
-    glfwSetCursorPosCallback(m_WindowHandle, MouseCursorPos);
+
 
     KeyStatuses defaultKeys;
     defaultKeys.fill(false);
@@ -180,6 +176,11 @@ void Input::CheckGamepadAtLaunch()
 
 void Input::Update()
 {
+    POINT point;
+    GetCursorPos(&point);
+    m_MousePosition.x = static_cast<float_t>(point.x);
+    m_MousePosition.y = static_cast<float_t>(point.y);
+    
     for (auto& button : m_Mouse)
     {
         button.at(MouseButtonStatus::Pressed) = false;
@@ -206,6 +207,32 @@ void Input::Update()
 
     if (mouseLocked)
         m_MousePosition -= m_MouseDelta;
+
+}
+
+uint32_t Input::GetBindingId()
+{
+    size_t index = m_BindedWindowInfo.size();
+    m_BindedWindowInfo.resize(index + 1);
+    return static_cast<uint32_t>(index);
+}
+
+void Input::UpdateBindedWindowInfo(uint32_t binding, BindedWindowInfo windowInfo)
+{
+    m_BindedWindowInfo[static_cast<size_t>(binding)] = windowInfo;
+}
+
+void Input::GetWindowBindedInfo(std::vector<BindedWindowInfo>* BindedWindowsInfo)
+{
+    *BindedWindowsInfo = m_BindedWindowInfo;
+}
+
+void Input::BindWindow(uint32_t bindInd)
+{
+    if (m_BindedWindowInfo.size() > bindInd)
+        return;
+
+    currentBindedWindow = bindInd;
 }
 
 void Input::Initialize()
@@ -214,7 +241,7 @@ void Input::Initialize()
 
     glfwSetKeyCallback(windowPtr, HandleKeyboard);
     glfwSetMouseButtonCallback(windowPtr, HandleMouseButton);
-    glfwSetCursorPosCallback(windowPtr, MouseCursorPos);
+    //glfwSetCursorPosCallback(windowPtr, MouseCursorPos);
     glfwSetJoystickCallback(HandleJoyStickCallBack);
 
     KeyStatuses defaultKeys;

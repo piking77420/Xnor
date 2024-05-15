@@ -17,6 +17,7 @@ _shaders/irradiance_convolution;496B2C68-8F3F-4AB5-90-E9-4F-F2-99-EA-92-4D
 _shaders/skymap_shader;2AEC7A9-907-4DEA-B8-F0-3A-6F-DD-7B-7-8B
 assets/skybox/left.jpg;444226B2-9630-40CD-BD-E8-98-FD-AD-CB-45-46
 assets/textures/puresky.hdr;6291CF33-C815-4CCC-AB-FA-88-B1-B4-F8-F0-AD
+assets/fonts/Mario64.ttf;EF89F61A-D25F-4353-A8-19-CC-AB-C6-B7-BD-D2
 assets/skybox/top.jpg;6EA6AD9C-15DD-415F-87-AE-A7-F0-65-61-59-5
 U3DMesh;155C43F7-CEAE-403D-A5-67-B4-33-C5-EE-CC-62
 assets/textures/diamond_block.jpg;7587E9E6-C775-4518-93-22-41-74-BC-95-DD-3D
@@ -51,11 +52,16 @@ assets_internal/editor/gizmos/dirlight_icon.png;6119E8D-B01D-4AE5-9D-B1-30-39-A1
 _shaders/bloom_threshold;848A1E09-D127-47FC-AC-76-27-C5-F-5F-92-92
 _shaders/depth_shader_point_light;48268CE4-BA8C-4CB7-BB-28-28-B4-43-B8-FF-C9
 _shaders/down_sample;86AB86C5-5C39-4C38-B1-5E-3F-61-A2-73-74-74
-_shaders/draw_gizmo_instanced;1D8CCE20-12B2-47D2-80-67-84-42-ED-56-F-5A
 _shaders/skinned_gbuffer;D416B5BA-C667-4145-8F-D8-FA-72-ED-DE-14-7
+_shaders/draw_gizmo_instanced;1D8CCE20-12B2-47D2-80-67-84-42-ED-56-F-5A
 assets/sounds/metal-pipe.wav;DFE1D450-B4E3-49F1-B8-41-92-36-78-74-9C-54
+_shaders/gui_shader;33B0481F-D31F-4CAA-9F-EE-98-A7-D1-89-9B-92
 _shaders/up_sample;590ABFD0-76AD-4F2D-94-50-D4-C5-9A-B5-A6-6
 assets/models/Coyote-Walking.fbx;6C09C002-82DC-4AF6-9D-41-B6-3A-31-72-4D-63
 assets/models/Coyote-Running.fbx;6681D90B-EA9E-4F13-87-FE-89-A8-AC-E0-A2-85
+assets/ui/slider.png;84061B1A-411-4B3B-9E-41-98-4-15-C7-A2-B4
 Cube;BF4A5B8F-DF43-4B3D-93-74-67-EA-78-C6-DC-3F
 assets/sounds/fazbear.wav;DC7765A-C607-4D03-AC-9-93-56-7-16-28-EA
+assets/models/planet.obj;19055A96-C6FE-4BD8-B4-D9-1F-E6-3D-D-DC-5F
+assets/textures/strawBerry.png;B605DD48-30CE-4257-A0-65-DB-99-2E-B8-17-F5
+_shaders/font_rendering;CD6CD3DD-971-49A1-B3-C-11-E8-9A-E5-52-F

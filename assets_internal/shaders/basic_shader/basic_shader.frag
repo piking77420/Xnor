@@ -2,6 +2,7 @@
 
 const int MaxSpotLight = 100;
 const int MaxPointLight = 100;
+const int DirectionalCascadeLevel =10;
 
 struct PointLightData
 {
@@ -27,7 +28,8 @@ struct DirectionalData
     float intensity;
     vec3 direction;
     bool isDirlightCastShadow;
-    mat4 lightSpaceMatrix;
+    uint cascadeCount; 
+    mat4 lightSpaceMatrix[DirectionalCascadeLevel];
 };
 
 layout (std140, binding = 0) uniform CameraUniform

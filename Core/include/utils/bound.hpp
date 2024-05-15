@@ -14,7 +14,7 @@ class XNOR_ENGINE Bound
 public:
     static Bound GetAabbFromTransform(const Bound& bound,const Transform& transform);
     
-     /// @brief The extents of the Bounding Box. This is always size of the Bounds.
+     /// @brief The extents of the Bounding Box. This is half size of the Bounds.
     Vector3 extents;
     /// @brief The center bound of this Bound.
     Vector3 center = Vector3::Zero();

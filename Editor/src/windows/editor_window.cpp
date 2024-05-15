@@ -1,4 +1,6 @@
 ﻿#include "windows/editor_window.hpp"
+
+#include "utils/logger.hpp"
 #include "utils/utils.hpp"
 
 using namespace XnorEditor;
@@ -29,14 +31,14 @@ void EditorWindow::Display()
     if (DrawOnTopOfImage())
         return;
 
-    const bool isEditingTransform = EditTransform();
+    const bool_t isEditingTransform = EditTransform(); 
     
     if (IsFocused())
     {
         m_EditorCamera.UpdateCamera();
 
         if (!isEditingTransform)
-        SelectEntityOnScreen();
+            SelectEntityOnScreen();
     }
     m_EditorCamera.OnPressGoToObject();
 }

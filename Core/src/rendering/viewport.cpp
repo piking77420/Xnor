@@ -7,7 +7,7 @@ using namespace XnorCore;
 void Viewport::Init(const Vector2i size)
 {
     viewPortSize = size;
-
+ 
     using namespace XnorCore;
     const std::vector<RenderTargetInfo> attachementsType =
     {
@@ -40,12 +40,6 @@ void Viewport::Resize(const Vector2i newSize)
 {
     Destroy();
     Init(newSize);
-}
-
-
-bool_t Viewport::IsValid() const
-{
-    return camera != nullptr && frameBuffer != nullptr;  
 }
 
 float_t Viewport::GetAspect() const

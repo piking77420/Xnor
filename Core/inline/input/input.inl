@@ -1,5 +1,6 @@
 #pragma once
 
+#include "utils/logger.hpp"
 #include "utils/meta_programming.hpp"
 
 BEGIN_XNOR_CORE
@@ -11,5 +12,6 @@ T Input::GetMousePosition()
     
     return static_cast<T>(m_MousePosition);
 }
+
 
 END_XNOR_CORE

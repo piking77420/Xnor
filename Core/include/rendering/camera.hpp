@@ -15,7 +15,7 @@ class XNOR_ENGINE Camera
 {
 public:
 	/// @brief Position
-	Vector3 position = { 0, 0, -3.f };
+	Vector3 position = { 0, 0, 6.f };
 
 	/// @brief Front vector, where the camera is looking
 	Vector3 front = -Vector3::UnitZ();
@@ -62,6 +62,11 @@ public:
 	/// @brief Makes the camera look at a specific position
 	/// @param at Where
 	void LookAt(const Vector3& at);
+	
+	/// @brief Makes the camera look at a specific position
+	/// @param at Where
+	/// @param upVector custom UpVector
+	void LookAt(const Vector3& at,const Vector3& upVector);
 
 	/// @brief Projects a 3D position onto the 2D screen coords space
 	/// @param vertex 3D position
@@ -71,6 +76,11 @@ public:
 	[[nodiscard]]
 	Vector2i ProjectOn(const Vector3& vertex, Vector2i screenSize, const Matrix& model) const;
 	
+	// fov in rad
+	static Matrix Perspective(float_t fovy, float_t aspect, float_t zNear, float_t zFar);
+	
+	static Matrix LookAtRH(Vector3 const& eye, Vector3 const& center, Vector3 const& up);
+
 };
 
 END_XNOR_CORE

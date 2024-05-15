@@ -50,10 +50,6 @@ public:
 	/// @param newSize New size
 	XNOR_ENGINE void Resize(Vector2i newSize);
 	
-	/// @brief Checks if the viewport is valid
-	/// @returns Whether it's valid
-	[[nodiscard]]
-	XNOR_ENGINE bool_t IsValid() const;
 
 	XNOR_ENGINE float_t GetAspect() const;
 	

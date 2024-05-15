@@ -8,6 +8,7 @@
 #include "rendering/light/spot_light.hpp"
 #include "rendering/camera.hpp"
 #include "rendering/frame_buffer.hpp"
+#include "rendering/light/cascade_shadow_map.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
 #include "resource/texture.hpp"
@@ -24,12 +25,11 @@ class Renderer;
 class LightManager
 {
 private:
-    static constexpr Vector2i DirectionalShadowMapSize = { 1024, 1024 };
+    static constexpr Vector2i DirectionalShadowMapSize = { 4096, 4096 };
     static constexpr Vector2i SpotLightShadowMapSize = { 1024, 1024 };
     static constexpr Vector2i PointLightLightShadowMapSize = { 1024, 1024 };
-    
+
     static constexpr float_t LightThreshold = 30.f;
-    
     static constexpr TextureInternalFormat::TextureInternalFormat ShadowDepthTextureInternalFormat = TextureInternalFormat::DepthComponent32F;
     
 public:
@@ -45,7 +45,7 @@ public:
     /// @brief Computes the internal lights to send to the GPU
     /// @param scene Concerned scene
     /// @param renderer Concerned renderer
-    XNOR_ENGINE void BeginFrame(const Scene& scene, const Renderer& renderer);
+    XNOR_ENGINE void BeginFrame(const Scene& scene, const Viewport& viewport, Renderer& renderer);
     
     /// @brief End frame
     /// @param scene Concerned scene
@@ -83,21 +83,26 @@ private:
         RenderingLight type;
     };
 
+    struct RenderingLightStruct
+    {
+        float_t scaleFactor = 2.f;
+        float_t minDistance = 1.f;
+        float_t minScalarFactor = 10.f;
+        float_t maxScalarFactor = 2.f;
+        
+        Pointer<Texture> pointLightTexture;
+        Pointer<Texture> dirLightTexture;
+        Pointer<Texture> spotLightTexture;
+        Pointer<Shader> editorUi;
+        Pointer<Model> quad;
+    };
+    
     GpuLightData* m_GpuLightData = nullptr;
-
-    Pointer<Texture> m_PointLightTexture;
-    Pointer<Texture> m_DirLightTexture;
-    Pointer<Texture> m_SpotLightTexture;
+    RenderingLightStruct m_RenderingLightStruct;
     
     Pointer<Shader> m_ShadowMapShader;
     Pointer<Shader> m_ShadowMapShaderPointLight;
-
-    float_t m_ScaleFactor = 2.f;
-    float_t m_MinDistance = 1.f;
-    float_t m_MinScalarFactor = 10.f;
-    float_t m_MaxScalarFactor = m_ScaleFactor;
-    Pointer<Shader> m_EditorUi;
-    Pointer<Model> m_Quad;
+    
     
     RenderPass m_ShadowRenderPass;
     Framebuffer* m_ShadowFrameBuffer {nullptr};
@@ -109,19 +114,21 @@ private:
     Texture* m_DepthBufferForPointLightPass = nullptr;
     Texture* m_DirectionalShadowMaps = nullptr;
 
-    std::vector<const PointLight*> m_PointLights;
-    std::vector<const SpotLight*> m_SpotLights;
-    std::vector<const DirectionalLight*> m_DirectionalLights;
+    mutable std::vector<const PointLight*> m_PointLights;
+    mutable std::vector<const SpotLight*> m_SpotLights;
+    mutable std::vector<const DirectionalLight*> m_DirectionalLights;
+    
+    CascadeShadowMap m_CascadeShadowMap;    
     
     XNOR_ENGINE void FecthLightInfo() const;
 
-    XNOR_ENGINE void ComputeShadow(const Scene& scene, const Renderer& renderer);
+    XNOR_ENGINE void ComputeShadow(const Scene& scene, const Viewport& viewport, Renderer& renderer);
 
-    XNOR_ENGINE void ComputeShadowDirLight(const Scene& scene, const Renderer& renderer);
+    XNOR_ENGINE void ComputeShadowDirLight(const Scene& scene, const Camera& viewPortCamera, Renderer& renderer);
 
-    XNOR_ENGINE void ComputeShadowSpotLight(const Scene& scene, const Renderer& renderer);
+    XNOR_ENGINE void ComputeShadowSpotLight(const Scene& scene, Renderer& renderer);
 
-    XNOR_ENGINE void ComputeShadowPointLight(const Scene& scene, const Renderer& renderer);
+    XNOR_ENGINE void ComputeShadowPointLight(const Scene& scene, Renderer& renderer);
     
     XNOR_ENGINE void GetDistanceFromCamera(std::map<float_t, GizmoLight>* sortedLight, const Camera& camera) const;
 
@@ -130,6 +137,9 @@ private:
     XNOR_ENGINE void InitShadowMap();
 
     XNOR_ENGINE void InitShader();
+
+    
+    XNOR_ENGINE float_t GetMax(Vector3 vec) const;
 };
 
 END_XNOR_CORE

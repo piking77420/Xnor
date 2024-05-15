@@ -29,7 +29,7 @@ public:
     
     /// @brief Computes the tone mapping
     /// @param imageWithoutToneMapping Initial image
-    /// @param bloomTexture Bloom texture
+    /// @param bloomTexture Bloom texture   
     XNOR_ENGINE void ComputeToneMaping(const Texture& imageWithoutToneMapping, const Texture& bloomTexture) const;
 
 private:

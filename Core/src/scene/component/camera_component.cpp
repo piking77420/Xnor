@@ -19,10 +19,10 @@ CameraComponent::~CameraComponent()
 
 void CameraComponent::Update()
 {
-    const Transform& transform = GetTransform();
     Component::Update();
-    camera.position = static_cast<Vector3>(transform.worldMatrix[3]);
-    camera.LookAt(Matrix3(transform.worldMatrix) * (camera.position + Vector3::UnitZ()));
+    const Vector3 pos = static_cast<Vector3>(entity->transform.worldMatrix[3]);
+    camera.position = pos;
+    camera.LookAt( pos + entity->transform.GetForward(),entity->transform.GetUp());
 }
 
 void CameraComponent::Begin()

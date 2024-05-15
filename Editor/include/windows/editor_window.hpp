@@ -29,7 +29,6 @@ protected:
     void SelectEntityOnScreen();
 
     PickingStrategy m_PickingStrategy;
-    
 
 private:
     EditorCamera m_EditorCamera;

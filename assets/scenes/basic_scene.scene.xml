@@ -5,15 +5,16 @@
 			<name>Directional</name>
 			<m_EntityId>73C3991F-64C8-43BE-BA-FB-8F-9C-A2-38-C9-75</m_EntityId>
 			<transform>
-				<m_Position>0 ; 1 ; 0</m_Position>
-				<m_EulerRotation>0.07414048 ; -0.07402368 ; -0.7875441</m_EulerRotation>
-				<m_Scale>0.9999999 ; 0.99999934 ; 0.9999999</m_Scale>
+				<m_Position>0 ; 1 ; -2</m_Position>
+				<m_EulerRotation>-0.20254232 ; -0.8008912 ; 1.2284114</m_EulerRotation>
+				<m_Scale>1.0000018 ; 1.0000001 ; 1</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="DirectionalLight">
 					<color>1 ; 1 ; 1 ; 1</color>
 					<intensity>4.5</intensity>
 					<castShadow>true</castShadow>
+					<enable>true</enable>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -24,7 +25,7 @@
 			<m_EntityId>DC36B839-E893-481D-B6-28-93-7E-24-FC-F4-C</m_EntityId>
 			<transform>
 				<m_Position>0 ; -2 ; 0</m_Position>
-				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>10 ; 1 ; 10</m_Scale>
 			</transform>
 			<m_Components>
@@ -47,6 +48,7 @@
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
+					<enable>true</enable>
 				</0>
 				<1 typeName="BoxCollider">
 					<center>0 ; 0 ; 0</center>
@@ -55,6 +57,7 @@
 					<m_IsStatic>true</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
 					<m_IsActive>false</m_IsActive>
+					<enable>true</enable>
 				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -64,7 +67,7 @@
 			<name>Sphere</name>
 			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
 			<transform>
-				<m_Position>-4 ; 2 ; 0</m_Position>
+				<m_Position>-6 ; 0.058427572 ; -6</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
@@ -88,6 +91,7 @@
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
+					<enable>true</enable>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -121,6 +125,7 @@
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
+					<enable>true</enable>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -130,15 +135,16 @@
 			<name>PointLight</name>
 			<m_EntityId>A284C848-DC61-4853-A4-48-15-9D-CE-5D-73-BD</m_EntityId>
 			<transform>
-				<m_Position>-2 ; 3 ; -6</m_Position>
+				<m_Position>-0.022478878 ; 3 ; 1.4140348</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="PointLight">
-					<color>0.0070581296 ; 0.14682326 ; 0.7128713 ; 1</color>
-					<intensity>10000</intensity>
+					<color>1 ; 0 ; 0.19799805 ; 1</color>
+					<intensity>380</intensity>
 					<castShadow>true</castShadow>
+					<enable>true</enable>
 				</0>
 				<1 typeName="TestComponent">
 					<TestComponent>
@@ -159,6 +165,7 @@
 						<m_Duration>0</m_Duration>
 						<m_Time>0</m_Time>
 					</m_Timeline>
+					<enable>true</enable>
 				</1>
 				<2 typeName="ScriptComponent" managedType="Game.TestScript">
 					<Intensity>28.003</Intensity>
@@ -173,17 +180,18 @@
 			<name>SpotLight</name>
 			<m_EntityId>8B8B51F5-90F0-405B-BE-3C-56-93-F2-7-34-F2</m_EntityId>
 			<transform>
-				<m_Position>0 ; 8 ; -5</m_Position>
-				<m_EulerRotation>2.3046567 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1.0000837 ; 1.0000837</m_Scale>
+				<m_Position>-0.022478878 ; 5 ; 1.4140348</m_Position>
+				<m_EulerRotation>2.1487358 ; -0.03379201 ; 0.0065374174</m_EulerRotation>
+				<m_Scale>0.9999989 ; 1.0002674 ; 1.0002551</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="SpotLight">
 					<cutOff>12.5</cutOff>
 					<outerCutOff>15</outerCutOff>
-					<color>1 ; 1 ; 1 ; 1</color>
-					<intensity>1000</intensity>
+					<color>1 ; 0 ; 0.19799805 ; 1</color>
+					<intensity>380</intensity>
 					<castShadow>true</castShadow>
+					<enable>true</enable>
 				</0>
 				<1 typeName="TestComponent">
 					<m_Rotate>true</m_Rotate>
@@ -196,6 +204,7 @@
 						<m_Duration>0</m_Duration>
 						<m_Time>0</m_Time>
 					</m_Timeline>
+					<enable>true</enable>
 				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -205,21 +214,23 @@
 			<name>Capsule</name>
 			<m_EntityId>3843FD98-4FF2-4459-98-DA-67-D9-98-57-38-14</m_EntityId>
 			<transform>
-				<m_Position>0 ; 4 ; 0</m_Position>
-				<m_EulerRotation>0.69813174 ; -0 ; 0</m_EulerRotation>
+				<m_Position>-1.0172284 ; 0.9799998 ; 3.9186933</m_Position>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="CapsuleCollider">
 					<height>1</height>
 					<radius>1</radius>
-					<constraints/>
+					<constraints>ConstraintRotation</constraints>
 					<m_IsStatic>false</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
-					<m_IsActive>false</m_IsActive>
+					<m_IsActive>true</m_IsActive>
+					<enable>true</enable>
 				</0>
 				<1 typeName="TestComponentPhysics">
 					<m_JumpForce>1000</m_JumpForce>
+					<enable>true</enable>
 				</1>
 				<2 typeName="MeshRenderer">
 					<model>29075914-46D0-4C58-B8-37-A9-2A-1F-15-91-D1</model>
@@ -240,12 +251,20 @@
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
+					<enable>true</enable>
 				</2>
-				<3 typeName="CameraComponent"/>
+				<3 typeName="CameraComponent">
+					<enable>true</enable>
+				</3>
 				<4 typeName="AudioListener">
 					<dopplerEffect>true</dopplerEffect>
 					<m_Volume>1</m_Volume>
+					<enable>true</enable>
 				</4>
+				<5 typeName="PlayerMovement">
+					<speed>1.4</speed>
+					<enable>true</enable>
+				</5>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
@@ -254,9 +273,9 @@
 			<name>VikingRoom</name>
 			<m_EntityId>924CE8D3-CDEA-4D8A-86-BE-50-D-74-E7-AF-38</m_EntityId>
 			<transform>
-				<m_Position>1 ; 0 ; -6</m_Position>
-				<m_EulerRotation>-1.716861 ; 1.225529 ; -0.06609928</m_EulerRotation>
-				<m_Scale>1.0000046 ; 1.0000085 ; 1.0000095</m_Scale>
+				<m_Position>1 ; -0.6811248 ; -6</m_Position>
+				<m_EulerRotation>1.4891161 ; 0.097306624 ; -3.11912</m_EulerRotation>
+				<m_Scale>1.0000691 ; 1.0000364 ; 1.0000256</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="MeshRenderer">
@@ -278,16 +297,62 @@
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
+					<enable>true</enable>
 				</0>
 				<1 typeName="AudioSource">
 					<audioTrack>61B61790-1047-476F-8F-FF-D4-6-2A-BC-85-14</audioTrack>
 					<m_Volume>0.149</m_Volume>
 					<m_Pitch>1</m_Pitch>
+					<enable>true</enable>
 				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
 		</7>
+		<8>
+			<name>Image</name>
+			<m_EntityId>8D6CCF25-11EC-4D98-93-B1-9-52-18-49-EE-18</m_EntityId>
+			<transform>
+				<m_Position>0 ; 6.7 ; 0</m_Position>
+				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="Image">
+					<image>73588105-EF48-4133-86-87-48-7F-A1-DA-91-AE</image>
+					<screenTransform>107.8 ; 76.6</screenTransform>
+					<size>20.5 ; 20</size>
+					<enable>true</enable>
+				</0>
+				<1 typeName="Button">
+					<enable>true</enable>
+				</1>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</8>
+		<9>
+			<name>Text</name>
+			<m_EntityId>E471477C-C2FE-4C72-BC-68-3E-1E-12-20-53-FF</m_EntityId>
+			<transform>
+				<m_Position>0 ; 0 ; 0</m_Position>
+				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="TextComponent">
+					<font>20CC62DB-6AB3-4DA5-99-FC-66-3B-74-32-49-4C</font>
+					<text>Health 100</text>
+					<color>0.57012194 ; 0.045192584 ; 0.045192584 ; 1</color>
+					<police>1</police>
+					<screenTransform>0 ; 0</screenTransform>
+					<size>1 ; 1</size>
+					<enable>true</enable>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</9>
 	</m_Entities>
 </Scene>
 

@@ -47,7 +47,7 @@ void DrawGizmo::DrawGizmos(const Viewport& viewport, const Entity* selectedEntit
     Rhi::SetPolygonMode(PolygonFace::PolygonFace::FrontAndBack, PolygonMode::Line);
 
     if (selectedEntity != nullptr)
-    DrawCollider(*selectedEntity);
+        DrawCollider(*selectedEntity);
 
     DrawRectangle();
     DrawSphere();

@@ -25,6 +25,9 @@ void Entity::Begin()
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
+        if (!m_Components[i]->enable)
+            continue;
+            
         m_Components[i]->Begin();
     }
 }
@@ -33,6 +36,9 @@ void Entity::Update()
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {
+        if (!m_Components[i]->enable)
+            continue;
+        
         m_Components[i]->Update();
     }
 }

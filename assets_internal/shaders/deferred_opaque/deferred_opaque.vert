@@ -11,5 +11,5 @@ out vec2 texCoords;
 void main()
 {
     texCoords = aTexCoords;
-    gl_Position = mat4(1.0) * vec4(aPos,1.0);
+    gl_Position = vec4(aPos,1.0);
 }

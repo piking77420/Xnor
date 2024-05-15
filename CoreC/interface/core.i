@@ -186,6 +186,7 @@ struct Data64
 %include "rendering/rhi_typedef.i"
 
 %include "resource/cubemap.hpp"
+%include "resource/texture.hpp"
 %include "resource/font.hpp"
 
 %include "transform.hpp"
@@ -200,7 +201,6 @@ struct Data64
 %include "resource/resource_manager.hpp"
 
 %include "resource/shader.hpp"
-%include "resource/texture.hpp"
 
 %include "input/gamepad_input.hpp"
 %include "input/keyboard_input.hpp"
@@ -232,7 +232,7 @@ struct Data64
 
 %include "world/skybox.hpp"
 
-%include "scene/scene.hpp"
+%include "scene/scene.i"
 %include "utils/utils.hpp"
 
 %include "world/scene_graph.hpp"

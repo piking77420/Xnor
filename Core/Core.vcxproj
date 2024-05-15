@@ -59,7 +59,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\static\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib;OpenAL32.lib</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib;OpenAL32.lib;freetype.lib</AdditionalDependencies>
       <AdditionalOptions>/WHOLEARCHIVE:CoreLibs.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
@@ -84,8 +84,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\static\$(Configuration);%(AdditionalLibraryDirectories);$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>;opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib;OpenAL32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\static\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib;OpenAL32.lib;freetype.lib</AdditionalDependencies>
       <AdditionalOptions>/WHOLEARCHIVE:CoreLibs.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
@@ -93,135 +93,6 @@
       <Message>Copy external DLL files</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="include\audio\audio_buffer.hpp" />
-    <ClInclude Include="include\csharp\dotnet_constants.hpp" />
-    <ClInclude Include="include\data_structure\object_bounding.hpp" />
-    <ClInclude Include="include\data_structure\octree.hpp" />
-    <ClInclude Include="include\data_structure\octree_iterator.hpp" />
-    <ClInclude Include="include\data_structure\octree_node.hpp" />
-    <ClInclude Include="externals\include\AL\al.h" />
-    <ClInclude Include="externals\include\AL\alc.h" />
-    <ClInclude Include="externals\include\AL\alext.h" />
-    <ClInclude Include="externals\include\AL\efx-creative.h" />
-    <ClInclude Include="externals\include\AL\efx-presets.h" />
-    <ClInclude Include="externals\include\AL\efx.h" />
-    <ClInclude Include="include\audio\audio.hpp" />
-    <ClInclude Include="include\audio\audio_context.hpp" />
-    <ClInclude Include="include\audio\audio_device.hpp" />
-    <ClInclude Include="include\audio\component\audio_listener.hpp" />
-    <ClInclude Include="include\audio\component\audio_source.hpp" />
-    <ClInclude Include="include\reflection\filters.hpp" />
-    <ClInclude Include="include\rendering\bone.hpp" />
-    <ClInclude Include="include\rendering\buffer\uniform_buffer.hpp" />
-    <ClInclude Include="include\rendering\draw_gizmo.hpp" />
-    <ClInclude Include="include\rendering\frustum.hpp" />
-    <ClInclude Include="include\rendering\plane.hpp" />
-    <ClInclude Include="include\rendering\rhi_typedef.hpp" />
-    <ClInclude Include="include\rendering\render_systems\animation_render.hpp" />
-    <ClInclude Include="include\resource\animation.hpp" />
-    <ClInclude Include="include\resource\mesh.hpp" />
-    <ClInclude Include="include\resource\skeleton.hpp" />
-    <ClInclude Include="include\scene\component\skinned_mesh_render.hpp" />
-    <ClInclude Include="include\resource\audio_track.hpp" />
-    <ClInclude Include="include\scene\component\test_component_physics.hpp" />
-    <ClCompile Include="src\application.cpp" />
-    <ClCompile Include="src\audio\audio.cpp" />
-    <ClCompile Include="src\audio\audio_buffer.cpp" />
-    <ClCompile Include="src\audio\audio_context.cpp" />
-    <ClCompile Include="src\audio\audio_device.cpp" />
-    <ClCompile Include="src\audio\component\audio_listener.cpp" />
-    <ClCompile Include="src\audio\component\audio_source.cpp" />
-    <ClCompile Include="src\csharp\dotnet_assembly.cpp" />
-    <ClCompile Include="src\csharp\dotnet_runtime.cpp" />
-    <ClCompile Include="src\csharp\dotnet_utils.cpp" />
-    <ClCompile Include="src\data_structure\object_bounding.cpp" />
-    <ClCompile Include="src\data_structure\octree.cpp" />
-    <ClCompile Include="src\data_structure\octree_iterator.cpp" />
-    <ClCompile Include="src\data_structure\octree_node.cpp" />
-    <ClCompile Include="src\file\directory.cpp" />
-    <ClCompile Include="src\file\entry.cpp" />
-    <ClCompile Include="src\input\input.cpp" />
-    <ClCompile Include="src\input\gamepad_input.cpp" />
-    <ClCompile Include="src\input\time.cpp" />
-    <ClCompile Include="src\reflection\dotnet_reflection.cpp" />
-    <ClCompile Include="src\physics\body_activation_listener.cpp" />
-    <ClCompile Include="src\physics\broad_phase_layer_interface.cpp" />
-    <ClCompile Include="src\physics\components\capsule_collider.cpp" />
-    <ClCompile Include="src\physics\components\collider.cpp" />
-    <ClCompile Include="src\physics\components\mesh_collider.cpp" />
-    <ClCompile Include="src\physics\components\sphere_collider.cpp" />
-    <ClCompile Include="src\physics\contact_listener.cpp" />
-    <ClCompile Include="src\physics\physics_world.cpp" />
-    <ClCompile Include="src\reflection\xnor_factory.cpp" />
-    <ClCompile Include="src\reflection\filters.cpp" />
-    <ClCompile Include="src\reflection\type_renderer.cpp" />
-    <ClCompile Include="src\rendering\bloom_rendertarget.cpp" />
-    <ClCompile Include="src\rendering\bone.cpp" />
-    <ClCompile Include="src\rendering\buffer\uniformBuffer.cpp" />
-    <ClCompile Include="src\rendering\buffer\vbo.cpp" />
-    <ClCompile Include="src\rendering\draw_gizmo.cpp" />
-    <ClCompile Include="src\rendering\frustum.cpp" />
-    <ClCompile Include="src\rendering\light\directional_light.cpp" />
-    <ClCompile Include="src\rendering\light\light.cpp" />
-    <ClCompile Include="src\rendering\light\point_light.cpp" />
-    <ClCompile Include="src\rendering\light\spot_light.cpp" />
-    <ClCompile Include="src\rendering\material.cpp" />
-    <ClCompile Include="src\rendering\postprocess_rendertarget.cpp" />
-    <ClCompile Include="src\rendering\render_pass.cpp" />
-    <ClCompile Include="src\rendering\render_systems\animation_render.cpp" />
-    <ClCompile Include="src\rendering\render_systems\bloom_pass.cpp" />
-    <ClCompile Include="src\rendering\render_systems\post_process_pass.cpp" />
-    <ClCompile Include="src\rendering\render_systems\skybox_parser.cpp" />
-    <ClCompile Include="src\rendering\render_systems\light_manager.cpp" />
-    <ClCompile Include="src\rendering\render_systems\skybox_renderer.cpp" />
-    <ClCompile Include="src\rendering\render_systems\tone_mapping.cpp" />
-    <ClCompile Include="src\rendering\rhi.cpp" />
-    <ClCompile Include="src\rendering\viewport_data.cpp" />
-    <ClCompile Include="src\resource\animation.cpp" />
-    <ClCompile Include="src\resource\audio_track.cpp" />
-    <ClCompile Include="src\resource\compute_shader.cpp" />
-    <ClCompile Include="src\resource\cubemap.cpp" />
-    <ClCompile Include="src\resource\font.cpp" />
-    <ClCompile Include="src\resource\mesh.cpp" />
-    <ClCompile Include="src\resource\shader.cpp" />
-    <ClCompile Include="src\file\file.cpp" />
-    <ClCompile Include="src\file\file_manager.cpp" />
-    <ClCompile Include="src\rendering\camera.cpp" />
-    <ClCompile Include="src\rendering\frame_buffer.cpp" />
-    <ClCompile Include="src\rendering\renderer.cpp" />
-    <ClCompile Include="src\rendering\viewport.cpp" />
-    <ClCompile Include="src\resource\model.cpp" />
-    <ClCompile Include="src\resource\resource.cpp" />
-    <ClCompile Include="src\resource\resource_manager.cpp" />
-    <ClCompile Include="src\resource\skeleton.cpp" />
-    <ClCompile Include="src\resource\texture.cpp" />
-    <ClCompile Include="src\scene\component.cpp" />
-    <ClCompile Include="src\scene\component\camera_component.cpp" />
-    <ClCompile Include="src\scene\component\mesh_renderer.cpp" />
-    <ClCompile Include="src\scene\component\script_component.cpp" />
-    <ClCompile Include="src\scene\component\skinned_mesh_render.cpp" />
-    <ClCompile Include="src\scene\component\test_component.cpp" />
-    <ClCompile Include="src\scene\component\test_component_physics.cpp" />
-    <ClCompile Include="src\scene\entity.cpp" />
-    <ClCompile Include="src\scene\scene.cpp" />
-    <ClCompile Include="src\screen.cpp" />
-    <ClCompile Include="src\serialization\serializer.cpp" />
-    <ClCompile Include="src\transform.cpp" />
-    <ClCompile Include="src\utils\bound.cpp" />
-    <ClCompile Include="src\utils\coroutine.cpp" />
-    <ClCompile Include="src\utils\file_system_watcher.cpp" />
-    <ClCompile Include="src\utils\logger.cpp" />
-    <ClCompile Include="src\utils\message_box.cpp" />
-    <ClCompile Include="src\utils\utils.cpp" />
-    <ClCompile Include="src\utils\windows.cpp" />
-    <ClCompile Include="src\window.cpp" />
-    <ClCompile Include="src\rendering\vertex.cpp" />
-    <ClCompile Include="src\utils\guid.cpp" />
-    <ClCompile Include="src\world\scene_graph.cpp" />
-    <ClCompile Include="src\world\skybox.cpp" />
-    <ClCompile Include="src\world\world.cpp" />
-  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\include\assimp\aabb.h" />
     <ClInclude Include="externals\include\assimp\ai_assert.h" />
@@ -624,17 +495,29 @@
     <ClInclude Include="externals\include\magic_enum\magic_enum_utility.hpp" />
     <ClInclude Include="externals\include\refl\refl.hpp" />
     <ClInclude Include="include\application.hpp" />
+    <ClInclude Include="include\audio\audio.hpp" />
+    <ClInclude Include="include\audio\audio_buffer.hpp" />
+    <ClInclude Include="include\audio\audio_context.hpp" />
+    <ClInclude Include="include\audio\audio_device.hpp" />
+    <ClInclude Include="include\audio\component\audio_listener.hpp" />
+    <ClInclude Include="include\audio\component\audio_source.hpp" />
     <ClInclude Include="include\core.hpp" />
     <ClInclude Include="include\csharp\dotnet_assembly.hpp" />
+    <ClInclude Include="include\csharp\dotnet_constants.hpp" />
     <ClInclude Include="include\csharp\dotnet_runtime.hpp" />
     <ClInclude Include="include\csharp\dotnet_utils.hpp" />
+    <ClInclude Include="include\data_structure\object_bounding.hpp" />
+    <ClInclude Include="include\data_structure\octree.hpp" />
+    <ClInclude Include="include\data_structure\octree_iterator.hpp" />
+    <ClInclude Include="include\data_structure\octree_node.hpp" />
     <ClInclude Include="include\file\directory.hpp" />
     <ClInclude Include="include\file\entry.hpp" />
     <ClInclude Include="include\file\file.hpp" />
     <ClInclude Include="include\file\file_manager.hpp" />
-    <ClInclude Include="include\input\input.hpp" />
     <ClInclude Include="include\input\gamepad_input.hpp" />
+    <ClInclude Include="include\input\input.hpp" />
     <ClInclude Include="include\input\keyboard_input.hpp" />
+    <ClInclude Include="include\input\low_pass_filter.hpp" />
     <ClInclude Include="include\input\mouse_input.hpp" />
     <ClInclude Include="include\input\time.hpp" />
     <ClInclude Include="include\physics\body_activation_listener.hpp" />
@@ -648,45 +531,72 @@
     <ClInclude Include="include\physics\data\collision_data.hpp" />
     <ClInclude Include="include\physics\layers.hpp" />
     <ClInclude Include="include\physics\physics_world.hpp" />
-    <ClInclude Include="include\reflection\xnor_factory.hpp" />
     <ClInclude Include="include\reflection\dotnet_reflection.hpp" />
+    <ClInclude Include="include\reflection\filters.hpp" />
     <ClInclude Include="include\reflection\reflection.hpp" />
     <ClInclude Include="include\reflection\type_renderer.hpp" />
+    <ClInclude Include="include\reflection\xnor_factory.hpp" />
     <ClInclude Include="include\rendering\bloom_render_target.hpp" />
+    <ClInclude Include="include\rendering\bone.hpp" />
+    <ClInclude Include="include\rendering\buffer\uniform_buffer.hpp" />
+    <ClInclude Include="include\rendering\buffer\vao.hpp" />
+    <ClInclude Include="include\rendering\buffer\vbo.hpp" />
     <ClInclude Include="include\rendering\camera.hpp" />
+    <ClInclude Include="include\rendering\draw_gizmo.hpp" />
     <ClInclude Include="include\rendering\frame_buffer.hpp" />
+    <ClInclude Include="include\rendering\frustum.hpp" />
+    <ClInclude Include="include\rendering\light\cascade_shadow_map.hpp" />
     <ClInclude Include="include\rendering\light\directional_light.hpp" />
     <ClInclude Include="include\rendering\light\light.hpp" />
     <ClInclude Include="include\rendering\light\point_light.hpp" />
     <ClInclude Include="include\rendering\light\spot_light.hpp" />
     <ClInclude Include="include\rendering\material.hpp" />
+    <ClInclude Include="include\rendering\plane.hpp" />
     <ClInclude Include="include\rendering\post_process_render_target.hpp" />
     <ClInclude Include="include\rendering\renderer.hpp" />
+    <ClInclude Include="include\rendering\render_pass.hpp" />
+    <ClInclude Include="include\rendering\render_systems\animation_render.hpp" />
     <ClInclude Include="include\rendering\render_systems\bloom_pass.hpp" />
+    <ClInclude Include="include\rendering\render_systems\gui_pass.hpp" />
+    <ClInclude Include="include\rendering\render_systems\light_manager.hpp" />
     <ClInclude Include="include\rendering\render_systems\post_process_pass.hpp" />
     <ClInclude Include="include\rendering\render_systems\skybox_parser.hpp" />
-    <ClInclude Include="include\rendering\viewport.hpp" />
-    <ClInclude Include="include\rendering\render_pass.hpp" />
-    <ClInclude Include="include\rendering\render_systems\light_manager.hpp" />
     <ClInclude Include="include\rendering\render_systems\skybox_renderer.hpp" />
     <ClInclude Include="include\rendering\render_systems\tone_mapping.hpp" />
+    <ClInclude Include="include\rendering\rhi.hpp" />
+    <ClInclude Include="include\rendering\rhi_typedef.hpp" />
+    <ClInclude Include="include\rendering\vertex.hpp" />
+    <ClInclude Include="include\rendering\viewport.hpp" />
     <ClInclude Include="include\rendering\viewport_data.hpp" />
+    <ClInclude Include="include\resource\animation.hpp" />
+    <ClInclude Include="include\resource\audio_track.hpp" />
     <ClInclude Include="include\resource\compute_shader.hpp" />
     <ClInclude Include="include\resource\cubemap.hpp" />
     <ClInclude Include="include\resource\font.hpp" />
+    <ClInclude Include="include\resource\mesh.hpp" />
     <ClInclude Include="include\resource\model.hpp" />
     <ClInclude Include="include\resource\resource.hpp" />
     <ClInclude Include="include\resource\resource_manager.hpp" />
+    <ClInclude Include="include\resource\shader.hpp" />
+    <ClInclude Include="include\resource\skeleton.hpp" />
     <ClInclude Include="include\resource\texture.hpp" />
     <ClInclude Include="include\scene\component.hpp" />
+    <ClInclude Include="include\scene\component\button.hpp" />
     <ClInclude Include="include\scene\component\camera_component.hpp" />
+    <ClInclude Include="include\scene\component\gui_component.hpp" />
+    <ClInclude Include="include\scene\component\image.hpp" />
     <ClInclude Include="include\scene\component\mesh_renderer.hpp" />
+    <ClInclude Include="include\scene\component\player_movement.hpp" />
     <ClInclude Include="include\scene\component\script_component.hpp" />
+    <ClInclude Include="include\scene\component\skinned_mesh_render.hpp" />
     <ClInclude Include="include\scene\component\test_component.hpp" />
+    <ClInclude Include="include\scene\component\test_component_physics.hpp" />
+    <ClInclude Include="include\scene\component\text_component.hpp" />
     <ClInclude Include="include\scene\entity.hpp" />
     <ClInclude Include="include\scene\scene.hpp" />
     <ClInclude Include="include\screen.hpp" />
     <ClInclude Include="include\serialization\serializer.hpp" />
+    <ClInclude Include="include\transform.hpp" />
     <ClInclude Include="include\utils\bound.hpp" />
     <ClInclude Include="include\utils\color.hpp" />
     <ClInclude Include="include\utils\concepts.hpp" />
@@ -694,19 +604,18 @@
     <ClInclude Include="include\utils\event.hpp" />
     <ClInclude Include="include\utils\file_system_watcher.hpp" />
     <ClInclude Include="include\utils\formatter.hpp" />
+    <ClInclude Include="include\utils\guid.hpp" />
     <ClInclude Include="include\utils\list.hpp" />
     <ClInclude Include="include\utils\logger.hpp" />
     <ClInclude Include="include\utils\message_box.hpp" />
+    <ClInclude Include="include\utils\meta_programming.hpp" />
     <ClInclude Include="include\utils\pointer.hpp" />
     <ClInclude Include="include\utils\reference_counter.hpp" />
+    <ClInclude Include="include\utils\timeline.hpp" />
     <ClInclude Include="include\utils\ts_queue.hpp" />
     <ClInclude Include="include\utils\utils.hpp" />
+    <ClInclude Include="include\utils\windows.hpp" />
     <ClInclude Include="include\window.hpp" />
-    <ClInclude Include="include\rendering\vertex.hpp" />
-    <ClInclude Include="include\transform.hpp" />
-    <ClInclude Include="include\utils\guid.hpp" />
-    <ClInclude Include="include\resource\shader.hpp" />
-    <ClInclude Include="include\rendering\rhi.hpp" />
     <ClInclude Include="include\world\scene_graph.hpp" />
     <ClInclude Include="include\world\skybox.hpp" />
     <ClInclude Include="include\world\world.hpp" />
@@ -714,11 +623,12 @@
     <ClInclude Include="inline\file\file_manager.inl" />
     <ClInclude Include="inline\input\input.inl" />
     <ClInclude Include="inline\input\time.inl" />
+    <ClInclude Include="inline\reflection\dotnet_reflection.inl" />
     <ClInclude Include="inline\reflection\filters.inl" />
-    <ClInclude Include="inline\reflection\type_renderer_impl.hpp" />
-    <ClInclude Include="inline\reflection\xnor_factory.inl" />
     <ClInclude Include="inline\reflection\reflection.inl" />
     <ClInclude Include="inline\reflection\type_renderer.inl" />
+    <ClInclude Include="inline\reflection\type_renderer_impl.hpp" />
+    <ClInclude Include="inline\reflection\xnor_factory.inl" />
     <ClInclude Include="inline\resource\audio_track.inl" />
     <ClInclude Include="inline\resource\resource_manager.inl" />
     <ClInclude Include="inline\resource\texture.inl" />
@@ -734,16 +644,11 @@
     <ClInclude Include="inline\utils\timeline.inl" />
     <ClInclude Include="inline\utils\ts_queue.inl" />
     <ClInclude Include="inline\utils\utils.inl" />
-    <ClCompile Include="src\physics\components\box_collider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="externals\include\assimp\.editorconfig" />
     <Content Include="externals\include\assimp\config.h.in" />
     <Content Include="externals\include\jolt\Physics\Collision\Shape\TaperedCapsuleShape.gliffy" />
-    <Content Include="include\utils\meta_programming.hpp" />
-    <ClInclude Include="inline\reflection\dotnet_reflection.inl" />
-    <Content Include="include\utils\timeline.hpp" />
-    <Content Include="include\utils\windows.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="externals\include\jolt\Jolt.natvis" />
@@ -753,6 +658,115 @@
   </ImportGroup>
   <ItemGroup>
     <CoralManagedFiles Include="$(ProjectDir)externals\managed\Coral\$(Configuration)\*" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\application.cpp" />
+    <ClCompile Include="src\audio\audio.cpp" />
+    <ClCompile Include="src\audio\audio_buffer.cpp" />
+    <ClCompile Include="src\audio\audio_context.cpp" />
+    <ClCompile Include="src\audio\audio_device.cpp" />
+    <ClCompile Include="src\audio\component\audio_listener.cpp" />
+    <ClCompile Include="src\audio\component\audio_source.cpp" />
+    <ClCompile Include="src\csharp\dotnet_assembly.cpp" />
+    <ClCompile Include="src\csharp\dotnet_runtime.cpp" />
+    <ClCompile Include="src\csharp\dotnet_utils.cpp" />
+    <ClCompile Include="src\data_structure\object_bounding.cpp" />
+    <ClCompile Include="src\data_structure\octree.cpp" />
+    <ClCompile Include="src\data_structure\octree_iterator.cpp" />
+    <ClCompile Include="src\data_structure\octree_node.cpp" />
+    <ClCompile Include="src\file\directory.cpp" />
+    <ClCompile Include="src\file\entry.cpp" />
+    <ClCompile Include="src\file\file.cpp" />
+    <ClCompile Include="src\file\file_manager.cpp" />
+    <ClCompile Include="src\input\gamepad_input.cpp" />
+    <ClCompile Include="src\input\input.cpp" />
+    <ClCompile Include="src\input\low_pass_filter.cpp" />
+    <ClCompile Include="src\input\time.cpp" />
+    <ClCompile Include="src\physics\body_activation_listener.cpp" />
+    <ClCompile Include="src\physics\broad_phase_layer_interface.cpp" />
+    <ClCompile Include="src\physics\components\box_collider.cpp" />
+    <ClCompile Include="src\physics\components\capsule_collider.cpp" />
+    <ClCompile Include="src\physics\components\collider.cpp" />
+    <ClCompile Include="src\physics\components\mesh_collider.cpp" />
+    <ClCompile Include="src\physics\components\sphere_collider.cpp" />
+    <ClCompile Include="src\physics\contact_listener.cpp" />
+    <ClCompile Include="src\physics\physics_world.cpp" />
+    <ClCompile Include="src\reflection\dotnet_reflection.cpp" />
+    <ClCompile Include="src\reflection\filters.cpp" />
+    <ClCompile Include="src\reflection\type_renderer.cpp" />
+    <ClCompile Include="src\reflection\xnor_factory.cpp" />
+    <ClCompile Include="src\rendering\bloom_rendertarget.cpp" />
+    <ClCompile Include="src\rendering\bone.cpp" />
+    <ClCompile Include="src\rendering\buffer\uniformBuffer.cpp" />
+    <ClCompile Include="src\rendering\buffer\vao.cpp" />
+    <ClCompile Include="src\rendering\buffer\vbo.cpp" />
+    <ClCompile Include="src\rendering\camera.cpp" />
+    <ClCompile Include="src\rendering\draw_gizmo.cpp" />
+    <ClCompile Include="src\rendering\frame_buffer.cpp" />
+    <ClCompile Include="src\rendering\frustum.cpp" />
+    <ClCompile Include="src\rendering\light\cascade_shadow_map.cpp" />
+    <ClCompile Include="src\rendering\light\directional_light.cpp" />
+    <ClCompile Include="src\rendering\light\light.cpp" />
+    <ClCompile Include="src\rendering\light\point_light.cpp" />
+    <ClCompile Include="src\rendering\light\spot_light.cpp" />
+    <ClCompile Include="src\rendering\material.cpp" />
+    <ClCompile Include="src\rendering\plane.cpp" />
+    <ClCompile Include="src\rendering\postprocess_rendertarget.cpp" />
+    <ClCompile Include="src\rendering\renderer.cpp" />
+    <ClCompile Include="src\rendering\render_pass.cpp" />
+    <ClCompile Include="src\rendering\render_systems\animation_render.cpp" />
+    <ClCompile Include="src\rendering\render_systems\bloom_pass.cpp" />
+    <ClCompile Include="src\rendering\render_systems\gui_pass.cpp" />
+    <ClCompile Include="src\rendering\render_systems\light_manager.cpp" />
+    <ClCompile Include="src\rendering\render_systems\post_process_pass.cpp" />
+    <ClCompile Include="src\rendering\render_systems\skybox_parser.cpp" />
+    <ClCompile Include="src\rendering\render_systems\skybox_renderer.cpp" />
+    <ClCompile Include="src\rendering\render_systems\tone_mapping.cpp" />
+    <ClCompile Include="src\rendering\rhi.cpp" />
+    <ClCompile Include="src\rendering\vertex.cpp" />
+    <ClCompile Include="src\rendering\viewport.cpp" />
+    <ClCompile Include="src\rendering\viewport_data.cpp" />
+    <ClCompile Include="src\resource\animation.cpp" />
+    <ClCompile Include="src\resource\audio_track.cpp" />
+    <ClCompile Include="src\resource\compute_shader.cpp" />
+    <ClCompile Include="src\resource\cubemap.cpp" />
+    <ClCompile Include="src\resource\font.cpp" />
+    <ClCompile Include="src\resource\mesh.cpp" />
+    <ClCompile Include="src\resource\model.cpp" />
+    <ClCompile Include="src\resource\resource.cpp" />
+    <ClCompile Include="src\resource\resource_manager.cpp" />
+    <ClCompile Include="src\resource\shader.cpp" />
+    <ClCompile Include="src\resource\skeleton.cpp" />
+    <ClCompile Include="src\resource\texture.cpp" />
+    <ClCompile Include="src\scene\component.cpp" />
+    <ClCompile Include="src\scene\component\button.cpp" />
+    <ClCompile Include="src\scene\component\camera_component.cpp" />
+    <ClCompile Include="src\scene\component\gui_component.cpp" />
+    <ClCompile Include="src\scene\component\image.cpp" />
+    <ClCompile Include="src\scene\component\mesh_renderer.cpp" />
+    <ClCompile Include="src\scene\component\player_movment.cpp" />
+    <ClCompile Include="src\scene\component\script_component.cpp" />
+    <ClCompile Include="src\scene\component\skinned_mesh_render.cpp" />
+    <ClCompile Include="src\scene\component\test_component.cpp" />
+    <ClCompile Include="src\scene\component\test_component_physics.cpp" />
+    <ClCompile Include="src\scene\component\text_component.cpp" />
+    <ClCompile Include="src\scene\entity.cpp" />
+    <ClCompile Include="src\scene\scene.cpp" />
+    <ClCompile Include="src\screen.cpp" />
+    <ClCompile Include="src\serialization\serializer.cpp" />
+    <ClCompile Include="src\transform.cpp" />
+    <ClCompile Include="src\utils\bound.cpp" />
+    <ClCompile Include="src\utils\coroutine.cpp" />
+    <ClCompile Include="src\utils\file_system_watcher.cpp" />
+    <ClCompile Include="src\utils\guid.cpp" />
+    <ClCompile Include="src\utils\logger.cpp" />
+    <ClCompile Include="src\utils\message_box.cpp" />
+    <ClCompile Include="src\utils\utils.cpp" />
+    <ClCompile Include="src\utils\windows.cpp" />
+    <ClCompile Include="src\window.cpp" />
+    <ClCompile Include="src\world\scene_graph.cpp" />
+    <ClCompile Include="src\world\skybox.cpp" />
+    <ClCompile Include="src\world\world.cpp" />
   </ItemGroup>
   <Target Name="CopyCoralManaged" AfterTargets="Build">
     <Copy SourceFiles="@(CoralManagedFiles)" DestinationFolder="$(OutDir)\DotnetAssemblies" SkipUnchangedFiles="true" />

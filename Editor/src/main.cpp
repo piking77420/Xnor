@@ -12,6 +12,7 @@ extern "C"
 	_declspec(dllexport) int32_t AmdPowerXpressRequestHighPerformance = 1;
 }
 
+
 int32_t main(const int32_t argc, const char_t* const* const argv)
 {
 	using namespace XnorCore;

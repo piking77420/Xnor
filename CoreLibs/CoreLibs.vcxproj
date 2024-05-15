@@ -157,7 +157,6 @@
     <ClCompile Include="src\RapidXMLSTD.cpp" />
     <ClCompile Include="src\stb\stb_image.c" />
     <ClCompile Include="src\stb\stb_image_write.c" />
-    <ClCompile Include="src\ttf\ttfParser.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

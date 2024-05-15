@@ -35,11 +35,7 @@ public:
 	/// @param screenSize Screen size
 	/// @param screenOffset Screen Offset
 	XNOR_ENGINE static void SetViewport(Vector2i screenOffset, Vector2i screenSize);
-
-	/// @brief Draws a quad
-	/// @param quadId Quad id
-	XNOR_ENGINE static void DrawQuad(uint32_t quadId);
-
+	
 	/// @brief Begins a render pass internally
 	/// beginInfo Render pass begin info
 	XNOR_ENGINE static void BeginRenderPassInternal(const RenderPassBeginInfo& beginInfo);
@@ -61,7 +57,11 @@ public:
 
 	/// @brief Draws a model
 	/// @param modelId Model id
-	XNOR_ENGINE static void DrawModel(DrawMode::DrawMode drawMode, uint32_t modelId); 
+	XNOR_ENGINE static void DrawModel(DrawMode::DrawMode drawMode, uint32_t modelId);
+	
+
+	XNOR_ENGINE static void DrawArray(DrawMode::DrawMode drawMode,uint32_t first, uint32_t count);
+
 	
 	/// @brief Destroy a shader program
 	/// @param shaderId Shader id
@@ -293,6 +293,11 @@ public:
 
 	XNOR_ENGINE static uint32_t DrawModeToOpengl(DrawMode::DrawMode drawMode);
 
+	XNOR_ENGINE static void SetPixelStore(DataAlignment alignement, int32_t value);
+
+	XNOR_ENGINE static uint32_t BufferUsageToOpenglUsage(BufferUsage usage);
+
+
 private:
 	struct ModelInternal
 	{
@@ -316,8 +321,7 @@ private:
 	XNOR_ENGINE static inline UniformBuffer* m_LightUniform = nullptr;
 	XNOR_ENGINE static inline UniformBuffer* m_MaterialUniform = nullptr;
 	XNOR_ENGINE static inline UniformBuffer* m_AnimationBuffer = nullptr;
-
-
+	
 	XNOR_ENGINE static inline bool_t m_Blending = false;
 	XNOR_ENGINE static inline bool_t m_Cullface = false;
 	XNOR_ENGINE static inline bool_t m_Depth = true;
@@ -332,16 +336,13 @@ private:
 	XNOR_ENGINE static void IsShaderValid(uint32_t shaderId);
 	
 	XNOR_ENGINE static GpuUniform& GetUniformInMap(uint32_t shaderId, const char_t* uniformKey, UniformType::UniformType type);
-
-
+	
 	// Texture 
 	XNOR_ENGINE static uint32_t CreateTextureId(TextureType::TextureType textureType);
-
 	
-
 	/// @brief Set the depth function to the graphic API
 	/// @param depthFunction The current depthFunction to set to the api
-	XNOR_ENGINE static __forceinline void ComputeDepthFunction(DepthFunction::DepthFunction depthFunction);
+	XNOR_ENGINE static void ComputeDepthFunction(DepthFunction::DepthFunction depthFunction);
 
 	XNOR_ENGINE static void OpenglDebugCallBack(
 		uint32_t source,

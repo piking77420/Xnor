@@ -51,9 +51,6 @@
     <ClCompile Include="src\editing\transform_gizmo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\editing\draw_gizmo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\editing\picking_strategy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -101,9 +98,6 @@
     <ClInclude Include="include\editing\transform_gizmo.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\editing\draw_gizmo.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\editing\picking_strategy.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -117,8 +111,5 @@
     <Image Include="logo.ico">
       <Filter>Resource Files</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\editing\picking_strategy.cpp~" />
   </ItemGroup>
 </Project>
