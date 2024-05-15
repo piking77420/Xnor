@@ -100,34 +100,34 @@ void DebugConsole::DisplayLogs()
         {
             case XnorCore::Logger::LogLevel::TemporaryDebug:
                 color = XnorCore::Color::LightGreen();
-            prefix = "Temporary Debug";
-            message = log->file + '(' + std::to_string(log->line) + "): ";
-            break;
+                prefix = "Temporary Debug";
+                message = log->file + '(' + std::to_string(log->line) + "): ";
+                break;
                 
             case XnorCore::Logger::LogLevel::Debug:
                 color = XnorCore::Color::DarkGray();
-            prefix = "Debug";
-            break;
+                prefix = "Debug";
+                break;
                 
             case XnorCore::Logger::LogLevel::Info:
                 color = XnorCore::Color::White();
-            prefix = "Info";
-            break;
+                prefix = "Info";
+                break;
                 
             case XnorCore::Logger::LogLevel::Warning:
                 color = XnorCore::Color::Orange();
-            prefix = "Warning";
-            break;
+                prefix = "Warning";
+                break;
                 
             case XnorCore::Logger::LogLevel::Error:
                 color = XnorCore::Color::Red();
-            prefix = "Error";
-            break;
+                prefix = "Error";
+                break;
                 
             case XnorCore::Logger::LogLevel::Fatal:
                 color = XnorCore::Color::DarkRed();
-            prefix = "Fatal";
-            break;
+                prefix = "Fatal";
+                break;
         }
 
         if (oldSameLastLogs > 0)
@@ -138,7 +138,9 @@ void DebugConsole::DisplayLogs()
         ImGui::TableNextColumn();
         ImGui::TextColored(static_cast<Vector4>(color), "%s", prefix.c_str());
         ImGui::TableNextColumn();
+        ImGui::PushTextWrapPos();
         ImGui::TextColored(static_cast<Vector4>(color), "%s", message.c_str());
+        ImGui::PopTextWrapPos();
     }
 
     if (scroll == 1)

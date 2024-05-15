@@ -20,6 +20,13 @@ public:
 	
 	EditorData data;
 
+	XnorCore::Event<> onScriptsReloadingBegin;
+	XnorCore::Event<> onScriptsReloadingEnd;
+	XnorCore::Event<> onSceneSerializationBegin;
+	XnorCore::Event<> onSceneSerializationEnd;
+	XnorCore::Event<> onSceneDeserializationBegin;
+	XnorCore::Event<> onSceneDeserializationEnd;
+
 	explicit Editor(int32_t argc, const char_t* const* argv);
 
 	~Editor() override;

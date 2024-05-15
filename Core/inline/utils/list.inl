@@ -56,6 +56,12 @@ void List<T>::Clear()
 }
 
 template <typename T>
+bool_t List<T>::Empty() const
+{
+    return GetSize() == 0;
+}
+
+template <typename T>
 void List<T>::Add()
 {
     m_Vector.emplace_back();
@@ -267,6 +273,12 @@ template <typename T>
 typename List<T>::Iterator List<T>::begin() { return Begin(); }
 
 template <typename T>
+typename List<T>::ConstIterator List<T>::begin() const { return CBegin(); }
+
+template <typename T>
 typename List<T>::Iterator List<T>::end() { return End(); }
+
+template <typename T>
+typename List<T>::ConstIterator List<T>::end() const { return CEnd(); }
 
 END_XNOR_CORE

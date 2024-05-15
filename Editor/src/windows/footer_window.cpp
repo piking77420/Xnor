@@ -8,10 +8,28 @@ using namespace XnorEditor;
 
 FooterWindow::FooterWindow(Editor* editor)
     : UiWindow(editor, "Footer")
+    , m_ScriptsWatcher(XnorCore::Dotnet::GameProjectLocation)
 {
     windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus;
 
     m_BuildTexture = XnorCore::ResourceManager::Get<XnorCore::Texture>("assets_internal/editor/ui/build_button.png");
+
+    m_ScriptsWatcher.fileExtensions.AddRange({ ".cs", ".cs~" });
+
+    // Get updated when the game project scripts get modified in any way
+    m_ScriptsWatcher.onCreated += [this](auto) { scriptsUpToDate = false; };
+    m_ScriptsWatcher.onDeleted += [this](auto) { scriptsUpToDate = false; };
+    m_ScriptsWatcher.onModified += [this](auto) { scriptsUpToDate = false; };
+    m_ScriptsWatcher.onRenamed += [this](auto) { scriptsUpToDate = false; };
+
+    m_Editor->onScriptsReloadingBegin += [this] { scriptsUpToDate = true; };
+
+    m_ScriptsWatcher.Start();
+}
+
+FooterWindow::~FooterWindow()
+{
+    m_ScriptsWatcher.Stop();
 }
 
 void FooterWindow::Display()
@@ -64,7 +82,17 @@ void FooterWindow::Display()
     if (reloadingScripts)
         ImGui::BeginDisabled();
     
-    if (ImGui::ImageButton(XnorCore::Utils::IntToPointer<ImTextureID>(m_BuildTexture->GetId()), { 25.f, 25.f }))
+    if (
+        ImGui::ImageButton(
+            XnorCore::Utils::IntToPointer<ImTextureID>(m_BuildTexture->GetId()),
+            {25.f, 25.f},
+            {},
+            {1.f, 1.f},
+            -1,
+            static_cast<Vector4>(XnorCore::Color::Black()),
+            scriptsUpToDate ? static_cast<Vector4>(XnorCore::Color::White()) : static_cast<Vector4>(XnorCore::Color::OrangeRed())
+        )
+    )
         m_Editor->BuildAndReloadCodeAsync();
     
     if (reloadingScripts)

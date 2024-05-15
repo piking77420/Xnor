@@ -291,6 +291,8 @@ void Editor::BuildAndReloadCodeAsync()
 	m_CurrentAsyncActionThread = std::thread(
 		[this, stoppedPlaying]
 		{
+			onScriptsReloadingBegin();
+
 			// If we stopped playing, the scene just got deserialized, so no need to serialize it again
 			if (!stoppedPlaying)
 				SerializeScene();
@@ -298,6 +300,8 @@ void Editor::BuildAndReloadCodeAsync()
 			DeserializeScene();
 			
 			m_ReloadingScripts = false;
+
+			onScriptsReloadingEnd();
 		}
 	);
 }
@@ -329,6 +333,8 @@ void Editor::StopPlaying()
 void Editor::SerializeScene(const std::string& filepath)
 {
 	XnorCore::Logger::LogInfo("Saving scene");
+
+	onSceneSerializationBegin();
 	
 	if (filepath.empty())
 		m_SerializedScenePath = std::filesystem::temp_directory_path() / "xnor_current.scene.xml";
@@ -342,6 +348,8 @@ void Editor::SerializeScene(const std::string& filepath)
 	XnorCore::Serializer::EndSerialization();
 
 	m_Serializing = false;
+	
+	onSceneSerializationEnd();
 }
 
 void Editor::SerializeSceneAsync(const std::string& filepath)
@@ -353,6 +361,8 @@ void Editor::SerializeSceneAsync(const std::string& filepath)
 void Editor::DeserializeScene(const std::string& filepath)
 {
 	XnorCore::Logger::LogInfo("Loading scene");
+	
+	onSceneDeserializationBegin();
 	
 	if (filepath.empty())
 		m_SerializedScenePath = std::filesystem::temp_directory_path() / "xnor_current.scene.xml";
@@ -378,6 +388,8 @@ void Editor::DeserializeScene(const std::string& filepath)
 		data.selectedEntity = XnorCore::World::scene->FindEntityById(selectedEntityId);
 
 	m_Deserializing = false;
+	
+	onSceneDeserializationEnd();
 }
 
 void Editor::DeserializeSceneAsync(const std::string& filepath)

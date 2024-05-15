@@ -21,7 +21,7 @@ bool_t Windows::CheckError()
             nullptr
         );
         
-        Logger::LogError("[Windows] {}", static_cast<LPSTR>(lpMsgBuf));
+        Logger::LogError("[Windows] Error {}: {}", error, static_cast<LPSTR>(lpMsgBuf));
         return true;
     }
 

@@ -87,7 +87,7 @@ void FileSystemWatcher::Run()
         if (m_PathChanged)
         {
             const std::filesystem::path&& abs = absolute(m_Path);
-            watchedPath = abs.parent_path();
+            watchedPath = abs;
             pathAbs = abs.string();
             
             file = CreateFileW(watchedPath.c_str(), FILE_LIST_DIRECTORY, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED, nullptr);
@@ -99,9 +99,9 @@ void FileSystemWatcher::Run()
             m_PathChanged = false;
         }
         
-        constexpr size_t bufferSize = 1024;
+        constexpr size_t bufferSize = 0x2000;
         std::array<uint8_t, bufferSize> buffer{};
-        ReadDirectoryChangesW(file, buffer.data(), bufferSize, recursive, NotifyFiltersToWindows(notifyFilters), nullptr, &overlapped, nullptr);
+        ReadDirectoryChangesW(file, buffer.data(), bufferSize, m_IsDirectory && checkContents, NotifyFiltersToWindows(notifyFilters), nullptr, &overlapped, nullptr);
         Windows::SilenceError(); // Windows would return an error because the 0ms timeout of WaitForSingleObject expired
         
         m_CondVar.wait_for(lock, updateRate);
@@ -120,10 +120,19 @@ void FileSystemWatcher::Run()
             
             while (true)
             {
-                const std::filesystem::path path = std::wstring_view(information->FileName, information->FileNameLength / sizeof(WCHAR));
+                const std::filesystem::path path = watchedPath / std::wstring_view(information->FileName, information->FileNameLength / sizeof(WCHAR));
+
+                bool_t validFile = path.string().starts_with(pathAbs);
+
+                // If we don't check recursively, make sure it is a file and is within the watched directory
+                if (!recursive)
+                    validFile &= !is_directory(path) && equivalent(path.parent_path(), watchedPath);
+
+                if (!fileExtensions.Empty())
+                    validFile &= Utils::StringArrayContains(fileExtensions, path.extension().string());
 
                 // Because we watch the parent directory, we need to check if the changed entry is the correct one
-                if ((watchedPath / path).string().starts_with(pathAbs))
+                if (validFile)
                 {
                     switch (information->Action)
                     {

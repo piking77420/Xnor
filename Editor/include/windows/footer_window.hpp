@@ -12,10 +12,15 @@ public:
     
     explicit FooterWindow(Editor* editor);
 
+    ~FooterWindow() override;
+
     void Display() override;
 
 private:
     XnorCore::Pointer<XnorCore::Texture> m_BuildTexture;
+    XnorCore::FileSystemWatcher m_ScriptsWatcher;
+
+    bool_t scriptsUpToDate = true;
 };
 
 END_XNOR_EDITOR
