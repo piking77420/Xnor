@@ -45,7 +45,7 @@ public:
 
     XNOR_ENGINE ~Animation() override = default;
 
-    XNOR_ENGINE void BindSkeleton(Pointer<Skeleton> skeleton);
+    XNOR_ENGINE void BindSkeleton(Pointer<Skeleton> bindedSkeleton);
 
     /// @copydoc XnorCore::Resource::Load(const uint8_t* buffer, int64_t length)
     XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;

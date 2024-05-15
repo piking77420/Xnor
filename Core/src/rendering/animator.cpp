@@ -72,7 +72,7 @@ void Animator::Animate()
         const size_t frame = Utils::RemapValue(m_CurrentFrame, Vector2i(0, static_cast<int32_t>(m_FrameCount)), Vector2i(0, static_cast<int32_t>(keyFrames.GetSize())));
         nextFrame = (frame + 1) % keyFrames.GetSize();
 
-        Logger::LogInfo("Current frame = {} ; Next frame = {}", frame, nextFrame);
+        //Logger::LogInfo("Current frame = {} ; Next frame = {}", frame, nextFrame);
         
         m_Positions[i] = Vector3::Lerp(keyFrames[frame].translation, keyFrames[nextFrame].translation, t);
         m_Rotations[i] = Quaternion::Slerp(keyFrames[frame].rotation, keyFrames[nextFrame].rotation, t);

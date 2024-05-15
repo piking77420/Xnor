@@ -100,7 +100,7 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<TestComponentAnimation>();
 
     
-    RegisterType<MeshRenderer>();
+    RegisterType<StaticMeshRenderer>();
     RegisterType<DirectionalLight>();
     RegisterType<TestComponent>();
     RegisterType<PointLight>();

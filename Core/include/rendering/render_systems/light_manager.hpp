@@ -102,7 +102,10 @@ private:
     
     Pointer<Shader> m_ShadowMapShader;
     Pointer<Shader> m_ShadowMapShaderPointLight;
-    
+
+    Pointer<Shader> m_ShadowMapShaderSkinned;
+    Pointer<Shader>m_ShadowMapShaderPointLightSkinned;
+
     
     RenderPass m_ShadowRenderPass;
     Framebuffer* m_ShadowFrameBuffer {nullptr};

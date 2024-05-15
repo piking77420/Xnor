@@ -60,3 +60,5 @@ private:
 };
 
 END_XNOR_CORE
+
+REFL_AUTO(type(XnorCore::Skeleton, bases<XnorCore::Resource>))

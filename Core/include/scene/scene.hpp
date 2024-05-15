@@ -4,7 +4,7 @@
 
 #include "core.hpp"
 #include "entity.hpp"
-#include "component/mesh_renderer.hpp"
+#include "component\static_mesh_renderer.hpp"
 #include "data_structure/octree.hpp"
 #include "world/skybox.hpp"
 
@@ -22,7 +22,7 @@ public:
     /// @brief Skybox handler
     Skybox skybox;
 
-    mutable Octree<const MeshRenderer> renderOctree;
+    mutable Octree<const StaticMeshRenderer> renderOctree;
     
     XNOR_ENGINE Scene();
     XNOR_ENGINE ~Scene();
@@ -80,7 +80,7 @@ public:
     /// @brief Gets the List of Entity of the scene
     /// @return List of Entity
     [[nodiscard]]
-    XNOR_ENGINE const List<Entity*>& GetEntities();
+    XNOR_ENGINE const List<Entity*>& GetEntities() const;
 
     /// @brief Gets the index of an entity in the scene List
     /// @param entity Entity

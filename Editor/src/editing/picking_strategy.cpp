@@ -11,8 +11,11 @@ PickingStrategy::PickingStrategy(Editor* editor)
     const Vector2i windowSize = XnorCore::Window::GetSize();
     InitRendering(windowSize);
     
-    m_PickingShader = XnorCore::ResourceManager::Get<XnorCore::Shader>("picking_shader");
-    m_PickingShader->CreateInInterface();
+    m_PickingShaderStatic = XnorCore::ResourceManager::Get<XnorCore::Shader>("picking_shader");
+    m_PickingShaderStatic->CreateInInterface();
+
+    m_PickingShaderSkinned = XnorCore::ResourceManager::Get<XnorCore::Shader>("picking_shader_skinned");
+    m_PickingShaderSkinned->CreateInInterface();
 }
 
 PickingStrategy::~PickingStrategy()
@@ -39,7 +42,7 @@ bool_t PickingStrategy::GetEntityFromScreen(const Vector2i pixelPos, XnorCore::S
         return false;
 
     // Draw
-    m_PickingShader->Use();
+    m_PickingShaderStatic->Use();
     const XnorCore::RenderPassBeginInfo beginInfo =
     {
         .frameBuffer = frameBuffer,
@@ -50,9 +53,9 @@ bool_t PickingStrategy::GetEntityFromScreen(const Vector2i pixelPos, XnorCore::S
     };
 
     if (XnorCore::World::scene != nullptr)
-        m_Editor->renderer.ZPass(*XnorCore::World::scene, pointOfView, beginInfo, m_ColorPass, m_PickingShader, true);
+        m_Editor->renderer.ZPass(*XnorCore::World::scene, pointOfView, beginInfo, m_ColorPass, m_PickingShaderStatic, m_PickingShaderSkinned, true);
 
-    m_PickingShader->Unuse();
+    m_PickingShaderStatic->Unuse();
 
     float_t getValue = 0.f;
     frameBuffer->GetPixelFromAttachment(0, pixelPos, XnorCore::TextureFormat::Red, XnorCore::DataType::Float, &getValue);

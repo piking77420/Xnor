@@ -5,7 +5,7 @@
 
 #include "editor.hpp"
 #include "input/time.hpp"
-#include "scene/component/mesh_renderer.hpp"
+#include "..\..\Core\include\scene\component\static_mesh_renderer.hpp"
 #include "utils/logger.hpp"
 #include "utils/utils.hpp"
 
@@ -143,7 +143,7 @@ void EditorCamera::OnPressGoToObject()
         return;
     
     const XnorCore::Entity& currentEntiy = *m_EditorRef->data.selectedEntity;
-    const XnorCore::MeshRenderer* meshRenderer = currentEntiy.GetComponent<XnorCore::MeshRenderer>();
+    const XnorCore::StaticMeshRenderer* meshRenderer = currentEntiy.GetComponent<XnorCore::StaticMeshRenderer>();
 
     if (meshRenderer == nullptr)
     {

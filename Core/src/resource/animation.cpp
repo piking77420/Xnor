@@ -7,9 +7,9 @@
 
 using namespace XnorCore;
 
-void Animation::BindSkeleton(Pointer<Skeleton> skeleton)
+void Animation::BindSkeleton(Pointer<Skeleton> bindedSkeleton)
 {
-    skeleton = skeleton;
+    skeleton = std::move(bindedSkeleton);
 }
 
 bool_t Animation::Load(const uint8_t* const, const int64_t)

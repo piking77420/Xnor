@@ -57,6 +57,10 @@ private:
     List<Pointer<Skeleton>> m_Skeletons;
 
     static std::string GetTextureFileName(const std::string& baseFileName,const std::string& fileName, const std::string& textureFormat, size_t index);
+
+    bool_t LoadMesh(const aiScene& scene, Pointer<Skeleton>* outSkeleton);
+
+    //bool_t LoadTexture(const aiScene& scene, Pointer<Skeleton>* outSkeleton);
 };
 
 END_XNOR_CORE
