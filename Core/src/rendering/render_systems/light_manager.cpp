@@ -186,13 +186,13 @@ void LightManager::FecthLightInfo() const
 
 void LightManager::ComputeShadow(const Scene& scene, const Viewport& viewport, Renderer& renderer)
 {
-	ComputeShadowDirLight(scene, *viewport.camera, renderer);
+	ComputeShadowDirLight(scene, *viewport.camera,viewport.viewPortSize, renderer);
 	ComputeShadowSpotLight(scene, renderer);
 	
 	ComputeShadowPointLight(scene, renderer);
 }
 
-void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPortCamera, Renderer& renderer)
+void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPortCamera, const Vector2i viewportSize, Renderer& renderer)
 {
 	const Bound& sceneAAbb = scene.renderOctree.GetMotherBound(); 
 
@@ -206,26 +206,35 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 		const Texture& shadowMap = *m_DirectionalShadowMaps;
 		const Vector2i shadowMapSize = shadowMap.GetSize(); 
 		
-		Vector3 lightDir =  -directionalLight->GetLightDirection();
-		float_t lenghtAabb =  sceneAAbb.extents.Length();
+		const Vector3 lightDir =  -directionalLight->GetLightDirection();
+		const float_t lenghtAabb =  sceneAAbb.extents.Length();
 		// Get Pos from scene aabb
-		Vector3 pos = sceneAAbb.center + (lenghtAabb * -lightDir);//static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);
+		const Vector3 pos = sceneAAbb.center + (lenghtAabb * -lightDir);//static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);
 		DrawGizmo::Sphere(pos);
-		
-		// CacadeShadowMap // TODO Make it cleaner ,
-		std::vector<float_t> shadowCascadeLevels =
-			{
-			viewPortCamera.far / 50.f,
-			viewPortCamera.far / 25.f,
-			viewPortCamera.far / 10.f,
-			viewPortCamera.far / 2.f
-			};
-		
-		
-		m_CascadeShadowMap.SetCascadeLevel(shadowCascadeLevels);
-		m_CascadeShadowMap.SetZMultiplicator(lenghtAabb);//);
 
-		// Handle float array padding
+		
+		// HardCoded Shadow Cascade distance by level
+		std::array<float_t,DirectionalCascadeLevel> shadowCascadeLevels =
+			{
+			    viewPortCamera.far / 50.f,
+				viewPortCamera.far / 25.f,
+				viewPortCamera.far / 10.f,
+				viewPortCamera.far / 8.f,
+				viewPortCamera.far / 4.f,
+				viewPortCamera.far / 2.f,
+				/*viewPortCamera.far / 58.f,
+				viewPortCamera.far / 44.f,
+				viewPortCamera.far / 32.f,
+				viewPortCamera.far / 18.f,
+				viewPortCamera.far / 12.f,
+				viewPortCamera.far / 6.f,
+				viewPortCamera.far / 2.f,*/
+			
+			};
+
+		m_CascadeShadowMap.SetCascadeLevel(shadowCascadeLevels);
+		m_CascadeShadowMap.SetZMultiplicator(directionalLight->zCascadeShadowMapZMultiplactor);
+
 		for (size_t k = 0; k < shadowCascadeLevels.size(); k++)
 		{
 			m_GpuLightData->directionalData->cascadePlaneDistance[k] = shadowCascadeLevels[k];
@@ -242,7 +251,7 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 		camDirectional.bottomtop = directionalLight->bottomTop;
 		
 		std::vector<Camera> cascadedCameras;
-		m_CascadeShadowMap.GetCascadeCameras(&cascadedCameras, camDirectional ,lightDir, shadowMapSize );
+		m_CascadeShadowMap.GetCascadeCameras(&cascadedCameras, camDirectional ,lightDir, viewportSize);
 		
 		for (size_t i = 0; i < cascadedCameras.size(); i++)
 		{

@@ -127,7 +127,7 @@ private:
 
     XNOR_ENGINE void ComputeShadow(const Scene& scene, const Viewport& viewport, Renderer& renderer);
 
-    XNOR_ENGINE void ComputeShadowDirLight(const Scene& scene, const Camera& viewPortCamera, Renderer& renderer);
+    XNOR_ENGINE void ComputeShadowDirLight(const Scene& scene, const Camera& viewPortCamera, Vector2i viewportSize, Renderer& renderer);
 
     XNOR_ENGINE void ComputeShadowSpotLight(const Scene& scene, Renderer& renderer);
 
@@ -140,7 +140,6 @@ private:
     XNOR_ENGINE void InitShadowMap();
 
     XNOR_ENGINE void InitShader();
-
     
     XNOR_ENGINE float_t GetMax(Vector3 vec) const;
 };

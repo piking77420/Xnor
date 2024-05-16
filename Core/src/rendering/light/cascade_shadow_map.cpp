@@ -9,10 +9,10 @@ using namespace XnorCore;
 void CascadeShadowMap::GetCascadeCameras(std::vector<Camera>* cameras, const Camera& viewPortCamera, Vector3 lightDir,
     Vector2i screenSize)
 {
-    cameras->resize(DirectionalCascadeLevel + 1);
     
-    for (size_t i = 0; i < cameras->size(); ++i)
+    for (size_t i = 0; i < DirectionalCascadeLevel + 1; ++i)
     {
+        cameras->emplace_back(Camera());
         cameras->at(i) = viewPortCamera;
         
         if (i == 0)
@@ -33,7 +33,7 @@ void CascadeShadowMap::GetCascadeCameras(std::vector<Camera>* cameras, const Cam
     
 }
 
-void CascadeShadowMap::SetCascadeLevel(const std::vector<float_t>& cascadeLevel)
+void CascadeShadowMap::SetCascadeLevel(const std::array<float_t,DirectionalCascadeLevel>& cascadeLevel)
 {
     m_CascadeLevel = cascadeLevel;
 }
@@ -42,21 +42,6 @@ void CascadeShadowMap::SetZMultiplicator(const float_t zMultiPlicator)
 {
     m_ZMultiplicator = zMultiPlicator;
 }
-
-void CascadeShadowMap::CreateCascadeLevelFromAABB(const Bound& sceneAABB, float_t cameraFar)
-{
-    const Vector3& extend = sceneAABB.extents;
-    const float_t extendNorm = extend.Length();
-    m_ZMultiplicator = extendNorm;
-
-    for (size_t i = 0; i < DirectionalCascadeLevelAllocation; i++)
-    {
-        
-        m_CascadeLevel.push_back(cameraFar /  extendNorm - (i * DirectionalCascadeLevelAllocation) );
-    }
-    
-}
-
 
 void CascadeShadowMap::ComputeFrustumCorner(std::vector<Vector4>* frustumCornerWorldSpace, const Matrix& proj,
                                             const Matrix& view)

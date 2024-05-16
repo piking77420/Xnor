@@ -5,8 +5,8 @@ out vec4 FragColor;
 
 const int MaxSpotLight = 100;
 const int MaxPointLight = 100;
-const int DirectionalCascadeLevel = 4;
 const int DirectionalCascadeLevelAllocation = 12;
+const int DirectionalCascadeLevel = 6;
 
 const float PI = 3.14159265359;
 const float InvPI = 1/PI;
@@ -100,12 +100,13 @@ const vec2 gridSamplingDiskVec2[20] = vec2[]
 );
 
 
+vec3 colorTest = vec3(0,0,0);
+
 float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
 {
     // select cascade layer
-    vec4 fragPosWorldSpaceView = vec4(fragPosWorldSpace.xyz,1.0f);
-    
-    float depthValue = abs(fragPosWorldSpaceView.z);
+    vec4 fragPosViewSpace = view * vec4(fragPosWorldSpace.xyz, 1.0);
+    float depthValue = abs(fragPosViewSpace.z);
 
     int layer = -1;
     
@@ -122,7 +123,19 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
         layer = directionalData.cascadeCount;
     }
     
-
+    if (layer == 0)
+        colorTest = vec3(1,0,0);
+    else if(layer == 1)
+        colorTest = vec3(0,1,0);
+    else if(layer == 2)
+        colorTest = vec3(0,0,1);
+    else if(layer == 3)
+        colorTest = vec3(1,1,0);
+    else if(layer == 4)
+        colorTest = vec3(0,1,1);
+    else if(layer == 5)
+        colorTest = vec3(1,0,1);
+    
     vec4 fragPosLightSpace = dirLightSpaceMatrix[layer] * vec4(fragPosWorldSpace.xyz, 1.0);
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
@@ -147,7 +160,7 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
     }
     else
     {
-        bias *= 1 / (directionalData.cascadePlaneDistance[layer] * biasModifier);
+        bias *= 1 / (directionalData.cascadePlaneDistance[layer] * biasModifier * biasModifier );
     }
 
     // PCF  

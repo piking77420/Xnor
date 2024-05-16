@@ -11,7 +11,7 @@ RenderPass::RenderPass(const std::vector<RenderTargetInfo>& attachments)
 
 void RenderPass::BeginRenderPass(const RenderPassBeginInfo& beginInfo) const
 {
-    if(!beginInfo.frameBuffer)
+    if (!beginInfo.frameBuffer)
     {
         Logger::LogFatal("BeginRenderPass framebuffer is invalid");
         throw std::runtime_error("BeginRenderPass framebuffer is invalid");

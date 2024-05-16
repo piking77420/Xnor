@@ -24,6 +24,8 @@ public:
     /// @brief Orthographic bottom/top for the shadow map
     Vector2 bottomTop = { -50.f, 50.f };
 
+    float_t zCascadeShadowMapZMultiplactor = 10.f;
+    
     XNOR_ENGINE DirectionalLight();
     XNOR_ENGINE ~DirectionalLight() override = default;
 
@@ -37,4 +39,5 @@ public:
 
 END_XNOR_CORE
 
-REFL_AUTO(type(XnorCore::DirectionalLight, bases<XnorCore::Light>))
+REFL_AUTO(type(XnorCore::DirectionalLight, bases<XnorCore::Light>),
+    field(zCascadeShadowMapZMultiplactor))

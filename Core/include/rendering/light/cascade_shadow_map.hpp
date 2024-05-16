@@ -6,6 +6,7 @@
 #include "Maths/matrix.hpp"
 #include "Maths/vector4.hpp"
 #include "rendering/camera.hpp"
+#include "rendering/rhi_typedef.hpp"
 #include "utils/bound.hpp"
 
 BEGIN_XNOR_CORE
@@ -20,15 +21,12 @@ public:
 
     XNOR_ENGINE void GetCascadeCameras(std::vector<Camera>* cameras ,const Camera&  viewPortCamera, Vector3 lightDir, Vector2i screenSize);
     
-    XNOR_ENGINE void SetCascadeLevel(const std::vector<float_t>& cascadeLevel);
+    XNOR_ENGINE void SetCascadeLevel(const std::array<float, DirectionalCascadeLevel>& cascadeLevel);
 
     XNOR_ENGINE void SetZMultiplicator(const float_t zMultiPlicator);
-    
-    XNOR_ENGINE void CreateCascadeLevelFromAABB(const Bound& sceneAABB, float_t cameraFar);
 
 private:
-    
-    std::vector<float_t> m_CascadeLevel;
+    std::array<float_t,DirectionalCascadeLevel> m_CascadeLevel;
     float_t m_ZMultiplicator = 10.f;
     
     
