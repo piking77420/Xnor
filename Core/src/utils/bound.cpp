@@ -88,7 +88,7 @@ void Bound::Encapsulate(const Bound& encapsulateBound)
     Encapsulate(encapsulateBound.center + encapsulateBound.extents);
 }
 
-void Bound::Encapsulate(Vector3 point)
+void Bound::Encapsulate(const Vector3 point)
 {
     const Vector3 min = GetMin();
     const Vector3 max = GetMax();

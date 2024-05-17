@@ -97,7 +97,7 @@ private:
         Pointer<Mesh> quad;
     };
     
-    GpuLightData* m_GpuLightData = nullptr;
+    mutable GpuLightData* m_GpuLightData = nullptr;
     RenderingLightStruct m_RenderingLightStruct;
     
     Pointer<Shader> m_ShadowMapShader;

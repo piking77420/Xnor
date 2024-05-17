@@ -1,6 +1,6 @@
 ﻿%module CoreC
 
-%include "typemaps/cs_struct.i"
+%import "typemaps/cs_struct.i"
 
 %{
 #include "Maths/math.hpp"

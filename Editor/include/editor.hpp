@@ -18,6 +18,13 @@ class Editor final : public XnorCore::Application
 public:
 	EditorData data;
 
+	XnorCore::Event<> onScriptsReloadingBegin;
+	XnorCore::Event<> onScriptsReloadingEnd;
+	XnorCore::Event<> onSceneSerializationBegin;
+	XnorCore::Event<> onSceneSerializationEnd;
+	XnorCore::Event<> onSceneDeserializationBegin;
+	XnorCore::Event<> onSceneDeserializationEnd;
+
 	explicit Editor(int32_t argc, const char_t* const* argv);
 
 	~Editor() override;
@@ -63,6 +70,9 @@ public:
 	
 	[[nodiscard]]
 	bool_t IsReloadingScripts() const;
+
+	[[nodiscard]]
+	bool_t IsGamePlaying() const;
 
 private:
 	std::vector<UiWindow*> m_UiWindows;

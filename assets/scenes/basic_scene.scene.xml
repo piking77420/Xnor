@@ -6,14 +6,14 @@
 			<m_EntityId>73C3991F-64C8-43BE-BA-FB-8F-9C-A2-38-C9-75</m_EntityId>
 			<transform>
 				<m_Position>0 ; 1 ; -2</m_Position>
-				<m_EulerRotation>-0.46794838 ; -0.5892006 ; 1.4177824</m_EulerRotation>
-				<m_Scale>1.000032 ; 1.0000107 ; 1.0000111</m_Scale>
+				<m_EulerRotation>-0.20254232 ; -0.8008912 ; 1.2284114</m_EulerRotation>
+				<m_Scale>1.0000018 ; 1.0000001 ; 1</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="DirectionalLight">
-					<zCascadeShadowMapZMultiplactor>5</zCascadeShadowMapZMultiplactor>
+					<zCascadeShadowMapZMultiplactor>10</zCascadeShadowMapZMultiplactor>
 					<color>1 ; 1 ; 1 ; 1</color>
-					<intensity>10</intensity>
+					<intensity>4.5</intensity>
 					<castShadow>true</castShadow>
 					<enable>true</enable>
 				</0>
@@ -25,9 +25,9 @@
 			<name>Plane</name>
 			<m_EntityId>DC36B839-E893-481D-B6-28-93-7E-24-FC-F4-C</m_EntityId>
 			<transform>
-				<m_Position>-0.61469746 ; -2 ; 1</m_Position>
-				<m_EulerRotation>0.000345267 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>29575.732 ; 1 ; 42062.234</m_Scale>
+				<m_Position>0 ; -2 ; 1</m_Position>
+				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_Scale>10 ; 1 ; 10</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="StaticMeshRenderer">
@@ -67,8 +67,8 @@
 			<name>Sphere</name>
 			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
 			<transform>
-				<m_Position>-9.380662 ; 0.29592717 ; 34.823902</m_Position>
-				<m_EulerRotation>2.752485 ; -0 ; 0</m_EulerRotation>
+				<m_Position>4.4999866 ; 0.058403905 ; -3.2958086</m_Position>
+				<m_EulerRotation>2.752485 ; 0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1.0000015 ; 1.0000015</m_Scale>
 			</transform>
 			<m_Components>
@@ -101,14 +101,14 @@
 			<m_EntityId>A284C848-DC61-4853-A4-48-15-9D-CE-5D-73-BD</m_EntityId>
 			<transform>
 				<m_Position>-0.022478878 ; 3 ; 1.4140348</m_Position>
-				<m_EulerRotation>-0.06981326 ; 0.10531835 ; 5.619069e-09</m_EulerRotation>
-				<m_Scale>1.0000006 ; 0.9999993 ; 1.0000005</m_Scale>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="PointLight">
-					<color>0 ; 0 ; 0 ; 1</color>
+					<color>1 ; 0 ; 0.19799805 ; 1</color>
 					<intensity>380</intensity>
-					<castShadow>false</castShadow>
+					<castShadow>true</castShadow>
 					<enable>true</enable>
 				</0>
 				<1 typeName="TestComponent">
@@ -150,7 +150,7 @@
 					<outerCutOff>15</outerCutOff>
 					<color>1 ; 0 ; 0.19799805 ; 1</color>
 					<intensity>380</intensity>
-					<castShadow>false</castShadow>
+					<castShadow>true</castShadow>
 					<enable>true</enable>
 				</0>
 				<1 typeName="TestComponent">
@@ -263,78 +263,6 @@
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
 		</8>
-		<9>
-			<name>Entity</name>
-			<m_EntityId>A5F5EF84-420B-4DD2-B1-F-D-8-E-E9-4E-34</m_EntityId>
-			<transform>
-				<m_Position>487.354 ; -0.9997714 ; 437.0339</m_Position>
-				<m_EulerRotation>2.8651314 ; -1.2124724 ; -2.839657</m_EulerRotation>
-				<m_Scale>0.05000163 ; 0.049999945 ; 0.050001018</m_Scale>
-			</transform>
-			<m_Components>
-				<0 typeName="SkinnedMeshRenderer">
-					<mesh>306C000-A37A-4F10-87-AB-5E-42-7F-5D-F7-FF</mesh>
-					<material>
-						<materialType>Opaque</materialType>
-						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
-						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
-						<metallic>0</metallic>
-						<roughness>0</roughness>
-						<reflectance>0</reflectance>
-						<emissive>0</emissive>
-						<ambientOcclusion>0</ambientOcclusion>
-						<albedoTexture>E01B5F33-4744-4694-92-4-19-7E-C7-F2-98-A1</albedoTexture>
-						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
-						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
-						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
-						<ambientOcclusionTexture>D9E318C1-41B9-4C1F-87-A1-C3-57-5F-7E-5A-6D</ambientOcclusionTexture>
-					</material>
-					<drawModelAabb>false</drawModelAabb>
-					<m_Animator>
-						<m_Animation>48B1114D-51B9-46DA-92-67-40-C3-D3-8D-7-60</m_Animation>
-						<m_CurrentFrame>383</m_CurrentFrame>
-						<m_PlaySpeed>1</m_PlaySpeed>
-						<m_CrossFadeT>0</m_CrossFadeT>
-					</m_Animator>
-					<enable>true</enable>
-				</0>
-			</m_Components>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
-			<m_Children/>
-		</9>
-		<10>
-			<name>Vikingroom</name>
-			<m_EntityId>5CE4F8CA-1E76-499A-B6-93-C5-C9-73-A1-3-D5</m_EntityId>
-			<transform>
-				<m_Position>9.950745 ; 0.6424589 ; -1.7448686</m_Position>
-				<m_EulerRotation>1.7672608 ; 0.019365 ; 2.4576125</m_EulerRotation>
-				<m_Scale>1.0000143 ; 1.0000086 ; 1.0000043</m_Scale>
-			</transform>
-			<m_Components>
-				<0 typeName="StaticMeshRenderer">
-					<mesh>7D4A901C-2429-4A7D-B2-98-A0-92-E4-79-B4-BE</mesh>
-					<material>
-						<materialType>Opaque</materialType>
-						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
-						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
-						<metallic>0</metallic>
-						<roughness>0</roughness>
-						<reflectance>0</reflectance>
-						<emissive>0</emissive>
-						<ambientOcclusion>0</ambientOcclusion>
-						<albedoTexture>E01B5F33-4744-4694-92-4-19-7E-C7-F2-98-A1</albedoTexture>
-						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
-						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
-						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
-						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
-					</material>
-					<drawModelAabb>false</drawModelAabb>
-					<enable>true</enable>
-				</0>
-			</m_Components>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
-			<m_Children/>
-		</10>
 	</m_Entities>
 </Scene>
 

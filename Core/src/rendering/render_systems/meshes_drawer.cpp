@@ -140,7 +140,7 @@ void MeshesDrawer::RenderStaticMesh(const MaterialType materialtype, const Camer
                         
                         Pointer<Model> model = meshRenderer->mesh->models[i];
                         Bound aabb;
-                        meshRenderer->GetAABB(&aabb);
+                        meshRenderer->GetAabb(&aabb);
 
                         if (!frustum.IsOnFrustum(aabb))
                         {
@@ -242,7 +242,7 @@ void MeshesDrawer::RenderStaticMeshNonShaded(const Camera& camera, const Frustum
                     {
                         Pointer<Model> model = meshRenderer->mesh->models[i];
                         Bound aabb;
-                        meshRenderer->GetAABB(&aabb);
+                        meshRenderer->GetAabb(&aabb);
 
                         if (!frustum.IsOnFrustum(aabb))
                         {
@@ -333,7 +333,7 @@ void MeshesDrawer::PrepareOctree(const Scene& scene)
                 continue;
 
             Bound bound;
-            meshRenderer->GetAABB(&bound);
+            meshRenderer->GetAabb(&bound);
 
             ObjectBounding<const StaticMeshRenderer> data;
             data.bound = bound;

@@ -226,7 +226,7 @@ void Renderer::DrawMeshRendersByType(const MaterialType materialType, const Scen
                     Pointer<Model> model = meshRenderer->mesh->models[i];
                     
                     Bound aabb;
-                    meshRenderer->GetAABB(&aabb);
+                    meshRenderer->GetAabb(&aabb);
 
                     if (!m_Frustum.IsOnFrustum(aabb))
                     {

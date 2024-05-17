@@ -10,7 +10,7 @@ namespace Game
         private Camera camera;
         private CapsuleCollider collider;
         
-        public override void Begin()
+        protected override void Begin()
         {
             CameraEntity = World.scene.FindEntityByName("Camera");
             camera = CameraEntity.GetComponent<CameraComponent>().camera;
@@ -18,7 +18,7 @@ namespace Game
             collider = GetComponent<CapsuleCollider>();
         }
 
-        public override void Update()
+        protected override void Update()
         {
             Vector3 movement = Vector3.Zero;
 
@@ -37,8 +37,8 @@ namespace Game
             else if (Input.GetKey(Key.D))
                 movement -= cameraRight;
 
-            Logger.LogInfo($"q : {movement * MovementSpeed * Time.GetDeltaTime()}");
-            collider.AddForce(movement * MovementSpeed * Time.GetDeltaTime());
+            Logger.LogInfo($"q : {movement * MovementSpeed * Time.DeltaTime}");
+            collider.AddForce(movement * MovementSpeed * Time.DeltaTime);
         }
     }
 }

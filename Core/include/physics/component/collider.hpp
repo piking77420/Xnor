@@ -56,11 +56,11 @@ public:
     Event<Collider*, Collider*, const CollisionData&> onTriggerStay;
     /// @brief Callback if the collider is a trigger and another collider left it
     Event<Collider*, Collider*> onTriggerExit;
-    /// @brief Callback if the collider is a collider and another collider entered in it
+    /// @brief Callback if the collider is not a trigger and another collider entered in it
     Event<Collider*, Collider*, const CollisionData&> onCollisionEnter;
-    /// @brief Callback if the collider is a collider and another collider stayed in it
+    /// @brief Callback if the collider is not a trigger and another collider stayed in it
     Event<Collider*, Collider*, const CollisionData&> onCollisionStay;
-    /// @brief Callback if the collider is a collider and another collider left in it
+    /// @brief Callback if the collider is not a trigger and another collider left in it
     Event<Collider*, Collider*> onCollisionExit;
 
     /// @brief Collider constraints

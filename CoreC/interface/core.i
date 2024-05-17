@@ -42,6 +42,8 @@ typedef float float_t;
 
 // Ignore output stream operator
 %ignore operator<<;
+// Ignore calling operator
+%ignore operator();
 
 // These structs are used to copy data between C++ and C# value types
 %{
@@ -205,7 +207,7 @@ struct Data64
 %include "resource/texture.hpp"
 %include "resource/font.hpp"
 
-%include "transform.hpp"
+%include "transform.i"
 
 %include "rendering/plane.hpp"
 
@@ -229,7 +231,7 @@ struct Data64
 %include "input/gamepad_input.hpp"
 %include "input/keyboard_input.hpp"
 %include "input/mouse_input.hpp"
-%include "input/input.hpp"
+%include "input/input.i"
 %include "input/time.i"
 
 %include "scene/component.i"
@@ -243,7 +245,7 @@ struct Data64
 
 %include "rendering/camera.hpp"
 
-%include "scene/component/camera_component.hpp"
+%include "scene/component/camera_component.i"
 
 %include "rendering/material.hpp"
 
@@ -251,20 +253,19 @@ struct Data64
 
 %include "resource/audio_track.hpp"
 
-%include "audio/component/audio_listener.hpp"
-%include "audio/component/audio_source.hpp"
+%include "audio/component/audio_listener.i"
+%include "audio/component/audio_source.i"
 
 %include "physics/data/collision_data.hpp"
 
-%include "physics/component/collider.hpp"
-%include "physics/component/box_collider.hpp"
-%include "physics/component/capsule_collider.hpp"
-%include "physics/component/mesh_collider.hpp"
-%include "physics/component/sphere_collider.hpp"
+%include "physics/component/collider.i"
+%include "physics/component/box_collider.i"
+%include "physics/component/capsule_collider.i"
+%include "physics/component/mesh_collider.i"
+%include "physics/component/sphere_collider.i"
 
 %include "scene/component/static_mesh_renderer.hpp"
-%ignore XnorCore::SkinnedMeshRenderer::StartMontage;
-%include "scene/component/skinned_mesh_renderer.hpp"
+%include "scene/component/skinned_mesh_renderer.i"
 %include "scene/component/script_component.i"
 
 %include "scene/entity.i"

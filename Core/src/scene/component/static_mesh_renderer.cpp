@@ -2,9 +2,9 @@
 
 using namespace  XnorCore;
 
-void StaticMeshRenderer::GetAABB(Bound* bound) const
+void StaticMeshRenderer::GetAabb(Bound* const bound) const
 {
-    *bound = Bound();
+    *bound = {};
     
     for (size_t i = 0; i < mesh->models.GetSize(); i++)
     {
@@ -13,5 +13,5 @@ void StaticMeshRenderer::GetAABB(Bound* bound) const
        bound->Encapsulate(model->GetAabb());
     }
     
-    *bound = Bound::GetAabbFromTransform(*bound,GetTransform());
+    *bound = Bound::GetAabbFromTransform(*bound, GetTransform());
 }

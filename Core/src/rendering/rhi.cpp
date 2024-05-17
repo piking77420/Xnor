@@ -967,7 +967,8 @@ bool Rhi::IsDataValid(const std::vector<void*>& data, const size_t wantedSize)
 
 void Rhi::DestroyTexture(const uint32_t textureId)
 {
-	glDeleteTextures(1, &textureId);
+	if (glIsTexture(textureId))
+		glDeleteTextures(1, &textureId);
 }
 
 void Rhi::BindTexture(const uint32_t unit, const uint32_t textureId)

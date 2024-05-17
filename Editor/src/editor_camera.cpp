@@ -152,7 +152,7 @@ void EditorCamera::OnPressGoToObject()
     else
     {
         XnorCore::Bound aabb;
-        meshRenderer->GetAABB(&aabb);
+        meshRenderer->GetAabb(&aabb);
         
         Vector4 radiusPreScale = Vector4(aabb.extents.x, aabb.extents.y, aabb.extents.z, 1.0f) * 0.5f;
         radiusPreScale.w = 1.0f;

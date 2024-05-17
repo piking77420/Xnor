@@ -20,7 +20,7 @@ public:
 
 	CameraComponent();
 
-	~CameraComponent();
+	~CameraComponent() override;
 
 	void Update() override;
 

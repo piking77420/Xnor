@@ -25,7 +25,7 @@ public:
 
     void FetchInfo() override;
 
-    XnorCore::Input::BindedWindowInfo GetBindWindoInfo() const override;
+    XnorCore::Input::BoundWindowInfo GetBindWindoInfo() const override;
 
 protected:
     XnorCore::Viewport* m_Viewport = nullptr;

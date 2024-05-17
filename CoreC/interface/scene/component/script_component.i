@@ -2,15 +2,15 @@
 
 %typemap(cscode) XnorCore::ScriptComponent
 %{
-    public Entity entity => GetEntity();
+    public Entity Entity => GetEntity();
 
-    public Transform transform => GetTransform();
+    public Transform Transform => GetTransform();
 
-    public T GetComponent<T>() where T : Component { return entity.GetComponent<T>(); }
+    public T GetComponent<T>() where T : Component { return Entity.GetComponent<T>(); }
     
-    public global::System.Collections.Generic.List<T> GetComponents<T>() where T : Component { return entity.GetComponents<T>(); }
+    public global::System.Collections.Generic.List<T> GetComponents<T>() where T : Component { return Entity.GetComponents<T>(); }
 
-    public bool TryGetComponent<T>(out T component) where T : Component { return entity.TryGetComponent<T>(out component); }
+    public bool TryGetComponent<T>(out T component) where T : Component { return Entity.TryGetComponent<T>(out component); }
 %}
 
 %include "scene/component/script_component.hpp"

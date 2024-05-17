@@ -19,7 +19,7 @@ class Input
     STATIC_CLASS(Input)
     
 public:
-    struct BindedWindowInfo
+    struct BoundWindowInfo
     {
         Vector2 windowPos;
         Vector2 windowSize;
@@ -35,23 +35,23 @@ public:
     /// @param key Key to check
     /// @param status Key status
     /// @return Result
-    XNOR_ENGINE static bool_t GetKey(Key::Key key, KeyStatus::KeyStatus status = KeyStatus::Down);
+    XNOR_ENGINE static bool_t GetKey(Key key, KeyStatus status = KeyStatus::Down);
 
     /// @brief Checks if a specified mouse button is of the specified status
     /// @param mouseButton Mouse button to check
     /// @param status Mouse button status
     /// @return Result
-    XNOR_ENGINE static bool_t GetMouseButton(MouseButton::MouseButton mouseButton, MouseButtonStatus::MouseButtonStatus status = MouseButtonStatus::Down);
+    XNOR_ENGINE static bool_t GetMouseButton(MouseButton mouseButton, MouseButtonStatus status = MouseButtonStatus::Down);
 
     /// @brief Checks if a specified gamepad button is of the specified status
     /// @param gamePadId Gamepad id
     /// @param gamepadButton Gamepad button to check
     /// @param buttonStatus Gamepad button status
     /// @return Result
-    XNOR_ENGINE static bool_t GetGamepadButton(uint32_t gamePadId, GamepadButton::GamepadButton gamepadButton, GamepadButtonStatus::GamepadButtonStatus buttonStatus);
+    XNOR_ENGINE static bool_t GetGamepadButton(uint32_t gamePadId, GamepadButton gamepadButton, GamepadButtonStatus buttonStatus = GamepadButtonStatus::Down);
 
     /// @brief Processes the input events
-    XNOR_ENGINE static void HandleEvent();
+    XNOR_ENGINE static void HandleEvents();
 
     /// @brief Gets the mouse position
     /// @tparam T Vector2 type
@@ -68,32 +68,32 @@ public:
     // Retrun A array indexOf WindowInfo
     XNOR_ENGINE static uint32_t GetBindingId();
 
-    XNOR_ENGINE static void UpdateBindedWindowInfo(uint32_t binding, BindedWindowInfo windowInfo);
+    XNOR_ENGINE static void UpdateBoundWindowInfo(uint32_t binding, const BoundWindowInfo& windowInfo);
     
-    XNOR_ENGINE static void GetWindowBindedInfo(std::vector<BindedWindowInfo>* BindedWindowsInfo);
+    XNOR_ENGINE static void GetWindowBoundInfo(std::vector<BoundWindowInfo>* boundWindowInfos);
 
     XNOR_ENGINE static void BindWindow(uint32_t bindInd);
     
 private:
-    using KeyStatuses = std::array<bool_t, KeyStatus::Count>;
-    using MouseStatuses = std::array<bool_t, MouseButtonStatus::Count>;
+    using KeyStatuses = std::array<bool_t, KeyStatusCount>;
+    using MouseStatuses = std::array<bool_t, MouseButtonStatusCount>;
     
-    XNOR_ENGINE static inline std::vector<BindedWindowInfo> m_BindedWindowInfo;
+    XNOR_ENGINE static inline std::vector<BoundWindowInfo> m_BoundWindowInfo;
     
-    XNOR_ENGINE static inline uint32_t currentBindedWindow = 0;
+    XNOR_ENGINE static inline uint32_t m_CurrentBoundWindow = 0;
 
-    static constexpr uint32_t GamepadMax = 15;
+    static constexpr size_t GamepadMax = 15;
     
-    XNOR_ENGINE static inline std::array<KeyStatuses, Key::Count - 1> m_Keyboard;
+    XNOR_ENGINE static inline std::array<KeyStatuses, KeyCount - 1> m_Keyboard;
 
-    XNOR_ENGINE static inline std::array<MouseStatuses, MouseButton::Count - 1> m_Mouse;
+    XNOR_ENGINE static inline std::array<MouseStatuses, MouseButtonCount - 1> m_Mouse;
     
     XNOR_ENGINE static inline std::array<GamepadInput, GamepadMax> m_Gamepads;
 
     // For each Status
-    using GamepadButtonStatuses = std::array<bool_t, static_cast<uint8_t>(GamepadButtonStatus::Count)>;
+    using GamepadButtonStatuses = std::array<bool_t, GamepadButtonStatusCount>;
     // For each Button
-    using GamepadButtons = std::array<GamepadButtonStatuses, static_cast<uint32_t>(GamepadButton::Count)>;
+    using GamepadButtons = std::array<GamepadButtonStatuses, GamepadButtonCount>;
     // For each Gamepad
     XNOR_ENGINE static inline std::array<GamepadButtons, GamepadMax> m_GamepadsButton;
     

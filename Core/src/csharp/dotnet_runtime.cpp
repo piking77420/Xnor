@@ -165,12 +165,17 @@ bool_t DotnetRuntime::BuildGameProject(const bool_t asynchronous)
     const std::filesystem::path tempPath = std::filesystem::temp_directory_path() / TempFile;
 
     m_ProjectReloadingProgress = 0.2f;
+    
+    m_LastProjectBuildResult = BuildResult::Unknown;
 
     Utils::TerminalCommand(std::string("dotnet clean ")+ " \"" + absolute(gameProjectDirectory).string() + '"');
 
     const int32_t commandResult = Utils::TerminalCommand(std::string("dotnet build ") + Dotnet::GameProjectBuildOptions + " \"" + absolute(gameProjectDirectory).string() + "\" 1> \"" + tempPath.string() + '"', asynchronous);
 
     m_ProjectReloadingProgress = 0.5f;
+
+    if (commandResult == 0)
+        m_LastProjectBuildResult = BuildResult::Success;
 
     // In case a warning/error occured, read the output file to understand what happened
     std::ifstream file(tempPath);
@@ -212,9 +217,15 @@ bool_t DotnetRuntime::BuildGameProject(const bool_t asynchronous)
         for (auto&& str : diagnostics)
         {
             if (str.find(": warning") != std::string::npos)
+            {
+                m_LastProjectBuildResult = BuildResult::Warning;
                 Logger::LogWarning("[.NET BUILD] {}", str);
+            }
             else
+            {
+                m_LastProjectBuildResult = BuildResult::Error;
                 Logger::LogError("[.NET BUILD] {}", str);
+            }
         }
     }
 
@@ -288,6 +299,8 @@ bool_t DotnetRuntime::GetInitialized() { return m_Initialized; }
 bool_t DotnetRuntime::IsReloadingProject() { return m_ReloadingProject; }
 
 float_t DotnetRuntime::GetProjectReloadingProgress() { return m_ProjectReloadingProgress; }
+
+DotnetRuntime::BuildResult DotnetRuntime::GetProjectLastBuildResult() { return m_LastProjectBuildResult; }
 
 bool_t DotnetRuntime::CheckDotnetInstalled()
 {

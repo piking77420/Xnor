@@ -27,8 +27,8 @@ public:
 
 private:
     std::array<float_t,DirectionalCascadeLevel> m_CascadeLevel;
-    float_t m_ZMultiplicator = 10.f;
     
+    float_t m_ZMultiplicator = 10.f;
     
     XNOR_ENGINE void ComputeFrustumCorner(std::vector<Vector4>* frustumCornerWorldSpace, const Matrix& proj, const Matrix& view);
 

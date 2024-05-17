@@ -8,7 +8,7 @@
 BEGIN_XNOR_CORE
 
 /// @brief %List of keyboard buttons
-BEGIN_ENUM(Key)
+enum class Key
 {
        /* Printable keys */
     /// @brief Space
@@ -257,11 +257,12 @@ BEGIN_ENUM(Key)
     Menu               = 348,
     
     Count              = 355,
-}
-END_ENUM
+};
+
+constexpr size_t KeyCount = static_cast<size_t>(Key::Count);
 
 /// @brief %List of keyboard button states
-BEGIN_ENUM(KeyStatus)
+enum class KeyStatus
 {
     /// @brief Pressed
     Pressed,
@@ -273,7 +274,8 @@ BEGIN_ENUM(KeyStatus)
     Repeat,
     
     Count
-}
-END_ENUM
+};
+
+constexpr size_t KeyStatusCount = static_cast<size_t>(KeyStatus::Count);
 
 END_XNOR_CORE

@@ -306,6 +306,8 @@ void Editor::BuildAndReloadCodeAsync()
 	m_CurrentAsyncActionThread = std::thread(
 		[this, stoppedPlaying]
 		{
+			onScriptsReloadingBegin();
+
 			// If we stopped playing, the scene just got deserialized, so no need to serialize it again
 			if (!stoppedPlaying)
 				SerializeScene();
@@ -313,6 +315,8 @@ void Editor::BuildAndReloadCodeAsync()
 			DeserializeScene();
 			
 			m_ReloadingScripts = false;
+
+			onScriptsReloadingEnd();
 		}
 	);
 }
@@ -323,11 +327,15 @@ void Editor::StartPlaying()
 	XnorCore::World::isPlaying = true;
 	XnorCore::World::hasStarted = false;
 
+	XnorCore::Logger::LogInfo("Starting game");
+
 	m_GamePlaying = true;
 }
 
 void Editor::StopPlaying()
 {
+	XnorCore::Logger::LogInfo("Stopping game");
+
 	XnorCore::Coroutine::StopAll();
 
 	data.selectedEntity = nullptr;
@@ -344,6 +352,8 @@ void Editor::StopPlaying()
 void Editor::SerializeScene(const std::string& filepath)
 {
 	XnorCore::Logger::LogInfo("Saving scene");
+
+	onSceneSerializationBegin();
 	
 	if (filepath.empty())
 		m_SerializedScenePath = std::filesystem::temp_directory_path() / "xnor_current.scene.xml";
@@ -357,6 +367,8 @@ void Editor::SerializeScene(const std::string& filepath)
 	XnorCore::Serializer::EndSerialization();
 
 	m_Serializing = false;
+	
+	onSceneSerializationEnd();
 }
 
 void Editor::SerializeSceneAsync(const std::string& filepath)
@@ -368,6 +380,8 @@ void Editor::SerializeSceneAsync(const std::string& filepath)
 void Editor::DeserializeScene(const std::string& filepath)
 {
 	XnorCore::Logger::LogInfo("Loading scene");
+	
+	onSceneDeserializationBegin();
 	
 	if (filepath.empty())
 		m_SerializedScenePath = std::filesystem::temp_directory_path() / "xnor_current.scene.xml";
@@ -393,6 +407,8 @@ void Editor::DeserializeScene(const std::string& filepath)
 		data.selectedEntity = XnorCore::World::scene->FindEntityById(selectedEntityId);
 
 	m_Deserializing = false;
+	
+	onSceneDeserializationEnd();
 }
 
 void Editor::DeserializeSceneAsync(const std::string& filepath)
@@ -401,20 +417,13 @@ void Editor::DeserializeSceneAsync(const std::string& filepath)
 	m_CurrentAsyncActionThread = std::thread([this, path = filepath] { DeserializeScene(path); });
 }
 
-bool_t Editor::IsSerializing() const
-{
-	return m_Serializing;
-}
+bool_t Editor::IsSerializing() const { return m_Serializing; }
 
-bool_t Editor::IsDeserializing() const
-{
-	return m_Deserializing;
-}
+bool_t Editor::IsDeserializing() const { return m_Deserializing; }
 
-bool_t Editor::IsReloadingScripts() const
-{
-	return m_ReloadingScripts;
-}
+bool_t Editor::IsReloadingScripts() const { return m_ReloadingScripts; }
+
+bool_t Editor::IsGamePlaying() const { return m_GamePlaying; }
 
 void Editor::UpdateWindows()
 {
@@ -475,7 +484,7 @@ void Editor::Update()
 	{
 		Time::Update();
 		Window::PollEvents();
-		Input::HandleEvent();
+		Input::HandleEvents();
 		BeginFrame();
 		CheckWindowResize();
 

@@ -42,7 +42,7 @@ public:
     // Whenever the window need to render after the update of the world
     virtual void OnApplicationRendering();
 
-    virtual XnorCore::Input::BindedWindowInfo GetBindWindoInfo() const;
+    virtual XnorCore::Input::BoundWindowInfo GetBindWindoInfo() const;
 
     bool_t opened = true;
     bool_t canClose = false;

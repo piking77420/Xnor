@@ -10,4 +10,5 @@
     %typemap(csbody) TYPE %{%}
     %typemap(csdispose) TYPE %{%}
     %typemap(csdisposing) TYPE %{%}
+    %typemap(csclassmodifiers) TYPE "public static class";
 %enddef

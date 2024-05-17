@@ -8,7 +8,7 @@ using namespace XnorEditor;
 void RenderWindow::FetchInfo()
 {
     UiWindow::FetchInfo();
-    XnorCore::Input::UpdateBindedWindowInfo(m_InputBindId, GetBindWindoInfo());
+    XnorCore::Input::UpdateBoundWindowInfo(m_InputBindId, GetBindWindoInfo());
 }
 
 RenderWindow::RenderWindow(Editor* editor, XnorCore::Viewport& viewport)
@@ -44,7 +44,7 @@ void RenderWindow::OnApplicationRendering()
         m_Editor->renderer.RenderViewport(*m_Viewport, *XnorCore::World::scene);
 }
 
-XnorCore::Input::BindedWindowInfo RenderWindow::GetBindWindoInfo() const
+XnorCore::Input::BoundWindowInfo RenderWindow::GetBindWindoInfo() const
 {
     auto& style = ImGui::GetStyle();
     const Vector2 windowPadding = style.WindowPadding * 0.5f;
@@ -55,7 +55,7 @@ XnorCore::Input::BindedWindowInfo RenderWindow::GetBindWindoInfo() const
     pos.x += windowPadding.x;
     pos.y += windowPadding.y + framePadding.y + TiletBarOffSet;
     
-    const XnorCore::Input::BindedWindowInfo windowInfo =
+    const XnorCore::Input::BoundWindowInfo windowInfo =
            {
         .windowPos = static_cast<Vector2>(pos),
         .windowSize = static_cast<Vector2>(m_Size),

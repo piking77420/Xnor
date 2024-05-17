@@ -8,26 +8,26 @@ namespace Game
 
         public Entity PlayerEntity;
 
-        public override void Begin()
+        protected override void Begin()
         {
             PlayerEntity = World.scene.FindEntityByName("Player");
         }
 
-        public override void Update()
+        protected override void Update()
         {
             if (Input.GetKey(Key.Left))
-                ViewAngle.X += Time.GetDeltaTime();
+                ViewAngle.X += Time.DeltaTime;
             else if (Input.GetKey(Key.Right))
-                ViewAngle.X -= Time.GetDeltaTime();
+                ViewAngle.X -= Time.DeltaTime;
 
             if (Input.GetKey(Key.Up))
-                ViewAngle.Y -= Time.GetDeltaTime();
+                ViewAngle.Y -= Time.DeltaTime;
             else if (Input.GetKey(Key.Down))
-                ViewAngle.Y += Time.GetDeltaTime();
+                ViewAngle.Y += Time.DeltaTime;
 
-            transform.SetRotationEulerAngle(new(ViewAngle.Y, ViewAngle.X, 0f));
+            Transform.RotationEulerAngle = new(ViewAngle.Y, ViewAngle.X, 0f);
             
-            transform.SetPosition(PlayerEntity.transform.GetPosition());
+            Transform.Position = PlayerEntity.Transform.Position;
         }
     }
 }
