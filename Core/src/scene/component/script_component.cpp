@@ -37,7 +37,12 @@ void ScriptComponent::Update()
 
 void ScriptComponent::OnTriggerEnter(Collider* self, Collider* other, const CollisionData& data)
 {
-    m_ManagedObject.InvokeMethod("OnTriggerEnter", std::forward<Collider*>(self), std::forward<Collider*>(other), std::forward<const CollisionData&>(data));
+    m_ManagedObject.InvokeMethod(
+        "OnTriggerEnter",
+        std::forward<Collider*>(self),
+        std::forward<Collider*>(other),
+        std::forward<CollisionData*>(&const_cast<CollisionData&>(data))
+    );
 }
 
 void ScriptComponent::OnTriggerStay(Collider* self, Collider* other, const CollisionData& data)

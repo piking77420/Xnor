@@ -18,7 +18,7 @@ const Component& DotnetUtils::ComponentListGetItem(const List<Component*>& list,
     // Convert these names to their C# type equivalent
     auto&& dotnetAssembly = DotnetAssembly::xnorCoreAssembly->GetCoralAssembly();
 
-    *managedTypeName = dotnetAssembly->GetType(DotnetAssembly::XnorCoreNamespace + '.' + typeName).GetFullName();
+    *managedTypeName = dotnetAssembly->GetType(Dotnet::XnorCoreNamespace + '.' + typeName).GetFullName();
     
     return *result;
 }

@@ -18,9 +18,6 @@ public:
     /// @brief The XNOR Engine Core .NET assembly. This is automatically loaded along with the .NET runtime.
     XNOR_ENGINE static inline const DotnetAssembly* xnorCoreAssembly = nullptr;
 
-    /// @brief The XNOR Engine Core .NET default namespace.
-    XNOR_ENGINE static inline const std::string XnorCoreNamespace = "Xnor.Core";
-
     /// @brief Constructs a .NET assembly from the given @p filepath.
     XNOR_ENGINE explicit DotnetAssembly(std::string filepath);
 

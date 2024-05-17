@@ -2,6 +2,7 @@
 
 #include <Maths/vector2i.hpp>
 
+#include "Coral/Attribute.hpp"
 #include "csharp/dotnet_assembly.hpp"
 #include "csharp/dotnet_runtime.hpp"
 #include "physics/component/capsule_collider.hpp"
@@ -17,7 +18,7 @@ void DotnetReflection::PrintTypes()
 
     RegisterAllTypes();
 
-    const Coral::Type& scriptComponentType = coreAssembly->GetType(DotnetAssembly::XnorCoreNamespace + ".ScriptComponent");
+    const Coral::Type& scriptComponentType = coreAssembly->GetType(Dotnet::XnorCoreNamespace + ".ScriptComponent");
 
     for (const Coral::Type* type : gameAssembly->GetTypes())
     {
@@ -87,7 +88,7 @@ void DotnetReflection::RegisterAllTypes()
     RegisterBaseType<double_t>("System.Double");
     RegisterBaseType<float_t>("System.Single");
 
-    static const std::string XnorCoreNamespace = DotnetAssembly::XnorCoreNamespace + '.';
+    static const std::string XnorCoreNamespace = Dotnet::XnorCoreNamespace + '.';
 
     RegisterBaseType<ColorHsva>(XnorCoreNamespace + "ColorHsva");
     RegisterBaseType<Color>(XnorCoreNamespace + "Colorf");
@@ -134,7 +135,15 @@ void DotnetReflection::DisplayType(ScriptComponent* const script)
     ImGui::PushID(script);
     for (Coral::FieldInfo& field : obj.GetType().GetFields())
     {
-        if (field.GetAccessibility() != Coral::TypeAccessibility::Public)
+        auto&& attributes = field.GetAttributes();
+        // Discard the field if it is non-public and doesn't have the 'Serialized' attribute
+        if (
+            field.GetAccessibility() != Coral::TypeAccessibility::Public &&
+            std::ranges::find_if(
+                attributes,
+                [](Coral::Attribute& attribute) -> bool_t { return attribute.GetType().GetFullName() == Dotnet::XnorCoreNamespace + ".Serialized"; }
+            ) == attributes.end()
+        )
             continue;
         
         const std::string fieldName = field.GetName();
