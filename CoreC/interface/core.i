@@ -204,7 +204,7 @@ struct Data64
 %include "resource/texture.hpp"
 %include "resource/font.hpp"
 
-%include "transform.hpp"
+%include "transform.i"
 
 %include "rendering/plane.hpp"
 

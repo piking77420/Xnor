@@ -25,9 +25,9 @@ namespace Game
             else if (Input.GetKey(Key.Down))
                 ViewAngle.Y += Time.GetDeltaTime();
 
-            transform.SetRotationEulerAngle(new(ViewAngle.Y, ViewAngle.X, 0f));
+            transform.RotationEulerAngle = new(ViewAngle.Y, ViewAngle.X, 0f);
             
-            transform.SetPosition(PlayerEntity.transform.GetPosition());
+            transform.Position = PlayerEntity.transform.Position;
         }
     }
 }

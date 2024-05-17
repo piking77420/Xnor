@@ -17,7 +17,6 @@ class MeshRenderer : public Component
     REFLECTABLE_IMPL(MeshRenderer)
     
 public:
-
     /// @brief @ref Model of the mesh
     Pointer<Model> model;
 
@@ -36,8 +35,7 @@ public:
     
     DEFAULT_COPY_MOVE_OPERATIONS(MeshRenderer);
 
-    XNOR_ENGINE void GetAABB(Bound* bound) const;
-
+    XNOR_ENGINE void GetAabb(Bound* bound) const;
 };
 
 END_XNOR_CORE

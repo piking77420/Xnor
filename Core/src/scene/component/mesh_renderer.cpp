@@ -2,7 +2,7 @@
 
 using namespace  XnorCore;
 
-void MeshRenderer::GetAABB(Bound* bound) const
+void MeshRenderer::GetAabb(Bound* bound) const
 {
     if (!model.IsValid())
         return;

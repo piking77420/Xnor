@@ -246,7 +246,7 @@ void Renderer::DrawMeshRendersByType(const MaterialType materialType, const Scen
                     continue;
 
                 Bound aabb;
-                meshRenderer->GetAABB(&aabb);
+                meshRenderer->GetAabb(&aabb);
 
                 if (!m_Frustum.IsOnFrustum(aabb))
                 {
@@ -303,7 +303,7 @@ void Renderer::DrawAllMeshRendersNonShaded(const Camera& camera, const Scene& sc
                 for (const MeshRenderer* const meshRenderer : *handle)
                 {
                     Bound aabb;
-                    meshRenderer->GetAABB(&aabb);
+                    meshRenderer->GetAabb(&aabb);
 
                     if (!m_Frustum.IsOnFrustum(aabb))
                     {
