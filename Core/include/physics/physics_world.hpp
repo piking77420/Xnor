@@ -96,7 +96,7 @@ public:
     XNOR_ENGINE static uint32_t CreateBox(const BodyCreationInfo& info);
 
     [[nodiscard]]
-    XNOR_ENGINE static JPH::Character* CreateCharacter(const JPH::CharacterSettings& settings, const Vector3& position, const Quaternion& rotation);
+    XNOR_ENGINE static JPH::Character* CreateCharacter(const BodyCreationInfo& info, const JPH::CharacterSettings& settings);
 
     /// @brief Creates a capsule body
     /// @param info Body creation info

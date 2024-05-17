@@ -17,7 +17,7 @@ public:
     
     ~RenderWindow() override = default;
     
-    DEFAULT_COPY_MOVE_OPERATIONS(RenderWindow);
+    DEFAULT_COPY_MOVE_OPERATIONS(RenderWindow)
     
     void Display() override;
 
@@ -25,7 +25,8 @@ public:
 
     void FetchInfo() override;
 
-    XnorCore::Input::BoundWindowInfo GetBindWindoInfo() const override;
+    [[nodiscard]]
+    XnorCore::Input::BoundWindowInfo GetBindWindowInfo() const override;
 
 protected:
     XnorCore::Viewport* m_Viewport = nullptr;

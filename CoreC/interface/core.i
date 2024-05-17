@@ -138,7 +138,6 @@ struct Data64
 #include "physics/component/capsule_collider.hpp"
 #include "physics/component/mesh_collider.hpp"
 #include "physics/component/sphere_collider.hpp"
-#include "physics/component/character_controller.hpp"
 
 #include "resource/cubemap.hpp"
 #include "resource/font.hpp"
@@ -264,7 +263,6 @@ struct Data64
 %include "physics/component/capsule_collider.i"
 %include "physics/component/mesh_collider.i"
 %include "physics/component/sphere_collider.i"
-%include "physics/component/character_controller.i"
 
 %include "scene/component/static_mesh_renderer.hpp"
 %include "scene/component/skinned_mesh_renderer.i"

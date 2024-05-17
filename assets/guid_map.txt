@@ -95,6 +95,7 @@ assets/textures/pyramid_1.jpg;52EC4AFF-3F6E-4A87-86-2D-F2-CB-78-56-B5-15
 assets/models/Coyote-Walking/Coyote.fbm/CH_NPC_MOB_Coyote_N_LTS.jpg;CFA32EDC-CFB5-4F0B-83-1A-81-37-44-FD-F3-D1
 assets/models/Coyote-Walking/Coyote.fbm/CH_NPC_MOB_Coyote_D_LTS.jpg;96BA51DD-A097-44F0-BD-5C-8C-BF-CE-20-81-A0
 assets\models\Arm Cannon (First Person)\Material__25.obj;F3BF216F-2076-41FA-93-6D-F9-57-8F-11-BA-B9
+assets/textures/lantern/braziers_lantern_Roughness.png;4B7FB2F6-79DB-46A1-A3-4B-DD-DB-40-9F-46-FC
 assets/models/Coyote-Walking/U3DMesh.obj;24BAF802-6CF1-4C9F-AE-21-E8-98-7A-D3-A7-B8
 assets/models/league/malphite.glb;306C000-A37A-4F10-87-AB-5E-42-7F-5D-F7-FF
 assets/models/league/rammus.glb;246B7F2C-EEB6-4B8E-B0-68-AA-60-2B-6A-31-2D
@@ -150,3 +151,8 @@ assets\models\Coyote-Attack3\Attack3.skel;40F81C79-BA97-41CF-8D-F1-DF-CD-F6-19-A
 assets\models\Coyote-Attack3\Attack3.anim;83BBBAF8-A95F-43FD-BA-CE-33-FB-F-1A-CD-46
 _shaders/depth_shader_skinned;70EAF329-5575-4817-BD-9A-46-DB-49-A8-AA-30
 _shaders/picking_shader_skinned;5334756-A586-4CE2-B0-ED-EF-8C-FE-3-28-E1
+assets/models/lantern.fbx;1477B7D2-B18F-4FD5-B3-60-6C-4-5F-3-4C-3A
+assets/textures/lantern/braziers_lantern_BaseColor.png;859554D6-B896-43BE-A6-70-37-10-92-57-7B-D4
+assets/textures/lantern/braziers_lantern_Normal.png;2D7B325C-A2A-4AD4-8D-4B-91-10-77-7D-70-A9
+assets/textures/lantern/braziers_lantern_Metallic.png;906F60E8-1910-44AB-AC-65-EE-B5-E0-28-E1-91
+assets\models\lantern\Plane.001.obj;E079166C-6BFC-42D1-95-47-35-71-7C-74-B4-94

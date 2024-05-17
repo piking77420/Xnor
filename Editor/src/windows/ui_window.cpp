@@ -50,7 +50,7 @@ void UiWindow::OnApplicationRendering()
 {
 }
 
-XnorCore::Input::BoundWindowInfo UiWindow::GetBindWindoInfo() const
+XnorCore::Input::BoundWindowInfo UiWindow::GetBindWindowInfo() const
 {
     auto& style = ImGui::GetStyle();
     const Vector2 windowPadding = style.WindowPadding * 0.5f;

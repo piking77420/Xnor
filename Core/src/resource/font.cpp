@@ -45,7 +45,7 @@ void Font::CreateInInterface()
         
         if (glyphSize == Vector2i::Zero())
         {
-            Logger::LogWarning("Character {} off the font {} has a size of {}",c ,m_File->GetPath().generic_string(),glyphSize);
+            Logger::LogWarning("Character {} of the font {} has a size of {}",c ,m_File->GetPath().generic_string(),glyphSize);
             continue;
         }
 

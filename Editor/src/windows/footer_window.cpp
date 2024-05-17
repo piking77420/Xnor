@@ -128,9 +128,8 @@ void FooterWindow::Display()
     
     if (reloadingScripts)
         ImGui::BeginDisabled();
-    
-    if (
-        ImGui::ImageButton(
+
+    const bool_t buildButton = ImGui::ImageButton(
             XnorCore::Utils::IntToPointer<ImTextureID>(m_BuildTexture->GetId()),
             {25.f, 25.f},
             {},
@@ -138,8 +137,11 @@ void FooterWindow::Display()
             -1,
             static_cast<Vector4>(XnorCore::Color::Black()),
             scriptsUpToDate ? static_cast<Vector4>(XnorCore::Color::White()) : static_cast<Vector4>(XnorCore::Color::OrangeRed())
-        )
-    )
+        );
+
+    ImGui::SetItemTooltip("Build and reload C# scripts");
+    
+    if ((m_Editor->IsReloadScriptsOnSave() && !scriptsUpToDate) || buildButton)
         m_Editor->BuildAndReloadCodeAsync();
     
     if (reloadingScripts)

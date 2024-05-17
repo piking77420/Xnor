@@ -101,7 +101,7 @@ void Editor::CreateDefaultWindows()
 		data.currentScene = XnorCore::FileManager::Get<XnorCore::File>(SerializedScenePath);
 
 	OpenWindow<EditorWindow>(data.editorViewPort);
-	OpenWindow<RenderWindow>(*gameViewPort);
+	m_GameWindow = OpenWindow<RenderWindow>(*gameViewPort);
 	OpenWindow<Performance>(50);
 	OpenWindow<Inspector>();
 	OpenWindow<HeaderWindow>();
@@ -286,6 +286,12 @@ void Editor::MenuBar()
 		
 		if (XnorCore::World::scene != nullptr)
 			renderer.RenderMenu(*XnorCore::World::scene);
+
+		if (ImGui::BeginMenu("Options"))
+		{
+			ImGui::MenuItem("Reload scripts on file save", nullptr, &m_ReloadScriptsOnSave);
+			ImGui::EndMenu();
+		}
 		
 		ImGui::EndMainMenuBar();
 	}
@@ -425,6 +431,8 @@ bool_t Editor::IsReloadingScripts() const { return m_ReloadingScripts; }
 
 bool_t Editor::IsGamePlaying() const { return m_GamePlaying; }
 
+bool_t Editor::IsReloadScriptsOnSave() const { return m_ReloadScriptsOnSave; }
+
 void Editor::UpdateWindows()
 {
 	for (UiWindow* const w : m_UiWindows)
@@ -484,7 +492,8 @@ void Editor::Update()
 	{
 		Time::Update();
 		Window::PollEvents();
-		Input::HandleEvents();
+		if (m_GameWindow->IsFocused())
+			Input::HandleEvents();
 		BeginFrame();
 		CheckWindowResize();
 
@@ -504,7 +513,8 @@ void Editor::Update()
 		}
 
 		Coroutine::UpdateAll();
-		Input::Update();
+		if (m_GameWindow->IsFocused())
+			Input::Update();
 		EndFrame();
 		renderer.SwapBuffers();
 

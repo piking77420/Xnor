@@ -12,17 +12,16 @@ CameraComponent::CameraComponent()
 CameraComponent::~CameraComponent()
 {
     if (Application::applicationInstance->gameViewPort->camera == &this->camera)
-    {
         Application::applicationInstance->gameViewPort->camera = nullptr;
-    }
 }
 
 void CameraComponent::Update()
 {
     Component::Update();
-    const Vector3 pos = static_cast<Vector3>(entity->transform.worldMatrix[3]);
+    // FIXME: This causes clipping problems
+    /*const Vector3 pos = static_cast<Vector3>(entity->transform.worldMatrix[3]);
     camera.position = pos;
-    camera.LookAt( pos + entity->transform.GetForward(),entity->transform.GetUp());
+    camera.LookAt(pos + entity->transform.GetForward(), entity->transform.GetUp());*/
 }
 
 void CameraComponent::Begin()

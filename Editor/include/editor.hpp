@@ -36,10 +36,10 @@ public:
 	void CheckWindowResize() override;
 
 	template <typename T, typename... Args>
-	void OpenWindow(Args&&... args);
+	T* OpenWindow(Args&&... args);
 
 	template <typename T, typename... Args>
-	void SetupWindow(Args&&... args);
+	T* SetupWindow(Args&&... args);
 
 	void OpenCreatedWindow(const std::string& name, void* arg) const;
 
@@ -74,6 +74,9 @@ public:
 	[[nodiscard]]
 	bool_t IsGamePlaying() const;
 
+	[[nodiscard]]
+	bool_t IsReloadScriptsOnSave() const;
+
 private:
 	std::vector<UiWindow*> m_UiWindows;
 
@@ -82,6 +85,10 @@ private:
 	bool_t m_Serializing = false;
 	bool_t m_Deserializing = false;
 	bool_t m_ReloadingScripts = false;
+
+	bool_t m_ReloadScriptsOnSave = true;
+
+	RenderWindow* m_GameWindow = nullptr;
 
 	/// @brief This thread is used both for serializing the scene, deserializing it, and reloading scripts
 	std::thread m_CurrentAsyncActionThread;

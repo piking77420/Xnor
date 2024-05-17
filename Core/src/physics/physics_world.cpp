@@ -153,10 +153,13 @@ uint32_t PhysicsWorld::CreateBox(const BodyCreationInfo& info)
     return CreateBody(info, settings);
 }
 
-JPH::Character* PhysicsWorld::CreateCharacter(const JPH::CharacterSettings& settings, const Vector3& position, const Quaternion& rotation)
+JPH::Character* PhysicsWorld::CreateCharacter(const BodyCreationInfo& info, const JPH::CharacterSettings& settings)
 {
-    JPH::Character* const c = new JPH::Character(&settings, ToJph(position), ToJph(rotation), 0, m_PhysicsSystem);
+    JPH::Character* const c = new JPH::Character(&settings, ToJph(info.position), ToJph(info.rotation), 0, m_PhysicsSystem);
     c->AddToPhysicsSystem(JPH::EActivation::Activate);
+
+    const uint32_t bodyId = c->GetBodyID().GetIndexAndSequenceNumber();
+    m_BodyMap.emplace(bodyId, info.collider);
 
     return c;
 }

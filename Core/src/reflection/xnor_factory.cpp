@@ -4,7 +4,6 @@
 #include "audio/component/audio_source.hpp"
 #include "physics/component/box_collider.hpp"
 #include "physics/component/capsule_collider.hpp"
-#include "physics/component/character_controller.hpp"
 #include "physics/component/collider.hpp"
 #include "physics/component/sphere_collider.hpp"
 #include "rendering/light/directional_light.hpp"
@@ -19,7 +18,6 @@
 #include "scene/component/test_component_animation.hpp"
 #include "scene/component/test_component_physics.hpp"
 #include "scene/component/text_component.hpp"
-
 
 using namespace XnorCore;
 
@@ -110,7 +108,6 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<BoxCollider>();
     RegisterType<SphereCollider>();
     RegisterType<CapsuleCollider>();
-    RegisterType<CharacterController>();
     RegisterType<TestComponentPhysics>();
     RegisterType<CameraComponent>();
 

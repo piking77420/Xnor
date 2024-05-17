@@ -9,9 +9,9 @@ BEGIN_XNOR_EDITOR
 class Performance : public UiWindow
 {
     // Constants
-    static constexpr inline float_t GraphsHeight = 50.f;
-    static constexpr inline uint32_t DefaultSampleCount = 50;
-    static constexpr inline float_t MemoryArrayBoundsFactor = 1.1f;
+    static constexpr float_t GraphsHeight = 50.f;
+    static constexpr uint32_t DefaultSampleCount = 50;
+    static constexpr float_t MemoryArrayBoundsFactor = 1.1f;
     
 public:
     explicit Performance(Editor* editor, size_t sampleCount);
