@@ -3,7 +3,6 @@
 #include "core.hpp"
 #include "Maths/vector2.hpp"
 #include "Maths/vector3.hpp"
-#include "Maths/vector4.hpp"
 
 /// @file vertex.hpp
 /// @brief Defines the XnorCore::Vertex class.
@@ -26,8 +25,8 @@ struct Vertex
 	Vector3 tangent;
 	Vector3 bitangent;
 
-	int32_t boneIndices[MaxBoneWeight];
-	float_t boneWeight[MaxBoneWeight];
+	float_t boneIndices[MaxBoneWeight] = { -1, -1, -1, -1 };
+	float_t boneWeight[MaxBoneWeight] = {};
 };
 
 END_XNOR_CORE

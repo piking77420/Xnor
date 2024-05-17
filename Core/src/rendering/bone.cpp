@@ -10,9 +10,4 @@ void Bone::Create(const Matrix& localMatrix, const Matrix& offsetMatrix)
     global = local;
     globalInverse = offsetMatrix.Transposed();
     parentId = -1;
-
-    if (name == "spine_01")
-    {
-        Logger::LogInfo("{}", local);
-    }
 }

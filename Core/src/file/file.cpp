@@ -4,6 +4,7 @@
 #include <ranges>
 
 #include "file/file_manager.hpp"
+#include "resource/animation_montage.hpp"
 #include "resource/compute_shader.hpp"
 #include "resource/font.hpp"
 #include "resource/mesh.hpp"
@@ -99,6 +100,11 @@ std::string File::GetNameNoExtension() const
     return m_NameNoExtension;
 }
 
+std::string File::GetPathNoExtension() const
+{
+    return m_PathNoExtension;
+}
+
 std::string File::GetExtension() const
 {
     return m_Extension;
@@ -124,29 +130,32 @@ Pointer<Resource> File::GetResource() const
 void File::UpdateUtilityValues()
 {
     Entry::UpdateUtilityValues();
-    
+
+    std::filesystem::path path = m_Path;
+
     m_NameNoExtension = m_Path.stem().generic_string();
     m_Extension = m_Path.extension().string();
+    m_PathNoExtension = path.replace_extension().string();
 
     // Update file type from extension
     if (Utils::StringArrayContains(Texture::FileExtensions, m_Extension))
         m_Type = Type::Texture;
-    if (Utils::StringArrayContains(Model::FileExtensions, m_Extension))
-        m_Type = Type::Model;
-    if (Utils::StringArrayContains(Mesh::FileExtensions, m_Extension))
+    else if (Utils::StringArrayContains(Mesh::FileExtensions, m_Extension))
         m_Type = Type::Mesh;
-    if (Utils::StringArrayContains(Skeleton::FileExtensions, m_Extension))
+    else if (Utils::StringArrayContains(Skeleton::FileExtensions, m_Extension))
         m_Type = Type::Skeleton;
-    if (Utils::StringArrayContains(Font::FileExtensions, m_Extension))
+    else if (Utils::StringArrayContains(Font::FileExtensions, m_Extension))
         m_Type = Type::Font;
-    if (Utils::StringEqualsIgnoreCase(m_Extension, ".xml"))
+    else if (Utils::StringEqualsIgnoreCase(m_Extension, ".xml"))
         m_Type = Type::Xml;
-    if (Utils::StringArrayContains(Shader::VertexFileExtensions, m_Extension))
+    else if (Utils::StringArrayContains(AnimationMontage::FileExtensions, m_Extension))
+        m_Type = Type::AnimationMontage;
+    else if (Utils::StringArrayContains(Shader::VertexFileExtensions, m_Extension))
         m_Type = Type::VertexShader;
-    if (Utils::StringArrayContains(Shader::FragmentFileExtensions, m_Extension))
+    else if (Utils::StringArrayContains(Shader::FragmentFileExtensions, m_Extension))
         m_Type = Type::FragmentShader;
-    if (Utils::StringArrayContains(Shader::GeometryFileExtensions, m_Extension))
+    else if (Utils::StringArrayContains(Shader::GeometryFileExtensions, m_Extension))
         m_Type = Type::GeometryShader;
-    if (Utils::StringArrayContains(ComputeShader::ComputeFileExtensions, m_Extension))
+    else if (Utils::StringArrayContains(ComputeShader::ComputeFileExtensions, m_Extension))
         m_Type = Type::ComputeShader;
 }

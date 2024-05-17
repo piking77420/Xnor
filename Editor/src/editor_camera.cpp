@@ -5,7 +5,7 @@
 
 #include "editor.hpp"
 #include "input/time.hpp"
-#include "scene/component/mesh_renderer.hpp"
+#include "..\..\Core\include\scene\component\static_mesh_renderer.hpp"
 #include "utils/logger.hpp"
 #include "utils/utils.hpp"
 
@@ -143,20 +143,22 @@ void EditorCamera::OnPressGoToObject()
         return;
     
     const XnorCore::Entity& currentEntiy = *m_EditorRef->data.selectedEntity;
-    const XnorCore::MeshRenderer* meshRenderer = currentEntiy.GetComponent<XnorCore::MeshRenderer>();
-    
+    const XnorCore::StaticMeshRenderer* meshRenderer = currentEntiy.GetComponent<XnorCore::StaticMeshRenderer>();
+
     if (meshRenderer == nullptr)
     {
         m_DistanceToStop = 1.f;
     }
     else
     {
-        const XnorCore::Bound&& aabb = meshRenderer->model->GetAabb();
+        XnorCore::Bound aabb;
+        meshRenderer->GetAabb(&aabb);
+        
         Vector4 radiusPreScale = Vector4(aabb.extents.x, aabb.extents.y, aabb.extents.z, 1.0f) * 0.5f;
         radiusPreScale.w = 1.0f;
         
-        radiusPreScale = Matrix::Trs(Vector3(0.f), Quaternion::Identity(), currentEntiy.transform.GetScale()) * radiusPreScale;
-        const Vector3 correctVec = {radiusPreScale.x, radiusPreScale.y, radiusPreScale.z};
+        radiusPreScale = Matrix::Trs(Vector3::Zero(), Quaternion::Identity(), currentEntiy.transform.GetScale()) * radiusPreScale;
+        const Vector3 correctVec = { radiusPreScale.x, radiusPreScale.y, radiusPreScale.z };
         m_DistanceToStop = correctVec.Length();
     }
     

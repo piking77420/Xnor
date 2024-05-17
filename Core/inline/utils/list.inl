@@ -195,6 +195,30 @@ T* List<T>::Find(const std::function<bool_t(const T*)>& lambda)
 }
 
 template <typename T>
+const T* List<T>::Find(const std::function<bool_t(const T*)>& lambda) const
+{
+    for (size_t i = 0; i < m_Vector.size(); i++)
+    {
+        if (lambda(&m_Vector[i]))
+            return &m_Vector[i];
+    }
+
+    return nullptr;
+}
+
+template <typename T>
+size_t List<T>::FindPosition(const std::function<bool_t(const T*)>& lambda) const
+{
+    for (size_t i = 0; i < m_Vector.size(); i++)
+    {
+        if (lambda(&m_Vector[i]))
+            return i;
+    }
+
+    return std::numeric_limits<size_t>::max();
+}
+
+template <typename T>
 T* List<T>::Find(const std::function<bool_t(const T*, size_t)>& lambda)
 {
     for (size_t i = 0; i < m_Vector.size(); i++)

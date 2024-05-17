@@ -1,19 +1,19 @@
 ﻿#pragma once
 
+#include <vector>
+
 #include <Maths/matrix.hpp>
 #include <Maths/vector2i.hpp>
 
 #include "core.hpp"
-#include "utils/color.hpp"
-#include <vector>
-
-#include "vertex.hpp"
+#include "rendering/vertex.hpp"
 
 
 /// @file rhi_typedef.hpp
 /// @brief Defines various types and enumerations needed by XnorCore::Rhi.
 
 BEGIN_XNOR_CORE
+
 class Framebuffer;
 
 /// @brief Maximum amount of spot lights that can exists in a same scene

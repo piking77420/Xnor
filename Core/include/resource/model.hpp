@@ -6,6 +6,7 @@
 
 #include "core.hpp"
 #include "file/file.hpp"
+#include "refl/refl.hpp"
 #include "rendering/vertex.hpp"
 #include "resource/resource.hpp"
 #include "utils/bound.hpp"
@@ -16,11 +17,12 @@
 BEGIN_XNOR_CORE
 
 /// @brief Holds the necessary information to draw a 3D model.
-class Model : public Resource
+class Model final : public Resource
 {
 public:
+    /*
     /// @brief Allowed extensions for models.
-    XNOR_ENGINE static inline constexpr std::array<const char_t*, 57> FileExtensions
+    XNOR_ENGINE static inline constexpr std::array<const char_t*, 56> FileExtensions
     {
         ".3d",
         ".3ds",
@@ -35,7 +37,6 @@ public:
         ".bvh",
         ".csm",
         ".cob",
-        ".dae",
         ".dxf",
         ".enff",
         ".gltf",
@@ -79,7 +80,7 @@ public:
         ".x3d",
         ".xgl",
         ".zgl"
-    };
+    };*/
     
     // Use the base class' constructors
     using Resource::Resource;
@@ -92,20 +93,19 @@ public:
     /// @brief Destroys this Model.
     XNOR_ENGINE ~Model() override;
 
-    /// @copydoc XnorCore::Resource::Load(const uint8_t* buffer, int64_t length)
-    XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;
-
     /// @brief Loads a Model from assimp loaded data.
     XNOR_ENGINE bool_t Load(const aiMesh& loadedData);
 
-    /// @copydoc XnorCore::Resource::CreateInRhi
+    /// @copydoc XnorCore::Resource::CreateInInterface
     XNOR_ENGINE void CreateInInterface() override;
 
-    /// @copydoc XnorCore::Resource::DestroyInRhi
+    /// @copydoc XnorCore::Resource::DestroyInInterface
     XNOR_ENGINE void DestroyInInterface() override;
     
     /// @copydoc XnorCore::Resource::Unload
     XNOR_ENGINE void Unload() override;
+
+    XNOR_ENGINE bool_t Save() const override;
 
     /// @brief Gets the id of the model
     /// @return Model id
@@ -134,3 +134,5 @@ private:
 };
 
 END_XNOR_CORE
+
+REFL_AUTO(type(XnorCore::Model, bases<XnorCore::Resource>))

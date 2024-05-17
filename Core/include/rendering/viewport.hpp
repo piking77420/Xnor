@@ -22,7 +22,7 @@ public:
 	const Camera* camera = nullptr;
 
 	/// @brief Texture that's rendered to
-	Texture* m_Image = nullptr;
+	Texture* image = nullptr;
 
 	/// @brief Viewport size
 	Vector2i viewPortSize = Window::GetSize();
@@ -51,8 +51,8 @@ public:
 	XNOR_ENGINE void Resize(Vector2i newSize);
 	
 
+	[[nodiscard]]
 	XNOR_ENGINE float_t GetAspect() const;
-	
 };
 
 END_XNOR_CORE

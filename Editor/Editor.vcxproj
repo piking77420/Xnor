@@ -109,23 +109,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\editing\picking_strategy.cpp" />
-    <ClCompile Include="src\editing\transform_gizmo.cpp" />
-    <ClCompile Include="src\editor.cpp" />
-    <ClCompile Include="src\editor_camera.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\windows\content_browser.cpp" />
-    <ClCompile Include="src\windows\debug_console.cpp" />
-    <ClCompile Include="src\windows\editor_window.cpp" />
-    <ClCompile Include="src\windows\footer_window.cpp" />
-    <ClCompile Include="src\windows\header_window.cpp" />
-    <ClCompile Include="src\windows\inspector.cpp" />
-    <ClCompile Include="src\windows\performance.cpp" />
-    <ClCompile Include="src\windows\render_window.cpp" />
-    <ClCompile Include="src\windows\hierarchy.cpp" />
-    <ClCompile Include="src\windows\ui_window.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Core\Core.vcxproj">
       <Project>{5be6a8f5-f699-4cdf-977b-4a39badb4c7e}</Project>
     </ProjectReference>
@@ -137,16 +120,19 @@
     <ClInclude Include="include\editor.hpp" />
     <ClInclude Include="include\editor_camera.hpp" />
     <ClInclude Include="include\editor_data.hpp" />
+    <ClInclude Include="include\windows\animation_montage_window.hpp" />
+    <ClInclude Include="include\windows\animation_window.hpp" />
     <ClInclude Include="include\windows\content_browser.hpp" />
     <ClInclude Include="include\windows\debug_console.hpp" />
     <ClInclude Include="include\windows\editor_window.hpp" />
     <ClInclude Include="include\windows\footer_window.hpp" />
     <ClInclude Include="include\windows\header_window.hpp" />
+    <ClInclude Include="include\windows\hierarchy.hpp" />
     <ClInclude Include="include\windows\inspector.hpp" />
     <ClInclude Include="include\windows\performance.hpp" />
     <ClInclude Include="include\windows\render_window.hpp" />
-    <ClInclude Include="include\windows\hierarchy.hpp" />
     <ClInclude Include="include\windows\ui_window.hpp" />
+    <ClInclude Include="inline\editor.inl" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +140,25 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\editing\picking_strategy.cpp" />
+    <ClCompile Include="src\editing\transform_gizmo.cpp" />
+    <ClCompile Include="src\editor.cpp" />
+    <ClCompile Include="src\editor_camera.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\windows\animation_montage_window.cpp" />
+    <ClCompile Include="src\windows\animation_window.cpp" />
+    <ClCompile Include="src\windows\content_browser.cpp" />
+    <ClCompile Include="src\windows\debug_console.cpp" />
+    <ClCompile Include="src\windows\editor_window.cpp" />
+    <ClCompile Include="src\windows\footer_window.cpp" />
+    <ClCompile Include="src\windows\header_window.cpp" />
+    <ClCompile Include="src\windows\hierarchy.cpp" />
+    <ClCompile Include="src\windows\inspector.cpp" />
+    <ClCompile Include="src\windows\performance.cpp" />
+    <ClCompile Include="src\windows\render_window.cpp" />
+    <ClCompile Include="src\windows\ui_window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

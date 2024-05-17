@@ -150,6 +150,8 @@ public:
     /// @brief Called after the physics update
     XNOR_ENGINE void PostPhysics();
 
+    XNOR_ENGINE void OnRendering();
+
     /// @brief Compares 2 entities using their Guid
     /// @param entity Other
     /// @return Equals

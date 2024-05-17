@@ -13,12 +13,12 @@
 #include "scene/component/camera_component.hpp"
 #include "scene/component/gui_component.hpp"
 #include "scene/component/image.hpp"
-#include "scene/component/mesh_renderer.hpp"
-#include "scene/component/script_component.hpp"
-#include "scene/component/skinned_mesh_render.hpp"
+#include "scene/component/skinned_mesh_renderer.hpp"
 #include "scene/component/test_component.hpp"
+#include "scene/component/test_component_animation.hpp"
 #include "scene/component/test_component_physics.hpp"
 #include "scene/component/text_component.hpp"
+
 
 using namespace XnorCore;
 
@@ -48,7 +48,7 @@ inline void* XnorFactory::CreateObject(const std::string& name, const std::strin
     return it->second.createFunc(managedTypeName);
 }
 
-inline void XnorFactory::DisplayObject(void* const obj, const size_t hash)
+inline void XnorFactory::DisplayObject(void* const obj, const size_t hash, std::pair<void*, const char_t*>* const windowInfo)
 {
     auto&& it = m_FactoryMapHash.find(hash);
 
@@ -58,8 +58,9 @@ inline void XnorFactory::DisplayObject(void* const obj, const size_t hash)
         return;
     }
 
-    it->second.displayFunc(obj);
+    it->second.displayFunc(obj, windowInfo);
 }
+
 
 void XnorFactory::SerializeObject(void* const obj, const size_t hash)
 {
@@ -93,7 +94,11 @@ void XnorFactory::RegisterAllTypes()
     // It'll probably stay this way for the classes internal to Core, and as for the user scripts generated from the editor, a solution will be found at a later date probably
     
     RegisterType<Component>();
-    RegisterType<MeshRenderer>();
+    
+    RegisterType<SkinnedMeshRenderer>();
+    RegisterType<TestComponentAnimation>();
+    
+    RegisterType<StaticMeshRenderer>();
     RegisterType<DirectionalLight>();
     RegisterType<TestComponent>();
     RegisterType<PointLight>();
@@ -106,7 +111,6 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<CapsuleCollider>();
     RegisterType<TestComponentPhysics>();
     RegisterType<CameraComponent>();
-    RegisterType<SkinnedMeshRender>();
 
     RegisterType<AudioListener>();
     RegisterType<AudioSource>();

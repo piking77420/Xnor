@@ -49,7 +49,7 @@ Texture::~Texture()
         Texture::Unload();
 }
 
-bool_t Texture::Load(const uint8_t* buffer, const int64_t length)
+bool_t Texture::Load(const uint8_t* const buffer, const int64_t length)
 {
     stbi_set_flip_vertically_on_load(loadData.flipVertically);
     
@@ -64,12 +64,12 @@ bool_t Texture::Load(const uint8_t* buffer, const int64_t length)
     
     m_TextureFormat = Rhi::GetTextureFormatFromChannels(m_DataChannels);
     m_Loaded = true;
+
     return true;
 }
 
 void Texture::CreateInInterface()
 {
-    
     TextureCreateInfo createInfo
     {
         .size = m_Size,
@@ -104,11 +104,18 @@ void Texture::DestroyInInterface()
 
 void Texture::Unload()
 {
-    stbi_image_free(m_Data);
+    if (!m_IsEmbedded)
+        stbi_image_free(m_Data);
+
     m_Data = nullptr;
     m_Size = Vector2i::Zero();
     
     m_Loaded = false;
+}
+
+void Texture::SetIsEmbedded()
+{
+    m_IsEmbedded = true;
 }
 
 Vector2i Texture::GetSize() const

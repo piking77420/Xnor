@@ -104,7 +104,7 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 		}
 		
 		Rhi::UpdateModelUniform(modelData);
-		Rhi::DrawModel(DrawMode::Triangles, m_RenderingLightStruct.quad->GetId());
+		Rhi::DrawModel(DrawMode::Triangles, m_RenderingLightStruct.quad->models[0]->GetId());
 	}
 
 	shader->Unuse();
@@ -186,14 +186,10 @@ void LightManager::FecthLightInfo() const
 
 void LightManager::ComputeShadow(const Scene& scene, const Viewport& viewport, Renderer& renderer)
 {
-	m_ShadowMapShader->Use();
 	ComputeShadowDirLight(scene, *viewport.camera, renderer);
 	ComputeShadowSpotLight(scene, renderer);
-	m_ShadowMapShader->Unuse();
 	
-	m_ShadowMapShaderPointLight->Use();
 	ComputeShadowPointLight(scene, renderer);
-	m_ShadowMapShaderPointLight->Unuse();
 }
 
 void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPortCamera, Renderer& renderer)
@@ -260,7 +256,7 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 				.clearBufferFlags = BufferFlag::DepthBit,
 				.clearColor = Vector4::Zero()
 			};
-			renderer.RenderNonShadedPass(scene,cascadedCameras.at(i) , renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, false);
+			renderer.RenderNonShadedPass(scene,cascadedCameras.at(i) , renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, m_ShadowMapShaderSkinned, false);
 		}
 		
 	}
@@ -298,7 +294,7 @@ void LightManager::ComputeShadowSpotLight(const Scene& scene, Renderer& renderer
 			.clearColor = Vector4(0.f)
 		};
 		
-		renderer.RenderNonShadedPass(scene, cam, renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, false);
+		renderer.RenderNonShadedPass(scene, cam, renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, m_ShadowMapShaderSkinned, false);
 	}
 }
 
@@ -334,7 +330,7 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, Renderer& rendere
 				.clearColor = Vector4(std::numeric_limits<float_t>::max())
 			};
 		
-			renderer.RenderNonShadedPass(scene, cam, renderPassBeginInfo, m_ShadowRenderPass, m_ShadowMapShader, false);
+			renderer.RenderNonShadedPass(scene, cam, renderPassBeginInfo, m_ShadowRenderPass, m_ShadowMapShaderPointLight, m_ShadowMapShaderPointLightSkinned, false);
 		}
 	}
 }
@@ -508,7 +504,7 @@ void LightManager::InitShader()
 	m_RenderingLightStruct.editorUi->SetBlendFunction(blendFunction);
 	m_RenderingLightStruct.editorUi->CreateInInterface();
 	m_RenderingLightStruct.editorUi->SetInt("uiTexture",0);
-	m_RenderingLightStruct.quad = ResourceManager::Get<Model>("assets/models/quad.obj");
+	m_RenderingLightStruct.quad = ResourceManager::Get<Mesh>("assets/models/quad.obj");
 	
 	m_ShadowMapShader = ResourceManager::Get<Shader>("depth_shader");
 	constexpr ShaderProgramCullInfo cullInfo =
@@ -524,6 +520,17 @@ void LightManager::InitShader()
 	m_ShadowMapShaderPointLight = ResourceManager::Get<Shader>("depth_shader_point_light");
 	m_ShadowMapShaderPointLight->SetFaceCullingInfo(cullInfo);
 	m_ShadowMapShaderPointLight->CreateInInterface();
+
+	
+	// Skinned
+	m_ShadowMapShaderSkinned = ResourceManager::Get<Shader>("depth_shader_skinned");
+	m_ShadowMapShaderSkinned->SetFaceCullingInfo(cullInfo);
+	m_ShadowMapShaderSkinned->CreateInInterface();
+
+	m_ShadowMapShaderPointLightSkinned = ResourceManager::Get<Shader>("depth_shader_point_light_skinned");
+	m_ShadowMapShaderPointLightSkinned->SetFaceCullingInfo(cullInfo);
+	m_ShadowMapShaderPointLightSkinned->CreateInInterface();
+	
 }
 
 float_t LightManager::GetMax(Vector3 vec) const

@@ -28,6 +28,7 @@ public:
         Skeleton,
         Font,
         Xml,
+        AnimationMontage,
         VertexShader,
         FragmentShader,
         GeometryShader,
@@ -66,7 +67,11 @@ public:
     /// @brief Returns the name of this File without the file extension.
     [[nodiscard]]
     XNOR_ENGINE std::string GetNameNoExtension() const;
-    
+
+    /// @brief Returns the name of this File without the file extension.
+    [[nodiscard]]
+    XNOR_ENGINE std::string GetPathNoExtension() const;
+
     /// @brief Returns the file extension of this File.
     [[nodiscard]]
     XNOR_ENGINE std::string GetExtension() const;
@@ -101,6 +106,7 @@ protected:
 private:
     std::string m_NameNoExtension;
     std::string m_Extension;
+    std::string m_PathNoExtension;
     Type m_Type = Type::Unknown;
     
     int8_t* m_Data = nullptr;

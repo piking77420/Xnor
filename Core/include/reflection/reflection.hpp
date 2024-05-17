@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include <functional>
 #include <refl/refl.hpp>
 
 /// @file reflection.hpp
@@ -16,7 +15,7 @@ using TypeDescriptor = refl::type_descriptor<T>;
 /// @brief refl::attr::usage::type shorthand
 ///
 /// Specifies that an attribute can only be used on a type
-using FieldType = refl::attr::usage::type;
+using TypeAttribute = refl::attr::usage::type;
 
 /// @brief refl::attr::usage::field shorthand
 ///
@@ -76,7 +75,7 @@ namespace Reflection
     template <typename T>
     struct ModifiedCallback : FieldAttribute
     {
-        using Type = void (*) (T*);
+        using Type = void(*)(T*);
         
         Type callback;
 
@@ -102,6 +101,30 @@ namespace Reflection
         /// @param min Minimum
         /// @param max Maximum
         constexpr explicit Range(const T& min, const T& max) : minimum(min), maximum(max) {}
+    };
+
+    /// @brief Allows an integer or floating type to be bound between a dynamic minimum and a maximum value, it will display the field using a slider
+    /// @tparam ReflectT Top level type
+    /// @tparam T Field type
+    template <typename ReflectT, typename T>
+    struct DynamicRange : FieldAttribute
+    {
+        /// @brief Shorthand for a class member pointer
+        using PtrType = T ReflectT::*;
+
+        /// @brief Minimum value
+        PtrType minimum;
+        /// @brief Maximum value
+        PtrType maximum;
+
+        /// @brief Creates a dynamic range with 0 being the minimum
+        /// @param max Maximum
+        constexpr explicit DynamicRange(const PtrType max) : minimum(nullptr), maximum(max) {}
+
+        /// @brief Creates a dynamic range
+        /// @param min Minimum
+        /// @param max Maximum
+        constexpr explicit DynamicRange(const PtrType min, const PtrType max) : minimum(min), maximum(max) {}
     };
 
     /// @brief Allows a tooltip to be bound to a field
@@ -137,6 +160,17 @@ namespace Reflection
     /// @brief Display a field as read only
     struct ReadOnly : FieldAttribute
     {
+    };
+
+    /// @brief Binds a window to a type
+    struct OpenEditorWindow : TypeAttribute
+    {
+        /// @brief Window text
+        const char_t* windowName;
+
+        /// @brief Creates a tooltip from a string literal
+        /// @param name Window name
+        constexpr explicit OpenEditorWindow(const char_t* const name) : windowName(name) {}
     };
 
     template <typename T>

@@ -38,8 +38,6 @@ void ResourceManager::LoadAll()
                 Load<Texture>(file, false);
             else if (std::ranges::find(Mesh::FileExtensions, file->GetExtension()) != Mesh::FileExtensions.end())
                 Load<Mesh>(file, false);
-            else if (std::ranges::find(Model::FileExtensions, file->GetExtension()) != Model::FileExtensions.end())
-                Load<Model>(file, false);
             else if (std::ranges::find(Skeleton::FileExtensions, file->GetExtension()) != Skeleton::FileExtensions.end())
                 Load<Skeleton>(file, false);
             else if (std::ranges::find(AudioTrack::FileExtensions, file->GetExtension()) != AudioTrack::FileExtensions.end())

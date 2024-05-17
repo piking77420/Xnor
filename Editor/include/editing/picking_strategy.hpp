@@ -28,8 +28,9 @@ public:
 
 private:
     Editor* m_Editor = nullptr;
-    XnorCore::Pointer<XnorCore::Shader> m_PickingShader;
-    
+    XnorCore::Pointer<XnorCore::Shader> m_PickingShaderStatic;
+    XnorCore::Pointer<XnorCore::Shader> m_PickingShaderSkinned;
+
     XnorCore::RenderPass m_ColorPass;
     XnorCore::Framebuffer* frameBuffer = nullptr;
 

@@ -21,6 +21,8 @@ public:
     /// @brief Called every frame when the world is playing
     XNOR_ENGINE static void Update();
     
+    XNOR_ENGINE static void OnRendering();
+
     /// @brief Whether the world is playing/running
     XNOR_ENGINE static inline bool_t isPlaying = false;
 

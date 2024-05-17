@@ -26,11 +26,13 @@ RenderWindow::RenderWindow(Editor* editor, const std::string& title, XnorCore::V
 
 void RenderWindow::Display()
 {
-    ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_Viewport->m_Image->GetId()), ImGui::GetContentRegionAvail(),  ImVec2(0, 1), ImVec2(1, 0));
+    ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(m_Viewport->image->GetId()), ImGui::GetContentRegionAvail(),  ImVec2(0, 1), ImVec2(1, 0));
 }
 
 void RenderWindow::OnApplicationRendering()
 {
+    if (m_Size == Vector2i::Zero())
+        return;
     
     if (m_Viewport->frameBuffer == nullptr || m_Viewport->viewPortSize != m_Size)
     {
@@ -55,7 +57,7 @@ XnorCore::Input::BoundWindowInfo RenderWindow::GetBindWindoInfo() const
     
     const XnorCore::Input::BoundWindowInfo windowInfo =
            {
-        .windowPos = static_cast<Vector2>(m_Position),
+        .windowPos = static_cast<Vector2>(pos),
         .windowSize = static_cast<Vector2>(m_Size),
         .isEditor = m_Viewport->isEditor,
         .isRendering = true

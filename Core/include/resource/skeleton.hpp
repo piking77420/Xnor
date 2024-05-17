@@ -13,7 +13,9 @@
 
 BEGIN_XNOR_CORE
 
-class Skeleton : public Resource
+class Mesh;
+
+class Skeleton final : public Resource
 {
 public:    
     /// @brief Allowed extensions for skeletons.
@@ -38,18 +40,25 @@ public:
     XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;
 
     XNOR_ENGINE bool_t Load(const aiSkeleton& loadedData);
+    XNOR_ENGINE bool_t Load(const aiMesh& loadedData, const aiNode& rootNode);
+    XNOR_ENGINE bool_t Load(const aiScene& scene, const aiAnimation& loadedData);
 
-    XNOR_ENGINE bool_t Load(const aiMesh& loadedData);
+    /// @brief Re-orders how the bones are stored in order to have the parents first and the children after
+    XNOR_ENGINE void ReorderBones();
 
     [[nodiscard]]
     XNOR_ENGINE const List<Bone>& GetBones() const;
 
+    Mesh* mesh = nullptr;
+
 private:
     List<Bone> m_Bones;
 
-    void ComputeGlobalMatrices();
+    XNOR_ENGINE void PrintBones() const;
 
-    void PrintBones() const;
+    XNOR_ENGINE void ReorderBones(Bone* parent, List<Bone>* newBones);
 };
 
 END_XNOR_CORE
+
+REFL_AUTO(type(XnorCore::Skeleton, bases<XnorCore::Resource>))

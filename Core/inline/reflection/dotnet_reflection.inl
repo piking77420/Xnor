@@ -11,7 +11,7 @@ BEGIN_XNOR_CORE
 template <typename T>
 void DotnetReflection::RegisterBaseType(const std::string& typeName)
 {
-    DotnetTypeInfo info = {
+    const  DotnetTypeInfo info = {
         .createFunc = []() -> Coral::ManagedObject { return {}; },
         .displayFunc = [](ScriptComponent* const script, void* const obj, const char_t* const name) -> void { DisplaySimpleType<T>(script, static_cast<T*>(obj), name); },
         .serializeFunc = [](void* const value, const std::string& fieldName) -> void { SerializeSimpleType<T>(static_cast<T*>(value), fieldName); },

@@ -9,28 +9,14 @@ using namespace XnorCore;
 
 Mesh::~Mesh()
 {
-    for (uint32_t i = 0; i < models.GetSize(); i++)
-        delete models[i];
-
-    for (uint32_t i = 0; i < m_Textures.GetSize(); i++)
-        delete m_Textures[i];
-
-    for (uint32_t i = 0; i < m_Skeletons.GetSize(); i++)
-        delete m_Skeletons[i];
-
-    for (uint32_t i = 0; i < m_Animations.GetSize(); i++)
-        delete m_Animations[i];
-
     models.Clear();
-    m_Textures.Clear();
-    m_Skeletons.Clear();
-    m_Animations.Clear();
 }
 
 bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
 {
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFileFromMemory(buffer, length, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FindInvalidData | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace | aiProcess_PopulateArmatureData);
+    const aiScene* scene = importer.ReadFileFromMemory(buffer, length, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace | aiProcess_PopulateArmatureData);
+    const std::string folderPath = m_File->GetPathNoExtension() + '\\';
 
     if (!scene)
     {
@@ -38,51 +24,167 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
         return false;
     }
 
-    for (uint32_t i = 0; i < scene->mNumMeshes; i++)
+    Pointer<Skeleton> skeletonRef = nullptr;
+
+    const bool_t hasSkeleton = LoadMesh(*scene, &skeletonRef);
+
+    if (hasSkeleton)
     {
-        // TODO: mName will not be accurate
-        Pointer<Model> model = ResourceManager::Add<Model>(scene->mMeshes[i]->mName.C_Str());
-
-        if (!model->Load(*scene->mMeshes[i]))
+        for (uint32_t i = 0; i < scene->mNumAnimations; i++)
         {
-            ResourceManager::Unload(model);
-            return false;
+            Pointer<Animation> animation = ResourceManager::Add<Animation>(folderPath + std::string(scene->mAnimations[i]->mName.C_Str()) + ".anim");
+        
+            animation->Load(*scene->mAnimations[i]);
+            animation->BindSkeleton(m_Skeletons[0]);
+            m_Animations.Add(animation);
         }
-
-        if (scene->mMeshes[i]->HasBones())
-        {
-            Skeleton* const skeleton = new Skeleton();
-
-            skeleton->Load(*scene->mMeshes[i]);
-            m_Skeletons.Add(skeleton);
-        }
-
-        // model->CreateInRhi();
-        //models.Add(model);
     }
-
+    
     /*
     for (uint32_t i = 0; i < scene->mNumTextures; i++)
     {
-        break;
-        Texture* const texture = new Texture(scene->mTextures[i]->mFilename.C_Str());
+        std::string fileName = GetTextureFileName(folderPath,scene->mTextures[i]->mFilename.C_Str(),scene->mTextures[i]->achFormatHint, i);
+    
+        const std::string fullName = folderPath + fileName;
 
-        const int64_t size = static_cast<int64_t>(static_cast<uint64_t>(scene->mTextures[i]->mWidth) * static_cast<uint64_t>(scene->mTextures[i]->mHeight) * sizeof(aiTexel));
+        if (FileManager::Contains(fullName))
+        {
+            
+        }
+        
+        const size_t pos = fileName.find_first_of('\\');
+        if (pos != std::string::npos)
+        {
+            const std::string subFolder = folderPath + fileName.substr(0, pos);
+            //FileManager::AddDirectory(subFolder);
+        }
+        Pointer<Texture> texture = ResourceManager::Add<Texture>(fullName);
+
+        int64_t size = 0;
+        if (scene->mTextures[i]->mHeight == 0)
+            size = scene->mTextures[i]->mWidth;
+        else
+            size = static_cast<int64_t>(static_cast<uint64_t>(scene->mTextures[i]->mWidth) * static_cast<uint64_t>(scene->mTextures[i]->mHeight) * sizeof(aiTexel));
+
         texture->Load(reinterpret_cast<const uint8_t*>(scene->mTextures[i]->pcData), size);
-        texture->CreateInRhi();
+        texture->SetIsEmbedded();
+        texture->Save();
+    }*/
 
-        m_Textures.Add(texture);
-    }
-    */
-
-    for (uint32_t i = 0; i < scene->mNumAnimations; i++)
+    /*
+    if (textures.GetSize() >= 1)
     {
-        Animation* const animation = new Animation(scene->mAnimations[i]->mName.C_Str());
+        aiString textureName;
+        scene->mMaterials[0]->GetTexture(aiTextureType_DIFFUSE, 0, &textureName);
+        
+        material.albedoTexture = Pointer<Texture>::New(*textures[0]);
+    }*/
+    
+    return true;
+}
 
-        animation->Load(*scene->mAnimations[i]);
+void Mesh::CreateInInterface()
+{
+    for (size_t i = 0; i < models.GetSize(); i++)
+        models[i]->CreateInInterface();
+    
+    m_LoadedInInterface = true;
+}
 
-        m_Animations.Add(animation);
+Pointer<Animation> Mesh::GetAnimation(const size_t id)
+{
+    if (id >= m_Animations.GetSize())
+        return nullptr;
+    
+    return m_Animations[id];
+}
+
+std::string Mesh::GetTextureFileName(const std::string& baseFileName, const std::string& textureFormat, size_t index)
+{
+    std::string returnName;
+    std::string baseNameCopy = baseFileName;
+    
+    baseNameCopy.pop_back();
+
+    const size_t last =  baseNameCopy.find_last_of('\\') + 1;
+        
+    for (size_t i = 0; i < baseNameCopy.size();i++)
+        returnName.push_back(baseNameCopy[i]);
+
+    returnName += ("texture_" + std::to_string(index));
+    returnName.push_back('.');
+
+    return returnName + textureFormat;
+}
+
+bool_t Mesh::LoadMesh(const aiScene& scene,Pointer<Skeleton>* outSkeleton)
+{
+    const std::string folderPath = m_File->GetPathNoExtension() + '\\';
+    //FileManager::AddDirectory(folderPath);
+
+    uint32_t nbrOfSkeleton = 0;
+    bool_t hasSkeleton = false;
+    Pointer<Skeleton> skeleton = nullptr;
+    
+    for (uint32_t i = 0; i < scene.mNumMeshes; i++)
+    {
+        const std::string meshName = scene.mMeshes[i]->mName.C_Str();
+        const std::string fullName = folderPath + std::string(meshName) + std::string(".obj");
+        Pointer<Model> model = nullptr;
+        
+        if (!ResourceManager::Contains(fullName))
+        {
+           model = ResourceManager::Add<Model>(fullName);
+
+            if (!model->Load(*scene.mMeshes[i]))
+            {
+                ResourceManager::Unload(model);
+                return false;
+            }
+            models.Add(model);
+
+            if (nbrOfSkeleton > 0)
+            {
+                Logger::LogWarning("Xnor don't handle multiple skeleton from one file {}", m_File->GetPath());
+                continue;
+            }
+        }
+        else
+        {
+           model = ResourceManager::Get<Model>(fullName);
+        }
+
+        if (scene.mMeshes[i]->HasBones())
+        {
+            std::string resourceName = folderPath + std::string(scene.mAnimations[i]->mName.C_Str()) + ".skel";
+            if (ResourceManager::Contains(resourceName))
+            {
+                skeleton = ResourceManager::Get<Skeleton>(resourceName);
+                *outSkeleton = skeleton;
+                return true;
+            }
+            else
+            {
+                skeleton = ResourceManager::Add<Skeleton>(resourceName);
+            }
+            
+            skeleton->Load(*scene.mMeshes[i], *scene.mRootNode);
+
+            if (i < scene.mNumAnimations)
+                skeleton->Load(scene, *scene.mAnimations[i]);
+
+            skeleton->ReorderBones();
+            skeleton->mesh = this;
+
+            m_Skeletons.Add(skeleton);
+            nbrOfSkeleton++;
+            hasSkeleton = true;
+        }
+        
     }
 
-    return true;
+    if (hasSkeleton)
+        *outSkeleton = skeleton;
+    
+    return hasSkeleton;
 }

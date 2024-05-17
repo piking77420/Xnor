@@ -142,16 +142,18 @@ struct Data64
 #include "resource/cubemap.hpp"
 #include "resource/font.hpp"
 #include "resource/audio_track.hpp"
+#include "resource/animation_montage.hpp"
 #include "resource/model.hpp"
-#include "resource/mesh.hpp"
+#include "resource/texture.hpp"
 #include "resource/animation.hpp"
+#include "resource/mesh.hpp"
 #include "resource/resource.hpp"
 #include "resource/resource_manager.hpp"
 #include "resource/shader.hpp"
-#include "resource/texture.hpp"
 
 #include "scene/component/camera_component.hpp"
-#include "scene/component/mesh_renderer.hpp"
+#include "scene/component/static_mesh_renderer.hpp"
+#include "scene/component/skinned_mesh_renderer.hpp"
 #include "scene/component/script_component.hpp"
 
 #include "scene/component.hpp"
@@ -185,12 +187,10 @@ struct Data64
 %}
 
 %include "utils/logger.i"
-
 %include "utils/pointer.hpp"
-
 %include "utils/guid.hpp"
-
 %include "utils/list.i"
+%include "utils/color.i"
 %include "utils/event.i"
 
 %include "resource/resource.hpp"
@@ -200,6 +200,7 @@ struct Data64
 %include "file/file.i"
 %include "file/file_manager.hpp"
 
+%include "rendering/vertex.hpp"
 %include "rendering/rhi_typedef.i"
 
 %include "resource/cubemap.hpp"
@@ -214,10 +215,18 @@ struct Data64
 
 %include "resource/model.hpp"
 
+%include "resource/texture.hpp"
+%include "rendering/material.hpp"
+%include "rendering/bone.hpp"
+%include "resource/skeleton.hpp"
+%include "resource/animation.hpp"
+
 %include "resource/mesh.hpp"
 %include "resource/resource_manager.hpp"
 
 %include "resource/shader.hpp"
+
+%include "resource/mesh.hpp"
 
 %include "input/gamepad_input.hpp"
 %include "input/keyboard_input.hpp"
@@ -228,8 +237,6 @@ struct Data64
 %include "scene/component.i"
 
 %include "csharp/dotnet_utils.hpp"
-
-%include "utils/color.i"
 
 %include "rendering/light/light.hpp"
 %include "rendering/light/directional_light.hpp"
@@ -257,7 +264,8 @@ struct Data64
 %include "physics/component/mesh_collider.i"
 %include "physics/component/sphere_collider.i"
 
-%include "scene/component/mesh_renderer.hpp"
+%include "scene/component/static_mesh_renderer.hpp"
+%include "scene/component/skinned_mesh_renderer.i"
 %include "scene/component/script_component.i"
 
 %include "scene/entity.i"

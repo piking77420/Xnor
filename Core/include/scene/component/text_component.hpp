@@ -3,6 +3,7 @@
 #include "gui_component.hpp"
 #include "resource/font.hpp"
 #include "scene/component.hpp"
+#include "utils/color.hpp"
 
 BEGIN_XNOR_CORE
 

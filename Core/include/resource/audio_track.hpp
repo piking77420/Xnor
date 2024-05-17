@@ -39,14 +39,14 @@ public:
     /// @brief Gets the raw data of the texture
     /// @tparam T Type
     /// @return Data
-    template<typename T = uint8_t>
+    template <typename T = uint8_t>
     [[nodiscard]]
     const T* GetData() const;
 
     /// @brief Gets the raw data of the texture
     /// @tparam T Type
     /// @return Data
-    template<typename T = uint8_t>
+    template <typename T = uint8_t>
     [[nodiscard]]
     T* GetData();
     

@@ -158,7 +158,7 @@ namespace Meta
     /// 
     /// @tparam T Type
     template <typename T>
-    constexpr bool_t IsNativeType = IsAny<T, uint8_t, int8_t, uint16_t, int16_t, uint32_t, int32_t, float_t, double_t, bool_t>;
+    constexpr bool_t IsNativeType = IsAny<T, uint8_t, int8_t, uint16_t, int16_t, uint32_t, int32_t, uint64_t, int64_t, float_t, double_t, bool_t>;
 
     /// @brief Checks if T is an integral or a floating type.
     /// 
@@ -174,7 +174,7 @@ namespace Meta
     /// 
     /// @tparam T Type
     template <typename T>
-    constexpr bool_t IsIntegralOrFloating = IsAny<T, uint8_t, int8_t, uint16_t, int16_t, uint32_t, int32_t, float_t, double_t>;
+    constexpr bool_t IsIntegralOrFloating = IsAny<T, uint8_t, int8_t, uint16_t, int16_t, uint32_t, int32_t, uint64_t, int64_t, float_t, double_t>;
 
     /// @brief Checks if T is a math type.
     /// 

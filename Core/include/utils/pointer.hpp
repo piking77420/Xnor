@@ -57,7 +57,7 @@ BEGIN_XNOR_CORE
 /// @see <a href="https://en.cppreference.com/w/cpp/memory/shared_ptr">std::shared_ptr</a>
 /// @see <a href="https://en.cppreference.com/w/cpp/memory/weak_ptr">std::weak_ptr</a>
 template <typename T>
-class Pointer
+class Pointer final
 {
 public:
     /// @brief The type of ReferenceCounter, and therefore the type this Pointer is pointing to.

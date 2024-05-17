@@ -13,6 +13,7 @@
 #include "scene/component/test_component.hpp"
 #include "serialization/serializer.hpp"
 #include "utils/coroutine.hpp"
+#include "windows/animation_montage_window.hpp"
 #include "windows/content_browser.hpp"
 #include "windows/debug_console.hpp"
 #include "windows/editor_window.hpp"
@@ -29,6 +30,18 @@ using namespace XnorEditor;
 
 void Editor::CheckWindowResize()
 {
+}
+
+void Editor::OpenCreatedWindow(const std::string& name, void* const arg) const
+{
+	for (UiWindow* const w : m_UiWindows)
+	{
+		if (w->GetName() != name)
+			continue;
+
+		w->opened = true;
+		w->SetParam(arg);
+	}
 }
 
 Editor::Editor(const int32_t argc, const char_t* const* const argv)
@@ -81,28 +94,30 @@ Editor::~Editor()
 
 void Editor::CreateDefaultWindows()
 {
-	m_UiWindows.push_back(new Performance(this, 50));
-	m_UiWindows.push_back(new Inspector(this));
-	m_UiWindows.push_back(new HeaderWindow(this));
-	m_UiWindows.push_back(new Hierarchy(this));
-	m_UiWindows.push_back(new ContentBrowser(this, XnorCore::FileManager::Get<XnorCore::Directory>("assets")));
-
 	data.editorViewPort.isEditor = true;
 	data.editorViewPort.camera = &data.editorCam;
-	m_UiWindows.push_back(new RenderWindow(this, *gameViewPort));
-	m_UiWindows.push_back(new EditorWindow(this, data.editorViewPort));
-	m_UiWindows.push_back(new DebugConsole(this));
-	m_UiWindows.push_back(new FooterWindow(this));
 
 	if (XnorCore::FileManager::Contains(SerializedScenePath))
 		data.currentScene = XnorCore::FileManager::Get<XnorCore::File>(SerializedScenePath);
+
+	OpenWindow<EditorWindow>(data.editorViewPort);
+	OpenWindow<RenderWindow>(*gameViewPort);
+	OpenWindow<Performance>(50);
+	OpenWindow<Inspector>();
+	OpenWindow<HeaderWindow>();
+	OpenWindow<Hierarchy>();
+	OpenWindow<ContentBrowser>(XnorCore::FileManager::Get<XnorCore::Directory>("assets"));
+	OpenWindow<DebugConsole>();
+	OpenWindow<FooterWindow>();
+	
+	//SetupWindow<AnimationMontageWindow>();
 }
 
 void Editor::BeginDockSpace() const
 {
-	static bool dockspaceOpen = true;
-	static bool optFullscreenPersistant = true;
-	const bool optFullscreen = optFullscreenPersistant;
+	static bool_t dockspaceOpen = true;
+	static bool_t optFullscreenPersistant = true;
+	const bool_t optFullscreen = optFullscreenPersistant;
 	
 	ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
 	if (optFullscreen)
@@ -405,9 +420,14 @@ void Editor::UpdateWindows()
 {
 	for (UiWindow* const w : m_UiWindows)
 	{
-		ImGui::Begin(w->GetName(), nullptr, w->windowFlags);
-		w->FetchInfo();
-		w->Display();
+		if (!w->opened)
+			continue;
+		
+		if (ImGui::Begin(w->GetName().c_str(), w->canClose ? &w->opened : nullptr , w->windowFlags))
+		{
+			w->FetchInfo();
+			w->Display();
+		}
 		ImGui::End();
 	}
 }
@@ -416,7 +436,8 @@ void Editor::OnRenderingWindow()
 {
 	for (UiWindow* const w : m_UiWindows)
 	{
-		w->OnApplicationRendering();
+		if (w->opened)
+			w->OnApplicationRendering();
 	}
 }
 
@@ -512,8 +533,9 @@ void Editor::WorldBehaviours()
 		{
 			XnorCore::World::Begin();
 			XnorCore::World::hasStarted = true;
-		}
-		
+			}
 		XnorCore::World::Update();
 	}
+	XnorCore::World::OnRendering();
+
 }

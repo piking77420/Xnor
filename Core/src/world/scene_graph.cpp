@@ -2,6 +2,8 @@
 
 #include <Maths/matrix.hpp>
 
+#include "utils/logger.hpp"
+
 using namespace XnorCore;
 
 Matrix GetTrsOfParents(const Entity& parent)

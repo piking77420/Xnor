@@ -40,6 +40,7 @@ void EditorWindow::Display()
         if (!isEditingTransform)
             SelectEntityOnScreen();
     }
+
     m_EditorCamera.OnPressGoToObject();
 }
 

@@ -28,7 +28,7 @@ public:
     /// @brief Renders a skybox
     /// @param cubeModel Cube model
     /// @param skybox Skybox
-    XNOR_ENGINE void DrawSkymap(const Pointer<Model>& cubeModel, const Skybox& skybox) const;
+    XNOR_ENGINE void DrawSkymap(const Pointer<Mesh>& cubeModel, const Skybox& skybox) const;
   
 private:
     Pointer<Shader> m_SkyboxDrawerShader;

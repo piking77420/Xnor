@@ -41,13 +41,21 @@ void Font::CreateInInterface()
             continue;
         }
 
+        const Vector2i glyphSize = Vector2i(face->glyph->bitmap.width,face->glyph->bitmap.rows);
+        
+        if (glyphSize == Vector2i::Zero())
+        {
+            Logger::LogWarning("Character {} off the font {} has a size of {}",c ,m_File->GetPath().generic_string(),glyphSize);
+            continue;
+        }
+
         TextureCreateInfo createInfo =
         {
             .textureType = TextureType::Texture2D,
             .datas = {face->glyph->bitmap.buffer},
             .mipMaplevel = 1,
             .depth = 1,
-            .size = Vector2i(face->glyph->bitmap.width,face->glyph->bitmap.rows),
+            .size = glyphSize,
             .filtering = TextureFiltering::Linear,
             .wrapping = TextureWrapping::ClampToEdge,
             .format = TextureFormat::Red,

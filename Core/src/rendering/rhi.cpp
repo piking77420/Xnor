@@ -83,16 +83,17 @@ uint32_t Rhi::CreateModel(const std::vector<Vertex>& vertices, const std::vector
 	glVertexArrayAttribBinding(modelInternal.vao, 4, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 4, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, bitangent));
 
+	
 	// bone indices
 	glEnableVertexArrayAttrib(modelInternal.vao, 5);
 	glVertexArrayAttribBinding(modelInternal.vao, 5, 0);
-	glVertexArrayAttribFormat(modelInternal.vao, 5, Vertex::MaxBoneWeight, GL_INT, GL_FALSE, offsetof(Vertex, boneIndices));
+	glVertexArrayAttribFormat(modelInternal.vao, 5, Vertex::MaxBoneWeight, GL_FLOAT, GL_FALSE, offsetof(Vertex, boneIndices));
 	// bone weights
 	glEnableVertexArrayAttrib(modelInternal.vao, 6);
 	glVertexArrayAttribBinding(modelInternal.vao, 6, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 6, Vertex::MaxBoneWeight, GL_FLOAT, GL_FALSE, offsetof(Vertex, boneWeight));
-
 	
+
 	glVertexArrayVertexBuffer(modelInternal.vao, 0, modelInternal.vbo, 0, sizeof(Vertex));
 	glVertexArrayElementBuffer(modelInternal.vao, modelInternal.ebo);
 	
@@ -117,7 +118,7 @@ bool_t Rhi::DestroyModel(const uint32_t modelId)
 	return true;
 }
 
-void Rhi::DrawModel(DrawMode::DrawMode drawMode,const uint32_t modelId)
+void Rhi::DrawModel(const ENUM_VALUE(DrawMode) drawMode,const uint32_t modelId)
 {
 	const ModelInternal model = m_ModelMap.at(modelId);
 	glBindVertexArray(model.vao);
@@ -1643,9 +1644,9 @@ void Rhi::UpdateCameraUniform(const CameraUniformData& cameraUniformData)
 	m_CameraUniform->Update(sizeof(CameraUniformData), 0, cameraUniformData.view.Raw());
 }
 
-void Rhi::UpdateAninationUniform(const SkinnedMeshGpuData& skinnedMeshGPUData)
+void Rhi::UpdateAnimationUniform(const SkinnedMeshGpuData& skinnedMeshGpuData)
 {
-	m_AnimationBuffer->Update(sizeof(SkinnedMeshGpuData), 0, skinnedMeshGPUData.boneMatrices->Raw());
+	m_AnimationBuffer->Update(sizeof(SkinnedMeshGpuData), 0, skinnedMeshGpuData.boneMatrices->Raw());
 }
 
 void Rhi::UpdateLight(const GpuLightData& lightData)

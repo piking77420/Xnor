@@ -13,7 +13,7 @@ void ToneMapping::ComputeToneMaping(const Texture& imageWithoutToneMapping, cons
     m_Aces->Use();
     imageWithoutToneMapping.BindTexture(ToneMapedTextureBinding);
     bloomTexture.BindTexture(1);
-    Rhi::DrawModel(DrawMode::Triangles, m_Quad->GetId());
+    Rhi::DrawModel(DrawMode::Triangles, m_Quad->models[0]->GetId());
     m_Aces->Unuse();
 }
 

@@ -57,11 +57,11 @@ public:
 private:
     Pointer<XnorCore::Shader> m_GizmoShader;
 
-    Pointer<XnorCore::Model> m_Sphere;
+    Pointer<XnorCore::Mesh> m_Sphere;
 
-    Pointer<XnorCore::Model> m_Cube;
+    Pointer<XnorCore::Mesh> m_Cube;
 
-    Pointer<XnorCore::Model> m_Capsule;
+    Pointer<XnorCore::Mesh> m_Capsule;
     
     RenderPass m_RenderPass;
 

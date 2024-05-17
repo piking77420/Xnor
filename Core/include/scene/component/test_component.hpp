@@ -15,7 +15,7 @@
 BEGIN_XNOR_CORE
 
 /// @private
-class TestComponent : public Component
+class TestComponent final : public Component
 {
     REFLECTABLE_IMPL(TestComponent)
 

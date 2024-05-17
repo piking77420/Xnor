@@ -94,7 +94,7 @@ private:
         Pointer<Texture> dirLightTexture;
         Pointer<Texture> spotLightTexture;
         Pointer<Shader> editorUi;
-        Pointer<Model> quad;
+        Pointer<Mesh> quad;
     };
     
     GpuLightData* m_GpuLightData = nullptr;
@@ -102,7 +102,10 @@ private:
     
     Pointer<Shader> m_ShadowMapShader;
     Pointer<Shader> m_ShadowMapShaderPointLight;
-    
+
+    Pointer<Shader> m_ShadowMapShaderSkinned;
+    Pointer<Shader>m_ShadowMapShaderPointLightSkinned;
+
     
     RenderPass m_ShadowRenderPass;
     Framebuffer* m_ShadowFrameBuffer {nullptr};

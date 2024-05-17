@@ -62,31 +62,34 @@ void DrawGizmo::DrawGizmos(const Viewport& viewport, const Entity* selectedEntit
 
 void DrawGizmo::DrawCollider(const Entity& entity)
 {
+
     std::vector<const Collider*> entityCollider;
     entity.GetComponents<Collider>(&entityCollider);
 
     if (entityCollider.empty())
         return;
 
-    Pointer<Model> model;
+    m_GizmoShader->SetVec3("color",static_cast<Vector3>(Color::Green()));
+
+    Pointer<Mesh> mesh;
     const Collider* collider = entityCollider[0];
     Matrix colliderMatrix;
-    
+
     if (dynamic_cast<const SphereCollider*>(collider))
     {
-        model = m_Sphere;
+        mesh = m_Sphere;
         const float_t radius = reinterpret_cast<const SphereCollider*>(collider)->radius;
         colliderMatrix = Matrix::Trs(Vector3::Zero(), Quaternion::Identity(), Vector3(radius));
     }
     else if( dynamic_cast<const BoxCollider*>(collider))
     {
-        model = m_Cube;
+        mesh = m_Cube;
         const BoxCollider* boxCollider = reinterpret_cast<const BoxCollider*>(collider);
         colliderMatrix = Matrix::Trs(boxCollider->center, Quaternion::Identity(), boxCollider->size);
     }
     else if(dynamic_cast<const CapsuleCollider*>(collider))
     {
-        model = m_Capsule;
+        mesh = m_Capsule;
         const CapsuleCollider* capsuleCollider = reinterpret_cast<const CapsuleCollider*>(collider);
         const Vector3 capsuleScale = Vector3(capsuleCollider->radius,capsuleCollider->height,capsuleCollider->radius);
         colliderMatrix = Matrix::Trs(Vector3::Zero(), Quaternion::Identity(), capsuleScale);
@@ -97,7 +100,7 @@ void DrawGizmo::DrawCollider(const Entity& entity)
     }
     modelData.model = entity.transform.worldMatrix * colliderMatrix;
     Rhi::UpdateModelUniform(modelData);
-    Rhi::DrawModel(DrawMode::Triangles, model->GetId());
+    Rhi::DrawModel(DrawMode::Triangles, mesh->models[0]->GetId());
     
     
 }
@@ -109,7 +112,7 @@ void DrawGizmo::DrawRectangle()
         m_GizmoShader->SetVec3("color",static_cast<Vector3>(gizmo.color));
         modelData.model = Matrix::Trs(gizmo.position, Quaternion::Identity(), Vector3(gizmo.size));
         Rhi::UpdateModelUniform(modelData);
-        Rhi::DrawModel(DrawMode::Triangles, m_Cube->GetId());
+        Rhi::DrawModel(DrawMode::Triangles, m_Cube->models[0]->GetId());
     }
 }
 
@@ -118,10 +121,10 @@ void DrawGizmo::DrawSphere()
 
     for (GizmoSphere& gizmo : m_GizmoSphereVector)
     {
-        //m_GizmoShader->SetVec3("color",static_cast<Vector3>(gizmo.color));
+        m_GizmoShader->SetVec3("color",static_cast<Vector3>(gizmo.color));
         modelData.model = Matrix::Trs(gizmo.position, Quaternion::Identity(), Vector3(gizmo.radius));
         Rhi::UpdateModelUniform(modelData);
-        Rhi::DrawModel(DrawMode::Triangles, m_Sphere->GetId());
+        Rhi::DrawModel(DrawMode::Triangles, m_Sphere->models[0]->GetId());
     }
     
 }

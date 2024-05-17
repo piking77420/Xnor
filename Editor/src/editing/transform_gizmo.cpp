@@ -40,7 +40,6 @@ bool_t TransfromGizmo::Manipulate(XnorCore::Entity& entity)
     transform.SetPosition(position);
     // Convert Imgui gizmoRot
     transform.SetRotationEulerAngle(eulerRotation * Calc::Deg2Rad);
-    transform.SetRotation(Quaternion::FromEuler(eulerRotation));
     transform.SetScale(scale);
     
     return true;

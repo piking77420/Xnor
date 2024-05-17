@@ -16,8 +16,6 @@ class UserInput;
 class Editor final : public XnorCore::Application
 {
 public:
-	void CheckWindowResize() override;
-	
 	EditorData data;
 
 	explicit Editor(int32_t argc, const char_t* const* argv);
@@ -27,6 +25,16 @@ public:
 	DEFAULT_COPY_MOVE_OPERATIONS(Editor)
 	
 	void Update() override;
+
+	void CheckWindowResize() override;
+
+	template <typename T, typename... Args>
+	void OpenWindow(Args&&... args);
+
+	template <typename T, typename... Args>
+	void SetupWindow(Args&&... args);
+
+	void OpenCreatedWindow(const std::string& name, void* arg) const;
 
 	void BuildAndReloadCodeAsync();
 
@@ -89,6 +97,10 @@ private:
 	void SetupImGuiStyle() const;
 	
 	void MenuBar();
+
+	XnorCore::AnimationMontage montage;
 };
+
+#include "editor.inl"
 
 END_XNOR_EDITOR

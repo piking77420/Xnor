@@ -6,9 +6,9 @@
 #include "frustum.hpp"
 #include "material.hpp"
 #include "viewport.hpp"
-#include "render_systems/animation_render.hpp"
 #include "render_systems/gui_pass.hpp"
 #include "render_systems/light_manager.hpp"
+#include "render_systems/meshes_drawer.hpp"
 #include "render_systems/skybox_renderer.hpp"
 #include "resource/model.hpp"
 #include "world/world.hpp"
@@ -22,7 +22,7 @@ BEGIN_XNOR_CORE
 class DirectionalLight;
 class SpotLight;
 class PointLight;
-class MeshRenderer;
+class StaticMeshRenderer;
 
 /// @brief Handles rendering a scene given a RendererContext
 class Renderer
@@ -30,6 +30,16 @@ class Renderer
 public:
     /// @brief Clear color
     Vector4 clearColor = Vector4(0.f);
+    
+    LightManager lightManager;
+    
+    SkyboxRenderer skyboxRenderer;
+    
+    PostProcessPass postProcessPass;
+    
+    MeshesDrawer meshesDrawer;
+    
+    GuiPass guiPass;
     
     XNOR_ENGINE Renderer() = default;
     XNOR_ENGINE ~Renderer() = default;
@@ -48,34 +58,28 @@ public:
     /// @param camera Camera
     /// @param renderPassBeginInfo Render pass begin info
     /// @param renderPass Render pass
-    /// @param shaderToUse Shader to use
+    /// @param shaderToUseStatic Shader to use
     /// @param scene Scene to render
     /// @param drawEditorUi Whether to draw the editor only UI
-    XNOR_ENGINE void ZPass(const Scene& scene,const Camera& camera, const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass,
-        const Pointer<Shader>& shaderToUse, bool_t drawEditorUi);
+    XNOR_ENGINE void ZPass(const Scene& scene, const Camera& camera, const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass,
+                           const Pointer<Shader>& shaderToUseStatic, const Pointer<Shader> shaderToUseSkinned, bool_t drawEditorUi);
 
     /// @brief Renders a scene without shading
     /// @param camera Camera
     /// @param renderPassBeginInfo Render pass begin info
     /// @param renderPass Render pass
-    /// @param shaderToUse Shader to use
+    /// @param shaderToUseStatic Shader to use
     /// @param scene Scene to render
     /// @param drawEditorUi Whether to draw the editor only UI
-    XNOR_ENGINE void RenderNonShadedPass(const Scene& scene, const Camera& camera, const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass, const
-                                         Pointer<Shader>& shaderToUse, bool_t drawEditorUi);
-    
+    XNOR_ENGINE void RenderNonShadedPass(const Scene& scene, const Camera& camera, const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass,
+                                         const Pointer<Shader>& shaderToUseStatic, const Pointer<Shader>& shaderToUseSkinned, bool_t drawEditorUi);
+
     /// @brief Swaps the front and back buffer.
     XNOR_ENGINE void SwapBuffers() const;
 
     XNOR_ENGINE void RenderMenu(const Scene& scene);
-private:
-     LightManager m_LightManager;
-     SkyboxRenderer m_SkyboxRenderer;
-     PostProcessPass m_PostProcessPass;
-     AnimationRender m_AnimationRender;
-     GuiPass m_GuiPass;
     
-     std::vector<const MeshRenderer*> m_MeshRenderers;
+private:
      mutable Frustum m_Frustum;
     
      Pointer<Shader> m_GBufferShader;
@@ -85,8 +89,8 @@ private:
      Pointer<Shader> m_DrawTextureToScreenShader;
      Pointer<Shader> m_GizmoShader;
     
-     Pointer<Model> m_Quad;
-     Pointer<Model> m_Cube;
+     Pointer<Mesh> m_Quad;
+     Pointer<Mesh> m_Cube;
 
     /// @brief Update All the infos of the current frame lights, animation, etc...
     /// @param scene The scene
@@ -103,22 +107,19 @@ private:
     
     XNOR_ENGINE void DrawMeshRendersByType(MaterialType materialType , const Scene& scene) const;
     
-    XNOR_ENGINE void DrawAllMeshRendersNonShaded(const Camera& camera, const Scene& scene) const;
 
     XNOR_ENGINE void DeferredRendering(
+        const Camera& camera,
         const Scene& scene,
         const ViewportData&
         viewportData,
         const Vector2i viewportSize
     ) const;
     
-    XNOR_ENGINE void ForwardPass(const std::vector<const MeshRenderer*>& meshRenderers, const Scene& scene,
+    XNOR_ENGINE void ForwardPass(const Scene& scene,
         const Viewport& viewport, Vector2i viewportSize, bool_t isEditor) const;
     
-    XNOR_ENGINE void DrawAabb(const std::vector<const MeshRenderer*>& meshRenderers) const;
-
-    XNOR_ENGINE void PrepareOctree(const Scene& scene);
-
+    XNOR_ENGINE void DrawAabb(const std::vector<const StaticMeshRenderer*>& meshRenderers) const;
 
 };
 

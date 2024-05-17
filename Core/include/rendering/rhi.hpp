@@ -56,12 +56,11 @@ public:
 	XNOR_ENGINE static bool_t DestroyModel(uint32_t modelId);
 
 	/// @brief Draws a model
+	/// @param drawMode Draw mode
 	/// @param modelId Model id
-	XNOR_ENGINE static void DrawModel(DrawMode::DrawMode drawMode, uint32_t modelId);
+	XNOR_ENGINE static void DrawModel(ENUM_VALUE(DrawMode) drawMode, uint32_t modelId); 
 	
-
 	XNOR_ENGINE static void DrawArray(DrawMode::DrawMode drawMode,uint32_t first, uint32_t count);
-
 	
 	/// @brief Destroy a shader program
 	/// @param shaderId Shader id
@@ -210,7 +209,7 @@ public:
 
 	/// @brief Updates the animation UniformBuffer
 	/// @param skinnedMeshGPUData Data
-	XNOR_ENGINE static void UpdateAninationUniform(const SkinnedMeshGpuData& skinnedMeshGPUData);
+	XNOR_ENGINE static void UpdateAnimationUniform(const SkinnedMeshGpuData& skinnedMeshGPUData);
 
 	/// @brief Updates the light UniformBuffer
 	/// @param lightData Data
@@ -339,7 +338,9 @@ private:
 	
 	// Texture 
 	XNOR_ENGINE static uint32_t CreateTextureId(TextureType::TextureType textureType);
+
 	
+
 	/// @brief Set the depth function to the graphic API
 	/// @param depthFunction The current depthFunction to set to the api
 	XNOR_ENGINE static void ComputeDepthFunction(DepthFunction::DepthFunction depthFunction);

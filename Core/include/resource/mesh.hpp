@@ -3,29 +3,35 @@
 #include <array>
 
 #include <assimp/mesh.h>
+#include <assimp/scene.h>
 
-#include "animation.hpp"
 #include "core.hpp"
-#include "model.hpp"
+#include "resource/animation.hpp"
+#include "resource/model.hpp"
 #include "skeleton.hpp"
 #include "texture.hpp"
-#include "assimp/scene.h"
-#include "file/file.hpp"
+#include "rendering/material.hpp"
 #include "resource/resource.hpp"
 #include "utils/list.hpp"
 
 BEGIN_XNOR_CORE
 
-class Mesh : public Resource
+class Mesh final : public Resource
 {
+    REFLECTABLE_IMPL(Mesh)
+    
 public:
     /// @brief Allowed extensions for meshes.
-    XNOR_ENGINE static inline constexpr std::array<const char_t*, 1> FileExtensions
+    XNOR_ENGINE static constexpr std::array<const char_t*, 5> FileExtensions
     {
-        ".fbx"
+        ".obj",
+        ".fbx",
+        ".dae",
+        ".glb",
+        ".gltf"
     };
 
-    List<Model*> models;
+    List<Pointer<Model>> models;
     
     // Use the base class' constructors
     using Resource::Resource;
@@ -40,10 +46,25 @@ public:
     /// @copydoc XnorCore::Resource::Load(const uint8_t* buffer, int64_t length)
     XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;
 
+    /// @copydoc XnorCore::Resource::CreateInInterface()
+    XNOR_ENGINE void CreateInInterface() override;
+
+    [[nodiscard]]
+    XNOR_ENGINE Pointer<Animation> GetAnimation(size_t id);
+
 private:
-    List<Texture*> m_Textures;
-    List<Skeleton*> m_Skeletons;
-    List<Animation*> m_Animations;
+    List<Pointer<Animation>> m_Animations;
+    List<Pointer<Skeleton>> m_Skeletons;
+
+    static std::string GetTextureFileName(const std::string& baseFileName, const std::string& textureFormat, size_t index);
+
+    bool_t LoadMesh(const aiScene& scene, Pointer<Skeleton>* outSkeleton);
+
+    //bool_t LoadTexture(const aiScene& scene, Pointer<Skeleton>* outSkeleton);
 };
 
 END_XNOR_CORE
+
+REFL_AUTO(
+    type(XnorCore::Mesh, bases<XnorCore::Resource>) // to do list of model
+)

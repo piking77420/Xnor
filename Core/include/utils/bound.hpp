@@ -29,25 +29,29 @@ public:
 
     bool_t operator==(const Bound& other) const;
 
+    [[nodiscard]]
     Vector3 GetMin() const;
 
+    [[nodiscard]]
     Vector3 GetMax() const;
 
+    [[nodiscard]]
     Vector3 GetSize() const;
 
     void SetMinMax(Vector3 newmin, Vector3 newMax);
 
-    
+    [[nodiscard]]
     bool_t Intersect(const Bound& otherBound) const;
 
+    [[nodiscard]]
     bool_t Countain(const Bound& otherBound) const;
 
-    bool_t IsOnPlane(const Plane& frustum) const;
+    [[nodiscard]]
+    bool_t IsOnPlane(const Plane& plane) const;
 
-    void Encapsulate(const Bound& plane);
+    void Encapsulate(const Bound& encapsulateBound);
 
     void Encapsulate(Vector3 point);
-
 
 private:
 

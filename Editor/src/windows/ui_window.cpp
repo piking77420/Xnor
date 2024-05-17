@@ -11,12 +11,12 @@ UiWindow::UiWindow(Editor* const editor, std::string title)
 {
 }
 
-const char* UiWindow::GetName() const
+const std::string& UiWindow::GetName() const
 {
-    return m_WindowTitle.c_str();
+    return m_WindowTitle;
 }
 
-bool UiWindow::IsFocused() const
+bool_t UiWindow::IsFocused() const
 {
     return m_IsFocused;
 }

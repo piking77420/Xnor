@@ -37,6 +37,8 @@ public:
     /// @brief Called after the physics update
     virtual void PostPhysics() {}
 
+    virtual void OnRendering() {} 
+
     /// @brief Deletes this Component. This is only used for polymorphism purposes with the ScriptComponent type.
     virtual void Destroy();
 

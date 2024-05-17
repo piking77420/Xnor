@@ -4,7 +4,10 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
+#include "assimp/Exporter.hpp"
+#include "assimp/Logger.hpp"
 #include "rendering/rhi.hpp"
+#include "utils/list.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -14,31 +17,7 @@ Model::~Model()
     Rhi::DestroyModel(m_ModelId);
 }
 
-bool_t Model::Load(const uint8_t* buffer, const int64_t length)
-{
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFileFromMemory(buffer, length, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FindInvalidData | aiProcess_FixInfacingNormals | aiProcess_CalcTangentSpace);
 
-    if (!scene)
-    {
-        Logger::LogError("An error occured while loading model: {}. Assimp error: {}", m_Name, importer.GetErrorString());
-        return false;
-    }
-
-    if (!scene->HasMeshes())
-    {
-        Logger::LogError("Invalid mesh format, should contain a model: {}", m_Name);
-        return false;
-    }
-
-    if (scene->mNumMeshes > 1)
-    {
-        Logger::LogError("Invalid mesh format, should only contain a single model: {}", m_Name);
-        return false;
-    }
-
-    return Load(*scene->mMeshes[0]);
-}
 
 bool_t Model::Load(const aiMesh& loadedData)
 {
@@ -50,9 +29,39 @@ bool_t Model::Load(const aiMesh& loadedData)
         vert.position = Vector3(&loadedData.mVertices[i].x);
         vert.normal = Vector3(&loadedData.mNormals[i].x);
         vert.textureCoord = Vector2(&loadedData.mTextureCoords[0][i].x);
-        
+    
         vert.tangent = Vector3(&loadedData.mBitangents[i].x);
-        vert.bitangent = Vector3::Cross(vert.normal,vert.tangent);
+        vert.bitangent = Vector3::Cross(vert.normal, vert.tangent);
+    }
+
+    for (uint32_t i = 0; i < loadedData.mNumBones; i++)
+    {
+        for (size_t j = 0; j < loadedData.mBones[i]->mNumWeights; j++)
+        {
+            const uint32_t vertexId = loadedData.mBones[i]->mWeights[j].mVertexId;
+            const float_t weight = loadedData.mBones[i]->mWeights[j].mWeight;
+
+            for (size_t k = 0; k < Vertex::MaxBoneWeight; k++)
+            {
+                if (Calc::Equals(m_Vertices[vertexId].boneIndices[k], -1))
+                {
+                    m_Vertices[vertexId].boneIndices[k] = static_cast<float_t>(i);
+                    m_Vertices[vertexId].boneWeight[k] = weight;
+                    break;
+                }
+            }
+        }
+    }
+
+    if (loadedData.mNumBones != 0)
+    {
+        for (size_t i = 0; i < m_Vertices.size(); i++)
+        {
+            const float_t totalWeight = m_Vertices[i].boneWeight[0] + m_Vertices[i].boneWeight[1] + m_Vertices[i].boneWeight[2] + m_Vertices[i].boneWeight[3];
+
+            if (!Calc::Equals(totalWeight, 1.f))
+                Logger::LogError("Invalid bone weight : {} ; {}", i, totalWeight);
+        }
     }
 
     m_Indices.resize(static_cast<size_t>(loadedData.mNumFaces) * 3);
@@ -104,6 +113,73 @@ void Model::Unload()
     m_Loaded = false;
 }
 
+bool_t Model::Save() const
+{
+    Assimp::Exporter exporter;
+    aiScene scene;
+
+    scene.mRootNode = new aiNode();
+
+    scene.mMaterials = new aiMaterial*[1];
+    scene.mMaterials[0] = nullptr;
+    scene.mNumMaterials = 1;
+
+    scene.mNumMeshes = 1;
+    scene.mMeshes = new aiMesh*[1];
+    scene.mMeshes[0] = new aiMesh;
+
+    scene.mRootNode->mMeshes = new uint32_t[1];
+    scene.mRootNode->mMeshes[0] = 0;
+    scene.mRootNode->mNumMeshes = 1;
+
+    aiMesh* const mesh = scene.mMeshes[0];
+
+    scene.mMeshes[0]->mMaterialIndex = 0;
+
+    List<aiVector3D> vertices(m_Vertices.size());
+    List<aiVector3D> normals(m_Vertices.size());
+    List<aiVector3D> texCoords(m_Vertices.size());
+    List<aiVector3D> tangents(m_Vertices.size());
+    
+    for (size_t i = 0; i < m_Vertices.size(); i++)
+    {
+        vertices[i] = aiVector3D(m_Vertices[i].position.x, m_Vertices[i].position.y, m_Vertices[i].position.z);
+        normals[i] = aiVector3D(m_Vertices[i].normal.x, m_Vertices[i].normal.y, m_Vertices[i].normal.z);
+        texCoords[i] = aiVector3D(m_Vertices[i].textureCoord.x, m_Vertices[i].textureCoord.y, 0.f);
+        tangents[i] = aiVector3D(m_Vertices[i].tangent.x, m_Vertices[i].tangent.y, m_Vertices[i].tangent.z);
+    }
+
+    mesh->mNumVertices = static_cast<uint32_t>(vertices.GetSize());
+
+    mesh->mVertices = vertices.GetData();
+    mesh->mNormals = normals.GetData();
+    mesh->mTextureCoords[0] = texCoords.GetData();
+    mesh->mTangents = tangents.GetData();
+
+    List<aiFace> faces(m_Indices.size() / 3);
+
+    uint32_t k = 0;
+    for (uint32_t i = 0; i < static_cast<uint32_t>(m_Indices.size() / 3); i++)
+    {
+        faces[i].mIndices = new uint32_t[3];
+        faces[i].mNumIndices = 3;
+
+        faces[i].mIndices[0] = k;
+        faces[i].mIndices[1] = k + 1;
+        faces[i].mIndices[2] = k + 2;
+        k = k + 3;
+    }
+
+    mesh->mFaces = faces.GetData();
+    mesh->mNumFaces = static_cast<uint32_t>(m_Indices.size() / 3);
+
+    const aiVector3D min = aiVector3D(m_Aabb.GetMin().x, m_Aabb.GetMin().y, m_Aabb.GetMin().z);
+    const aiVector3D max = aiVector3D(m_Aabb.GetMax().x, m_Aabb.GetMax().y, m_Aabb.GetMax().z);
+    mesh->mAABB = aiAABB(min, max);
+    
+    return exporter.Export(&scene, "obj", m_Name.c_str()) == aiReturn_SUCCESS;
+}
+
 uint32_t Model::GetId() const
 {
     return m_ModelId;
@@ -127,8 +203,6 @@ void Model::ComputeAabb(const aiAABB& assimpAabb)
     if (assimpAabb.mMax.x == 0.f && assimpAabb.mMax.y == 0.f && assimpAabb.mMax.z == 0.f &&
         assimpAabb.mMin.x == 0.f && assimpAabb.mMin.y == 0.f && assimpAabb.mMin.z == 0.f)
     {
-        
-        
         for (const Vertex& vertex : m_Vertices)
         {
             if (vertex.position.x < min.x)

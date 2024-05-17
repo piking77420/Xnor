@@ -47,6 +47,14 @@ void Scene::PostPhysics()
         m_Entities[i]->PostPhysics();
 }
 
+void Scene::OnRendering()
+{
+    for (size_t i = 0; i < m_Entities.GetSize(); i++)
+    {
+        m_Entities[i]->OnRendering();
+    }
+}
+
 Entity* Scene::FindEntityById(const Guid& xnorGuid)
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)
@@ -101,7 +109,7 @@ bool_t Scene::HasEntity(const Entity* const entity) const
     return m_Entities.Contains(const_cast<Entity* const>(entity));
 }
 
-const List<Entity*>& Scene::GetEntities()
+const List<Entity*>& Scene::GetEntities() const
 {
     return m_Entities;
 }
