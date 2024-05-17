@@ -91,7 +91,7 @@ void FooterWindow::Display()
         
         constexpr const char_t* const reloadingProjectText = "Reloading .NET project";
         ImGui::SameLine();
-        ImGui::Dummy({ ImGui::GetContentRegionAvail().x - (ImGui::CalcTextSize(reloadingProjectText).x + 150.f + 60.f), 1.f });
+        ImGui::Dummy({ ImGui::GetContentRegionAvail().x - (ImGui::CalcTextSize(reloadingProjectText).x + 200.f + 60.f), 1.f });
         ImGui::SameLine();
         ImGui::Text(reloadingProjectText);
         ImGui::SameLine();
@@ -106,7 +106,7 @@ void FooterWindow::Display()
                 progress = 1.f;
         }
         
-        ImGui::ProgressBar(progress, { 100.f, 0.f });
+        ImGui::ProgressBar(progress, { 200.f, 0.f });
         
         if (!reloadingScripts)
             ImGui::PopStyleVar();

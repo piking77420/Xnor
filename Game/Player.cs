@@ -8,14 +8,14 @@ namespace Game
         public Entity CameraEntity;
 
         private Camera camera;
-        private CapsuleCollider collider;
+        private CharacterController controller;
         
         protected override void Begin()
         {
             CameraEntity = World.scene.FindEntityByName("Camera");
             camera = CameraEntity.GetComponent<CameraComponent>().camera;
             
-            collider = GetComponent<CapsuleCollider>();
+            controller = GetComponent<CharacterController>();
         }
 
         protected override void Update()
@@ -38,7 +38,7 @@ namespace Game
                 movement -= cameraRight;
 
             Logger.LogInfo($"q : {movement * MovementSpeed * Time.DeltaTime}");
-            collider.AddForce(movement * MovementSpeed * Time.DeltaTime);
+            controller.SetVelocity(movement * MovementSpeed * Time.DeltaTime);
         }
     }
 }

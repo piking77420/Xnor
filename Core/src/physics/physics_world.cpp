@@ -15,6 +15,7 @@
 #include <Jolt/Physics/Collision/Shape/SphereShape.h>
 
 #include "input/time.hpp"
+#include "jolt/Physics/Character/Character.h"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -26,26 +27,24 @@ namespace Layers
     static constexpr JPH::ObjectLayer NON_MOVING = 0;
     static constexpr JPH::ObjectLayer MOVING = 1;
     static constexpr JPH::ObjectLayer NUM_LAYERS = 2;
-};
+}
 
-[[nodiscard]]
-static JPH::Vec3Arg ToJph(const Vector3& in)
+JPH::Vec3Arg PhysicsWorld::ToJph(const Vector3& in)
 {
     return JPH::RVec3Arg(in.x, in.y, in.z);
 }
 
-[[nodiscard]]
-static JPH::QuatArg ToJph(const Quaternion& in)
+JPH::QuatArg PhysicsWorld::ToJph(const Quaternion& in)
 {
     return JPH::QuatArg(in.X(), in.Y(), in.Z(), in.W());
 }
 
-static Vector3 FromJph(const JPH::Vec3& in)
+Vector3 PhysicsWorld::FromJph(const JPH::Vec3& in)
 {
     return Vector3(in.GetX(), in.GetY(), in.GetZ());
 }
 
-static Quaternion FromJph(const JPH::Quat& in)
+Quaternion PhysicsWorld::FromJph(const JPH::Quat& in)
 {
     return Quaternion(in.GetX(), in.GetY(), in.GetZ(), in.GetW());
 }
@@ -154,7 +153,15 @@ uint32_t PhysicsWorld::CreateBox(const BodyCreationInfo& info)
     return CreateBody(info, settings);
 }
 
-uint32_t PhysicsWorld::CreateCapsule(const BodyCreationInfo& info, float_t height, float_t radius)
+JPH::Character* PhysicsWorld::CreateCharacter(const JPH::CharacterSettings& settings, const Vector3& position, const Quaternion& rotation)
+{
+    JPH::Character* const c = new JPH::Character(&settings, ToJph(position), ToJph(rotation), 0, m_PhysicsSystem);
+    c->AddToPhysicsSystem(JPH::EActivation::Activate);
+
+    return c;
+}
+
+uint32_t PhysicsWorld::CreateCapsule(const BodyCreationInfo& info, const float_t height, const float_t radius)
 {
     const JPH::CapsuleShapeSettings capsuleSettings(height, radius);
     const JPH::ShapeSettings::ShapeResult result = capsuleSettings.Create();

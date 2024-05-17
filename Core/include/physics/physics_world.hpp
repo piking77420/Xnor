@@ -11,6 +11,7 @@
 #include <Maths/quaternion.hpp>
 #include <Maths/vector3.hpp>
 
+#include "jolt/Physics/Character/Character.h"
 #include "physics/body_activation_listener.hpp"
 #include "physics/broad_phase_layer_interface.hpp"
 #include "physics/contact_listener.hpp"
@@ -60,6 +61,15 @@ public:
         float_t distance{};
     };
 
+    [[nodiscard]]
+    static JPH::Vec3Arg ToJph(const Vector3& in);
+    [[nodiscard]]
+    static JPH::QuatArg ToJph(const Quaternion& in);
+    [[nodiscard]]
+    static Vector3 FromJph(const JPH::Vec3& in);
+    [[nodiscard]]
+    static Quaternion FromJph(const JPH::Quat& in);
+
     /// @brief Initializes the physics world
     XNOR_ENGINE static void Initialize();
     /// @brief Destroys the physics world
@@ -84,6 +94,9 @@ public:
     /// @returns Created body id
     [[nodiscard]]
     XNOR_ENGINE static uint32_t CreateBox(const BodyCreationInfo& info);
+
+    [[nodiscard]]
+    XNOR_ENGINE static JPH::Character* CreateCharacter(const JPH::CharacterSettings& settings, const Vector3& position, const Quaternion& rotation);
 
     /// @brief Creates a capsule body
     /// @param info Body creation info

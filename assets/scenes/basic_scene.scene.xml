@@ -225,18 +225,20 @@
 				<0 typeName="ScriptComponent" managedType="Game.Player">
 					<MovementSpeed>3</MovementSpeed>
 				</0>
-				<1 typeName="CapsuleCollider">
-					<height>1</height>
-					<radius>1</radius>
-					<constraints>ConstraintRotation</constraints>
+				<1 typeName="AudioListener">
+					<dopplerEffect>true</dopplerEffect>
+					<m_Volume>1</m_Volume>
+					<enable>true</enable>
+				</1>
+				<2 typeName="CharacterController">
+					<m_Friction>0.2</m_Friction>
+					<m_GravityFactor>1</m_GravityFactor>
+					<m_Mass>80</m_Mass>
+					<m_MaxSlopeAngle>0.7853982</m_MaxSlopeAngle>
+					<constraints/>
 					<m_IsStatic>false</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
 					<m_IsActive>false</m_IsActive>
-					<enable>true</enable>
-				</1>
-				<2 typeName="AudioListener">
-					<dopplerEffect>true</dopplerEffect>
-					<m_Volume>1</m_Volume>
 					<enable>true</enable>
 				</2>
 			</m_Components>

@@ -50,6 +50,10 @@ public:
     /// @param force Force
     XNOR_ENGINE void AddForce(const Vector3& force) const;
 
+    /// @brief Adds an impulse to the component
+    /// @param impulse Force
+    XNOR_ENGINE void AddImpulse(const Vector3& impulse) const;
+
     /// @brief Callback if the collider is a trigger and another collider entered in it
     Event<Collider*, Collider*, const CollisionData&> onTriggerEnter;
     /// @brief Callback if the collider is a trigger and another collider stayed in it

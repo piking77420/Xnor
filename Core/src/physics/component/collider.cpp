@@ -59,6 +59,11 @@ void Collider::AddForce(const Vector3& force) const
     PhysicsWorld::AddForce(m_BodyId, force);
 }
 
+void Collider::AddImpulse(const Vector3& impulse) const
+{
+    PhysicsWorld::AddImpulse(m_BodyId, impulse);
+}
+
 void Collider::AddDebugEvents()
 {
     onTriggerEnter += [](const Collider* const self, const Collider* const other, const CollisionData& data) -> void

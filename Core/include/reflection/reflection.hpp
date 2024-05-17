@@ -143,6 +143,10 @@ namespace Reflection
     {
     };
 
+    struct AsAngle : FieldAttribute
+    {
+    };
+
     /// @brief Allows to edit a Vector2 by plotting on a 2D grid
     struct GridPlotting : FieldAttribute
     {

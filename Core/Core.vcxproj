@@ -102,6 +102,7 @@
     <ClInclude Include="externals\include\AL\efx-creative.h" />
     <ClInclude Include="externals\include\AL\efx-presets.h" />
     <ClInclude Include="externals\include\AL\efx.h" />
+    <ClInclude Include="include\physics\component\character_controller.hpp" />
     <ClInclude Include="inline\file\file.inl" />
     <ClInclude Include="inline\file\file_manager.inl" />
     <ClInclude Include="inline\input\input.inl" />
@@ -698,6 +699,7 @@
     <ClCompile Include="src\physics\broad_phase_layer_interface.cpp" />
     <ClCompile Include="src\physics\component\box_collider.cpp" />
     <ClCompile Include="src\physics\component\capsule_collider.cpp" />
+    <ClCompile Include="src\physics\component\character_controller.cpp" />
     <ClCompile Include="src\physics\component\collider.cpp" />
     <ClCompile Include="src\physics\component\mesh_collider.cpp" />
     <ClCompile Include="src\physics\component\sphere_collider.cpp" />

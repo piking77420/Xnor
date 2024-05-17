@@ -105,7 +105,6 @@ TYPE_RENDERER_IMPL(ColorHsva)
 TYPE_RENDERER_IMPL(std::string)
 
 
-
 template <typename MemberT>
 template <typename ReflectT, typename DescriptorT>
 void TypeRendererImpl<MemberT, Meta::EnableIf<Meta::IsEnum<MemberT>>>::Render(const TypeRenderer::Metadata<ReflectT, MemberT, DescriptorT>& metadata)
@@ -144,11 +143,15 @@ void TypeRendererImpl<MemberT, Meta::EnableIf<Meta::IsIntegralOrFloating<MemberT
     else if constexpr (Meta::IsSame<MemberT, double_t>)
         type = ImGuiDataType_Double;
 
-    if constexpr (Reflection::HasAttribute<Reflection::Range<MemberT>, DescriptorT>())
+    if constexpr (Meta::IsSame<MemberT, float> && Reflection::HasAttribute<Reflection::AsAngle, DescriptorT>())
+    {
+        ImGui::SliderAngle(metadata.name, metadata.obj);
+    }
+    else if constexpr (Reflection::HasAttribute<Reflection::Range<MemberT>, DescriptorT>())
     {
         constexpr Reflection::Range<MemberT> range = Reflection::GetAttribute<Reflection::Range<MemberT>, DescriptorT>();
         // Has a range attribute, display as a slider
-        ImGui::SliderScalar(metadata.name, type, metadata.obj, &range.minimum, &range.maximum);        
+        ImGui::SliderScalar(metadata.name, type, metadata.obj, &range.minimum, &range.maximum);
     }
     else if constexpr (Reflection::HasAttribute<Reflection::DynamicRange<ReflectT, MemberT>, DescriptorT>())
     {
