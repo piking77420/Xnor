@@ -56,8 +56,11 @@ public:
     /// @brief Whether to check the directory contents. Doesn't do anything if the watched path points to a file.
     bool_t checkContents = true;
 
-    /// @brief Whether to check subdirectories. Doesn't do anything if the watched path points to a file.
+    /// @brief Whether to check subdirectories. Doesn't do anything if the watched path points to a file or if @c checkContents is @c false
     bool_t recursive = false;
+
+    /// @brief File extensions including the dot '.'
+    List<std::string> fileExtensions;
 
     ENUM_VALUE(FswNotifyFilters) notifyFilters = FswNotifyFilters::Default;
     

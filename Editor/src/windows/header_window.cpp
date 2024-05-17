@@ -18,22 +18,20 @@ HeaderWindow::HeaderWindow(Editor* editor)
 {
     windowFlags |= ImGuiWindowFlags_NoScrollbar;
     
-    m_PauseButton = XnorCore::ResourceManager::Get<XnorCore::Texture>("assets_internal/editor/ui/pause_button.png");
-    m_PlayButton = XnorCore::ResourceManager::Get<XnorCore::Texture>("assets_internal/editor/ui/play_button.png");
-    m_StopButton = XnorCore::ResourceManager::Get<XnorCore::Texture>("assets_internal/editor/ui/stop_button.png");
+    m_PlayButton = XnorCore::ResourceManager::Get<XnorCore::Texture>("assets_internal/editor/ui/header/play_button.png");
+    m_PauseButton = XnorCore::ResourceManager::Get<XnorCore::Texture>("assets_internal/editor/ui/header/pause_button.png");
+    m_ResumeButton = XnorCore::ResourceManager::Get<XnorCore::Texture>("assets_internal/editor/ui/header/resume_button.png");
+    m_StopButton = XnorCore::ResourceManager::Get<XnorCore::Texture>("assets_internal/editor/ui/header/stop_button.png");
 }
 
 void HeaderWindow::Display()
 {
-    // Value to offset the little gray image from imgui
-    constexpr size_t imageCount = 2;
-
     m_ImageSize = TileBaseSize;
     
-    for (size_t i = 0; i < imageCount; i++)
+    for (size_t i = 0; i < ImageCount; i++)
     {
         constexpr float_t constantOffsetValue = 1.5f;
-        const float_t offSet = m_ImageSize * static_cast<float_t>(imageCount - (i + 1)) * constantOffsetValue;
+        const float_t offSet = m_ImageSize * static_cast<float_t>(ImageCount - (i + 1)) * constantOffsetValue;
         const float_t x = (static_cast<float_t>(m_Size.x) - m_ImageSize) * 0.5f;
         const float_t y = (static_cast<float_t>(m_Size.y) - m_ImageSize) * 0.5f;
 
@@ -41,7 +39,7 @@ void HeaderWindow::Display()
         m_ImagePos[i].y = y;
     }
 
-    if (XnorCore::World::isPlaying)
+    if (m_Editor->IsGamePlaying())
         DisplayOnPlay();
     else
         DisplayOnEditor();
@@ -66,19 +64,27 @@ void HeaderWindow::DisplayOnEditor()
 
 void HeaderWindow::DisplayOnPlay()
 {
-    ImVec2 currentImagePos = { m_ImagePos[1].x, m_ImagePos[1].y };
-
-    ImGui::SetCursorPos(currentImagePos);
-
-    if (ImGui::ImageButton(XnorCore::Utils::IntToPointer<ImTextureID>(m_PauseButton->GetId()), { m_ImageSize, m_ImageSize }))
-    {
-        XnorCore::World::isPlaying = false;
-        return;
-    }
-    
-    currentImagePos = { m_ImagePos[0].x, m_ImagePos[0].y };
+    ImVec2 currentImagePos = { m_ImagePos[0].x, m_ImagePos[0].y };
     ImGui::SetCursorPos(currentImagePos);
     
     if (ImGui::ImageButton(XnorCore::Utils::IntToPointer<ImTextureID>(m_StopButton->GetId()), { m_ImageSize, m_ImageSize }))
+    {
         m_Editor->StopPlaying();
+        return;
+    }
+
+    currentImagePos = { m_ImagePos[1].x, m_ImagePos[1].y };
+
+    ImGui::SetCursorPos(currentImagePos);
+
+    if (XnorCore::World::isPlaying)
+    {
+        if (ImGui::ImageButton(XnorCore::Utils::IntToPointer<ImTextureID>(m_PauseButton->GetId()), { m_ImageSize, m_ImageSize }))
+            XnorCore::World::isPlaying = false;
+    }
+    else
+    {
+        if (ImGui::ImageButton(XnorCore::Utils::IntToPointer<ImTextureID>(m_ResumeButton->GetId()), { m_ImageSize, m_ImageSize }))
+            XnorCore::World::isPlaying = true;
+    }
 }

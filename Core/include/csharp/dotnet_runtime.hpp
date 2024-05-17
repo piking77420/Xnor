@@ -17,6 +17,14 @@ class DotnetRuntime
     STATIC_CLASS(DotnetRuntime)
     
 public:
+    enum class BuildResult
+    {
+        Unknown,
+        Success,
+        Warning,
+        Error
+    };
+    
     /// @brief Initializes the .NET runtime.
     XNOR_ENGINE static bool_t Initialize();
 
@@ -52,13 +60,20 @@ public:
     XNOR_ENGINE static void BuildAndReloadProject(bool_t recreateScriptInstances = true);
 
     /// @brief Returns whether the runtime is initialized.
+    [[nodiscard]]
     XNOR_ENGINE static bool_t GetInitialized();
 
     /// @brief Returns whether a thread is currently building/reloading the .NET project.
+    [[nodiscard]]
     XNOR_ENGINE static bool_t IsReloadingProject();
 
     /// @brief Returns the current building/reloading progress of the .NET project. Only valid if @c IsReloadingProject() returns @c true
+    [[nodiscard]]
     XNOR_ENGINE static float_t GetProjectReloadingProgress();
+
+    /// @brief Returns the last project build result.
+    [[nodiscard]]
+    XNOR_ENGINE static BuildResult GetProjectLastBuildResult();
 
 private:
     XNOR_ENGINE static constexpr int32_t DotnetVersion = 5;
@@ -79,6 +94,8 @@ private:
 
     /// @brief Project reloading progress between 0 and 1. Only valid if @c m_ReloadingProject is @c true
     XNOR_ENGINE static inline float_t m_ProjectReloadingProgress = 0.f;
+
+    XNOR_ENGINE static inline BuildResult m_LastProjectBuildResult = BuildResult::Unknown;
 
     static bool_t CheckDotnetInstalled();
 

@@ -80,6 +80,9 @@ public:
     /// @brief Clears the list
     void Clear();
 
+    /// @brief Returns whether the list is empty. This is equivalent to doing @c GetSize() == @c 0
+    bool_t Empty() const;
+
     /// @brief Adds a default element to the end of the list (calls the default constructor of T)
     void Add();
 
@@ -318,9 +321,19 @@ public:
     Iterator begin();
 
     /// @private
+    /// Necessary when using range-for loops with a @c const list
+    [[nodiscard]]
+    ConstIterator begin() const;
+
+    /// @private
     /// Necessary when using range-for loops
     [[nodiscard]]
     Iterator end();
+
+    /// @private
+    /// Necessary when using range-for loops with a @c const list
+    [[nodiscard]]
+    ConstIterator end() const;
 
 private:
     std::vector<T> m_Vector;

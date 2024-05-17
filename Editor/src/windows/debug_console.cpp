@@ -24,14 +24,17 @@ void DebugConsole::DisplayHeader() const
     if (ImGui::Button("Scroll up"))
         scroll = -1;
     ImGui::SameLine();
-    if (ImGui::Button("Scroll down") || XnorCore::Logger::GetLogList().size() > m_LastLogCount || ImGui::IsWindowAppearing())
+    if (ImGui::Button("Scroll down") || XnorCore::Logger::GetLogList().size() > m_LastLogCount)
         scroll = 1;
 }
 
 void DebugConsole::DisplayLogs()
 {
-    if (!ImGui::BeginTable("Logs", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY))
+    if (!ImGui::BeginTable("Logs", 3, ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY))
         return;
+
+    // This will only be executed the first time the control flow reaches here
+    static auto _ = [this] { return scroll = 1; }();
     
     auto logList = XnorCore::Logger::GetLogList();
     
@@ -39,6 +42,7 @@ void DebugConsole::DisplayLogs()
         ImGui::SetScrollHereY(0.f);
     
     ImGui::TableSetupColumn("Level");
+    ImGui::TableSetupColumn("Timestamp");
     ImGui::TableSetupColumn("Message");
     ImGui::TableSetupScrollFreeze(0, 1);
 
@@ -66,10 +70,16 @@ void DebugConsole::DisplayLogs()
     ImGui::Text("(%llu)", std::ranges::count_if(logList, [this] (auto&& val) -> bool_t { return val->level >= minimumLogLevel; }));
     ImGui::PopID();
 
-    // Message header
+    // Timestamp header
     ImGui::TableSetColumnIndex(1);
     ImGui::PushID(1);
     ImGui::TableHeader(ImGui::TableGetColumnName(1)); // Retrieve name passed to TableSetupColumn()
+    ImGui::PopID();
+
+    // Message header
+    ImGui::TableSetColumnIndex(2);
+    ImGui::PushID(2);
+    ImGui::TableHeader(ImGui::TableGetColumnName(2)); // Retrieve name passed to TableSetupColumn()
     ImGui::PopID();
     
     for (decltype(logList)::const_iterator it = logList.cbegin(); it != logList.cend(); it++)
@@ -100,34 +110,34 @@ void DebugConsole::DisplayLogs()
         {
             case XnorCore::Logger::LogLevel::TemporaryDebug:
                 color = XnorCore::Color::LightGreen();
-            prefix = "Temporary Debug";
-            message = log->file + '(' + std::to_string(log->line) + "): ";
-            break;
+                prefix = "Temporary Debug";
+                message = log->file + '(' + std::to_string(log->line) + "): ";
+                break;
                 
             case XnorCore::Logger::LogLevel::Debug:
                 color = XnorCore::Color::DarkGray();
-            prefix = "Debug";
-            break;
+                prefix = "Debug";
+                break;
                 
             case XnorCore::Logger::LogLevel::Info:
                 color = XnorCore::Color::White();
-            prefix = "Info";
-            break;
+                prefix = "Info";
+                break;
                 
             case XnorCore::Logger::LogLevel::Warning:
                 color = XnorCore::Color::Orange();
-            prefix = "Warning";
-            break;
+                prefix = "Warning";
+                break;
                 
             case XnorCore::Logger::LogLevel::Error:
                 color = XnorCore::Color::Red();
-            prefix = "Error";
-            break;
+                prefix = "Error";
+                break;
                 
             case XnorCore::Logger::LogLevel::Fatal:
                 color = XnorCore::Color::DarkRed();
-            prefix = "Fatal";
-            break;
+                prefix = "Fatal";
+                break;
         }
 
         if (oldSameLastLogs > 0)
@@ -135,10 +145,22 @@ void DebugConsole::DisplayLogs()
         else
             message += log->message;
 
+        const ImVec4 col = static_cast<Vector4>(color);
+
         ImGui::TableNextColumn();
-        ImGui::TextColored(static_cast<Vector4>(color), "%s", prefix.c_str());
+        ImGui::TextColored(col, "%s", prefix.c_str());
+        
+        // Get the message time and format it in [hh:mm:ss:ms]
+        const auto&& t = std::chrono::duration_cast<std::chrono::milliseconds, int64_t>(log->time.time_since_epoch());
+        const std::string time = std::format("{:%T}", t);
+
         ImGui::TableNextColumn();
-        ImGui::TextColored(static_cast<Vector4>(color), "%s", message.c_str());
+        ImGui::TextColored(col, "%s", time.c_str());
+        
+        ImGui::TableNextColumn();
+        ImGui::PushTextWrapPos();
+        ImGui::TextColored(col, "%s", message.c_str());
+        ImGui::PopTextWrapPos();
     }
 
     if (scroll == 1)
