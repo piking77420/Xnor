@@ -16,11 +16,28 @@ public:
     void Display() override;
 
 private:
+    struct LogData
+    {
+        ImVec4 color;
+
+        XnorCore::Logger::LogLevel level;
+        
+        std::string prefix;
+        std::string time;
+        std::string message;
+
+        uint64_t sameLastLogs;
+    };
+    
     size_t m_LastLogCount = 0;
+
+    std::vector<LogData> m_CachedLogs;
     
     void DisplayHeader() const;
 
     void DisplayLogs();
+
+    void DisplayLog(const LogData& data);
 };
 
 END_XNOR_EDITOR

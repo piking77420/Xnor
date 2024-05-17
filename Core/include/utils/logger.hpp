@@ -21,8 +21,8 @@ BEGIN_XNOR_CORE
 /// @brief Static class used to log messages to the console and/or a file.
 ///
 /// ### Requirements
-/// Thread-safe logger that starts logging even before @c main() gets called because of a static-storage thread. You can synchronize the calling thread
-/// with the logger one at any time by calling @c Logger::Synchronize.
+/// Thread-safe logger that starts logging once @c Logger::Start() gets called, which is already done in @c Application::Application(). You can synchronize the calling thread
+/// with the logger one at any time by calling @c Logger::Synchronize. The logger needs to be stopped by calling @c Logger::Stop() gets called, which is also already done in @c Application::~Application().
 ///
 /// ### Options
 /// By default, the logger doesn't log to a file. This can be changed by either calling @c Logger::OpenDefaultFile or @c Logger::OpenFile.

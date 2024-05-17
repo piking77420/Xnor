@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "Coral/ManagedObject.hpp"
+#include "physics/component/collider.hpp"
 #include "reflection/reflection.hpp"
 #include "scene/component.hpp"
 
@@ -28,6 +29,18 @@ public:
     XNOR_ENGINE void Begin() override;
 
     XNOR_ENGINE void Update() override;
+    
+    XNOR_ENGINE virtual void OnTriggerEnter(Collider* self, Collider* other, const CollisionData& data);
+
+    XNOR_ENGINE virtual void OnTriggerStay(Collider* self, Collider* other, const CollisionData& data);
+
+    XNOR_ENGINE virtual void OnTriggerExit(Collider* self, Collider* other);
+
+    XNOR_ENGINE virtual void OnCollisionEnter(Collider* self, Collider* other, const CollisionData& data);
+
+    XNOR_ENGINE virtual void OnCollisionStay(Collider* self, Collider* other, const CollisionData& data);
+
+    XNOR_ENGINE virtual void OnCollisionExit(Collider* self, Collider* other);
 
     /// @brief Returns the .NET ManagedObject linked to this ScriptComponent
     [[nodiscard]]

@@ -51,7 +51,7 @@ bool_t DotnetRuntime::Initialize()
 
     m_Alc = m_Runtime.CreateAssemblyLoadContext(AlcName);
 
-    if (!LoadAssembly("CoreCSharp"))
+    if (!LoadAssembly(Dotnet::CoreProjectName))
     {
         Logger::LogError("An unknown error occured while loading XNOR .NET library");
         return false;

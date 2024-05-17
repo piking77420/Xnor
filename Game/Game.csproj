@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CoreCSharp\CoreCSharp.csproj" />
+    <ProjectReference Include="..\CoreManaged\CoreManaged.csproj" />
   </ItemGroup>
 
   <ItemGroup>

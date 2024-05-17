@@ -14,7 +14,7 @@ void DebugConsole::Display()
     DisplayHeader();
     DisplayLogs();
     
-    m_LastLogCount = XnorCore::Logger::GetLogList().size();
+    m_LastLogCount = m_CachedLogs.size();
 }
 
 int scroll;
@@ -36,7 +36,7 @@ void DebugConsole::DisplayLogs()
     // This will only be executed the first time the control flow reaches here
     static auto _ = [this] { return scroll = 1; }();
     
-    auto logList = XnorCore::Logger::GetLogList();
+    auto&& logList = XnorCore::Logger::GetLogList();
     
     if (scroll == -1)
         ImGui::SetScrollHereY(0.f);
@@ -82,25 +82,18 @@ void DebugConsole::DisplayLogs()
     ImGui::TableHeader(ImGui::TableGetColumnName(2)); // Retrieve name passed to TableSetupColumn()
     ImGui::PopID();
     
-    for (decltype(logList)::const_iterator it = logList.cbegin(); it != logList.cend(); it++)
+    for (size_t i = m_CachedLogs.size(); i < logList.size(); i++)
     {
-        const auto& log = *it;
+        const auto& log = logList[i];
         
         const XnorCore::Logger::LogLevel level = log->level;
-        if (level < minimumLogLevel)
-            continue;
 
         static uint64_t sameLastLogs;
-        static uint64_t oldSameLastLogs;
 
-        oldSameLastLogs = sameLastLogs;
         if (log->sameAsPrevious)
             sameLastLogs++;
         else
             sameLastLogs = 0;
-
-        if (sameLastLogs > 0 && it + 1 != logList.cend())
-            continue;
 
         std::string message;
 
@@ -140,31 +133,56 @@ void DebugConsole::DisplayLogs()
                 break;
         }
 
-        if (oldSameLastLogs > 0)
-            message = std::format("[...and {} more]", oldSameLastLogs);
+        if (sameLastLogs > 0)
+            message = std::format("[...and {} more]", sameLastLogs);
         else
             message += log->message;
 
         const ImVec4 col = static_cast<Vector4>(color);
-
-        ImGui::TableNextColumn();
-        ImGui::TextColored(col, "%s", prefix.c_str());
         
         // Get the message time and format it in [hh:mm:ss:ms]
         const auto&& t = std::chrono::duration_cast<std::chrono::milliseconds, int64_t>(log->time.time_since_epoch());
-        const std::string time = std::format("{:%T}", t);
+        std::string time = std::format("{:%T}", t);
 
-        ImGui::TableNextColumn();
-        ImGui::TextColored(col, "%s", time.c_str());
+        m_CachedLogs.push_back({ col, level, std::move(prefix), std::move(time), std::move(message), sameLastLogs });
+    }
+
+    for (size_t i = 0; i < m_CachedLogs.size(); i++)
+    {
+        const LogData& log = m_CachedLogs[i];
         
-        ImGui::TableNextColumn();
-        ImGui::PushTextWrapPos();
-        ImGui::TextColored(col, "%s", message.c_str());
-        ImGui::PopTextWrapPos();
+        if (log.level < minimumLogLevel)
+            continue;
+
+        if (log.sameLastLogs > 0 && i + 1 != logList.size())
+            continue;
+
+        if (i > 0)
+        {
+            const LogData& previousLog = m_CachedLogs[i - 1];
+            if (previousLog.sameLastLogs > 0 && log.sameLastLogs == 0)
+                DisplayLog(previousLog);
+        }
+
+        DisplayLog(log);
     }
 
     if (scroll == 1)
         ImGui::SetScrollHereY(1.f);
 
     ImGui::EndTable();
+}
+
+void DebugConsole::DisplayLog(const LogData& data)
+{
+    ImGui::TableNextColumn();
+    ImGui::TextColored(data.color, "%s", data.prefix.c_str());
+        
+    ImGui::TableNextColumn();
+    ImGui::TextColored(data.color, "%s", data.time.c_str());
+        
+    ImGui::TableNextColumn();
+    ImGui::PushTextWrapPos();
+    ImGui::TextColored(data.color, "%s", data.message.c_str());
+    ImGui::PopTextWrapPos();
 }
