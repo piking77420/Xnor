@@ -30,6 +30,9 @@ public:
     
     /// @brief Whether the mouse is locked
     XNOR_ENGINE static inline bool_t mouseLocked = false;
+
+    // @brief Whether the input are locked
+    XNOR_ENGINE static void LockInput(bool_t lockInput);
     
     /// @brief Checks if a specified key is of the specified status
     /// @param key Key to check
@@ -73,14 +76,17 @@ public:
     XNOR_ENGINE static void GetWindowBoundInfo(std::vector<BoundWindowInfo>* boundWindowInfos);
 
     XNOR_ENGINE static void BindWindow(uint32_t bindInd);
-    
+
 private:
     using KeyStatuses = std::array<bool_t, KeyStatusCount>;
+    
     using MouseStatuses = std::array<bool_t, MouseButtonStatusCount>;
     
     XNOR_ENGINE static inline std::vector<BoundWindowInfo> m_BoundWindowInfo;
     
     XNOR_ENGINE static inline uint32_t m_CurrentBoundWindow = 0;
+
+    static inline bool_t m_IsInputLocked = false;
 
     static constexpr size_t GamepadMax = 15;
     

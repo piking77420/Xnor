@@ -87,9 +87,7 @@ private:
 	bool_t m_ReloadingScripts = false;
 
 	bool_t m_ReloadScriptsOnSave = true;
-
-	RenderWindow* m_GameWindow = nullptr;
-
+	
 	/// @brief This thread is used both for serializing the scene, deserializing it, and reloading scripts
 	std::thread m_CurrentAsyncActionThread;
 

@@ -49,9 +49,9 @@ namespace Game
             else if (Input.GetKey(Key.S))
                 movement -= cameraFront;
             if (Input.GetKey(Key.A))
-                movement += cameraRight;
-            else if (Input.GetKey(Key.D))
                 movement -= cameraRight;
+            else if (Input.GetKey(Key.D))
+                movement += cameraRight;
 
             // Handle jump
             if (Input.GetKey(Key.Space))

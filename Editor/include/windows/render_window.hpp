@@ -24,6 +24,7 @@ public:
     void OnApplicationRendering() override;
 
     void FetchInfo() override;
+    
 
     [[nodiscard]]
     XnorCore::Input::BoundWindowInfo GetBindWindowInfo() const override;

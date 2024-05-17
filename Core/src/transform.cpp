@@ -145,5 +145,5 @@ Vector3 Transform::GetUp() const
 
 Vector3 Transform::GetForward() const
 {
-    return (Matrix3(worldMatrix) * Vector3::UnitZ()).Normalized();
+    return (Matrix3(worldMatrix) * -Vector3::UnitZ()).Normalized();
 }

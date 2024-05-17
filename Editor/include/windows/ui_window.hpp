@@ -43,7 +43,7 @@ public:
     virtual void OnApplicationRendering();
 
     virtual XnorCore::Input::BoundWindowInfo GetBindWindowInfo() const;
-
+    
     bool_t opened = true;
     bool_t canClose = false;
 

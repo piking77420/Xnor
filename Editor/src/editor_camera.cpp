@@ -170,9 +170,9 @@ void EditorCamera::GoToObject()
     if (!m_EditorRef->data.gotoObject)
         return;
     
-    const XnorCore::Entity& currentEntiy = *m_EditorRef->data.selectedEntity;
-    const Vector3 pos = static_cast<Vector3>(currentEntiy.transform.worldMatrix[3]);
-    m_EditorRefCamera->LookAt(static_cast<Vector3>(currentEntiy.transform.worldMatrix[3]));
+    const XnorCore::Entity& currentEntity = *m_EditorRef->data.selectedEntity;
+    const Vector3 pos = static_cast<Vector3>(currentEntity.transform.worldMatrix[3]);
+    m_EditorRefCamera->LookAt(static_cast<Vector3>(currentEntity.transform.worldMatrix[3]));
 
     Vector3 forwardVec = (pos - m_EditorRefCamera->position);
     const float_t distance = forwardVec.Length();

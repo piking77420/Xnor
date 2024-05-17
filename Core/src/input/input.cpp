@@ -7,18 +7,32 @@
 
 using namespace XnorCore;
 
-bool Input::GetKey(const Key key, const KeyStatus status)
+void Input::LockInput(const bool_t lockInput)
 {
+    m_IsInputLocked = lockInput;
+}
+
+bool_t Input::GetKey(const Key key, const KeyStatus status)
+{
+    if (m_IsInputLocked)
+        return false;
+    
     return m_Keyboard.at(static_cast<size_t>(key)).at(static_cast<size_t>(status));
 }
 
-bool Input::GetMouseButton(const MouseButton mouseButton, const MouseButtonStatus status)
+bool_t Input::GetMouseButton(const MouseButton mouseButton, const MouseButtonStatus status)
 {
+    if (m_IsInputLocked)
+        return false;
+    
     return m_Mouse.at(static_cast<size_t>(mouseButton)).at(static_cast<size_t>(status));
 }
 
-bool Input::GetGamepadButton(const uint32_t gamePadId, const GamepadButton gamepadButton, const GamepadButtonStatus buttonStatus)
+bool_t Input::GetGamepadButton(const uint32_t gamePadId, const GamepadButton gamepadButton, const GamepadButtonStatus buttonStatus)
 {
+    if (m_IsInputLocked)
+        return false;
+    
     if (gamePadId > GamepadMax)
     {
         Logger::LogFatal("Invalid gamepad ID {}", gamePadId);
@@ -30,6 +44,9 @@ bool Input::GetGamepadButton(const uint32_t gamePadId, const GamepadButton gamep
 
 void Input::HandleEvents()
 {
+    if (m_IsInputLocked)
+        return;
+    
     HandleGamepad();
 }
 
@@ -37,6 +54,7 @@ void Input::HandleKeyboard(GLFWwindow*, const int32_t key, const int32_t, const 
 {
     if (static_cast<size_t>(key) > m_Keyboard.size())
         return;
+    
     
     KeyStatuses& keyStatuses = m_Keyboard.at(static_cast<size_t>(key));
     
@@ -64,6 +82,7 @@ void Input::HandleKeyboard(GLFWwindow*, const int32_t key, const int32_t, const 
 
 void Input::HandleMouseButton(GLFWwindow*, const int32_t mouseButton, const int32_t action, int32_t)
 {
+    
     MouseStatuses& keyStatuses = m_Mouse.at(static_cast<size_t>(mouseButton));
     
     switch (action)
@@ -176,6 +195,9 @@ void Input::CheckGamepadAtLaunch()
 
 void Input::Update()
 {
+    if (m_IsInputLocked)
+        return;
+    
     POINT point;
     GetCursorPos(&point);
     m_MousePosition.x = static_cast<float_t>(point.x);
@@ -241,7 +263,6 @@ void Input::Initialize()
 
     glfwSetKeyCallback(windowPtr, HandleKeyboard);
     glfwSetMouseButtonCallback(windowPtr, HandleMouseButton);
-    //glfwSetCursorPosCallback(windowPtr, MouseCursorPos);
     glfwSetJoystickCallback(HandleJoyStickCallBack);
 
     KeyStatuses defaultKeys;

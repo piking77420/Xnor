@@ -18,6 +18,7 @@
 #include "windows/debug_console.hpp"
 #include "windows/editor_window.hpp"
 #include "windows/footer_window.hpp"
+#include "windows/game_window.hpp"
 #include "windows/header_window.hpp"
 #include "windows/hierarchy.hpp"
 #include "windows/inspector.hpp"
@@ -101,7 +102,7 @@ void Editor::CreateDefaultWindows()
 		data.currentScene = XnorCore::FileManager::Get<XnorCore::File>(SerializedScenePath);
 
 	OpenWindow<EditorWindow>(data.editorViewPort);
-	m_GameWindow = OpenWindow<RenderWindow>(*gameViewPort);
+	OpenWindow<GameWindow>(*gameViewPort);
 	OpenWindow<Performance>(50);
 	OpenWindow<Inspector>();
 	OpenWindow<HeaderWindow>();
@@ -492,8 +493,6 @@ void Editor::Update()
 	{
 		Time::Update();
 		Window::PollEvents();
-		if (m_GameWindow->IsFocused())
-			Input::HandleEvents();
 		BeginFrame();
 		CheckWindowResize();
 
@@ -513,8 +512,8 @@ void Editor::Update()
 		}
 
 		Coroutine::UpdateAll();
-		if (m_GameWindow->IsFocused())
-			Input::Update();
+		Input::Update();
+		
 		EndFrame();
 		renderer.SwapBuffers();
 
@@ -552,7 +551,7 @@ void Editor::WorldBehaviours()
 		{
 			XnorCore::World::Begin();
 			XnorCore::World::hasStarted = true;
-			}
+		}
 		XnorCore::World::Update();
 	}
 	XnorCore::World::OnRendering();

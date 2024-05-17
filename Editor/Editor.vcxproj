@@ -126,6 +126,7 @@
     <ClInclude Include="include\windows\debug_console.hpp" />
     <ClInclude Include="include\windows\editor_window.hpp" />
     <ClInclude Include="include\windows\footer_window.hpp" />
+    <ClInclude Include="include\windows\game_window.hpp" />
     <ClInclude Include="include\windows\header_window.hpp" />
     <ClInclude Include="include\windows\hierarchy.hpp" />
     <ClInclude Include="include\windows\inspector.hpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="src\windows\debug_console.cpp" />
     <ClCompile Include="src\windows\editor_window.cpp" />
     <ClCompile Include="src\windows\footer_window.cpp" />
+    <ClCompile Include="src\windows\game_window.cpp" />
     <ClCompile Include="src\windows\header_window.cpp" />
     <ClCompile Include="src\windows\hierarchy.cpp" />
     <ClCompile Include="src\windows\inspector.cpp" />

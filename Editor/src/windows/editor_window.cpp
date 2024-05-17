@@ -1,5 +1,6 @@
 ﻿#include "windows/editor_window.hpp"
 
+#include "assimp/Logger.hpp"
 #include "utils/logger.hpp"
 #include "utils/utils.hpp"
 
@@ -40,6 +41,7 @@ void EditorWindow::Display()
         if (!isEditingTransform)
             SelectEntityOnScreen();
     }
+
 
     m_EditorCamera.OnPressGoToObject();
 }
@@ -95,17 +97,17 @@ void EditorWindow::SelectEntityOnScreen()
     if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
     {
         const Vector2 mousepos = ImGui::GetMousePos();
-        Vector2i mouseposI = {static_cast<int32_t>(mousepos.x), static_cast<int32_t>(mousepos.y)};
-        mouseposI -= m_Position;
+        Vector2i mousePosI = {static_cast<int32_t>(mousepos.x), static_cast<int32_t>(mousepos.y)};
+        mousePosI -= m_Position;
         // Flip the y axis 
-        mouseposI.y = m_Size.y - mouseposI.y;
-        if (mouseposI.x >= m_Size.x || mouseposI.y >= m_Size.y || mouseposI.x < 0 || mouseposI.y < 0)
+        mousePosI.y = m_Size.y - mousePosI.y;
+        if (mousePosI.x >= m_Size.x || mousePosI.y >= m_Size.y || mousePosI.x < 0 || mousePosI.y < 0)
         {
             return;
         }
 
         XnorCore::Entity* ptr = nullptr;
-        if (m_PickingStrategy.GetEntityFromScreen(mouseposI, *XnorCore::World::scene, m_Editor->data.editorCam, &ptr))
+        if (m_PickingStrategy.GetEntityFromScreen(mousePosI, *XnorCore::World::scene, m_Editor->data.editorCam, &ptr))
         {
             m_Editor->data.selectedEntity = ptr;
             return;
