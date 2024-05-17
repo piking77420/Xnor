@@ -111,16 +111,16 @@
 %ignore XnorCore::List::Find;
 %ignore XnorCore::List::Sort;
 
-%ignore XnorCore::List::Begin();
-%ignore XnorCore::List::End();
-%ignore XnorCore::List::CBegin() const;
-%ignore XnorCore::List::CEnd() const;
-%ignore XnorCore::List::RBegin();
-%ignore XnorCore::List::REnd();
-%ignore XnorCore::List::CrBegin() const;
-%ignore XnorCore::List::CrEnd() const;
-%ignore XnorCore::List::begin();
-%ignore XnorCore::List::end();
+%ignore XnorCore::List::Begin;
+%ignore XnorCore::List::End;
+%ignore XnorCore::List::CBegin const;
+%ignore XnorCore::List::CEnd const;
+%ignore XnorCore::List::RBegin;
+%ignore XnorCore::List::REnd;
+%ignore XnorCore::List::CrBegin const;
+%ignore XnorCore::List::CrEnd const;
+%ignore XnorCore::List::begin;
+%ignore XnorCore::List::end;
 
 %include "utils/list.hpp"
 

@@ -22,11 +22,11 @@ void Button::ButtonUpdate() const
 
     const Vector2 mousePosApplication = Input::GetMousePosition<Vector2>();
     
-    std::vector<Input::BindedWindowInfo> windowBindedInfos;
-    Input::GetWindowBindedInfo(&windowBindedInfos);
+    std::vector<Input::BoundWindowInfo> windowBindedInfos;
+    Input::GetWindowBoundInfo(&windowBindedInfos);
 
     // Look for each window if we ckeck on the boutton bounding box
-    for (const Input::BindedWindowInfo& windowInfo : windowBindedInfos)
+    for (const Input::BoundWindowInfo& windowInfo : windowBindedInfos)
     {
         if (!windowInfo.isRendering)
             continue;

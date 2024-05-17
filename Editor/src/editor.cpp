@@ -454,7 +454,7 @@ void Editor::Update()
 	{
 		Time::Update();
 		Window::PollEvents();
-		Input::HandleEvent();
+		Input::HandleEvents();
 		BeginFrame();
 		CheckWindowResize();
 

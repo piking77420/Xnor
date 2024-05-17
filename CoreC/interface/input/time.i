@@ -1,10 +1,26 @@
 %module CoreC
 
-%include "typemaps/cs_static_class.i"
-
-%typemap(csclassmodifiers) XnorCore::Time "public static class";
+%import "typemaps/cs_static_class.i"
 
 %cs_static_class(XnorCore::Time);
+
+%typemap(cscode) XnorCore::Time
+%{
+    public static float TotalTime => GetTotalTime();
+    
+    public static float LastTotalTime => GetLastTotalTime();
+    
+    public static float DeltaTime => GetDeltaTime();
+    
+    public static uint TotalFrameCount => GetTotalFrameCount();
+%}
+
+%csmethodmodifiers XnorCore::Time::GetTotalTime "private";
+%csmethodmodifiers XnorCore::Time::GetLastTotalTime "private";
+%csmethodmodifiers XnorCore::Time::GetDeltaTime "private";
+%csmethodmodifiers XnorCore::Time::GetTotalFrameCount "private";
+
+%ignore XnorCore::Time::Update;
 
 %include "input/time.hpp"
 

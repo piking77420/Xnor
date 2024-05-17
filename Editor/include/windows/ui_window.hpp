@@ -40,7 +40,7 @@ public:
     // Whenever the window need to render after the update of the world
     virtual void OnApplicationRendering();
 
-    virtual XnorCore::Input::BindedWindowInfo GetBindWindoInfo() const;
+    virtual XnorCore::Input::BoundWindowInfo GetBindWindoInfo() const;
 
 protected:
     std::string m_WindowTitle = "Untitled";

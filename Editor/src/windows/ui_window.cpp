@@ -50,7 +50,7 @@ void UiWindow::OnApplicationRendering()
 {
 }
 
-XnorCore::Input::BindedWindowInfo UiWindow::GetBindWindoInfo() const
+XnorCore::Input::BoundWindowInfo UiWindow::GetBindWindoInfo() const
 {
     auto& style = ImGui::GetStyle();
     const Vector2 windowPadding = style.WindowPadding * 0.5f;
@@ -61,7 +61,7 @@ XnorCore::Input::BindedWindowInfo UiWindow::GetBindWindoInfo() const
     pos.x += windowPadding.x;
     pos.y += windowPadding.y + framePadding.y + TiletBarOffSet;
     
-    const XnorCore::Input::BindedWindowInfo windowInfo =
+    const XnorCore::Input::BoundWindowInfo windowInfo =
         {
         .windowPos = pos,
         .windowSize = static_cast<Vector2>(m_Size),

@@ -65,4 +65,6 @@
 
 %csmethodmodifiers XnorCore::Entity::operator== "private";
 
+%rename XnorCore::Entity::transform Transform;
+
 %include "scene/entity.hpp"
