@@ -7,12 +7,11 @@ using namespace XnorCore;
 
 
 void CascadeShadowMap::GetCascadeCameras(std::vector<Camera>* cameras, const Camera& viewPortCamera, Vector3 lightDir,
-    Vector2i screenSize)
+                                         const Vector2i screenSize)
 {
-    
+    cameras->resize(DirectionalCascadeLevel + 1);
     for (size_t i = 0; i < DirectionalCascadeLevel + 1; ++i)
     {
-        cameras->emplace_back(Camera());
         cameras->at(i) = viewPortCamera;
         
         if (i == 0)
@@ -92,9 +91,9 @@ void CascadeShadowMap::GetCamera(Camera* cascadedCamera,const float_t cascadedNe
         center += {v.x , v.y, v.z};
     }
     center /= static_cast<float_t>(corners.size());
-    cascadedCamera->position = center;
+    cascadedCamera->position = center + lightDir;
 
-    const Matrix lightView = Matrix::LookAt(center, center + lightDir, Vector3::UnitY());
+    const Matrix lightView = Matrix::LookAt( cascadedCamera->position, center, Vector3::UnitY());
 
     float_t minX = std::numeric_limits<float_t>::max();
     float_t maxX = std::numeric_limits<float_t>::lowest();
@@ -114,7 +113,7 @@ void CascadeShadowMap::GetCamera(Camera* cascadedCamera,const float_t cascadedNe
         maxZ = std::max(maxZ, trf.z);
     }
 
-    if (minZ < 0)
+    if (minZ < 0.f)
     {
         minZ *= m_ZMultiplicator;
     }
@@ -122,7 +121,7 @@ void CascadeShadowMap::GetCamera(Camera* cascadedCamera,const float_t cascadedNe
     {
         minZ /= m_ZMultiplicator;
     }
-    if (maxZ < 0)
+    if (maxZ < 0.f)
     {
         maxZ /= m_ZMultiplicator;
     }

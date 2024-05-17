@@ -172,8 +172,8 @@ void LightManager::FecthLightInfo() const
 	{
 		for (size_t i = 0 ; i < MaxDirectionalLights ; i++)
 		{
+			//m_GpuLightData->nbrOfDirLight = static_cast<uint32_t>(nbrOfDirectionalLight); 
 			const Vector3 direction = m_DirectionalLights[i]->GetLightDirection(); 
-
 			m_GpuLightData->directionalData[i] =
 			{
 				.color = static_cast<Vector3>(m_DirectionalLights[i]->color),
@@ -207,10 +207,7 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 		const Vector2i shadowMapSize = shadowMap.GetSize(); 
 		
 		const Vector3 lightDir =  -directionalLight->GetLightDirection();
-		const float_t lenghtAabb =  sceneAAbb.extents.Length();
 		// Get Pos from scene aabb
-		const Vector3 pos = sceneAAbb.center + (lenghtAabb * -lightDir);//static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);
-		DrawGizmo::Sphere(pos);
 
 		
 		// HardCoded Shadow Cascade distance by level
@@ -218,17 +215,10 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 			{
 			    viewPortCamera.far / 50.f,
 				viewPortCamera.far / 25.f,
+				viewPortCamera.far / 15,
 				viewPortCamera.far / 10.f,
-				viewPortCamera.far / 8.f,
-				viewPortCamera.far / 4.f,
-				viewPortCamera.far / 2.f,
-				/*viewPortCamera.far / 58.f,
-				viewPortCamera.far / 44.f,
-				viewPortCamera.far / 32.f,
-				viewPortCamera.far / 18.f,
-				viewPortCamera.far / 12.f,
 				viewPortCamera.far / 6.f,
-				viewPortCamera.far / 2.f,*/
+				viewPortCamera.far / 3.f,
 			
 			};
 
@@ -243,7 +233,7 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 		
 		Camera camDirectional;
 		camDirectional.isOrthographic = true;
-		camDirectional.position = pos;
+		camDirectional.position = viewPortCamera.position;
 		camDirectional.LookAt(camDirectional.position + lightDir);
 		camDirectional.near = viewPortCamera.near;
 		camDirectional.far = directionalLight->far;
@@ -540,18 +530,4 @@ void LightManager::InitShader()
 	m_ShadowMapShaderPointLightSkinned->SetFaceCullingInfo(cullInfo);
 	m_ShadowMapShaderPointLightSkinned->CreateInInterface();
 	
-}
-
-float_t LightManager::GetMax(Vector3 vec) const
-{
-
-	float_t maxComponent = vec.x;
-
-	if (vec.y > maxComponent)
-		maxComponent = vec.y;
-
-	if (vec.z > maxComponent)
-		maxComponent = vec.z;
-
-	return maxComponent;
 }

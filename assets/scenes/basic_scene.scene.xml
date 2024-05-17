@@ -6,12 +6,12 @@
 			<m_EntityId>73C3991F-64C8-43BE-BA-FB-8F-9C-A2-38-C9-75</m_EntityId>
 			<transform>
 				<m_Position>0 ; 1 ; -2</m_Position>
-				<m_EulerRotation>-0.034200516 ; -0.8571824 ; 0.98926187</m_EulerRotation>
-				<m_Scale>1.0000256 ; 1.0000052 ; 1.0000143</m_Scale>
+				<m_EulerRotation>-0.46794838 ; -0.5892006 ; 1.4177824</m_EulerRotation>
+				<m_Scale>1.000032 ; 1.0000107 ; 1.0000111</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="DirectionalLight">
-					<zCascadeShadowMapZMultiplactor>10</zCascadeShadowMapZMultiplactor>
+					<zCascadeShadowMapZMultiplactor>5</zCascadeShadowMapZMultiplactor>
 					<color>1 ; 1 ; 1 ; 1</color>
 					<intensity>10</intensity>
 					<castShadow>true</castShadow>
@@ -27,7 +27,7 @@
 			<transform>
 				<m_Position>-0.61469746 ; -2 ; 1</m_Position>
 				<m_EulerRotation>0.000345267 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>75.937584 ; 1 ; 47.62838</m_Scale>
+				<m_Scale>29575.732 ; 1 ; 42062.234</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="StaticMeshRenderer">
@@ -67,8 +67,8 @@
 			<name>Sphere</name>
 			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
 			<transform>
-				<m_Position>4.4999866 ; 0.058403905 ; -3.2958086</m_Position>
-				<m_EulerRotation>2.752485 ; 0 ; 0</m_EulerRotation>
+				<m_Position>-9.380662 ; 0.29592717 ; 34.823902</m_Position>
+				<m_EulerRotation>2.752485 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1.0000015 ; 1.0000015</m_Scale>
 			</transform>
 			<m_Components>
@@ -267,9 +267,9 @@
 			<name>Entity</name>
 			<m_EntityId>A5F5EF84-420B-4DD2-B1-F-D-8-E-E9-4E-34</m_EntityId>
 			<transform>
-				<m_Position>3.5727234 ; -0.99982184 ; -0.24707794</m_Position>
-				<m_EulerRotation>0.031808868 ; -0.22929065 ; -0.10728335</m_EulerRotation>
-				<m_Scale>0.050000854 ; 0.049999945 ; 0.05000027</m_Scale>
+				<m_Position>487.354 ; -0.9997714 ; 437.0339</m_Position>
+				<m_EulerRotation>2.8651314 ; -1.2124724 ; -2.839657</m_EulerRotation>
+				<m_Scale>0.05000163 ; 0.049999945 ; 0.050001018</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="SkinnedMeshRenderer">
@@ -292,7 +292,7 @@
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
 						<m_Animation>48B1114D-51B9-46DA-92-67-40-C3-D3-8D-7-60</m_Animation>
-						<m_CurrentFrame>367</m_CurrentFrame>
+						<m_CurrentFrame>383</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>
@@ -306,7 +306,7 @@
 			<name>Vikingroom</name>
 			<m_EntityId>5CE4F8CA-1E76-499A-B6-93-C5-C9-73-A1-3-D5</m_EntityId>
 			<transform>
-				<m_Position>9.950745 ; -0.35754108 ; -1.7448686</m_Position>
+				<m_Position>9.950745 ; 0.6424589 ; -1.7448686</m_Position>
 				<m_EulerRotation>1.7672608 ; 0.019365 ; 2.4576125</m_EulerRotation>
 				<m_Scale>1.0000143 ; 1.0000086 ; 1.0000043</m_Scale>
 			</transform>
