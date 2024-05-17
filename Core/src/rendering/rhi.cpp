@@ -111,9 +111,12 @@ bool_t Rhi::DestroyModel(const uint32_t modelId)
 
 	const ModelInternal* model = &m_ModelMap.at(modelId);
 
-	glDeleteBuffers(1, &model->vbo);
-	glDeleteBuffers(1, &model->ebo);
-	glDeleteVertexArrays(1, &model->vao);
+	if (glIsBuffer(model->vbo))
+		glDeleteBuffers(1, &model->vbo);
+	if (glIsBuffer(model->ebo))
+		glDeleteBuffers(1, &model->ebo);
+	if (glIsVertexArray(model->vao))
+		glDeleteVertexArrays(1, &model->vao);
 
 	return true;
 }
@@ -1054,7 +1057,8 @@ void Rhi::BlitFrameBuffer(const uint32_t readBuffer, const uint32_t targetBuffer
 
 void Rhi::BindFrameBuffer(const uint32_t frameBufferId)
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
+	if (glIsFramebuffer(frameBufferId))
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
 }
 
 void Rhi::UnbindFrameBuffer()

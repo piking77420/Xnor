@@ -11,9 +11,9 @@
 			</transform>
 			<m_Components>
 				<0 typeName="DirectionalLight">
-					<zCascadeShadowMapZMultiplactor>10</zCascadeShadowMapZMultiplactor>
+					<zCascadeShadowMapZMultiplactor>14.3</zCascadeShadowMapZMultiplactor>
 					<color>1 ; 1 ; 1 ; 1</color>
-					<intensity>4.5</intensity>
+					<intensity>10</intensity>
 					<castShadow>true</castShadow>
 					<enable>true</enable>
 				</0>
@@ -26,8 +26,8 @@
 			<m_EntityId>DC36B839-E893-481D-B6-28-93-7E-24-FC-F4-C</m_EntityId>
 			<transform>
 				<m_Position>0 ; -2 ; 1</m_Position>
-				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
-				<m_Scale>10 ; 1 ; 10</m_Scale>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
+				<m_Scale>800 ; 1 ; 800</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="StaticMeshRenderer">
@@ -67,9 +67,9 @@
 			<name>Sphere</name>
 			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
 			<transform>
-				<m_Position>4.4999866 ; 0.058403905 ; -3.2958086</m_Position>
-				<m_EulerRotation>2.752485 ; 0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1.0000015 ; 1.0000015</m_Scale>
+				<m_Position>0 ; 1.058404 ; 0</m_Position>
+				<m_EulerRotation>-2.640093 ; 1.1868199 ; -1.2728888e-06</m_EulerRotation>
+				<m_Scale>1.000001 ; 1.0000162 ; 1.0000148</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="StaticMeshRenderer">
@@ -100,7 +100,7 @@
 			<name>PointLight</name>
 			<m_EntityId>A284C848-DC61-4853-A4-48-15-9D-CE-5D-73-BD</m_EntityId>
 			<transform>
-				<m_Position>-0.022478878 ; 3 ; 1.4140348</m_Position>
+				<m_Position>-31.022478 ; 3 ; 1.4140348</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
@@ -140,9 +140,9 @@
 			<name>SpotLight</name>
 			<m_EntityId>8B8B51F5-90F0-405B-BE-3C-56-93-F2-7-34-F2</m_EntityId>
 			<transform>
-				<m_Position>-0.022478878 ; 5 ; 1.4140348</m_Position>
-				<m_EulerRotation>-2.7362182 ; 0.35602307 ; 0.72564805</m_EulerRotation>
-				<m_Scale>1.0000027 ; 1.0002744 ; 1.0002621</m_Scale>
+				<m_Position>-18.022478 ; 5 ; 1.4140348</m_Position>
+				<m_EulerRotation>-2.7362175 ; 0.35602325 ; 0.7256482</m_EulerRotation>
+				<m_Scale>1.0000025 ; 1.0002749 ; 1.0002629</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="SpotLight">

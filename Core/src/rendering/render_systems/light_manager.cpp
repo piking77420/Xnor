@@ -14,11 +14,17 @@ using namespace XnorCore;
 LightManager::~LightManager()
 {
 	delete m_DirectionalShadowMaps;
+	m_DirectionalShadowMaps = nullptr;
 	delete m_GpuLightData;
+	m_GpuLightData = nullptr;
 	delete m_SpotLightShadowMapTextureArray;
+	m_SpotLightShadowMapTextureArray = nullptr;
 	delete m_PointLightShadowMapCubemapArrayPixelDistance;
+	m_PointLightShadowMapCubemapArrayPixelDistance = nullptr;
 	delete m_DepthBufferForPointLightPass;
+	m_DepthBufferForPointLightPass = nullptr;
 	delete m_ShadowFrameBufferPointLight;
+	m_ShadowFrameBufferPointLight = nullptr;
 }
 
 void LightManager::InitResources()
