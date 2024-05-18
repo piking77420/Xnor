@@ -18,7 +18,7 @@ class DotnetReflection
 {
     STATIC_CLASS(DotnetReflection)
 
-    struct DotnetTypeInfo final
+    struct DotnetTypeInfo
     {
         std::function<Coral::ManagedObject()> createFunc;
         std::function<void(ScriptComponent*, void*, const char_t*)> displayFunc;
@@ -27,6 +27,14 @@ class DotnetReflection
 
         std::string name;
         bool_t isScriptType = false;
+    };
+
+    struct DotnetEnumInfo
+    {
+        std::vector<std::string> names;
+        std::vector<int32_t> values;
+        
+        std::string typeName;
     };
 
 public:
@@ -93,7 +101,9 @@ private:
         "swigCMemOwn"
     };
     
-    static inline std::unordered_map<std::string, DotnetTypeInfo> m_DotnetMap;
+    static inline std::unordered_map<std::string, DotnetTypeInfo> m_DotnetTypes;
+    
+    static inline std::unordered_map<std::string, DotnetEnumInfo> m_DotnetEnums;
 
     XNOR_ENGINE static void SerializeType(void* value, const std::string& fieldName, const std::string& typeName);
 
@@ -110,6 +120,8 @@ private:
 
     template <typename T>
     static void DeserializeSimpleType(T* obj, const std::string& fieldName);
+
+    static DotnetEnumInfo& GetEnumInfo(const std::string& name);
 };
 
 END_XNOR_CORE

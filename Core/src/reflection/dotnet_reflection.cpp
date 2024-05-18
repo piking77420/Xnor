@@ -28,7 +28,7 @@ void DotnetReflection::PrintTypes()
         }
     }
 
-    for (auto&& it : m_DotnetMap)
+    for (auto&& it : m_DotnetTypes)
     {
         Logger::LogInfo("{} ; {}", it.first, it.second.name);
     }
@@ -48,7 +48,7 @@ void DotnetReflection::RegisterScriptType(const std::string& typeName)
         .isScriptType = true
     };
 
-    m_DotnetMap.emplace(typeName, info);
+    m_DotnetTypes.emplace(typeName, info);
 }
 
 void DotnetReflection::RegisterEnumType(const std::string& typeName, const std::string& assemblyName)
@@ -65,12 +65,12 @@ void DotnetReflection::RegisterEnumType(const std::string& typeName, const std::
         .isScriptType = false
     };
 
-    m_DotnetMap.emplace(typeName, info);
+    m_DotnetTypes.emplace(typeName, info);
 }
 
 void DotnetReflection::UnregisterScriptType(const std::string& typeName)
 {
-    m_DotnetMap.erase(m_DotnetMap.find(typeName));
+    m_DotnetTypes.erase(m_DotnetTypes.find(typeName));
 }
 
 void DotnetReflection::RegisterAllTypes()
@@ -111,9 +111,9 @@ void DotnetReflection::DisplayType(ScriptComponent* const script, void* obj, con
         return;
     }
 
-    auto&& it = m_DotnetMap.find(typeName);
+    auto&& it = m_DotnetTypes.find(typeName);
 
-    if (it == m_DotnetMap.end())
+    if (it == m_DotnetTypes.end())
     {
         Logger::LogError("[C# Refl] Couldn't find type named {}", typeName);
         return;
@@ -164,7 +164,7 @@ void DotnetReflection::DisplayType(ScriptComponent* const script)
 
 void DotnetReflection::GetScriptTypes(List<std::string>* const list)
 {
-    for (DotnetTypeInfo& typeInfo : m_DotnetMap | std::views::values)
+    for (DotnetTypeInfo& typeInfo : m_DotnetTypes | std::views::values)
     {
         if (typeInfo.isScriptType)
             list->Add(typeInfo.name);
@@ -173,7 +173,7 @@ void DotnetReflection::GetScriptTypes(List<std::string>* const list)
 
 ScriptComponent* DotnetReflection::CreateInstance(const std::string& typeName)
 {
-    auto&& obj = m_DotnetMap[typeName].createFunc();
+    auto&& obj = m_DotnetTypes[typeName].createFunc();
     ScriptComponent* component = obj.GetFieldValue<ScriptComponent*>("swigCPtr");
     component->Initialize(obj);
     return component;
@@ -181,9 +181,9 @@ ScriptComponent* DotnetReflection::CreateInstance(const std::string& typeName)
 
 void DotnetReflection::SerializeType(void* const value, const std::string& fieldName, const std::string& typeName)
 {
-    auto&& it = m_DotnetMap.find(typeName);
+    auto&& it = m_DotnetTypes.find(typeName);
 
-    if (it == m_DotnetMap.end())
+    if (it == m_DotnetTypes.end())
     {
         Logger::LogError("[C# Refl] Couldn't find type named {}", typeName);
         return;
@@ -194,9 +194,9 @@ void DotnetReflection::SerializeType(void* const value, const std::string& field
 
 void DotnetReflection::DeserializeType(void* const value, const std::string& fieldName, const std::string& typeName)
 {
-    auto&& it = m_DotnetMap.find(typeName);
+    auto&& it = m_DotnetTypes.find(typeName);
 
-    if (it == m_DotnetMap.end())
+    if (it == m_DotnetTypes.end())
     {
         Logger::LogError("[C# Refl] Couldn't find type named {}", typeName);
         return;
@@ -211,22 +211,17 @@ void DotnetReflection::SerializeExternalType(void* const value, const std::strin
     
     if (type.IsEnum())
     {
-        // TODO: Can be improved a lot by using cache
-        std::vector<Coral::String> enumNames;
-        type.GetEnumNames(enumNames);
+        const DotnetEnumInfo& info = GetEnumInfo(typeName);
 
-        std::vector<std::string> enumNamesStr(enumNames.size());
-        std::ranges::transform(enumNames, enumNamesStr.begin(), [](const Coral::String& str) -> std::string { return str; });
-        
-        std::vector<int32_t> enumValues;
-        type.GetEnumValues(enumValues);
+        const std::vector<std::string>& enumNames = info.names;
+        const std::vector<int32_t>& enumValues = info.values;
 
         const int32_t val = *static_cast<int32_t* const>(value);
-        for (size_t i = 0; i < enumNamesStr.size(); i++)
+        for (size_t i = 0; i < enumNames.size(); i++)
         {
             if (enumValues[i] == val)
             {
-                Serializer::AddSimpleValue(fieldName, enumNamesStr[i]);
+                Serializer::AddSimpleValue(fieldName, enumNames[i]);
                 break;
             }
         }
@@ -240,21 +235,16 @@ void DotnetReflection::DeserializeExternalType(void* const value, const std::str
     if (type.IsEnum())
     {
         const char_t* const xmlValue = Serializer::ReadElementValue(fieldName);
-        
-        // TODO: Can be improved a lot by using cache
-        std::vector<Coral::String> enumNames;
-        type.GetEnumNames(enumNames);
 
-        std::vector<std::string> enumNamesStr(enumNames.size());
-        std::ranges::transform(enumNames, enumNamesStr.begin(), [](const Coral::String& str) -> std::string { return str; });
-        
-        std::vector<int32_t> enumValues;
-        type.GetEnumValues(enumValues);
+        const DotnetEnumInfo& info = GetEnumInfo(typeName);
+
+        const std::vector<std::string>& enumNames = info.names;
+        const std::vector<int32_t>& enumValues = info.values;
 
         int32_t* const val = static_cast<int32_t* const>(value);
-        for (size_t i = 0; i < enumNamesStr.size(); i++)
+        for (size_t i = 0; i < enumNames.size(); i++)
         {
-            if (enumNamesStr[i] == xmlValue)
+            if (enumNames[i] == xmlValue)
             {
                 *val = enumValues[i];
                 break;
@@ -271,26 +261,42 @@ void DotnetReflection::DisplayExternalType(void* const value, const char_t* cons
     {
         int32_t* const val = static_cast<int32_t* const>(value);
 
-        // TODO: Can be improved a lot by using cache
-        std::vector<Coral::String> enumNames;
-        type.GetEnumNames(enumNames);
+        const DotnetEnumInfo& info = GetEnumInfo(typeName);
 
-        std::vector<std::string> enumNamesStr(enumNames.size());
-        std::ranges::transform(enumNames, enumNamesStr.begin(), [](const Coral::String& str) -> std::string { return str; });
-        
-        std::vector<int32_t> enumValues;
-        type.GetEnumValues(enumValues);
+        const std::vector<std::string>& enumNames = info.names;
+        const std::vector<int32_t>& enumValues = info.values;
 
-        if (ImGui::BeginCombo(fieldName, enumNamesStr[std::distance(enumValues.begin(), std::ranges::find(enumValues, *val))].c_str()))
+        if (ImGui::BeginCombo(fieldName, enumNames[std::distance(enumValues.begin(), std::ranges::find(enumValues, *val))].c_str()))
         {
-            for (size_t i = 0; i < enumNamesStr.size(); i++)
+            for (size_t i = 0; i < enumNames.size(); i++)
             {
-                if (ImGui::Selectable(enumNamesStr[i].c_str()))
+                if (ImGui::Selectable(enumNames[i].c_str()))
                     *val = enumValues[i];
             }
             ImGui::EndCombo();
         }
     }
+}
+
+DotnetReflection::DotnetEnumInfo& DotnetReflection::GetEnumInfo(const std::string& name)
+{
+    if (m_DotnetEnums.contains(name))
+        return m_DotnetEnums[name];
+    
+    const Coral::Type& type = DotnetRuntime::GetGameAssembly()->GetCoralAssembly()->GetType(name);
+
+    std::vector<Coral::String> enumNames;
+    type.GetEnumNames(enumNames);
+
+    std::vector<std::string> enumNamesStr(enumNames.size());
+    std::ranges::transform(enumNames, enumNamesStr.begin(), [](const Coral::String& str) -> std::string { return str; });
+        
+    std::vector<int32_t> enumValues;
+    type.GetEnumValues(enumValues);
+
+    m_DotnetEnums.emplace(name, DotnetEnumInfo{ enumNamesStr, enumValues, name });
+    
+    return m_DotnetEnums.at(name);
 }
 
 void DotnetReflection::SerializeScript(const ScriptComponent* const script)

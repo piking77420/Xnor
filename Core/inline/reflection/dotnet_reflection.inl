@@ -20,7 +20,7 @@ void DotnetReflection::RegisterBaseType(const std::string& typeName)
         .isScriptType = false
     };
 
-    m_DotnetMap.emplace(typeName, info);
+    m_DotnetTypes.emplace(typeName, info);
 }
 
 template <typename T>
@@ -35,7 +35,7 @@ void DotnetReflection::RegisterCoreType(const std::string& typeName)
         .isScriptType = false
     };
 
-    m_DotnetMap.emplace(typeName, info);
+    m_DotnetTypes.emplace(typeName, info);
 }
 
 template <typename T>
@@ -131,6 +131,7 @@ void DotnetReflection::DisplaySimpleType([[maybe_unused]] ScriptComponent* const
         ImGui::Text("%s", name);
         ImGui::SameLine();
 
+        // We reinterpret the pointer to a double pointer because we point to a .NET reference type which is itself a pointer
         Component** e = reinterpret_cast<Component**>(obj);
         
         // Display entity name
@@ -150,17 +151,7 @@ void DotnetReflection::SerializeSimpleType(T* const obj, const std::string& fiel
     }
     else if constexpr (Meta::IsEnum<T>)
     {
-        // TODO constexpr bool_t isEnumFlag = Reflection::HasAttribute<Reflection::EnumFlags, DescriptorT>();
-        constexpr auto enumNames = magic_enum::enum_names<T>();
-    
-        if constexpr (false)
-        {
-            Serializer::AddSimpleValue<std::string>(fieldName, magic_enum::enum_flags_name<T>(*obj, '|').data());
-        }
-        else
-        {
-            Serializer::AddSimpleValue<std::string>(fieldName, magic_enum::enum_name<T>(*obj).data());
-        }
+        Serializer::AddSimpleValue<std::string>(fieldName, magic_enum::enum_name<T>(*obj).data());
     }
 }
 

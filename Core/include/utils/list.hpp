@@ -7,8 +7,6 @@
 /// @file list.hpp
 /// @brief Defines the XnorCore::List class.
 
-// TODO: Add boolean template for thread-safe list
-
 BEGIN_XNOR_CORE
 
 /// @brief A dynamic array implementation.

@@ -17,7 +17,10 @@ class XNOR_ENGINE Component
     REFLECTABLE_IMPL(Component)
 
 public:
-    bool_t enable = true;
+    bool_t enabled = true;
+
+    /// @brief Entity bound to the component
+    Entity* entity = nullptr;
     
     Component() = default;
 
@@ -71,11 +74,8 @@ public:
     ///
     /// @see GetEntity
     Transform& GetTransform();
-
-    // TODO m_Entity must be private at some point
-    /// @brief Entity bound to the component
-    Entity* entity = nullptr;
 #endif
+    
 private:
 
     // We need Entity to be able to set m_Entity
@@ -85,4 +85,4 @@ private:
 END_XNOR_CORE
 
 /// @private
-REFL_AUTO(type(XnorCore::Component), field(enable));
+REFL_AUTO(type(XnorCore::Component), field(enabled));

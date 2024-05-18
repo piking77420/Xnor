@@ -122,7 +122,7 @@ void GuiPass::RenderText() const
 
     for (const TextComponent* textComponent : m_TextComponents)
     {
-        if (!textComponent->enable)
+        if (!textComponent->enabled)
             continue;
         
         if (!textComponent->font.IsValid())
@@ -177,7 +177,7 @@ void GuiPass::RenderImage(const Vector2 viewPortSize) const
 
 void GuiPass::DrawImage(const Image* imagComponent, Vector2 viewPortSize) const
 {
-    if (!imagComponent->enable)
+    if (!imagComponent->enabled)
         return;
         
     if (!imagComponent->image.IsValid())

@@ -207,30 +207,28 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 		const Vector2i shadowMapSize = shadowMap.GetSize(); 
 		
 		Vector3 lightDir =  -directionalLight->GetLightDirection();
-		float_t lenghtAabb =  sceneAAbb.extents.Length();
+		const float_t lengthAabb =  sceneAAbb.extents.Length();
 		// Get Pos from scene aabb
-		Vector3 pos = sceneAAbb.center + (lenghtAabb * -lightDir);//static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);
+		const Vector3 pos = sceneAAbb.center + (lengthAabb * -lightDir);//static_cast<Vector3>(directionalLight->entity->transform.worldMatrix[3]);
 		DrawGizmo::Sphere(pos);
 		
-		// CacadeShadowMap // TODO Make it cleaner ,
-		std::vector<float_t> shadowCascadeLevels =
-			{
+		// CascadeShadowMap // TODO Make it cleaner
+		std::vector shadowCascadeLevels =
+		{
 			viewPortCamera.far / 50.f,
 			viewPortCamera.far / 25.f,
 			viewPortCamera.far / 10.f,
 			viewPortCamera.far / 2.f
-			};
-		
+		};
 		
 		m_CascadeShadowMap.SetCascadeLevel(shadowCascadeLevels);
-		m_CascadeShadowMap.SetZMultiplicator(lenghtAabb);//);
+		m_CascadeShadowMap.SetZMultiplicator(lengthAabb);//);
 
 		// Handle float array padding
 		for (size_t k = 0; k < shadowCascadeLevels.size(); k++)
 		{
 			m_GpuLightData->directionalData->cascadePlaneDistance[k] = shadowCascadeLevels[k];
 		}
-
 		
 		Camera camDirectional;
 		camDirectional.isOrthographic = true;
@@ -258,11 +256,7 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 			};
 			renderer.RenderNonShadedPass(scene,cascadedCameras.at(i) , renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, m_ShadowMapShaderSkinned, false);
 		}
-		
 	}
-
-
-	
 }
 
 void LightManager::ComputeShadowSpotLight(const Scene& scene, Renderer& renderer)
@@ -280,8 +274,6 @@ void LightManager::ComputeShadowSpotLight(const Scene& scene, Renderer& renderer
 		cam.near = m_SpotLights[i]->near;
 		cam.far = m_SpotLights[i]->far;
 		cam.GetVp(SpotLightShadowMapSize, &m_GpuLightData->spotLightSpaceMatrix[i]);
-
-	
 		
 		m_ShadowFrameBuffer->AttachTextureLayer(*m_SpotLightShadowMapTextureArray, Attachment::Depth, 0, static_cast<uint32_t>(i));
 
@@ -326,7 +318,7 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, Renderer& rendere
 				.frameBuffer = m_ShadowFrameBufferPointLight,
 				.renderAreaOffset = { 0, 0 },
 				.renderAreaExtent = SpotLightShadowMapSize ,
-				.clearBufferFlags = static_cast<BufferFlag::BufferFlag>(BufferFlag::DepthBit | BufferFlag::ColorBit),
+				.clearBufferFlags = static_cast<ENUM_VALUE(BufferFlag)>(BufferFlag::DepthBit | BufferFlag::ColorBit),
 				.clearColor = Vector4(std::numeric_limits<float_t>::max())
 			};
 		
@@ -343,14 +335,16 @@ void LightManager::GetDistanceFromCamera(std::map<float_t, GizmoLight>* sortedLi
 	{
 		if (pointLight == nullptr)
 			continue;
+
+		const Vector3 entityPosition = pointLight->GetEntity()->transform.GetPosition();
 		
 		GizmoLight gizmoLight = {
-			.pos = pointLight->GetEntity()->transform.GetPosition(),
+			.pos = entityPosition,
 			.light = pointLight,
 			.type = RenderingLight::PointLight,
 		};
 		
-		const float_t distance = (camera.position - pointLight->GetEntity()->transform.GetPosition()).SquaredLength();
+		const float_t distance = (camera.position - entityPosition).SquaredLength();
 		sortedLight->emplace(distance, gizmoLight);
 	}
 	
@@ -358,14 +352,16 @@ void LightManager::GetDistanceFromCamera(std::map<float_t, GizmoLight>* sortedLi
 	{
 		if (spotLight == nullptr)
 			continue;
+
+		const Vector3 entityPosition = spotLight->GetEntity()->transform.GetPosition();
 		
 		GizmoLight gizmoLight = {
-			.pos = spotLight->GetEntity()->transform.GetPosition(),
+			.pos = entityPosition,
 			.light = spotLight,
 			.type = RenderingLight::SpothLight
 		};
 		
-		const float_t distance = (camera.position - spotLight->GetEntity()->transform.GetPosition()).SquaredLength();
+		const float_t distance = (camera.position - entityPosition).SquaredLength();
 		sortedLight->emplace(distance, gizmoLight);
 	}
 	
@@ -373,14 +369,16 @@ void LightManager::GetDistanceFromCamera(std::map<float_t, GizmoLight>* sortedLi
 	{
 		if (dirLight == nullptr)
 			continue;
+
+		const Vector3 entityPosition = dirLight->GetEntity()->transform.GetPosition();
 		
 		GizmoLight gizmoLight = {
-			.pos = dirLight->GetEntity()->transform.GetPosition(),
+			.pos = entityPosition,
 			.light = dirLight,
 			.type = RenderingLight::DirLight
 		};
 		
-		const float_t distance = (camera.position - dirLight->GetEntity()->transform.GetPosition()).SquaredLength();
+		const float_t distance = (camera.position - entityPosition).SquaredLength();
 		sortedLight->emplace(distance, gizmoLight);
 	}
 }
@@ -443,7 +441,7 @@ void LightManager::InitShadowMap()
 	
 	m_DirectionalShadowMaps = new Texture(dirLightShadowMpa);
 	
-	const TextureCreateInfo spothLightShadowArray =
+	const TextureCreateInfo spotLightShadowArray =
 	{
 		.textureType = TextureType::Texture2DArray,
 		.mipMaplevel = 1,
@@ -456,7 +454,7 @@ void LightManager::InitShadowMap()
 		.dataType = DataType::Float
 	};
 
-	m_SpotLightShadowMapTextureArray = new Texture(spothLightShadowArray);
+	m_SpotLightShadowMapTextureArray = new Texture(spotLightShadowArray);
 
 	const TextureCreateInfo pointLightDepthBufferCreateInfo =
 	{
