@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "Coral/ManagedObject.hpp"
+#include "csharp/dotnet_assembly.hpp"
 #include "physics/component/collider.hpp"
 #include "reflection/reflection.hpp"
 #include "scene/component.hpp"
@@ -20,10 +21,13 @@ class ScriptComponent : public Component
 public:
     ScriptComponent() = default;
 
+    /// @brief Creates and initializes a new ScriptComponent from the given managed type name and assembly.
+    XNOR_ENGINE static ScriptComponent* New(const std::string& managedTypeName, const DotnetAssembly* assembly);
+
     /// @brief Initializes this ScriptComponent with the given ManagedObject, effectively linking it with its instantiated .NET version.
     XNOR_ENGINE void Initialize(const Coral::ManagedObject& managedObject);
 
-    /// @brief Destroys this ScriptComponent in the .NET garbage collector.
+    /// @brief Destroys this ScriptComponent in the .NET runtime.
     XNOR_ENGINE void Destroy() override;
 
     XNOR_ENGINE void Begin() override;
@@ -51,11 +55,6 @@ public:
     XNOR_ENGINE const Coral::ManagedObject& GetManagedObject() const;
     
 private:
-    struct InvokeCollisionData
-    {
-        void* obj;
-    };
-    
     Coral::ManagedObject m_ManagedObject;
 
     void InvokeCollisionEvent(const std::string& functionName, Collider* self, Collider* other, const CollisionData& data);

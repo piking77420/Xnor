@@ -5,6 +5,7 @@
 #include "file/file.hpp"
 
 #include "application.hpp"
+#include "Coral/GC.hpp"
 #include "csharp/dotnet_constants.hpp"
 #include "reflection/dotnet_reflection.hpp"
 #include "utils/message_box.hpp"
@@ -108,6 +109,9 @@ DotnetAssembly* DotnetRuntime::GetGameAssembly()
 void DotnetRuntime::UnloadAllAssemblies(const bool_t reloadContext)
 {
     Logger::LogInfo("Unloading {} .NET assemblies", m_LoadedAssemblies.size());
+    
+    Coral::GC::Collect();
+    Coral::GC::WaitForPendingFinalizers();
     
     for (auto&& assembly : m_LoadedAssemblies)
         delete assembly;
@@ -254,13 +258,15 @@ void DotnetRuntime::BuildAndReloadProject(const bool_t recreateScriptInstances)
 
     std::vector<ScriptComponent*> scripts;
     World::scene->GetAllComponentsOfType(&scripts);
-    std::vector<std::string> types(scripts.size());
+    std::vector<std::pair<Entity*, std::string>> managedTypeEntityPairs(scripts.size());
 
     for (size_t i = 0; i < scripts.size(); i++)
     {
         ScriptComponent* const script = scripts[i];
-        types[i] = script->m_ManagedObject.GetType().GetFullName();
-        // script->Destroy(); // FIXME: This line causes the crash
+        auto&& pair = std::make_pair(script->GetEntity(), script->m_ManagedObject.GetType().GetFullName());
+        if (recreateScriptInstances)
+            managedTypeEntityPairs[i] = pair;
+        pair.first->RemoveComponent<ScriptComponent>();
     }
     
     m_ProjectReloadingProgress = 0.1f;
@@ -276,12 +282,10 @@ void DotnetRuntime::BuildAndReloadProject(const bool_t recreateScriptInstances)
             auto&& gameTypes = GetGameAssembly()->GetCoralAssembly()->GetTypes();
             for (size_t i = 0; i < scripts.size(); i++)
             {
-                auto&& it = std::ranges::find_if(gameTypes, [&] (const Coral::Type* const type) -> bool_t { return type->GetFullName() == types[i]; });
+                auto&& pair = managedTypeEntityPairs[i];
+                auto&& it = std::ranges::find_if(gameTypes, [&](const Coral::Type* const type) -> bool_t { return type->GetFullName() == pair.second; });
                 if (it != gameTypes.end())
-                {
-                    auto&& type = *it;
-                    scripts[i]->m_ManagedObject = type->CreateInstance();
-                }
+                    pair.first->AddComponent(ScriptComponent::New(pair.second, GetGameAssembly()));
             }
         }
     }

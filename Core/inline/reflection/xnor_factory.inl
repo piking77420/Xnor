@@ -39,13 +39,7 @@ void XnorFactory::RegisterType()
 
     if constexpr (Meta::IsSame<T, ScriptComponent>)
     {
-        info.createFunc = [](const std::string& managedTypeName) -> void*
-        {
-            Coral::ManagedObject&& instance = DotnetRuntime::GetGameAssembly()->GetCoralAssembly()->GetType(managedTypeName).CreateInstance();
-            ScriptComponent* const script = instance.GetFieldValue<ScriptComponent*>("swigCPtr");
-            script->Initialize(instance);
-            return script;
-        };
+        info.createFunc = [](const std::string& managedTypeName) -> void* { return ScriptComponent::New(managedTypeName, DotnetRuntime::GetGameAssembly()); };
         info.serializeFunc = [](void* const obj) -> void { DotnetReflection::SerializeScript(static_cast<ScriptComponent*>(obj)); };
         info.deserializeFunc = [](void* const obj) -> void { DotnetReflection::DeserializeScript(static_cast<ScriptComponent*>(obj)); };
     }

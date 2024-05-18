@@ -7,6 +7,16 @@
 
 using namespace XnorCore;
 
+ScriptComponent* ScriptComponent::New(const std::string& managedTypeName, const DotnetAssembly* assembly)
+{
+    Logger::LogDebug("Creating ScriptComponent instance with managed type {} from assembly {}", managedTypeName, assembly->GetName());
+    Coral::Type& type = assembly->GetCoralAssembly()->GetType(managedTypeName);
+    Coral::ManagedObject instance = type.CreateInstance();
+    ScriptComponent* script = instance.GetFieldValue<ScriptComponent*>("swigCPtr");
+    script->Initialize(instance);
+    return script;
+}
+
 void ScriptComponent::Initialize(const Coral::ManagedObject& managedObject)
 {
     m_ManagedObject = managedObject;
@@ -14,6 +24,7 @@ void ScriptComponent::Initialize(const Coral::ManagedObject& managedObject)
 
 void ScriptComponent::Destroy()
 {
+    Logger::LogDebug("Destroying ScriptComponent instance with managed type {}", static_cast<std::string>(m_ManagedObject.GetType().GetFullName()));
     m_ManagedObject.Destroy();
 }
 
@@ -85,23 +96,17 @@ void ScriptComponent::InvokeCollisionEvent(const std::string& functionName, Coll
     Coral::Type& colliderType = assembly->GetType(Dotnet::XnorCoreNamespace + ".Collider");
     Coral::Type& collisionDataType = assembly->GetType(Dotnet::XnorCoreNamespace + ".CollisionData");
 
-    const std::array managedObjects
+    std::array managedObjects
     {
         colliderType.CreateInstance(FORWARD(self), false),
         colliderType.CreateInstance(FORWARD(other), false),
         collisionDataType.CreateInstance(&data, false)
     };
-
-    // Manipulate the data to forward them as references to ManagedObject pointers in .NET GC
-    // This is done through the InvokeCollisionData struct which serves as the reference
-    // We need to do this to trick Coral into thinking we send actual data because the struct type will not be
-    // considered a pointer while the actual data we send is the void pointer to the GC handle with the ManagedObject
-    std::array<InvokeCollisionData, 3> managedObjectRefs{};
-
-    for (size_t i = 0; i < 3; i++)
-        managedObjectRefs.at(i) = { managedObjects.at(i).GetHandle() };
     
-    m_ManagedObject.InvokeMethod(functionName, managedObjectRefs[0], managedObjectRefs[1], managedObjectRefs[2]);
+    m_ManagedObject.InvokeMethod(functionName, managedObjects[0], managedObjects[1], managedObjects[2]);
+
+    for (auto&& object : managedObjects)
+        object.Destroy();
 }
 
 void ScriptComponent::InvokeCollisionExitEvent(const std::string& functionName, Collider* self, Collider* other)
@@ -110,20 +115,14 @@ void ScriptComponent::InvokeCollisionExitEvent(const std::string& functionName, 
     
     Coral::Type& colliderType = assembly->GetType(Dotnet::XnorCoreNamespace + ".Collider");
 
-    const std::array managedObjects
+    std::array managedObjects
     {
         colliderType.CreateInstance(FORWARD(self), false),
         colliderType.CreateInstance(FORWARD(other), false),
     };
-
-    // Manipulate the data to forward the parameters as references to ManagedObject pointers in the .NET GC
-    // This is done through the InvokeCollisionData struct which serves as the reference
-    // We need to do this to trick Coral into thinking we send actual data because the struct type will not be
-    // considered a pointer while the actual data we send is the void pointer to the GC handle with the ManagedObject
-    std::array<InvokeCollisionData, 3> managedObjectRefs{};
-
-    for (size_t i = 0; i < 2; i++)
-        managedObjectRefs.at(i) = { managedObjects.at(i).GetHandle() };
     
-    m_ManagedObject.InvokeMethod(functionName, managedObjectRefs[0], managedObjectRefs[1]);
+    m_ManagedObject.InvokeMethod(functionName, managedObjects[0], managedObjects[1]);
+
+    for (auto&& object : managedObjects)
+        object.Destroy();
 }
