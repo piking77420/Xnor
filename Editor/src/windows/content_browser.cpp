@@ -51,7 +51,6 @@ void ContentBrowser::Display()
     const ImVec2 textSize = ImGui::CalcTextSize(titleStr);
     XnorCore::Utils::AlignImGuiCursor(textSize.x);
     ImGui::Text("%s", titleStr);
-    // TODO Add child window around title for visual border
 
     bool_t entryHovered = false, entryClicked = false;
     for (const XnorCore::Pointer<XnorCore::Directory>& directory : m_CurrentDirectory->GetChildDirectories())
@@ -207,13 +206,17 @@ void ContentBrowser::DisplayEntry(
         pushedStyleVar = true;
     }
 
-    const ImVec2 textSize = ImGui::CalcTextSize(entry->GetName().c_str());
+    static constexpr float_t BaseChildSize = 64.f;
+
     const ImVec2 framePadding = ImGui::GetStyle().FramePadding;
+    const float_t childWidth = BaseChildSize + framePadding.x * 2.f;
+    const ImVec2 textSize = ImGui::CalcTextSize(entry->GetName().c_str(), nullptr, false, childWidth);
+    
     ImGui::BeginChild(
         entry->GetPathString().c_str(),
         ImVec2(
-            64.f + framePadding.x * 2.f,
-            64.f + textSize.y + framePadding.y * 2.f
+            childWidth,
+            BaseChildSize + textSize.y + framePadding.y * 2.f
         ),
         ImGuiChildFlags_None,
         ImGuiWindowFlags_NoScrollbar
@@ -227,10 +230,12 @@ void ContentBrowser::DisplayEntry(
     ImGui::Image(XnorCore::Utils::IntToPointer<ImTextureID>(texture->GetId()), ImVec2(64.f, 64.f));
     
     XnorCore::Utils::AlignImGuiCursor(textSize.x);
+    ImGui::PushTextWrapPos();
     if (m_EntryToRename == entry && !m_IsEntryToRenameLeft)
         RenameEntry(entry);
     else
         ImGui::Text("%s", entry->GetName().c_str());
+    ImGui::PopTextWrapPos();
     
     ImGui::EndChild();
 
