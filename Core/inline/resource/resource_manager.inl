@@ -185,7 +185,7 @@ template <Concepts::ResourceT T>
 std::vector<Pointer<T>> ResourceManager::FindAll(std::function<bool_t(Pointer<T>)>&& predicate)
 {
     std::vector<Pointer<T>> result;
-    FindAll<T>(std::forward<decltype(predicate)>(predicate), &result);
+    FindAll<T>(FORWARD(predicate), &result);
     return result;
 }
 

@@ -96,6 +96,7 @@ namespace Coral {
 		const Type& GetType() const;
 		
 		void Destroy();
+		void* GetHandle() const { return m_Handle; }
 
 	private:
 		void InvokeMethodInternal(std::string_view InMethodName, const void** InParameters, const ManagedType* InParameterTypes, size_t InLength) const;

@@ -57,10 +57,5 @@ namespace Game
             if (Input.GetKey(Key.Space))
                 velocity.Y += JumpSpeed;
         }
-
-        public override void OnCollisionEnter(Collider self, Collider other, CollisionData data)
-        {
-            Logger.LogTempDebug("Hello");
-        }
     }
 }

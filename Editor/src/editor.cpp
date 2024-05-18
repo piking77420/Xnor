@@ -46,7 +46,7 @@ void Editor::OpenCreatedWindow(const std::string& name, void* const arg) const
 }
 
 Editor::Editor(const int32_t argc, const char_t* const* const argv)
-	: Application(std::forward<decltype(argc)>(argc), std::forward<decltype(argv)>(argv))
+	: Application(FORWARD(argc), FORWARD(argv))
 {
 	XnorCore::Texture::defaultLoadOptions = { .flipVertically = false };
 	XnorCore::FileManager::LoadDirectory("assets_internal/editor");

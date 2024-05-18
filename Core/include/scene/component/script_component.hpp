@@ -51,7 +51,16 @@ public:
     XNOR_ENGINE const Coral::ManagedObject& GetManagedObject() const;
     
 private:
+    struct InvokeCollisionData
+    {
+        void* obj;
+    };
+    
     Coral::ManagedObject m_ManagedObject;
+
+    void InvokeCollisionEvent(const std::string& functionName, Collider* self, Collider* other, const CollisionData& data);
+
+    void InvokeCollisionExitEvent(const std::string& functionName, Collider* self, Collider* other);
 
     // The DotnetRuntime class needs to have access to the m_ManagedObject field
     friend class DotnetRuntime;

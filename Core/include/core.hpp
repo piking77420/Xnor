@@ -208,3 +208,6 @@ using stdstring = std::string;
 #else
 #define ALIGNAS(size)
 #endif
+
+/// @brief Forwards a value with its own type as template.
+#define FORWARD(value) std::forward<decltype(value)>(value)

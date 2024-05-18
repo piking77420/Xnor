@@ -159,5 +159,5 @@ int32_t Utils::TerminalCommand(const std::string& command, const bool_t asynchro
 void Utils::CreateEmptyFile(const std::filesystem::path& path)
 {
     // Creating a std::ofstream is the only necessary thing to do to create an empty file
-    std::ofstream(std::forward<decltype(path)>(path));
+    std::ofstream(FORWARD(path));
 }
