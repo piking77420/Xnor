@@ -562,8 +562,6 @@ struct ALIGNAS(16) DirectionalLightData
 /// @brief Light UniformBuffer data
 struct ALIGNAS(16) GpuLightData
 {
-	/// @brief Number of active directional lights shoul be 0 or 1
-	//uint32_t nbrOfDirLight{};
 	/// @brief Number of active point lights
 	uint32_t nbrOfPointLight{};
 	/// @brief Number of active spot lights
@@ -581,6 +579,9 @@ struct ALIGNAS(16) GpuLightData
 
 	/// @brief Light space matrix
 	Matrix dirLightSpaceMatrix[DirectionalCascadeLevelAllocation];
+	
+	/// @brief Number of active directional lights shoul be 0 or 1
+	uint32_t nbrOfDirLight{};
 };
 
 /// @brief UniformBuffer data for animation

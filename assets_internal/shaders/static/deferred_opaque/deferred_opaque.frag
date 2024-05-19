@@ -51,6 +51,7 @@ layout (std430, binding = 2) uniform LightData
 
     mat4 spothLightlightSpaceMatrix[MaxSpotLight];
     mat4 dirLightSpaceMatrix[DirectionalCascadeLevelAllocation];
+    int nbrOfDirLight;
 };
 layout (std140, binding = 0) uniform CameraUniform
 {
@@ -122,7 +123,6 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
     {
         layer = directionalData.cascadeCount;
     }
-    
     if (csmDebug)
     {
 
@@ -148,7 +148,7 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
     float bias = max(0.05 * (1.0 - dot(normalize(n), normalize(l))), 0.005);
     
     // calculate bias (based on depth map resolution and slope)
-    const float biasModifier = 1.0f;
+    const float biasModifier = 0.5f;
     if (layer == directionalData.cascadeCount)
     {
         bias *= 1 / (far * biasModifier);
@@ -166,6 +166,7 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
         for(int y = -1; y <= 1; ++y)
         {
             float pcfDepth = texture(dirLightShadowMap, vec3(projCoords.xy + vec2(x, y) * texelSize, layer)).r;
+
             shadow += (currentDepth - bias) > pcfDepth ? 1.0 : 0.0;
         }
     }
@@ -428,7 +429,7 @@ void main()
 
     vec3 kD = vec3(0,0,0);
     
-    if (true)
+    if (nbrOfDirLight == 1)
     {
         vec3 radiance = directionalData.color * directionalData.intensity;
         vec3 numerator = ndf * g * f;

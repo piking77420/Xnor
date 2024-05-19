@@ -7,6 +7,7 @@
 
 #include "window.hpp"
 #include "magic_enum/magic_enum.hpp"
+#include "rendering/camera.hpp"
 #include "rendering/frame_buffer.hpp"
 #include "rendering/render_pass.hpp"
 #include "resource/resource_manager.hpp"
@@ -1714,12 +1715,12 @@ void Rhi::GetCubeMapViewMatrices(std::array<Matrix, 6>* viewsMatricies)
 {
 	*viewsMatricies =
 	{
-		Matrix::LookAt(Vector3(), -Vector3::UnitX(), -Vector3::UnitY()), // CubeMapPositiveX
-		Matrix::LookAt(Vector3(),  Vector3::UnitX(), -Vector3::UnitY()), // CubeMapNegativeX
-		Matrix::LookAt(Vector3(), -Vector3::UnitY(), -Vector3::UnitZ()), // CubeMapPositiveY
-		Matrix::LookAt(Vector3(),  Vector3::UnitY(),  Vector3::UnitZ()), // CubeMapNegativeY
-		Matrix::LookAt(Vector3(),  Vector3::UnitZ(), -Vector3::UnitY()), // CubeMapPositiveZ
-		Matrix::LookAt(Vector3(), -Vector3::UnitZ(), -Vector3::UnitY()), // CubeMapNegativeZ
+		Camera::LookAtRH(Vector3(), -Vector3::UnitX(), -Vector3::UnitY()), // CubeMapPositiveX
+		Camera::LookAtRH(Vector3(),  Vector3::UnitX(), -Vector3::UnitY()), // CubeMapNegativeX
+		Camera::LookAtRH(Vector3(), -Vector3::UnitY(), -Vector3::UnitZ()), // CubeMapPositiveY
+		Camera::LookAtRH(Vector3(),  Vector3::UnitY(),  Vector3::UnitZ()), // CubeMapNegativeY
+		Camera::LookAtRH(Vector3(),  Vector3::UnitZ(), -Vector3::UnitY()), // CubeMapPositiveZ
+		Camera::LookAtRH(Vector3(), -Vector3::UnitZ(), -Vector3::UnitY()), // CubeMapNegativeZ
 	};
 }
 
@@ -1747,10 +1748,10 @@ uint32_t Rhi::CreateTexture(const TextureCreateInfo& textureCreateInfo)
 	AllocTexture(textureCreateInfo.textureType, textureId, textureCreateInfo);
 	ComputeTextureFiltering(textureCreateInfo.textureType, textureId, textureCreateInfo);
 	ComputeTextureWrapping(textureCreateInfo.textureType, textureId, textureCreateInfo);
-	
+	/*
 	float_t aniso = 0.f;
 	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso); 
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);*/ 
 	glGenerateTextureMipmap(textureId);
 	
 	return textureId;

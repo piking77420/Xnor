@@ -142,7 +142,7 @@ void LightManager::FecthLightInfo() const
 	const size_t nbrOfSpotLight = std::clamp<size_t>(m_SpotLights.size(), 0, MaxSpotLights);
 	const size_t nbrOfDirectionalLight = std::clamp<size_t>(m_DirectionalLights.size(), 0, MaxDirectionalLights);
 
-	//m_GpuLightData->nbrOfDirLight = static_cast<uint32_t>(nbrOfDirectionalLight);
+	m_GpuLightData->nbrOfDirLight = static_cast<uint32_t>(nbrOfDirectionalLight);
 	m_GpuLightData->nbrOfPointLight = static_cast<uint32_t>(nbrOfpointLight);
 	m_GpuLightData->nbrOfSpotLight = static_cast<uint32_t>(nbrOfSpotLight);
 
@@ -176,7 +176,6 @@ void LightManager::FecthLightInfo() const
 		};
 	}
 	
-	m_GpuLightData->nbrOfSpotLight = static_cast<uint32_t>(nbrOfSpotLight);
 
 	if (nbrOfDirectionalLight != 0)
 	{
@@ -217,10 +216,10 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 		// HardCoded Shadow Cascade distance by level
 		std::array<float_t,DirectionalCascadeLevel> shadowCascadeLevels =
 			{
-			    viewPortCamera.far / 50.f,
-				viewPortCamera.far / 25.f,
-				viewPortCamera.far / 10.f,
-				viewPortCamera.far / 2.f,
+			    viewPortCamera.far / 100.f,
+				viewPortCamera.far / 50.f,
+				viewPortCamera.far / 20.f,
+				viewPortCamera.far / 4.f,
 			
 			};
 
@@ -231,16 +230,13 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 		{
 			m_GpuLightData->directionalData->cascadePlaneDistance[k] = shadowCascadeLevels[k];
 		}
-
-		
-		Camera camDirectional = viewPortCamera;
-		camDirectional.isOrthographic = true;
 		
 		std::vector<Camera> cascadedCameras;
-		m_CascadeShadowMap.GetCascadeCameras(&cascadedCameras, camDirectional ,lightDir, viewportSize);
+		m_CascadeShadowMap.GetCascadeCameras(&cascadedCameras, viewPortCamera ,lightDir, viewportSize);
 		
 		for (size_t i = 0; i < cascadedCameras.size(); i++)
 		{
+			cascadedCameras[i].isOrthographic = true;
 			cascadedCameras[i].GetVp(viewportSize, &m_GpuLightData->dirLightSpaceMatrix[i]);
 
 			

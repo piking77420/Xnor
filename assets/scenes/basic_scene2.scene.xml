@@ -70,8 +70,8 @@
 			<name>Sphere</name>
 			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
 			<transform>
-				<m_Position>-4 ; 18.22004 ; -3</m_Position>
-				<m_EulerRotation>2.116503 ; 0.86363584 ; -0.80623007</m_EulerRotation>
+				<m_Position>0 ; 0 ; 0</m_Position>
+				<m_EulerRotation>2.5656343 ; 0.86363584 ; -0.80623007</m_EulerRotation>
 				<m_Scale>1.0000095 ; 1.0000446 ; 1.0000362</m_Scale>
 			</transform>
 			<m_Components>
@@ -240,7 +240,7 @@
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
 						<m_Animation>9D968E66-1292-4581-B4-B6-EB-2C-CA-DA-8B-16</m_Animation>
-						<m_CurrentFrame>263</m_CurrentFrame>
+						<m_CurrentFrame>867</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>

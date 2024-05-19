@@ -52,6 +52,7 @@ layout (std430, binding = 2) uniform LightData
 
     mat4 spothLightlightSpaceMatrix[MaxSpotLight];
     mat4 dirLightSpaceMatrix[DirectionalCascadeLevelAllocation];
+    int nbrOfDirLight;
 };
 
 

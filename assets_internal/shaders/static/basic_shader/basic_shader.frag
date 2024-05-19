@@ -43,7 +43,6 @@ struct DirectionalData
 
 layout (std430, binding = 2) uniform LightData
 {
-    //int nbrOfDirLight;
     int nbrOfPointLight;
     int nbrOfSpotLight;
     PointLightData pointLightData[MaxPointLight];
@@ -52,6 +51,7 @@ layout (std430, binding = 2) uniform LightData
 
     mat4 spothLightlightSpaceMatrix[MaxSpotLight];
     mat4 dirLightSpaceMatrix[DirectionalCascadeLevelAllocation];
+    int nbrOfDirLight;
 };
 
 layout (std140, binding = 0) uniform CameraUniform

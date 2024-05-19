@@ -5,30 +5,10 @@
 	</skybox>
 	<m_Entities>
 		<0>
-			<name>Directional</name>
-			<m_EntityId>73C3991F-64C8-43BE-BA-FB-8F-9C-A2-38-C9-75</m_EntityId>
-			<transform>
-				<m_Position>1.3694445 ; 1 ; 1.2801226</m_Position>
-				<m_EulerRotation>-1.1123661 ; 1.1247627 ; -0.26976722</m_EulerRotation>
-				<m_Scale>3.5241897 ; 1.0000201 ; 1.0000437</m_Scale>
-			</transform>
-			<m_Components>
-				<0 typeName="DirectionalLight">
-					<zCascadeShadowMapZMultiplactor>10</zCascadeShadowMapZMultiplactor>
-					<color>1 ; 1 ; 1 ; 1</color>
-					<intensity>100</intensity>
-					<castShadow>true</castShadow>
-					<enable>true</enable>
-				</0>
-			</m_Components>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
-			<m_Children/>
-		</0>
-		<1>
 			<name>Plane</name>
 			<m_EntityId>DC36B839-E893-481D-B6-28-93-7E-24-FC-F4-C</m_EntityId>
 			<transform>
-				<m_Position>0 ; -2 ; 1.0183711</m_Position>
+				<m_Position>-2.3841858e-07 ; -2 ; 1.0183711</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>800 ; 0.9999985 ; 800.00073</m_Scale>
 			</transform>
@@ -65,13 +45,13 @@
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
-		</1>
-		<2>
+		</0>
+		<1>
 			<name>Sphere</name>
 			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
 			<transform>
-				<m_Position>732.3363 ; 1.431061 ; 700.8732</m_Position>
-				<m_EulerRotation>1.9708798 ; 0.7463962 ; -0.9114653</m_EulerRotation>
+				<m_Position>700 ; 1.4310163 ; 700</m_Position>
+				<m_EulerRotation>1.9722221 ; 0.7463962 ; -0.9114653</m_EulerRotation>
 				<m_Scale>1.0000124 ; 1.0000588 ; 1.0000463</m_Scale>
 			</transform>
 			<m_Components>
@@ -80,17 +60,17 @@
 					<material>
 						<materialType>Opaque</materialType>
 						<albedoColor>1 ; 1 ; 1 ; 1</albedoColor>
-						<emissiveColor>1 ; 1 ; 1 ; 1</emissiveColor>
+						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
 						<metallic>1</metallic>
 						<roughness>1</roughness>
 						<reflectance>1</reflectance>
 						<emissive>0</emissive>
 						<ambientOcclusion>1</ambientOcclusion>
-						<albedoTexture>9CC81A77-8A40-4CF6-AA-BF-19-54-F5-CF-3-76</albedoTexture>
-						<metallicTexture>C684A905-F8AF-43A2-9E-9C-DB-75-91-E6-B2-F</metallicTexture>
-						<roughnessTexture>711D09DE-C159-4D0E-85-CC-89-D6-6C-AE-18-47</roughnessTexture>
-						<normalTexture>F7DD2A02-97D4-400A-9B-37-29-C8-EC-11-F1-1B</normalTexture>
-						<ambientOcclusionTexture>6B348672-B88A-4184-84-EF-4A-8D-BB-44-DE-94</ambientOcclusionTexture>
+						<albedoTexture>71B1D3E0-34A8-4CF2-B2-5D-AA-E3-5F-40-87-AD</albedoTexture>
+						<metallicTexture>FD729C73-1920-471A-A4-16-0-DF-BF-99-31-FC</metallicTexture>
+						<roughnessTexture>752FA041-11DC-4E70-84-39-C-FF-C0-DF-59-80</roughnessTexture>
+						<normalTexture>ADCBBC53-317F-46FB-A1-72-A2-88-43-7D-2E-58</normalTexture>
+						<ambientOcclusionTexture>7094E218-5FD2-4B95-96-B3-42-AB-38-FF-58-F8</ambientOcclusionTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 					<enable>true</enable>
@@ -98,8 +78,8 @@
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
-		</2>
-		<3>
+		</1>
+		<2>
 			<name>Image</name>
 			<m_EntityId>8D6CCF25-11EC-4D98-93-B1-9-52-18-49-EE-18</m_EntityId>
 			<transform>
@@ -120,8 +100,8 @@
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
-		</3>
-		<4>
+		</2>
+		<3>
 			<name>Text</name>
 			<m_EntityId>E471477C-C2FE-4C72-BC-68-3E-1E-12-20-53-FF</m_EntityId>
 			<transform>
@@ -142,8 +122,8 @@
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
-		</4>
-		<5>
+		</3>
+		<4>
 			<name>Player</name>
 			<m_EntityId>873D1C72-ACA1-47D6-AC-9C-8F-E1-81-B6-B6-B4</m_EntityId>
 			<transform>
@@ -172,8 +152,8 @@
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
-		</5>
-		<6>
+		</4>
+		<5>
 			<name>Camera</name>
 			<m_EntityId>55E1E12F-7B57-4A4E-A6-92-63-AC-40-AA-B3-36</m_EntityId>
 			<transform>
@@ -191,14 +171,14 @@
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
-		</6>
-		<7>
+		</5>
+		<6>
 			<name>PointLight</name>
 			<m_EntityId>198BC2C7-AD88-4738-9A-B1-F7-AC-BB-84-A7-CA</m_EntityId>
 			<transform>
 				<m_Position>-2.0359373 ; 1.0819739 ; 8.940823</m_Position>
-				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1 ; 1</m_Scale>
+				<m_EulerRotation>0 ; -0 ; 0.5799542</m_EulerRotation>
+				<m_Scale>0.9999998 ; 0.9999998 ; 1</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="PointLight">
@@ -210,14 +190,14 @@
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
-		</7>
-		<8>
+		</6>
+		<7>
 			<name>Rammus</name>
 			<m_EntityId>EC3A3F5-FE8A-40A6-8A-8B-E-CB-F1-DC-E3-0</m_EntityId>
 			<transform>
-				<m_Position>-15.306963 ; -0.9717543 ; 7.3312097</m_Position>
-				<m_EulerRotation>0 ; -1.0750928 ; 0</m_EulerRotation>
-				<m_Scale>0.020000014 ; 0.02 ; 0.020000014</m_Scale>
+				<m_Position>-15.306963 ; -0.97178674 ; 7.3312097</m_Position>
+				<m_EulerRotation>3.1291025 ; -1.1628456 ; -3.1406417</m_EulerRotation>
+				<m_Scale>0.02000026 ; 0.019999979 ; 0.020000266</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="SkinnedMeshRenderer">
@@ -244,6 +224,26 @@
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>
+					<enable>true</enable>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</7>
+		<8>
+			<name>Entity</name>
+			<m_EntityId>9346629E-4F43-4DC9-98-2F-5B-BE-6B-27-E0-41</m_EntityId>
+			<transform>
+				<m_Position>0 ; 0 ; 0</m_Position>
+				<m_EulerRotation>0 ; -0 ; 0.36885887</m_EulerRotation>
+				<m_Scale>0.9999995 ; 0.9999995 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="DirectionalLight">
+					<zCascadeShadowMapZMultiplactor>10</zCascadeShadowMapZMultiplactor>
+					<color>1 ; 1 ; 1 ; 1</color>
+					<intensity>100</intensity>
+					<castShadow>true</castShadow>
 					<enable>true</enable>
 				</0>
 			</m_Components>
