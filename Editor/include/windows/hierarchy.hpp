@@ -17,6 +17,10 @@ public:
     void Display() override;
 
 private:
+    XnorCore::Entity* m_EntityToDelete = nullptr;
+    XnorCore::Entity* m_EntityToRename = nullptr;
+    bool_t m_ClickedOnEntity = false;
+    
     void DisplayEntity(XnorCore::Scene& scene, XnorCore::Entity* entity);
     void DisplayEntityContextMenu(XnorCore::Scene& scene, XnorCore::Entity* entity);
     void DisplayEntityRenaming(XnorCore::Entity* entity);
@@ -35,10 +39,6 @@ private:
     bool_t IsRenamingEntity(const XnorCore::Entity* entity) const;
     [[nodiscard]]
     bool_t IsEntitySelected(const XnorCore::Entity* entity) const;
-
-    XnorCore::Entity* m_EntityToDelete;
-    XnorCore::Entity* m_EntityToRename;
-    bool_t m_ClickedOnEntity;
 };
 
 END_XNOR_EDITOR

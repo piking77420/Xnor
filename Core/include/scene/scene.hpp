@@ -73,7 +73,7 @@ public:
     /// @param name Entity name
     /// @param parent Entity parent, no parent by default
     /// @return Created entity
-    XNOR_ENGINE Entity* CreateEntity(const std::string&& name, Entity* parent = nullptr);
+    XNOR_ENGINE Entity* CreateEntity(const std::string& name, Entity* parent = nullptr);
 
     /// @brief Destroys an entity and removes it from the scene
     /// @param entity Entity

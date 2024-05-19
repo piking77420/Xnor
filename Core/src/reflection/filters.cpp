@@ -83,6 +83,8 @@ Component* Filters::FilterComponent(List<Component*>* target)
     XnorFactory::FindAllChildClasses<Component>(&names);
     names.Sort();
 
+    ImGui::TextColored(static_cast<Vector4>(Color::Gray()), "C++ Components");
+
     for (size_t i = 0; i < names.GetSize(); i++)
     {
         if (m_TextFilter.PassFilter(names[i].c_str()) && ImGui::Selectable(names[i].c_str()))
@@ -97,6 +99,8 @@ Component* Filters::FilterComponent(List<Component*>* target)
     names.Clear();
     DotnetReflection::GetScriptTypes(&names);
     names.Sort();
+
+    ImGui::TextColored(static_cast<Vector4>(Color::Gray()), "C# Scripts");
 
     for (size_t i = 0; i < names.GetSize(); i++)
     {

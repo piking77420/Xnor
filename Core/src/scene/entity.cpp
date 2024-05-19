@@ -63,7 +63,22 @@ void Entity::OnRendering()
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
         m_Components[i]->OnRendering();
-    
+}
+
+Entity* Entity::Clone() const
+{
+    Entity* clone = World::scene->CreateEntity(name, m_Parent);
+
+    for (Component* component : m_Components)
+    {
+        // TODO: Clone components
+        //clone->AddComponent();
+    }
+
+    for (const Entity* child : m_Children)
+        clone->AddChild(child->Clone());
+
+    return clone;
 }
 
 void Entity::AddComponent(Component* const component)

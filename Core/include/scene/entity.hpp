@@ -152,6 +152,15 @@ public:
 
     XNOR_ENGINE void OnRendering();
 
+    /// @brief Clones the current Entity.
+    ///
+    /// This function creates a new Entity at the same scope in the scene graph and with the same
+    /// components, parent, and children, but a different ID.
+    ///
+    /// Be aware that this function can be very performance heavy, especially for Entities with a lot
+    /// of nested children.
+    XNOR_ENGINE Entity* Clone() const;
+
     /// @brief Compares 2 entities using their Guid
     /// @param entity Other
     /// @return Equals

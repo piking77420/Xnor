@@ -81,7 +81,7 @@ Entity* Scene::FindEntityByName(const std::string& name)
     return nullptr;
 }
 
-Entity* Scene::CreateEntity(const std::string&& name, Entity* parent)
+Entity* Scene::CreateEntity(const std::string& name, Entity* parent)
 {
     Entity* const e = new Entity();
 

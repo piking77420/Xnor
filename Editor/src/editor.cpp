@@ -23,7 +23,6 @@
 #include "windows/hierarchy.hpp"
 #include "windows/inspector.hpp"
 #include "windows/performance.hpp"
-#include "windows/render_window.hpp"
 #include "world/scene_graph.hpp"
 #include "world/world.hpp"
 
@@ -276,7 +275,7 @@ void Editor::MenuBar()
 			if (ImGui::MenuItem("Load"))
 				DeserializeSceneAsync(path);
 
-			if (ImGui::MenuItem("Load backup"))
+			if (!m_GamePlaying && exists(SerializedTempScenePath) && ImGui::MenuItem("Load backup"))
 				DeserializeSceneAsync();
 
 			if (saveLoadDisabled)
@@ -363,7 +362,7 @@ void Editor::SerializeScene(const std::string& filepath)
 	onSceneSerializationBegin();
 	
 	if (filepath.empty())
-		m_SerializedScenePath = std::filesystem::temp_directory_path() / "xnor_current.scene.xml";
+		m_SerializedScenePath = SerializedTempScenePath;
 	else
 		m_SerializedScenePath = filepath;
 
@@ -391,7 +390,7 @@ void Editor::DeserializeScene(const std::string& filepath)
 	onSceneDeserializationBegin();
 	
 	if (filepath.empty())
-		m_SerializedScenePath = std::filesystem::temp_directory_path() / "xnor_current.scene.xml";
+		m_SerializedScenePath = SerializedTempScenePath;
 	else
 		m_SerializedScenePath = filepath;
 

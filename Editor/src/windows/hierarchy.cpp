@@ -10,9 +10,6 @@ using namespace XnorEditor;
 Hierarchy::Hierarchy(Editor* editor)
     : UiWindow(editor, "Scene Graph")
 {
-    m_EntityToDelete = nullptr;
-    m_EntityToRename = nullptr;
-    m_ClickedOnEntity = false;
 }
 
 void Hierarchy::Display()
@@ -38,7 +35,6 @@ void Hierarchy::Display()
         
         if (ImGui::BeginDragDropTarget())
         {
-            // ReSharper disable once CppTooWideScope
             const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("HierarchyEntity");
             
             if (payload)
@@ -126,6 +122,9 @@ void Hierarchy::DisplayEntityContextMenu(XnorCore::Scene& scene, XnorCore::Entit
                     
         if (ImGui::Selectable("Rename"))
             m_EntityToRename = entity;
+                    
+        if (ImGui::Selectable("Duplicate"))
+            m_Editor->data.selectedEntity = entity->Clone();
 
         if (ImGui::Selectable("Delete"))
             m_EntityToDelete = entity;

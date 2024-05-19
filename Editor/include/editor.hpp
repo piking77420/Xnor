@@ -15,6 +15,8 @@ class UserInput;
 
 class Editor final : public XnorCore::Application
 {
+	static inline const std::filesystem::path SerializedTempScenePath = std::filesystem::temp_directory_path() / "xnor_current.scene.xml";
+	
 public:
 	EditorData data;
 
