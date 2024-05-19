@@ -9,14 +9,14 @@
 			<m_EntityId>73C3991F-64C8-43BE-BA-FB-8F-9C-A2-38-C9-75</m_EntityId>
 			<transform>
 				<m_Position>1.3694445 ; 1 ; 1.2801226</m_Position>
-				<m_EulerRotation>1.4932395 ; 0.77911705 ; 0.5082962</m_EulerRotation>
-				<m_Scale>3.5240767 ; 1.0000097 ; 1.0000083</m_Scale>
+				<m_EulerRotation>-1.1123661 ; 1.1247627 ; -0.26976722</m_EulerRotation>
+				<m_Scale>3.5241897 ; 1.0000201 ; 1.0000437</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="DirectionalLight">
-					<zCascadeShadowMapZMultiplactor>14.3</zCascadeShadowMapZMultiplactor>
-					<color>1 ; 0.8978102 ; 0.8978102 ; 1</color>
-					<intensity>10</intensity>
+					<zCascadeShadowMapZMultiplactor>10</zCascadeShadowMapZMultiplactor>
+					<color>1 ; 1 ; 1 ; 1</color>
+					<intensity>100</intensity>
 					<castShadow>true</castShadow>
 					<enable>true</enable>
 				</0>
@@ -28,7 +28,7 @@
 			<name>Plane</name>
 			<m_EntityId>DC36B839-E893-481D-B6-28-93-7E-24-FC-F4-C</m_EntityId>
 			<transform>
-				<m_Position>0 ; -2 ; 1</m_Position>
+				<m_Position>0 ; -2 ; 1.0183711</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>800 ; 0.9999985 ; 800.00073</m_Scale>
 			</transform>
@@ -70,9 +70,9 @@
 			<name>Sphere</name>
 			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
 			<transform>
-				<m_Position>-4 ; 18.22004 ; -3</m_Position>
-				<m_EulerRotation>2.116503 ; 0.86363584 ; -0.80623007</m_EulerRotation>
-				<m_Scale>1.0000095 ; 1.0000446 ; 1.0000362</m_Scale>
+				<m_Position>732.3363 ; 1.431061 ; 700.8732</m_Position>
+				<m_EulerRotation>1.9708798 ; 0.7463962 ; -0.9114653</m_EulerRotation>
+				<m_Scale>1.0000124 ; 1.0000588 ; 1.0000463</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="StaticMeshRenderer">
@@ -202,7 +202,7 @@
 			</transform>
 			<m_Components>
 				<0 typeName="PointLight">
-					<color>0 ; 1 ; 0.27737212 ; 1</color>
+					<color>0 ; 0 ; 0 ; 1</color>
 					<intensity>10000</intensity>
 					<castShadow>true</castShadow>
 					<enable>true</enable>
@@ -215,7 +215,7 @@
 			<name>Rammus</name>
 			<m_EntityId>EC3A3F5-FE8A-40A6-8A-8B-E-CB-F1-DC-E3-0</m_EntityId>
 			<transform>
-				<m_Position>-15.306963 ; -1.0117129 ; 7.3312097</m_Position>
+				<m_Position>-15.306963 ; -0.9717543 ; 7.3312097</m_Position>
 				<m_EulerRotation>0 ; -1.0750928 ; 0</m_EulerRotation>
 				<m_Scale>0.020000014 ; 0.02 ; 0.020000014</m_Scale>
 			</transform>
@@ -239,8 +239,8 @@
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
-						<m_Animation>9D968E66-1292-4581-B4-B6-EB-2C-CA-DA-8B-16</m_Animation>
-						<m_CurrentFrame>249</m_CurrentFrame>
+						<m_Animation>0-0-0-0-0-0-0-0-0-0-0</m_Animation>
+						<m_CurrentFrame>48</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>

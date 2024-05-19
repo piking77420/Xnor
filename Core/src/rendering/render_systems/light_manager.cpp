@@ -212,17 +212,15 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 		const Texture& shadowMap = *m_DirectionalShadowMaps;
 		const Vector2i shadowMapSize = shadowMap.GetSize(); 
 		
-		const Vector3 lightDir = -directionalLight->GetLightDirection();
+		const Vector3 lightDir = directionalLight->GetLightDirection();
 		
 		// HardCoded Shadow Cascade distance by level
 		std::array<float_t,DirectionalCascadeLevel> shadowCascadeLevels =
 			{
 			    viewPortCamera.far / 50.f,
 				viewPortCamera.far / 25.f,
-				viewPortCamera.far / 15,
 				viewPortCamera.far / 10.f,
-				viewPortCamera.far / 6.f,
-				viewPortCamera.far / 3.f,
+				viewPortCamera.far / 2.f,
 			
 			};
 
@@ -235,21 +233,17 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 		}
 
 		
-		Camera camDirectional;
+		Camera camDirectional = viewPortCamera;
 		camDirectional.isOrthographic = true;
-		camDirectional.position = viewPortCamera.position;
-		camDirectional.LookAt(camDirectional.position + lightDir);
-		camDirectional.near = viewPortCamera.near;
-		camDirectional.far = directionalLight->far;
-		camDirectional.leftRight = directionalLight->leftRight;
-		camDirectional.bottomtop = directionalLight->bottomTop;
 		
 		std::vector<Camera> cascadedCameras;
 		m_CascadeShadowMap.GetCascadeCameras(&cascadedCameras, camDirectional ,lightDir, viewportSize);
 		
 		for (size_t i = 0; i < cascadedCameras.size(); i++)
 		{
-			cascadedCameras[i].GetVp(shadowMap.GetSize(), &m_GpuLightData->dirLightSpaceMatrix[i]);
+			cascadedCameras[i].GetVp(viewportSize, &m_GpuLightData->dirLightSpaceMatrix[i]);
+
+			
 			m_ShadowFrameBuffer->AttachTextureLayer(*m_DirectionalShadowMaps, Attachment::Depth, 0, static_cast<uint32_t>(i));
 			RenderPassBeginInfo renderPassBeginInfo =
 			{
@@ -259,13 +253,10 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 				.clearBufferFlags = BufferFlag::DepthBit,
 				.clearColor = Vector4::Zero()
 			};
-			
 			renderer.RenderNonShadedPass(scene,cascadedCameras.at(i) , renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, m_ShadowMapShaderSkinned, false);
 		}
 		
 	}
-
-
 	
 }
 
@@ -432,7 +423,7 @@ void LightManager::GetPointLightDirection(const size_t index, Vector3* front, Ve
 
 void LightManager::InitShadowMap()
 {
-	const TextureCreateInfo dirLightShadowMpa =
+	const TextureCreateInfo dirLightShadowMap =
 		{
 		.textureType = TextureType::Texture2DArray,
 		.mipMaplevel = 1,
@@ -446,7 +437,7 @@ void LightManager::InitShadowMap()
 		.dataType = DataType::Float
 	};
 	
-	m_DirectionalShadowMaps = new Texture(dirLightShadowMpa);
+	m_DirectionalShadowMaps = new Texture(dirLightShadowMap);
 	
 	const TextureCreateInfo spothLightShadowArray =
 	{

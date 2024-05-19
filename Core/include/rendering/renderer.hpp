@@ -89,6 +89,8 @@ public:
 
     /// @brief Swaps the front and back buffer.
     XNOR_ENGINE void SwapBuffers() const;
+    
+    XNOR_ENGINE static inline bool_t isCsm = false;
 
 private:
      mutable Frustum m_Frustum;
@@ -102,7 +104,7 @@ private:
     
      Pointer<Mesh> m_Quad;
      Pointer<Mesh> m_Cube;
-
+    
     /// @brief Update All the infos of the current frame lights, animation, etc...
     /// @param scene The scene
     XNOR_ENGINE void BeginFrame(const Scene& scene, const Viewport& viewport);

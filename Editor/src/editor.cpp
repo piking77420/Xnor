@@ -99,7 +99,7 @@ void Editor::CreateDefaultWindows()
 	data.editorViewPort.camera = &data.editorCam;
 	
 	OpenWindow<EditorWindow>(data.editorViewPort);
-	OpenWindow<RenderWindow>(*gameViewPort);
+	//OpenWindow<RenderWindow>(*gameViewPort);
 	OpenWindow<Performance>(50);
 	OpenWindow<Inspector>();
 	OpenWindow<HeaderWindow>();
@@ -384,7 +384,7 @@ void Editor::StopPlaying()
 
 	data.selectedEntity = nullptr;
 
-	DeserializeScene();
+	DeserializeScene(data.currentScene.Get()->GetPath().generic_string());
 
 	XnorCore::World::scene->Initialize();
 	XnorCore::World::isPlaying = false;

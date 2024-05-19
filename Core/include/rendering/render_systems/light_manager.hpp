@@ -31,14 +31,15 @@ private:
 
     static constexpr float_t LightThreshold = 30.f;
     static constexpr TextureInternalFormat::TextureInternalFormat ShadowDepthTextureInternalFormat = TextureInternalFormat::DepthComponent32F;
-    
+
+
 public:
     XNOR_ENGINE LightManager() = default;
 
     XNOR_ENGINE ~LightManager();
     
     DEFAULT_COPY_MOVE_OPERATIONS(LightManager)
-
+    
     /// @brief Initializes the light manager resources
     XNOR_ENGINE void InitResources();
 

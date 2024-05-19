@@ -6,7 +6,7 @@ out vec4 FragColor;
 const int MaxSpotLight = 50;
 const int MaxPointLight = 50;
 const int DirectionalCascadeLevelAllocation = 12;
-const int DirectionalCascadeLevel = 6;
+const int DirectionalCascadeLevel = 4;
 
 const float PI = 3.14159265359;
 const float InvPI = 1/PI;
@@ -99,7 +99,8 @@ const vec2 gridSamplingDiskVec2[20] = vec2[]
     vec2(0, 1), vec2( 0, -1), vec2( 0, -1), vec2( 0, 1)
 );
 
-
+bool csmDebug = false;
+vec3 colorTest = vec3(0,0,0);
 
 float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
 {
@@ -122,6 +123,13 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
         layer = directionalData.cascadeCount;
     }
     
+    if (csmDebug)
+    {
+
+        if (layer == 0)
+            colorTest = vec3(1,0,0);
+
+    }
     
     vec4 fragPosLightSpace = dirLightSpaceMatrix[layer] * vec4(fragPosWorldSpace.xyz, 1.0);
     // perform perspective divide
@@ -140,7 +148,7 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
     float bias = max(0.05 * (1.0 - dot(normalize(n), normalize(l))), 0.005);
     
     // calculate bias (based on depth map resolution and slope)
-    const float biasModifier = 0.3f;
+    const float biasModifier = 1.0f;
     if (layer == directionalData.cascadeCount)
     {
         bias *= 1 / (far * biasModifier);
@@ -446,6 +454,11 @@ void main()
     
     vec3 ambient = ComputeIbl(roughness, kD, ambientOcclusion, albedo, n, r, v, f);
     vec3 color = Lo + ambient + (emissiveColor * emissive);
-
-    FragColor = vec4(color, 1);
+    if (csmDebug)
+    {
+        FragColor = vec4(colorTest, 1);
+    }else
+    {
+        FragColor = vec4(color, 1);
+    }
 }

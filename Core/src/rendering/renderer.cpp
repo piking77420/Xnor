@@ -34,7 +34,7 @@ void Renderer::EndFrame(const Scene& scene)
     meshesDrawer.EndFrame();
 }
 
-void Renderer::RenderViewport(const Viewport& viewport, const Scene& scene)
+void Renderer:: RenderViewport(const Viewport& viewport, const Scene& scene)
 {
     BeginFrame(scene,viewport);
     
