@@ -15,8 +15,7 @@ LightManager::~LightManager()
 {
 	delete m_DirectionalShadowMaps;
 	m_DirectionalShadowMaps = nullptr;
-	delete m_GpuLightData;
-	m_GpuLightData = nullptr;
+
 	delete m_SpotLightShadowMapTextureArray;
 	m_SpotLightShadowMapTextureArray = nullptr;
 	delete m_PointLightShadowMapCubemapArrayPixelDistance;
@@ -25,6 +24,10 @@ LightManager::~LightManager()
 	m_DepthBufferForPointLightPass = nullptr;
 	delete m_ShadowFrameBufferPointLight;
 	m_ShadowFrameBufferPointLight = nullptr;
+
+
+	delete m_GpuLightData;
+	m_GpuLightData = nullptr;
 }
 
 void LightManager::InitResources()
@@ -137,8 +140,9 @@ void LightManager::FecthLightInfo() const
 	
 	const size_t nbrOfpointLight = std::clamp<size_t>(m_PointLights.size(), 0, MaxPointLights);
 	const size_t nbrOfSpotLight = std::clamp<size_t>(m_SpotLights.size(), 0, MaxSpotLights);
-	const size_t nbrOfDirectionalLight = std::clamp<size_t>(m_DirectionalLights.size(), 0, MaxSpotLights);
+	const size_t nbrOfDirectionalLight = std::clamp<size_t>(m_DirectionalLights.size(), 0, MaxDirectionalLights);
 
+	//m_GpuLightData->nbrOfDirLight = static_cast<uint32_t>(nbrOfDirectionalLight);
 	m_GpuLightData->nbrOfPointLight = static_cast<uint32_t>(nbrOfpointLight);
 	m_GpuLightData->nbrOfSpotLight = static_cast<uint32_t>(nbrOfSpotLight);
 
@@ -178,7 +182,6 @@ void LightManager::FecthLightInfo() const
 	{
 		for (size_t i = 0 ; i < MaxDirectionalLights ; i++)
 		{
-			//m_GpuLightData->nbrOfDirLight = static_cast<uint32_t>(nbrOfDirectionalLight); 
 			const Vector3 direction = m_DirectionalLights[i]->GetLightDirection(); 
 			m_GpuLightData->directionalData[i] =
 			{
@@ -194,14 +197,11 @@ void LightManager::ComputeShadow(const Scene& scene, const Viewport& viewport, R
 {
 	ComputeShadowDirLight(scene, *viewport.camera,viewport.viewPortSize, renderer);
 	ComputeShadowSpotLight(scene, renderer);
-	
 	ComputeShadowPointLight(scene, renderer);
 }
 
 void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPortCamera, const Vector2i viewportSize, Renderer& renderer)
 {
-	const Bound& sceneAAbb = scene.renderOctree.GetMotherBound(); 
-
 	for (const DirectionalLight* const directionalLight : m_DirectionalLights)
 	{
 		m_GpuLightData->directionalData->isDirlightCastingShadow = directionalLight->castShadow;
@@ -212,9 +212,7 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 		const Texture& shadowMap = *m_DirectionalShadowMaps;
 		const Vector2i shadowMapSize = shadowMap.GetSize(); 
 		
-		const Vector3 lightDir =  -directionalLight->GetLightDirection();
-		// Get Pos from scene aabb
-
+		const Vector3 lightDir = -directionalLight->GetLightDirection();
 		
 		// HardCoded Shadow Cascade distance by level
 		std::array<float_t,DirectionalCascadeLevel> shadowCascadeLevels =
@@ -261,6 +259,7 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 				.clearBufferFlags = BufferFlag::DepthBit,
 				.clearColor = Vector4::Zero()
 			};
+			
 			renderer.RenderNonShadedPass(scene,cascadedCameras.at(i) , renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, m_ShadowMapShaderSkinned, false);
 		}
 		
@@ -334,6 +333,7 @@ void LightManager::ComputeShadowPointLight(const Scene& scene, Renderer& rendere
 				.clearBufferFlags = static_cast<BufferFlag::BufferFlag>(BufferFlag::DepthBit | BufferFlag::ColorBit),
 				.clearColor = Vector4(std::numeric_limits<float_t>::max())
 			};
+			
 		
 			renderer.RenderNonShadedPass(scene, cam, renderPassBeginInfo, m_ShadowRenderPass, m_ShadowMapShaderPointLight, m_ShadowMapShaderPointLightSkinned, false);
 		}

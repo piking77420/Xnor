@@ -1318,7 +1318,10 @@ void Rhi::LogComputeShaderInfo()
 
 void Rhi::IsShaderValid(const uint32_t shaderId)
 {
-	if (!m_ShaderMap.contains(shaderId) || !glIsProgram(shaderId))
+	const bool_t contain = m_ShaderMap.contains(shaderId);
+	const bool_t isProgram = glIsProgram(shaderId);
+
+	if (!contain || !isProgram)
 	{
 		Logger::LogFatal("No shader with id #{}", shaderId);
 		throw std::runtime_error("No shader with this id");

@@ -11,6 +11,15 @@
 
 using namespace XnorCore;
 
+Font::~Font()
+{
+    if (m_LoadedInInterface)
+        Font::DestroyInInterface();
+    
+    if (m_Loaded)
+        Font::Unload();
+}
+
 void Font::CreateInInterface()
 {
     

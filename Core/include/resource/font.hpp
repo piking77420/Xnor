@@ -35,7 +35,7 @@ public:
     // We keep both function overloads and only override one
     using Resource::Load;
     
-    XNOR_ENGINE ~Font() override = default;
+    XNOR_ENGINE ~Font() override;
 
     XNOR_ENGINE Font() = default;
 

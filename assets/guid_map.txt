@@ -148,3 +148,8 @@ assets\models\Coyote-Attack3\Attack3.skel;40F81C79-BA97-41CF-8D-F1-DF-CD-F6-19-A
 assets\models\Coyote-Attack3\Attack3.anim;83BBBAF8-A95F-43FD-BA-CE-33-FB-F-1A-CD-46
 _shaders/depth_shader_skinned;70EAF329-5575-4817-BD-9A-46-DB-49-A8-AA-30
 _shaders/picking_shader_skinned;5334756-A586-4CE2-B0-ED-EF-8C-FE-3-28-E1
+assets/textures/gold/albedo.png;9CC81A77-8A40-4CF6-AA-BF-19-54-F5-CF-3-76
+assets/textures/gold/ao.png;6B348672-B88A-4184-84-EF-4A-8D-BB-44-DE-94
+assets/textures/gold/metallic.png;C684A905-F8AF-43A2-9E-9C-DB-75-91-E6-B2-F
+assets/textures/gold/normal.png;F7DD2A02-97D4-400A-9B-37-29-C8-EC-11-F1-1B
+assets/textures/gold/roughness.png;711D09DE-C159-4D0E-85-CC-89-D6-6C-AE-18-47

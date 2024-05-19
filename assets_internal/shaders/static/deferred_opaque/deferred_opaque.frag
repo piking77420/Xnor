@@ -3,8 +3,8 @@
 
 out vec4 FragColor;
 
-const int MaxSpotLight = 75;
-const int MaxPointLight = 75;
+const int MaxSpotLight = 50;
+const int MaxPointLight = 50;
 const int DirectionalCascadeLevelAllocation = 6;
 const int DirectionalCascadeLevel = DirectionalCascadeLevelAllocation;
 
@@ -43,7 +43,6 @@ struct DirectionalData
 
 layout (std430, binding = 2) uniform LightData
 {
-    int nbrOfDirLight;
     int nbrOfPointLight;
     int nbrOfSpotLight;
     PointLightData pointLightData[MaxPointLight];
@@ -101,8 +100,6 @@ const vec2 gridSamplingDiskVec2[20] = vec2[]
 );
 
 
-vec3 colorTest = vec3(0,0,0);
-
 
 float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
 {
@@ -125,18 +122,6 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
         layer = directionalData.cascadeCount;
     }
     
-    if (layer == 0)
-        colorTest = vec3(1,0,0);
-    else if(layer == 1)
-        colorTest = vec3(0,1,0);
-    else if(layer == 2)
-        colorTest = vec3(0,0,1);
-    else if(layer == 3)
-        colorTest = vec3(1,1,0);
-    else if(layer == 4)
-        colorTest = vec3(0,1,1);
-    else if(layer == 5)
-        colorTest = vec3(1,0,1);
     
     vec4 fragPosLightSpace = dirLightSpaceMatrix[layer] * vec4(fragPosWorldSpace.xyz, 1.0);
     // perform perspective divide
@@ -155,7 +140,7 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
     float bias = max(0.05 * (1.0 - dot(normalize(n), normalize(l))), 0.005);
     
     // calculate bias (based on depth map resolution and slope)
-    const float biasModifier = 0.15f;
+    const float biasModifier = 0.3f;
     if (layer == directionalData.cascadeCount)
     {
         bias *= 1 / (far * biasModifier);
@@ -432,28 +417,30 @@ void main()
     float ndf = SpecularD(NoH, roughness * roughness );
     float g =  SpecularG(l, v, h, n, roughness);
     vec3 f = SpecularF(VoH,F0,roughness);
+
+    vec3 kD = vec3(0,0,0);
     
-
-    vec3 radiance = directionalData.color * directionalData.intensity;
-    vec3 numerator = ndf * g * f;
-    float denominator = 4.0 * max(dot(n, v), 0.0) * max(dot(n, l), 0.0) + 0.0001;
-    vec3 specular  = numerator / denominator;
-
-    vec3 kS = f;
-    vec3 kD = vec3(1.0) - kS;
-    kD *= 1.0 - metallic;
-    float NdotL = max(dot(n, l), 0.0);
-
-    vec3 LoDir = (kD * albedo * InvPI + specular) * radiance * NdotL;
-    if (directionalData.isDirlightCastShadow)
+    if (true)
     {
-        float shadow = DirLightShadowCalculation(fragPosVec4, n, l);
-        LoDir *= (1.0-shadow);
-    }
-    Lo += LoDir;
-    
+        vec3 radiance = directionalData.color * directionalData.intensity;
+        vec3 numerator = ndf * g * f;
+        float denominator = 4.0 * max(dot(n, v), 0.0) * max(dot(n, l), 0.0) + 0.0001;
+        vec3 specular  = numerator / denominator;
 
-   
+        vec3 kS = f;
+        kD = vec3(1.0) - kS;
+        kD *= 1.0 - metallic;
+        float NdotL = max(dot(n, l), 0.0);
+
+        vec3 LoDir = (kD * albedo * InvPI + specular) * radiance * NdotL;
+        if (directionalData.isDirlightCastShadow)
+        {
+            float shadow = DirLightShadowCalculation(fragPosVec4, n, l);
+            LoDir *= (1.0-shadow);
+        }
+        Lo += LoDir;
+    }
+    
     Lo += ComputePointLight(albedo, fragPos, v, n, roughness, metallic, F0);
     Lo += ComputeSpotLight(albedo, fragPosVec4, v, n, roughness, metallic, F0);
     
@@ -461,5 +448,4 @@ void main()
     vec3 color = Lo + ambient + (emissiveColor * emissive);
 
     FragColor = vec4(color, 1);
-    //FragColor = vec4(colorTest, 1);
 }
