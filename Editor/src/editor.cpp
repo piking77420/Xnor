@@ -248,8 +248,7 @@ void Editor::ProjectMenuBar()
 {
 	if (ImGui::BeginMainMenuBar())
 	{	
-		
-		SerializeScene(XnorCore::World::scene);
+		SerializeSceneMenue();
 		
 		if (XnorCore::World::scene != nullptr)
 			SceneMenueBar(XnorCore::World::scene);
@@ -284,7 +283,7 @@ void Editor::SceneMenueBar(XnorCore::Scene* scene)
 	}
 }
 
-void Editor::SerializeScene(XnorCore::Scene* )
+void Editor::SerializeSceneMenue()
 {
 	if (ImGui::BeginMenu("File"))
 	{
@@ -402,7 +401,7 @@ void Editor::SerializeScene(const std::string& filepath)
 	
 	m_Serializing = true;
 	
-	XnorCore::Serializer::StartSerialization(data.currentScene->GetPath().string());
+	XnorCore::Serializer::StartSerialization(filepath);
 	XnorCore::Serializer::Serialize<XnorCore::Scene, true>(XnorCore::World::scene);
 	XnorCore::Serializer::EndSerialization();
 
@@ -432,7 +431,7 @@ void Editor::DeserializeScene(const std::string& filepath)
 
 	m_Deserializing = true;
 	
-	XnorCore::Serializer::StartDeserialization(data.currentScene->GetPath().generic_string());
+	XnorCore::Serializer::StartDeserialization(filepath);
 	const XnorCore::Guid selectedEntityId = data.selectedEntity ? data.selectedEntity->GetGuid() : XnorCore::Guid::Empty();
 	
 	delete XnorCore::World::scene;

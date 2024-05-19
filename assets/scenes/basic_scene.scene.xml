@@ -215,7 +215,7 @@
 			<name>Rammus</name>
 			<m_EntityId>EC3A3F5-FE8A-40A6-8A-8B-E-CB-F1-DC-E3-0</m_EntityId>
 			<transform>
-				<m_Position>-1.1178907 ; -1.0117129 ; 7.3312097</m_Position>
+				<m_Position>-15.306963 ; -1.0117129 ; 7.3312097</m_Position>
 				<m_EulerRotation>0 ; -1.0750928 ; 0</m_EulerRotation>
 				<m_Scale>0.020000014 ; 0.02 ; 0.020000014</m_Scale>
 			</transform>
@@ -240,7 +240,7 @@
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
 						<m_Animation>9D968E66-1292-4581-B4-B6-EB-2C-CA-DA-8B-16</m_Animation>
-						<m_CurrentFrame>383</m_CurrentFrame>
+						<m_CurrentFrame>249</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>

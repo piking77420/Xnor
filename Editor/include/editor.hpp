@@ -106,7 +106,7 @@ private:
 
 	void SceneMenueBar(XnorCore::Scene* scene);
 
-	void SerializeScene(XnorCore::Scene* scene);
+	void SerializeSceneMenue();
 	
 	void LoadOtherScene();
 };
