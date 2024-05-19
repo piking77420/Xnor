@@ -11,7 +11,7 @@ void Scene::Initialize()
 {
     // TODO Make menu to select skybox
     skybox.Initialize();
-    Pointer<Texture> texture = ResourceManager::Get<Texture>("assets/textures/puresky.hdr");
+    Pointer<Texture> texture = ResourceManager::Get<Texture>("assets/textures/ssl.hdr");
     texture->loadData.flipVertically = true;
     texture->Reload();
     skybox.LoadFromHdrTexture(texture);

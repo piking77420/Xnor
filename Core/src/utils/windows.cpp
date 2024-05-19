@@ -20,8 +20,10 @@ bool_t Windows::CheckError()
             0,
             nullptr
         );
+        SilenceError();
         
         Logger::LogError("[Windows] Error {}: {}", error, static_cast<LPSTR>(lpMsgBuf));
+
         return true;
     }
 

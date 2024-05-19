@@ -91,11 +91,13 @@ void Window::SetIcon(Texture& icon)
 void Window::SetCursorHidden(const bool_t value)
 {
 	ShowCursor(!value);
+    Windows::SilenceError();
 }
 
 void Window::SetCursorPosition(const Vector2 newPosition)
 {
 	SetCursorPos(static_cast<int32_t>(newPosition.x),static_cast<int32_t>(newPosition.y));
+    Windows::SilenceError();
 }
 
 void Window::GlfwResizeFramebuffer(GLFWwindow*, const int32_t width, const int32_t height)

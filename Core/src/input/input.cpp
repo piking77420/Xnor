@@ -200,6 +200,7 @@ void Input::Update()
     
     POINT point;
     GetCursorPos(&point);
+    Windows::SilenceError();
     m_MousePosition.x = static_cast<float_t>(point.x);
     m_MousePosition.y = static_cast<float_t>(point.y);
     

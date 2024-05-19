@@ -71,8 +71,7 @@ void FileSystemWatcher::SetPath(const std::filesystem::path& newPath)
 
 void FileSystemWatcher::Run()
 {
-    (void) SetThreadDescription(m_Thread.native_handle(), L"FileSystemWatcher Thread");
-    Windows::CheckError();
+    Utils::SetThreadName(m_Thread, L"FileSystemWatcher Thread");
     
     std::unique_lock lock(m_Mutex);
 

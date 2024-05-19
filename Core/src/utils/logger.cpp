@@ -3,7 +3,6 @@
 #include <iostream>
 
 #include "utils/formatter.hpp"
-#include "utils/windows.hpp"
 
 #define ANSI_COLOR_GRAY     "\x1b[38;5;242m"
 #define ANSI_COLOR_GREEN    "\x1b[0;32m"
@@ -192,7 +191,7 @@ bool_t Logger::LogEntry::operator==(const LogEntry& other) const { return messag
 void Logger::Run()
 {
     // Set thread name for easier debugging
-    (void) SetThreadDescription(m_Thread.native_handle(), L"Logger Thread");
+    Utils::SetThreadName(m_Thread, L"Logger Thread");
 
     // Detach this thread from the main one to make sure it finishes normally
     m_Thread.detach();

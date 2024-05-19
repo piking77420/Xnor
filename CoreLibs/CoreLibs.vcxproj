@@ -140,7 +140,6 @@
     <ClInclude Include="include\RapidXML\rapidxml_utils.hpp" />
     <ClInclude Include="include\stb\stb_image.h" />
     <ClInclude Include="include\stb\stb_image_write.h" />
-    <ClInclude Include="include\ttf\ttfParser.h" />
   </ItemGroup>
 
   <ItemGroup>

@@ -5,6 +5,7 @@
 #include <ImGui/imgui.h>
 
 #include "file/directory.hpp"
+#include "utils/windows.hpp"
 
 using namespace XnorCore;
 
@@ -160,4 +161,10 @@ void Utils::CreateEmptyFile(const std::filesystem::path& path)
 {
     // Creating a std::ofstream is the only necessary thing to do to create an empty file
     std::ofstream(FORWARD(path));
+}
+
+void Utils::SetThreadName(std::thread& thread, const std::wstring& name)
+{
+    (void) SetThreadDescription(thread.native_handle(), name.c_str());
+    Windows::SilenceError();
 }

@@ -3,17 +3,16 @@
 #include <vector>
 
 #include <Maths/vector3.hpp>
+
 #include "rendering/render_pass.hpp"
 #include "rendering/viewport.hpp"
 #include "utils/color.hpp"
 #include "utils/pointer.hpp"
 
-
 BEGIN_XNOR_CORE
 
 class DrawGizmo
 {
-private:
     struct GizmoSphere
     {
         Vector3 position;
@@ -53,15 +52,14 @@ public:
 
     XNOR_ENGINE void DrawGizmos(const Viewport& viewport, const Entity* selectedEntity);
 
-
 private:
-    Pointer<XnorCore::Shader> m_GizmoShader;
+    Pointer<Shader> m_GizmoShader;
 
-    Pointer<XnorCore::Mesh> m_Sphere;
+    Pointer<Mesh> m_Sphere;
 
-    Pointer<XnorCore::Mesh> m_Cube;
+    Pointer<Mesh> m_Cube;
 
-    Pointer<XnorCore::Mesh> m_Capsule;
+    Pointer<Mesh> m_Capsule;
     
     RenderPass m_RenderPass;
 
@@ -76,7 +74,6 @@ private:
     XNOR_ENGINE void Clear();
     
     XNOR_ENGINE void DrawCollider(const Entity& entity);
-
 };
 
 END_XNOR_CORE

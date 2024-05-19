@@ -19,9 +19,9 @@ BEGIN_XNOR_CORE
 
 namespace Windows
 {
-    bool_t CheckError();
+    XNOR_ENGINE bool_t CheckError();
 
-    void SilenceError();
+    XNOR_ENGINE void SilenceError();
 }
 
 END_XNOR_CORE

@@ -28,6 +28,7 @@ void Performance::Update()
 
     PROCESS_MEMORY_COUNTERS memory;
     GetProcessMemoryInfo(GetCurrentProcess(), &memory, sizeof(memory));
+    XnorCore::Windows::SilenceError();
 
     m_LastMemory = static_cast<float_t>(memory.WorkingSetSize) / 0x100000; // Convert to MB
     m_MemoryArray[m_ArrayIndex] = m_LastMemory;

@@ -2,9 +2,10 @@
 
 #include <type_traits>
 
-BEGIN_XNOR_CORE
+#include "Maths/vector2i.hpp"
 
-template <Concepts::PointerT PtrT, Concepts::IntegralT IntT>
+BEGIN_XNOR_CORE
+    template <Concepts::PointerT PtrT, Concepts::IntegralT IntT>
 constexpr PtrT Utils::IntToPointer(const IntT number) { return reinterpret_cast<PtrT>(reinterpret_cast<uint8_t*>(1) + static_cast<const size_t>(number) - 1); }
 
 constexpr std::string Utils::RemoveNamespaces(const std::string& str)

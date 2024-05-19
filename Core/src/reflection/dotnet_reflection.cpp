@@ -132,8 +132,14 @@ void DotnetReflection::DisplayType(ScriptComponent* const script)
     
     Coral::ManagedObject& obj = script->GetManagedObject();
 
+    const Coral::Type& type = obj.GetType();
+
+    const std::string text = type.GetFullName();
+    Utils::AlignImGuiCursor(ImGui::CalcTextSize(text.c_str()).x);
+    ImGui::TextColored(static_cast<Vector4>(Color::PaleGreen()), "%s", text.c_str());
+
     ImGui::PushID(script);
-    for (Coral::FieldInfo& field : obj.GetType().GetFields())
+    for (Coral::FieldInfo& field : type.GetFields())
     {
         auto&& attributes = field.GetAttributes();
         // Discard the field if it is non-public and doesn't have the 'Serialized' attribute

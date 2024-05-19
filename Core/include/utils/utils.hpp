@@ -4,15 +4,11 @@
 #include <functional>
 
 #include <Maths/quaternion.hpp>
-#include <Maths/vector2i.hpp>
 #include <Maths/vector2.hpp>
 #include <Maths/vector3.hpp>
 
-#include <ImGui/imgui.h>
-
 #include "core.hpp"
 
-#include "utils/color.hpp"
 #include "utils/concepts.hpp"
 #include "utils/pointer.hpp"
 
@@ -186,6 +182,8 @@ namespace Utils
     XNOR_ENGINE int32_t TerminalCommand(const std::string& command, bool_t asynchronous = true);
 
     XNOR_ENGINE void CreateEmptyFile(const std::filesystem::path& path);
+
+    XNOR_ENGINE void SetThreadName(std::thread& thread, const std::wstring& name);
 }
 
 END_XNOR_CORE

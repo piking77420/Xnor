@@ -8,6 +8,8 @@ BEGIN_XNOR_CORE
 
 class AudioTrack : public Resource
 {
+    REFLECTABLE_IMPL(AudioTrack)
+    
 public:
     /// @brief Allowed extensions for audio files
     XNOR_ENGINE static constexpr std::array<const char_t*, 4> FileExtensions
@@ -87,3 +89,10 @@ private:
 END_XNOR_CORE
 
 #include "resource/audio_track.inl"
+
+REFL_AUTO(type(XnorCore::AudioTrack, bases<XnorCore::Resource>),
+    field(m_DataSize),
+    field(m_Channels),
+    field(m_SampleRate),
+    field(m_BitDepth)
+)

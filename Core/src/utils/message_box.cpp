@@ -70,5 +70,7 @@ MessageBox::Result MessageBox::ParseResult(const int32_t windowsResult)
 
 MessageBox::Result MessageBox::Call(const char_t* const text, const char_t* const title, const Type type, const Icon icon, const DefaultButton defaultButton)
 {
-    return ParseResult(MessageBoxA(nullptr, text, title, TypeToWindows(type) | IconToWindows(icon) | DefaultButtonToWindows(defaultButton)));
+    const Result result = ParseResult(MessageBoxA(nullptr, text, title, TypeToWindows(type) | IconToWindows(icon) | DefaultButtonToWindows(defaultButton)));
+    Windows::CheckError();
+    return result;
 }

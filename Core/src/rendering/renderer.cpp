@@ -3,6 +3,7 @@
 #include "rendering/rhi.hpp"
 #include "resource/resource_manager.hpp"
 #include "..\..\include\scene\component\static_mesh_renderer.hpp"
+#include "ImGui/imgui.h"
 
 using namespace XnorCore;
 

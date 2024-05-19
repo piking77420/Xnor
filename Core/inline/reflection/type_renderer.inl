@@ -168,7 +168,7 @@ std::pair<void*, const char_t*> TypeRenderer::DisplayObject(ReflectT* const obj,
     // Display the type name centered
     const float_t textSize = ImGui::CalcTextSize(typeName.c_str()).x;
     Utils::AlignImGuiCursor(textSize);
-    ImGui::Text("%s", typeName.c_str());
+    ImGui::TextColored(static_cast<Vector4>(Color::PaleGreen()), "%s", typeName.c_str());
 
     if constexpr (Reflection::HasAttribute<Reflection::OpenEditorWindow, DescriptorT>())
     {

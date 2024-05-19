@@ -72,7 +72,7 @@ Entity* Entity::Clone() const
     for (Component* component : m_Components)
     {
         // TODO: Clone components
-        //clone->AddComponent();
+        //clone->AddComponent<>();
     }
 
     for (const Entity* child : m_Children)
