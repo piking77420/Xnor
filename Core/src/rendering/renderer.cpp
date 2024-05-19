@@ -2,26 +2,10 @@
 
 #include "rendering/rhi.hpp"
 #include "resource/resource_manager.hpp"
-#include "..\..\include\scene\component\static_mesh_renderer.hpp"
+#include "scene/component/static_mesh_renderer.hpp"
+#include "reflection/filters.hpp"
 
 using namespace XnorCore;
-
-void Renderer::RenderMenu(const Scene& scene)
-{
-    if (ImGui::BeginMenu("CurrentScene"))
-    {
-        if (ImGui::Checkbox("DrawScene Octree", &scene.renderOctree.draw))
-        {
-        }
-
-        ImGui::EndMenu();
-    }
-
-    if (scene.renderOctree.draw)
-    {
-        scene.renderOctree.Draw();
-    }
-}
 
 void Renderer::Initialize()
 {

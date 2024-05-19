@@ -59,8 +59,6 @@ public:
 
 	void DeserializeSceneAsync(const std::string& filepath = "");
 
-	// TODO temp
-	static constexpr const char_t* SerializedScenePath = "assets/scenes/basic_scene.scene.xml";
 	
 	[[nodiscard]]
 	bool_t IsSerializing() const;
@@ -76,9 +74,7 @@ public:
 
 private:
 	std::vector<UiWindow*> m_UiWindows;
-
-    std::filesystem::path m_SerializedScenePath;
-
+	
 	bool_t m_Serializing = false;
 	bool_t m_Deserializing = false;
 	bool_t m_ReloadingScripts = false;
@@ -106,9 +102,13 @@ private:
 
 	void SetupImGuiStyle() const;
 	
-	void MenuBar();
+	void ProjectMenuBar();
 
-	XnorCore::AnimationMontage montage;
+	void SceneMenueBar(XnorCore::Scene* scene);
+
+	void SerializeScene(XnorCore::Scene* scene);
+	
+	void LoadOtherScene();
 };
 
 #include "editor.inl"

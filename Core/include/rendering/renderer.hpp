@@ -90,8 +90,6 @@ public:
     /// @brief Swaps the front and back buffer.
     XNOR_ENGINE void SwapBuffers() const;
 
-    XNOR_ENGINE void RenderMenu(const Scene& scene);
-    
 private:
      mutable Frustum m_Frustum;
     

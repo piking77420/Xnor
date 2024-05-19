@@ -9,12 +9,7 @@ using namespace XnorCore;
 
 void Scene::Initialize()
 {
-    // TODO Make menu to select skybox
     skybox.Initialize();
-    Pointer<Texture> texture = ResourceManager::Get<Texture>("assets/textures/newport_loft.hdr");
-    texture->loadData.flipVertically = true;
-    texture->Reload();
-    skybox.LoadFromHdrTexture(texture);
 }
 
 void Scene::Begin()

@@ -8,6 +8,7 @@
 #include "csharp/dotnet_runtime.hpp"
 #include "file/file_manager.hpp"
 #include "input/time.hpp"
+#include "reflection/filters.hpp"
 #include "resource/resource_manager.hpp"
 #include "resource/shader.hpp"
 #include "scene/component/test_component.hpp"
@@ -96,10 +97,7 @@ void Editor::CreateDefaultWindows()
 {
 	data.editorViewPort.isEditor = true;
 	data.editorViewPort.camera = &data.editorCam;
-
-	if (XnorCore::FileManager::Contains(SerializedScenePath))
-		data.currentScene = XnorCore::FileManager::Get<XnorCore::File>(SerializedScenePath);
-
+	
 	OpenWindow<EditorWindow>(data.editorViewPort);
 	OpenWindow<RenderWindow>(*gameViewPort);
 	OpenWindow<Performance>(50);
@@ -246,49 +244,96 @@ void Editor::SetupImGuiStyle() const
 	style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.800000011920929f, 0.800000011920929f, 0.800000011920929f, 0.3499999940395355f);
 }
 
-void Editor::MenuBar()
+void Editor::ProjectMenuBar()
 {
 	if (ImGui::BeginMainMenuBar())
 	{	
-		if (ImGui::BeginMenu("File"))
-		{
-			std::string path;
-			if (data.currentScene == nullptr)
-			{
-				if (!std::filesystem::exists("assets/scenes"))
-					std::filesystem::create_directories("assets/scenes");
-				path = SerializedScenePath;
-			}
-			else
-			{
-				path = data.currentScene->GetPathString();
-			}
-
-			const bool_t saveLoadDisabled = m_ReloadingScripts || m_GamePlaying;
-
-			if (saveLoadDisabled)
-				ImGui::BeginDisabled();
-
-			if (ImGui::MenuItem("Save"))
-				SerializeSceneAsync(path);
-
-			if (ImGui::MenuItem("Load"))
-				DeserializeSceneAsync(path);
-
-			if (ImGui::MenuItem("Load backup"))
-				DeserializeSceneAsync();
-
-			if (saveLoadDisabled)
-				ImGui::EndDisabled();
-
-			ImGui::EndMenu();
-		}
+		
+		SerializeScene(XnorCore::World::scene);
 		
 		if (XnorCore::World::scene != nullptr)
-			renderer.RenderMenu(*XnorCore::World::scene);
+			SceneMenueBar(XnorCore::World::scene);
 		
 		ImGui::EndMainMenuBar();
 	}
+}
+
+void Editor::SceneMenueBar(XnorCore::Scene* scene)
+{
+	if (ImGui::BeginMenu("Scene"))
+	{
+		if (ImGui::MenuItem("DrawScene Octree"))
+			scene->renderOctree.draw = !scene->renderOctree.draw;
+		
+		XnorCore::Pointer<XnorCore::Texture> cubeMap = nullptr;
+		
+		if (ImGui::Button("Skybox"))
+		{
+			XnorCore::Filters::BeginResourceFilter();
+		}
+		XnorCore::Filters::FilterResources<XnorCore::Texture>(&cubeMap);
+		if (cubeMap)
+			scene->skybox.LoadFromHdrTexture(cubeMap);
+        
+		ImGui::EndMenu();
+	}
+
+	if (scene->renderOctree.draw)
+	{
+		scene->renderOctree.Draw();
+	}
+}
+
+void Editor::SerializeScene(XnorCore::Scene* )
+{
+	if (ImGui::BeginMenu("File"))
+	{
+		const std::string path = data.currentScene.IsValid() ? data.currentScene->GetPath().generic_string() : "";
+
+		const bool_t saveLoadDisabled = m_ReloadingScripts || m_GamePlaying;
+
+		if (saveLoadDisabled)
+			ImGui::BeginDisabled();
+
+		if (ImGui::MenuItem("Save"))
+			SerializeSceneAsync(path);
+		
+		if (ImGui::MenuItem("Load"))
+			DeserializeSceneAsync(path);
+
+		if (ImGui::MenuItem("Load backup"))
+			DeserializeSceneAsync();
+
+		LoadOtherScene();
+
+		if (saveLoadDisabled)
+			ImGui::EndDisabled();
+		
+
+		ImGui::EndMenu();
+
+	}
+}
+
+void Editor::LoadOtherScene()
+{
+	XnorCore::Pointer<XnorCore::File> fileScene;
+	
+	if (ImGui::Button("Open"))
+	{
+		XnorCore::Filters::BeginFilter("File");
+	}
+	XnorCore::Filters::FilterFile(&fileScene);
+
+	if (!fileScene)
+		return;
+
+	// Save the current scene
+	if (data.currentScene && data.currentScene->GetSize() == static_cast<int64_t>(0))
+		DeserializeSceneAsync(data.currentScene->GetPath().generic_string());
+
+	data.currentScene = fileScene;
+	DeserializeSceneAsync(data.currentScene->GetPath().generic_string());
 }
 
 void Editor::BuildAndReloadCodeAsync()
@@ -355,14 +400,9 @@ void Editor::SerializeScene(const std::string& filepath)
 
 	onSceneSerializationBegin();
 	
-	if (filepath.empty())
-		m_SerializedScenePath = std::filesystem::temp_directory_path() / "xnor_current.scene.xml";
-	else
-		m_SerializedScenePath = filepath;
-
 	m_Serializing = true;
 	
-	XnorCore::Serializer::StartSerialization(m_SerializedScenePath.string());
+	XnorCore::Serializer::StartSerialization(data.currentScene->GetPath().string());
 	XnorCore::Serializer::Serialize<XnorCore::Scene, true>(XnorCore::World::scene);
 	XnorCore::Serializer::EndSerialization();
 
@@ -373,6 +413,12 @@ void Editor::SerializeScene(const std::string& filepath)
 
 void Editor::SerializeSceneAsync(const std::string& filepath)
 {
+	if (filepath.empty())
+	{
+		XnorCore::Logger::LogInfo("Please select a scene before loading");
+		return;
+	}
+	
 	m_Serializing = true;
 	m_CurrentAsyncActionThread = std::thread([this, path = filepath] { SerializeScene(path); });
 }
@@ -382,18 +428,11 @@ void Editor::DeserializeScene(const std::string& filepath)
 	XnorCore::Logger::LogInfo("Loading scene");
 	
 	onSceneDeserializationBegin();
-	
-	if (filepath.empty())
-		m_SerializedScenePath = std::filesystem::temp_directory_path() / "xnor_current.scene.xml";
-	else
-		m_SerializedScenePath = filepath;
 
-	if (!exists(m_SerializedScenePath))
-		return;
 
 	m_Deserializing = true;
 	
-	XnorCore::Serializer::StartDeserialization(m_SerializedScenePath.string());
+	XnorCore::Serializer::StartDeserialization(data.currentScene->GetPath().generic_string());
 	const XnorCore::Guid selectedEntityId = data.selectedEntity ? data.selectedEntity->GetGuid() : XnorCore::Guid::Empty();
 	
 	delete XnorCore::World::scene;
@@ -413,6 +452,12 @@ void Editor::DeserializeScene(const std::string& filepath)
 
 void Editor::DeserializeSceneAsync(const std::string& filepath)
 {
+	if (filepath.empty())
+	{
+		XnorCore::Logger::LogInfo("Please select a scene before saving");
+		return;
+	}
+	
 	m_Deserializing = true;
 	m_CurrentAsyncActionThread = std::thread([this, path = filepath] { DeserializeScene(path); });
 }
@@ -458,7 +503,7 @@ void Editor::BeginFrame()
 	ImGuizmo::BeginFrame();
 	
 	BeginDockSpace();
-	MenuBar();
+	ProjectMenuBar();
 }
 
 void Editor::Update()
@@ -542,7 +587,7 @@ void Editor::WorldBehaviours()
 		{
 			XnorCore::World::Begin();
 			XnorCore::World::hasStarted = true;
-			}
+		}
 		XnorCore::World::Update();
 	}
 	XnorCore::World::OnRendering();

@@ -26,7 +26,10 @@ void Hierarchy::Display()
     if (serializing)
         ImGui::BeginDisabled();
 
-    if (ImGui::TreeNodeEx("Entities", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_FramePadding))
+    const std::string treeNodeName = m_Editor->data.currentScene.IsValid() ? m_Editor->data.currentScene->GetNameNoExtension() : "Entities";
+    const std::filesystem::path path = treeNodeName;
+
+    if (ImGui::TreeNodeEx(path.stem().generic_string().c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_FramePadding))
     {
         if (ImGui::BeginPopupContextItem())
         {

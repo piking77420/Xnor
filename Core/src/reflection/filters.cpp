@@ -5,6 +5,43 @@
 
 using namespace XnorCore;
 
+
+
+Pointer<File> Filters::FilterFile(Pointer<File>* target)
+{
+    if (!ImGui::BeginPopupModal("File"))
+        return nullptr;
+
+    m_TextFilter.Draw();
+    std::vector<Pointer<File>> file = FileManager::FindAll<File>([](Pointer<File> file)->bool_t
+    {
+        return file->GetName().ends_with(".scene.xml");
+    });
+
+    
+    Pointer<File> r = nullptr;
+    for (const Pointer<File>& res : file)
+    {
+        if (ImGui::Selectable(res->GetName().c_str()))
+        {
+            r = res;
+            break;
+        }
+    }
+
+    if (r != nullptr)
+    {
+        *target = r;
+        ImGui::CloseCurrentPopup();
+    }
+
+    if (ImGui::IsKeyPressed(ImGuiKey_Escape))
+        ImGui::CloseCurrentPopup();
+    
+    ImGui::EndPopup();
+    return r;
+}
+
 Entity* Filters::FilterEntity(Entity** target)
 {
     if (!ImGui::BeginPopupModal("Entity"))
@@ -167,4 +204,10 @@ void Filters::BeginComponentFilter()
 {
     m_TextFilter.Clear();
     ImGui::OpenPopup("Component");
+}
+
+void Filters::BeginFilter(const std::string& filterName)
+{
+    m_TextFilter.Clear();
+    ImGui::OpenPopup(filterName.c_str());
 }
