@@ -71,8 +71,8 @@
 			<name>Sphere</name>
 			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
 			<transform>
-				<m_Position>4.4999866 ; 0.058403905 ; -3.2958086</m_Position>
-				<m_EulerRotation>2.752485 ; 0 ; 0</m_EulerRotation>
+				<m_Position>4.302115 ; 2.393759 ; 0.5966617</m_Position>
+				<m_EulerRotation>2.752485 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1.0000015 ; 1.0000015</m_Scale>
 			</transform>
 			<m_Components>
@@ -87,10 +87,10 @@
 						<reflectance>0</reflectance>
 						<emissive>0</emissive>
 						<ambientOcclusion>0</ambientOcclusion>
-						<albedoTexture>D4DE5A31-2DD4-4EA2-A0-44-48-D2-C9-99-71-8B</albedoTexture>
-						<metallicTexture>92C273FA-1E2D-43AA-B8-CF-AE-D0-15-6F-57-87</metallicTexture>
-						<roughnessTexture>D951D7C1-D2F0-4849-86-EF-1-74-A-42-66-C9</roughnessTexture>
-						<normalTexture>D951D7C1-D2F0-4849-86-EF-1-74-A-42-66-C9</normalTexture>
+						<albedoTexture>4916125F-AD2F-41C0-93-F8-C-51-D3-9A-25-6B</albedoTexture>
+						<metallicTexture>305C17F4-B611-44D3-BC-F3-66-A5-1A-C0-BC-64</metallicTexture>
+						<roughnessTexture>D1189582-EC00-49BD-A0-4A-57-1C-53-82-B3-2A</roughnessTexture>
+						<normalTexture>57B0A6C2-3-4FDC-B0-BF-E4-17-A7-E6-4F-3E</normalTexture>
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 						<emissiveTexture>0-0-0-0-0-0-0-0-0-0-0</emissiveTexture>
 					</material>
@@ -199,9 +199,9 @@
 			<name>Lantern</name>
 			<m_EntityId>9144D2C0-8CE-41CA-93-B-F-F-A3-A6-32-8D</m_EntityId>
 			<transform>
-				<m_Position>0 ; 1.3420203 ; 0.6511441</m_Position>
+				<m_Position>0 ; 2.4178417 ; 0.6511441</m_Position>
 				<m_EulerRotation>-1.5707965 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 0.9999148 ; 0.9999148</m_Scale>
+				<m_Scale>1 ; 0.9999077 ; 0.9999077</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="StaticMeshRenderer">
@@ -270,7 +270,7 @@
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
 						<m_Animation>D40974A1-F0EF-4613-A7-6F-97-D3-57-87-60-87</m_Animation>
-						<m_CurrentFrame>1418</m_CurrentFrame>
+						<m_CurrentFrame>2319</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>
