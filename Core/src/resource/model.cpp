@@ -80,10 +80,10 @@ bool_t Model::Load(const aiMesh& loadedData)
         m_Indices[baseIndex + 1] = face.mIndices[1];
         m_Indices[baseIndex + 2] = face.mIndices[2];
     }
+    
+    m_Loaded = true;
 
     ComputeAabb(loadedData.mAABB);
-
-    m_Loaded = true;
 
     return true;
 }
@@ -173,8 +173,8 @@ bool_t Model::Save() const
     mesh->mFaces = faces.GetData();
     mesh->mNumFaces = static_cast<uint32_t>(m_Indices.size() / 3);
 
-    const aiVector3D min = aiVector3D(m_Aabb.GetMin().x, m_Aabb.GetMin().y, m_Aabb.GetMin().z);
-    const aiVector3D max = aiVector3D(m_Aabb.GetMax().x, m_Aabb.GetMax().y, m_Aabb.GetMax().z);
+    const aiVector3D min = aiVector3D(aabb.GetMin().x, aabb.GetMin().y, aabb.GetMin().z);
+    const aiVector3D max = aiVector3D(aabb.GetMax().x, aabb.GetMax().y, aabb.GetMax().z);
     mesh->mAABB = aiAABB(min, max);
     
     return exporter.Export(&scene, "obj", m_Name.c_str()) == aiReturn_SUCCESS;
@@ -183,11 +183,6 @@ bool_t Model::Save() const
 uint32_t Model::GetId() const
 {
     return m_ModelId;
-}
-
-Bound Model::GetAabb() const
-{
-    return m_Aabb;
 }
 
 const std::vector<Vertex>& Model::GetVertices() const
@@ -206,7 +201,7 @@ void Model::ComputeAabb(const aiAABB& assimpAabb)
         for (const Vertex& vertex : m_Vertices)
         {
             if (vertex.position.x < min.x)
-                 min.x = vertex.position.x;
+                min.x = vertex.position.x;
             if (vertex.position.y < min.y)
                 min.y = vertex.position.y;
             if (vertex.position.z < min.z)
@@ -226,5 +221,5 @@ void Model::ComputeAabb(const aiAABB& assimpAabb)
         max = Vector3(&assimpAabb.mMax.x);
     }
 
-   m_Aabb.SetMinMax(min, max);
+    aabb.SetMinMax(min, max);
 }

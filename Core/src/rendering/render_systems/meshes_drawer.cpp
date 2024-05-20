@@ -13,6 +13,8 @@ MeshesDrawer::MeshesDrawer()
 {
 }
 
+
+
 MeshesDrawer::~MeshesDrawer()
 {
     delete m_SkinnedMeshGpuData;
@@ -30,6 +32,76 @@ void MeshesDrawer::InitResources()
 
     m_SkinnedShader->SetFaceCullingInfo(cullInfo);
     m_SkinnedShader->CreateInInterface();
+    m_GizmoShader = ResourceManager::Get<Shader>("gizmo_shader");
+    m_GizmoShader->CreateInInterface();
+}
+
+
+void MeshesDrawer::DrawAabb(const Pointer<Mesh> cube) const
+{
+    
+    m_GizmoShader->Use();
+    Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Line);
+    ModelUniformData modelData;
+    m_GizmoShader->SetVec3("color", {0.f, 1.f, 0.f});
+
+    for (const StaticMeshRenderer* const staticMeshRenderer : m_StaticMeshs)
+    {
+        if (!staticMeshRenderer->mesh.IsValid())
+            continue;
+
+        if (!staticMeshRenderer->drawModelAabb)
+            continue;
+        
+        for (size_t i = 0; i < staticMeshRenderer->mesh->models.GetSize(); i++)
+        {
+            Pointer<Model> model = staticMeshRenderer->mesh->models[i];
+            
+            const Transform& transform = staticMeshRenderer->GetEntity()->transform;
+            const Bound& modelAabb = Bound::GetAabbFromTransform(model->aabb, transform);
+            const Matrix&& trsAabb = Matrix::Trs(modelAabb.center, Quaternion::Identity(), modelAabb.extents);
+            modelData.model = trsAabb;
+            Rhi::UpdateModelUniform(modelData);
+
+            Rhi::DrawModel(DrawMode::Triangles, cube->models[0]->GetId());
+        }
+   
+    }
+
+    for (const SkinnedMeshRenderer* skinnedMeshRender : m_SkinnedRender)
+    {
+        if (!skinnedMeshRender->drawModelAabb)
+            continue;
+        
+        ModelUniformData modelData;
+        modelData.model = skinnedMeshRender->GetTransform().worldMatrix;
+
+        try
+        {
+            modelData.normalInvertMatrix = skinnedMeshRender->GetTransform().worldMatrix.Inverted().Transposed();
+        }
+        catch (const std::invalid_argument&)
+        {
+            modelData.normalInvertMatrix = Matrix::Identity();
+        }
+		
+        Rhi::UpdateModelUniform(modelData);
+
+        if (skinnedMeshRender->mesh)
+        {
+
+            const Transform& transform = skinnedMeshRender->GetEntity()->transform;
+            const Bound& modelAabb = Bound::GetAabbFromTransform(skinnedMeshRender->mesh->aabb, transform);
+            const Matrix&& trsAabb = Matrix::Trs(modelAabb.center, Quaternion::Identity(), modelAabb.extents);
+            modelData.model = trsAabb;
+            Rhi::UpdateModelUniform(modelData);
+
+            Rhi::DrawModel(DrawMode::Triangles, cube->models[0]->GetId());
+        }
+    }
+
+    m_GizmoShader->Unuse();
+    Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
 }
 
 void MeshesDrawer::BeginFrame(const Scene& scene, const Renderer&)
@@ -131,27 +203,27 @@ void MeshesDrawer::RenderStaticMesh(const MaterialType materialtype, const Camer
                 it.GetHandles(&handle);
 
                 // draw
-                for (const StaticMeshRenderer* const meshRenderer : *handle)
+                for (const StaticMeshRenderer* const staticMeshRenderer : *handle)
                 {
-                    for (size_t i = 0; i < meshRenderer->mesh->models.GetSize(); i++)
+                    for (size_t i = 0; i < staticMeshRenderer->mesh->models.GetSize(); i++)
                     {
-                        if (meshRenderer->material.materialType != materialtype )
+                        if (staticMeshRenderer->material.materialType != materialtype )
                             continue;
                         
-                        Pointer<Model> model = meshRenderer->mesh->models[i];
+                        Pointer<Model> model = staticMeshRenderer->mesh->models[i];
                         Bound aabb;
-                        meshRenderer->GetAabb(&aabb);
+                        staticMeshRenderer->GetAabb(&aabb);
 
                         if (!frustum.IsOnFrustum(aabb))
                         {
                             continue;
                         }
 
-                        const Transform& transform = meshRenderer->GetEntity()->transform;
+                        const Transform& transform = staticMeshRenderer->GetEntity()->transform;
                         ModelUniformData modelData;
                         modelData.model = transform.worldMatrix;
                         // +1 to avoid the black color of the attachment be a valid index  
-                            modelData.meshRenderIndex = scene.GetEntityIndex(meshRenderer->GetEntity()) + 1;
+                            modelData.meshRenderIndex = scene.GetEntityIndex(staticMeshRenderer->GetEntity()) + 1;
 
                         try
                         {
@@ -164,7 +236,7 @@ void MeshesDrawer::RenderStaticMesh(const MaterialType materialtype, const Camer
                         
                         if (model.IsValid())
                         {
-                            meshRenderer->material.BindMaterial();
+                            staticMeshRenderer->material.BindMaterial();
                             Rhi::UpdateModelUniform(modelData);
                             Rhi::DrawModel(DrawMode::Triangles, model->GetId());
                         }

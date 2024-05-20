@@ -17,9 +17,9 @@ BEGIN_XNOR_CORE
 class Framebuffer;
 
 /// @brief Maximum amount of spot lights that can exists in a same scene
-static constexpr uint32_t MaxSpotLights = 50;
+static constexpr uint32_t MaxSpotLights = 100;
 /// @brief Maximum amount of point lights that can exists in a same scene
-static constexpr uint32_t MaxPointLights = 50;
+static constexpr uint32_t MaxPointLights = 100;
 /// @brief Maximum amount of directional lights that can exists in a same scene
 static constexpr uint32_t MaxDirectionalLights = 1;
 

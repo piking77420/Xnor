@@ -19,6 +19,7 @@ public:
     DEFAULT_COPY_MOVE_OPERATIONS(MeshesDrawer)
 
     XNOR_ENGINE void InitResources();
+    void DrawAabb(const Pointer<Mesh> cube) const;
 
     XNOR_ENGINE void BeginFrame(const Scene& scene, const Renderer& renderer);
     
@@ -39,6 +40,8 @@ private:
     SkinnedMeshGpuData* m_SkinnedMeshGpuData = nullptr;
 
     Pointer<Shader> m_SkinnedShader;
+
+    Pointer<Shader> m_GizmoShader;
     
     std::vector<const SkinnedMeshRenderer*> m_SkinnedRender;
 

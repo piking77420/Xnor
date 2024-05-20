@@ -1,34 +1,36 @@
 #include "transform.hpp"
 
+#include "world/scene_graph.hpp"
+
 using namespace XnorCore;
 
-const Vector3& Transform::GetPosition() const
+Vector3 Transform::GetPosition() const
 {
-    return m_Position;
+    return static_cast<Vector3>(worldMatrix[3]);
 }
 
 void Transform::SetPosition(const Vector3& newPosition)
 {
-    m_Changed = true;
     m_Position = newPosition;
+    SceneGraph::UpdateTransform(*entity);
 }
 
 void Transform::SetPositionX(const float_t newPositionX)
 {
-    m_Changed = true;
     m_Position.x = newPositionX;
+    SceneGraph::UpdateTransform(*entity);
 }
 
 void Transform::SetPositionY(const float_t newPositionY)
 {
-    m_Changed = true;
     m_Position.y = newPositionY;
+    SceneGraph::UpdateTransform(*entity);
 }
 
 void Transform::SetPositionZ(const float_t newPositionZ)
 {
-    m_Changed = true;
     m_Position.z = newPositionZ;
+    SceneGraph::UpdateTransform(*entity);
 }
 
 const Vector3& Transform::GetRotationEulerAngle() const
@@ -38,26 +40,26 @@ const Vector3& Transform::GetRotationEulerAngle() const
 
 void Transform::SetRotationEulerAngle(const Vector3& newRotationEulerAngle)
 {
-    m_Changed = true;
     m_EulerRotation = newRotationEulerAngle;
+    m_Rotation = Quaternion::FromEuler(m_EulerRotation).Normalized();
 }
 
 void Transform::SetRotationEulerAngleX(const float_t newRotationEulerAngleX)
 {
-    m_Changed = true;
     m_EulerRotation.x = newRotationEulerAngleX;
+    m_Rotation = Quaternion::FromEuler(m_EulerRotation).Normalized();
 }
 
 void Transform::SetRotationEulerAngleY(const float_t newRotationEulerAngleY)
 {
-    m_Changed = true;
     m_EulerRotation.y = newRotationEulerAngleY;
+    m_Rotation = Quaternion::FromEuler(m_EulerRotation).Normalized();
 }
 
 void Transform::SetRotationEulerAngleZ(const float_t newRotationEulerAngleZ)
 {
-    m_Changed = true;
     m_EulerRotation.z = newRotationEulerAngleZ;
+    SceneGraph::UpdateTransform(*entity);
 }
 
 const Quaternion& Transform::GetRotation() const
@@ -67,70 +69,61 @@ const Quaternion& Transform::GetRotation() const
 
 void Transform::SetRotation(const Quaternion& newRotation)
 {
-    m_Changed = true;
     m_Rotation = newRotation;
     m_EulerRotation = Quaternion::ToEuler(m_Rotation);
+    SceneGraph::UpdateTransform(*entity);
 }
 
 void Transform::SetRotationX(const float_t newRotationX)
 {
-    m_Changed = true;
     m_Rotation.X() = newRotationX;
     m_EulerRotation = Quaternion::ToEuler(m_Rotation);
+    SceneGraph::UpdateTransform(*entity);
 }
 
 void Transform::SetRotationY(const float_t newRotationY)
 {
-    m_Changed = true;
     m_Rotation.Y() = newRotationY;
     m_EulerRotation = Quaternion::ToEuler(m_Rotation);
+    SceneGraph::UpdateTransform(*entity);
 }
 
 void Transform::SetRotationZ(const float_t newRotationZ)
 {
-    m_Changed = true;
     m_Rotation.Z() = newRotationZ;
     m_EulerRotation = Quaternion::ToEuler(m_Rotation);
+    SceneGraph::UpdateTransform(*entity);
 }
 
 void Transform::SetRotationW(const float_t newRotationW)
 {
-    m_Changed = true;
     m_Rotation.W() = newRotationW;
+    SceneGraph::UpdateTransform(*entity);
 }
 
-const Vector3& Transform::GetScale() const
-{
-    return m_Scale;
-}
 
 void Transform::SetScale(const Vector3& newScale)
 {
-    m_Changed = true;
     m_Scale = newScale;
+    SceneGraph::UpdateTransform(*entity);
 }
 
 void Transform::SetScaleX(const float_t newScaleX)
 {
-    m_Changed = true;
     m_Scale.x = newScaleX;
+    SceneGraph::UpdateTransform(*entity);
 }
 
 void Transform::SetScaleY(const float_t newScaleY)
 {
-    m_Changed = true;
     m_Scale.y = newScaleY;
+    SceneGraph::UpdateTransform(*entity);
 }
 
 void Transform::SetScaleZ(const float_t newScaleZ)
 {
-    m_Changed = true;
     m_Scale.z = newScaleZ;
-}
-
-bool_t Transform::GetChanged() const
-{
-    return m_Changed;
+    SceneGraph::UpdateTransform(*entity);
 }
 
 Vector3 Transform::GetRight() const

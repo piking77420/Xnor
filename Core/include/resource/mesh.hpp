@@ -32,6 +32,8 @@ public:
     };
 
     List<Pointer<Model>> models;
+
+    Bound aabb;
     
     // Use the base class' constructors
     using Resource::Resource;
@@ -61,6 +63,8 @@ private:
     bool_t LoadMesh(const aiScene& scene, Pointer<Skeleton>* outSkeleton);
 
     //bool_t LoadTexture(const aiScene& scene, Pointer<Skeleton>* outSkeleton);
+
+    void ComputeAabb();
 };
 
 END_XNOR_CORE

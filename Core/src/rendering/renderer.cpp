@@ -131,6 +131,7 @@ void Renderer::ForwardPass(const Scene& scene,
     m_Forward->Use();
     meshesDrawer.RenderStaticMesh(MaterialType::Lit,*viewport.camera,m_Frustum,scene);
     m_Forward->Unuse();
+    meshesDrawer.DrawAabb(m_Cube);
     skyboxRenderer.DrawSkymap(m_Cube, scene.skybox);
 
     if (isEditor)

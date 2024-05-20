@@ -14,7 +14,7 @@ DrawGizmo::DrawGizmo()
      m_Sphere = ResourceManager::Get<Model>("assets/models/sphere.obj");
      m_Cube = ResourceManager::Get<Model>("assets/models/cube.obj");
      m_Capsule = ResourceManager::Get<Model>("assets/models/capsule.obj");
-    m_GizmoShader = ResourceManager::Get<Shader>("gizmo_shader");
+     m_GizmoShader = ResourceManager::Get<Shader>("gizmo_shader");
 }
 
 void DrawGizmo::Sphere(Vector3 position, float_t radius, Color color)

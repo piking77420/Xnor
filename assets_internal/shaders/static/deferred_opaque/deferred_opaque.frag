@@ -3,8 +3,8 @@
 
 out vec4 FragColor;
 
-const int MaxSpotLight = 50;
-const int MaxPointLight = 50;
+const int MaxSpotLight = 100;
+const int MaxPointLight = 100;
 const int DirectionalCascadeLevelAllocation = 12;
 const int DirectionalCascadeLevel = 4;
 
@@ -152,8 +152,7 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
     {
         return 0.0;
     }
-    float bias = max(0.05 * (1.0 - dot(normalize(n), normalize(l))), 0.005);
-    
+    float bias = max(0.05 * (1.0 - dot(n, l)), 0.005);    
     // calculate bias (based on depth map resolution and slope)
     const float biasModifier = 0.9f;
     if (layer == directionalData.cascadeCount)

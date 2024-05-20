@@ -79,6 +79,7 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
         
         material.albedoTexture = Pointer<Texture>::New(*textures[0]);
     }*/
+    ComputeAabb();
     
     return true;
 }
@@ -135,12 +136,14 @@ bool_t Mesh::LoadMesh(const aiScene& scene,Pointer<Skeleton>* outSkeleton)
         if (!ResourceManager::Contains(fullName))
         {
            model = ResourceManager::Add<Model>(fullName);
+            
 
             if (!model->Load(*scene.mMeshes[i]))
             {
                 ResourceManager::Unload(model);
                 return false;
             }
+            
             models.Add(model);
 
             if (nbrOfSkeleton > 0)
@@ -188,3 +191,36 @@ bool_t Mesh::LoadMesh(const aiScene& scene,Pointer<Skeleton>* outSkeleton)
     
     return hasSkeleton;
 }
+
+void Mesh::ComputeAabb()
+{
+    Vector3 aabbMin = Vector3(std::numeric_limits<float_t>::max());
+    Vector3 aabbMax =  Vector3(std::numeric_limits<float_t>::min());
+    
+    for (size_t i = 0; i < models.GetSize(); ++i)
+    {
+        if (!models[i].IsValid())
+            continue;
+
+        const Bound& bound = models[i]->aabb;
+        const Vector3& min = bound.GetMin();
+        const Vector3& max = bound.GetMax();
+
+        if (min.x < aabbMin.x)
+            aabbMin.x = min.x;
+        if (min.y < aabbMin.y)
+            aabbMin.y = min.y;
+        if (min.z < aabbMin.z)
+            aabbMin.z = min.z;
+
+        if (max.x > aabbMax.x)
+            aabbMax.x = max.x;
+        if (max.y > aabbMax.y)
+            aabbMax.y = max.y;
+        if (max.z > aabbMax.z)
+            aabbMax.z = max.z;
+    }
+
+    aabb.SetMinMax(aabbMin, aabbMax);
+}
+

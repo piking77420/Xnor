@@ -81,6 +81,7 @@ public:
         ".xgl",
         ".zgl"
     };*/
+    Bound aabb;
     
     // Use the base class' constructors
     using Resource::Resource;
@@ -112,10 +113,6 @@ public:
     [[nodiscard]]
     XNOR_ENGINE uint32_t GetId() const;
 
-    /// @brief Gets the Aabb bounding box of the model
-    /// @return Aabb bounding box
-    XNOR_ENGINE Bound GetAabb() const;
-
 #ifndef SWIG
     /// @brief Gets the vertices of the model
     /// @return Vertices
@@ -130,7 +127,6 @@ private:
     std::vector<uint32_t> m_Indices;
     uint32_t m_ModelId = 0;
     
-    Bound m_Aabb;
 };
 
 END_XNOR_CORE
