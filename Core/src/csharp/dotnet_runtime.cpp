@@ -9,6 +9,7 @@
 #include "csharp/dotnet_constants.hpp"
 #include "reflection/dotnet_reflection.hpp"
 #include "utils/message_box.hpp"
+#include "utils/windows.hpp"
 
 using namespace XnorCore;
 
@@ -24,6 +25,8 @@ Coral::HostSettings DotnetRuntime::m_Settings =
 bool_t DotnetRuntime::Initialize()
 {
     Logger::LogInfo("Initializing .NET runtime");
+
+    SetEnvironmentVariableA("DOTNET_CLI_UI_LANGUAGE", "en");
 
     if (!CheckDotnetInstalled())
     {

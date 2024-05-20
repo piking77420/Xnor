@@ -7,14 +7,10 @@ namespace Game
         public Vector2 ViewAngle;
 
         private Entity playerEntity;
-        private Camera camera;
 
         protected override void Begin()
         {
             playerEntity = World.scene.FindEntityByName("Player");
-
-            camera = GetComponent<CameraComponent>().camera;
-
             Transform.Rotation = playerEntity.Transform.Rotation;
         }
 
@@ -31,11 +27,8 @@ namespace Game
                 ViewAngle.Y += Time.DeltaTime;
 
             Transform.RotationEulerAngle = new(ViewAngle.Y, ViewAngle.X, 0f);
-            
             Transform.Position = playerEntity.Transform.Position;
 
-            camera.position = Transform.Position;
-            //camera.LookAt(camera.position - camera.front);
         }
     }
 }

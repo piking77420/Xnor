@@ -393,8 +393,9 @@ void Editor::StopPlaying()
 	data.selectedEntity = nullptr;
 
 	DeserializeScene(data.currentScene.Get()->GetPath().generic_string());
-
 	XnorCore::World::scene->Initialize();
+
+	
 	XnorCore::World::isPlaying = false;
 	XnorCore::World::hasStarted = false;
 	
@@ -403,13 +404,20 @@ void Editor::StopPlaying()
 
 void Editor::SerializeScene(const std::string& filepath)
 {
+	std::string file = filepath;
 	XnorCore::Logger::LogInfo("Saving scene");
 
 	onSceneSerializationBegin();
+
+	if (filepath.empty())
+		file = SerializedTempScenePath.generic_string();
+	else
+		file = filepath;
+
 	
 	m_Serializing = true;
 	
-	XnorCore::Serializer::StartSerialization(filepath);
+	XnorCore::Serializer::StartSerialization(file);
 	XnorCore::Serializer::Serialize<XnorCore::Scene, true>(XnorCore::World::scene);
 	XnorCore::Serializer::EndSerialization();
 
@@ -432,22 +440,31 @@ void Editor::SerializeSceneAsync(const std::string& filepath)
 
 void Editor::DeserializeScene(const std::string& filepath)
 {
+	std::string file = filepath;
 	XnorCore::Logger::LogInfo("Loading scene");
 	
 	onSceneDeserializationBegin();
 
+	if (filepath.empty())
+		file = SerializedTempScenePath.generic_string();
+	else
+		file = filepath;
+
 
 	m_Deserializing = true;
-	
-	XnorCore::Serializer::StartDeserialization(filepath);
+
 	const XnorCore::Guid selectedEntityId = data.selectedEntity ? data.selectedEntity->GetGuid() : XnorCore::Guid::Empty();
-	
 	delete XnorCore::World::scene;
 	XnorCore::World::scene = new XnorCore::Scene;
+
 	
-	// Possible memory leak?
+	XnorCore::Serializer::StartDeserialization(file);
+		// Possible memory leak?
 	XnorCore::Serializer::Deserialize<XnorCore::Scene, true>(XnorCore::World::scene);
 	XnorCore::Serializer::EndDeserialization();
+	
+	
+
 	
 	if (selectedEntityId != XnorCore::Guid::Empty())
 		data.selectedEntity = XnorCore::World::scene->FindEntityById(selectedEntityId);
