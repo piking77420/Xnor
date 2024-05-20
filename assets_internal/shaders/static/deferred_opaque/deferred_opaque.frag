@@ -101,8 +101,6 @@ const vec2 gridSamplingDiskVec2[20] = vec2[]
     vec2(0, 1), vec2( 0, -1), vec2( 0, -1), vec2( 0, 1)
 );
 
-bool csmDebug = false;
-vec3 colorTest = vec3(0,0,0);
 
 // this is supposed to get the world position from the depth buffer
 vec4 WorldPosFromDepth(float depth) {
@@ -139,13 +137,6 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
     {
         layer = directionalData.cascadeCount;
     }
-    if (csmDebug)
-    {
-
-        if (layer == 0)
-            colorTest = vec3(1,0,0);
-
-    }
     
     vec4 fragPosLightSpace = dirLightSpaceMatrix[layer] * vec4(fragPosWorldSpace.xyz, 1.0);
     // perform perspective divide
@@ -164,7 +155,7 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
     float bias = max(0.05 * (1.0 - dot(normalize(n), normalize(l))), 0.005);
     
     // calculate bias (based on depth map resolution and slope)
-    const float biasModifier = 0.5f;
+    const float biasModifier = 0.9f;
     if (layer == directionalData.cascadeCount)
     {
         bias *= 1 / (far * biasModifier);
@@ -471,11 +462,7 @@ void main()
     
     vec3 ambient = ComputeIbl(roughness, kD, ambientOcclusion, albedo, n, r, v, f);
     vec3 color = Lo + ambient + (emissiveColor * emissive);
-    if (csmDebug)
-    {
-        FragColor = vec4(colorTest, 1);
-    }else
-    {
-        FragColor = vec4(color, 1);
-    }
+ 
+    FragColor = vec4(color, 1);
+    
 }
