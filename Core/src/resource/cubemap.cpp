@@ -58,8 +58,8 @@ m_TextureFiltering(textureCreateInfo.filtering),m_TextureWrapping(textureCreateI
 
 Cubemap::~Cubemap()
 {
-    DestroyInInterface();
-    Unload();
+    Cubemap::DestroyInInterface();
+    Cubemap::Unload();
 }
 
 void Cubemap::BindTexture(const uint32_t unit) const

@@ -160,7 +160,7 @@ bool_t DotnetRuntime::BuildGameProject(const bool_t asynchronous)
     if (!is_directory(gameProjectDirectory))
         return false;
 
-    if (!exists(gameProjectDirectory / "Game.csproj"))
+    if (!exists(gameProjectDirectory / std::format("{}.csproj", Dotnet::GameProjectName)))
         return false;
 
     Logger::LogInfo("Building Game project");

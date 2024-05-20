@@ -13,8 +13,6 @@ void DebugConsole::Display()
 {
     DisplayHeader();
     DisplayLogs();
-    
-    m_LastLogCount = m_CachedLogs.size();
 }
 
 int scroll;
@@ -24,7 +22,7 @@ void DebugConsole::DisplayHeader()
     if (ImGui::Button("Scroll up"))
         scroll = -1;
     ImGui::SameLine();
-    if (ImGui::Button("Scroll down") || XnorCore::Logger::GetLogList().size() > m_LastLogCount)
+    if (ImGui::Button("Scroll down") || XnorCore::Logger::GetLogList().size() > m_CachedLogs.size())
         scroll = 1;
     ImGui::SameLine();
     if (ImGui::Button("Clear"))
@@ -41,7 +39,7 @@ void DebugConsole::DisplayLogs()
 
     // This will only be executed the first time the control flow reaches here
     static auto _ = [this] { return scroll = 1; }();
-    
+
     auto&& logList = XnorCore::Logger::GetLogList();
     
     if (scroll == -1)
@@ -58,7 +56,7 @@ void DebugConsole::DisplayLogs()
     // Level header
     ImGui::TableSetColumnIndex(0);
     ImGui::PushID(0);
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{});
     if (ImGui::BeginCombo("##level", magic_enum::enum_name(minimumLogLevel).data()))
     {
         for (auto&& level : magic_enum::enum_values<XnorCore::Logger::LogLevel>())
@@ -73,6 +71,7 @@ void DebugConsole::DisplayLogs()
     }
     ImGui::PopStyleVar();
     ImGui::SameLine();
+    XnorCore::Logger::Synchronize();
     ImGui::Text("(%llu)", std::ranges::count_if(logList, [this] (auto&& val) -> bool_t { return val->level >= minimumLogLevel; }));
     ImGui::PopID();
 

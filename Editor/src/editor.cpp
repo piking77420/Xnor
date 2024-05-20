@@ -345,8 +345,6 @@ void Editor::StopPlaying()
 
 	XnorCore::Coroutine::StopAll();
 
-	data.selectedEntity = nullptr;
-
 	DeserializeScene();
 
 	XnorCore::World::scene->Initialize();
@@ -506,7 +504,7 @@ void Editor::Update()
 
 		UpdateWindows();
 		
-		if (!deserializingScene)
+		if (!(deserializingScene || m_ReloadingScripts))
 		{
 			WorldBehaviours();
 			OnRenderingWindow();

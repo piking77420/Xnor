@@ -16,6 +16,8 @@ BEGIN_XNOR_CORE
 /// @brief Stands for Global Unique Identifier, it represents a unique ID that's used to link pointers during serialization and deserialization
 class XNOR_ENGINE Guid final
 {
+    static constexpr size_t Data4Size = 8;
+    
 public:
     constexpr Guid() = default;
 
@@ -25,6 +27,23 @@ public:
     /// @brief Creates a new @ref Guid
     /// @return New guid
     static Guid New();
+
+    /// @brief Parses a Guid from a string
+    /// @param str String
+    /// @returns Guid
+    static Guid FromString(const char_t* str);
+    
+    [[nodiscard]]
+    uint32_t GetData1() const;
+    
+    [[nodiscard]]
+    uint16_t GetData2() const;
+    
+    [[nodiscard]]
+    uint16_t GetData3() const;
+    
+    [[nodiscard]]
+    const std::array<uint8_t, Data4Size>& GetData4() const;
 
     /// @brief Compares 2 @ref Guid
     /// @param other Other guid
@@ -38,17 +57,10 @@ public:
     [[nodiscard]]
     bool_t operator!=(const Guid& other) const;
 
-    /// @brief Parses a Guid from a string
-    /// @param str String
-    /// @returns Guid
-    static Guid FromString(const char_t* str);
-
     /// @brief Converts a @ref Guid to a string representation
     explicit operator std::string() const;
 
 private:
-    static constexpr inline size_t Data4Size = 8;
-    
     uint32_t m_Data1 = 0;
     uint16_t m_Data2 = 0;
     uint16_t m_Data3 = 0;

@@ -165,6 +165,8 @@ void Utils::CreateEmptyFile(const std::filesystem::path& path)
 
 void Utils::SetThreadName(std::thread& thread, const std::wstring& name)
 {
+#ifdef _DEBUG
     (void) SetThreadDescription(thread.native_handle(), name.c_str());
     Windows::SilenceError();
+#endif
 }

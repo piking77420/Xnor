@@ -15,7 +15,17 @@ namespace Xnor.Core
         public static readonly Color Yellow = new(1f, 1f, 0);
         public static readonly Color LightBlue = new(0, 1f, 1f);
         public static readonly Color Magenta = new(1f, 0, 1f);
-        
+
+        public static Color Lerp(Color a, Color b, float t)
+        {
+            return new(
+                CoreNative.Lerp(a.R, b.R, t),
+                CoreNative.Lerp(a.G, b.G, t),
+                CoreNative.Lerp(a.B, b.B, t),
+                CoreNative.Lerp(a.A, b.A, t)
+            );
+        }
+
         public static Color operator +(Color a, Color b) => new(MathF.Min(a.R + b.R, 1f), MathF.Min(a.G + b.G, 1f), MathF.Min(a.B + b.B, 1f), MathF.Min(a.A + b.A, 1f));
 
         public static Color operator *(Color a, Color b) => new(MathF.Min(a.R * b.R, 1f), MathF.Min(a.G * b.G, 1f), MathF.Min(a.B * b.B, 1f), MathF.Min(a.A * b.A, 1f));
@@ -61,6 +71,10 @@ namespace Xnor.Core
         public static explicit operator Vector3(Color color) => new(color.R, color.G, color.B);
 
         public static explicit operator Vector4(Color color) => new(color.R, color.G, color.B, color.A);
+
+        public static bool operator ==(Color left, Color right) => left.Equals(right);
+
+        public static bool operator !=(Color left, Color right) => !left.Equals(right);
         
         public float R;
         public float G;
@@ -84,9 +98,5 @@ namespace Xnor.Core
         public override bool Equals(object obj) => obj is Color other && Equals(other);
 
         public override int GetHashCode() => HashCode.Combine(R, G, B, A);
-
-        public static bool operator ==(Color left, Color right) => left.Equals(right);
-
-        public static bool operator !=(Color left, Color right) => !left.Equals(right);
     }
 }

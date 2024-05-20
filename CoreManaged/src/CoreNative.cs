@@ -20,5 +20,7 @@ namespace Xnor.Core
             return (Component) managedType.Assembly.CreateInstance(managedTypeName, false, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance, null,
                 new object[] { item, false }, null, null);
         }
+
+        public static float Lerp(float a, float b, float t) => a + (b - a) * t;
     }
 }

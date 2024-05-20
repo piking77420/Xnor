@@ -18,7 +18,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MathTests", "MathTests\Math
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoreTests", "CoreTests\CoreTests.vcxproj", "{58F5F225-2FFD-4A38-AF6E-91E70710A1EB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game", "Game\Game.csproj", "{65031099-7331-4AEF-9DA1-D07EFC4C99EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleGame", "ExampleGame\ExampleGame.csproj", "{65031099-7331-4AEF-9DA1-D07EFC4C99EC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreManaged", "CoreManaged\CoreManaged.csproj", "{84E7B6CB-C782-42E1-A9EA-7DC3D0445BEA}"
 	ProjectSection(ProjectDependencies) = postProject

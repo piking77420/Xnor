@@ -66,8 +66,8 @@
 			<name>Sphere</name>
 			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
 			<transform>
-				<m_Position>4.4999866 ; 0.058403905 ; -3.2958086</m_Position>
-				<m_EulerRotation>2.752485 ; 0 ; 0</m_EulerRotation>
+				<m_Position>15.499987 ; 0.058403905 ; -13.295809</m_Position>
+				<m_EulerRotation>2.752485 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1.0000015 ; 1.0000015</m_Scale>
 			</transform>
 			<m_Components>
@@ -143,7 +143,7 @@
 			<name>Player</name>
 			<m_EntityId>873D1C72-ACA1-47D6-AC-9C-8F-E1-81-B6-B6-B4</m_EntityId>
 			<transform>
-				<m_Position>-4 ; 1 ; 0</m_Position>
+				<m_Position>0 ; 1 ; -4</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
@@ -225,7 +225,7 @@
 					<enabled>true</enabled>
 				</1>
 				<2 typeName="ScriptComponent" managedType="Game.Lantern">
-					<MaxRotationAngle>0.7853982</MaxRotationAngle>
+					<Speed>0.05</Speed>
 				</2>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -237,7 +237,7 @@
 			<name>Rammus</name>
 			<m_EntityId>AA4C0C09-AB9-4A1E-90-DA-D3-CC-FA-5F-BA-1</m_EntityId>
 			<transform>
-				<m_Position>0 ; -1 ; 5</m_Position>
+				<m_Position>-20 ; -1 ; -15.5</m_Position>
 				<m_EulerRotation>3.1415925 ; 0.92511785 ; 3.1415925</m_EulerRotation>
 				<m_Scale>0.050001148 ; 0.05000079 ; 0.050001416</m_Scale>
 			</transform>
@@ -262,7 +262,7 @@
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
 						<m_Animation>D40974A1-F0EF-4613-A7-6F-97-D3-57-87-60-87</m_Animation>
-						<m_CurrentFrame>2354</m_CurrentFrame>
+						<m_CurrentFrame>700</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>

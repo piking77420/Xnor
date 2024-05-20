@@ -65,7 +65,7 @@ void Hierarchy::Display()
 
 void Hierarchy::DisplayEntity(XnorCore::Scene& scene, XnorCore::Entity* const entity)
 {
-    ImGui::PushID(entity);
+    ImGui::PushID(static_cast<int32_t>(entity->GetGuid().GetData1()));
     
     const char_t* name = entity->name.c_str();
     const bool_t isRenaming = IsRenamingEntity(entity);

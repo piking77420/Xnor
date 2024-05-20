@@ -75,40 +75,64 @@ void FooterWindow::Display()
     ImGui::Text("XNOR > %s", XnorCore::Dotnet::GameProjectName);
 
     const bool_t reloadingScripts = m_Editor->IsReloadingScripts();
+    const bool_t serializingScene = m_Editor->IsSerializing();
+    const bool_t deserializingScene = m_Editor->IsDeserializing();
 
-    static std::chrono::time_point<std::chrono::system_clock> lastReloadingScriptsTrue;
+    const bool_t showingText = reloadingScripts || serializingScene || deserializingScene;
+
+    static std::chrono::time_point<std::chrono::system_clock> lastShowingTextTrue;
     const std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
 
-    if (reloadingScripts)
-        lastReloadingScriptsTrue = now;
+    if (showingText)
+        lastShowingTextTrue = now;
 
-    const std::chrono::duration<float_t> diff = now - lastReloadingScriptsTrue;
+    const std::chrono::duration<float_t> diff = now - lastShowingTextTrue;
 
-    if (reloadingScripts || diff < FadeOutDuration)
+    if (showingText || diff < FadeOutDuration)
     {
-        if (!reloadingScripts)
+        if (!showingText)
             ImGui::PushStyleVar(ImGuiStyleVar_Alpha, 1.f - diff / FadeOutDuration);
         
-        constexpr const char_t* const reloadingProjectText = "Reloading .NET project";
-        ImGui::SameLine();
-        ImGui::Dummy({ ImGui::GetContentRegionAvail().x - (ImGui::CalcTextSize(reloadingProjectText).x + 200.f + 60.f), 1.f });
-        ImGui::SameLine();
-        ImGui::Text(reloadingProjectText);
-        ImGui::SameLine();
+        constexpr const char_t* const reloadingProjectText = "Reloading .NET project...";
+        constexpr const char_t* const serializingSceneText = "Saving scene...";
+        constexpr const char_t* const deserializingSceneText = "Loading scene...";
+
+        static const char_t* text = nullptr; // This needs to be static so that we keep its value even when the action is over
+
+        if (reloadingScripts)
+            text = reloadingProjectText;
+        else if (serializingScene)
+            text = serializingSceneText;
+        else if (deserializingScene)
+            text = deserializingSceneText;
         
-        float_t progress = 0.f;
-        if (!m_Editor->IsSerializing())
+        ImGui::SameLine();
+        float dummyWidth = ImGui::GetContentRegionAvail().x - ImGui::CalcTextSize(text).x;
+        if (reloadingScripts)
+            dummyWidth -= 200.f; // Take the build progress bar width into account
+        dummyWidth -= 60.f; // Take the build button width into account
+        ImGui::Dummy({ dummyWidth, 1.f });
+        ImGui::SameLine();
+        ImGui::Text("%s", text);
+
+        if (reloadingScripts)
         {
-            const float_t reloadingProgress = XnorCore::DotnetRuntime::GetProjectReloadingProgress();
-            progress = 0.1f + reloadingProgress * 0.8f;
+            ImGui::SameLine();
             
-            if (reloadingProgress >= 1.f && !m_Editor->IsDeserializing())
-                progress = 1.f;
+            float_t progress = 0.f;
+            if (!serializingScene)
+            {
+                const float_t reloadingProgress = XnorCore::DotnetRuntime::GetProjectReloadingProgress();
+                progress = 0.1f + reloadingProgress * 0.8f;
+                
+                if (reloadingProgress >= 1.f && !deserializingScene)
+                    progress = 1.f;
+            }
+            
+            ImGui::ProgressBar(progress, { 200.f, 0.f });
         }
         
-        ImGui::ProgressBar(progress, { 200.f, 0.f });
-        
-        if (!reloadingScripts)
+        if (!showingText)
             ImGui::PopStyleVar();
     }
     else if (!scriptsUpToDate)
@@ -131,9 +155,9 @@ void FooterWindow::Display()
 
     const bool_t buildButton = ImGui::ImageButton(
             XnorCore::Utils::IntToPointer<ImTextureID>(m_BuildTexture->GetId()),
-            {25.f, 25.f},
+            { 25.f, 25.f },
             {},
-            {1.f, 1.f},
+            { 1.f, 1.f },
             -1,
             static_cast<Vector4>(XnorCore::Color::Black()),
             scriptsUpToDate ? static_cast<Vector4>(XnorCore::Color::White()) : static_cast<Vector4>(XnorCore::Color::OrangeRed())

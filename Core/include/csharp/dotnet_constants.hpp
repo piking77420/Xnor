@@ -6,7 +6,7 @@ BEGIN_XNOR_CORE
 
 namespace Dotnet
 {
-    constexpr const char_t* const GameProjectName = "Game";
+    constexpr const char_t* const GameProjectName = "ExampleGame";
     
     constexpr const char_t* const AssembliesDirectory = "DotnetAssemblies";
     

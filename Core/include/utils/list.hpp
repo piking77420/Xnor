@@ -21,7 +21,7 @@ BEGIN_XNOR_CORE
 /// @see <a href="https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1?view=net-8.0">C# List</a>
 template <typename T>
 class List
-{    
+{
 public:
     using Iterator = typename std::vector<T>::iterator;
     using ConstIterator = typename std::vector<T>::const_iterator;

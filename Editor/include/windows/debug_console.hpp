@@ -29,8 +29,6 @@ private:
         uint64_t sameLastLogs;
     };
     
-    size_t m_LastLogCount = 0;
-
     std::vector<LogData> m_CachedLogs;
     
     void DisplayHeader();
