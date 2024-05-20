@@ -26,6 +26,7 @@ bool_t DotnetRuntime::Initialize()
 {
     Logger::LogInfo("Initializing .NET runtime");
 
+    // Set .NET commands result language to English
     SetEnvironmentVariableA("DOTNET_CLI_UI_LANGUAGE", "en");
 
     if (!CheckDotnetInstalled())

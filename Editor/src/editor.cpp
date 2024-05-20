@@ -280,9 +280,7 @@ void Editor::SceneMenueBar(XnorCore::Scene* scene)
 	}
 
 	if (scene->renderOctree.draw)
-	{
 		scene->renderOctree.Draw();
-	}
 }
 
 void Editor::SerializeSceneMenu()
@@ -318,18 +316,14 @@ void Editor::SerializeSceneMenu()
 		ImGui::MenuItem("Reload scripts on file save", nullptr, &m_ReloadScriptsOnSave);
 		ImGui::EndMenu();
 	}
-	
 }
-
 
 void Editor::LoadOtherScene()
 {
 	XnorCore::Pointer<XnorCore::File> fileScene;
 	
 	if (ImGui::Button("Open"))
-	{
 		XnorCore::Filters::BeginFilter("File");
-	}
 	XnorCore::Filters::FilterFile(&fileScene);
 
 	if (!fileScene)
@@ -449,21 +443,16 @@ void Editor::DeserializeScene(const std::string& filepath)
 	else
 		file = filepath;
 
-
 	m_Deserializing = true;
 
 	const XnorCore::Guid selectedEntityId = data.selectedEntity ? data.selectedEntity->GetGuid() : XnorCore::Guid::Empty();
 	delete XnorCore::World::scene;
 	XnorCore::World::scene = new XnorCore::Scene;
-
 	
 	XnorCore::Serializer::StartDeserialization(file);
 		// Possible memory leak?
 	XnorCore::Serializer::Deserialize<XnorCore::Scene, true>(XnorCore::World::scene);
 	XnorCore::Serializer::EndDeserialization();
-	
-	
-
 	
 	if (selectedEntityId != XnorCore::Guid::Empty())
 		data.selectedEntity = XnorCore::World::scene->FindEntityById(selectedEntityId);

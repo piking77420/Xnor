@@ -87,16 +87,22 @@ void Skybox::LoadFromHdrTexture(const Pointer<Texture>& hdrFile)
 
 void Skybox::BindDesriptorSet() const 
 {
-    m_IrradianceMap->BindTexture(DefferedDescriptor::SkyboxIrradiance);
-    m_PrefilterMap->BindTexture(DefferedDescriptor::SkyboxPrefilterMap);
-    m_PrecomputeBrdfTexture->BindTexture(DefferedDescriptor::SkyboxPrecomputeBrdf);
+    if (m_IrradianceMap)
+        m_IrradianceMap->BindTexture(DefferedDescriptor::SkyboxIrradiance);
+    if (m_PrefilterMap)
+        m_PrefilterMap->BindTexture(DefferedDescriptor::SkyboxPrefilterMap);
+    if (m_PrecomputeBrdfTexture)
+        m_PrecomputeBrdfTexture->BindTexture(DefferedDescriptor::SkyboxPrecomputeBrdf);
 }
 
 void Skybox::UnbindDesriptorSet() const
 {
-    m_IrradianceMap->UnbindTexture(DefferedDescriptor::SkyboxIrradiance);
-    m_PrefilterMap->UnbindTexture(DefferedDescriptor::SkyboxPrefilterMap);
-    m_PrecomputeBrdfTexture->UnbindTexture(DefferedDescriptor::SkyboxPrecomputeBrdf);
+    if (m_IrradianceMap)
+        m_IrradianceMap->UnbindTexture(DefferedDescriptor::SkyboxIrradiance);
+    if (m_PrefilterMap)
+        m_PrefilterMap->UnbindTexture(DefferedDescriptor::SkyboxPrefilterMap);
+    if (m_PrecomputeBrdfTexture)
+        m_PrecomputeBrdfTexture->UnbindTexture(DefferedDescriptor::SkyboxPrecomputeBrdf);
 }
 
 const Texture* Skybox::GetSkyboxAlbedoColor() const
