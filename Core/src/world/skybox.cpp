@@ -61,7 +61,7 @@ void Skybox::Initialize()
     LoadFromHdrTexture(m_SkyboxTextureResource);
 }
 
-void Skybox::LoadCubeMap(const std::array<std::string, 6>& cubeMapFiles)
+void Skybox::LoadCubeMap(const std::array<std::string, 6>&)
 {
     /*
     if (m_CubeMapAlbedo != nullptr)

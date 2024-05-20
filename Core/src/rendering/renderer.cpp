@@ -284,6 +284,25 @@ void Renderer::BindCamera(const Camera& camera, const Vector2i screenSize) const
     CameraUniformData cam;
     camera.GetView(&cam.view);
     camera.GetProjection(screenSize, &cam.projection);
+    cam.invProjection = cam.projection.Inverted();
+
+    try
+    {
+        cam.invView = cam.view.Inverted();
+    }
+    catch (const std::invalid_argument&)
+    {
+        cam.invView = Matrix::Identity();
+    }
+
+    try
+    {
+        cam.invProjection = cam.projection.Inverted();
+    }
+    catch (const std::invalid_argument&)
+    {
+        cam.invProjection = Matrix::Identity();
+    }
 
     cam.cameraPos = camera.position;
     cam.near = camera.near;
@@ -300,12 +319,12 @@ void Renderer::InitResources()
     m_GBufferShaderLit->CreateInInterface();
     m_GBufferShaderLit->Use();
 
-    m_GBufferShaderLit->SetInt("gPosition", DefferedDescriptor::Position);
     m_GBufferShaderLit->SetInt("gNormal", DefferedDescriptor::Normal);
     m_GBufferShaderLit->SetInt("gAlbedoSpec", DefferedDescriptor::Albedo);
     m_GBufferShaderLit->SetInt("gMetallicRoughessReflectance", DefferedDescriptor::MetallicRoughessReflectance);
     m_GBufferShaderLit->SetInt("gAmbiantOcclusion", DefferedDescriptor::AmbiantOcclusion);
     m_GBufferShaderLit->SetInt("gEmissive", DefferedDescriptor::Emissivive);
+    m_GBufferShaderLit->SetInt("gDepth", DefferedDescriptor::Depth);
 
     m_GBufferShaderLit->SetInt("irradianceMap", DefferedDescriptor::SkyboxIrradiance);
     m_GBufferShaderLit->SetInt("prefilterMap", DefferedDescriptor::SkyboxPrefilterMap);
@@ -337,6 +356,7 @@ void Renderer::InitResources()
     m_GBufferShader->SetInt("material.roughnessMap", MaterialTextureEnum::Roughness);
     m_GBufferShader->SetInt("material.normalMap", MaterialTextureEnum::Normal);
     m_GBufferShader->SetInt("material.ambiantOcclusionMap", MaterialTextureEnum::AmbiantOcclusion);
+    m_GBufferShader->SetInt("material.emissiveMap", MaterialTextureEnum::EmissiveMap);
     m_GBufferShader->Unuse();
     // End deferred
 

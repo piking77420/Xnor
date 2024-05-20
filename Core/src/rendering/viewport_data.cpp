@@ -15,7 +15,6 @@ void ViewportData::Destroy()
     delete gFramebuffer;
     delete renderBuffer;
     
-    delete positionAttachment;
     delete normalAttachement;
     delete albedoAttachment;
     delete metallicRoughnessReflectance;
@@ -30,22 +29,22 @@ void ViewportData::Destroy()
 
 void ViewportData::BindDescriptor() const
 {
-    positionAttachment->BindTexture(DefferedDescriptor::Position);
     normalAttachement->BindTexture(DefferedDescriptor::Normal);
     albedoAttachment->BindTexture(DefferedDescriptor::Albedo);
     metallicRoughnessReflectance->BindTexture(DefferedDescriptor::MetallicRoughessReflectance);
     ambiantOcclusion->BindTexture(DefferedDescriptor::AmbiantOcclusion);
     emissive->BindTexture(DefferedDescriptor::Emissivive);
+    depthAtttachment->BindTexture(DefferedDescriptor::Depth);
 }
 
 void ViewportData::UnbindDescriptor() const
 {
-    positionAttachment->UnbindTexture(DefferedDescriptor::Position);
     normalAttachement->UnbindTexture(DefferedDescriptor::Normal);
     albedoAttachment->UnbindTexture(DefferedDescriptor::Albedo);
     metallicRoughnessReflectance->UnbindTexture(DefferedDescriptor::MetallicRoughessReflectance);
     ambiantOcclusion->UnbindTexture(DefferedDescriptor::AmbiantOcclusion);
     emissive->UnbindTexture(DefferedDescriptor::Emissivive);
+    depthAtttachment->UnbindTexture(DefferedDescriptor::Depth);
 }
 
 void ViewportData::InitForward(const Vector2i size)
@@ -73,7 +72,6 @@ void ViewportData::InitForward(const Vector2i size)
 void ViewportData::InitDeffered(const Vector2i size)
 {
     gFramebuffer = new Framebuffer();
-    positionAttachment = new Texture(TextureInternalFormat::Rgba16F, size);
     normalAttachement = new Texture(TextureInternalFormat::Rgb16F, size);
     albedoAttachment = new Texture(TextureInternalFormat::Rgb16F, size);
     metallicRoughnessReflectance = new Texture(TextureInternalFormat::Rgb16F, size);
@@ -101,9 +99,6 @@ void ViewportData::InitDeffered(const Vector2i size)
             .attachment = Attachment::Color04
         },
         {
-            .attachment = Attachment::Color05
-        },
-        {
             .attachment = Attachment::Depth
         },
     };
@@ -111,7 +106,7 @@ void ViewportData::InitDeffered(const Vector2i size)
     // Set Up renderPass
     gBufferPass = RenderPass(attachementsType);
 
-    const std::vector<const Texture*> targets = { positionAttachment, normalAttachement,
+    const std::vector<const Texture*> targets = {normalAttachement,
         albedoAttachment, metallicRoughnessReflectance, ambiantOcclusion, emissive, depthAtttachment};
     gFramebuffer->AttachTextures(gBufferPass, targets);
 }

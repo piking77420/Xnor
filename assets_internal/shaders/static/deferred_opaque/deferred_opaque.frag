@@ -57,19 +57,20 @@ layout (std140, binding = 0) uniform CameraUniform
 {
     mat4 view;
     mat4 projection;
+    mat4 inView;
+    mat4 inProjection;
     vec3 cameraPos;
     float near;
     float far;
 };
 
 
-uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gAlbedoSpec;
 uniform sampler2D gMetallicRoughessReflectance;
 uniform sampler2D gAmbiantOcclusion;
 uniform sampler2D gEmissive;
-
+uniform sampler2D gDepth;
 
 uniform samplerCube irradianceMap;
 uniform samplerCube prefilterMap;
@@ -102,6 +103,21 @@ const vec2 gridSamplingDiskVec2[20] = vec2[]
 
 bool csmDebug = false;
 vec3 colorTest = vec3(0,0,0);
+
+// this is supposed to get the world position from the depth buffer
+vec4 WorldPosFromDepth(float depth) {
+    float z = depth * 2.0 - 1.0;
+
+    vec4 clipSpacePosition = vec4(texCoords * 2.0 - 1.0, z, 1.0);
+    vec4 viewSpacePosition = inverse(projection) * clipSpacePosition;
+
+    // Perspective division
+    viewSpacePosition /= viewSpacePosition.w;
+
+    vec4 worldSpacePosition = inverse(view) * viewSpacePosition;
+
+    return worldSpacePosition;
+}
 
 float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
 {
@@ -386,7 +402,7 @@ vec3 ComputePointLight(vec3 baseColor,vec3 fragPos,vec3 v, vec3 n, float roughne
 
 void main()
 {
-    vec4 fragPosVec4 = texture(gPosition, texCoords);
+    vec4 fragPosVec4 = WorldPosFromDepth(texture(gDepth,texCoords).r);
     vec3 fragPos = fragPosVec4.xyz;
 
     vec3 normal = texture(gNormal, texCoords).rgb;

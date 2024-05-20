@@ -344,6 +344,11 @@ struct CameraUniformData
 	Matrix view = Matrix::Identity();
 	/// @brief Projection matrix
 	Matrix projection = Matrix::Identity();
+	/// @brief View matrix
+	Matrix invView = Matrix::Identity();
+	/// @brief Projection matrix
+	Matrix invProjection = Matrix::Identity();
+	
 	/// @brief Camera position
 	Vector3 cameraPos;
 
@@ -605,6 +610,8 @@ struct MaterialData
 	Vector3 emissiveColor;
 	/// @brief Emissive parameter
 	float_t emissive = 0.f;
+
+	int32_t hasEmissive;
 	
 	/// @brief Whether it has a metallic map
 	int32_t hasMetallicMap;
@@ -630,12 +637,12 @@ struct MaterialData
 /// @brief The type of DefferedDescriptor.
 BEGIN_ENUM(DefferedDescriptor)
 {
-	Position = 4,
-	Normal,
+	Normal = 5,
 	Albedo,
 	MetallicRoughessReflectance,
 	AmbiantOcclusion,
 	Emissivive,
+	Depth,
 	
 	SkyboxIrradiance = 12,
 	SkyboxPrefilterMap = 13,
@@ -660,6 +667,7 @@ BEGIN_ENUM(MaterialTextureEnum) : int32_t
 	Roughness,
 	Normal,
 	AmbiantOcclusion,
+	EmissiveMap,
 };
 END_ENUM
 

@@ -1672,18 +1672,19 @@ void Rhi::BindMaterial(const Material& material)
 	materialData.hasRoughnessMap =  static_cast<int32_t>(material.roughnessTexture.IsValid());
 	materialData.hasNormalMap =  static_cast<int32_t>(material.normalTexture.IsValid());
 	materialData.hasAmbientOcclusionMap =  static_cast<int32_t>(material.ambientOcclusionTexture.IsValid());
-	
+	materialData.hasEmissive =  static_cast<int32_t>(material.emissiveTexture.IsValid());
+
 	materialData.albedoColor = static_cast<Vector3>(material.albedoColor);
 	materialData.emissiveColor = static_cast<Vector3>(material.emissiveColor);
-	
+
+	// Set Scalar value
 	materialData.metallic = material.metallic;
 	materialData.roughness = material.roughness;
 	materialData.reflectance = material.reflectance;
 	materialData.emissive = material.emissive;
 	materialData.ambientOcclusion = material.ambientOcclusion;
-	
-	constexpr size_t size = sizeof(MaterialData);
-	m_MaterialUniform->Update(size, 0, &materialData);
+
+	m_MaterialUniform->Update(sizeof(MaterialData), 0, &materialData);
 }
 
 TextureFormat::TextureFormat Rhi::GetTextureFormatFromChannels(const uint32_t channels)

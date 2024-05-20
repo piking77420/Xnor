@@ -98,8 +98,8 @@ void Editor::CreateDefaultWindows()
 	data.editorViewPort.isEditor = true;
 	data.editorViewPort.camera = &data.editorCam;
 	
-	OpenWindow<EditorWindow>(data.editorViewPort);
 	OpenWindow<RenderWindow>(*gameViewPort);
+	OpenWindow<EditorWindow>(data.editorViewPort);
 	OpenWindow<Performance>(50);
 	OpenWindow<Inspector>();
 	OpenWindow<HeaderWindow>();
