@@ -131,6 +131,8 @@ void Logger::Stop()
 
 const decltype(Logger::m_Logs)& Logger::GetLogList() { return m_Logs; }
 
+void Logger::Clear() { m_Logs.clear(); }
+
 Logger::LogEntry::LogEntry()
     : level(LogLevel::Info)
     , printToConsole(false)

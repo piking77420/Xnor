@@ -226,6 +226,8 @@ public:
 
     XNOR_ENGINE static const decltype(m_Logs)& GetLogList();
 
+    XNOR_ENGINE static void Clear();
+
 private:
     XNOR_ENGINE static inline TsQueue<std::shared_ptr<LogEntry>> m_NewLogs;
 

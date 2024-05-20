@@ -18,7 +18,7 @@ void DebugConsole::Display()
 }
 
 int scroll;
-void DebugConsole::DisplayHeader() const
+void DebugConsole::DisplayHeader()
 {
     scroll = 0;
     if (ImGui::Button("Scroll up"))
@@ -26,6 +26,12 @@ void DebugConsole::DisplayHeader() const
     ImGui::SameLine();
     if (ImGui::Button("Scroll down") || XnorCore::Logger::GetLogList().size() > m_LastLogCount)
         scroll = 1;
+    ImGui::SameLine();
+    if (ImGui::Button("Clear"))
+    {
+        XnorCore::Logger::Clear();
+        m_CachedLogs.clear();
+    }
 }
 
 void DebugConsole::DisplayLogs()

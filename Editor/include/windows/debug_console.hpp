@@ -33,7 +33,7 @@ private:
 
     std::vector<LogData> m_CachedLogs;
     
-    void DisplayHeader() const;
+    void DisplayHeader();
 
     void DisplayLogs();
 
