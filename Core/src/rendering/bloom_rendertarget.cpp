@@ -45,6 +45,9 @@ Texture* BloomRenderTarget::GetBloomedTexture() const
 
 void BloomRenderTarget::CreateBloomMip(const Vector2i viewportSize)
 {
+    for (const BloomMip& mip : mipChain)
+        delete mip.texture;
+    
     mipChain.resize(BloomMipNumber);
     
     Vector2 mimSizeF = { static_cast<float_t>(viewportSize.x), static_cast<float_t>(viewportSize.y) };

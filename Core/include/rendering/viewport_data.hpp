@@ -20,8 +20,6 @@ public:
     RenderPass gBufferPass{};
     /// @brief Framebuffer for the G-buffer
     Framebuffer* gFramebuffer = nullptr;
-    /// @brief Position attachment for the G-buffer
-    Texture* positionAttachment = nullptr;
     /// @brief Normal vectors attachment for the G-buffer
     Texture* normalAttachement = nullptr;
     /// @brief Albedo attachment for the G-buffer

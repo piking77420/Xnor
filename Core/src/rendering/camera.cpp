@@ -13,7 +13,15 @@ void Camera::GetProjection(const Vector2i screenSize, Matrix* const matrix) cons
 		*matrix = Perspective(fov * Calc::Deg2Rad , ratio , near, far);
 		return;
 	}
-	Matrix::Orthographic(leftRight.x, leftRight.y, bottomtop.x, bottomtop.y, near ,far, matrix);
+
+	try
+	{
+		Matrix::Orthographic(leftRight.x, leftRight.y, bottomtop.x, bottomtop.y, near ,far, matrix);
+	}
+	catch (const std::invalid_argument&)
+	{
+		*matrix = Matrix::Identity();
+	}
 }
 
 void Camera::GetView(Matrix* const matrix) const

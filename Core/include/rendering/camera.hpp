@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core.hpp"
+#include "rhi_typedef.hpp"
 
 #include "Maths/vector2i.hpp"
 #include "Maths/vector3.hpp"
@@ -80,7 +81,7 @@ public:
 	static Matrix Perspective(float_t fovy, float_t aspect, float_t zNear, float_t zFar);
 	
 	static Matrix LookAtRH(Vector3 const& eye, Vector3 const& center, Vector3 const& up);
-
+	
 };
 
 END_XNOR_CORE

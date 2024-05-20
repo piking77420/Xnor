@@ -1,11 +1,10 @@
 #version 460 core
 
-layout (location = 0) out vec4 gPosition;
-layout (location = 1) out vec3 gNormal;
-layout (location = 2) out vec4 gAlbedoSpec;
-layout (location = 3) out vec3 gMetallicRoughessReflectance;
-layout (location = 4) out vec2 gAmbiantOcclusion;
-layout (location = 5) out vec4 gEmissive;
+layout (location = 0) out vec3 gNormal;
+layout (location = 1) out vec4 gAlbedoSpec;
+layout (location = 2) out vec3 gMetallicRoughessReflectance;
+layout (location = 3) out vec2 gAmbiantOcclusion;
+layout (location = 4) out vec4 gEmissive;
 
 struct Material
 {
@@ -14,6 +13,7 @@ struct Material
     sampler2D roughnessMap;
     sampler2D normalMap;
     sampler2D ambiantOcclusionMap;
+    sampler2D emissiveMap;
 };
 
 layout (std140, binding = 4) uniform MaterialDataUniform
@@ -23,6 +23,7 @@ layout (std140, binding = 4) uniform MaterialDataUniform
 
     vec3 emissiveColor;
     float emissive;
+    bool hasEmisive;
 
     bool hasMetallicMap;
     float metallic;
@@ -55,8 +56,6 @@ uniform Material material;
 
 void main()
 {
-    gPosition = fs_in.fragPos;
-
     if (hasAlbedoMap == false)
     {
         gAlbedoSpec.rgb = albedoColor;
@@ -110,5 +109,13 @@ void main()
 
     gMetallicRoughessReflectance = vec3(gMetallicRoughessReflectance.r, gMetallicRoughessReflectance.g, reflectance);
     gAmbiantOcclusion = vec2(currentOcclusion,0);
-    gEmissive = vec4(emissiveColor,emissive);
+
+    if (hasEmisive)
+    {
+        gEmissive = vec4(texture(material.emissiveMap,fs_in.texCoords).xyz,emissive);
+    }
+    else
+    {
+        gEmissive = vec4(emissiveColor,emissive);
+    }
 }

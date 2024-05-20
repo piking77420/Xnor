@@ -12,6 +12,7 @@ BEGIN_XNOR_CORE
 /// @brief Component that encapsulates a @ref Camera
 class XNOR_ENGINE CameraComponent : public Component
 {
+private:
 	REFLECTABLE_IMPL(CameraComponent)
 
 public:
@@ -25,6 +26,11 @@ public:
 	void Update() override;
 
 	void Begin() override;
+	
+	void OnRendering() override;
+private:
+	void FollowEntityRotation();
+
 };
 
 END_XNOR_CORE

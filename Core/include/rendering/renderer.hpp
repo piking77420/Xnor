@@ -40,6 +40,8 @@ public:
     MeshesDrawer meshesDrawer;
     
     GuiPass guiPass;
+
+    XNOR_ENGINE static inline bool_t IsCsm = false;
     
     XNOR_ENGINE Renderer() = default;
     XNOR_ENGINE ~Renderer() = default;
@@ -65,20 +67,31 @@ public:
                            const Pointer<Shader>& shaderToUseStatic, const Pointer<Shader> shaderToUseSkinned, bool_t drawEditorUi);
 
     /// @brief Renders a scene without shading
-    /// @param camera Camera
+    /// @param cameraData Camera
     /// @param renderPassBeginInfo Render pass begin info
     /// @param renderPass Render pass
     /// @param shaderToUseStatic Shader to use
     /// @param scene Scene to render
     /// @param drawEditorUi Whether to draw the editor only UI
-    XNOR_ENGINE void RenderNonShadedPass(const Scene& scene, const Camera& camera, const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass,
+    XNOR_ENGINE void RenderNonShadedPass(const Scene& scene, const Camera& cameraData, const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass,
                                          const Pointer<Shader>& shaderToUseStatic, const Pointer<Shader>& shaderToUseSkinned, bool_t drawEditorUi);
+
+    /// @brief Renders a scene without shading
+    /// @param cameraData Camera
+    /// @param renderPassBeginInfo Render pass begin info
+    /// @param renderPass Render pass
+    /// @param shaderToUseStatic Shader to use
+    /// @param scene Scene to render
+    /// @param drawEditorUi Whether to draw the editor only UI
+    XNOR_ENGINE void RenderNonShadedPass(const Scene& scene, const CameraUniformData& cameraData, const RenderPassBeginInfo& renderPassBeginInfo, const RenderPass& renderPass,
+                                         const Pointer<Shader>& shaderToUseStatic, const Pointer<Shader>& shaderToUseSkinned, bool_t drawEditorUi);
+
 
     /// @brief Swaps the front and back buffer.
     XNOR_ENGINE void SwapBuffers() const;
-
-    XNOR_ENGINE void RenderMenu(const Scene& scene);
     
+    XNOR_ENGINE static inline bool_t isCsm = false;
+
 private:
      mutable Frustum m_Frustum;
     
@@ -91,7 +104,7 @@ private:
     
      Pointer<Mesh> m_Quad;
      Pointer<Mesh> m_Cube;
-
+    
     /// @brief Update All the infos of the current frame lights, animation, etc...
     /// @param scene The scene
     XNOR_ENGINE void BeginFrame(const Scene& scene, const Viewport& viewport);
@@ -101,7 +114,7 @@ private:
     XNOR_ENGINE void EndFrame(const Scene& scene);
     
     
-    XNOR_ENGINE void BindCamera(const Camera& camera, Vector2i screenSize) const;
+    XNOR_ENGINE void BindCamera(const Camera& camera, const Vector2i screenSize) const;
     
     XNOR_ENGINE void InitResources();
     

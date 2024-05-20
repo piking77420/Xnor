@@ -11,6 +11,15 @@
 
 using namespace XnorCore;
 
+Font::~Font()
+{
+    if (m_LoadedInInterface)
+        Font::DestroyInInterface();
+    
+    if (m_Loaded)
+        Font::Unload();
+}
+
 void Font::CreateInInterface()
 {
     
@@ -45,7 +54,7 @@ void Font::CreateInInterface()
         
         if (glyphSize == Vector2i::Zero())
         {
-            Logger::LogWarning("Character {} of the font {} has a size of {}",c ,m_File->GetPath().generic_string(),glyphSize);
+            Logger::LogWarning("Character {} off the font {} has a size of {}",c ,m_File->GetPath().generic_string(),glyphSize);
             continue;
         }
 

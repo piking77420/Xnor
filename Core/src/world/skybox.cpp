@@ -6,8 +6,8 @@ using namespace XnorCore;
 
 Skybox::~Skybox()
 {
-    delete m_CubeMap;
-    m_CubeMap = nullptr;
+    delete m_CubeMapAlbedo;
+    m_CubeMapAlbedo = nullptr;
     delete m_IrradianceMap;
     m_IrradianceMap = nullptr;
     delete m_PrefilterMap;
@@ -18,7 +18,7 @@ Skybox::~Skybox()
 
 void Skybox::Initialize()
 {
-    delete m_CubeMap;
+    delete m_CubeMapAlbedo;
     delete m_IrradianceMap;
     delete m_PrefilterMap;
     delete m_PrecomputeBrdfTexture;
@@ -34,14 +34,14 @@ void Skybox::Initialize()
         .internalFormat = TextureInternalFormat::Rgb16F,
         .dataType = DataType::Float
     };
-    m_CubeMap = new Cubemap(createCubeMapInfo);
+    m_CubeMapAlbedo = new Texture(createCubeMapInfo);
     
     createCubeMapInfo.size = IradianceCubeSize;
-    m_IrradianceMap = new Cubemap(createCubeMapInfo);
+    m_IrradianceMap = new Texture(createCubeMapInfo);
     
     createCubeMapInfo.size = PrefilterMapSize;
     createCubeMapInfo.filtering = TextureFiltering::LinearMimMapLinear;
-    m_PrefilterMap = new Cubemap(createCubeMapInfo);
+    m_PrefilterMap = new Texture(createCubeMapInfo);
 
     const TextureCreateInfo precomputeBrdf =
     {
@@ -54,28 +54,35 @@ void Skybox::Initialize()
         .dataType = DataType::Float
     };
     m_PrecomputeBrdfTexture = new Texture(precomputeBrdf);
+
+    if (!m_SkyboxTextureResource)
+        return;
+
+    LoadFromHdrTexture(m_SkyboxTextureResource);
 }
 
-void Skybox::LoadCubeMap(const std::array<std::string, 6>& cubeMapFiles)
+void Skybox::LoadCubeMap(const std::array<std::string, 6>&)
 {
-    if (m_CubeMap != nullptr)
+    /*
+    if (m_CubeMapAlbedo != nullptr)
     {
-        m_CubeMap->DestroyInInterface();
-        m_CubeMap->Unload();
-        delete m_CubeMap;
-        m_CubeMap = nullptr;
+        m_CubeMapAlbedo->DestroyInInterface();
+        m_CubeMapAlbedo->Unload();
+        delete m_CubeMapAlbedo;
+        m_CubeMapAlbedo = nullptr;
     }
 
-    m_CubeMap = new Cubemap(cubeMapFiles);
-    m_CubeMap->CreateInInterface();
+    m_CubeMapAlbedo = new Texture(cubeMapFiles);
+    m_CubeMapAlbedo->CreateInInterface();*/
 }
 
-void Skybox::LoadFromHdrTexture(const Pointer<Texture>& hdfFile) const 
+void Skybox::LoadFromHdrTexture(const Pointer<Texture>& hdrFile) 
 {
-    Rhi::skyBoxParser.EquirectangularToCubeMapFunc(*hdfFile.Get(), *m_CubeMap);
+    m_SkyboxTextureResource = hdrFile;
+    Rhi::skyBoxParser.EquirectangularToCubeMapFunc(*hdrFile.Get(), *m_CubeMapAlbedo);
     Rhi::skyBoxParser.PreComputeBrdf(EnvironementCubeMapSize, *m_PrecomputeBrdfTexture);
-    Rhi::skyBoxParser.ComputeIrradiance(*m_CubeMap, *m_IrradianceMap, IradianceCubeSize);
-    Rhi::skyBoxParser.ComputePreFiltering(*m_CubeMap, *m_PrefilterMap, MaxMinMapLevel);
+    Rhi::skyBoxParser.ComputeIrradiance(*m_CubeMapAlbedo, *m_IrradianceMap, IradianceCubeSize);
+    Rhi::skyBoxParser.ComputePreFiltering(*m_CubeMapAlbedo, *m_PrefilterMap, MaxMinMapLevel);
 }
 
 void Skybox::BindDesriptorSet() const 
@@ -87,13 +94,13 @@ void Skybox::BindDesriptorSet() const
 
 void Skybox::UnbindDesriptorSet() const
 {
-    m_IrradianceMap->UnBindTexture(DefferedDescriptor::SkyboxIrradiance);
-    m_PrefilterMap->UnBindTexture(DefferedDescriptor::SkyboxPrefilterMap);
+    m_IrradianceMap->UnbindTexture(DefferedDescriptor::SkyboxIrradiance);
+    m_PrefilterMap->UnbindTexture(DefferedDescriptor::SkyboxPrefilterMap);
     m_PrecomputeBrdfTexture->UnbindTexture(DefferedDescriptor::SkyboxPrecomputeBrdf);
 }
 
-const Cubemap* Skybox::GetSkyboxAlbedoColor() const
+const Texture* Skybox::GetSkyboxAlbedoColor() const
 {
-    return m_CubeMap;
+    return m_CubeMapAlbedo;
 }
 

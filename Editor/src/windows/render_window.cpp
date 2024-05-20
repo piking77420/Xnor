@@ -37,6 +37,7 @@ void RenderWindow::OnApplicationRendering()
     {
         if (m_Viewport->camera)
             m_Viewport->Resize(m_Size);
+        
     }
 
     if (m_Viewport->frameBuffer && m_Viewport->camera != nullptr)

@@ -18,14 +18,25 @@ CameraComponent::~CameraComponent()
 void CameraComponent::Update()
 {
     Component::Update();
-    // FIXME: This causes clipping problems
-    const Vector3 pos = static_cast<Vector3>(entity->transform.worldMatrix[3]);
-    camera.position = pos;
-    const Vector3 forward = entity->transform.GetForward();
-    camera.LookAt(pos - forward);
+    
 }
 
 void CameraComponent::Begin()
 {
     Component::Begin();
+}
+
+void CameraComponent::OnRendering()
+{
+    Component::OnRendering();
+    FollowEntityRotation();
+  
+}
+
+void CameraComponent::FollowEntityRotation()
+{
+    const Vector3 pos = static_cast<Vector3>(entity->transform.worldMatrix[3]);
+    camera.position = pos;
+    const Vector3 forward = entity->transform.GetForward();
+    camera.LookAt(pos - forward);
 }

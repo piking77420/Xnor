@@ -7,8 +7,10 @@ layout (location = 2) in vec2 aTexCoords;
 
 layout (std140, binding = 0) uniform CameraUniform
 {
-    mat4 view;
+   mat4 view;
     mat4 projection;
+    mat4 inView;
+    mat4 inProjection;
     vec3 cameraPos;
     float near;
     float far;
