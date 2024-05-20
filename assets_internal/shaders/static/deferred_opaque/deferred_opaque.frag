@@ -109,12 +109,12 @@ vec4 WorldPosFromDepth(float depth) {
     float z = depth * 2.0 - 1.0;
 
     vec4 clipSpacePosition = vec4(texCoords * 2.0 - 1.0, z, 1.0);
-    vec4 viewSpacePosition = inverse(projection) * clipSpacePosition;
+    vec4 viewSpacePosition = inProjection * clipSpacePosition;
 
     // Perspective division
     viewSpacePosition /= viewSpacePosition.w;
 
-    vec4 worldSpacePosition = inverse(view) * viewSpacePosition;
+    vec4 worldSpacePosition = inView * viewSpacePosition;
 
     return worldSpacePosition;
 }
