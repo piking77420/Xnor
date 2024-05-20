@@ -8,8 +8,10 @@ layout (location = 4) in vec3 aBitangent;
 
 layout (std140, binding = 0) uniform CameraUniform
 {
-    mat4 view;
+     mat4 view;
     mat4 projection;
+    mat4 inView;
+    mat4 inProjection;
     vec3 cameraPos;
     float near;
     float far;

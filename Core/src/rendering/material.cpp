@@ -21,6 +21,9 @@ void Material::BindMaterial() const
     if (ambientOcclusionTexture.IsValid())
         ambientOcclusionTexture->BindTexture(MaterialTextureEnum::AmbiantOcclusion);
 
+    if (emissiveTexture.IsValid())
+        emissiveTexture->BindTexture(MaterialTextureEnum::EmissiveMap);
+
     Rhi::BindMaterial(*this);
 
 }

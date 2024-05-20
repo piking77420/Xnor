@@ -28,19 +28,19 @@ public:
     /// @brief Converts an equirectangular map to a cubemap
     /// @param equirectangularMap Source equirectangular map
     /// @param cubemap Target cubemap
-    XNOR_ENGINE void EquirectangularToCubeMapFunc(const Texture& equirectangularMap, const Cubemap& cubemap);
+    XNOR_ENGINE void EquirectangularToCubeMapFunc(const Texture& equirectangularMap, const Texture& cubemap);
 
     /// @brief Computes the irradiance
     /// @param irradianceInput Source cubemap
     /// @param irradianceOutput Target cubemap
     /// @param irradianceSize Irradiance size
-    XNOR_ENGINE void ComputeIrradiance(const Cubemap& irradianceInput, const Cubemap& irradianceOutput, Vector2i irradianceSize);
+    XNOR_ENGINE void ComputeIrradiance(const Texture& irradianceInput, const Texture& irradianceOutput, Vector2i irradianceSize);
 
     /// @brief Computes the pre-filtering
     /// @param environementMap Source cubemap
     /// @param prefilteringMap Target cubemap
     /// @param mipLevels Mip levels
-    XNOR_ENGINE void ComputePreFiltering(const Cubemap& environementMap, const Cubemap& prefilteringMap, uint32_t mipLevels);
+    XNOR_ENGINE void ComputePreFiltering(const Texture& environementMap, const Texture& prefilteringMap, uint32_t mipLevels);
 
     /// @brief Computes the BRDF
     /// @param environementMapSize Map size
@@ -64,7 +64,7 @@ private:
     
     XNOR_ENGINE void Resize(Vector2i size);
     
-    XNOR_ENGINE void Compute(const Texture& equirectangularMap, const Cubemap& cubemap, const Pointer<Shader>& shader);
+    XNOR_ENGINE void Compute(const Texture& equirectangularMap, const Texture& cubemap, const Pointer<Shader>& shader);
 };
 
 END_XNOR_CORE

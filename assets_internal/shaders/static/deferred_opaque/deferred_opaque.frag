@@ -3,10 +3,10 @@
 
 out vec4 FragColor;
 
-const int MaxSpotLight = 100;
-const int MaxPointLight = 100;
-const int DirectionalCascadeLevel = 4;
+const int MaxSpotLight = 50;
+const int MaxPointLight = 50;
 const int DirectionalCascadeLevelAllocation = 12;
+const int DirectionalCascadeLevel = 4;
 
 const float PI = 3.14159265359;
 const float InvPI = 1/PI;
@@ -51,24 +51,26 @@ layout (std430, binding = 2) uniform LightData
 
     mat4 spothLightlightSpaceMatrix[MaxSpotLight];
     mat4 dirLightSpaceMatrix[DirectionalCascadeLevelAllocation];
+    int nbrOfDirLight;
 };
 layout (std140, binding = 0) uniform CameraUniform
 {
     mat4 view;
     mat4 projection;
+    mat4 inView;
+    mat4 inProjection;
     vec3 cameraPos;
     float near;
     float far;
 };
 
 
-uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D gAlbedoSpec;
 uniform sampler2D gMetallicRoughessReflectance;
 uniform sampler2D gAmbiantOcclusion;
 uniform sampler2D gEmissive;
-
+uniform sampler2D gDepth;
 
 uniform samplerCube irradianceMap;
 uniform samplerCube prefilterMap;
@@ -100,12 +102,26 @@ const vec2 gridSamplingDiskVec2[20] = vec2[]
 );
 
 
+// this is supposed to get the world position from the depth buffer
+vec4 WorldPosFromDepth(float depth) {
+    float z = depth * 2.0 - 1.0;
+
+    vec4 clipSpacePosition = vec4(texCoords * 2.0 - 1.0, z, 1.0);
+    vec4 viewSpacePosition = inProjection * clipSpacePosition;
+
+    // Perspective division
+    viewSpacePosition /= viewSpacePosition.w;
+
+    vec4 worldSpacePosition = inView * viewSpacePosition;
+
+    return worldSpacePosition;
+}
+
 float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
 {
     // select cascade layer
-    vec4 fragPosWorldSpaceView = vec4(fragPosWorldSpace.xyz,1.0f);
-    
-    float depthValue = abs(fragPosWorldSpaceView.z);
+    vec4 fragPosViewSpace = view * vec4(fragPosWorldSpace.xyz, 1.0);
+    float depthValue = abs(fragPosViewSpace.z);
 
     int layer = -1;
     
@@ -122,7 +138,6 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
         layer = directionalData.cascadeCount;
     }
     
-
     vec4 fragPosLightSpace = dirLightSpaceMatrix[layer] * vec4(fragPosWorldSpace.xyz, 1.0);
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
@@ -140,14 +155,14 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
     float bias = max(0.05 * (1.0 - dot(normalize(n), normalize(l))), 0.005);
     
     // calculate bias (based on depth map resolution and slope)
-    const float biasModifier = 0.5f;
+    const float biasModifier = 0.9f;
     if (layer == directionalData.cascadeCount)
     {
         bias *= 1 / (far * biasModifier);
     }
     else
     {
-        bias *= 1 / (directionalData.cascadePlaneDistance[layer] * biasModifier);
+        bias *= 1 / (directionalData.cascadePlaneDistance[layer] * biasModifier );
     }
 
     // PCF  
@@ -158,10 +173,11 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
         for(int y = -1; y <= 1; ++y)
         {
             float pcfDepth = texture(dirLightShadowMap, vec3(projCoords.xy + vec2(x, y) * texelSize, layer)).r;
+
             shadow += (currentDepth - bias) > pcfDepth ? 1.0 : 0.0;
         }
     }
-    shadow /= 9.0;
+    shadow /= 9.0f;
 
     return shadow;
 }
@@ -377,7 +393,7 @@ vec3 ComputePointLight(vec3 baseColor,vec3 fragPos,vec3 v, vec3 n, float roughne
 
 void main()
 {
-    vec4 fragPosVec4 = texture(gPosition, texCoords);
+    vec4 fragPosVec4 = WorldPosFromDepth(texture(gDepth,texCoords).r);
     vec3 fragPos = fragPosVec4.xyz;
 
     vec3 normal = texture(gNormal, texCoords).rgb;
@@ -413,34 +429,40 @@ void main()
     
     float NoH = clamp(dot(n,h),0.0,1.0);
     float VoH = clamp(dot(v,h),0.0,1.0);
-
-    vec3 radiance = directionalData.color * directionalData.intensity;
+    
     float ndf = SpecularD(NoH, roughness * roughness );
     float g =  SpecularG(l, v, h, n, roughness);
     vec3 f = SpecularF(VoH,F0,roughness);
 
-    vec3 numerator = ndf * g * f;
-    float denominator = 4.0 * max(dot(n, v), 0.0) * max(dot(n, l), 0.0) + 0.0001;
-    vec3 specular  = numerator / denominator;
+    vec3 kD = vec3(0,0,0);
     
-    vec3 kS = f;
-    vec3 kD = vec3(1.0) - kS;
-    kD *= 1.0 - metallic;
-    float NdotL = max(dot(n, l), 0.0);
-    
-    vec3 LoDir = (kD * albedo * InvPI + specular) * radiance * NdotL;
-    if (directionalData.isDirlightCastShadow)
+    if (nbrOfDirLight == 1)
     {
-        float shadow = DirLightShadowCalculation(fragPosVec4, n, l);
-        LoDir *= (1.0-shadow);
+        vec3 radiance = directionalData.color * directionalData.intensity;
+        vec3 numerator = ndf * g * f;
+        float denominator = 4.0 * max(dot(n, v), 0.0) * max(dot(n, l), 0.0) + 0.0001;
+        vec3 specular  = numerator / denominator;
+
+        vec3 kS = f;
+        kD = vec3(1.0) - kS;
+        kD *= 1.0 - metallic;
+        float NdotL = max(dot(n, l), 0.0);
+
+        vec3 LoDir = (kD * albedo * InvPI + specular) * radiance * NdotL;
+        if (directionalData.isDirlightCastShadow)
+        {
+            float shadow = DirLightShadowCalculation(fragPosVec4, n, l);
+            LoDir *= (1.0-shadow);
+        }
+        Lo += LoDir;
     }
     
-    Lo += LoDir;
     Lo += ComputePointLight(albedo, fragPos, v, n, roughness, metallic, F0);
     Lo += ComputeSpotLight(albedo, fragPosVec4, v, n, roughness, metallic, F0);
     
     vec3 ambient = ComputeIbl(roughness, kD, ambientOcclusion, albedo, n, r, v, f);
     vec3 color = Lo + ambient + (emissiveColor * emissive);
-
+ 
     FragColor = vec4(color, 1);
+    
 }

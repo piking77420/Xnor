@@ -7,11 +7,10 @@ using namespace XnorCore;
 
 
 void CascadeShadowMap::GetCascadeCameras(std::vector<Camera>* cameras, const Camera& viewPortCamera, Vector3 lightDir,
-    Vector2i screenSize)
+                                         const Vector2i screenSize)
 {
     cameras->resize(DirectionalCascadeLevel + 1);
-    
-    for (size_t i = 0; i < cameras->size(); ++i)
+    for (size_t i = 0; i < DirectionalCascadeLevel + 1; ++i)
     {
         cameras->at(i) = viewPortCamera;
         
@@ -33,7 +32,7 @@ void CascadeShadowMap::GetCascadeCameras(std::vector<Camera>* cameras, const Cam
     
 }
 
-void CascadeShadowMap::SetCascadeLevel(const std::vector<float_t>& cascadeLevel)
+void CascadeShadowMap::SetCascadeLevel(const std::array<float_t,DirectionalCascadeLevel>& cascadeLevel)
 {
     m_CascadeLevel = cascadeLevel;
 }
@@ -42,21 +41,6 @@ void CascadeShadowMap::SetZMultiplicator(const float_t zMultiPlicator)
 {
     m_ZMultiplicator = zMultiPlicator;
 }
-
-void CascadeShadowMap::CreateCascadeLevelFromAABB(const Bound& sceneAABB, float_t cameraFar)
-{
-    const Vector3& extend = sceneAABB.extents;
-    const float_t extendNorm = extend.Length();
-    m_ZMultiplicator = extendNorm;
-
-    for (size_t i = 0; i < DirectionalCascadeLevelAllocation; i++)
-    {
-        
-        m_CascadeLevel.push_back(cameraFar /  extendNorm - (i * DirectionalCascadeLevelAllocation) );
-    }
-    
-}
-
 
 void CascadeShadowMap::ComputeFrustumCorner(std::vector<Vector4>* frustumCornerWorldSpace, const Matrix& proj,
                                             const Matrix& view)
@@ -107,9 +91,14 @@ void CascadeShadowMap::GetCamera(Camera* cascadedCamera,const float_t cascadedNe
         center += {v.x , v.y, v.z};
     }
     center /= static_cast<float_t>(corners.size());
-    cascadedCamera->position = center;
-
-    const Matrix lightView = Matrix::LookAt(center, center + lightDir, Vector3::UnitY());
+    
+    cascadedCamera->position = center + lightDir;
+    cascadedCamera->front = -lightDir;
+    cascadedCamera->up = Vector3::UnitY();
+        
+    Matrix lightView;
+    cascadedCamera->GetView(&lightView);
+    
 
     float_t minX = std::numeric_limits<float_t>::max();
     float_t maxX = std::numeric_limits<float_t>::lowest();
@@ -129,7 +118,7 @@ void CascadeShadowMap::GetCamera(Camera* cascadedCamera,const float_t cascadedNe
         maxZ = std::max(maxZ, trf.z);
     }
 
-    if (minZ < 0)
+    if (minZ < 0.f)
     {
         minZ *= m_ZMultiplicator;
     }
@@ -137,7 +126,7 @@ void CascadeShadowMap::GetCamera(Camera* cascadedCamera,const float_t cascadedNe
     {
         minZ /= m_ZMultiplicator;
     }
-    if (maxZ < 0)
+    if (maxZ < 0.f)
     {
         maxZ /= m_ZMultiplicator;
     }
@@ -148,11 +137,9 @@ void CascadeShadowMap::GetCamera(Camera* cascadedCamera,const float_t cascadedNe
 
     cascadedCamera->near = minZ;
     cascadedCamera->far = maxZ ;
-    
+        
     cascadedCamera->leftRight = { minX , maxX };
     cascadedCamera->bottomtop = { minY, maxY };
 
-
-    cascadedCamera->LookAt(cascadedCamera->position + lightDir);
 }
 

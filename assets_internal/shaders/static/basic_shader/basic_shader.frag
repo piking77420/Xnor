@@ -1,8 +1,15 @@
 #version 460 core
+#extension GL_NV_uniform_buffer_std430_layout : enable
 
-const int MaxSpotLight = 100;
-const int MaxPointLight = 100;
-const int DirectionalCascadeLevel =10;
+out vec4 FragColor;
+
+const int MaxSpotLight = 50;
+const int MaxPointLight = 50;
+const int DirectionalCascadeLevelAllocation = 12;
+const int DirectionalCascadeLevel = 4;
+
+const float PI = 3.14159265359;
+const float InvPI = 1/PI;
 
 struct PointLightData
 {
@@ -10,6 +17,7 @@ struct PointLightData
     float intensity;
     vec3 position;
     float radius;
+    bool isCastShadow;
 };
 
 struct SpotLightData
@@ -20,6 +28,7 @@ struct SpotLightData
     float cutOff;
     vec3 direction;
     float outerCutOff;
+    bool isCastShadow;
 };
 
 struct DirectionalData
@@ -28,28 +37,32 @@ struct DirectionalData
     float intensity;
     vec3 direction;
     bool isDirlightCastShadow;
-    uint cascadeCount; 
-    mat4 lightSpaceMatrix[DirectionalCascadeLevel];
+    int cascadeCount;
+    float cascadePlaneDistance[DirectionalCascadeLevel];
+};
+
+layout (std430, binding = 2) uniform LightData
+{
+    int nbrOfPointLight;
+    int nbrOfSpotLight;
+    PointLightData pointLightData[MaxPointLight];
+    SpotLightData spotLightData[MaxSpotLight];
+    DirectionalData directionalData;
+
+    mat4 spothLightlightSpaceMatrix[MaxSpotLight];
+    mat4 dirLightSpaceMatrix[DirectionalCascadeLevelAllocation];
+    int nbrOfDirLight;
 };
 
 layout (std140, binding = 0) uniform CameraUniform
 {
     mat4 view;
     mat4 projection;
+    mat4 inView;
+    mat4 inProjection;
     vec3 cameraPos;
     float near;
     float far;
-};
-
-layout (std140, binding = 2) uniform LightData
-{
-    int nbrOfPointLight;
-    int nbrOfSpotLight;
-    int padding1;
-    int padding2;
-    PointLightData pointLightData[MaxPointLight];
-    SpotLightData spotLightData[MaxSpotLight];
-    DirectionalData directionalData;
 };
 
 in VS_OUT
@@ -58,8 +71,6 @@ in VS_OUT
     vec3 normal;
     vec2 texCoords;
 } fs_in;
-
-out vec4 FragColor;
 
 uniform vec3 color;
 uniform sampler2D diffuseTexture;

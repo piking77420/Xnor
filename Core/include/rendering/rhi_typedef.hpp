@@ -17,16 +17,16 @@ BEGIN_XNOR_CORE
 class Framebuffer;
 
 /// @brief Maximum amount of spot lights that can exists in a same scene
-static constexpr uint32_t MaxSpotLights = 100;
+static constexpr uint32_t MaxSpotLights = 50;
 /// @brief Maximum amount of point lights that can exists in a same scene
-static constexpr uint32_t MaxPointLights = 100;
+static constexpr uint32_t MaxPointLights = 50;
 /// @brief Maximum amount of directional lights that can exists in a same scene
 static constexpr uint32_t MaxDirectionalLights = 1;
 
 static constexpr uint32_t MaxBones = 100;
 
-static constexpr size_t DirectionalCascadeLevel = 4;
 static constexpr size_t DirectionalCascadeLevelAllocation = 12;
+static constexpr size_t DirectionalCascadeLevel = 4;
 
 
 /// @brief Polygon rasterization mode
@@ -344,6 +344,11 @@ struct CameraUniformData
 	Matrix view = Matrix::Identity();
 	/// @brief Projection matrix
 	Matrix projection = Matrix::Identity();
+	/// @brief View matrix
+	Matrix invView = Matrix::Identity();
+	/// @brief Projection matrix
+	Matrix invProjection = Matrix::Identity();
+	
 	/// @brief Camera position
 	Vector3 cameraPos;
 
@@ -579,6 +584,9 @@ struct ALIGNAS(16) GpuLightData
 
 	/// @brief Light space matrix
 	Matrix dirLightSpaceMatrix[DirectionalCascadeLevelAllocation];
+	
+	/// @brief Number of active directional lights shoul be 0 or 1
+	uint32_t nbrOfDirLight{};
 };
 
 /// @brief UniformBuffer data for animation
@@ -602,6 +610,8 @@ struct MaterialData
 	Vector3 emissiveColor;
 	/// @brief Emissive parameter
 	float_t emissive = 0.f;
+
+	int32_t hasEmissive;
 	
 	/// @brief Whether it has a metallic map
 	int32_t hasMetallicMap;
@@ -627,12 +637,12 @@ struct MaterialData
 /// @brief The type of DefferedDescriptor.
 BEGIN_ENUM(DefferedDescriptor)
 {
-	Position = 4,
-	Normal,
+	Normal = 5,
 	Albedo,
 	MetallicRoughessReflectance,
 	AmbiantOcclusion,
 	Emissivive,
+	Depth,
 	
 	SkyboxIrradiance = 12,
 	SkyboxPrefilterMap = 13,
@@ -657,6 +667,7 @@ BEGIN_ENUM(MaterialTextureEnum) : int32_t
 	Roughness,
 	Normal,
 	AmbiantOcclusion,
+	EmissiveMap,
 };
 END_ENUM
 

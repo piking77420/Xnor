@@ -7,6 +7,7 @@
 
 #include "window.hpp"
 #include "magic_enum/magic_enum.hpp"
+#include "rendering/camera.hpp"
 #include "rendering/frame_buffer.hpp"
 #include "rendering/render_pass.hpp"
 #include "resource/resource_manager.hpp"
@@ -111,9 +112,12 @@ bool_t Rhi::DestroyModel(const uint32_t modelId)
 
 	const ModelInternal* model = &m_ModelMap.at(modelId);
 
-	glDeleteBuffers(1, &model->vbo);
-	glDeleteBuffers(1, &model->ebo);
-	glDeleteVertexArrays(1, &model->vao);
+	if (glIsBuffer(model->vbo))
+		glDeleteBuffers(1, &model->vbo);
+	if (glIsBuffer(model->ebo))
+		glDeleteBuffers(1, &model->ebo);
+	if (glIsVertexArray(model->vao))
+		glDeleteVertexArrays(1, &model->vao);
 
 	return true;
 }
@@ -967,7 +971,8 @@ bool Rhi::IsDataValid(const std::vector<void*>& data, const size_t wantedSize)
 
 void Rhi::DestroyTexture(const uint32_t textureId)
 {
-	glDeleteTextures(1, &textureId);
+	if (glIsTexture(textureId))
+		glDeleteTextures(1, &textureId);
 }
 
 void Rhi::BindTexture(const uint32_t unit, const uint32_t textureId)
@@ -1053,7 +1058,8 @@ void Rhi::BlitFrameBuffer(const uint32_t readBuffer, const uint32_t targetBuffer
 
 void Rhi::BindFrameBuffer(const uint32_t frameBufferId)
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
+	if (glIsFramebuffer(frameBufferId))
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
 }
 
 void Rhi::UnbindFrameBuffer()
@@ -1313,7 +1319,10 @@ void Rhi::LogComputeShaderInfo()
 
 void Rhi::IsShaderValid(const uint32_t shaderId)
 {
-	if (!m_ShaderMap.contains(shaderId) || !glIsProgram(shaderId))
+	const bool_t contain = m_ShaderMap.contains(shaderId);
+	const bool_t isProgram = glIsProgram(shaderId);
+
+	if (!contain || !isProgram)
 	{
 		Logger::LogFatal("No shader with id #{}", shaderId);
 		throw std::runtime_error("No shader with this id");
@@ -1663,18 +1672,19 @@ void Rhi::BindMaterial(const Material& material)
 	materialData.hasRoughnessMap =  static_cast<int32_t>(material.roughnessTexture.IsValid());
 	materialData.hasNormalMap =  static_cast<int32_t>(material.normalTexture.IsValid());
 	materialData.hasAmbientOcclusionMap =  static_cast<int32_t>(material.ambientOcclusionTexture.IsValid());
-	
+	materialData.hasEmissive =  static_cast<int32_t>(material.emissiveTexture.IsValid());
+
 	materialData.albedoColor = static_cast<Vector3>(material.albedoColor);
 	materialData.emissiveColor = static_cast<Vector3>(material.emissiveColor);
-	
+
+	// Set Scalar value
 	materialData.metallic = material.metallic;
 	materialData.roughness = material.roughness;
 	materialData.reflectance = material.reflectance;
 	materialData.emissive = material.emissive;
 	materialData.ambientOcclusion = material.ambientOcclusion;
-	
-	constexpr size_t size = sizeof(MaterialData);
-	m_MaterialUniform->Update(size, 0, &materialData);
+
+	m_MaterialUniform->Update(sizeof(MaterialData), 0, &materialData);
 }
 
 TextureFormat::TextureFormat Rhi::GetTextureFormatFromChannels(const uint32_t channels)
@@ -1706,12 +1716,12 @@ void Rhi::GetCubeMapViewMatrices(std::array<Matrix, 6>* viewsMatricies)
 {
 	*viewsMatricies =
 	{
-		Matrix::LookAt(Vector3(), -Vector3::UnitX(), -Vector3::UnitY()), // CubeMapPositiveX
-		Matrix::LookAt(Vector3(),  Vector3::UnitX(), -Vector3::UnitY()), // CubeMapNegativeX
-		Matrix::LookAt(Vector3(), -Vector3::UnitY(), -Vector3::UnitZ()), // CubeMapPositiveY
-		Matrix::LookAt(Vector3(),  Vector3::UnitY(),  Vector3::UnitZ()), // CubeMapNegativeY
-		Matrix::LookAt(Vector3(),  Vector3::UnitZ(), -Vector3::UnitY()), // CubeMapPositiveZ
-		Matrix::LookAt(Vector3(), -Vector3::UnitZ(), -Vector3::UnitY()), // CubeMapNegativeZ
+		Camera::LookAtRH(Vector3(), -Vector3::UnitX(), -Vector3::UnitY()), // CubeMapPositiveX
+		Camera::LookAtRH(Vector3(),  Vector3::UnitX(), -Vector3::UnitY()), // CubeMapNegativeX
+		Camera::LookAtRH(Vector3(), -Vector3::UnitY(), -Vector3::UnitZ()), // CubeMapPositiveY
+		Camera::LookAtRH(Vector3(),  Vector3::UnitY(),  Vector3::UnitZ()), // CubeMapNegativeY
+		Camera::LookAtRH(Vector3(),  Vector3::UnitZ(), -Vector3::UnitY()), // CubeMapPositiveZ
+		Camera::LookAtRH(Vector3(), -Vector3::UnitZ(), -Vector3::UnitY()), // CubeMapNegativeZ
 	};
 }
 
@@ -1739,10 +1749,10 @@ uint32_t Rhi::CreateTexture(const TextureCreateInfo& textureCreateInfo)
 	AllocTexture(textureCreateInfo.textureType, textureId, textureCreateInfo);
 	ComputeTextureFiltering(textureCreateInfo.textureType, textureId, textureCreateInfo);
 	ComputeTextureWrapping(textureCreateInfo.textureType, textureId, textureCreateInfo);
-	
+	/*
 	float_t aniso = 0.f;
 	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso); 
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);*/ 
 	glGenerateTextureMipmap(textureId);
 	
 	return textureId;

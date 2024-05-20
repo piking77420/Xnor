@@ -338,9 +338,7 @@ private:
 	
 	// Texture 
 	XNOR_ENGINE static uint32_t CreateTextureId(TextureType::TextureType textureType);
-
 	
-
 	/// @brief Set the depth function to the graphic API
 	/// @param depthFunction The current depthFunction to set to the api
 	XNOR_ENGINE static void ComputeDepthFunction(DepthFunction::DepthFunction depthFunction);

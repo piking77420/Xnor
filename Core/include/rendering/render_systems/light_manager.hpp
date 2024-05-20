@@ -31,14 +31,15 @@ private:
 
     static constexpr float_t LightThreshold = 30.f;
     static constexpr TextureInternalFormat::TextureInternalFormat ShadowDepthTextureInternalFormat = TextureInternalFormat::DepthComponent32F;
-    
+
+
 public:
     XNOR_ENGINE LightManager() = default;
 
     XNOR_ENGINE ~LightManager();
     
     DEFAULT_COPY_MOVE_OPERATIONS(LightManager)
-
+    
     /// @brief Initializes the light manager resources
     XNOR_ENGINE void InitResources();
 
@@ -127,7 +128,7 @@ private:
 
     XNOR_ENGINE void ComputeShadow(const Scene& scene, const Viewport& viewport, Renderer& renderer);
 
-    XNOR_ENGINE void ComputeShadowDirLight(const Scene& scene, const Camera& viewPortCamera, Renderer& renderer);
+    XNOR_ENGINE void ComputeShadowDirLight(const Scene& scene, const Camera& viewPortCamera, Vector2i viewportSize, Renderer& renderer);
 
     XNOR_ENGINE void ComputeShadowSpotLight(const Scene& scene, Renderer& renderer);
 
@@ -140,9 +141,6 @@ private:
     XNOR_ENGINE void InitShadowMap();
 
     XNOR_ENGINE void InitShader();
-
-    
-    XNOR_ENGINE float_t GetMax(Vector3 vec) const;
 };
 
 END_XNOR_CORE

@@ -41,6 +41,8 @@ public:
     /// @brief Ambiant occlusion texture
     Pointer<Texture> ambientOcclusionTexture;
 
+    Pointer<Texture> emissiveTexture;
+
     /// @brief Albedo color
     Color albedoColor;
     /// @brief Emissive color
@@ -77,5 +79,6 @@ REFL_AUTO(
     field(metallicTexture),
     field(roughnessTexture),
     field(normalTexture),
-    field(ambientOcclusionTexture)
+    field(ambientOcclusionTexture),
+    field(emissiveTexture)
 );

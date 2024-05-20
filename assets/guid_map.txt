@@ -63,7 +63,6 @@ _shaders/depth_shader_point_light;48268CE4-BA8C-4CB7-BB-28-28-B4-43-B8-FF-C9
 _shaders/down_sample;86AB86C5-5C39-4C38-B1-5E-3F-61-A2-73-74-74
 _shaders/gui_shader;33B0481F-D31F-4CAA-9F-EE-98-A7-D1-89-9B-92
 assets\models\league\rammus\rammus_dance.anm.anim;6E4C07A-F5FC-4643-B7-F7-E4-93-4B-41-D-7B
-_shaders/draw_gizmo_instanced;1D8CCE20-12B2-47D2-80-67-84-42-ED-56-F-5A
 assets/sounds/metal-pipe.wav;DFE1D450-B4E3-49F1-B8-41-92-36-78-74-9C-54
 assets\models\league\rammus\rammus_idle2.anm.anim;8E348432-6EAE-48CA-A7-DB-D0-E-48-ED-CA-3A
 _shaders/skinned_gbuffer;D416B5BA-C667-4145-8F-D8-FA-72-ED-DE-14-7

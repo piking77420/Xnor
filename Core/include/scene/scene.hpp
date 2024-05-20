@@ -25,6 +25,7 @@ public:
     mutable Octree<const StaticMeshRenderer> renderOctree;
     
     XNOR_ENGINE Scene() = default;
+    
     XNOR_ENGINE ~Scene();
 
     DEFAULT_COPY_MOVE_OPERATIONS(Scene)
@@ -107,6 +108,6 @@ END_XNOR_CORE
 #include "scene/scene.inl"
 
 /// @private
-REFL_AUTO(type(XnorCore::Scene),
+REFL_AUTO(type(XnorCore::Scene),field(skybox),
     field(m_Entities, XnorCore::Reflection::ExpandPointer(), XnorCore::Reflection::HideInInspector())
 );
