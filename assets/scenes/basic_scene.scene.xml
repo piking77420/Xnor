@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-16"?>
 <Scene>
+	<skybox>
+		<m_SkyboxTextureResource>D9E318C1-41B9-4C1F-87-A1-C3-57-5F-7E-5A-6D</m_SkyboxTextureResource>
+	</skybox>
 	<m_Entities>
 		<0>
 			<name>Directional</name>
@@ -11,6 +14,7 @@
 			</transform>
 			<m_Components>
 				<0 typeName="DirectionalLight">
+					<zCascadeShadowMapZMultiplactor>10</zCascadeShadowMapZMultiplactor>
 					<color>1 ; 1 ; 1 ; 1</color>
 					<intensity>4.5</intensity>
 					<castShadow>false</castShadow>
@@ -45,6 +49,7 @@
 						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
 						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
+						<emissiveTexture>0-0-0-0-0-0-0-0-0-0-0</emissiveTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 					<enabled>true</enabled>
@@ -66,7 +71,7 @@
 			<name>Sphere</name>
 			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
 			<transform>
-				<m_Position>15.499987 ; 0.058403905 ; -13.295809</m_Position>
+				<m_Position>4.4896526 ; 0.05834717 ; 1.3693048</m_Position>
 				<m_EulerRotation>2.752485 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1.0000015 ; 1.0000015</m_Scale>
 			</transform>
@@ -87,6 +92,7 @@
 						<roughnessTexture>D951D7C1-D2F0-4849-86-EF-1-74-A-42-66-C9</roughnessTexture>
 						<normalTexture>D951D7C1-D2F0-4849-86-EF-1-74-A-42-66-C9</normalTexture>
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
+						<emissiveTexture>0-0-0-0-0-0-0-0-0-0-0</emissiveTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 					<enabled>true</enabled>
@@ -214,6 +220,7 @@
 						<roughnessTexture>4B7FB2F6-79DB-46A1-A3-4B-DD-DB-40-9F-46-FC</roughnessTexture>
 						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
 						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
+						<emissiveTexture>0-0-0-0-0-0-0-0-0-0-0</emissiveTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 					<enabled>true</enabled>
@@ -237,7 +244,7 @@
 			<name>Rammus</name>
 			<m_EntityId>AA4C0C09-AB9-4A1E-90-DA-D3-CC-FA-5F-BA-1</m_EntityId>
 			<transform>
-				<m_Position>-20 ; -1 ; -15.5</m_Position>
+				<m_Position>-6.023074 ; -1 ; 0.36161947</m_Position>
 				<m_EulerRotation>3.1415925 ; 0.92511785 ; 3.1415925</m_EulerRotation>
 				<m_Scale>0.050001148 ; 0.05000079 ; 0.050001416</m_Scale>
 			</transform>
@@ -258,11 +265,12 @@
 						<roughnessTexture>D1189582-EC00-49BD-A0-4A-57-1C-53-82-B3-2A</roughnessTexture>
 						<normalTexture>57B0A6C2-3-4FDC-B0-BF-E4-17-A7-E6-4F-3E</normalTexture>
 						<ambientOcclusionTexture>210AF9D9-1CE6-4B0B-85-87-87-2C-90-70-37-75</ambientOcclusionTexture>
+						<emissiveTexture>0-0-0-0-0-0-0-0-0-0-0</emissiveTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
 						<m_Animation>D40974A1-F0EF-4613-A7-6F-97-D3-57-87-60-87</m_Animation>
-						<m_CurrentFrame>700</m_CurrentFrame>
+						<m_CurrentFrame>33</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>
