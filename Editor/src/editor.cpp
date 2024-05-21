@@ -580,6 +580,8 @@ void Editor::Update()
 	}
 	Window::Hide();
 
+	StopPlaying();
+
 	shaderWatcher.Stop();
 }
 
