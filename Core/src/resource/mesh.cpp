@@ -39,7 +39,8 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
             m_Animations.Add(animation);
         }
     }
-    
+
+    LoadTexture(*scene);
     /*
     for (uint32_t i = 0; i < scene->mNumTextures; i++)
     {
@@ -100,22 +101,21 @@ Pointer<Animation> Mesh::GetAnimation(const size_t id)
     return m_Animations[id];
 }
 
-std::string Mesh::GetTextureFileName(const std::string& baseFileName, const std::string& textureFormat, size_t index)
+std::string Mesh::GetTextureFileName(const std::string& baseFileName, const std::string& textureName, const std::string& textureFormat, size_t index)
 {
     std::string returnName;
-    std::string baseNameCopy = baseFileName;
+    std::string baseNameCopy = textureName;
     
-    baseNameCopy.pop_back();
-
     const size_t last =  baseNameCopy.find_last_of('\\') + 1;
         
-    for (size_t i = 0; i < baseNameCopy.size();i++)
+    for (size_t i = last; i < baseNameCopy.size();i++)
         returnName.push_back(baseNameCopy[i]);
 
-    returnName += ("texture_" + std::to_string(index));
-    returnName.push_back('.');
-
-    return returnName + textureFormat;
+    std::filesystem::path path(returnName);
+    returnName = path.stem().generic_string();
+    returnName += ( "." + textureFormat);
+    
+    return returnName;
 }
 
 bool_t Mesh::LoadMesh(const aiScene& scene,Pointer<Skeleton>* outSkeleton)
@@ -190,6 +190,43 @@ bool_t Mesh::LoadMesh(const aiScene& scene,Pointer<Skeleton>* outSkeleton)
         *outSkeleton = skeleton;
     
     return hasSkeleton;
+}
+
+void Mesh::LoadTexture(const aiScene& scene)
+{
+    for (uint32_t i = 0; i < scene.mNumTextures; i++)
+    {
+        std::string textureAssimpname = scene.mTextures[i]->mFilename.C_Str();
+
+        if (textureAssimpname.empty())
+            textureAssimpname = m_File->GetNameNoExtension();
+        
+        std::string fileName = GetTextureFileName(m_File->GetNameNoExtension(),textureAssimpname,scene.mTextures[i]->achFormatHint, i);
+
+        std::filesystem::path p(m_File->GetPath());
+        std::string parentPath = p.parent_path().generic_string();
+        
+        std::string filePath = parentPath + "/" + fileName;
+        
+        if (FileManager::Contains(filePath))
+        {
+             continue;
+        }
+        
+        Pointer<Texture> texture = ResourceManager::Add<Texture>(fileName);
+        texture->SetName(fileName);
+        texture->SetFile(FileManager::Add( std::filesystem::path(filePath)));
+
+        int64_t size = 0;
+        if (scene.mTextures[i]->mHeight == 0)
+            size = scene.mTextures[i]->mWidth;
+        else
+            size = static_cast<int64_t>(static_cast<uint64_t>(scene.mTextures[i]->mWidth) * static_cast<uint64_t>(scene.mTextures[i]->mHeight) * sizeof(aiTexel));
+
+        texture->Load(reinterpret_cast<const uint8_t*>(scene.mTextures[i]->pcData), size);
+        texture->SetIsEmbedded();
+        texture->Save();
+    }
 }
 
 void Mesh::ComputeAabb()

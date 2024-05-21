@@ -201,8 +201,9 @@ void Input::Update()
     POINT point;
     GetCursorPos(&point);
     Windows::SilenceError();
-    m_MousePosition.x = static_cast<float_t>(point.x);
-    m_MousePosition.y = static_cast<float_t>(point.y);
+    float_t mouseX = static_cast<float_t>(point.x);
+    float_t mouseY = static_cast<float_t>(point.y);
+    m_MousePosition.AddSample({ mouseX, mouseY });
     
     for (auto& button : m_Mouse)
     {
@@ -226,11 +227,12 @@ void Input::Update()
         }
     }
 
-    m_MouseDelta = m_MousePosition - m_LastMousePosition;
+    m_MouseDelta.AddSample(m_MousePosition.GetAvarage<Vector2>() - m_LastMousePosition.GetAvarage<Vector2>());
 
     if (mouseLocked)
-        m_MousePosition -= m_MouseDelta;
+        m_MouseDelta.AddSample(-m_MouseDelta.GetAvarage<Vector2>());
 
+    m_LastMousePosition.AddSample(-m_MousePosition.GetAvarage<Vector2>()); 
 }
 
 uint32_t Input::GetBindingId()
@@ -256,6 +258,11 @@ void Input::BindWindow(const uint32_t bindInd)
         return;
 
     m_CurrentBoundWindow = bindInd;
+}
+
+Vector2 Input::GetMouseDelta()
+{
+    return m_MouseDelta.GetAvarage<Vector2>();
 }
 
 void Input::Initialize()

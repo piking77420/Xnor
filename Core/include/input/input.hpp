@@ -3,6 +3,7 @@
 #include <array>
 
 #include "core.hpp"
+#include "low_pass_filter.hpp"
 #include "window.hpp"
 #include "input/gamepad_input.hpp"
 #include "input/keyboard_input.hpp"
@@ -62,6 +63,8 @@ public:
     template <class T>
     static T GetMousePosition();
 
+    XNOR_ENGINE static Vector2 GetMouseDelta();
+
     /// @brief Initializes the input manager
     XNOR_ENGINE static void Initialize();
 
@@ -103,11 +106,11 @@ private:
     // For each Gamepad
     XNOR_ENGINE static inline std::array<GamepadButtons, GamepadMax> m_GamepadsButton;
     
-    XNOR_ENGINE static inline Vector2 m_LastMousePosition;
+    XNOR_ENGINE static inline LowPassFilter<Vector2,6> m_LastMousePosition;
     
-    XNOR_ENGINE static inline Vector2 m_MousePosition;
+    XNOR_ENGINE static inline LowPassFilter<Vector2,6> m_MousePosition;
     
-    XNOR_ENGINE static inline Vector2 m_MouseDelta;
+    XNOR_ENGINE static inline LowPassFilter<Vector2,6> m_MouseDelta;
 
     XNOR_ENGINE static inline GLFWwindow* m_WindowHandle = nullptr;
 

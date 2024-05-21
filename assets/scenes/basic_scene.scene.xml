@@ -234,7 +234,7 @@
 					<enabled>true</enabled>
 				</1>
 				<2 typeName="ScriptComponent" managedType="Game.Lantern">
-					<Speed>0.05</Speed>
+					<MaxRotationAngle>0.7853982</MaxRotationAngle>
 				</2>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -262,17 +262,17 @@
 						<reflectance>0</reflectance>
 						<emissive>0</emissive>
 						<ambientOcclusion>0</ambientOcclusion>
-						<albedoTexture>4916125F-AD2F-41C0-93-F8-C-51-D3-9A-25-6B</albedoTexture>
-						<metallicTexture>305C17F4-B611-44D3-BC-F3-66-A5-1A-C0-BC-64</metallicTexture>
-						<roughnessTexture>D1189582-EC00-49BD-A0-4A-57-1C-53-82-B3-2A</roughnessTexture>
-						<normalTexture>57B0A6C2-3-4FDC-B0-BF-E4-17-A7-E6-4F-3E</normalTexture>
-						<ambientOcclusionTexture>210AF9D9-1CE6-4B0B-85-87-87-2C-90-70-37-75</ambientOcclusionTexture>
+						<albedoTexture>39C64926-E193-44D2-AB-EE-C9-1A-F-62-F3-45</albedoTexture>
+						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
+						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
+						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
+						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 						<emissiveTexture>0-0-0-0-0-0-0-0-0-0-0</emissiveTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
-						<m_Animation>D40974A1-F0EF-4613-A7-6F-97-D3-57-87-60-87</m_Animation>
-						<m_CurrentFrame>2219</m_CurrentFrame>
+						<m_Animation>E9F04973-E9D-4E85-98-A1-9-BF-16-C-2-FB</m_Animation>
+						<m_CurrentFrame>500</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>

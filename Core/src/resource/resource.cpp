@@ -117,3 +117,8 @@ const Guid& Resource::GetGuid() const
 {
     return m_Guid;
 }
+
+void Resource::SetFile(const Pointer<File> file)
+{
+    m_File = file;
+}

@@ -18,17 +18,11 @@ namespace Game
 
         protected override void Update()
         {
-      
-            
-            if (Input.GetKey(Key.Left))
-                ViewAngle.X += Time.DeltaTime;
-            else if (Input.GetKey(Key.Right))
-                ViewAngle.X -= Time.DeltaTime;
 
-            if (Input.GetKey(Key.Up))
-                ViewAngle.Y -= Time.DeltaTime;
-            else if (Input.GetKey(Key.Down))
-                ViewAngle.Y += Time.DeltaTime;
+            Vector2 mousDelta = Input.GetMouseDelta();
+            
+            ViewAngle.X += mousDelta.X * Time.DeltaTime;
+            ViewAngle.Y -= mousDelta.Y * Time.DeltaTime;
             
           /*  
             if (ViewAngle.Y * calc > MaxPitch)
