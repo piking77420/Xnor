@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <refl/refl.hpp>
+#include "core.hpp"
 
 /// @file reflection.hpp
 /// @brief Defines reflection types and helpers
@@ -184,28 +185,35 @@ namespace Reflection
     /// @tparam ReflectT Type
     /// @return Type info
     template <typename ReflectT>
-    static constexpr TypeDescriptor<ReflectT> GetTypeInfo();
+    constexpr TypeDescriptor<ReflectT> GetTypeInfo();
 
     /// @brief Checks if a descriptor has a specified attribute
     /// @tparam AttributeT Attribute type
     /// @tparam DescriptorT Descriptor type
     /// @return Result
     template <typename AttributeT, typename DescriptorT>
-    static constexpr bool_t HasAttribute();
+    constexpr bool_t HasAttribute();
 
     /// @brief Gets the specified attribute of a descriptor
     /// @tparam AttributeT Attribute type
     /// @tparam DescriptorT Descriptor type
     /// @return Attribute
     template <typename AttributeT, typename DescriptorT>
-    static constexpr const AttributeT& GetAttribute();
+    constexpr const AttributeT& GetAttribute();
 
     /// @brief Tries to get a specified attribute of a descriptor
     /// @tparam AttributeT Attribute type
     /// @tparam DescriptorT Descriptor type
     /// @return Attribute, @c nullptr if not found
     template <typename AttributeT, typename DescriptorT>
-    static constexpr const AttributeT* TryGetAttribute();
+    constexpr const AttributeT* TryGetAttribute();
+
+    template <typename T>
+    void Clone(const T* src, T* dst);
+
+    void CloneUsingFactory(const void* src, void* dst, size_t hash);
+    [[nodiscard]]
+    void* CreateUsingFactory(size_t hash);
 }
 
 END_XNOR_CORE

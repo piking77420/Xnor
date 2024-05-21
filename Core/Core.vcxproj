@@ -705,6 +705,7 @@
     <ClCompile Include="src\physics\physics_world.cpp" />
     <ClCompile Include="src\reflection\dotnet_reflection.cpp" />
     <ClCompile Include="src\reflection\filters.cpp" />
+    <ClCompile Include="src\reflection\reflection.cpp" />
     <ClCompile Include="src\reflection\type_renderer.cpp" />
     <ClCompile Include="src\reflection\xnor_factory.cpp" />
     <ClCompile Include="src\rendering\animator.cpp" />

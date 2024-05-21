@@ -68,12 +68,7 @@ void Entity::OnRendering()
 Entity* Entity::Clone() const
 {
     Entity* clone = World::scene->CreateEntity(name, m_Parent);
-
-    for (Component* component : m_Components)
-    {
-        // TODO: Clone components
-        //clone->AddComponent<>();
-    }
+    Reflection::Clone<Entity>(this, clone);
 
     for (const Entity* child : m_Children)
         clone->AddChild(child->Clone());

@@ -135,8 +135,7 @@ bool_t Mesh::LoadMesh(const aiScene& scene,Pointer<Skeleton>* outSkeleton)
         
         if (!ResourceManager::Contains(fullName))
         {
-           model = ResourceManager::Add<Model>(fullName);
-            
+            model = ResourceManager::Add<Model>(fullName);
 
             if (!model->Load(*scene.mMeshes[i]))
             {
@@ -148,7 +147,7 @@ bool_t Mesh::LoadMesh(const aiScene& scene,Pointer<Skeleton>* outSkeleton)
 
             if (nbrOfSkeleton > 0)
             {
-                Logger::LogWarning("Xnor don't handle multiple skeleton from one file {}", m_File->GetPath());
+                Logger::LogWarning("Xnor doesn't handle multiple skeletons from one file {}", m_File->GetPath());
                 continue;
             }
         }

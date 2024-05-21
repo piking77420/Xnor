@@ -47,6 +47,19 @@ inline void* XnorFactory::CreateObject(const std::string& name, const std::strin
     return it->second.createFunc(managedTypeName);
 }
 
+void XnorFactory::CloneObject(const void* const src, void* const dst, const size_t hash)
+{
+    auto&& it = m_FactoryMapHash.find(hash);
+
+    if (it == m_FactoryMapHash.end())
+    {
+        Logger::LogError("Couldn't find type : {}", hash);
+        return;
+    }
+
+    it->second.cloneFunc(src, dst);
+}
+
 inline void XnorFactory::DisplayObject(void* const obj, const size_t hash, std::pair<void*, const char_t*>* const windowInfo)
 {
     auto&& it = m_FactoryMapHash.find(hash);

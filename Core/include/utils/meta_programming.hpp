@@ -6,8 +6,8 @@
 ///
 /// @brief Defines utilities for meta programming and template manipulation
 
-#include <type_traits>
 #include <map>
+#include <type_traits>
 
 #include <Maths/quaternion.hpp>
 #include <Maths/vector2.hpp>
@@ -81,6 +81,11 @@ namespace Meta
     /// @tparam T Type
     template <typename T>
     constexpr bool_t IsDefaultConstructible = std::is_default_constructible_v<T>;
+
+    /// @brief Checks whether @c T can be copied without semantics
+    /// @tparam T Type
+    template <typename T>
+    constexpr bool_t IsCopyAssignable = std::is_copy_assignable_v<T>;
 
     template <bool_t Test>
     using EnableIf = std::enable_if_t<Test>;

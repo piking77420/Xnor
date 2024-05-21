@@ -28,6 +28,7 @@ void XnorFactory::RegisterType()
         .displayFunc = [](void* const obj, std::pair<void*, const char_t*>* const windowInfo) -> void { TypeRenderer::DisplayObject<T>(static_cast<T*>(obj), windowInfo); },
         .serializeFunc = [](void* const obj) -> void { Serializer::Serialize<T, false>(static_cast<T*>(obj)); },
         .deserializeFunc = [](void* const obj) -> void { Serializer::Deserialize<T, false>(static_cast<T*>(obj)); },
+        .cloneFunc = [](const void* const src, void* const dst) -> void { Reflection::Clone(static_cast<const T*>(src), static_cast<T*>(dst)); },
         .isConstructible = isConstructible,
         .name = humanizedName
     };

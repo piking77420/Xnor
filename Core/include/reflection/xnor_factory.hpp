@@ -21,6 +21,7 @@ class XnorFactory
         std::function<void(void*, std::pair<void*, const char_t*>*)> displayFunc;
         std::function<void(void*)> serializeFunc;
         std::function<void(void*)> deserializeFunc;
+        std::function<void(const void*, void*)> cloneFunc; 
 
         bool_t isConstructible;
         std::string name;
@@ -66,6 +67,8 @@ public:
     /// @returns Created instance (@c nullptr if can't create)
     [[nodiscard]]
     XNOR_ENGINE static void* CreateObject(const std::string& name, const std::string& managedTypeName = "");
+
+    XNOR_ENGINE static void CloneObject(const void* src, void* dst, size_t hash);
 
     /// @brief Helper function to register all the XnorCore types
     XNOR_ENGINE static void RegisterAllTypes();
