@@ -37,6 +37,11 @@
 
 %ignore XnorCore::Pointer::GetReferenceCounter;
 
+%ignore XnorCore::Pointer::operator=;
+%ignore XnorCore::Pointer::operator*;
+%ignore XnorCore::Pointer::operator->;
+%ignore XnorCore::Pointer::operator bool_t;
+
 %include "utils/pointer.hpp"
 
 %template(MeshPointer) XnorCore::Pointer<XnorCore::Mesh>;

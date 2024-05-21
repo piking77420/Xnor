@@ -143,7 +143,7 @@ Component* Filters::FilterComponent(List<Component*>* target)
     {
         if (m_TextFilter.PassFilter(names[i].c_str()) && ImGui::Selectable(names[i].c_str()))
         {
-            c = DotnetReflection::CreateInstance(names[i]);
+            c = ScriptComponent::New(names[i], DotnetRuntime::GetGameAssembly());
             break;
         }
     }

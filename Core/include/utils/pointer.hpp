@@ -76,8 +76,10 @@ public:
     /// @brief Creates a copy of another @ref Pointer, specifying whether it is a weak or strong reference.
     Pointer(const Pointer& other, bool_t strongReference = false);
 
+#ifndef SWIG
     /// @brief Creates a Pointer by moving all the values of an existing one.
     Pointer(Pointer&& other) noexcept;
+#endif
 
     // ReSharper disable once CppNonExplicitConvertingConstructor
     /// @brief Creates a Pointer from a @c nullptr.
@@ -110,11 +112,13 @@ public:
     [[nodiscard]]
     const T* Get() const;
 
+#ifndef SWIG
     /// @brief Gets the underlying raw pointer.
     ///
     /// This is equivalent to calling Pointer::operator T*();
     [[nodiscard]]
     T* Get();
+#endif
 
     /// @brief Returns whether this Pointer is @c nullptr.
     [[nodiscard]]
@@ -158,6 +162,7 @@ public:
     template <typename U>
     Pointer& operator=(Pointer<U>&& other) noexcept;
 
+#ifndef SWIG
     /// @brief Converts this @c const Pointer to its underlying @c const raw pointer.
     [[nodiscard]]
     explicit operator const T*() const;
@@ -165,7 +170,8 @@ public:
     /// @brief Converts this Pointer to its underlying raw pointer.
     [[nodiscard]]
     explicit operator T*();
-
+#endif
+    
     // ReSharper disable once CppNonExplicitConversionOperator
     /// @brief Converts this @ref Pointer to a @c bool_t the same way a raw pointer would.
     [[nodiscard]]

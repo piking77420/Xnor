@@ -177,14 +177,6 @@ void DotnetReflection::GetScriptTypes(List<std::string>* const list)
     }
 }
 
-ScriptComponent* DotnetReflection::CreateInstance(const std::string& typeName)
-{
-    auto&& obj = m_DotnetTypes[typeName].createFunc();
-    ScriptComponent* component = obj.GetFieldValue<ScriptComponent*>("swigCPtr");
-    component->Initialize(obj);
-    return component;
-}
-
 void DotnetReflection::SerializeType(void* const value, const std::string& fieldName, const std::string& typeName)
 {
     auto&& it = m_DotnetTypes.find(typeName);
