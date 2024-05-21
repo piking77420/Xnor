@@ -49,6 +49,16 @@ void ScriptComponent::Update()
     m_ManagedObject.InvokeMethod("Update");
 }
 
+Coral::ManagedObject& ScriptComponent::GetManagedObject()
+{
+    return m_ManagedObject;
+}
+
+const Coral::ManagedObject& ScriptComponent::GetManagedObject() const
+{
+    return m_ManagedObject;
+}
+
 void ScriptComponent::OnTriggerEnter(Collider* self, Collider* other, const CollisionData& data)
 {
     InvokeCollisionEvent("OnTriggerEnter", FORWARD(self), FORWARD(other), FORWARD(data));
@@ -77,16 +87,6 @@ void ScriptComponent::OnCollisionStay(Collider* self, Collider* other, const Col
 void ScriptComponent::OnCollisionExit(Collider* self, Collider* other)
 {
     InvokeCollisionExitEvent("OnCollisionExit", FORWARD(self), FORWARD(other));
-}
-
-Coral::ManagedObject& ScriptComponent::GetManagedObject()
-{
-    return m_ManagedObject;
-}
-
-const Coral::ManagedObject& ScriptComponent::GetManagedObject() const
-{
-    return m_ManagedObject;
 }
 
 void ScriptComponent::InvokeCollisionEvent(const std::string& functionName, Collider* self, Collider* other, const CollisionData& data)

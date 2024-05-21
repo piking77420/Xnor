@@ -5,6 +5,7 @@
 #include <ImGui/imgui_impl_opengl3.h>
 #include <ImguiGizmo/ImGuizmo.h>
 
+#include "Coral/GC.hpp"
 #include "csharp/dotnet_runtime.hpp"
 #include "file/file_manager.hpp"
 #include "input/time.hpp"
@@ -383,7 +384,9 @@ void Editor::StopPlaying()
 	XnorCore::Logger::LogInfo("Stopping game");
 	
 	XnorCore::Coroutine::StopAll();
-	
+
+	XnorCore::DotnetRuntime::GcCollect();
+
 	if (data.currentScene.IsValid())
 	{
 		DeserializeScene(data.currentScene.Get()->GetPath().generic_string());

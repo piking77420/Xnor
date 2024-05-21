@@ -187,7 +187,7 @@ struct Data64
 %}
 
 %include "utils/logger.i"
-%include "utils/pointer.hpp"
+%include "utils/pointer.i"
 %include "utils/guid.hpp"
 %include "utils/list.i"
 %include "utils/color.i"
@@ -221,7 +221,7 @@ struct Data64
 %include "resource/animation.hpp"
 
 %include "resource/mesh.hpp"
-%include "resource/resource_manager.hpp"
+%include "resource/resource_manager.i"
 
 %include "resource/shader.hpp"
 

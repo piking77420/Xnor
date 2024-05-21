@@ -181,6 +181,7 @@ private:
     List<Component*> m_Components;
 
     friend class Scene;
+    friend class Component;
 };
 
 END_XNOR_CORE

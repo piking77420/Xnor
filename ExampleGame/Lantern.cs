@@ -1,29 +1,23 @@
-﻿using Xnor.Core;
+﻿using System;
+using Xnor.Core;
 
 namespace Game
 {
     public class Lantern : ScriptComponent
     {
-        private Light light;
-        private Color color;
+        public float MaxRotationAngle = CoreNative.PiOver4;
 
-        public float Speed = 0.05f;
+        private Vector3 startingPosition;
 
         protected override void Begin()
         {
-            light = GetComponent<Light>();
+            startingPosition = Transform.Position;
         }
 
         protected override void Update()
         {
-            color = Color.Lerp(color, Color.Red, Speed);
-
-            if (Input.GetMouseButton(MouseButton.Left, MouseButtonStatus.Pressed))
-                color = Color.Blue;
-            if (Input.GetMouseButton(MouseButton.Right, MouseButtonStatus.Pressed))
-                color = Color.Green;
-
-            light.color = color;
+            float time = Time.TotalTime * 0.25f;
+            Transform.Position = startingPosition + new Vector3(MathF.Cos(time), MathF.Sin(time), 0f);
         }
     }
 }

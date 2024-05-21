@@ -33,7 +33,16 @@ public:
     XNOR_ENGINE void Begin() override;
 
     XNOR_ENGINE void Update() override;
-    
+
+    /// @brief Returns the .NET ManagedObject linked to this ScriptComponent
+    [[nodiscard]]
+    XNOR_ENGINE Coral::ManagedObject& GetManagedObject();
+
+    /// @brief Returns the .NET ManagedObject linked to this ScriptComponent
+    [[nodiscard]]
+    XNOR_ENGINE const Coral::ManagedObject& GetManagedObject() const;
+
+protected:
     XNOR_ENGINE virtual void OnTriggerEnter(Collider* self, Collider* other, const CollisionData& data);
 
     XNOR_ENGINE virtual void OnTriggerStay(Collider* self, Collider* other, const CollisionData& data);
@@ -45,14 +54,6 @@ public:
     XNOR_ENGINE virtual void OnCollisionStay(Collider* self, Collider* other, const CollisionData& data);
 
     XNOR_ENGINE virtual void OnCollisionExit(Collider* self, Collider* other);
-
-    /// @brief Returns the .NET ManagedObject linked to this ScriptComponent
-    [[nodiscard]]
-    XNOR_ENGINE Coral::ManagedObject& GetManagedObject();
-
-    /// @brief Returns the .NET ManagedObject linked to this ScriptComponent
-    [[nodiscard]]
-    XNOR_ENGINE const Coral::ManagedObject& GetManagedObject() const;
     
 private:
     Coral::ManagedObject m_ManagedObject;

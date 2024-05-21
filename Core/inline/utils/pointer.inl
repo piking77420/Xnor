@@ -210,22 +210,6 @@ Pointer<T>::operator T*()
 }
 
 template <typename T>
-#ifdef DOXYGEN
-Pointer<T>::operator stdstring() const
-#else
-Pointer<T>::operator std::string() const
-#endif
-{
-    return std::format(
-        "{{ ptr={:p}, sRefs={:d}, wRefs={:d}, isSRef={} }}",
-        static_cast<const T*>(this),
-        m_ReferenceCounter->GetStrong(),
-        m_ReferenceCounter->GetWeak(),
-        m_IsStrongReference
-    );
-}
-
-template <typename T>
 Pointer<T>::operator bool_t() const { return IsValid(); }
 
 template <typename T>
