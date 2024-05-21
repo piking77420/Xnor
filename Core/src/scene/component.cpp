@@ -4,7 +4,11 @@
 
 using namespace XnorCore;
 
-Component::~Component() = default;
+Component::~Component()
+{
+    if (entity)
+        entity->m_Components.Remove(this);
+}
 
 void Component::Destroy()
 {

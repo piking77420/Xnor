@@ -105,10 +105,9 @@ DotnetAssembly* DotnetRuntime::GetAssembly(const std::string& name)
     return nullptr;
 }
 
-DotnetAssembly* DotnetRuntime::GetGameAssembly()
-{
-    return GetAssembly(Dotnet::GameProjectName);
-}
+void DotnetRuntime::GcCollect() { Coral::GC::Collect(); Coral::GC::WaitForPendingFinalizers(); }
+
+DotnetAssembly* DotnetRuntime::GetGameAssembly() { return GetAssembly(Dotnet::GameProjectName); }
 
 void DotnetRuntime::UnloadAllAssemblies(const bool_t reloadContext)
 {

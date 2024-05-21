@@ -38,7 +38,13 @@
         return false;
     }
 
-    public void AddComponent<T>() where T : Component, new() => GetComponents().Add(new T());
+    public T AddComponent<T>() where T : Component, new()
+    {
+        T result = new();
+        GetComponents().Add(result);
+        result.entity = this;
+        return result;
+    }
 
     public void RemoveComponent<T>() where T : Component
     {
@@ -51,16 +57,18 @@
             }
         }
     }
+
+    public void RemoveComponent(Component c) => GetComponents().Remove(c);
     
     public bool Equals(Entity other) => OperatorEq(other);
 
-    public override bool Equals(object obj) => obj is Entity other && Equals(other);
+    public override bool Equals(object obj) => obj != null && obj is Entity other && Equals(other);
 
     public override int GetHashCode() => throw new global::System.NotImplementedException("Cannot get the hash code of a native object");
 
-    public static bool operator ==(Entity left, Entity right) => left.Equals(right);
+    public static bool operator ==(Entity left, Entity right) => left.Equals((object) right);
 
-    public static bool operator !=(Entity left, Entity right) => !left.Equals(right);
+    public static bool operator !=(Entity left, Entity right) => !left.Equals((object) right);
 %}
 
 %csmethodmodifiers XnorCore::Entity::operator== "private";

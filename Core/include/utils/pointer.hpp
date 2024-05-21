@@ -166,19 +166,6 @@ public:
     [[nodiscard]]
     explicit operator T*();
 
-    /// @brief Converts this Pointer to its string representation.
-    ///
-    /// The resulting string will be of the following form:
-    /// @code
-    /// { ptr=<address>, sRefs=<strongReferenceCount>, wRefs=<weakReferenceCount>, isSRef=<isStrongReference> }
-    /// @endcode
-    [[nodiscard]]
-#ifdef DOXYGEN
-    explicit operator stdstring() const;
-#else
-    explicit operator std::string() const;
-#endif
-
     // ReSharper disable once CppNonExplicitConversionOperator
     /// @brief Converts this @ref Pointer to a @c bool_t the same way a raw pointer would.
     [[nodiscard]]

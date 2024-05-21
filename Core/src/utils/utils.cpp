@@ -163,7 +163,7 @@ void Utils::CreateEmptyFile(const std::filesystem::path& path)
     std::ofstream(FORWARD(path));
 }
 
-void Utils::SetThreadName(std::thread& thread, const std::wstring& name)
+void Utils::SetThreadName([[maybe_unused]] std::thread& thread, [[maybe_unused]] const std::wstring& name)
 {
 #ifdef _DEBUG
     (void) SetThreadDescription(thread.native_handle(), name.c_str());
