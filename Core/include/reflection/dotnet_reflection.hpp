@@ -86,9 +86,6 @@ public:
     XNOR_ENGINE static void DisplayType(ScriptComponent* script);
 
     XNOR_ENGINE static void GetScriptTypes(List<std::string>* list);
-
-    [[nodiscard]]
-    XNOR_ENGINE static ScriptComponent* CreateInstance(const std::string& typeName);
     
     XNOR_ENGINE static void SerializeScript(const ScriptComponent* script);
 

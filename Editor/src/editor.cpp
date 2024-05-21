@@ -5,7 +5,6 @@
 #include <ImGui/imgui_impl_opengl3.h>
 #include <ImguiGizmo/ImGuizmo.h>
 
-#include "Coral/GC.hpp"
 #include "csharp/dotnet_runtime.hpp"
 #include "file/file_manager.hpp"
 #include "input/time.hpp"
@@ -25,7 +24,6 @@
 #include "windows/hierarchy.hpp"
 #include "windows/inspector.hpp"
 #include "windows/performance.hpp"
-#include "windows/render_window.hpp"
 #include "world/scene_graph.hpp"
 #include "world/world.hpp"
 
@@ -366,6 +364,7 @@ void Editor::BuildAndReloadCodeAsync()
 			onScriptsReloadingEnd();
 		}
 	);
+	XnorCore::Utils::SetThreadName(m_CurrentAsyncActionThread, L"Scripts Reloading Thread");
 }
 
 void Editor::StartPlaying()
@@ -433,6 +432,7 @@ void Editor::SerializeSceneAsync(const std::string& filepath)
 	
 	m_Serializing = true;
 	m_CurrentAsyncActionThread = std::thread([this, path = filepath] { SerializeScene(path); });
+	XnorCore::Utils::SetThreadName(m_CurrentAsyncActionThread, L"Scene Serialization Thread");
 }
 
 void Editor::DeserializeScene(const std::string& filepath)

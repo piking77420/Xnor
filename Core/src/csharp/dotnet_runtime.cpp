@@ -13,7 +13,7 @@
 
 using namespace XnorCore;
 
-constexpr const char_t* AlcName = "XNOR Coral AssemblyLoadContext";
+constexpr const char_t* AlcName = "XNOR .NET AssemblyLoadContext";
 
 Coral::HostSettings DotnetRuntime::m_Settings =
 {
@@ -105,7 +105,13 @@ DotnetAssembly* DotnetRuntime::GetAssembly(const std::string& name)
     return nullptr;
 }
 
-void DotnetRuntime::GcCollect() { Coral::GC::Collect(); Coral::GC::WaitForPendingFinalizers(); }
+void DotnetRuntime::GcCollect(bool_t wait)
+{
+    Coral::GC::Collect();
+    
+    if (wait)
+        Coral::GC::WaitForPendingFinalizers();
+}
 
 DotnetAssembly* DotnetRuntime::GetGameAssembly() { return GetAssembly(Dotnet::GameProjectName); }
 
@@ -113,8 +119,7 @@ void DotnetRuntime::UnloadAllAssemblies(const bool_t reloadContext)
 {
     Logger::LogInfo("Unloading {} .NET assemblies", m_LoadedAssemblies.size());
     
-    Coral::GC::Collect();
-    Coral::GC::WaitForPendingFinalizers();
+    GcCollect();
     
     for (auto&& assembly : m_LoadedAssemblies)
         delete assembly;

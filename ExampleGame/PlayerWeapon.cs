@@ -17,7 +17,6 @@ namespace Game
         
         public void Shoot()
         {
-            return;
             Entity bullet = World.scene.CreateEntity("Bullet ammoooo");
             SetBulletPrefabs(bullet);
             
