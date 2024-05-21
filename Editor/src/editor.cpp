@@ -544,6 +544,7 @@ void Editor::Update()
 	{
 		Time::Update();
 		Window::PollEvents();
+		Input::Update();
 		BeginFrame();
 		CheckWindowResize();
 
@@ -563,7 +564,6 @@ void Editor::Update()
 		}
 
 		Coroutine::UpdateAll();
-		Input::Update();
 		EndFrame();
 		renderer.SwapBuffers();
 

@@ -69,9 +69,19 @@ void Collider::SetFriction(const float_t friction)
     PhysicsWorld::SetFriction(m_BodyId, friction);
 }
 
-float_t Collider::GetFriction()
+float_t Collider::GetFriction() const
 {
     return PhysicsWorld::GetFriction(m_BodyId);
+}
+
+void Collider::SetLinearVelocity(Vector3 velocity)
+{
+    PhysicsWorld::SetLinearVelocity(m_BodyId,velocity);
+}
+
+Vector3 Collider::GetLinearVelocity() const
+{
+    return PhysicsWorld::GetLinearVelocity(m_BodyId);
 }
 
 void Collider::AddDebugEvents()

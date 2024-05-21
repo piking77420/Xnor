@@ -194,6 +194,10 @@ public:
     /// @param result Raycast result
     /// @returns Whether a hit occured
     XNOR_ENGINE static bool_t Raycast(const Vector3& position, const Vector3& direction, float_t length, RaycastResult* result);
+    
+    XNOR_ENGINE static void SetLinearVelocity(uint32_t bodyId,Vector3 velocity);
+
+    XNOR_ENGINE static Vector3 GetLinearVelocity(uint32_t bodyId);
 
 private:
     XNOR_ENGINE static void TraceImpl(const char_t* format, ...);

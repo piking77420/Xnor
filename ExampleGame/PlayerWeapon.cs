@@ -12,6 +12,7 @@ namespace Game
         private List<Entity> bullets = new List<Entity>();
         public void Shoot()
         {
+            return;
             Entity bullet = World.scene.CreateEntity("Bullet ammoooo");
             bullet.AddComponent<BoxCollider>();
             bullet.AddComponent<StaticMeshRenderer>();

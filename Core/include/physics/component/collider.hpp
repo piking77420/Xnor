@@ -61,7 +61,11 @@ public:
     /// @brief Get the friction of the body
     /// @param value value
     [[nodiscard]]
-    XNOR_ENGINE float_t GetFriction();
+    XNOR_ENGINE float_t GetFriction() const;
+
+    XNOR_ENGINE void SetLinearVelocity(Vector3 velocity);
+
+    XNOR_ENGINE Vector3 GetLinearVelocity() const;
 
     /// @brief Callback if the collider is a trigger and another collider entered in it
     Event<Collider*, Collider*, const CollisionData&> onTriggerEnter;

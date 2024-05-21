@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-16"?>
 <Scene>
 	<skybox>
-		<m_SkyboxTextureResource>6291CF33-C815-4CCC-AB-FA-88-B1-B4-F8-F0-AD</m_SkyboxTextureResource>
+		<m_SkyboxTextureResource>6ABED7C9-3FCA-4901-90-D1-6E-A2-B8-B1-93-75</m_SkyboxTextureResource>
 	</skybox>
 	<m_Entities>
 		<0>
@@ -272,7 +272,7 @@
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
 						<m_Animation>D40974A1-F0EF-4613-A7-6F-97-D3-57-87-60-87</m_Animation>
-						<m_CurrentFrame>2236</m_CurrentFrame>
+						<m_CurrentFrame>2219</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>
@@ -313,12 +313,12 @@
 						<roughness>0</roughness>
 						<reflectance>0</reflectance>
 						<emissive>0</emissive>
-						<ambientOcclusion>0</ambientOcclusion>
+						<ambientOcclusion>0.036</ambientOcclusion>
 						<albedoTexture>1B23E0FA-D07C-458B-8D-FF-A5-84-C5-41-82-8D</albedoTexture>
 						<metallicTexture>7587E9E6-C775-4518-93-22-41-74-BC-95-DD-3D</metallicTexture>
 						<roughnessTexture>7587E9E6-C775-4518-93-22-41-74-BC-95-DD-3D</roughnessTexture>
 						<normalTexture>299972BB-7B3B-4960-86-88-77-D3-1B-94-D1-19</normalTexture>
-						<ambientOcclusionTexture>7094E218-5FD2-4B95-96-B3-42-AB-38-FF-58-F8</ambientOcclusionTexture>
+						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
 						<emissiveTexture>0-0-0-0-0-0-0-0-0-0-0</emissiveTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>

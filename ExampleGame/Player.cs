@@ -25,15 +25,17 @@ namespace Game
         protected override void Update()
         {
             HandleInputs();
+            collider.SetFriction(0);
 
             // Update velocity
             Vector3 desiredVelocity = movement * MovementSpeed;
             desiredVelocity.Y = velocity.Y;
             velocity = 0.75f * velocity + 0.25f * desiredVelocity;
 
-            // Update position
             
+            // Update position
             Transform.Position += velocity * Time.DeltaTime;
+            velocity = new Vector3();
         }
 
         private void HandleInputs()

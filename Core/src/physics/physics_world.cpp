@@ -357,6 +357,30 @@ bool_t PhysicsWorld::Raycast(const Vector3& position, const Vector3& direction, 
     return hit;
 }
 
+void PhysicsWorld::SetLinearVelocity(uint32_t bodyId, Vector3 velocity)
+{
+    const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
+
+    if (!lock.Succeeded())
+        return;
+
+    JPH::Body& body = lock.GetBody();
+
+    body.SetLinearVelocity(ToJph(velocity));
+}
+
+Vector3 PhysicsWorld::GetLinearVelocity(uint32_t bodyId)
+{
+    const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
+
+    if (!lock.Succeeded())
+        return Vector3::Zero();
+
+    JPH::Body& body = lock.GetBody();
+
+    return FromJph(body.GetLinearVelocity());
+}
+
 bool_t PhysicsWorld::IsBodyActive(const uint32_t bodyId)
 {
     return m_BodyInterface->IsActive(JPH::BodyID(bodyId));
