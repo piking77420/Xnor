@@ -272,7 +272,7 @@
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
 						<m_Animation>D40974A1-F0EF-4613-A7-6F-97-D3-57-87-60-87</m_Animation>
-						<m_CurrentFrame>1199</m_CurrentFrame>
+						<m_CurrentFrame>2236</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>
@@ -343,6 +343,49 @@
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
 		</11>
+		<12>
+			<name>Plane</name>
+			<m_EntityId>A44A61BE-51AA-4167-A5-41-EE-35-8E-BC-FC-53</m_EntityId>
+			<transform>
+				<m_Position>0.07956362 ; -3.5399346 ; 16.901243</m_Position>
+				<m_EulerRotation>0.26508138 ; -0 ; 0</m_EulerRotation>
+				<m_Scale>6.453011 ; 0.99999976 ; 6.2981915</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="StaticMeshRenderer">
+					<mesh>99097F3B-B578-4C0B-A2-64-E1-51-5A-41-BA-A</mesh>
+					<material>
+						<materialType>Opaque</materialType>
+						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
+						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
+						<metallic>0</metallic>
+						<roughness>0</roughness>
+						<reflectance>0</reflectance>
+						<emissive>0</emissive>
+						<ambientOcclusion>0</ambientOcclusion>
+						<albedoTexture>5880DD9A-CFA7-4B8E-AE-20-A0-F0-D9-B9-9D-3C</albedoTexture>
+						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
+						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
+						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
+						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
+						<emissiveTexture>0-0-0-0-0-0-0-0-0-0-0</emissiveTexture>
+					</material>
+					<drawModelAabb>false</drawModelAabb>
+					<enabled>true</enabled>
+				</0>
+				<1 typeName="BoxCollider">
+					<center>0 ; 0 ; 0</center>
+					<size>1 ; 1 ; 1</size>
+					<constraints>ConstraintPosition|ConstraintRotation</constraints>
+					<m_IsStatic>true</m_IsStatic>
+					<m_IsTrigger>false</m_IsTrigger>
+					<m_IsActive>false</m_IsActive>
+					<enabled>true</enabled>
+				</1>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</12>
 	</m_Entities>
 </Scene>
 

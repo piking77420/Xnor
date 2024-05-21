@@ -166,7 +166,16 @@ public:
     /// @param impulse Impulse
     /// @param point Point
     XNOR_ENGINE static void AddImpulse(uint32_t bodyId, const Vector3& impulse, const Vector3& point);
+    
+    /// @brief Adds a impulse to a body at a specific point
+    /// @param bodyId Body ID
+    /// @param friction friction
+    XNOR_ENGINE static void SetFriction(uint32_t bodyId, float_t friction);
 
+    /// @brief Adds a impulse to a body at a specific point
+    /// @param bodyId Body ID
+    XNOR_ENGINE static float_t GetFriction(uint32_t bodyId);
+    
     /// @brief Adds a torque to a body
     /// @param bodyId Body ID
     /// @param torque Torque

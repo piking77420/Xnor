@@ -54,6 +54,15 @@ public:
     /// @param impulse Force
     XNOR_ENGINE void AddImpulse(const Vector3& impulse) const;
 
+    /// @brief Set the friction of the body
+    /// @param friction friction
+    XNOR_ENGINE void SetFriction(float_t friction);
+
+    /// @brief Get the friction of the body
+    /// @param value value
+    [[nodiscard]]
+    XNOR_ENGINE float_t GetFriction();
+
     /// @brief Callback if the collider is a trigger and another collider entered in it
     Event<Collider*, Collider*, const CollisionData&> onTriggerEnter;
     /// @brief Callback if the collider is a trigger and another collider stayed in it

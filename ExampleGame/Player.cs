@@ -32,6 +32,7 @@ namespace Game
             velocity = 0.75f * velocity + 0.25f * desiredVelocity;
 
             // Update position
+            
             Transform.Position += velocity * Time.DeltaTime;
         }
 

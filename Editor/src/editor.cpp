@@ -99,7 +99,7 @@ void Editor::CreateDefaultWindows()
 	data.editorViewPort.isEditor = true;
 	data.editorViewPort.camera = &data.editorCam;
 	
-	OpenWindow<RenderWindow>(*gameViewPort);
+	//OpenWindow<RenderWindow>(*gameViewPort);
 	OpenWindow<EditorWindow>(data.editorViewPort);
 	OpenWindow<GameWindow>(*gameViewPort);
 	OpenWindow<Performance>(50);
@@ -381,13 +381,14 @@ void Editor::StartPlaying()
 void Editor::StopPlaying()
 {
 	XnorCore::Logger::LogInfo("Stopping game");
-
+	
 	XnorCore::Coroutine::StopAll();
-
-	DeserializeScene(data.currentScene.Get()->GetPath().generic_string());
-
-	XnorCore::World::scene->Initialize();
-
+	
+	if (data.currentScene.IsValid())
+	{
+		DeserializeScene(data.currentScene.Get()->GetPath().generic_string());
+		XnorCore::World::scene->Initialize();
+	}
 	
 	XnorCore::World::isPlaying = false;
 	XnorCore::World::hasStarted = false;
@@ -450,7 +451,6 @@ void Editor::DeserializeScene(const std::string& filepath)
 	XnorCore::World::scene = new XnorCore::Scene;
 	
 	XnorCore::Serializer::StartDeserialization(file);
-		// Possible memory leak?
 	XnorCore::Serializer::Deserialize<XnorCore::Scene, true>(XnorCore::World::scene);
 	XnorCore::Serializer::EndDeserialization();
 	

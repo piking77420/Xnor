@@ -64,6 +64,16 @@ void Collider::AddImpulse(const Vector3& impulse) const
     PhysicsWorld::AddImpulse(m_BodyId, impulse);
 }
 
+void Collider::SetFriction(const float_t friction)
+{
+    PhysicsWorld::SetFriction(m_BodyId, friction);
+}
+
+float_t Collider::GetFriction()
+{
+    return PhysicsWorld::GetFriction(m_BodyId);
+}
+
 void Collider::AddDebugEvents()
 {
     onTriggerEnter += [](const Collider* const self, const Collider* const other, const CollisionData& data) -> void

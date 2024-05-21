@@ -296,6 +296,30 @@ void PhysicsWorld::AddImpulse(const uint32_t bodyId, const Vector3& impulse, con
     body.AddImpulse(ToJph(impulse) * body.GetMotionProperties()->GetInverseMass(), ToJph(point));
 }
 
+void PhysicsWorld::SetFriction(uint32_t bodyId, float_t friction)
+{
+    const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
+
+    if (!lock.Succeeded())
+        return;
+
+    JPH::Body& body = lock.GetBody();
+
+    body.SetFriction(friction);
+}
+
+float_t PhysicsWorld::GetFriction(uint32_t bodyId)
+{
+    const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
+
+    if (!lock.Succeeded())
+        return 0.f;
+
+    JPH::Body& body = lock.GetBody();
+
+    return body.GetFriction();
+}
+
 void PhysicsWorld::AddTorque(const uint32_t bodyId, const Vector3& torque)
 {
     m_BodyInterface->AddTorque(JPH::BodyID(bodyId), ToJph(torque));
