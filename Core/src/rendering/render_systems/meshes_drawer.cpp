@@ -73,7 +73,6 @@ void MeshesDrawer::DrawAabb(const Pointer<Mesh> cube) const
         if (!skinnedMeshRender->drawModelAabb)
             continue;
         
-        ModelUniformData modelData;
         modelData.model = skinnedMeshRender->GetTransform().worldMatrix;
 
         try
