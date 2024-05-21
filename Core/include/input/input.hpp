@@ -71,6 +71,8 @@ public:
     /// @brief Updates the input manager
     XNOR_ENGINE static void Update();
 
+    XNOR_ENGINE static void Reset();
+
     // Retrun A array indexOf WindowInfo
     XNOR_ENGINE static uint32_t GetBindingId();
 
@@ -106,9 +108,9 @@ private:
     // For each Gamepad
     XNOR_ENGINE static inline std::array<GamepadButtons, GamepadMax> m_GamepadsButton;
     
-    XNOR_ENGINE static inline LowPassFilter<Vector2,6> m_LastMousePosition;
+    XNOR_ENGINE static inline Vector2 m_LastMousePosition;
     
-    XNOR_ENGINE static inline LowPassFilter<Vector2,6> m_MousePosition;
+    XNOR_ENGINE static inline Vector2 m_MousePosition;
     
     XNOR_ENGINE static inline LowPassFilter<Vector2,6> m_MouseDelta;
 

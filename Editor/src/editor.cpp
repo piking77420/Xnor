@@ -567,6 +567,7 @@ void Editor::Update()
 		}
 
 		Coroutine::UpdateAll();
+		Input::Reset();
 		EndFrame();
 		renderer.SwapBuffers();
 
