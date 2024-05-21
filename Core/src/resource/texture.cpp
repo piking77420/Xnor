@@ -173,13 +173,14 @@ bool_t Texture::Save() const
     stbi_flip_vertically_on_write(loadData.flipVertically);
 
     const std::string&& extension = m_File->GetExtension();
+    
     int32_t result = 0;
     if (extension == ".hdr")
-        result = stbi_write_hdr(m_Name.c_str(), m_Size.x, m_Size.y, m_DataChannels, reinterpret_cast<const float_t* const>(m_Data));
+        result = stbi_write_hdr(m_File->GetPath().generic_string().c_str(), m_Size.x, m_Size.y, m_DataChannels, reinterpret_cast<const float_t* const>(m_Data));
     else if (extension == ".png")
-        result = stbi_write_png(m_Name.c_str(), m_Size.x, m_Size.y, m_DataChannels, m_Data, 0);
+        result = stbi_write_png(m_File->GetPath().generic_string().c_str(), m_Size.x, m_Size.y, m_DataChannels, m_Data, 0);
     else if (extension == ".jpg" || extension == ".jpeg")
-        result = stbi_write_jpg(m_Name.c_str(), m_Size.x, m_Size.y, m_DataChannels, m_Data, 100);
+        result = stbi_write_jpg(m_File->GetPath().generic_string().c_str(), m_Size.x, m_Size.y, m_DataChannels, m_Data, 100);
     else
         Logger::LogError("Unrecognized texture file extension {}", extension);
 

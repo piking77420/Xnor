@@ -93,6 +93,8 @@ public:
     [[nodiscard]]
     XNOR_ENGINE const Guid& GetGuid() const;
 
+    XNOR_ENGINE void SetFile(const Pointer<File> file);
+
 protected:
     /// @brief Whether the resource was loaded
     bool_t m_Loaded = false;

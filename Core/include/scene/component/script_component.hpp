@@ -24,9 +24,6 @@ public:
     /// @brief Creates and initializes a new ScriptComponent from the given managed type name and assembly.
     XNOR_ENGINE static ScriptComponent* New(const std::string& managedTypeName, const DotnetAssembly* assembly);
 
-    /// @brief Initializes this ScriptComponent with the given ManagedObject, effectively linking it with its instantiated .NET version.
-    XNOR_ENGINE void Initialize(const Coral::ManagedObject& managedObject);
-
     /// @brief Destroys this ScriptComponent in the .NET runtime.
     XNOR_ENGINE void Destroy() override;
 

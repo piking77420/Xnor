@@ -71,7 +71,6 @@ REFL_AUTO(
     field(m_Radius),
     field(m_StaticTest),
     field(m_StaticTransform),
-    field(m_TestEntity),
     field(m_GridPlottingTest, XnorCore::Reflection::GridPlotting(0, 1)),
     field(m_Array, XnorCore::Reflection::NotSerializable()),
     field(m_List, XnorCore::Reflection::NotSerializable()),

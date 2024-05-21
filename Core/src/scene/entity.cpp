@@ -15,10 +15,10 @@ Entity::Entity(const Guid& entiyId)
 
 Entity::~Entity()
 {
-    for (size_t i = 0; i < m_Components.GetSize(); i++)
-        m_Components[i]->Destroy();
+    decltype(m_Components) copy(m_Components);
 
-    m_Components.Clear();
+    for (size_t i = 0; i < copy.GetSize(); i++)
+        copy[i]->Destroy();
 }
 
 void Entity::Begin()

@@ -41,8 +41,8 @@ public:
     /// @brief Returns the loaded assembly with the given @p name.
     XNOR_ENGINE static DotnetAssembly* GetAssembly(const std::string& name);
 
-    /// @brief Tells the .NET Garbage Collector to collect unused memory.
-    XNOR_ENGINE static void GcCollect();
+    /// @brief Tells the .NET Garbage Collector to collect unused memory now. If @p wait is set, the function only returns when the GC has finished its task.
+    XNOR_ENGINE static void GcCollect(bool_t wait = true);
 
     /// @brief Returns the loaded Game assembly.
     XNOR_ENGINE static DotnetAssembly* GetGameAssembly();

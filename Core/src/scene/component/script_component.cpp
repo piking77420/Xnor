@@ -13,18 +13,14 @@ ScriptComponent* ScriptComponent::New(const std::string& managedTypeName, const 
     Coral::Type& type = assembly->GetCoralAssembly()->GetType(managedTypeName);
     Coral::ManagedObject instance = type.CreateInstance();
     ScriptComponent* script = instance.GetFieldValue<ScriptComponent*>("swigCPtr");
-    script->Initialize(instance);
+    script->m_ManagedObject = instance;
     return script;
-}
-
-void ScriptComponent::Initialize(const Coral::ManagedObject& managedObject)
-{
-    m_ManagedObject = managedObject;
 }
 
 void ScriptComponent::Destroy()
 {
     Logger::LogDebug("Destroying ScriptComponent instance with managed type {}", static_cast<std::string>(m_ManagedObject.GetType().GetFullName()));
+    entity = nullptr; // In case the C# finalizer is called late
     m_ManagedObject.Destroy();
 }
 

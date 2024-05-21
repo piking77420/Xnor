@@ -461,7 +461,10 @@ void Serializer::DeserializePointer(const Metadata<ReflectT, MemberT, Descriptor
         if (guid == Guid::Empty())
             *metadata.obj = nullptr;
         else
+        {
             m_GuidEntityMap.emplace(guid, metadata.obj);
+            Logger::LogInfo("Entity GUID = {} \n, Metadata name = {} \n Metatdata obj = {} ", static_cast<std::string>(guid), metadata.name , metadata.topLevelObj->name);
+        }
     }
 }
 

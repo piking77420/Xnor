@@ -3,6 +3,7 @@
 #include <array>
 
 #include "core.hpp"
+#include "low_pass_filter.hpp"
 #include "window.hpp"
 #include "input/gamepad_input.hpp"
 #include "input/keyboard_input.hpp"
@@ -62,11 +63,15 @@ public:
     template <class T>
     static T GetMousePosition();
 
+    XNOR_ENGINE static Vector2 GetMouseDelta();
+
     /// @brief Initializes the input manager
     XNOR_ENGINE static void Initialize();
 
     /// @brief Updates the input manager
     XNOR_ENGINE static void Update();
+
+    XNOR_ENGINE static void Reset();
 
     // Retrun A array indexOf WindowInfo
     XNOR_ENGINE static uint32_t GetBindingId();
@@ -107,7 +112,7 @@ private:
     
     XNOR_ENGINE static inline Vector2 m_MousePosition;
     
-    XNOR_ENGINE static inline Vector2 m_MouseDelta;
+    XNOR_ENGINE static inline LowPassFilter<Vector2,6> m_MouseDelta;
 
     XNOR_ENGINE static inline GLFWwindow* m_WindowHandle = nullptr;
 

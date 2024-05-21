@@ -196,14 +196,30 @@ void Input::CheckGamepadAtLaunch()
 void Input::Update()
 {
     if (m_IsInputLocked)
+    {
+        m_MouseDelta = {};
+        m_LastMousePosition = {};
+        m_MousePosition = {};
         return;
+    }
     
     POINT point;
     GetCursorPos(&point);
     Windows::SilenceError();
-    m_MousePosition.x = static_cast<float_t>(point.x);
-    m_MousePosition.y = static_cast<float_t>(point.y);
-    
+    float_t mouseX = static_cast<float_t>(point.x);
+    float_t mouseY = static_cast<float_t>(point.y);
+    m_MousePosition = { mouseX, mouseY };
+
+    m_MouseDelta.AddSample(m_MousePosition - m_LastMousePosition);
+
+    if (mouseLocked)
+        m_MouseDelta.AddSample(-m_MouseDelta.GetAvarage<Vector2>());
+
+    m_LastMousePosition = m_MousePosition; 
+}
+
+void Input::Reset()
+{
     for (auto& button : m_Mouse)
     {
         button.at(static_cast<size_t>(MouseButtonStatus::Pressed)) = false;
@@ -225,12 +241,6 @@ void Input::Update()
             button.at(static_cast<size_t>(GamepadButtonStatus::Release)) = false;
         }
     }
-
-    m_MouseDelta = m_MousePosition - m_LastMousePosition;
-
-    if (mouseLocked)
-        m_MousePosition -= m_MouseDelta;
-
 }
 
 uint32_t Input::GetBindingId()
@@ -256,6 +266,11 @@ void Input::BindWindow(const uint32_t bindInd)
         return;
 
     m_CurrentBoundWindow = bindInd;
+}
+
+Vector2 Input::GetMouseDelta()
+{
+    return m_MouseDelta.GetAvarage<Vector2>();
 }
 
 void Input::Initialize()
