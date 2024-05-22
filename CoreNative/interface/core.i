@@ -129,7 +129,7 @@ struct Data64
 #include "rendering/vertex.hpp"
 #include "rendering/viewport.hpp"
 #include "rendering/viewport_data.hpp"
-#include "rendering/plane.hpp"
+#include "utils/plane.hpp"
 
 #include "physics/data/collision_data.hpp"
 
@@ -139,7 +139,6 @@ struct Data64
 #include "physics/component/mesh_collider.hpp"
 #include "physics/component/sphere_collider.hpp"
 
-#include "resource/cubemap.hpp"
 #include "resource/font.hpp"
 #include "resource/audio_track.hpp"
 #include "resource/animation_montage.hpp"
@@ -202,13 +201,12 @@ struct Data64
 %include "rendering/vertex.hpp"
 %include "rendering/rhi_typedef.i"
 
-%include "resource/cubemap.hpp"
 %include "resource/texture.hpp"
 %include "resource/font.hpp"
 
 %include "transform.i"
 
-%include "rendering/plane.hpp"
+%include "utils/plane.hpp"
 
 %include "utils/bound.hpp"
 

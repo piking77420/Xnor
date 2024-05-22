@@ -24,11 +24,6 @@ void Framebuffer::AttachTexture(const Texture& texture, const Attachment::Attach
 	Rhi::AttachTextureToFrameBuffer(m_Id, attachment, texture.GetId(), level);
 }
 
-void Framebuffer::AttachTexture(const Cubemap& cubemap, const Attachment::Attachment attachment, const CubeMapFace cubeMapFace, const uint32_t level) const
-{
-	Rhi::AttachTextureToFrameBuffer(m_Id, attachment, cubeMapFace, cubemap.GetId(), level);
-}
-
 void Framebuffer::AttachTextureLayer(const Texture& texture, const Attachment::Attachment attachment, const uint32_t level, const uint32_t layer) const
 {
 	Rhi::AttachTextureToFrameBufferLayer(m_Id,attachment,texture.GetId(), level, layer);

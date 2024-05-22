@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-16"?>
 <Scene>
 	<skybox>
-		<m_SkyboxTextureResource>6ABED7C9-3FCA-4901-90-D1-6E-A2-B8-B1-93-75</m_SkyboxTextureResource>
+		<m_SkyboxTextureResource>6291CF33-C815-4CCC-AB-FA-88-B1-B4-F8-F0-AD</m_SkyboxTextureResource>
 	</skybox>
 	<m_Entities>
 		<0>
@@ -16,10 +16,11 @@
 				<0 typeName="DirectionalLight">
 					<zCascadeShadowMapZMultiplactor>10</zCascadeShadowMapZMultiplactor>
 					<color>1 ; 1 ; 1 ; 1</color>
-					<intensity>4.5</intensity>
-					<castShadow>false</castShadow>
+					<intensity>100</intensity>
+					<castShadow>true</castShadow>
 					<enabled>true</enabled>
 				</0>
+				<1 typeName="ScriptComponent" managedType="Game.RotateDirectionalLight"/>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
@@ -272,7 +273,7 @@
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
 						<m_Animation>E9F04973-E9D-4E85-98-A1-9-BF-16-C-2-FB</m_Animation>
-						<m_CurrentFrame>500</m_CurrentFrame>
+						<m_CurrentFrame>333</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>
@@ -340,7 +341,7 @@
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
 			<m_Components/>
-			<m_Parent>CEE35AD1-3980-4298-AD-2B-48-6C-53-DF-30-53</m_Parent>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
 		</11>
 		<12>

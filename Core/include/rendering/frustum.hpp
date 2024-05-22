@@ -4,7 +4,7 @@
 #include <Maths/vector3.hpp>
 
 #include "core.hpp"
-#include "plane.hpp"
+#include "utils/plane.hpp"
 #include "utils/bound.hpp"
 #include "camera.hpp"
 
