@@ -129,7 +129,6 @@ struct Data64
 #include "rendering/vertex.hpp"
 #include "rendering/viewport.hpp"
 #include "rendering/viewport_data.hpp"
-#include "rendering/plane.hpp"
 #include "rendering/draw_gizmo.hpp"
 #include "utils/plane.hpp"
 

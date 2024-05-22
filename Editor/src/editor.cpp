@@ -257,6 +257,8 @@ void Editor::ProjectMenuBar()
 		{
 			const std::string path = data.currentScene.IsValid() ? data.currentScene->GetPath().generic_string() : "";
 
+			ImGui::SeparatorText("Serialization");
+
 			const bool_t saveLoadDisabled = m_ReloadingScripts || m_GamePlaying;
 
 			if (saveLoadDisabled)
@@ -277,7 +279,7 @@ void Editor::ProjectMenuBar()
 			if (saveLoadDisabled)
 				ImGui::EndDisabled();
 
-			ImGui::Separator();
+			ImGui::SeparatorText("Metadata");
 			
 			const bool_t noScene = scene == nullptr;
 
