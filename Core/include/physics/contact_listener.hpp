@@ -10,7 +10,7 @@
 BEGIN_XNOR_CORE
 
 /// @private
-class ContactListenerImpl : public JPH::ContactListener
+class ContactListenerImpl final : public JPH::ContactListener
 {
 public:
     void ProcessEvents();
@@ -43,8 +43,9 @@ private:
 
         EventCount
     };
-    
-    std::vector<std::vector<EventInfo>> m_Events = std::vector<std::vector<EventInfo>>(EventCount);
+
+    std::mutex m_EventsMutex;
+    std::array<std::vector<EventInfo>, EventCount> m_Events;
 };
 
 END_XNOR_CORE
