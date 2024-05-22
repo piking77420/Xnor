@@ -183,6 +183,11 @@ namespace Reflection
     {
     };
 
+    /// @brief Prevents a field content from being displayed
+    struct DontExpand : FieldAttribute
+    {
+    };
+
     template <typename T>
     constexpr bool_t IsReflected = refl::trait::is_reflectable_v<T>;
 

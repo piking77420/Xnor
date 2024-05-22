@@ -15,6 +15,8 @@
 #include "scene/component/test_component.hpp"
 #include "serialization/serializer.hpp"
 #include "utils/coroutine.hpp"
+#include "world/world.hpp"
+
 #include "windows/animation_montage_window.hpp"
 #include "windows/content_browser.hpp"
 #include "windows/debug_console.hpp"
@@ -25,8 +27,6 @@
 #include "windows/hierarchy.hpp"
 #include "windows/inspector.hpp"
 #include "windows/performance.hpp"
-#include "world/scene_graph.hpp"
-#include "world/world.hpp"
 
 using namespace XnorEditor;
 
@@ -296,6 +296,9 @@ void Editor::ProjectMenuBar()
 			ImGui::EndMenu();
 		}
 
+		if (m_GamePlaying)
+			ImGui::BeginDisabled();
+
 		if (ImGui::BeginMenu("Audio device"))
 		{
 			auto&& devices = XnorCore::Audio::GetAvailableDevices();
@@ -317,6 +320,12 @@ void Editor::ProjectMenuBar()
 			}
 			
 			ImGui::EndMenu();
+		}
+
+		if (m_GamePlaying)
+		{
+			ImGui::EndDisabled();
+			ImGui::SetItemTooltip("Stop the game to change audio device");
 		}
 
 #ifdef _DEBUG
@@ -451,7 +460,6 @@ void Editor::StopPlaying()
 	}
 	
 	XnorCore::World::isPlaying = false;
-	XnorCore::World::hasStarted = false;
 	
 	m_GamePlaying = false;
 }

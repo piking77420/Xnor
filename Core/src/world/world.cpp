@@ -13,16 +13,14 @@ void World::Begin()
 
 void World::Update()
 {
-    if (!hasStarted)
+    if (!hasStarted && isPlaying)
     {
         Begin();
         hasStarted = true;
     }
 
     if (isPlaying)
-    {
         scene->Update();
-    }
     
     SceneGraph::Update(scene->GetEntities());
     

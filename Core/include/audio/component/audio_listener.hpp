@@ -25,6 +25,8 @@ public:
 private:
     /// @brief Volume in the range [0, inf]. Default value is 1.
     float_t m_Volume = 1.f;
+
+    Vector3 m_LastPosition;
 };
 
 END_XNOR_CORE

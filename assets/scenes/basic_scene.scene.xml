@@ -285,7 +285,7 @@
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
 						<m_Animation>E9F04973-E9D-4E85-98-A1-9-BF-16-C-2-FB</m_Animation>
-						<m_CurrentFrame>984</m_CurrentFrame>
+						<m_CurrentFrame>28</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>
@@ -293,9 +293,11 @@
 					<entity>AA4C0C09-AB9-4A1E-90-DA-D3-CC-FA-5F-BA-1</entity>
 				</0>
 				<1 typeName="AudioSource">
-					<audioTrack>61B61790-1047-476F-8F-FF-D4-6-2A-BC-85-14</audioTrack>
+					<audioTrack>DC7765A-C607-4D03-AC-9-93-56-7-16-28-EA</audioTrack>
 					<m_Volume>1</m_Volume>
 					<m_Pitch>1</m_Pitch>
+					<m_Looping>true</m_Looping>
+					<m_PlayOnBegin>true</m_PlayOnBegin>
 					<enabled>true</enabled>
 					<entity>AA4C0C09-AB9-4A1E-90-DA-D3-CC-FA-5F-BA-1</entity>
 				</1>

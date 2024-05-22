@@ -30,7 +30,9 @@ void AudioSource::Begin()
     // Update pitch and volume in OpenAL
     SetVolume(m_Volume);
     SetPitch(m_Pitch);
-    Play();
+
+    if (m_PlayOnBegin)
+        Play();
 }
 
 void AudioSource::Update()

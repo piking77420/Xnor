@@ -4,6 +4,7 @@
 
 #include "transform.hpp"
 #include "audio/audio.hpp"
+#include "input/time.hpp"
 
 using namespace XnorCore;
 
@@ -13,11 +14,13 @@ void AudioListener::Update()
 
     const Transform& transform = GetTransform();
 
+    const Vector3& position = transform.GetPosition();
+
     // Position
-    alListenerfv(AL_POSITION, transform.GetPosition().Raw());
+    alListenerfv(AL_POSITION, position.Raw());
     AudioContext::CheckError();
 
-    Vector3 velocity;
+    Vector3 velocity = (position - m_LastPosition) / Time::GetDeltaTime();
     std::array orientation = { transform.worldMatrix * Vector3::UnitZ(), Vector3::UnitY() };
     if (!dopplerEffect)
     {
@@ -32,6 +35,8 @@ void AudioListener::Update()
     // Orientation
     alListenerfv(AL_ORIENTATION, orientation[0].Raw());
     AudioContext::CheckError();
+
+    m_LastPosition = position;
 }
 
 float_t AudioListener::GetVolume() const
