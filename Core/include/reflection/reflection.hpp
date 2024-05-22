@@ -178,6 +178,11 @@ namespace Reflection
         constexpr explicit OpenEditorWindow(const char_t* const name) : windowName(name) {}
     };
 
+    /// @brief Prevents a field from being cloned when cloning a type
+    struct DontClone : FieldAttribute
+    {
+    };
+
     template <typename T>
     constexpr bool_t IsReflected = refl::trait::is_reflectable_v<T>;
 
