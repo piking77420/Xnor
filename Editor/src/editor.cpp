@@ -5,6 +5,7 @@
 #include <ImGui/imgui_impl_opengl3.h>
 #include <ImguiGizmo/ImGuizmo.h>
 
+#include "audio/audio.hpp"
 #include "csharp/dotnet_runtime.hpp"
 #include "file/file_manager.hpp"
 #include "input/time.hpp"
@@ -14,6 +15,8 @@
 #include "scene/component/test_component.hpp"
 #include "serialization/serializer.hpp"
 #include "utils/coroutine.hpp"
+#include "world/world.hpp"
+
 #include "windows/animation_montage_window.hpp"
 #include "windows/content_browser.hpp"
 #include "windows/debug_console.hpp"
@@ -24,8 +27,6 @@
 #include "windows/hierarchy.hpp"
 #include "windows/inspector.hpp"
 #include "windows/performance.hpp"
-#include "world/scene_graph.hpp"
-#include "world/world.hpp"
 
 using namespace XnorEditor;
 
@@ -295,6 +296,38 @@ void Editor::ProjectMenuBar()
 			ImGui::EndMenu();
 		}
 
+		if (m_GamePlaying)
+			ImGui::BeginDisabled();
+
+		if (ImGui::BeginMenu("Audio device"))
+		{
+			auto&& devices = XnorCore::Audio::GetAvailableDevices();
+
+			for (XnorCore::AudioDevice* device : devices)
+			{
+				if (ImGui::MenuItem(device->GetName().c_str(), nullptr, device == XnorCore::Audio::GetCurrentDevice()))
+				{
+					SerializeScene();
+
+					// Manually delete the scene so that everything audio-related is destroyed before changing context
+					data.selectedEntity = nullptr;
+					delete XnorCore::World::scene;
+					XnorCore::World::scene = nullptr;
+					
+					XnorCore::Audio::SetCurrentDevice(device);
+					DeserializeScene();
+				}
+			}
+			
+			ImGui::EndMenu();
+		}
+
+		if (m_GamePlaying)
+		{
+			ImGui::EndDisabled();
+			ImGui::SetItemTooltip("Stop the game to change audio device");
+		}
+
 #ifdef _DEBUG
 		if (ImGui::BeginMenu("Debug"))
 		{
@@ -319,7 +352,7 @@ void Editor::ProjectMenuBar()
 		ImGui::EndMainMenuBar();
 	}
 
-	if (scene->renderOctree.draw)
+	if (!m_Deserializing && scene->renderOctree.draw)
 		scene->renderOctree.Draw();
 
 	LoadScenePopup(openLoadScenePopup);
@@ -427,7 +460,6 @@ void Editor::StopPlaying()
 	}
 	
 	XnorCore::World::isPlaying = false;
-	XnorCore::World::hasStarted = false;
 	
 	m_GamePlaying = false;
 }
@@ -440,7 +472,7 @@ void Editor::SerializeScene(const std::string& filepath)
 	onSceneSerializationBegin();
 
 	if (filepath.empty())
-		file = SerializedTempScenePath.generic_string();
+		file = SerializedTempScenePath.string();
 	else
 		file = filepath;
 
@@ -458,12 +490,6 @@ void Editor::SerializeScene(const std::string& filepath)
 
 void Editor::SerializeSceneAsync(const std::string& filepath)
 {
-	if (filepath.empty())
-	{
-		XnorCore::Logger::LogInfo("Please select a scene before loading");
-		return;
-	}
-	
 	m_Serializing = true;
 	m_CurrentAsyncActionThread = std::thread([this, path = filepath] { SerializeScene(path); });
 	XnorCore::Utils::SetThreadName(m_CurrentAsyncActionThread, L"Scene Serialization Thread");
@@ -491,10 +517,8 @@ void Editor::DeserializeScene(const std::string& filepath)
 	XnorCore::Serializer::Deserialize<XnorCore::Scene, true>(XnorCore::World::scene);
 	XnorCore::Serializer::EndDeserialization();
 
-	auto s = XnorCore::World::scene;
-	
 	if (selectedEntityId != XnorCore::Guid::Empty())
-		data.selectedEntity = s->FindEntityById(selectedEntityId);
+		data.selectedEntity = XnorCore::World::scene->FindEntityById(selectedEntityId);
 
 	m_Deserializing = false;
 	
@@ -503,12 +527,6 @@ void Editor::DeserializeScene(const std::string& filepath)
 
 void Editor::DeserializeSceneAsync(const std::string& filepath)
 {
-	if (filepath.empty())
-	{
-		XnorCore::Logger::LogInfo("Please select a scene before saving");
-		return;
-	}
-	
 	m_Deserializing = true;
 	m_CurrentAsyncActionThread = std::thread([this, path = filepath] { DeserializeScene(path); });
 	XnorCore::Utils::SetThreadName(m_CurrentAsyncActionThread, L"Scene Deserialization Thread");

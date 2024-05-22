@@ -32,9 +32,25 @@ void Audio::Shutdown()
 
 AudioContext* Audio::GetContext() { return m_CurrentContext; }
 
+void Audio::RegisterBuffer(AudioBuffer* buffer) { m_Buffers.Add(buffer); }
+
 void Audio::UnregisterBuffer(AudioBuffer* buffer) { m_Buffers.Remove(buffer); }
 
-void Audio::RegisterBuffer(AudioBuffer* buffer) { m_Buffers.Add(buffer); }
+void Audio::UpdateContext()
+{
+    delete m_CurrentContext;
+    m_CurrentContext = new AudioContext(*m_CurrentDevice);
+}
+
+const List<AudioDevice*>& Audio::GetAvailableDevices() { return m_AvailableDevices; }
+
+const AudioDevice* Audio::GetCurrentDevice() { return m_CurrentDevice; }
+
+void Audio::SetCurrentDevice(AudioDevice* newCurrentDevice)
+{
+    m_CurrentDevice = newCurrentDevice;
+    UpdateContext();
+}
 
 void Audio::InitializeDevices()
 {

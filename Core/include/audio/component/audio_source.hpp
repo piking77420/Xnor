@@ -43,8 +43,6 @@ public:
 
 private:
     uint32_t m_Handle = 0;
-
-    AudioContext* m_Context = nullptr;
     
     /// @brief Volume in the range [0, inf]. Default value is 1.
     float_t m_Volume = 1.f;
@@ -53,13 +51,18 @@ private:
     float_t m_Pitch = 1.f;
 
     bool_t m_Looping = false;
+
+    bool_t m_PlayOnBegin = true;
 };
 
 END_XNOR_CORE
 
 REFL_AUTO(
     type(XnorCore::AudioSource, bases<XnorCore::Component>),
-    field(audioTrack),
+    field(
+        audioTrack,
+        XnorCore::Reflection::DontExpand()
+    ),
     field(
         m_Volume,
         XnorCore::Reflection::Range(0.f, 5.f),
@@ -79,5 +82,15 @@ REFL_AUTO(
                 source->SetPitch(source->m_Pitch);
             }
         )
-    )
+    ),
+    field(
+        m_Looping,
+        XnorCore::Reflection::ModifiedCallback<XnorCore::AudioSource>(
+            [](XnorCore::AudioSource* source)
+            {
+                source->SetLooping(source->m_Looping);
+            }
+        )
+    ),
+    field(m_PlayOnBegin)
 )

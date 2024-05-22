@@ -320,16 +320,19 @@ void TypeRendererImpl<Pointer<T>, Meta::EnableIf<Meta::IsBaseOf<Resource, T>>>::
         Filters::BeginResourceFilter();
     }
 
-    if (metadata.obj->IsValid())
+    if constexpr (!Reflection::HasAttribute<Reflection::DontExpand, DescriptorT>())
     {
-        const TypeRenderer::Metadata<ReflectT, T, DescriptorT> metadataPtr = {
-            .topLevelObj = metadata.topLevelObj,
-            .name = metadata.name,
-            .obj = metadata.obj->Get(),
-            .windowInfo = metadata.windowInfo
-        };
+        if (metadata.obj->IsValid())
+        {
+            const TypeRenderer::Metadata<ReflectT, T, DescriptorT> metadataPtr = {
+                .topLevelObj = metadata.topLevelObj,
+                .name = metadata.name,
+                .obj = metadata.obj->Get(),
+                .windowInfo = metadata.windowInfo
+            };
 
-        TypeRenderer::DisplaySimpleType<ReflectT, T, DescriptorT>(metadataPtr);
+            TypeRenderer::DisplaySimpleType<ReflectT, T, DescriptorT>(metadataPtr);
+        }
     }
 
     // Check if the filter should be displayed

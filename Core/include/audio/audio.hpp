@@ -5,10 +5,11 @@
 #include "core.hpp"
 #include "audio/audio_buffer.hpp"
 #include "audio/audio_device.hpp"
+#include "audio/component/audio_listener.hpp"
+#include "audio/component/audio_source.hpp"
 
 BEGIN_XNOR_CORE
-
-class Audio
+    class Audio
 {
     STATIC_CLASS(Audio)
 
@@ -24,6 +25,14 @@ public:
     XNOR_ENGINE static void RegisterBuffer(AudioBuffer* buffer);
 
     XNOR_ENGINE static void UnregisterBuffer(AudioBuffer* buffer);
+
+    XNOR_ENGINE static void UpdateContext();
+
+    XNOR_ENGINE static const List<AudioDevice*>& GetAvailableDevices();
+
+    XNOR_ENGINE static const AudioDevice* GetCurrentDevice();
+
+    XNOR_ENGINE static void SetCurrentDevice(AudioDevice* newCurrentDevice);
 
 private:
     XNOR_ENGINE static inline List<AudioDevice*> m_AvailableDevices;

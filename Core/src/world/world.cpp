@@ -8,7 +8,7 @@ using namespace XnorCore;
 
 void World::Update()
 {
-    if (!hasStarted)
+    if (!hasStarted && isPlaying)
     {
         scene->Awake();
         scene->Begin();
@@ -22,9 +22,9 @@ void World::Update()
         PhysicsWorld::Update(Time::GetDeltaTime());
         scene->PostPhysics();
     }
+    
     SceneGraph::Update(scene->GetEntities());
 
     scene->OnRendering();
 }
-
 

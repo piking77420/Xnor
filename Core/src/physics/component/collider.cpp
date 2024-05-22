@@ -44,16 +44,14 @@ void Collider::PostPhysics()
     if (!m_IsActive)
         return;
 
+    
     if (!(constraints & ConstraintPosition))
     {
         entity->transform.SetPosition(PhysicsWorld::GetBodyPosition(m_BodyId));
     }
 
     if (!(constraints & ConstraintRotation))
-    {
         entity->transform.SetRotationEulerAngle(Quaternion::ToEuler(PhysicsWorld::GetBodyRotation(m_BodyId)));
-    }
-    
 }
 
 bool_t Collider::IsTrigger() const
