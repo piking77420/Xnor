@@ -70,7 +70,6 @@ public:
     [[nodiscard]]
     static Quaternion FromJph(const JPH::Quat& in);
 
-    static Matrix FromJph(const JPH::Mat44& mJph);
 
 
     /// @brief Initializes the physics world

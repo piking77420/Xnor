@@ -18,16 +18,12 @@ void World::Update()
     if (isPlaying)
     {
         scene->Update();
-    }
-    
-    SceneGraph::Update(scene->GetEntities());
-    
-    if (isPlaying)
-    {
         scene->PrePhysics();
         PhysicsWorld::Update(Time::GetDeltaTime());
         scene->PostPhysics();
     }
+    
+    SceneGraph::Update(scene->GetEntities());
     scene->OnRendering();
 }
 

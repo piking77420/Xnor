@@ -48,8 +48,7 @@ void Collider::PrePhysics()
 {
     if (m_IsActive)
     {
-        const Vector3 pos = static_cast<Vector3>(entity->transform.worldMatrix[3]);
-        PhysicsWorld::SetPosition(m_BodyId, pos);
+        PhysicsWorld::SetPosition(m_BodyId, entity->transform.GetPosition());
         PhysicsWorld::SetRotation(m_BodyId, entity->transform.GetRotation().Normalized());
     }
 }
@@ -62,7 +61,7 @@ void Collider::PostPhysics()
         return;
 
     
-    
+
     if (!(constraints & ConstraintPosition))
     {
         entity->transform.SetPosition(PhysicsWorld::GetBodyPosition(m_BodyId));
@@ -72,6 +71,8 @@ void Collider::PostPhysics()
     {
         entity->transform.SetRotationEulerAngle(Quaternion::ToEuler(PhysicsWorld::GetBodyRotation(m_BodyId)));
     }
+
+
 }
 
 bool_t Collider::IsTrigger() const

@@ -240,13 +240,6 @@ Quaternion PhysicsWorld::GetBodyRotation(uint32_t bodyId)
     return FromJph(rotation);
 }
 
-Matrix PhysicsWorld::GetWorldMatrix(uint32_t bodyId)
-{
-    ToJph()
-
-    
-}
-
 void PhysicsWorld::SetPosition(const uint32_t bodyId, const Vector3& position)
 {
     m_BodyInterface->SetPosition(JPH::BodyID(bodyId), JPH::RVec3Arg(position.x, position.y, position.z), JPH::EActivation::DontActivate);

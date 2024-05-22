@@ -12,6 +12,8 @@ namespace Game
         private float bulletSize = 0.2f;
 
         private MeshPointer spherePointer;
+
+        
         
         private void SetupBullet(Entity bullet)
         {
@@ -30,8 +32,7 @@ namespace Game
             Matrix shootPointMatrix = shootPoint.Transform.WorldMatrix;
             bullet.Transform.Position = new(shootPointMatrix.M30, shootPointMatrix.M31, shootPointMatrix.M32);
             bullet.Transform.Scale *= bulletSize;
-            
-            Vector3 force = (bullet.Transform.Position - parent.Transform.Position).Normalized() * 5f;
+            Vector3 force = (bullet.Transform.Position - parent.Transform.Position).Normalized() * 10f;
             coll.AddForce(force);
 
         }
@@ -48,6 +49,11 @@ namespace Game
         {
             if (Input.GetMouseButton(MouseButton.Right, MouseButtonStatus.Pressed))
                 Shoot();
+
+            Vector3 pos = new(shootPoint.Transform.WorldMatrix.M30, shootPoint.Transform.WorldMatrix.M31, shootPoint.Transform.WorldMatrix.M32);
+
+            DrawGizmo.Sphere(pos);
+
         }
     }
 }
