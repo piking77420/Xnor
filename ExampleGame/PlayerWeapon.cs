@@ -22,7 +22,7 @@ namespace Game
             
             BoxCollider coll = bullet.AddComponent<BoxCollider>();
             bullet.Transform.Position = new(shootPoint.Transform.WorldMatrix.M30,shootPoint.Transform.WorldMatrix.M31,shootPoint.Transform.WorldMatrix.M32);
-            coll.AddForce((parent.Transform.Position - bullet.Transform.Position).Normalized() * 100);
+            //coll.AddForce((parent.Transform.Position - bullet.Transform.Position).Normalized() * 100);
         }
         
         protected override void Begin()

@@ -17,7 +17,19 @@ namespace Xnor.Core
         public static readonly Quaternion Identity = UnitW;
         
         public static readonly Quaternion One = new(1f);
-
+        
+        float QuaternionSquaredLength() { return Imaginary.X *  Imaginary.X +  Imaginary.Y * Imaginary.Y + Imaginary.Z * Imaginary.Z + Real * Real; }
+        
+        float Length()
+        {
+            return MathF.Sqrt(QuaternionSquaredLength());
+        }
+        public Quaternion Normalize()
+        {
+            float length = Length();
+            return new Quaternion(Imaginary / length, Real / length);
+        }
+        
         public static Quaternion FromEuler(Vector3 v)
         {
             Quaternion result = Zero;
@@ -69,7 +81,12 @@ namespace Xnor.Core
 
         public static Quaternion operator*(float scalar, Quaternion b) => b * scalar;
 
-        public static Quaternion operator*(Quaternion a, Quaternion b) => new(a.Imaginary * b.Imaginary, a.Real * b.Real);
+        public static Quaternion operator*(Quaternion a, Quaternion b)
+        {
+            return new Quaternion(a.W * b.X + a.X * b.W + a.Y * b.Z - a.Z * b.Y,
+                a.W * b.Y + a.Y * b.W + a.Z * b.X - a.X * b.Z, a.W * b.Z + a.Z * b.W + a.X * b.Y - a.Y * b.X,
+                a.W * b.W - a.X * b.X - a.Y * b.Y - a.Z * b.Z);
+        }
 
         public static Quaternion operator/(Quaternion a, float scalar) => new(a.Imaginary / scalar, a.Real / scalar);
 

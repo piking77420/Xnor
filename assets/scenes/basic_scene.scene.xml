@@ -284,7 +284,7 @@
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
 						<m_Animation>E9F04973-E9D-4E85-98-A1-9-BF-16-C-2-FB</m_Animation>
-						<m_CurrentFrame>650</m_CurrentFrame>
+						<m_CurrentFrame>549</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>
@@ -304,7 +304,7 @@
 				<m_Scale>1 ; 0.9999681 ; 0.9999681</m_Scale>
 			</transform>
 			<m_Components/>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Parent>9144D2C0-8CE-41CA-93-B-F-F-A3-A6-32-8D</m_Parent>
 			<m_Children/>
 		</9>
 		<10>
@@ -340,7 +340,7 @@
 				</0>
 				<1 typeName="ScriptComponent" managedType="Game.PlayerWeapons"/>
 			</m_Components>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Parent>55E1E12F-7B57-4A4E-A6-92-63-AC-40-AA-B3-36</m_Parent>
 			<m_Children>
 				<0>D733C9EE-E38-4D78-83-FC-48-A9-AF-80-E5-4F</0>
 			</m_Children>
@@ -354,7 +354,7 @@
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
 			<m_Components/>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Parent>CEE35AD1-3980-4298-AD-2B-48-6C-53-DF-30-53</m_Parent>
 			<m_Children/>
 		</11>
 		<12>
@@ -399,7 +399,7 @@
 					<entity>A44A61BE-51AA-4167-A5-41-EE-35-8E-BC-FC-53</entity>
 				</1>
 			</m_Components>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Parent>CEE35AD1-3980-4298-AD-2B-48-6C-53-DF-30-53</m_Parent>
 			<m_Children/>
 		</12>
 	</m_Entities>

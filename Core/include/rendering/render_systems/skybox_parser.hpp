@@ -2,7 +2,6 @@
 
 #include "core.hpp"
 #include "rendering/render_pass.hpp"
-#include "resource/cubemap.hpp"
 #include "resource/mesh.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"

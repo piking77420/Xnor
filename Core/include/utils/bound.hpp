@@ -4,7 +4,7 @@
 
 #include "core.hpp"
 #include "transform.hpp"
-#include "rendering/plane.hpp"
+#include "utils/plane.hpp"
 
 BEGIN_XNOR_CORE
 
