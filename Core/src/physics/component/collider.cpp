@@ -18,6 +18,24 @@ Collider::~Collider()
         PhysicsWorld::DestroyBody(m_BodyId);
 }
 
+void Collider::Awake()
+{
+    const Transform& t = entity->transform;
+
+    const PhysicsWorld::BodyCreationInfo info = {
+        .collider = this,
+        .position = t.GetPosition(),
+        .rotation = t.GetRotation(),
+        .scaling = t.GetScale(),
+        .isTrigger = m_IsTrigger,
+        .isStatic = m_IsStatic
+    };
+
+    m_BodyId = PhysicsWorld::CreateBox(info);
+
+    SetFriction(m_Friction);
+}
+
 void Collider::Begin()
 {
 }
@@ -66,6 +84,7 @@ void Collider::AddImpulse(const Vector3& impulse) const
 
 void Collider::SetFriction(const float_t friction)
 {
+    m_Friction = friction;
     PhysicsWorld::SetFriction(m_BodyId, friction);
 }
 

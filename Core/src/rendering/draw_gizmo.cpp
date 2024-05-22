@@ -78,7 +78,7 @@ void DrawGizmo::DrawCollider(const Entity& entity)
     {
         mesh = m_Sphere;
         const float_t radius = reinterpret_cast<const SphereCollider*>(collider)->radius;
-        colliderMatrix = Matrix::Trs(Vector3::Zero(), Quaternion::Identity(), Vector3(radius));
+        colliderMatrix = Matrix::Trs(Vector3::Zero(), Quaternion::Identity(), Vector3(radius) * 2.f);
     }
     else if (Utils::GetTypeHash<Collider>(collider) == Utils::GetTypeHash<BoxCollider>())
     {

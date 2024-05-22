@@ -2,14 +2,11 @@
 #include "scene/component/script_component.hpp"
 
 BEGIN_XNOR_CORE
-
-template <Concepts::ComponentT T>
+    template <Concepts::ComponentT T>
 T* Entity::AddComponent()
 {
     T* newT = new T;
-    newT->entity = this;
-    m_Components.Add(newT);
-
+    AddComponent(newT);
     return newT;
 }
 

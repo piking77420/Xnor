@@ -9,32 +9,44 @@ namespace Game
 
         //private List<Entity> bullets = new();
 
+        private float bulletSize = 0.2f;
+
+        private MeshPointer spherePointer;
+        
         private void SetupBullet(Entity bullet)
         {
             StaticMeshRenderer meshRenderer = bullet.AddComponent<StaticMeshRenderer>();
-            meshRenderer.mesh = ResourceManager.GetMesh("assets/models/sphere.obj");
+            meshRenderer.mesh = spherePointer;
         }
         
         public void Shoot()
         {
+            
             Entity bullet = World.scene.CreateEntity("Bullet");
             SetupBullet(bullet);
-            
-            BoxCollider coll = bullet.AddComponent<BoxCollider>();
+            SphereCollider coll = bullet.AddComponent<SphereCollider>();
+            coll.radius = bulletSize;
+                
             Matrix shootPointMatrix = shootPoint.Transform.WorldMatrix;
             bullet.Transform.Position = new(shootPointMatrix.M30, shootPointMatrix.M31, shootPointMatrix.M32);
-            coll.AddForce((parent.Transform.Position - bullet.Transform.Position).Normalized() * 10f);
+            bullet.Transform.Scale *= bulletSize;
+            
+            //Vector3 force = (bullet.Transform.Position - parent.Transform.Position).Normalized() * 5f;
+            //coll.AddForce(force);
+
         }
         
         protected override void Begin()
         {
             parent = Entity.GetParent();
             shootPoint = Entity.GetChild(0);
+            spherePointer = ResourceManager.GetMesh("assets/models/sphere.obj");
+            //_boxCollider = GetComponent<BoxCollider>();
         }
 
         protected override void Update()
         {
-            if (Input.GetMouseButton(MouseButton.Left, MouseButtonStatus.Pressed))
+            if (Input.GetMouseButton(MouseButton.Right, MouseButtonStatus.Pressed))
                 Shoot();
         }
     }

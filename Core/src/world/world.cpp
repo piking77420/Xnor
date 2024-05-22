@@ -6,16 +6,12 @@
 
 using namespace XnorCore;
 
-void World::Begin()
-{
-    scene->Begin();
-}
-
 void World::Update()
 {
     if (!hasStarted)
     {
-        Begin();
+        scene->Awake();
+        scene->Begin();
         hasStarted = true;
     }
 

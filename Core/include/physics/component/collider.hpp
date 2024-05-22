@@ -14,7 +14,6 @@ BEGIN_XNOR_CORE
 class Collider : public Component
 {
     REFLECTABLE_IMPL(Collider)
-
 public:
     /// @brief Collider constraints
     enum ColliderConstraints : size_t
@@ -32,6 +31,8 @@ public:
 
     DEFAULT_COPY_MOVE_OPERATIONS(Collider)
 
+    /// @brief Awake function
+    XNOR_ENGINE void Awake() override;
     /// @brief Begin function
     XNOR_ENGINE void Begin() override;
     /// @brief Update function
@@ -88,9 +89,7 @@ protected:
     void AddDebugEvents();
 
     static void Test(Collider*, Collider*, const CollisionData&) {}
-
-    static void Test2() {}
-
+    
     /// @brief Jolt internal body ID for the collider
     uint32_t m_BodyId = std::numeric_limits<uint32_t>::max();
 
@@ -100,12 +99,23 @@ protected:
     bool_t m_IsTrigger = false;
     /// @brief Whether the collider is active
     bool_t m_IsActive = false;
+
+    float_t m_Friction = 0.f;
 };
 
 END_XNOR_CORE
 
 REFL_AUTO(type(XnorCore::Collider, bases<XnorCore::Component>),
     field(constraints, XnorCore::Reflection::EnumFlags()),
+    field(m_Friction,
+        XnorCore::Reflection::Range(0.f, 5.f),
+        XnorCore::Reflection::ModifiedCallback<XnorCore::Collider>(
+            [](XnorCore::Collider* collider)
+            {
+                collider->SetFriction(collider->m_Friction);
+            }
+        )
+    ),
     field(m_IsStatic),
     field(m_IsTrigger),
     field(m_IsActive, XnorCore::Reflection::ReadOnly()),

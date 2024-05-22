@@ -60,6 +60,7 @@
 					<center>0 ; 0 ; 0</center>
 					<size>1 ; 1 ; 1</size>
 					<constraints/>
+					<m_Friction>0</m_Friction>
 					<m_IsStatic>true</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
 					<m_IsActive>false</m_IsActive>
@@ -175,6 +176,7 @@
 					<height>1</height>
 					<radius>1</radius>
 					<constraints>ConstraintRotation</constraints>
+					<m_Friction>1000</m_Friction>
 					<m_IsStatic>false</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
 					<m_IsActive>false</m_IsActive>
@@ -285,13 +287,20 @@
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
 						<m_Animation>E9F04973-E9D-4E85-98-A1-9-BF-16-C-2-FB</m_Animation>
-						<m_CurrentFrame>283</m_CurrentFrame>
+						<m_CurrentFrame>784</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>
 					<enabled>true</enabled>
 					<entity>AA4C0C09-AB9-4A1E-90-DA-D3-CC-FA-5F-BA-1</entity>
 				</0>
+				<1 typeName="AudioSource">
+					<audioTrack>0-0-0-0-0-0-0-0-0-0-0</audioTrack>
+					<m_Volume>1</m_Volume>
+					<m_Pitch>1</m_Pitch>
+					<enabled>true</enabled>
+					<entity>AA4C0C09-AB9-4A1E-90-DA-D3-CC-FA-5F-BA-1</entity>
+				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
@@ -350,7 +359,7 @@
 			<name>ShootPoint</name>
 			<m_EntityId>D733C9EE-E38-4D78-83-FC-48-A9-AF-80-E5-4F</m_EntityId>
 			<transform>
-				<m_Position>0.011752859 ; -0.032314703 ; 0.58539885</m_Position>
+				<m_Position>0.011752859 ; -0.032314703 ; 1.140566</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
@@ -393,6 +402,7 @@
 					<center>0 ; 0 ; 0</center>
 					<size>1 ; 1 ; 1</size>
 					<constraints>ConstraintPosition|ConstraintRotation</constraints>
+					<m_Friction>0</m_Friction>
 					<m_IsStatic>true</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
 					<m_IsActive>false</m_IsActive>

@@ -1,3 +1,4 @@
+using System;
 using Xnor.Core;
 
 namespace Game
@@ -14,25 +15,32 @@ namespace Game
         private Vector3 movement = Vector3.Zero;
         private Vector3 velocity = Vector3.Zero;
         
+        
+        [Serialized] 
+        private float MaxVelocity = 10f;
+
+        
         protected override void Begin()
         {
             cameraEntity = World.scene.FindEntityByName("Camera");
             camera = cameraEntity.GetComponent<CameraComponent>().camera;
-            
             collider = GetComponent<CapsuleCollider>();
+            collider.SetFriction(1000);
         }
         
         protected override void Update()
         {
             HandleInputs();
-            collider.SetFriction(0);
 
             // Update velocity
             Vector3 desiredVelocity = movement * MovementSpeed;
             desiredVelocity.Y = velocity.Y;
             velocity = 0.75f * velocity + 0.25f * desiredVelocity;
 
-            
+            velocity.X = Math.Clamp(velocity.X, -MaxVelocity, MaxVelocity);
+            velocity.Y = Math.Clamp(velocity.Y, -MaxVelocity, MaxVelocity);
+            velocity.Z = Math.Clamp(velocity.Z, -MaxVelocity, MaxVelocity);
+
             // Update position
             Transform.Position += velocity * Time.DeltaTime;
             velocity = new Vector3();

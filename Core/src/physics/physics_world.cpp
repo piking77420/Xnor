@@ -268,6 +268,7 @@ void PhysicsWorld::AddForce(const uint32_t bodyId, const Vector3& force, const V
         return;
 
     JPH::Body& body = lock.GetBody();
+    
 
     body.AddForce(ToJph(force) / body.GetMotionProperties()->GetInverseMass(), ToJph(point));
 }

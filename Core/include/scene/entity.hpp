@@ -138,6 +138,9 @@ public:
     /// @param child Child
     XNOR_ENGINE void RemoveChild(Entity* child);
 
+    /// @brief Awake the entity
+    XNOR_ENGINE void Awake();
+    
     /// @brief Begins behavior for the entity
     XNOR_ENGINE void Begin();
 

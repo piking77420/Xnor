@@ -28,6 +28,9 @@ public:
 
     DEFAULT_COPY_MOVE_OPERATIONS(Component)
 
+    /// @brief Awake the component
+    virtual void Awake() {}
+    
     /// @brief Begins the component
     virtual void Begin() {}
 

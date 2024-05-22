@@ -37,7 +37,7 @@ public:
         return m_HandleSize;
     }
 
-    const OctreeIterator<OctreeNode<const T>> GetIterator() const
+    OctreeIterator<OctreeNode<const T>> GetIterator() const
     {
         return OctreeIterator<OctreeNode<const T>>(&m_MotherNode);
     }

@@ -15,9 +15,6 @@ class World
     STATIC_CLASS(World)
     
 public:
-    /// @brief Called once when the world starts playing
-    XNOR_ENGINE static void Begin();
-    
     /// @brief Called every frame when the world is playing
     XNOR_ENGINE static void Update();
     

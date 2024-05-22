@@ -80,6 +80,12 @@ void Entity::AddComponent(Component* const component)
 {
     component->entity = this;
     m_Components.Add(component);
+    
+    if (World::isPlaying)
+    {
+        component->Awake();
+        component->Begin();
+    }
 }
 
 const Guid& Entity::GetGuid() const
@@ -181,6 +187,14 @@ void Entity::RemoveChild(Entity* const child)
 
     // Orphan the child
     child->m_Parent = nullptr;
+}
+
+void Entity::Awake()
+{
+    for (size_t i = 0; i < m_Components.GetSize(); i++)
+    {
+        m_Components[i]->Awake();
+    }
 }
 
 bool_t Entity::operator==(const Entity& entity) const

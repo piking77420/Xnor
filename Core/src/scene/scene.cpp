@@ -12,6 +12,14 @@ void Scene::Initialize()
     skybox.Initialize();
 }
 
+void Scene::Awake()
+{
+    for (size_t i = 0; i < m_Entities.GetSize(); i++)
+    {
+        m_Entities[i]->Awake();
+    }
+}
+
 void Scene::Begin()
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)
@@ -82,7 +90,12 @@ Entity* Scene::CreateEntity(const std::string& name, Entity* parent)
 
     e->name = name;
     e->SetParent(parent);
-    e->Begin();
+
+    if (World::isPlaying)
+    {
+        e->Awake();
+        e->Begin();
+    }
 
     m_Entities.Add(e);
 

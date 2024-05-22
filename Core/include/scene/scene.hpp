@@ -44,6 +44,9 @@ public:
 
     XNOR_ENGINE void Initialize();
 
+    /// @brief Awake the scene
+    XNOR_ENGINE void Awake();
+
     /// @brief Begins the scene
     XNOR_ENGINE void Begin();
 
