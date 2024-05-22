@@ -74,17 +74,12 @@ public:
 	[[nodiscard]]
 	bool_t IsGamePlaying() const;
 
-	[[nodiscard]]
-	bool_t IsReloadScriptsOnSave() const;
-
 private:
 	std::vector<UiWindow*> m_UiWindows;
 	
 	bool_t m_Serializing = false;
 	bool_t m_Deserializing = false;
 	bool_t m_ReloadingScripts = false;
-
-	bool_t m_ReloadScriptsOnSave = true;
 	
 	/// @brief This thread is used both for serializing the scene, deserializing it, and reloading scripts
 	std::thread m_CurrentAsyncActionThread;
@@ -110,12 +105,10 @@ private:
 	void SetupImGuiStyle() const;
 	
 	void ProjectMenuBar();
-
-	void SceneMenueBar(XnorCore::Scene* scene);
-
-	void SerializeSceneMenu();
 	
-	void LoadOtherScene();
+	void LoadScenePopup(bool_t openPopup);
+
+	void ChangeSceneSkyboxPopup(bool_t openPopup);
 };
 
 #include "editor.inl"

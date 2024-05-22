@@ -101,13 +101,15 @@ Pointer<Animation> Mesh::GetAnimation(const size_t id)
     return m_Animations[id];
 }
 
-std::string Mesh::GetTextureFileName(const std::string&, const std::string& textureName, const std::string& textureFormat, const size_t)
+std::string Mesh::GetTextureFileName(const std::string& textureName, const std::string& textureFormat)
 {
     std::string returnName;
-    const size_t last = textureName.find_last_of('\\') + 1;
+    const std::string baseNameCopy = textureName;
+    
+    const size_t last =  baseNameCopy.find_last_of('\\') + 1;
         
-    for (size_t i = last; i < textureName.size();i++)
-        returnName.push_back(textureName[i]);
+    for (size_t i = last; i < baseNameCopy.size();i++)
+        returnName.push_back(baseNameCopy[i]);
 
     const std::filesystem::path path(returnName);
     returnName = path.stem().generic_string();
@@ -198,7 +200,7 @@ void Mesh::LoadTexture(const aiScene& scene)
         if (textureAssimpname.empty())
             textureAssimpname = m_File->GetNameNoExtension();
         
-        std::string fileName = GetTextureFileName(m_File->GetNameNoExtension(),textureAssimpname,scene.mTextures[i]->achFormatHint, i);
+        std::string fileName = GetTextureFileName(textureAssimpname,scene.mTextures[i]->achFormatHint);
 
         std::filesystem::path p(m_File->GetPath());
         std::string parentPath = p.parent_path().generic_string();

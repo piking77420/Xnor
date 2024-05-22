@@ -30,6 +30,8 @@ namespace Xnor.Core
 
         public static Vector3 operator/(Vector3 a, float scalar) => new(a.X / scalar, a.Y / scalar, a.Z / scalar);
 
+        public static float Dot(Vector3 a, Vector3 b) => a.X * b.X + a.Y * b.Y + a.Z * b.Z; 
+
         public static explicit operator Vector2(Vector3 v) => new(v.X, v.Y);
 
         public static explicit operator Vector4(Vector3 v) => new(v.X, v.Y, 0f, 1f);

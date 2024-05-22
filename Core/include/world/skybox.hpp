@@ -5,7 +5,6 @@
 
 #include "core.hpp"
 #include "rendering/render_systems/skybox_parser.hpp"
-#include "resource/cubemap.hpp"
 #include "resource/shader.hpp"
 #include "resource/texture.hpp"
 

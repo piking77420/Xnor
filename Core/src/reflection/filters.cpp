@@ -5,18 +5,18 @@
 
 using namespace XnorCore;
 
-
-
 Pointer<File> Filters::FilterFile(Pointer<File>* target)
 {
     if (!ImGui::BeginPopupModal("File"))
         return nullptr;
 
     m_TextFilter.Draw();
-    std::vector<Pointer<File>> file = FileManager::FindAll<File>([](Pointer<File> file)->bool_t
-    {
-        return file->GetName().ends_with(".scene.xml");
-    });
+    const std::vector<Pointer<File>> file = FileManager::FindAll<File>(
+        [](Pointer<File> f) -> bool_t
+        {
+            return f->GetName().ends_with(".scene.xml");
+        }
+    );
 
     
     Pointer<File> r = nullptr;
@@ -35,6 +35,7 @@ Pointer<File> Filters::FilterFile(Pointer<File>* target)
         ImGui::CloseCurrentPopup();
     }
 
+    // If the user pressed the Escape key or clicked outside the popup, close it
     if (ImGui::IsKeyPressed(ImGuiKey_Escape))
         ImGui::CloseCurrentPopup();
     
@@ -49,7 +50,7 @@ Entity* Filters::FilterEntity(Entity** target)
 
     m_TextFilter.Draw();
     List<Entity*> entities = World::scene->GetEntities();
-    entities.Sort([](const Entity* const left, const Entity* const right) -> bool_t { return left->name < right->name; });
+    entities.Sort();
 
     Entity* e = nullptr;
     for (size_t i = 0; i < entities.GetSize(); i++)
@@ -68,6 +69,7 @@ Entity* Filters::FilterEntity(Entity** target)
         ImGui::CloseCurrentPopup();
     }
 
+    // If the user pressed the Escape key or clicked outside the popup, close it
     if (ImGui::IsKeyPressed(ImGuiKey_Escape))
         ImGui::CloseCurrentPopup();
     
@@ -82,7 +84,7 @@ Entity* Filters::FilterEntity()
 
     m_TextFilter.Draw();
     List<Entity*> entities = World::scene->GetEntities();
-    entities.Sort([](const Entity* const left, const Entity* const right) -> bool_t { return left->name < right->name; });
+    entities.Sort();
 
     Entity* e = nullptr;
     for (size_t i = 0; i < entities.GetSize(); i++)
@@ -100,6 +102,7 @@ Entity* Filters::FilterEntity()
         ImGui::CloseCurrentPopup();
     }
 
+    // If the user pressed the Escape key or clicked outside the popup, close it
     if (ImGui::IsKeyPressed(ImGuiKey_Escape))
         ImGui::CloseCurrentPopup();
     
@@ -154,6 +157,7 @@ Component* Filters::FilterComponent(List<Component*>* target)
         ImGui::CloseCurrentPopup();
     }
 
+    // If the user pressed the Escape key or clicked outside the popup, close it
     if (ImGui::IsKeyPressed(ImGuiKey_Escape))
         ImGui::CloseCurrentPopup();
     

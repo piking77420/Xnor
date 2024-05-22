@@ -309,6 +309,9 @@ void MeshesDrawer::RenderStaticMeshNonShaded(const Camera& camera, const Frustum
                 // draw
                 for (const StaticMeshRenderer* const meshRenderer : *handle)
                 {
+                    if (!meshRenderer->mesh.IsValid())
+                        continue;
+                    
                     for (size_t i = 0; i < meshRenderer->mesh->models.GetSize(); i++)
                     {
                         Pointer<Model> model = meshRenderer->mesh->models[i];

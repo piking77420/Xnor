@@ -247,93 +247,115 @@ void Editor::SetupImGuiStyle() const
 
 void Editor::ProjectMenuBar()
 {
+	XnorCore::Scene* const scene = XnorCore::World::scene;
+	
+	bool_t openLoadScenePopup = false, openSceneSkyboxPopup = false;
+	
 	if (ImGui::BeginMainMenuBar())
 	{	
-		SerializeSceneMenu();
+		if (ImGui::BeginMenu("Scene"))
+		{
+			const std::string path = data.currentScene.IsValid() ? data.currentScene->GetPath().generic_string() : "";
+
+			ImGui::SeparatorText("Serialization");
+
+			const bool_t saveLoadDisabled = m_ReloadingScripts || m_GamePlaying;
+
+			if (saveLoadDisabled)
+				ImGui::BeginDisabled();
+
+			if (ImGui::MenuItem("Save"))
+				SerializeSceneAsync(path);
 		
-		if (XnorCore::World::scene != nullptr)
-			SceneMenueBar(XnorCore::World::scene);
+			if (ImGui::MenuItem("Load"))
+				openLoadScenePopup = true;
+		
+			if (ImGui::MenuItem("Reload"))
+				DeserializeSceneAsync(path);
+		
+			if (ImGui::MenuItem("Load backup"))
+				DeserializeSceneAsync();
+
+			if (saveLoadDisabled)
+				ImGui::EndDisabled();
+
+			ImGui::SeparatorText("Metadata");
+			
+			const bool_t noScene = scene == nullptr;
+
+			if (noScene)
+				ImGui::BeginDisabled();
+			
+			if (ImGui::MenuItem("Set skybox"))
+				openSceneSkyboxPopup = true;
+
+			if (noScene)
+				ImGui::EndDisabled();
+		
+			ImGui::EndMenu();
+		}
+
+#ifdef _DEBUG
+		if (ImGui::BeginMenu("Debug"))
+		{
+			const bool_t noScene = scene == nullptr;
+
+			if (noScene)
+				ImGui::BeginDisabled();
+			
+			if (ImGui::MenuItem("Draw scene octree"))
+			{
+				bool_t& draw = scene->renderOctree.draw;
+				draw = !draw;
+			}
+
+			if (noScene)
+				ImGui::EndDisabled();
+
+			ImGui::EndMenu();
+		}
+#endif
 		
 		ImGui::EndMainMenuBar();
-	}
-}
-
-void Editor::SceneMenueBar(XnorCore::Scene* scene)
-{
-	if (ImGui::BeginMenu("Scene"))
-	{
-		if (ImGui::MenuItem("DrawScene Octree"))
-			scene->renderOctree.draw = !scene->renderOctree.draw;
-		
-		XnorCore::Pointer<XnorCore::Texture> cubeMap = nullptr;
-		
-		if (ImGui::Button("Skybox"))
-		{
-			XnorCore::Filters::BeginResourceFilter();
-		}
-		XnorCore::Filters::FilterResources<XnorCore::Texture>(&cubeMap);
-		if (cubeMap)
-			scene->skybox.LoadFromHdrTexture(cubeMap);
-        
-		ImGui::EndMenu();
 	}
 
 	if (scene->renderOctree.draw)
 		scene->renderOctree.Draw();
+
+	LoadScenePopup(openLoadScenePopup);
+
+	ChangeSceneSkyboxPopup(openSceneSkyboxPopup);
 }
 
-void Editor::SerializeSceneMenu()
+void Editor::LoadScenePopup(const bool_t openPopup)
 {
-	if (ImGui::BeginMenu("File"))
-	{
-		const std::string path = data.currentScene.IsValid() ? data.currentScene->GetPath().generic_string() : "";
-
-		const bool_t saveLoadDisabled = m_ReloadingScripts || m_GamePlaying;
-
-		if (saveLoadDisabled)
-			ImGui::BeginDisabled();
-
-		if (ImGui::MenuItem("Save"))
-			SerializeSceneAsync(path);
-		
-		if (ImGui::MenuItem("Load"))
-			DeserializeSceneAsync(path);
-		
-		if (!m_GamePlaying && ImGui::MenuItem("Load backup"))
-			DeserializeSceneAsync();
-
-		LoadOtherScene();
-
-		if (saveLoadDisabled)
-			ImGui::EndDisabled();
-		
-		ImGui::EndMenu();
-	}
-
-	if (ImGui::BeginMenu("Options"))
-	{
-		ImGui::MenuItem("Reload scripts on file save", nullptr, &m_ReloadScriptsOnSave);
-		ImGui::EndMenu();
-	}
-}
-
-void Editor::LoadOtherScene()
-{
-	XnorCore::Pointer<XnorCore::File> fileScene;
+	if (openPopup)
+		XnorCore::Filters::BeginFilter();
 	
-	if (ImGui::Button("Open"))
-		XnorCore::Filters::BeginFilter("File");
-	XnorCore::Filters::FilterFile(&fileScene);
-
-	if (!fileScene)
+	XnorCore::Pointer<XnorCore::File> sceneFile;
+	XnorCore::Filters::FilterFile(&sceneFile);
+	
+	if (!sceneFile)
 		return;
-
+		
 	// Save the current scene
-	if (data.currentScene && data.currentScene->GetSize() == static_cast<int64_t>(0))
+	if (data.currentScene && data.currentScene->GetSize() == 0)
 		DeserializeSceneAsync(data.currentScene->GetPath().generic_string());
 
-	data.currentScene = fileScene;
+	data.currentScene = sceneFile;
 	DeserializeSceneAsync(data.currentScene->GetPath().generic_string());
+}
+
+void Editor::ChangeSceneSkyboxPopup(const bool_t openPopup)
+{
+	if (openPopup)
+		XnorCore::Filters::BeginResourceFilter();
+	
+	XnorCore::Pointer<XnorCore::Texture> cubeMap = nullptr;
+	XnorCore::Filters::FilterResources<XnorCore::Texture>(&cubeMap);
+	
+	if (cubeMap)
+		XnorCore::World::scene->skybox.LoadFromHdrTexture(cubeMap);
 }
 
 void Editor::BuildAndReloadCodeAsync()
@@ -487,8 +509,6 @@ bool_t Editor::IsDeserializing() const { return m_Deserializing; }
 bool_t Editor::IsReloadingScripts() const { return m_ReloadingScripts; }
 
 bool_t Editor::IsGamePlaying() const { return m_GamePlaying; }
-
-bool_t Editor::IsReloadScriptsOnSave() const { return m_ReloadScriptsOnSave; }
 
 void Editor::UpdateWindows()
 {

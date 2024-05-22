@@ -102,6 +102,8 @@
     <ClInclude Include="externals\include\AL\efx-creative.h" />
     <ClInclude Include="externals\include\AL\efx-presets.h" />
     <ClInclude Include="externals\include\AL\efx.h" />
+    <ClInclude Include="include\utils\plane.hpp" />
+    <ClInclude Include="include\world\skybox.hpp" />
     <ClInclude Include="inline\file\file.inl" />
     <ClInclude Include="inline\file\file_manager.inl" />
     <ClInclude Include="inline\input\input.inl" />
@@ -587,7 +589,6 @@
     <ClInclude Include="include\rendering\light\point_light.hpp" />
     <ClInclude Include="include\rendering\light\spot_light.hpp" />
     <ClInclude Include="include\rendering\material.hpp" />
-    <ClInclude Include="include\rendering\plane.hpp" />
     <ClInclude Include="include\rendering\post_process_render_target.hpp" />
     <ClInclude Include="include\rendering\renderer.hpp" />
     <ClInclude Include="include\rendering\render_pass.hpp" />
@@ -608,7 +609,6 @@
     <ClInclude Include="include\resource\animation_montage.hpp" />
     <ClInclude Include="include\resource\audio_track.hpp" />
     <ClInclude Include="include\resource\compute_shader.hpp" />
-    <ClInclude Include="include\resource\cubemap.hpp" />
     <ClInclude Include="include\resource\font.hpp" />
     <ClInclude Include="include\resource\mesh.hpp" />
     <ClInclude Include="include\resource\model.hpp" />
@@ -654,7 +654,6 @@
     <ClInclude Include="include\utils\windows.hpp" />
     <ClInclude Include="include\window.hpp" />
     <ClInclude Include="include\world\scene_graph.hpp" />
-    <ClInclude Include="include\world\skybox.hpp" />
     <ClInclude Include="include\world\world.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -724,7 +723,6 @@
     <ClCompile Include="src\rendering\light\point_light.cpp" />
     <ClCompile Include="src\rendering\light\spot_light.cpp" />
     <ClCompile Include="src\rendering\material.cpp" />
-    <ClCompile Include="src\rendering\plane.cpp" />
     <ClCompile Include="src\rendering\postprocess_rendertarget.cpp" />
     <ClCompile Include="src\rendering\renderer.cpp" />
     <ClCompile Include="src\rendering\render_pass.cpp" />
@@ -745,7 +743,6 @@
     <ClCompile Include="src\resource\animation_montage.cpp" />
     <ClCompile Include="src\resource\audio_track.cpp" />
     <ClCompile Include="src\resource\compute_shader.cpp" />
-    <ClCompile Include="src\resource\cubemap.cpp" />
     <ClCompile Include="src\resource\font.cpp" />
     <ClCompile Include="src\resource\mesh.cpp" />
     <ClCompile Include="src\resource\model.cpp" />
@@ -778,6 +775,81 @@
     <ClCompile Include="src\utils\guid.cpp" />
     <ClCompile Include="src\utils\logger.cpp" />
     <ClCompile Include="src\utils\message_box.cpp" />
+    <ClCompile Include="src\utils\plane.cpp">
+      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>x64\Debug\</AssemblerListingLocation>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformationFile>x64\Debug\</BrowseInformationFile>
+      <CompileAs>Default</CompileAs>
+      <ConformanceMode>false</ConformanceMode>
+      <DiagnosticsFormat>Column</DiagnosticsFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ErrorReporting>Prompt</ErrorReporting>
+      <ExpandAttributedSource>false</ExpandAttributedSource>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <EnableASAN>false</EnableASAN>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <GenerateModuleDependencies>false</GenerateModuleDependencies>
+      <GenerateSourceDependencies>false</GenerateSourceDependencies>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ModuleDependenciesFile>x64\Debug\</ModuleDependenciesFile>
+      <ModuleOutputFile>x64\Debug\</ModuleOutputFile>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ObjectFileName>x64\Debug\</ObjectFileName>
+      <CallingConvention>Cdecl</CallingConvention>
+      <ProgramDataBaseFileName>x64\Debug\vc142.pdb</ProgramDataBaseFileName>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>x64\Debug\Core.pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ShowIncludes>false</ShowIncludes>
+      <SourceDependenciesFile>x64\Debug\</SourceDependenciesFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <SpectreMitigation>false</SpectreMitigation>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <TrackerLogDirectory>x64\Debug\Core.tlog\</TrackerLogDirectory>
+      <TranslateIncludes>false</TranslateIncludes>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>true</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <XMLDocumentationFileName>x64\Debug\</XMLDocumentationFileName>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_WINDLL;_UNICODE;UNICODE;;XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY;JPH_DEBUG_RENDERER;JPH_FLOATING_POINT_EXCEPTIONS_ENABLED;JPH_PROFILE_ENABLED</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>;externals\include;include;inline;externals\inline;..\CoreLibs\include;C:\Projet\vcpkg\installed\x64-windows\include</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions>/bigobj </AdditionalOptions>
+      <LinkCompiled>true</LinkCompiled>
+    </ClCompile>
     <ClCompile Include="src\utils\utils.cpp" />
     <ClCompile Include="src\utils\windows.cpp" />
     <ClCompile Include="src\window.cpp" />

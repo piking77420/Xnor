@@ -55,7 +55,7 @@ public:
     /// @brief Begins a component filter
     XNOR_ENGINE static void BeginComponentFilter();
     /// @brief Begins a filter
-    XNOR_ENGINE static void BeginFilter(const std::string& filterName);
+    XNOR_ENGINE static void BeginFilter(const std::string& filterName = "File");
 
 private:
     static inline ImGuiTextFilter m_TextFilter;
