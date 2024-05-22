@@ -42,7 +42,7 @@ namespace Game
             velocity.Z = Math.Clamp(velocity.Z, -MaxVelocity, MaxVelocity);
 
             // Update position
-            Transform.Position += velocity * Time.DeltaTime;
+            //Transform.Position += velocity * Time.DeltaTime;
             velocity = new Vector3();
         }
 

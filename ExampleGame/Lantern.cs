@@ -20,7 +20,7 @@ namespace Game
         protected override void Update()
         {
             float time = Time.TotalTime * RotationSpeed;
-            Transform.RotationEulerAngleZ = MathF.Sin(time) / 2f;
+            //Transform.RotationEulerAngleZ = MathF.Sin(time) / 2f;
         }
     }
 }

@@ -31,8 +31,8 @@ namespace Game
             bullet.Transform.Position = new(shootPointMatrix.M30, shootPointMatrix.M31, shootPointMatrix.M32);
             bullet.Transform.Scale *= bulletSize;
             
-            //Vector3 force = (bullet.Transform.Position - parent.Transform.Position).Normalized() * 5f;
-            //coll.AddForce(force);
+            Vector3 force = (bullet.Transform.Position - parent.Transform.Position).Normalized() * 5f;
+            coll.AddForce(force);
 
         }
         

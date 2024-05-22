@@ -70,6 +70,9 @@ public:
     [[nodiscard]]
     static Quaternion FromJph(const JPH::Quat& in);
 
+    static Matrix FromJph(const JPH::Mat44& mJph);
+
+
     /// @brief Initializes the physics world
     XNOR_ENGINE static void Initialize();
     /// @brief Destroys the physics world
@@ -134,7 +137,7 @@ public:
     /// @returns Rotation
     [[nodiscard]]
     XNOR_ENGINE static Quaternion GetBodyRotation(uint32_t bodyId);
-
+    
     /// @brief Sets the position of a body
     /// @param bodyId Body ID
     /// @param position Position
@@ -198,6 +201,8 @@ public:
     XNOR_ENGINE static void SetLinearVelocity(uint32_t bodyId,Vector3 velocity);
 
     XNOR_ENGINE static Vector3 GetLinearVelocity(uint32_t bodyId);
+
+    XNOR_ENGINE static Vector3 GetMatrix(uint32_t bodyId);
 
 private:
     XNOR_ENGINE static void TraceImpl(const char_t* format, ...);

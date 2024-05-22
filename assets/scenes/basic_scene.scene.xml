@@ -294,13 +294,6 @@
 					<enabled>true</enabled>
 					<entity>AA4C0C09-AB9-4A1E-90-DA-D3-CC-FA-5F-BA-1</entity>
 				</0>
-				<1 typeName="AudioSource">
-					<audioTrack>0-0-0-0-0-0-0-0-0-0-0</audioTrack>
-					<m_Volume>1</m_Volume>
-					<m_Pitch>1</m_Pitch>
-					<enabled>true</enabled>
-					<entity>AA4C0C09-AB9-4A1E-90-DA-D3-CC-FA-5F-BA-1</entity>
-				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>

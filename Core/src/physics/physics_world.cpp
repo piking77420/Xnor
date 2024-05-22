@@ -16,6 +16,7 @@
 
 #include "input/time.hpp"
 #include "jolt/Physics/Character/Character.h"
+#include "Maths/matrix.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -48,6 +49,7 @@ Quaternion PhysicsWorld::FromJph(const JPH::Quat& in)
 {
     return Quaternion(in.GetX(), in.GetY(), in.GetZ(), in.GetW());
 }
+
 
 void PhysicsWorld::Initialize()
 {
@@ -236,6 +238,13 @@ Quaternion PhysicsWorld::GetBodyRotation(uint32_t bodyId)
     const JPH::Quat rotation = m_BodyInterface->GetRotation(id);
 
     return FromJph(rotation);
+}
+
+Matrix PhysicsWorld::GetWorldMatrix(uint32_t bodyId)
+{
+    ToJph()
+
+    
 }
 
 void PhysicsWorld::SetPosition(const uint32_t bodyId, const Vector3& position)

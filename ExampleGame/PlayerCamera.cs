@@ -28,8 +28,8 @@ namespace Game
             if (ViewAngle.Y * CoreNative.Rad2Deg < -MaxPitch)
                 ViewAngle.Y = -MaxPitch * CoreNative.Deg2Rad;
             
-            Transform.RotationEulerAngle = new(ViewAngle.Y, ViewAngle.X, 0f);
-            Transform.Position = playerEntity.Transform.Position;
+            //Transform.RotationEulerAngle = new(ViewAngle.Y, ViewAngle.X, 0f);
+            //Transform.Position = playerEntity.Transform.Position;
 
         }
     }
