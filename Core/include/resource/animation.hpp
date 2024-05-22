@@ -64,8 +64,7 @@ public:
     [[nodiscard]]
     XNOR_ENGINE float_t GetFrameDuration() const;
 
-    [[nodiscard]]
-    XNOR_ENGINE const List<KeyFrame>& GetBoneKeyFrame(const Bone& bone) const;
+    XNOR_ENGINE void GetBoneKeyFrame(const Bone& bone, const List<Animation::KeyFrame>** keyFrames) const;
 
 private:
     float_t m_Duration;

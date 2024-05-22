@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Xnor.Core;
 
 namespace Game
@@ -17,7 +18,7 @@ namespace Game
         protected override void Update()
         {
             float time = Time.TotalTime * 0.25f;
-            Transform.Position = startingPosition + new Vector3(MathF.Cos(time), MathF.Sin(time), 0f);
+            Transform.RotationEulerAngleZ = MathF.Sin(time);
         }
     }
 }

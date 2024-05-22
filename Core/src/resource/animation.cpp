@@ -73,7 +73,14 @@ float_t Animation::GetFrameDuration() const
     return m_FrameDuration;
 }
 
-const List<Animation::KeyFrame>& Animation::GetBoneKeyFrame(const Bone& bone) const
+void Animation::GetBoneKeyFrame(const Bone& bone, const List<Animation::KeyFrame>** keyFrames) const
 {
-    return m_KeyFrames.find(bone.name)->second;
+    auto&& it = m_KeyFrames.find(bone.name);
+    if (it == m_KeyFrames.end())
+    {
+        *keyFrames = nullptr;
+        return;
+    }
+
+    *keyFrames = &it->second;
 }

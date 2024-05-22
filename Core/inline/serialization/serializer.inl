@@ -559,6 +559,9 @@ void Serializer::DeserializeListType(const Metadata<ReflectT, MemberT, Descripto
             
             ListT const ptr = static_cast<ListT>(CreateObjectUsingFactory(typeName, managedTypeName));
             metadata.obj->Add(ptr);
+            if constexpr (Meta::IsSame<PtrT, Component>)
+                ptr->entity = metadata.topLevelObj;
+
         }
         else if constexpr (Meta::IsPointer<ListT>)
         {

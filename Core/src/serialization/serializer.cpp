@@ -74,8 +74,7 @@ void Serializer::EndDeserialization()
     Logger::Synchronize();
     m_CurrentFilePath = "";
     
-    decltype(auto) a = (m_GuidEntityMap);
-    a.clear();
+    m_GuidEntityMap.clear();
 }
 
 void Serializer::BeginRootElement(const std::string& elementName, const std::string& elementValue)

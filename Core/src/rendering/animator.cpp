@@ -64,10 +64,18 @@ void Animator::Animate()
     {
         const Bone& bone = bones[i];
 
-        if (bone.id >= currentMatrices.GetSize())
+        if (static_cast<size_t>(bone.id) >= currentMatrices.GetSize())
             continue;
 
-        const List<Animation::KeyFrame>& keyFrames = m_Animation->GetBoneKeyFrame(bone);
+        const List<Animation::KeyFrame>* keyFramesPtr = nullptr;
+        m_Animation->GetBoneKeyFrame(bone, &keyFramesPtr);
+        if (keyFramesPtr == nullptr)
+        {
+            // Reset animation
+            m_Time = 0.f;
+            break;
+        }
+        const List<Animation::KeyFrame>& keyFrames = *keyFramesPtr;
 
         const size_t frame = Utils::RemapValue(m_CurrentFrame, Vector2i(0, static_cast<int32_t>(m_FrameCount)), Vector2i(0, static_cast<int32_t>(keyFrames.GetSize())));
         nextFrame = (frame + 1) % keyFrames.GetSize();
