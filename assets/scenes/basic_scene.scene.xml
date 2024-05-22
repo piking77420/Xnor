@@ -29,8 +29,8 @@
 			<name>Plane</name>
 			<m_EntityId>DC36B839-E893-481D-B6-28-93-7E-24-FC-F4-C</m_EntityId>
 			<transform>
-				<m_Position>0 ; -2 ; 1</m_Position>
-				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_Position>0.7613487 ; -2.8172169 ; 0.3783853</m_Position>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>10 ; 1 ; 10</m_Scale>
 			</transform>
 			<m_Components>
@@ -75,7 +75,7 @@
 			<name>Sphere</name>
 			<m_EntityId>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</m_EntityId>
 			<transform>
-				<m_Position>1.2363967 ; -0.17789808 ; -4.054154</m_Position>
+				<m_Position>7.139344 ; -2.1281729 ; 34.983772</m_Position>
 				<m_EulerRotation>2.752485 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1.0000015 ; 1.0000015</m_Scale>
 			</transform>
@@ -271,9 +271,9 @@
 			<name>Rammus</name>
 			<m_EntityId>AA4C0C09-AB9-4A1E-90-DA-D3-CC-FA-5F-BA-1</m_EntityId>
 			<transform>
-				<m_Position>4.3250613 ; -1.4555666 ; 1.3833785</m_Position>
-				<m_EulerRotation>3.1415925 ; 0.92511785 ; 3.1415925</m_EulerRotation>
-				<m_Scale>0.050001148 ; 0.05000079 ; 0.050001416</m_Scale>
+				<m_Position>-3.6612613 ; -3.6183074 ; 40.619995</m_Position>
+				<m_EulerRotation>0.0049710334 ; 0.12107528 ; 0.0069478876</m_EulerRotation>
+				<m_Scale>0.050002605 ; 0.050000906 ; 0.050003022</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="SkinnedMeshRenderer">
@@ -296,8 +296,8 @@
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
-						<m_Animation>E9F04973-E9D-4E85-98-A1-9-BF-16-C-2-FB</m_Animation>
-						<m_CurrentFrame>299</m_CurrentFrame>
+						<m_Animation>7C216888-784A-457B-80-6D-AE-45-8-1D-EE-41</m_Animation>
+						<m_CurrentFrame>14</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>
@@ -500,6 +500,48 @@
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
 		</14>
+		<15>
+			<name>Enemy Maplhite</name>
+			<m_EntityId>B52820E-8798-4141-BA-7F-4E-FC-4A-AC-81-A2</m_EntityId>
+			<transform>
+				<m_Position>10.369689 ; -4.1882763 ; 25.89512</m_Position>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
+				<m_Scale>0.02 ; 0.02 ; 0.02</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="SkinnedMeshRenderer">
+					<mesh>306C000-A37A-4F10-87-AB-5E-42-7F-5D-F7-FF</mesh>
+					<material>
+						<materialType>Opaque</materialType>
+						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
+						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
+						<metallic>0</metallic>
+						<roughness>0</roughness>
+						<reflectance>0</reflectance>
+						<emissive>0</emissive>
+						<ambientOcclusion>0</ambientOcclusion>
+						<albedoTexture>D3FFCA27-A0BF-468C-B5-3C-FB-7A-DA-A9-7A-6E</albedoTexture>
+						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
+						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
+						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
+						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
+						<emissiveTexture>0-0-0-0-0-0-0-0-0-0-0</emissiveTexture>
+					</material>
+					<drawModelAabb>false</drawModelAabb>
+					<m_Animator>
+						<m_Animation>0-0-0-0-0-0-0-0-0-0-0</m_Animation>
+						<m_CurrentFrame>0</m_CurrentFrame>
+						<m_PlaySpeed>1</m_PlaySpeed>
+						<m_CrossFadeT>0</m_CrossFadeT>
+					</m_Animator>
+					<enabled>true</enabled>
+					<entity>B52820E-8798-4141-BA-7F-4E-FC-4A-AC-81-A2</entity>
+				</0>
+				<1 typeName="ScriptComponent" managedType="Game.Enemy"/>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</15>
 	</m_Entities>
 </Scene>
 

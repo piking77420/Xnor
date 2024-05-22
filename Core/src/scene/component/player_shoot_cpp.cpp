@@ -23,14 +23,21 @@ void PlayerShootCpp::Shoot()
     SetupBullet(bullet);
     SphereCollider* coll = bullet->AddComponent<SphereCollider>();
     coll->SetRadius(bulletSize);
-                
+    auto s = bullet->AddComponent<AudioSource>();
+    s->audioTrack = ResourceManager::Get<AudioTrack>("assets/sounds/blaster.wav");
+    s->SetLooping(false);
+    s->Play();
             
     Matrix shootPointMatrix = shootPoint->transform.worldMatrix;
     bullet->transform.SetPosition( {shootPointMatrix.m03, shootPointMatrix.m13, shootPointMatrix.m23}) ;
     bullet->transform.SetScale( bullet->transform.GetScale() * bulletSize);
     Vector3 force = (bullet->transform.GetPosition() - parent->transform.GetPosition()).Normalized() * 10000.f;
     coll->AddForce(force);
+}
 
+void PlayerShootCpp::BulletSound()
+{
+    
 }
 
 void XnorCore::PlayerShootCpp::Awake()

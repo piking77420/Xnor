@@ -7,6 +7,7 @@
 #include "csharp/dotnet_runtime.hpp"
 #include "physics/component/capsule_collider.hpp"
 #include "rendering/light/light.hpp"
+#include "resource/audio_track.hpp"
 #include "utils/logger.hpp"
 
 using namespace XnorCore;
@@ -95,6 +96,13 @@ void DotnetReflection::RegisterAllTypes()
     RegisterCoreType<Light>(XnorCoreNamespace + "Light");
     RegisterCoreType<Entity>(XnorCoreNamespace + "Entity");
     RegisterCoreType<CapsuleCollider>(XnorCoreNamespace + "CapsuleCollider");
+    
+    RegisterCoreType<Pointer<Mesh>>(XnorCoreNamespace + "MeshPointer");
+    RegisterCoreType<Pointer<Animation>>(XnorCoreNamespace + "AnimationPointer");
+    RegisterCoreType<Pointer<Model>>(XnorCoreNamespace + "ModelPointer");
+    RegisterCoreType<Pointer<AudioTrack>>(XnorCoreNamespace + "AudioTrackPointer");
+    RegisterCoreType<Pointer<Texture>>(XnorCoreNamespace + "TexturePointer");
+    RegisterCoreType<Pointer<Skeleton>>(XnorCoreNamespace + "SkeletonPointer");
 }
 
 void DotnetReflection::DisplayType(ScriptComponent* const script, void* obj, const char_t* const name, const std::string& typeName)
