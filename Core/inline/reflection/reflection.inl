@@ -45,7 +45,7 @@ void Reflection::Clone(const T* const src, T* const dst)
     {
         using MemberT = typename DescriptorT::value_type;
 
-        constexpr bool_t shouldProcess = !DescriptorT::is_static && !IsFunction<DescriptorT>;
+        constexpr bool_t shouldProcess = !DescriptorT::is_static && !IsFunction<DescriptorT> && !HasAttribute<DontClone, DescriptorT>();
 
         if constexpr (shouldProcess)
         {
