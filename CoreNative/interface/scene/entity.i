@@ -41,8 +41,7 @@
     public T AddComponent<T>() where T : Component, new()
     {
         T result = new();
-        GetComponents().Add(result);
-        result.Entity = this;
+        AddComponent(result);
         return result;
     }
 
