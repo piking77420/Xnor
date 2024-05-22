@@ -615,7 +615,8 @@ void Editor::Update()
 	}
 	Window::Hide();
 
-	StopPlaying();
+	if (m_GamePlaying)
+		StopPlaying();
 
 	shaderWatcher.Stop();
 }
