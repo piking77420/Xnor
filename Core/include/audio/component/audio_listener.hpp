@@ -13,12 +13,6 @@ class XNOR_ENGINE AudioListener : public Component
 public:
     bool_t dopplerEffect = true;
     
-    AudioListener();
-    
-    ~AudioListener() override = default;
-
-    DEFAULT_COPY_MOVE_OPERATIONS(AudioListener)
-    
     void Update() override;
     
     /// @brief Get the volume in the range [0, inf].
@@ -29,8 +23,6 @@ public:
     void SetVolume(float_t newVolume);
 
 private:
-    AudioContext* m_Context = nullptr;
-    
     /// @brief Volume in the range [0, inf]. Default value is 1.
     float_t m_Volume = 1.f;
 };

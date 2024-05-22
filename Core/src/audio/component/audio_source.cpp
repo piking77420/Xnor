@@ -11,9 +11,8 @@
 using namespace XnorCore;
 
 AudioSource::AudioSource()
-    : m_Context(Audio::GetContext())
 {
-    m_Context->MakeCurrent();
+    Audio::GetContext()->MakeCurrent();
     alGenSources(1, &m_Handle);
     AudioContext::CheckError();
     SetLooping(true);
@@ -21,7 +20,7 @@ AudioSource::AudioSource()
 
 AudioSource::~AudioSource()
 {
-    m_Context->MakeCurrent();
+    Audio::GetContext()->MakeCurrent();
     alDeleteSources(1, &m_Handle);
     AudioContext::CheckError();
 }
@@ -36,7 +35,7 @@ void AudioSource::Begin()
 
 void AudioSource::Update()
 {
-    m_Context->MakeCurrent();
+    Audio::GetContext()->MakeCurrent();
 
     const Transform& transform = GetTransform();
     
@@ -62,6 +61,8 @@ void AudioSource::Play() { if (audioTrack) Play(*audioTrack); }
 
 void AudioSource::Play(AudioTrack& track)
 {
+    Audio::GetContext()->MakeCurrent();
+    
     if (!track.IsLoadedInInterface())
     {
         Logger::LogWarning("Tried to play an AudioTrack ({}) that wasn't loaded in the audio interface. Loading it", track.GetName());
@@ -77,7 +78,7 @@ void AudioSource::Play(AudioTrack& track)
 // ReSharper disable once CppMemberFunctionMayBeConst
 void AudioSource::SetBuffer(const AudioBuffer* buffer)
 {
-    m_Context->MakeCurrent();
+    Audio::GetContext()->MakeCurrent();
     alSourcei(m_Handle, AL_BUFFER, static_cast<int32_t>(buffer->GetHandle()));
     AudioContext::CheckError();
 }
@@ -91,7 +92,7 @@ void AudioSource::SetVolume(const float_t newVolume)
 {
     m_Volume = std::max(0.f, newVolume);
     
-    m_Context->MakeCurrent();
+    Audio::GetContext()->MakeCurrent();
     alSourcef(m_Handle, AL_GAIN, m_Volume);
     AudioContext::CheckError();
 }
@@ -105,7 +106,7 @@ void AudioSource::SetPitch(const float_t newPitch)
 {
     m_Pitch = std::max(0.f, newPitch);
     
-    m_Context->MakeCurrent();
+    Audio::GetContext()->MakeCurrent();
     alSourcef(m_Handle, AL_PITCH, m_Pitch);
     AudioContext::CheckError();
 }
@@ -119,7 +120,7 @@ void AudioSource::SetLooping(const bool_t newLooping)
 {
     m_Looping = newLooping;
     
-    m_Context->MakeCurrent();
+    Audio::GetContext()->MakeCurrent();
     alSourcei(m_Handle, AL_LOOPING, m_Looping);
     AudioContext::CheckError();
 }

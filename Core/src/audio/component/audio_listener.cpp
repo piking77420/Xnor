@@ -7,11 +7,9 @@
 
 using namespace XnorCore;
 
-AudioListener::AudioListener() { m_Context = Audio::GetContext(); }
-
 void AudioListener::Update()
 {
-    m_Context->MakeCurrent();
+    Audio::GetContext()->MakeCurrent();
 
     const Transform& transform = GetTransform();
 
@@ -45,7 +43,7 @@ void AudioListener::SetVolume(const float_t newVolume)
 {
     m_Volume = std::max(0.f, newVolume);
     
-    m_Context->MakeCurrent();
+    Audio::GetContext()->MakeCurrent();
     alListenerf(AL_GAIN, m_Volume);
     AudioContext::CheckError();
 }

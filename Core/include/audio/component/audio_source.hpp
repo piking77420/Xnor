@@ -43,8 +43,6 @@ public:
 
 private:
     uint32_t m_Handle = 0;
-
-    AudioContext* m_Context = nullptr;
     
     /// @brief Volume in the range [0, inf]. Default value is 1.
     float_t m_Volume = 1.f;
