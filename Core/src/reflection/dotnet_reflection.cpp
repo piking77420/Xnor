@@ -23,9 +23,7 @@ void DotnetReflection::PrintTypes()
     for (const Coral::Type* type : gameAssembly->GetTypes())
     {
         if (type->IsSubclassOf(scriptComponentType))
-        {
             RegisterScriptType(type->GetFullName());
-        }
     }
 
     for (auto&& it : m_DotnetTypes)
@@ -142,14 +140,23 @@ void DotnetReflection::DisplayType(ScriptComponent* const script)
     for (Coral::FieldInfo& field : type.GetFields())
     {
         auto&& attributes = field.GetAttributes();
-        // Discard the field if it is non-public and doesn't have the 'Serialized' attribute
-        if (
-            field.GetAccessibility() != Coral::TypeAccessibility::Public &&
-            std::ranges::find_if(
-                attributes,
-                [](Coral::Attribute& attribute) -> bool_t { return attribute.GetType().GetFullName() == Dotnet::XnorCoreNamespace + ".Serialized"; }
-            ) == attributes.end()
-        )
+
+        // Discard the field if it is non-public
+        bool_t discard = field.GetAccessibility() != Coral::TypeAccessibility::Public;
+
+        for (Coral::Attribute& attribute : attributes)
+        {
+            Coral::String&& name = attribute.GetType().GetFullName();
+            // And if it doesn't have the 'Serialized' attribute
+            if (name == Dotnet::XnorCoreNamespace + ".Serialized")
+                discard = false;
+                
+            // Discard it anyway if it has the 'NotSerialized' attribute
+            if (name == Dotnet::XnorCoreNamespace + ".NotSerialized")
+                discard = true;
+        }
+        
+        if (discard)
             continue;
         
         const std::string fieldName = field.GetName();
