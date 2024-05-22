@@ -16,7 +16,7 @@ class DrawGizmo
     struct GizmoSphere
     {
         Vector3 position;
-        float_t radius;
+        float_t radius = 1.f;
         Color color;
     };
 
@@ -30,8 +30,8 @@ class DrawGizmo
     struct GizmoCapsule
     {
         Vector3 position;
-        float_t height;
-        float_t radius;
+        float_t height = 1.f;
+        float_t radius = 1.f;
         Color color;
     };
     
@@ -43,6 +43,8 @@ public:
     XNOR_ENGINE DrawGizmo();
 
     XNOR_ENGINE ~DrawGizmo() = default;
+
+    DEFAULT_COPY_MOVE_OPERATIONS(DrawGizmo)
     
     XNOR_ENGINE static void Sphere(Vector3 position, float_t radius = 1.f, Color color = Color::Green());
     
