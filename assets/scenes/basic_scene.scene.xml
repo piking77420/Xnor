@@ -190,7 +190,7 @@
 			<m_EntityId>55E1E12F-7B57-4A4E-A6-92-63-AC-40-AA-B3-36</m_EntityId>
 			<transform>
 				<m_Position>0 ; 0 ; 0</m_Position>
-				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
+				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
 			<m_Components>
@@ -211,9 +211,9 @@
 			<name>Lantern</name>
 			<m_EntityId>9144D2C0-8CE-41CA-93-B-F-F-A3-A6-32-8D</m_EntityId>
 			<transform>
-				<m_Position>0 ; 2 ; 0</m_Position>
+				<m_Position>-3.1423028 ; 2 ; -3.828267</m_Position>
 				<m_EulerRotation>-1.5707965 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 0.99992913 ; 0.99992913</m_Scale>
+				<m_Scale>0.5 ; 0.49999675 ; 0.49999675</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="StaticMeshRenderer">
@@ -247,6 +247,7 @@
 				</1>
 				<2 typeName="ScriptComponent" managedType="Game.Lantern">
 					<MaxRotationAngle>0.7853982</MaxRotationAngle>
+					<RotationSpeed>1</RotationSpeed>
 				</2>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -284,7 +285,7 @@
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
 						<m_Animation>E9F04973-E9D-4E85-98-A1-9-BF-16-C-2-FB</m_Animation>
-						<m_CurrentFrame>549</m_CurrentFrame>
+						<m_CurrentFrame>283</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>
@@ -311,7 +312,7 @@
 			<name>Weapon</name>
 			<m_EntityId>CEE35AD1-3980-4298-AD-2B-48-6C-53-DF-30-53</m_EntityId>
 			<transform>
-				<m_Position>-0.1736043 ; -0.15393622 ; 0</m_Position>
+				<m_Position>-0.18116966 ; -0.13631852 ; 0</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
@@ -328,10 +329,10 @@
 						<emissive>0</emissive>
 						<ambientOcclusion>0.036</ambientOcclusion>
 						<albedoTexture>1B23E0FA-D07C-458B-8D-FF-A5-84-C5-41-82-8D</albedoTexture>
-						<metallicTexture>7587E9E6-C775-4518-93-22-41-74-BC-95-DD-3D</metallicTexture>
-						<roughnessTexture>7587E9E6-C775-4518-93-22-41-74-BC-95-DD-3D</roughnessTexture>
-						<normalTexture>299972BB-7B3B-4960-86-88-77-D3-1B-94-D1-19</normalTexture>
-						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
+						<metallicTexture>FD729C73-1920-471A-A4-16-0-DF-BF-99-31-FC</metallicTexture>
+						<roughnessTexture>752FA041-11DC-4E70-84-39-C-FF-C0-DF-59-80</roughnessTexture>
+						<normalTexture>ADCBBC53-317F-46FB-A1-72-A2-88-43-7D-2E-58</normalTexture>
+						<ambientOcclusionTexture>84E2993B-87A9-4C4C-88-3E-B4-6E-1C-19-31-4A</ambientOcclusionTexture>
 						<emissiveTexture>0-0-0-0-0-0-0-0-0-0-0</emissiveTexture>
 					</material>
 					<drawModelAabb>false</drawModelAabb>

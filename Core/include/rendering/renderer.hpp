@@ -121,19 +121,11 @@ private:
     XNOR_ENGINE void DrawMeshRendersByType(MaterialType materialType , const Scene& scene) const;
     
 
-    XNOR_ENGINE void DeferredRendering(
-        const Camera& camera,
-        const Scene& scene,
-        const ViewportData&
-        viewportData,
-        const Vector2i viewportSize
-    ) const;
+    XNOR_ENGINE void DeferredRendering(const Camera& camera, const Scene& scene, const ViewportData& viewportData, const Vector2i viewportSize) const;
     
     XNOR_ENGINE void ForwardPass(const Scene& scene,
         const Viewport& viewport, Vector2i viewportSize, bool_t isEditor) const;
     
-    XNOR_ENGINE void DrawAabb(const std::vector<const StaticMeshRenderer*>& meshRenderers) const;
-
 };
 
 END_XNOR_CORE

@@ -122,7 +122,8 @@ private:
     mutable std::vector<const SpotLight*> m_SpotLights;
     mutable std::vector<const DirectionalLight*> m_DirectionalLights;
     
-    CascadeShadowMap m_CascadeShadowMap;    
+    CascadeShadowMap m_CascadeShadowMap;
+    
     
     XNOR_ENGINE void FecthLightInfo() const;
 

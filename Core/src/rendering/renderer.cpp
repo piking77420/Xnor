@@ -23,8 +23,7 @@ void Renderer::Initialize()
 void Renderer::BeginFrame(const Scene& scene, const Viewport& viewport)
 {
     Rhi::ClearBuffer(BufferFlag::ColorBit);
-    meshesDrawer.BeginFrame(scene, *this);
-    
+    meshesDrawer.BeginFrame(scene, *this);  
     lightManager.BeginFrame(scene, viewport, *this);
 }
 
@@ -146,39 +145,6 @@ void Renderer::ForwardPass(const Scene& scene,
     viewportData.colorPass.EndRenderPass();
 }
 
-void Renderer::DrawAabb(const std::vector<const StaticMeshRenderer*>& /*meshRenderers*/) const
-{
-    /*
-    m_GizmoShader->Use();
-    Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Line);
-    ModelUniformData modelData;
-    m_GizmoShader->SetVec3("color", {0.f, 1.f, 0.f});
-
-    for (const StaticMeshRenderer* const meshRenderer : meshRenderers)
-    {
-        if (!meshRenderer->mesh.IsValid())
-            continue;
-
-        if (!meshRenderer->drawModelAabb)
-            continue;
-        for (size_t i = 0; i < meshRenderer->mesh->models.GetSize(); i++)
-        {
-            Pointer<Model> model = meshRenderer->mesh->models[i];
-            
-            const Transform& transform = meshRenderer->GetEntity()->transform;
-            const Bound& modelAabb = Bound::GetAabbFromTransform(model->GetAabb(), transform);
-            const Matrix&& trsAabb = Matrix::Trs(modelAabb.center, Quaternion::Identity(), modelAabb.extents);
-            modelData.model = trsAabb;
-            Rhi::UpdateModelUniform(modelData);
-
-            Rhi::DrawModel(DrawMode::Triangles, m_Cube->models[0]->GetId());
-        }
-   
-    }
-
-    m_GizmoShader->Unuse();
-    Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);*/
-}
 
 void Renderer::DrawMeshRendersByType(const MaterialType materialType, const Scene& scene) const
 {

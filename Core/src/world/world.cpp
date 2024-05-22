@@ -2,6 +2,7 @@
 
 #include "input/time.hpp"
 #include "physics/physics_world.hpp"
+#include "world/scene_graph.hpp"
 
 using namespace XnorCore;
 
@@ -12,14 +13,26 @@ void World::Begin()
 
 void World::Update()
 {
-    scene->Update();
-    scene->PrePhysics();
-    PhysicsWorld::Update(Time::GetDeltaTime());
-    scene->PostPhysics();
-}
+    if (!hasStarted)
+    {
+        Begin();
+        hasStarted = true;
+    }
 
-void World::OnRendering()
-{
+    if (isPlaying)
+    {
+        scene->Update();
+    }
+    
+    SceneGraph::Update(scene->GetEntities());
+    
+    if (isPlaying)
+    {
+        scene->PrePhysics();
+        PhysicsWorld::Update(Time::GetDeltaTime());
+        scene->PostPhysics();
+    }
     scene->OnRendering();
 }
+
 
