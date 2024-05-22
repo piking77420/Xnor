@@ -6,7 +6,7 @@
 
 using namespace XnorCore;
 
-void CapsuleCollider::Begin()
+void CapsuleCollider::Awake()
 {
     const Transform& t = entity->transform;
 

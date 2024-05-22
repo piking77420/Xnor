@@ -258,7 +258,6 @@ void PhysicsWorld::AddForce(const uint32_t bodyId, const Vector3& force)
         return;
 
     JPH::Body& body = lock.GetBody();
-
     body.AddForce(ToJph(force) / body.GetMotionProperties()->GetInverseMass());
 }
 
@@ -372,6 +371,18 @@ void PhysicsWorld::SetLinearVelocity(uint32_t bodyId, Vector3 velocity)
     body.SetLinearVelocity(ToJph(velocity));
 }
 
+void PhysicsWorld::AddLinearVelocity(uint32_t bodyId, Vector3 velocity)
+{
+    const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
+
+    if (!lock.Succeeded())
+        return;
+
+    JPH::Body& body = lock.GetBody();
+
+    body.SetLinearVelocity(ToJph(velocity) + body.GetLinearVelocity());
+}
+
 Vector3 PhysicsWorld::GetLinearVelocity(uint32_t bodyId)
 {
     const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
@@ -382,6 +393,17 @@ Vector3 PhysicsWorld::GetLinearVelocity(uint32_t bodyId)
     JPH::Body& body = lock.GetBody();
 
     return FromJph(body.GetLinearVelocity());
+}
+
+void PhysicsWorld::MoveKinematic(uint32_t bodyId, Vector3 inTargetPosition, Quaternion inTargetRotation, float_t inDeltaTime)
+{
+    const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
+
+    if (!lock.Succeeded())
+        return;
+
+    JPH::Body& body = lock.GetBody();
+    body.MoveKinematic(ToJph(inTargetPosition),ToJph(inTargetRotation),inDeltaTime);
 }
 
 bool_t PhysicsWorld::IsBodyActive(const uint32_t bodyId)

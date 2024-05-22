@@ -18,23 +18,7 @@ Collider::~Collider()
         PhysicsWorld::DestroyBody(m_BodyId);
 }
 
-void Collider::Awake()
-{
-    const Transform& t = entity->transform;
 
-    const PhysicsWorld::BodyCreationInfo info = {
-        .collider = this,
-        .position = t.GetPosition(),
-        .rotation = t.GetRotation(),
-        .scaling = t.GetScale(),
-        .isTrigger = m_IsTrigger,
-        .isStatic = m_IsStatic
-    };
-
-    m_BodyId = PhysicsWorld::CreateBox(info);
-
-    SetFriction(m_Friction);
-}
 
 void Collider::Begin()
 {
@@ -46,6 +30,8 @@ void Collider::Update()
 
 void Collider::PrePhysics()
 {
+    m_IsActive = PhysicsWorld::IsBodyActive(m_BodyId);
+
     if (m_IsActive)
     {
         PhysicsWorld::SetPosition(m_BodyId, entity->transform.GetPosition());
@@ -55,12 +41,8 @@ void Collider::PrePhysics()
 
 void Collider::PostPhysics()
 {
-    m_IsActive = PhysicsWorld::IsBodyActive(m_BodyId);
-
     if (!m_IsActive)
         return;
-
-    
 
     if (!(constraints & ConstraintPosition))
     {
@@ -71,8 +53,7 @@ void Collider::PostPhysics()
     {
         entity->transform.SetRotationEulerAngle(Quaternion::ToEuler(PhysicsWorld::GetBodyRotation(m_BodyId)));
     }
-
-
+    
 }
 
 bool_t Collider::IsTrigger() const
@@ -101,14 +82,24 @@ float_t Collider::GetFriction() const
     return PhysicsWorld::GetFriction(m_BodyId);
 }
 
-void Collider::SetLinearVelocity(Vector3 velocity)
+void Collider::SetLinearVelocity(const Vector3 velocity)
 {
     PhysicsWorld::SetLinearVelocity(m_BodyId,velocity);
+}
+
+void Collider::AddLinearVelocity(const Vector3 velocity)
+{
+    PhysicsWorld::AddLinearVelocity(m_BodyId, velocity);
 }
 
 Vector3 Collider::GetLinearVelocity() const
 {
     return PhysicsWorld::GetLinearVelocity(m_BodyId);
+}
+
+void Collider::MoveKinematic(const Vector3& inTargetPosition, const Quaternion& inTargetRotation,float_t inDeltaTime)
+{
+    PhysicsWorld::MoveKinematic(m_BodyId, inTargetPosition, inTargetRotation, inDeltaTime);
 }
 
 void Collider::AddDebugEvents()

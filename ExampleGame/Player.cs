@@ -13,7 +13,6 @@ namespace Game
         private Entity cameraEntity;
 
         private Vector3 movement = Vector3.Zero;
-        private Vector3 velocity = Vector3.Zero;
         
         
         [Serialized] 
@@ -33,17 +32,18 @@ namespace Game
             HandleInputs();
 
             // Update velocity
-            Vector3 desiredVelocity = movement * MovementSpeed;
-            desiredVelocity.Y = velocity.Y;
-            velocity = 0.75f * velocity + 0.25f * desiredVelocity;
-
-            velocity.X = Math.Clamp(velocity.X, -MaxVelocity, MaxVelocity);
-            velocity.Y = Math.Clamp(velocity.Y, -MaxVelocity, MaxVelocity);
-            velocity.Z = Math.Clamp(velocity.Z, -MaxVelocity, MaxVelocity);
+            Vector3 current_velocity = collider.GetLinearVelocity();
+            Vector3 desired_velocity = MovementSpeed * movement;
+            desired_velocity.Y = current_velocity.Y;
+            Vector3 new_velocity = 0.75f * current_velocity + 0.25f * desired_velocity;
+            
 
             // Update position
-            Transform.Position += velocity * Time.DeltaTime;
-            collider.AddForce(velocity);
+            collider.SetLinearVelocity(new_velocity);
+
+           
+
+            movement = new Vector3();
         }
 
         private void HandleInputs()
@@ -66,7 +66,7 @@ namespace Game
 
             // Handle jump
             if (Input.GetKey(Key.Space))
-                velocity.Y += JumpSpeed;
+                collider.AddForce(Vector3.UnitY * JumpSpeed);;
         }
     }
 }

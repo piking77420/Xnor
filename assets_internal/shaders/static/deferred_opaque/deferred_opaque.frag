@@ -152,7 +152,7 @@ float DirLightShadowCalculation(vec4 fragPosWorldSpace, vec3 n, vec3 l)
     {
         return 0.0;
     }
-    float bias = max(0.05 * (1.0 - dot(n, l)), 0.005);    
+    float bias = max(0.01 * (1.0 - dot(n, l)), 0.001);    
     // calculate bias (based on depth map resolution and slope)
     const float biasModifier = 0.9f;
     if (layer == directionalData.cascadeCount)

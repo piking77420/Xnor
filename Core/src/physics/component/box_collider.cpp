@@ -7,6 +7,25 @@
 
 using namespace XnorCore;
 
+void BoxCollider::Awake()
+{
+    const Transform& t = entity->transform;
+
+    const PhysicsWorld::BodyCreationInfo info = {
+        .collider = this,
+        .position = t.GetPosition(),
+        .rotation = t.GetRotation(),
+        .scaling = t.GetScale(),
+        .isTrigger = m_IsTrigger,
+        .isStatic = m_IsStatic
+    };
+
+    m_BodyId = PhysicsWorld::CreateBox(info);
+
+    SetFriction(m_Friction);
+    PrePhysics();
+}
+
 void BoxCollider::Begin()
 {
    

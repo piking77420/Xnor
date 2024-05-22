@@ -11,6 +11,7 @@ using namespace XnorCore;
 Entity::Entity(const Guid& entiyId)
     : m_EntityId(entiyId)
 {
+    SceneGraph::UpdateTransform(*this);
 }
 
 Entity::~Entity()

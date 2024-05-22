@@ -13,6 +13,7 @@
 #include "scene/component/camera_component.hpp"
 #include "scene/component/gui_component.hpp"
 #include "scene/component/image.hpp"
+#include "scene/component/player_shoot_cpp.hpp"
 #include "scene/component/skinned_mesh_renderer.hpp"
 #include "scene/component/test_component.hpp"
 #include "scene/component/test_component_animation.hpp"
@@ -109,7 +110,7 @@ void XnorFactory::RegisterAllTypes()
     
     RegisterType<SkinnedMeshRenderer>();
     RegisterType<TestComponentAnimation>();
-    
+    RegisterType<PlayerShootCpp>();
     RegisterType<StaticMeshRenderer>();
     RegisterType<DirectionalLight>();
     RegisterType<TestComponent>();

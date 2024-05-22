@@ -15,6 +15,8 @@ class SphereCollider : public Collider
     REFLECTABLE_IMPL(SphereCollider)
 
 public:
+    float_t radius = 1.f;
+    
     XNOR_ENGINE SphereCollider() = default; 
     XNOR_ENGINE ~SphereCollider() override = default;
     
@@ -25,7 +27,8 @@ public:
     /// @brief Update function
     XNOR_ENGINE void Update() override;
 
-    float_t radius = 1.f;
+    XNOR_ENGINE void SetRadius(float_t radius);
+
 
 private:
 };

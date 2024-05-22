@@ -12,6 +12,7 @@ BEGIN_XNOR_CORE
 /// @brief Capsule collider
 class CapsuleCollider : public Collider
 {
+private:
     REFLECTABLE_IMPL(CapsuleCollider)
 
 public:
@@ -23,9 +24,9 @@ public:
     XNOR_ENGINE ~CapsuleCollider() override = default;
     
     DEFAULT_COPY_MOVE_OPERATIONS(CapsuleCollider)
-
-    /// @brief Begin function
-    XNOR_ENGINE void Begin() override;
+    
+    /// @brief Awake function
+    XNOR_ENGINE void Awake() override;
     /// @brief Update function
     XNOR_ENGINE void Update() override;
     

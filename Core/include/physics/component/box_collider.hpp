@@ -12,6 +12,10 @@ BEGIN_XNOR_CORE
 /// @brief Box collider
 class BoxCollider : public Collider
 {
+public:
+    void Awake() override;
+
+private:
     REFLECTABLE_IMPL(BoxCollider)
 
 public:

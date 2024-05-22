@@ -199,9 +199,11 @@ public:
     
     XNOR_ENGINE static void SetLinearVelocity(uint32_t bodyId,Vector3 velocity);
 
+    XNOR_ENGINE static void AddLinearVelocity(uint32_t bodyId,Vector3 velocity);
+
     XNOR_ENGINE static Vector3 GetLinearVelocity(uint32_t bodyId);
 
-    XNOR_ENGINE static Vector3 GetMatrix(uint32_t bodyId);
+    XNOR_ENGINE static void MoveKinematic(uint32_t bodyId, Vector3 inTargetPosition, Quaternion inTargetRotation, float_t inDeltaTime);
 
 private:
     XNOR_ENGINE static void TraceImpl(const char_t* format, ...);

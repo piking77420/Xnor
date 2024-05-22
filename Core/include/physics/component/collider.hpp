@@ -32,7 +32,7 @@ public:
     DEFAULT_COPY_MOVE_OPERATIONS(Collider)
 
     /// @brief Awake function
-    XNOR_ENGINE void Awake() override;
+    XNOR_ENGINE void Awake() override{}
     /// @brief Begin function
     XNOR_ENGINE void Begin() override;
     /// @brief Update function
@@ -66,7 +66,11 @@ public:
 
     XNOR_ENGINE void SetLinearVelocity(Vector3 velocity);
 
+    XNOR_ENGINE void AddLinearVelocity(Vector3 velocity);
+
     XNOR_ENGINE Vector3 GetLinearVelocity() const;
+    
+    XNOR_ENGINE void MoveKinematic(const Vector3& inTargetPosition, const Quaternion& inTargetRotation, float_t inDeltaTime);
 
     /// @brief Callback if the collider is a trigger and another collider entered in it
     Event<Collider*, Collider*, const CollisionData&> onTriggerEnter;

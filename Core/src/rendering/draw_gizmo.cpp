@@ -74,30 +74,32 @@ void DrawGizmo::DrawCollider(const Entity& entity)
     const Collider* collider = entityCollider[0];
     Matrix colliderMatrix;
 
+    Vector3 worldPos = static_cast<Vector3>(entity.transform.worldMatrix[3]);
+
     if (Utils::GetTypeHash<Collider>(collider) == Utils::GetTypeHash<SphereCollider>())
     {
         mesh = m_Sphere;
         const float_t radius = reinterpret_cast<const SphereCollider*>(collider)->radius;
-        colliderMatrix = Matrix::Trs(Vector3::Zero(), Quaternion::Identity(), Vector3(radius) * 2.f);
+        colliderMatrix = Matrix::Trs(worldPos, Quaternion::Identity(), Vector3(radius));
     }
     else if (Utils::GetTypeHash<Collider>(collider) == Utils::GetTypeHash<BoxCollider>())
     {
         mesh = m_Cube;
         const BoxCollider* boxCollider = reinterpret_cast<const BoxCollider*>(collider);
-        colliderMatrix = Matrix::Trs(boxCollider->center, Quaternion::Identity(), boxCollider->size);
+        colliderMatrix = entity.transform.worldMatrix * Matrix::Trs(Vector3::Zero(), Quaternion::Identity(), boxCollider->size);
     }
     else if (Utils::GetTypeHash<Collider>(collider) == Utils::GetTypeHash<CapsuleCollider>())
     {
         mesh = m_Capsule;
         const CapsuleCollider* capsuleCollider = reinterpret_cast<const CapsuleCollider*>(collider);
         const Vector3 capsuleScale = Vector3(capsuleCollider->radius, capsuleCollider->height, capsuleCollider->radius);
-        colliderMatrix = Matrix::Trs(Vector3::Zero(), Quaternion::Identity(), capsuleScale);
+        colliderMatrix = Matrix::Trs(worldPos, Quaternion::Identity(), capsuleScale);
     }
     else
     {
         return;
     }
-    modelData.model = entity.transform.worldMatrix * colliderMatrix;
+    modelData.model = colliderMatrix;
     Rhi::UpdateModelUniform(modelData);
     Rhi::DrawModel(DrawMode::Triangles, mesh->models[0]->GetId());
     
