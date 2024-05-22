@@ -8,7 +8,7 @@ using namespace XnorCore;
 
 void World::Update()
 {
-    if (!hasStarted)
+    if (!hasStarted && isPlaying)
     {
         scene->Awake();
         scene->Begin();
@@ -16,9 +16,7 @@ void World::Update()
     }
 
     if (isPlaying)
-    {
         scene->Update();
-    }
     
     SceneGraph::Update(scene->GetEntities());
     
