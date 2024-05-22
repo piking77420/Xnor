@@ -33,9 +33,9 @@ constexpr const AttributeT* Reflection::TryGetAttribute()
 }
 
 template <typename T>
-void Reflection::Clone(const T* const, T* const)
+void Reflection::Clone(const T* const src, T* const dst)
 {
-    /*if constexpr (!Reflection::IsReflected<T>)
+    if constexpr (!Reflection::IsReflected<T>)
     {
         Logger::LogError("Trying to clone a non reflected type {}", typeid(T).name());
         return;
@@ -45,35 +45,43 @@ void Reflection::Clone(const T* const, T* const)
     {
         using MemberT = typename DescriptorT::value_type;
 
-        if constexpr (Meta::IsXnorList<MemberT>)
+        constexpr bool_t shouldProcess = !DescriptorT::is_static && !IsFunction<DescriptorT>;
+
+        if constexpr (shouldProcess)
         {
-            using ListT = typename MemberT::Type;
-
-            const MemberT& srcList = DescriptorT::get(src);
-            MemberT& dstList = DescriptorT::get(dst);
-
-            if constexpr (Meta::IsPointer<ListT> && Meta::IsAbstract<ListT>)
+            if constexpr (Meta::IsXnorList<MemberT>)
             {
-                for (size_t i = 0; i < srcList.GetSize(); i++)
+                using ListT = typename MemberT::Type;
+
+                const MemberT& srcList = DescriptorT::get(src);
+                MemberT& dstList = DescriptorT::get(dst);
+
+                if constexpr (Meta::IsPointer<ListT> && Meta::IsAbstract<Meta::RemovePointerSpecifier<ListT>>)
                 {
-                    const size_t hash = typeid(*srcList[i]).hash_code();
-                    dstList.Add(static_cast<ListT*>(Reflection::CreateUsingFactory(hash)));
-                    Reflection::CloneUsingFactory(srcList[i], dstList[i], hash);
+                    for (size_t i = 0; i < srcList.GetSize(); i++)
+                    {
+                        const size_t hash = typeid(*srcList[i]).hash_code();
+                        dstList.Add(static_cast<ListT>(Reflection::CreateUsingFactory(hash)));
+                        Reflection::CloneUsingFactory(srcList[i], dstList[i], hash);
+
+                        // Hardcoding because no time
+                        dstList[i]->entity = dst;
+                    }
+                }
+                else
+                {
+                    for (size_t i = 0; i < srcList.GetSize(); i++)
+                    {
+                        dstList.Add(srcList[i]);
+                    }
                 }
             }
-            else
+            else if constexpr (Meta::IsCopyAssignable<MemberT>)
             {
-                for (size_t i = 0; i < srcList.GetSize(); i++)
-                {
-                    dstList.Add(srcList[i]);
-                }
+                DescriptorT::get(dst) = DescriptorT::get(src);
             }
         }
-        else if constexpr (Meta::IsCopyAssignable<MemberT>)
-        {
-            DescriptorT::get(dst) = DescriptorT::get(src);
-        }
-    });*/
+    });
 }
 
 END_XNOR_CORE

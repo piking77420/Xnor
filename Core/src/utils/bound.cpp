@@ -33,7 +33,7 @@ void Bound::SetMinMax(const Vector3 newmin, const Vector3 newMax)
     center = newmin + extents;
 }
 
-Bound Bound::GetAabbFromTransform(const Bound& bound,const Transform& transform)
+Bound Bound::GetAabbFromTransform(const Bound& bound, const Transform& transform)
 {
     const Vector3 globalPos = static_cast<Vector3>(transform.worldMatrix * Vector4(bound.center.x, bound.center.y, bound.center.z, 1.f));
     // Let the constructor

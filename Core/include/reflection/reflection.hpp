@@ -180,6 +180,9 @@ namespace Reflection
 
     template <typename T>
     constexpr bool_t IsReflected = refl::trait::is_reflectable_v<T>;
+
+    template <typename T>
+    constexpr bool_t IsFunction = refl::trait::is_function_v<T>;
     
     /// @brief Gets the type info of a class
     /// @tparam ReflectT Type

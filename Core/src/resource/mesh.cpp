@@ -101,17 +101,15 @@ Pointer<Animation> Mesh::GetAnimation(const size_t id)
     return m_Animations[id];
 }
 
-std::string Mesh::GetTextureFileName(const std::string& baseFileName, const std::string& textureName, const std::string& textureFormat, size_t index)
+std::string Mesh::GetTextureFileName(const std::string&, const std::string& textureName, const std::string& textureFormat, const size_t)
 {
     std::string returnName;
-    std::string baseNameCopy = textureName;
-    
-    const size_t last =  baseNameCopy.find_last_of('\\') + 1;
+    const size_t last = textureName.find_last_of('\\') + 1;
         
-    for (size_t i = last; i < baseNameCopy.size();i++)
-        returnName.push_back(baseNameCopy[i]);
+    for (size_t i = last; i < textureName.size();i++)
+        returnName.push_back(textureName[i]);
 
-    std::filesystem::path path(returnName);
+    const std::filesystem::path path(returnName);
     returnName = path.stem().generic_string();
     returnName += ( "." + textureFormat);
     

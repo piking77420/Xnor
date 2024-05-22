@@ -85,4 +85,7 @@ private:
 END_XNOR_CORE
 
 /// @private
-REFL_AUTO(type(XnorCore::Component), field(enabled));
+REFL_AUTO(type(XnorCore::Component),
+    field(enabled),
+    field(entity, XnorCore::Reflection::HideInInspector())
+);
