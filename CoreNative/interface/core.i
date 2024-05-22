@@ -129,6 +129,8 @@ struct Data64
 #include "rendering/vertex.hpp"
 #include "rendering/viewport.hpp"
 #include "rendering/viewport_data.hpp"
+#include "rendering/plane.hpp"
+#include "rendering/draw_gizmo.hpp"
 #include "utils/plane.hpp"
 
 #include "physics/data/collision_data.hpp"
@@ -191,6 +193,8 @@ struct Data64
 %include "utils/list.i"
 %include "utils/color.i"
 
+%include "rendering/draw_gizmo.i"
+
 %include "resource/resource.hpp"
 
 %include "file/entry.hpp"
@@ -215,6 +219,7 @@ struct Data64
 %include "resource/texture.hpp"
 %include "rendering/material.hpp"
 %include "rendering/bone.hpp"
+
 %include "resource/skeleton.hpp"
 %include "resource/animation.hpp"
 

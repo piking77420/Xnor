@@ -461,10 +461,7 @@ void Serializer::DeserializePointer(const Metadata<ReflectT, MemberT, Descriptor
         if (guid == Guid::Empty())
             *metadata.obj = nullptr;
         else
-        {
-            m_GuidEntityMap.emplace(guid, metadata.obj);
-            Logger::LogInfo("Entity GUID = {} \n, Metadata name = {} \n Metatdata obj = {} ", static_cast<std::string>(guid), metadata.name , metadata.topLevelObj->name);
-        }
+            m_GuidEntityMap.push_back(std::make_pair(guid, metadata.obj));
     }
 }
 
@@ -562,8 +559,6 @@ void Serializer::DeserializeListType(const Metadata<ReflectT, MemberT, Descripto
             
             ListT const ptr = static_cast<ListT>(CreateObjectUsingFactory(typeName, managedTypeName));
             metadata.obj->Add(ptr);
-            if constexpr (Meta::IsSame<PtrT, Component>)
-                 ptr->entity = metadata.topLevelObj;
         }
         else if constexpr (Meta::IsPointer<ListT>)
         {

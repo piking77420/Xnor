@@ -3,10 +3,10 @@
 namespace Xnor.Core
 {
     /// <summary>
-    /// Tells the XNOR engine to serialize a private field.
+    /// Tells the XNOR engine to avoid serializing a public field.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field)]
-    public class Serialized : Attribute
+    public class NotSerialized : Attribute
     {
     }
 }

@@ -29,7 +29,7 @@ public:
     
     XNOR_ENGINE StaticMeshRenderer() = default;
 
-    XNOR_ENGINE ~StaticMeshRenderer() override = default ;
+    XNOR_ENGINE ~StaticMeshRenderer() override = default;
     
     DEFAULT_COPY_MOVE_OPERATIONS(StaticMeshRenderer);
 

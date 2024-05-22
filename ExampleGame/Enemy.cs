@@ -5,11 +5,11 @@ namespace Game
     public class Enemy : ScriptComponent
     {
         [Serialized]
-        private AnimationPointer animationIdle;
+        private AnimationPointer idleAnimation;
         [Serialized]
-        private AnimationPointer animationRun;
+        private AnimationPointer runAnimation;
         [Serialized]
-        private AnimationPointer animationAttack;
+        private AnimationPointer attackAnimation;
         
         protected override void Begin()
         {

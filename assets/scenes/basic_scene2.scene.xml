@@ -19,6 +19,7 @@
 					<intensity>100</intensity>
 					<castShadow>true</castShadow>
 					<enabled>true</enabled>
+					<entity>73C3991F-64C8-43BE-BA-FB-8F-9C-A2-38-C9-75</entity>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -53,6 +54,7 @@
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 					<enabled>true</enabled>
+					<entity>DC36B839-E893-481D-B6-28-93-7E-24-FC-F4-C</entity>
 				</0>
 				<1 typeName="BoxCollider">
 					<center>0 ; 0 ; 0</center>
@@ -62,6 +64,7 @@
 					<m_IsTrigger>false</m_IsTrigger>
 					<m_IsActive>false</m_IsActive>
 					<enabled>true</enabled>
+					<entity>DC36B839-E893-481D-B6-28-93-7E-24-FC-F4-C</entity>
 				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -96,6 +99,7 @@
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 					<enabled>true</enabled>
+					<entity>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</entity>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -115,9 +119,11 @@
 					<screenTransform>107.8 ; 76.6</screenTransform>
 					<size>20.5 ; 20</size>
 					<enabled>true</enabled>
+					<entity>8D6CCF25-11EC-4D98-93-B1-9-52-18-49-EE-18</entity>
 				</0>
 				<1 typeName="Button">
 					<enabled>true</enabled>
+					<entity>8D6CCF25-11EC-4D98-93-B1-9-52-18-49-EE-18</entity>
 				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -140,6 +146,7 @@
 					<screenTransform>0 ; 0</screenTransform>
 					<size>1 ; 1</size>
 					<enabled>true</enabled>
+					<entity>E471477C-C2FE-4C72-BC-68-3E-1E-12-20-53-FF</entity>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -157,6 +164,7 @@
 				<0 typeName="ScriptComponent" managedType="Game.Player">
 					<MovementSpeed>3</MovementSpeed>
 					<JumpSpeed>5</JumpSpeed>
+					<entity>873D1C72-ACA1-47D6-AC-9C-8F-E1-81-B6-B6-B4</entity>
 				</0>
 				<1 typeName="CapsuleCollider">
 					<height>1</height>
@@ -166,11 +174,13 @@
 					<m_IsTrigger>false</m_IsTrigger>
 					<m_IsActive>false</m_IsActive>
 					<enabled>true</enabled>
+					<entity>873D1C72-ACA1-47D6-AC-9C-8F-E1-81-B6-B6-B4</entity>
 				</1>
 				<2 typeName="AudioListener">
 					<dopplerEffect>true</dopplerEffect>
 					<m_Volume>1</m_Volume>
 					<enabled>true</enabled>
+					<entity>873D1C72-ACA1-47D6-AC-9C-8F-E1-81-B6-B6-B4</entity>
 				</2>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -187,9 +197,11 @@
 			<m_Components>
 				<0 typeName="CameraComponent">
 					<enabled>true</enabled>
+					<entity>55E1E12F-7B57-4A4E-A6-92-63-AC-40-AA-B3-36</entity>
 				</0>
 				<1 typeName="ScriptComponent" managedType="Game.PlayerCamera">
 					<ViewAngle>0 ; 0</ViewAngle>
+					<entity>55E1E12F-7B57-4A4E-A6-92-63-AC-40-AA-B3-36</entity>
 				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -209,6 +221,7 @@
 					<intensity>10000</intensity>
 					<castShadow>true</castShadow>
 					<enabled>true</enabled>
+					<entity>198BC2C7-AD88-4738-9A-B1-F7-AC-BB-84-A7-CA</entity>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -249,6 +262,7 @@
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>
 					<enabled>true</enabled>
+					<entity>EC3A3F5-FE8A-40A6-8A-8B-E-CB-F1-DC-E3-0</entity>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>

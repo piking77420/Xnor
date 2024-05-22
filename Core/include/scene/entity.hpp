@@ -191,7 +191,7 @@ END_XNOR_CORE
 REFL_AUTO(
     type(XnorCore::Entity),
     field(name),
-    field(m_EntityId, XnorCore::Reflection::HideInInspector()),
+    field(m_EntityId, XnorCore::Reflection::HideInInspector(), XnorCore::Reflection::DontClone()),
     field(transform),
     field(m_Components),
     field(m_Parent, XnorCore::Reflection::HideInInspector()),

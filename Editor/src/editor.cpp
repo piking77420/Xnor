@@ -456,9 +456,11 @@ void Editor::DeserializeScene(const std::string& filepath)
 	XnorCore::Serializer::StartDeserialization(file);
 	XnorCore::Serializer::Deserialize<XnorCore::Scene, true>(XnorCore::World::scene);
 	XnorCore::Serializer::EndDeserialization();
+
+	auto s = XnorCore::World::scene;
 	
 	if (selectedEntityId != XnorCore::Guid::Empty())
-		data.selectedEntity = XnorCore::World::scene->FindEntityById(selectedEntityId);
+		data.selectedEntity = s->FindEntityById(selectedEntityId);
 
 	m_Deserializing = false;
 	

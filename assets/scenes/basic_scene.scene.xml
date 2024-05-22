@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-16"?>
 <Scene>
 	<skybox>
-		<m_SkyboxTextureResource>6291CF33-C815-4CCC-AB-FA-88-B1-B4-F8-F0-AD</m_SkyboxTextureResource>
+		<m_SkyboxTextureResource>6ABED7C9-3FCA-4901-90-D1-6E-A2-B8-B1-93-75</m_SkyboxTextureResource>
 	</skybox>
 	<m_Entities>
 		<0>
@@ -16,11 +16,11 @@
 				<0 typeName="DirectionalLight">
 					<zCascadeShadowMapZMultiplactor>10</zCascadeShadowMapZMultiplactor>
 					<color>1 ; 1 ; 1 ; 1</color>
-					<intensity>100</intensity>
-					<castShadow>true</castShadow>
+					<intensity>4.5</intensity>
+					<castShadow>false</castShadow>
 					<enabled>true</enabled>
+					<entity>73C3991F-64C8-43BE-BA-FB-8F-9C-A2-38-C9-75</entity>
 				</0>
-				<1 typeName="ScriptComponent" managedType="Game.RotateDirectionalLight"/>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
@@ -54,6 +54,7 @@
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 					<enabled>true</enabled>
+					<entity>DC36B839-E893-481D-B6-28-93-7E-24-FC-F4-C</entity>
 				</0>
 				<1 typeName="BoxCollider">
 					<center>0 ; 0 ; 0</center>
@@ -63,6 +64,7 @@
 					<m_IsTrigger>false</m_IsTrigger>
 					<m_IsActive>false</m_IsActive>
 					<enabled>true</enabled>
+					<entity>DC36B839-E893-481D-B6-28-93-7E-24-FC-F4-C</entity>
 				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -97,6 +99,7 @@
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 					<enabled>true</enabled>
+					<entity>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</entity>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -116,9 +119,11 @@
 					<screenTransform>107.8 ; 76.6</screenTransform>
 					<size>20.5 ; 20</size>
 					<enabled>true</enabled>
+					<entity>8D6CCF25-11EC-4D98-93-B1-9-52-18-49-EE-18</entity>
 				</0>
 				<1 typeName="Button">
 					<enabled>true</enabled>
+					<entity>8D6CCF25-11EC-4D98-93-B1-9-52-18-49-EE-18</entity>
 				</1>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -141,6 +146,7 @@
 					<screenTransform>0 ; 0</screenTransform>
 					<size>1 ; 1</size>
 					<enabled>true</enabled>
+					<entity>E471477C-C2FE-4C72-BC-68-3E-1E-12-20-53-FF</entity>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -163,6 +169,7 @@
 					<dopplerEffect>true</dopplerEffect>
 					<m_Volume>1</m_Volume>
 					<enabled>true</enabled>
+					<entity>873D1C72-ACA1-47D6-AC-9C-8F-E1-81-B6-B6-B4</entity>
 				</1>
 				<2 typeName="CapsuleCollider">
 					<height>1</height>
@@ -172,6 +179,7 @@
 					<m_IsTrigger>false</m_IsTrigger>
 					<m_IsActive>false</m_IsActive>
 					<enabled>true</enabled>
+					<entity>873D1C72-ACA1-47D6-AC-9C-8F-E1-81-B6-B6-B4</entity>
 				</2>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -188,6 +196,7 @@
 			<m_Components>
 				<0 typeName="CameraComponent">
 					<enabled>true</enabled>
+					<entity>55E1E12F-7B57-4A4E-A6-92-63-AC-40-AA-B3-36</entity>
 				</0>
 				<1 typeName="ScriptComponent" managedType="Game.PlayerCamera">
 					<ViewAngle>0 ; 0</ViewAngle>
@@ -227,12 +236,14 @@
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 					<enabled>true</enabled>
+					<entity>9144D2C0-8CE-41CA-93-B-F-F-A3-A6-32-8D</entity>
 				</0>
 				<1 typeName="PointLight">
 					<color>1 ; 0.47560978 ; 0 ; 1</color>
 					<intensity>1000</intensity>
 					<castShadow>true</castShadow>
 					<enabled>true</enabled>
+					<entity>9144D2C0-8CE-41CA-93-B-F-F-A3-A6-32-8D</entity>
 				</1>
 				<2 typeName="ScriptComponent" managedType="Game.Lantern">
 					<MaxRotationAngle>0.7853982</MaxRotationAngle>
@@ -273,11 +284,12 @@
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
 						<m_Animation>E9F04973-E9D-4E85-98-A1-9-BF-16-C-2-FB</m_Animation>
-						<m_CurrentFrame>333</m_CurrentFrame>
+						<m_CurrentFrame>549</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>
 					<enabled>true</enabled>
+					<entity>AA4C0C09-AB9-4A1E-90-DA-D3-CC-FA-5F-BA-1</entity>
 				</0>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
@@ -324,6 +336,7 @@
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 					<enabled>true</enabled>
+					<entity>CEE35AD1-3980-4298-AD-2B-48-6C-53-DF-30-53</entity>
 				</0>
 				<1 typeName="ScriptComponent" managedType="Game.PlayerWeapons"/>
 			</m_Components>
@@ -341,7 +354,7 @@
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
 			<m_Components/>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Parent>CEE35AD1-3980-4298-AD-2B-48-6C-53-DF-30-53</m_Parent>
 			<m_Children/>
 		</11>
 		<12>
@@ -373,6 +386,7 @@
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 					<enabled>true</enabled>
+					<entity>A44A61BE-51AA-4167-A5-41-EE-35-8E-BC-FC-53</entity>
 				</0>
 				<1 typeName="BoxCollider">
 					<center>0 ; 0 ; 0</center>
@@ -382,9 +396,10 @@
 					<m_IsTrigger>false</m_IsTrigger>
 					<m_IsActive>false</m_IsActive>
 					<enabled>true</enabled>
+					<entity>A44A61BE-51AA-4167-A5-41-EE-35-8E-BC-FC-53</entity>
 				</1>
 			</m_Components>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Parent>CEE35AD1-3980-4298-AD-2B-48-6C-53-DF-30-53</m_Parent>
 			<m_Children/>
 		</12>
 	</m_Entities>

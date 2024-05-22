@@ -71,8 +71,11 @@ void Serializer::EndDeserialization()
 {
     DisposeXMLObject(m_XmlDoc);
     DisposeXMLFile(m_File);
+    Logger::Synchronize();
     m_CurrentFilePath = "";
-    m_GuidEntityMap.clear();
+    
+    decltype(auto) a = (m_GuidEntityMap);
+    a.clear();
 }
 
 void Serializer::BeginRootElement(const std::string& elementName, const std::string& elementValue)
