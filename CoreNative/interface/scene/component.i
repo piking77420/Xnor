@@ -26,4 +26,6 @@
 %csmethodmodifiers XnorCore::Component::Begin "protected virtual";
 %csmethodmodifiers XnorCore::Component::Update "protected virtual";
 
+%rename(Entity) XnorCore::Component::entity;
+
 %include "scene/component.hpp"

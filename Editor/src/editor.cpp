@@ -255,8 +255,6 @@ void Editor::ProjectMenuBar()
 	{	
 		if (ImGui::BeginMenu("Scene"))
 		{
-			const std::string path = data.currentScene.IsValid() ? data.currentScene->GetPath().generic_string() : "";
-
 			ImGui::SeparatorText("Serialization");
 
 			const bool_t saveLoadDisabled = m_ReloadingScripts || m_GamePlaying;
@@ -264,14 +262,16 @@ void Editor::ProjectMenuBar()
 			if (saveLoadDisabled)
 				ImGui::BeginDisabled();
 
+			const std::string currentScenePath = data.currentScene.IsValid() ? data.currentScene->GetPath().generic_string() : "";
+
 			if (ImGui::MenuItem("Save"))
-				SerializeSceneAsync(path);
+				SerializeSceneAsync(currentScenePath);
 		
 			if (ImGui::MenuItem("Load"))
 				openLoadScenePopup = true;
 		
 			if (ImGui::MenuItem("Reload"))
-				DeserializeSceneAsync(path);
+				DeserializeSceneAsync(currentScenePath);
 		
 			if (ImGui::MenuItem("Load backup"))
 				DeserializeSceneAsync();

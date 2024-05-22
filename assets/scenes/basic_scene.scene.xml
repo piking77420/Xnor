@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-16"?>
 <Scene>
 	<skybox>
-		<m_SkyboxTextureResource>6ABED7C9-3FCA-4901-90-D1-6E-A2-B8-B1-93-75</m_SkyboxTextureResource>
+		<m_SkyboxTextureResource>D9E318C1-41B9-4C1F-87-A1-C3-57-5F-7E-5A-6D</m_SkyboxTextureResource>
 	</skybox>
 	<m_Entities>
 		<0>
@@ -339,7 +339,7 @@
 					<enabled>true</enabled>
 					<entity>CEE35AD1-3980-4298-AD-2B-48-6C-53-DF-30-53</entity>
 				</0>
-				<1 typeName="ScriptComponent" managedType="Game.PlayerWeapons"/>
+				<1 typeName="ScriptComponent" managedType="Game.PlayerWeapon"/>
 			</m_Components>
 			<m_Parent>55E1E12F-7B57-4A4E-A6-92-63-AC-40-AA-B3-36</m_Parent>
 			<m_Children>

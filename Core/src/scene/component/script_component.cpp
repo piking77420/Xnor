@@ -11,6 +11,13 @@ ScriptComponent* ScriptComponent::New(const std::string& managedTypeName, const 
 {
     Logger::LogDebug("Creating ScriptComponent instance with managed type {} from assembly {}", managedTypeName, assembly->GetName());
     Coral::Type& type = assembly->GetCoralAssembly()->GetType(managedTypeName);
+    
+    if (!type)
+    {
+        Logger::LogWarning("ScriptComponent of managed type {} couldn't be found in assembly {}", managedTypeName, assembly->GetName());
+        return nullptr;
+    }
+    
     Coral::ManagedObject instance = type.CreateInstance();
     ScriptComponent* script = instance.GetFieldValue<ScriptComponent*>("swigCPtr");
     script->m_ManagedObject = instance;

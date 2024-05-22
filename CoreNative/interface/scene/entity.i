@@ -42,7 +42,7 @@
     {
         T result = new();
         GetComponents().Add(result);
-        result.entity = this;
+        result.Entity = this;
         return result;
     }
 

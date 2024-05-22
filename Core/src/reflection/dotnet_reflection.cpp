@@ -34,11 +34,7 @@ void DotnetReflection::PrintTypes()
 
 void DotnetReflection::RegisterScriptType(const std::string& typeName)
 {
-    const Coral::ManagedAssembly* const gameAssembly = DotnetRuntime::GetGameAssembly()->GetCoralAssembly();
-
-    Coral::Type& type = gameAssembly->GetType(typeName);
     DotnetTypeInfo info = {
-        .createFunc = [&]() -> Coral::ManagedObject { return type.CreateInstance(); },
         .displayFunc = [&, tName = typeName](ScriptComponent* const, void* const value, const char_t* fieldName) -> void { DisplayExternalType(value, fieldName, tName); },
         .serializeFunc = [&, tName = typeName](void* const value, const std::string& fieldName) -> void { SerializeExternalType(value, fieldName, tName); },
         .deserializeFunc = [&, tName = typeName](void* const value, const std::string& fieldName) -> void { DeserializeExternalType(value, fieldName, tName); },
@@ -55,7 +51,7 @@ void DotnetReflection::RegisterEnumType(const std::string& typeName, const std::
 
     Coral::Type& type = gameAssembly->GetType(typeName);
     DotnetTypeInfo info = {
-        .createFunc = [&]() -> Coral::ManagedObject { return type.CreateInstance(); },
+        .createFunc = [&] { return type.CreateInstance(); },
         .displayFunc = [&, tName = typeName](ScriptComponent* const, void* const value, const char_t* fieldName) -> void { DisplayExternalType(value, fieldName, tName); },
         .serializeFunc = [&, tName = typeName](void* const value, const std::string& fieldName) -> void { SerializeExternalType(value, fieldName, tName); },
         .deserializeFunc = [&, tName = typeName](void* const value, const std::string& fieldName) -> void { DeserializeExternalType(value, fieldName, tName); },

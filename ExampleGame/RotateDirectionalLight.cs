@@ -4,8 +4,7 @@ namespace Game
 {
     public class RotateDirectionalLight : ScriptComponent
     {
-
-        [Serialized] 
+        [Serialized]
         private float speed = 1f;
         
         [Serialized]
@@ -13,7 +12,6 @@ namespace Game
         
         protected override void Begin()
         {
-          
         }
 
         protected override void Update()
@@ -21,7 +19,6 @@ namespace Game
             Quaternion q = Quaternion.FromEuler(axis);
 
             Transform.Rotation *= q;
-            
         }
     }
 }

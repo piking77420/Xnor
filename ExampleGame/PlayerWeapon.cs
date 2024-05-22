@@ -2,14 +2,14 @@
 
 namespace Game
 {
-    public class PlayerWeapons : ScriptComponent
+    public class PlayerWeapon : ScriptComponent
     {
         private Entity parent;
         private Entity shootPoint;
 
         //private List<Entity> bullets = new();
 
-        void SetBulletPrefabs(Entity bullet)
+        private void SetupBullet(Entity bullet)
         {
             StaticMeshRenderer meshRenderer = bullet.AddComponent<StaticMeshRenderer>();
             meshRenderer.mesh = ResourceManager.GetMesh("assets/models/sphere.obj");
@@ -17,18 +17,19 @@ namespace Game
         
         public void Shoot()
         {
-            Entity bullet = World.scene.CreateEntity("Bullet ammoooo");
-            SetBulletPrefabs(bullet);
+            Entity bullet = World.scene.CreateEntity("Bullet");
+            SetupBullet(bullet);
             
             BoxCollider coll = bullet.AddComponent<BoxCollider>();
-            bullet.Transform.Position = new(shootPoint.Transform.WorldMatrix.M30,shootPoint.Transform.WorldMatrix.M31,shootPoint.Transform.WorldMatrix.M32);
-            //coll.AddForce((parent.Transform.Position - bullet.Transform.Position).Normalized() * 100);
+            Matrix shootPointMatrix = shootPoint.Transform.WorldMatrix;
+            bullet.Transform.Position = new(shootPointMatrix.M30, shootPointMatrix.M31, shootPointMatrix.M32);
+            coll.AddForce((parent.Transform.Position - bullet.Transform.Position).Normalized() * 10f);
         }
         
         protected override void Begin()
         {
-            parent = entity.GetParent();
-            shootPoint = entity.GetChild(0);
+            parent = Entity.GetParent();
+            shootPoint = Entity.GetChild(0);
         }
 
         protected override void Update()
