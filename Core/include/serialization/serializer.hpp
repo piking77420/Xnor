@@ -109,7 +109,7 @@ private:
 
     XNOR_ENGINE static inline std::vector<size_t> m_StaticClassesPared;
     
-    XNOR_ENGINE static inline std::unordered_map<Guid, Entity**> m_GuidEntityMap;
+    XNOR_ENGINE static inline std::vector<std::pair<Guid, Entity**>> m_GuidEntityMap;
 
     // Serialize
     XNOR_ENGINE static void OpenFileToWrite(const std::string& filePath);
