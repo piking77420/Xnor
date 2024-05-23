@@ -647,6 +647,8 @@ void Editor::Update()
 	}
 	Window::Hide();
 
+	Coroutine::StopAll();
+	
 	if (m_GamePlaying)
 		StopPlaying();
 

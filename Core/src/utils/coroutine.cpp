@@ -11,11 +11,7 @@ using namespace XnorCore;
 
 bool_t Coroutine::Awaitable::await_ready() { return false; }
 
-bool_t Coroutine::Awaitable::await_suspend(std::coroutine_handle<promise_type> h)
-{
-    std::this_thread::sleep_for(h.promise().awaitValue);
-    return true;
-}
+void Coroutine::Awaitable::await_suspend(std::coroutine_handle<promise_type>) {}
 
 void Coroutine::Awaitable::await_resume() {}
 
@@ -105,6 +101,8 @@ Coroutine::Awaitable Coroutine::promise_type::await_transform(const AwaitType& d
     awaitValue = duration;
     return {};
 }
+
+Coroutine::Awaitable Coroutine::promise_type::await_transform(float_t duration) { return await_transform(AwaitType(duration)); }
 
 Coroutine::Coroutine(const HandleType handle) : m_Handle(handle) {}
 
