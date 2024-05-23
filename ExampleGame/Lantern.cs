@@ -6,21 +6,18 @@ namespace Game
 {
     public class Lantern : ScriptComponent
     {
-        public float MaxRotationAngle = CoreNative.PiOver4;
-
-        private Vector3 startingPosition;
-
         public float RotationSpeed = 1f;
+        private float time;
 
         protected override void Begin()
         {
-            startingPosition = Transform.Position;
         }
 
         protected override void Update()
         {
-            float time = Time.TotalTime * RotationSpeed;
-            //Transform.RotationEulerAngleZ = MathF.Sin(time) / 2f;
+            time += Time.DeltaTime * RotationSpeed;
+
+            Transform.RotationEulerAngleZ = MathF.Sin(time) / 2f;
         }
     }
 }
