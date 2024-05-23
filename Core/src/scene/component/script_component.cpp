@@ -1,5 +1,6 @@
 #include "scene/component/script_component.hpp"
 
+#include "Coral/GC.hpp"
 #include "csharp/dotnet_assembly.hpp"
 #include "csharp/dotnet_constants.hpp"
 #include "reflection/xnor_factory.hpp"
@@ -27,6 +28,8 @@ ScriptComponent* ScriptComponent::New(const std::string& managedTypeName, const 
 void ScriptComponent::Destroy()
 {
     Logger::LogDebug("Destroying ScriptComponent instance with managed type {}", static_cast<std::string>(m_ManagedObject.GetType().GetFullName()));
+
+    entity->RemoveComponent(this);
     entity = nullptr; // In case the C# finalizer is called late
     m_ManagedObject.Destroy();
 }

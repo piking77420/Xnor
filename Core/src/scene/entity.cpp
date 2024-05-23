@@ -89,6 +89,18 @@ void Entity::AddComponent(Component* const component)
     }
 }
 
+void Entity::RemoveComponent(Component* component)
+{
+    for (size_t i = 0; i < m_Components.GetSize(); i++)
+    {
+        if (m_Components[i] == component)
+        {
+            m_Components.RemoveAt(i);
+            break;
+        }
+    }
+}
+
 const Guid& Entity::GetGuid() const
 {
     return m_EntityId;
