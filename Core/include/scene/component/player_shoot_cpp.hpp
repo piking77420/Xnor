@@ -7,14 +7,14 @@
 #include "utils/coroutine.hpp"
 
 BEGIN_XNOR_CORE
+
 class PlayerShootCpp : public Component
 {
     REFLECTABLE_IMPL(PlayerShootCpp)
 
 public:
     PlayerShootCpp() = default;
-    
-    ~PlayerShootCpp();
+    ~PlayerShootCpp() override;
 
     DEFAULT_COPY_MOVE_OPERATIONS(PlayerShootCpp)
 
@@ -43,19 +43,17 @@ private:
 
     Guid m_RestShoot;
 
-    void SetupBullet(Entity* bullet);
+    void SetupBullet(Entity* bullet) const;
     
     void Shoot();
 
     void BulletSound(Entity* bullet);
 
-    void HitEnemy(Collider* bullet,Collider* enemy,const CollisionData& data);
+    void HitEnemy(const Collider* self, const Collider* other, const CollisionData& data) const;
 
     void UpdateBullets();
 
     Coroutine ResetDirtyFlagShoot();
-    
-
 };
 
 END_XNOR_CORE

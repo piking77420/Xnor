@@ -120,6 +120,10 @@
   <ItemGroup>
     <Content Include="interface\input\time.i" />
     <Content Include="interface\rendering\rhi_typedef.i" />
+    <Content Include="interface\scene\component\camera_component.i" />
+    <Content Include="interface\scene\component\script_component.i" />
+    <Content Include="interface\scene\component\skinned_mesh_renderer.i" />
+    <Content Include="interface\scene\scene.i" />
     <Content Include="interface\typemaps\cs_static_class.i" />
     <Content Include="interface\typemaps\cs_struct.i" />
   </ItemGroup>
