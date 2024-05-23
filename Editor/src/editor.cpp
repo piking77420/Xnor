@@ -316,6 +316,7 @@ void Editor::ProjectMenuBar()
 					
 					XnorCore::Audio::SetCurrentDevice(device);
 					DeserializeScene();
+					XnorCore::World::scene->Initialize();
 
 					changedAudioDevice = true;
 				}

@@ -18,10 +18,10 @@ namespace Game
 
         protected override void Update()
         {
-            Vector2 mousDelta = Input.GetMouseDelta();
+            Vector2 mouseDelta = Input.GetMouseDelta();
             
-            ViewAngle.X -= mousDelta.X * Time.DeltaTime;
-            ViewAngle.Y += mousDelta.Y * Time.DeltaTime;
+            ViewAngle.X -= mouseDelta.X * Time.DeltaTime;
+            ViewAngle.Y += mouseDelta.Y * Time.DeltaTime;
             
             if (ViewAngle.Y * CoreNative.Rad2Deg > MaxPitch)
                 ViewAngle.Y = MaxPitch * CoreNative.Deg2Rad;
@@ -30,7 +30,6 @@ namespace Game
             
             Transform.RotationEulerAngle = new(ViewAngle.Y, ViewAngle.X, 0f);
             Transform.Position = playerEntity.Transform.Position;
-
         }
     }
 }
