@@ -15,7 +15,7 @@ bool_t ComputeShader::Load(const Pointer<File>& shader)
     return m_Loaded;
 }
 
-bool_t ComputeShader::Load(const char_t* buffer, int64_t length)
+bool_t ComputeShader::Load(const char_t* const buffer, const int64_t length)
 {
 
     ShaderCode& code = m_ShaderCode;
@@ -31,7 +31,7 @@ void ComputeShader::CreateInInterface()
 {
     constexpr  ShaderCreateInfo shaderCreateInfo;
     
-    m_Id = Rhi::CreateShaders( { m_ShaderCode } ,shaderCreateInfo);
+    m_Id = Rhi::CreateShaders({ m_ShaderCode }, shaderCreateInfo);
 }
 
 void ComputeShader::DestroyInInterface()

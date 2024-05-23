@@ -39,7 +39,7 @@ private:
 
     float_t m_MouseWheelZoom = 50.f;
 
-    XnorCore::LowPassFilter <Vector2, 6> m_LowPassFilterDeltaMouse;
+    XnorCore::LowPassFilter<Vector2, 6> m_LowPassFilterDeltaMouse {};
     
     void CameraOnRightClick();
     
@@ -54,7 +54,6 @@ private:
     void AddMovement(const Vector3& movement);
 
     void ClampMouseToScreen(Vector2* currentMousePos , Vector2* previousMousePos);
-    
 };
 
 END_XNOR_EDITOR

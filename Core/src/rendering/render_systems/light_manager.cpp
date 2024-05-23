@@ -82,7 +82,7 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 	for (decltype(sortedLight)::reverse_iterator it = sortedLight.rbegin(); it != sortedLight.rend(); it++)
 	{
 		ModelUniformData modelData;
-		float_t scaleScalar =m_RenderingLightStruct.scaleFactor;
+		float_t scaleScalar = m_RenderingLightStruct.scaleFactor;
 
 		float_t distance = (it->second.pos - camera.position).SquaredLength();
 		if (distance < m_RenderingLightStruct.maxScalarFactor * m_RenderingLightStruct.maxScalarFactor)
@@ -92,10 +92,9 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 		Matrix scale = Matrix::Scaling(Vector3(scaleScalar));
 		modelData.model = (scale * Matrix::LookAt(it->second.pos, camera.position, Vector3::UnitY())).Inverted();
 		modelData.normalInvertMatrix = Matrix::Identity();
+
 		// +1 to avoid the black color of the attachment be a valid index  
 		modelData.meshRenderIndex = scene.GetEntityIndex(it->second.light->GetEntity()) + 1;
-		
-
 		
 		switch (it->second.type)
 		{
@@ -214,14 +213,14 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 		const Vector3 lightDir = directionalLight->GetLightDirection();
 		
 		// HardCoded Shadow Cascade distance by level
-		std::array<float_t,DirectionalCascadeLevel> shadowCascadeLevels =
-			{
-			    viewPortCamera.far / 100.f,
-				viewPortCamera.far / 50.f,
-				viewPortCamera.far / 20.f,
-				viewPortCamera.far / 4.f,
-			
-			};
+		std::array<float_t, DirectionalCascadeLevel> shadowCascadeLevels =
+		{
+		    viewPortCamera.far / 100.f,
+			viewPortCamera.far / 50.f,
+			viewPortCamera.far / 20.f,
+			viewPortCamera.far / 4.f,
+		
+		};
 
 		m_CascadeShadowMap.SetCascadeLevel(shadowCascadeLevels);
 		m_CascadeShadowMap.SetZMultiplicator(directionalLight->zCascadeShadowMapZMultiplactor);
@@ -251,9 +250,7 @@ void LightManager::ComputeShadowDirLight(const Scene& scene,const Camera& viewPo
 			};
 			renderer.RenderNonShadedPass(scene,cascadedCameras.at(i) , renderPassBeginInfo, m_ShadowRenderPass,m_ShadowMapShader, m_ShadowMapShaderSkinned, false);
 		}
-		
 	}
-	
 }
 
 void LightManager::ComputeShadowSpotLight(const Scene& scene, Renderer& renderer)
@@ -483,7 +480,6 @@ void LightManager::InitShadowMap()
 	};
 
 	m_PointLightShadowMapCubemapArrayPixelDistance = new Texture(pointLightCubeMapArrayWorldSpaceInfo);
-
 }
 
 void LightManager::InitShader()
@@ -516,7 +512,6 @@ void LightManager::InitShader()
 	m_ShadowMapShaderPointLight = ResourceManager::Get<Shader>("depth_shader_point_light");
 	m_ShadowMapShaderPointLight->SetFaceCullingInfo(cullInfo);
 	m_ShadowMapShaderPointLight->CreateInInterface();
-
 	
 	// Skinned
 	m_ShadowMapShaderSkinned = ResourceManager::Get<Shader>("depth_shader_skinned");
@@ -526,5 +521,4 @@ void LightManager::InitShader()
 	m_ShadowMapShaderPointLightSkinned = ResourceManager::Get<Shader>("depth_shader_point_light_skinned");
 	m_ShadowMapShaderPointLightSkinned->SetFaceCullingInfo(cullInfo);
 	m_ShadowMapShaderPointLightSkinned->CreateInInterface();
-	
 }

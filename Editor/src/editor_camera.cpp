@@ -5,15 +5,12 @@
 
 #include "editor.hpp"
 #include "input/time.hpp"
-#include "..\..\Core\include\scene\component\static_mesh_renderer.hpp"
-#include "utils/logger.hpp"
-#include "utils/utils.hpp"
+#include "scene/component/static_mesh_renderer.hpp"
 
 using namespace XnorEditor;
 
 EditorCamera::EditorCamera(Editor& editor, XnorCore::Camera& camera)
-    : m_EditorRef(&editor)
-    , m_EditorRefCamera(&camera) 
+    : m_EditorRef(&editor), m_EditorRefCamera(&camera) 
 {
 }
 
@@ -22,7 +19,6 @@ void EditorCamera::UpdateCamera()
     OnMiddleButton();
     CameraOnRightClick();
     EditorCameraMovement();
-    
 }
 
 void EditorCamera::CameraOnRightClick()
@@ -40,7 +36,6 @@ void EditorCamera::CameraOnRightClick()
         m_MouseDrag = ImGui::GetMousePos();
         ClampMouseToScreen(&m_MouseDrag, &m_PreviousMouseDrag);
 
-        
         m_MouseDelta = m_MouseDrag - m_PreviousMouseDrag;
         m_LowPassFilterDeltaMouse.AddSample({ m_MouseDelta.x, m_MouseDelta.y } );
 
@@ -52,8 +47,6 @@ void EditorCamera::CameraOnRightClick()
         XnorCore::Window::SetCursorHidden(false);
         m_MouseDrag = Vector2::Zero();
     }
-    
-    
 }
 
 void EditorCamera::EditorCameraRotation()
@@ -82,30 +75,28 @@ void EditorCamera::EditorCameraMovement()
     const float_t cameraSpeed = m_CameraSpeed;
     Vector3 addVector;
 
-   
     if (ImGui::IsKeyDown(ImGuiKey_W))
         addVector += m_EditorRefCamera->front;
     if (ImGui::IsKeyDown(ImGuiKey_S))
         addVector -= m_EditorRefCamera->front;
-    if(ImGui::IsKeyDown(ImGuiKey_A))
+    if (ImGui::IsKeyDown(ImGuiKey_A))
         addVector -= m_EditorRefCamera->right;
-    if(ImGui::IsKeyDown(ImGuiKey_D))
+    if (ImGui::IsKeyDown(ImGuiKey_D))
         addVector += m_EditorRefCamera->right;
-    if(ImGui::IsKeyDown(ImGuiKey_Space))
+    if (ImGui::IsKeyDown(ImGuiKey_Space))
         addVector += Vector3::UnitY();
     if (ImGui::IsKeyDown(ImGuiMod_Shift))
         addVector -= Vector3::UnitY();
 
-    if (ImGui::IsKeyPressed(ImGuiKey_W,false) ||
-       ImGui::IsKeyPressed(ImGuiKey_S,false) ||
-       ImGui::IsKeyPressed(ImGuiKey_A,false) ||
-       ImGui::IsKeyPressed(ImGuiKey_D,false) ||
-       ImGui::IsKeyPressed(ImGuiKey_Space,false) ||
-       ImGui::IsKeyPressed(ImGuiMod_Shift,false))
+    if (ImGui::IsKeyPressed(ImGuiKey_W, false) ||
+        ImGui::IsKeyPressed(ImGuiKey_S, false) ||
+        ImGui::IsKeyPressed(ImGuiKey_A, false) ||
+        ImGui::IsKeyPressed(ImGuiKey_D, false) ||
+        ImGui::IsKeyPressed(ImGuiKey_Space, false) ||
+        ImGui::IsKeyPressed(ImGuiMod_Shift, false))
     {
         addVector *= 1.5f;
     }
-
 
     AddMovement(addVector * cameraSpeed);
 }
@@ -189,10 +180,10 @@ void EditorCamera::GoToObject()
 
 void EditorCamera::AddMovement(const Vector3& movement)
 {
-   if (movement == Vector3::Zero())
-   {
+    if (movement == Vector3::Zero())
+    {
        return;
-   }
+    }
 
     const float_t dt = XnorCore::Time::GetDeltaTime<float_t>();
 
@@ -200,7 +191,7 @@ void EditorCamera::AddMovement(const Vector3& movement)
     m_EditorRef->data.gotoObject = false;
 }
 
-void EditorCamera::ClampMouseToScreen(Vector2* currentMousePos, Vector2* previousMousePos)
+void EditorCamera::ClampMouseToScreen(Vector2* const currentMousePos, Vector2* const previousMousePos)
 {
     if (currentMousePos == nullptr)
         return;
@@ -224,7 +215,6 @@ void EditorCamera::ClampMouseToScreen(Vector2* currentMousePos, Vector2* previou
         previousMouseToWindow.x = -previousMouseToWindow.x;
         changePos = true;
     }
-
     
     if (std::abs(mouseToWindow.y) > imguiHalfSize.y - windowSpacing.y * 2.f)
     {
@@ -241,7 +231,4 @@ void EditorCamera::ClampMouseToScreen(Vector2* currentMousePos, Vector2* previou
         
         XnorCore::Window::SetCursorPosition(*currentMousePos);
     }
-
 }
-
-

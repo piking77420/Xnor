@@ -5,9 +5,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-
 #include "rendering/rhi.hpp"
-
 
 using namespace XnorCore;
 
@@ -22,25 +20,24 @@ Font::~Font()
 
 void Font::CreateInInterface()
 {
-    
-    FT_Library ft;
+    FT_Library ft = nullptr;
     if (FT_Init_FreeType(&ft))
     {
         Logger::LogError("Error freetype : Could not init FreeType Library");
         return;
     }
 
-    FT_Face face;
+    FT_Face face = nullptr;
     const std::string stringPath = m_File->GetPath().generic_string();
     if (FT_New_Face(ft, stringPath.c_str(), 0, &face))
     {
         Logger::LogError("Error freetype : Failed to load font");
         return;
     }
-    FT_Set_Pixel_Sizes(face, 0, 48);  
 
+    FT_Set_Pixel_Sizes(face, 0, 48);  
    
-    Rhi::SetPixelStore(DataAlignment::UnPack,1);
+    Rhi::SetPixelStore(DataAlignment::UnPack, 1);
     
     for (uint8_t c = 0; c < 128; c++)
     {
@@ -50,18 +47,18 @@ void Font::CreateInInterface()
             continue;
         }
 
-        const Vector2i glyphSize = Vector2i(face->glyph->bitmap.width,face->glyph->bitmap.rows);
+        const Vector2i glyphSize = Vector2i(static_cast<int32_t>(face->glyph->bitmap.width), static_cast<int32_t>(face->glyph->bitmap.rows));
         
         if (glyphSize == Vector2i::Zero())
         {
-            Logger::LogWarning("Character {} of the font {} has a size of {}",c ,m_File->GetPath().generic_string(),glyphSize);
+            Logger::LogWarning("Character {} of the font {} has a size of {}", c, m_File->GetPath().generic_string(), glyphSize);
             continue;
         }
 
         TextureCreateInfo createInfo =
         {
             .textureType = TextureType::Texture2D,
-            .datas = {face->glyph->bitmap.buffer},
+            .datas = { face->glyph->bitmap.buffer },
             .mipMaplevel = 1,
             .depth = 1,
             .size = glyphSize,
@@ -74,18 +71,17 @@ void Font::CreateInInterface()
 
         Character character;
         character.texture = new Texture(createInfo);
-        character.size = Vector2i(face->glyph->bitmap.width, face->glyph->bitmap.rows);
+        character.size = Vector2i(static_cast<int32_t>(face->glyph->bitmap.width), static_cast<int32_t>(face->glyph->bitmap.rows));
         character.bearing = Vector2i(face->glyph->bitmap_left, face->glyph->bitmap_top);
         character.advance = face->glyph->advance.x;
-        m_Characters.emplace(c,character);
+        m_Characters.emplace(c, character);
     }
     
-    Rhi::SetPixelStore(DataAlignment::UnPack,4);
+    Rhi::SetPixelStore(DataAlignment::UnPack, 4);
 
     FT_Done_Face(face);
     FT_Done_FreeType(ft);
     m_LoadedInInterface = true;
-    
 }
 
 void Font::DestroyInInterface()
@@ -94,12 +90,11 @@ void Font::DestroyInInterface()
     {
         delete it->second.texture;
     }
+
     m_LoadedInInterface = false;
 }
 
-const Font::Character& Font::GetGlyphByChar(char_t characters) const 
+const Font::Character& Font::GetGlyphByChar(const char_t characters) const 
 {
     return m_Characters.at(characters);
 }
-
-

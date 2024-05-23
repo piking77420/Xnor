@@ -109,6 +109,7 @@
     <ClInclude Include="inline\file\file.inl" />
     <ClInclude Include="inline\file\file_manager.inl" />
     <ClInclude Include="inline\input\input.inl" />
+    <ClInclude Include="inline\input\low_pass_filter.inl" />
     <ClInclude Include="inline\input\time.inl" />
     <ClInclude Include="inline\reflection\dotnet_reflection.inl" />
     <ClInclude Include="inline\reflection\filters.inl" />

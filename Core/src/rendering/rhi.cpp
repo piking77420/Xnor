@@ -1422,50 +1422,50 @@ uint32_t Rhi::DrawModeToOpengl(DrawMode::DrawMode drawMode)
 void Rhi::SetPixelStore(const DataAlignment alignement, const int32_t value)
 {
 	GLuint alignementOpengl {};
+
 	switch (alignement)
 	{
-	case DataAlignment::Pack:
-		alignementOpengl = GL_PACK_ALIGNMENT;
-		break;
-	case DataAlignment::UnPack:
-		alignementOpengl = GL_UNPACK_ALIGNMENT;
-		break;
+		case DataAlignment::Pack:
+			alignementOpengl = GL_PACK_ALIGNMENT;
+			break;
+		case DataAlignment::UnPack:
+			alignementOpengl = GL_UNPACK_ALIGNMENT;
+			break;
 	}
 
 	glPixelStorei(alignementOpengl, value);
 }
 
-uint32_t Rhi::BufferUsageToOpenglUsage(BufferUsage usage)
+uint32_t Rhi::BufferUsageToOpenglUsage(const BufferUsage usage)
 {
 	switch (usage)
 	{
-	case BufferUsage::StreamDraw:
-		return GL_STREAM_DRAW;
-		
-	case BufferUsage::StreamRead:
-		return GL_STREAM_READ;
-		
-	case BufferUsage::StreamCopy:
-		return GL_STREAM_COPY;
-		
-	case BufferUsage::StaticDraw:
-		return GL_STATIC_DRAW;
-		
-	case BufferUsage::StaticRead:
-		return GL_STATIC_READ;
-		
-	case BufferUsage::StaticCopy:
-		return GL_STATIC_COPY;
-		
-	case BufferUsage::DynamicDraw:
-		return GL_DYNAMIC_DRAW;
-		
-	case BufferUsage::DrawRead:
-		return GL_DYNAMIC_READ;
-		
-	case BufferUsage::ReadCopy:
-		return GL_DYNAMIC_COPY;
-		
+		case BufferUsage::StreamDraw:
+			return GL_STREAM_DRAW;
+			
+		case BufferUsage::StreamRead:
+			return GL_STREAM_READ;
+			
+		case BufferUsage::StreamCopy:
+			return GL_STREAM_COPY;
+			
+		case BufferUsage::StaticDraw:
+			return GL_STATIC_DRAW;
+			
+		case BufferUsage::StaticRead:
+			return GL_STATIC_READ;
+			
+		case BufferUsage::StaticCopy:
+			return GL_STATIC_COPY;
+			
+		case BufferUsage::DynamicDraw:
+			return GL_DYNAMIC_DRAW;
+			
+		case BufferUsage::DrawRead:
+			return GL_DYNAMIC_READ;
+			
+		case BufferUsage::ReadCopy:
+			return GL_DYNAMIC_COPY;
 	}
 
 	return GL_DYNAMIC_DRAW;

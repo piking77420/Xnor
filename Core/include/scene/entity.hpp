@@ -168,7 +168,7 @@ public:
     /// of nested children.
     XNOR_ENGINE Entity* Clone() const;
 
-    XNOR_ENGINE void LookAt(const Vector3& sourcePoint, const Vector3& at, const Vector3& up = Vector3::UnitY());
+    XNOR_ENGINE void LookAt(const Vector3& sourcePoint, const Vector3& at);
 
     /// @brief Compares 2 entities using their Guid
     /// @param entity Other

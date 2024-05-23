@@ -12,7 +12,6 @@
 #include "reflection/filters.hpp"
 #include "resource/resource_manager.hpp"
 #include "resource/shader.hpp"
-#include "scene/component/test_component.hpp"
 #include "serialization/serializer.hpp"
 #include "utils/coroutine.hpp"
 #include "world/world.hpp"
