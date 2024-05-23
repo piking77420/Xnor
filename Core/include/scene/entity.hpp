@@ -197,6 +197,6 @@ REFL_AUTO(
     field(m_EntityId, XnorCore::Reflection::HideInInspector(), XnorCore::Reflection::DontClone()),
     field(transform),
     field(m_Components),
-    field(m_Parent, XnorCore::Reflection::HideInInspector()),
-    field(m_Children, XnorCore::Reflection::HideInInspector())
+    field(m_Parent, XnorCore::Reflection::HideInInspector(), XnorCore::Reflection::DontClone()),
+    field(m_Children, XnorCore::Reflection::HideInInspector(), XnorCore::Reflection::DontClone())
 )

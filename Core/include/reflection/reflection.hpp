@@ -38,6 +38,7 @@ using MemberAttribute = refl::attr::usage::member;
 private:                                              \
 friend struct refl_impl::metadata::type_info__<type>; \
 
+class Component;
 
 /// @brief Provides utility functions for reflection
 namespace Reflection
@@ -226,7 +227,7 @@ namespace Reflection
 
     void CloneUsingFactory(const void* src, void* dst, size_t hash);
     [[nodiscard]]
-    void* CreateUsingFactory(size_t hash);
+    void* CreateUsingFactory(size_t hash, const Component* obj);
 }
 
 END_XNOR_CORE
