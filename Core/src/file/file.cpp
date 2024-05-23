@@ -24,9 +24,6 @@ File::File(std::filesystem::path&& filepath)
 {
     if (!exists(m_Path))
         Utils::CreateEmptyFile(m_Path);
-    
-    if (!is_regular_file(m_Path))
-        throw std::invalid_argument("Path does not point to a file");
 
     File::UpdateUtilityValues();
 }

@@ -7,10 +7,6 @@
 
 using namespace XnorCore;
 
-Collider::Collider()
-{
-    //AddDebugEvents();
-}
 
 Collider::~Collider()
 {
@@ -18,15 +14,6 @@ Collider::~Collider()
         PhysicsWorld::DestroyBody(m_BodyId);
 }
 
-
-
-void Collider::Begin()
-{
-}
-
-void Collider::Update()
-{
-}
 
 void Collider::PrePhysics()
 {
@@ -48,15 +35,10 @@ void Collider::PostPhysics()
         return;
     
     if (!(constraints & ConstraintPosition))
-    {
         entity->transform.SetPosition(PhysicsWorld::GetBodyPosition(m_BodyId) - center);
-    }
 
     if (!(constraints & ConstraintRotation))
-    {
-        
         entity->transform.SetRotation((PhysicsWorld::GetBodyRotation(m_BodyId)).Normalized());
-    }
 }
 
 bool_t Collider::IsTrigger() const

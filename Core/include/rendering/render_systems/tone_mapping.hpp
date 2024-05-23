@@ -18,6 +18,7 @@ class ToneMapping
 
 public:
     XNOR_ENGINE ToneMapping() = default;
+    
     XNOR_ENGINE ~ToneMapping() = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(ToneMapping)

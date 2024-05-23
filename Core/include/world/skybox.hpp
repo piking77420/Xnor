@@ -31,10 +31,6 @@ public:
     /// @brief Initializes the skybox
     XNOR_ENGINE void Initialize();
     
-    /// @brief Loads a cube map using an array of 6 different file paths
-    /// @param cubeMapFiles Array of 6 texture file paths
-    XNOR_ENGINE void LoadCubeMap(const std::array<std::string, 6>& cubeMapFiles);
-    
     /// @brief take a hdr file in input and wrap it to cubeMap
     /// @param hdrFile hdr image
     XNOR_ENGINE void LoadFromHdrTexture(const Pointer<Texture>& hdrFile);

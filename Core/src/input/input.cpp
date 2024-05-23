@@ -82,7 +82,6 @@ void Input::HandleKeyboard(GLFWwindow*, const int32_t key, const int32_t, const 
 
 void Input::HandleMouseButton(GLFWwindow*, const int32_t mouseButton, const int32_t action, int32_t)
 {
-    
     MouseStatuses& keyStatuses = m_Mouse.at(static_cast<size_t>(mouseButton));
     
     switch (action)

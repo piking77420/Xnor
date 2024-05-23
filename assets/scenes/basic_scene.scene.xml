@@ -533,8 +533,7 @@
 					<enabled>true</enabled>
 					<entity>B52820E-8798-4141-BA-7F-4E-FC-4A-AC-81-A2</entity>
 				</0>
-				<1 typeName="ScriptComponent" managedType="Game.Enemy"/>
-				<2 typeName="CapsuleCollider">
+				<1 typeName="CapsuleCollider">
 					<height>1</height>
 					<radius>1</radius>
 					<center>0 ; 1.9 ; 0</center>
@@ -546,8 +545,8 @@
 					<m_IsActive>false</m_IsActive>
 					<enabled>true</enabled>
 					<entity>B52820E-8798-4141-BA-7F-4E-FC-4A-AC-81-A2</entity>
-				</2>
-				<3 typeName="SphereCollider">
+				</1>
+				<2 typeName="SphereCollider">
 					<radius>19.7</radius>
 					<center>0 ; 0 ; 0</center>
 					<constraints>ConstraintRotation</constraints>
@@ -558,8 +557,8 @@
 					<m_IsActive>false</m_IsActive>
 					<enabled>true</enabled>
 					<entity>B52820E-8798-4141-BA-7F-4E-FC-4A-AC-81-A2</entity>
-				</3>
-				<4 typeName="EnemyCpp">
+				</2>
+				<3 typeName="EnemyCpp">
 					<m_Idle>C6F64E9A-9091-433A-84-18-A5-57-2F-7D-60-2D</m_Idle>
 					<m_Run>4C913EC6-2466-43E5-86-5C-1D-7B-AF-1A-B8-A5</m_Run>
 					<m_Attack>58E19681-D8BE-4D67-B3-55-94-79-69-F8-7E-9D</m_Attack>
@@ -568,7 +567,7 @@
 					<m_LifePoint>100</m_LifePoint>
 					<enabled>true</enabled>
 					<entity>B52820E-8798-4141-BA-7F-4E-FC-4A-AC-81-A2</entity>
-				</4>
+				</3>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>

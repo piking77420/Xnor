@@ -33,7 +33,6 @@ public:
     Texture* emissive = nullptr;
 
     // Forward Rendering
-
     /// @brief RenderPass forward buffer
     RenderPass colorPass{};
     /// @brief Framebuffer for the forward buffer

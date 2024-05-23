@@ -9,8 +9,6 @@ using namespace XnorCore;
 void CapsuleCollider::Begin()
 {
     Collider::Begin();
-    //SetFriction(m_Friction);
-    //SetMass(m_Mass);
 }
 
 void CapsuleCollider::Awake()
@@ -29,8 +27,6 @@ void CapsuleCollider::Awake()
 
     m_BodyId = PhysicsWorld::CreateCapsule(info, height, radius);
     PrePhysics();
-
-
 }
 
 void CapsuleCollider::Update()

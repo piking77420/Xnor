@@ -27,6 +27,7 @@ public:
     float_t zCascadeShadowMapZMultiplactor = 10.f;
     
     XNOR_ENGINE DirectionalLight();
+    
     XNOR_ENGINE ~DirectionalLight() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(DirectionalLight)

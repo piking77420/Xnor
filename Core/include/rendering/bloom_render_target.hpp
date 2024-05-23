@@ -37,6 +37,7 @@ public:
     RenderPass renderPass;
     
     XNOR_ENGINE BloomRenderTarget();
+    
     XNOR_ENGINE ~BloomRenderTarget();
 
     DEFAULT_COPY_MOVE_OPERATIONS(BloomRenderTarget)

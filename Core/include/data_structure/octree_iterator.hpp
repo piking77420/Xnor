@@ -8,8 +8,6 @@
 
 BEGIN_XNOR_CORE
 
-
-
 enum class State
 {
     Iteration,
@@ -32,8 +30,6 @@ enum OctansState : uint8_t
    OctansStateFill = 0b11111111  // 0b11111111
 };
 
-
-
 template <typename  T>
 class OctreeIterator
 {
@@ -47,7 +43,6 @@ public:
     
     OctreeIterator(PtrType ptr) : m_Ptr(ptr)
     {
-       //m_OctanState.push(OctansStateZero);
     } 
 
     ~OctreeIterator() = default;
@@ -106,8 +101,6 @@ private:
         
         return true;
     }
-    
-
     
     mutable PtrType m_Ptr;
 

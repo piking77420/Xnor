@@ -10,6 +10,7 @@
 
 #include "audio/audio.hpp"
 #include "utils/message_box.hpp"
+#include "world/world.hpp"
 
 using namespace XnorCore;
 

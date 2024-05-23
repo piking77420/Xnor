@@ -38,16 +38,21 @@ private:
     Pointer<Animation> m_Animation;
     
     float_t m_Time = 0.f;
+    
     size_t m_CurrentFrame = 0;
+    
     float_t m_PlaySpeed = 1.f;
 
     size_t m_FrameCount;
 
     mutable List<Matrix> m_FinalMatrices = List<Matrix>(MaxBones);
+    
     List<Vector3> m_Positions = List<Vector3>(MaxBones);
+    
     List<Quaternion> m_Rotations = List<Quaternion>(MaxBones);
 
     float_t m_CrossFadeT = 0.f;
+    
     Animator* m_BlendTarget = nullptr;
 
     bool_t m_IsFinished = false;

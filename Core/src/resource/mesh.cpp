@@ -19,10 +19,7 @@ bool_t Mesh::Load(const uint8_t* buffer, const int64_t length)
     const std::string folderPath = m_File->GetPathNoExtension() + '\\';
 
     if (!scene)
-    {
-        Logger::LogError("An error occured while loading mesh: {}. Assimp error: {}", m_Name, importer.GetErrorString());
         return false;
-    }
 
     Pointer<Skeleton> skeletonRef = nullptr;
 

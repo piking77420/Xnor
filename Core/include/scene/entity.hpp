@@ -184,6 +184,7 @@ private:
     XNOR_ENGINE explicit Entity(const Guid& entiyId);
     
     Entity* m_Parent = nullptr;
+    
     List<Entity*> m_Children;
     
     Guid m_EntityId = Guid::New();

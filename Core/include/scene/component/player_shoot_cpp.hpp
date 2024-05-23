@@ -26,6 +26,7 @@ public:
     
 private:
     Entity* parent = nullptr;
+    
     Entity* shootPoint = nullptr;
     
     float_t m_BulletSize = 0.2f;

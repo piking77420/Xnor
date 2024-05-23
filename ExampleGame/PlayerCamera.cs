@@ -12,7 +12,7 @@ namespace Game
         
         protected override void Begin()
         {
-            playerEntity = World.scene.FindEntityByName("Player");
+            playerEntity = World.scene.FindEntityByName(nameof(Player));
             Transform.Rotation = playerEntity.Transform.Rotation;
         }
 
