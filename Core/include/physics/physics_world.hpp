@@ -46,6 +46,8 @@ public:
         bool_t isTrigger{};
         /// @brief Whether it's static
         bool_t isStatic{};
+
+        Vector3 offsetShape;
     };
 
     /// @brief Raycast result
@@ -204,6 +206,8 @@ public:
     XNOR_ENGINE static Vector3 GetLinearVelocity(uint32_t bodyId);
 
     XNOR_ENGINE static void MoveKinematic(uint32_t bodyId, Vector3 inTargetPosition, Quaternion inTargetRotation, float_t inDeltaTime);
+
+    XNOR_ENGINE static void SetInverseMass(uint32_t bodyId, float_t invertedMass);
 
 private:
     XNOR_ENGINE static void TraceImpl(const char_t* format, ...);

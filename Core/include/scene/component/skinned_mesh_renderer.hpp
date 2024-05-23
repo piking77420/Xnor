@@ -18,7 +18,6 @@ class
 
 SkinnedMeshRenderer final : public Component
 {
-private:
     REFLECTABLE_IMPL(SkinnedMeshRenderer)
 
 public:

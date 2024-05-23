@@ -29,13 +29,11 @@ public:
     /// @brief Update function
     XNOR_ENGINE void Update() override;
 
-    Vector3 center = Vector3::Zero();
     Vector3 size = Vector3(1.f);
 };
 
 END_XNOR_CORE
 
 REFL_AUTO(type(XnorCore::BoxCollider, bases<XnorCore::Collider>),
-    field(center),
     field(size)
 )

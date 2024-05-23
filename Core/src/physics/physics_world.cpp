@@ -13,6 +13,7 @@
 #include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
 #include <Jolt/Physics/Collision/Shape/ConvexHullShape.h>
 #include <Jolt/Physics/Collision/Shape/SphereShape.h>
+#include <Jolt/Physics/Collision/Shape/CompoundShape.h>
 
 #include "input/time.hpp"
 #include "jolt/Physics/Character/Character.h"
@@ -159,7 +160,7 @@ JPH::Character* PhysicsWorld::CreateCharacter(const BodyCreationInfo& info, cons
 {
     JPH::Character* const c = new JPH::Character(&settings, ToJph(info.position), ToJph(info.rotation), 0, m_PhysicsSystem);
     c->AddToPhysicsSystem(JPH::EActivation::Activate);
-
+    
     const uint32_t bodyId = c->GetBodyID().GetIndexAndSequenceNumber();
     m_BodyMap.emplace(bodyId, info.collider);
 
@@ -176,7 +177,6 @@ uint32_t PhysicsWorld::CreateCapsule(const BodyCreationInfo& info, const float_t
         Logger::LogError("[Physics] - Couldn't create the capsule shape");
         return JPH::BodyID::cInvalidBodyID;
     }
-    
     JPH::BodyCreationSettings settings(result.Get(), ToJph(info.position), ToJph(info.rotation), JPH::EMotionType::Dynamic, Layers::MOVING);
 
     return CreateBody(info, settings);
@@ -236,7 +236,6 @@ Quaternion PhysicsWorld::GetBodyRotation(uint32_t bodyId)
     }
 
     const JPH::Quat rotation = m_BodyInterface->GetRotation(id);
-
     return FromJph(rotation);
 }
 
@@ -269,7 +268,6 @@ void PhysicsWorld::AddForce(const uint32_t bodyId, const Vector3& force, const V
         return;
 
     JPH::Body& body = lock.GetBody();
-    
 
     body.AddForce(ToJph(force) / body.GetMotionProperties()->GetInverseMass(), ToJph(point));
 }
@@ -367,7 +365,8 @@ void PhysicsWorld::SetLinearVelocity(uint32_t bodyId, Vector3 velocity)
         return;
 
     JPH::Body& body = lock.GetBody();
-
+    
+    
     body.SetLinearVelocity(ToJph(velocity));
 }
 
@@ -404,6 +403,18 @@ void PhysicsWorld::MoveKinematic(uint32_t bodyId, Vector3 inTargetPosition, Quat
 
     JPH::Body& body = lock.GetBody();
     body.MoveKinematic(ToJph(inTargetPosition),ToJph(inTargetRotation),inDeltaTime);
+}
+
+void PhysicsWorld::SetInverseMass(uint32_t bodyId, float_t invertedMass)
+{
+    const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
+
+    if (!lock.Succeeded())
+        return;
+
+    JPH::Body& body = lock.GetBody();
+
+    body.GetMotionProperties()->SetInverseMass(invertedMass);
 }
 
 bool_t PhysicsWorld::IsBodyActive(const uint32_t bodyId)

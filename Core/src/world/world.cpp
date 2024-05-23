@@ -26,5 +26,6 @@ void World::Update()
     SceneGraph::Update(scene->GetEntities());
 
     scene->OnRendering();
+    scene->PopEnitiesToDelete();
 }
 

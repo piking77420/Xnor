@@ -13,7 +13,7 @@ void BoxCollider::Awake()
 
     const PhysicsWorld::BodyCreationInfo info = {
         .collider = this,
-        .position = t.GetPosition(),
+        .position = t.GetPosition() + center,
         .rotation = t.GetRotation(),
         .scaling = t.GetScale(),
         .isTrigger = m_IsTrigger,
@@ -21,14 +21,14 @@ void BoxCollider::Awake()
     };
 
     m_BodyId = PhysicsWorld::CreateBox(info);
-
-    SetFriction(m_Friction);
     PrePhysics();
+
 }
 
 void BoxCollider::Begin()
 {
-   
+    //SetFriction(m_Friction);
+    //SetMass(m_Mass);
 }
 
 void BoxCollider::Update()
