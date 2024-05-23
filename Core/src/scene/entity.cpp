@@ -68,7 +68,7 @@ void Entity::OnRendering()
 
 Entity* Entity::Clone() const
 {
-    Entity* clone = World::scene->CreateEntity(name, m_Parent);
+    Entity* clone = World::scene->CreateEntity(name, nullptr);
     Reflection::Clone<Entity>(this, clone);
 
     for (const Entity* child : m_Children)
@@ -103,6 +103,18 @@ void Entity::AddComponent(Component* const component)
     {
         component->Awake();
         component->Begin();
+    }
+}
+
+void Entity::RemoveComponent(Component* component)
+{
+    for (size_t i = 0; i < m_Components.GetSize(); i++)
+    {
+        if (m_Components[i] == component)
+        {
+            m_Components.RemoveAt(i);
+            break;
+        }
     }
 }
 
@@ -184,7 +196,7 @@ void Entity::AddChild(Entity* child)
     if (child->HasParent())
     {
         // If it had one, remove its old child affiliation
-        m_Parent->m_Children.Remove(this);
+        child->m_Parent->m_Children.Remove(this);
     }
 
     // Set the new parent of the child to ourselves

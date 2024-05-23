@@ -249,7 +249,8 @@ void Editor::SetupImGuiStyle() const
 void Editor::ProjectMenuBar()
 {
 	XnorCore::Scene* const scene = XnorCore::World::scene;
-	
+
+	bool_t changedAudioDevice = false;
 	bool_t openLoadScenePopup = false, openSceneSkyboxPopup = false;
 	
 	if (ImGui::BeginMainMenuBar())
@@ -316,6 +317,8 @@ void Editor::ProjectMenuBar()
 					
 					XnorCore::Audio::SetCurrentDevice(device);
 					DeserializeScene();
+
+					changedAudioDevice = true;
 				}
 			}
 			
@@ -352,7 +355,7 @@ void Editor::ProjectMenuBar()
 		ImGui::EndMainMenuBar();
 	}
 
-	if (!m_Deserializing && scene->renderOctree.draw)
+	if (!changedAudioDevice && !m_Deserializing && scene->renderOctree.draw)
 		scene->renderOctree.Draw();
 
 	LoadScenePopup(openLoadScenePopup);
@@ -433,6 +436,12 @@ void Editor::StartPlaying()
 	SerializeScene();
 	XnorCore::World::isPlaying = true;
 	XnorCore::World::hasStarted = false;
+
+	for (UiWindow* window : m_UiWindows)
+	{
+		if (dynamic_cast<GameWindow*>(window))
+			ImGui::SetWindowFocus(window->GetName().c_str());
+	}
 
 	XnorCore::Logger::LogInfo("Starting game");
 
@@ -538,6 +547,8 @@ bool_t Editor::IsDeserializing() const { return m_Deserializing; }
 
 bool_t Editor::IsReloadingScripts() const { return m_ReloadingScripts; }
 
+bool_t Editor::IsAutoReloadingScripts() const { return m_AutoReloadingScripts; }
+
 bool_t Editor::IsGamePlaying() const { return m_GamePlaying; }
 
 void Editor::UpdateWindows()
@@ -630,6 +641,9 @@ void Editor::Update()
 			World::scene->Initialize();
 			m_CurrentAsyncActionThread.join();
 		}
+
+		if (Calc::OnInterval(Time::GetTotalTime(), Time::GetLastTotalTime(), 1.f))
+			DotnetRuntime::GcCollect();
 	}
 	Window::Hide();
 
