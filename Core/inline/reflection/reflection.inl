@@ -61,7 +61,7 @@ void Reflection::Clone(const T* const src, T* const dst)
                     for (size_t i = 0; i < srcList.GetSize(); i++)
                     {
                         const size_t hash = typeid(*srcList[i]).hash_code();
-                        dstList.Add(static_cast<ListT>(Reflection::CreateUsingFactory(hash)));
+                        dstList.Add(static_cast<ListT>(Reflection::CreateUsingFactory(hash, srcList[i])));
                         Reflection::CloneUsingFactory(srcList[i], dstList[i], hash);
 
                         // Hardcoding because no time

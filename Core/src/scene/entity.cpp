@@ -68,7 +68,7 @@ void Entity::OnRendering()
 
 Entity* Entity::Clone() const
 {
-    Entity* clone = World::scene->CreateEntity(name, m_Parent);
+    Entity* clone = World::scene->CreateEntity(name, nullptr);
     Reflection::Clone<Entity>(this, clone);
 
     for (const Entity* child : m_Children)
@@ -179,7 +179,7 @@ void Entity::AddChild(Entity* child)
     if (child->HasParent())
     {
         // If it had one, remove its old child affiliation
-        m_Parent->m_Children.Remove(this);
+        child->m_Parent->m_Children.Remove(this);
     }
 
     // Set the new parent of the child to ourselves

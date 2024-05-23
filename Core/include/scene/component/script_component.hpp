@@ -7,7 +7,6 @@
 #include "reflection/reflection.hpp"
 #include "scene/component.hpp"
 
-
 /// @file script_component.hpp
 /// @brief Defines the XnorCore::ScriptComponent class.
 
