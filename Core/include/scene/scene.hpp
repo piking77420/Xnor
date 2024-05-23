@@ -23,6 +23,9 @@ public:
     Skybox skybox;
 
     mutable Octree<const StaticMeshRenderer> renderOctree;
+
+    Event<Entity*> onCreateEntity;
+    Event<Entity*> onDestroyEntity;
     
     XNOR_ENGINE Scene() = default;
     

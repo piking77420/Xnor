@@ -99,11 +99,15 @@ Entity* Scene::CreateEntity(const std::string& name, Entity* parent)
 
     m_Entities.Add(e);
 
+    onCreateEntity(e);
+
     return e;
 }
 
 void Scene::DestroyEntity(Entity* const entity)
 {
+    onDestroyEntity(entity);
+    
     DestroyEntityChildren(entity);
     
     entity->SetParent(nullptr);
