@@ -181,7 +181,7 @@
 				</0>
 				<1 typeName="AudioListener">
 					<dopplerEffect>true</dopplerEffect>
-					<m_Volume>1</m_Volume>
+					<m_Volume>0.5</m_Volume>
 					<enabled>true</enabled>
 					<entity>873D1C72-ACA1-47D6-AC-9C-8F-E1-81-B6-B6-B4</entity>
 				</1>
@@ -619,6 +619,28 @@
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
 		</15>
+		<16>
+			<name>Music</name>
+			<m_EntityId>590F9BF1-C4F7-488B-9C-A1-15-83-9C-12-2B-FC</m_EntityId>
+			<transform>
+				<m_Position>0 ; 0 ; 0</m_Position>
+				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="AudioSource">
+					<audioTrack>6BCFDAB-CECF-4718-A0-55-48-4A-4-57-5C-73</audioTrack>
+					<m_Volume>0.5</m_Volume>
+					<m_Pitch>1</m_Pitch>
+					<m_Looping>true</m_Looping>
+					<m_PlayOnBegin>true</m_PlayOnBegin>
+					<enabled>true</enabled>
+					<entity>590F9BF1-C4F7-488B-9C-A1-15-83-9C-12-2B-FC</entity>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</16>
 	</m_Entities>
 </Scene>
 
