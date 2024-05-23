@@ -2,29 +2,30 @@
 
 %typemap(csclassmodifiers) XnorCore::Component "public abstract class";
 
-%typemap(csdisposing, methodname="Dispose", methodmodifiers="protected", parameters="bool disposing") XnorCore::Component
+%typemap(cscode) XnorCore::Component
 %{
-    {
-        lock(this)
-        {
-            if (swigCPtr.Handle != global::System.IntPtr.Zero)
-            {
-                /*if (!disposing)
-                    entity.GetComponents().Remove(this);*/
-                
-                if (swigCMemOwn)
-                {
-                    swigCMemOwn = false;
-                    CoreNativeFuncs.delete_Component(swigCPtr);
-                }
-                swigCPtr = new global::System.Runtime.InteropServices.HandleRef(null, global::System.IntPtr.Zero);
-            }
-        }
-    }
+  public virtual void Awake() {}
+
+  protected virtual void Begin() {}
+
+  protected virtual void Update() {}
+
+  public virtual void PrePhysics() {}
+
+  public virtual void PostPhysics() {}
+
+  public virtual void OnRendering() {}
+
+  public virtual void Destroy() {}
 %}
 
-%csmethodmodifiers XnorCore::Component::Begin "protected virtual";
-%csmethodmodifiers XnorCore::Component::Update "protected virtual";
+%ignore XnorCore::Component::Awake;
+%ignore XnorCore::Component::Begin;
+%ignore XnorCore::Component::Update;
+%ignore XnorCore::Component::PrePhysics;
+%ignore XnorCore::Component::PostPhysics;
+%ignore XnorCore::Component::OnRendering;
+%ignore XnorCore::Component::Destroy;
 
 %rename(Entity) XnorCore::Component::entity;
 

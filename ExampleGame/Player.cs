@@ -1,4 +1,3 @@
-using System;
 using Xnor.Core;
 
 namespace Game
@@ -14,14 +13,11 @@ namespace Game
 
         private Vector3 movement = Vector3.Zero;
         
-        [Serialized] 
-        private float MaxVelocity = 10f;
-
-        private float JectpackTim = 4f;
+        private float jetpackDuration = 4f;
         
-        private float JetPackValue = 2f;
+        private float jetpackPower = 2f;
 
-        private bool CanJump = true;
+        private bool canJump = true;
         
         protected override void Begin()
         {
@@ -41,13 +37,8 @@ namespace Game
             desiredVelocity.Y = currentVelocity.Y;
             Vector3 newVelocity = 0.75f * currentVelocity + 0.25f * desiredVelocity;
             
-
             // Update position
             collider.SetLinearVelocity(newVelocity);
-
-           
-
-            movement = new Vector3();
         }
 
         private void HandleInputs()
@@ -59,6 +50,7 @@ namespace Game
             cameraRight.Y = 0f;
             
             // Handle movement
+            movement = Vector3.Zero;
             if (Input.GetKey(Key.W))
                 movement += cameraFront;
             else if (Input.GetKey(Key.S))
@@ -69,22 +61,22 @@ namespace Game
                 movement += cameraRight;
 
             // Handle jump
-            if (CanJump && Input.GetKey(Key.Space))
+            if (canJump && Input.GetKey(Key.Space))
             {
                 collider.AddForce(Vector3.UnitY * JumpSpeed);
-                JetPackValue -= Time.DeltaTime;
+                jetpackPower -= Time.DeltaTime;
             }
 
-            if (JetPackValue <= 0)
+            if (jetpackPower <= 0)
             {
-                CanJump = false;
-                JectpackTim -= Time.DeltaTime;
+                canJump = false;
+                jetpackDuration -= Time.DeltaTime;
                 
-                if (JectpackTim <= 0)
+                if (jetpackDuration <= 0)
                 {
-                    JectpackTim = 4f;
-                    CanJump = true;
-                    JetPackValue = 2f;
+                    jetpackDuration = 4f;
+                    canJump = true;
+                    jetpackPower = 2f;
                 }
             }
         }

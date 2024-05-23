@@ -24,9 +24,6 @@ bool_t Resource::Load(const uint8_t* const, const int64_t)
 
 bool_t Resource::Load(const Pointer<File>& file)
 {
-    if (!file->GetLoaded())
-        Logger::LogWarning("Tried to load resource {} with an unloaded file: {}", m_Name, file->GetPath());
-
     m_File = file;
     
     return Load(file->GetData<uint8_t>(), file->GetSize());

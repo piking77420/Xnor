@@ -1,10 +1,7 @@
 %module CoreNative
 
 %ignore XnorCore::Scene::renderOctree;
-
-%typemap(cscode) XnorCore::Scene
-%{
-    
-%}
+%ignore XnorCore::Scene::onDestroyEntity;
+%ignore XnorCore::Scene::onCreateEntity;
 
 %include "scene/scene.hpp"
