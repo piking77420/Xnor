@@ -316,6 +316,7 @@ void Editor::ProjectMenuBar()
 					
 					XnorCore::Audio::SetCurrentDevice(device);
 					DeserializeScene();
+					XnorCore::World::scene->Initialize();
 
 					changedAudioDevice = true;
 				}
@@ -524,6 +525,12 @@ void Editor::DeserializeScene(const std::string& filepath)
 
 	if (selectedEntityId != XnorCore::Guid::Empty())
 		data.selectedEntity = XnorCore::World::scene->FindEntityById(selectedEntityId);
+
+	XnorCore::World::scene->onDestroyEntity += [this](const XnorCore::Entity* const entity)
+	{
+		if (data.selectedEntity == entity)
+			data.selectedEntity = nullptr;
+	};
 
 	m_Deserializing = false;
 	
