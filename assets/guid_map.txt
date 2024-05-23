@@ -42,25 +42,28 @@ assets_internal/editor/gizmos/spot_light.png;9D89B96-6A1B-4A65-B5-E2-70-A3-E6-40
 assets/textures/normal_map/viking_room_normal_map.png;62B11E27-5C33-4D20-B8-14-2F-BC-D9-6B-18-4F
 assets/textures/newport_loft.hdr;5B4A8E56-E7E7-4D2C-BF-B7-44-F5-7-64-3A-AD
 _shaders/precompute_brdf;DAC737DF-419F-4CC8-89-1A-1F-28-37-8E-54-F6
+assets/models/Desert/rock03.fbx;32AF8B90-649D-4301-A8-51-9A-20-84-99-D-21
 assets/textures/normal_map/diffuse.png;299972BB-7B3B-4960-86-88-77-D3-1B-94-D1-19
 assets/textures/pbr/rustediron2_basecolor.png;D4DE5A31-2DD4-4EA2-A0-44-48-D2-C9-99-71-8B
 assets/textures/pbr/rustediron2_metallic.png;92C273FA-1E2D-43AA-B8-CF-AE-D0-15-6F-57-87
 assets\models\Arm Cannon (First Person)\Material__26.obj;73F439DB-50F8-4EA9-B0-A8-B-9D-D9-7E-E4-67
 assets/textures/pbr/rustediron2_normal.png;D951D7C1-D2F0-4849-86-EF-1-74-A-42-66-C9
 assets/textures/pbr/rustediron2_roughness.png;8604A7C-197D-4C26-91-66-E7-35-5B-4B-BA-EF
+assets/models/Desert/rock07.fbx;425D3B11-EF94-4814-97-67-ED-69-1D-BA-F3-EA
 assets/textures/wood.jpg;5880DD9A-CFA7-4B8E-AE-20-A0-F0-D9-B9-9D-3C
 _shaders/tone_mapper;57918165-1C3A-417B-83-EA-9F-51-3C-B5-EE-22
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Flowers/Flower_bush_white.fbx;B388A3C3-BB1C-4656-A2-A3-F4-38-AE-A0-C9-23
 _shaders/deferred_opaque;E3D63823-BA2A-4F48-81-A6-4E-53-31-11-1-6E
 _shaders/editor_ui_shader;DFBB329D-759-42B7-B9-1C-B2-5D-F6-4F-71-CC
+assets/models/Desert/rock08.fbx;DD1A606E-37B3-400C-9A-8A-84-1D-45-B4-3B-EC
 _shaders/equirectangular_to_cubemap;A16F98DB-4437-47B1-A2-39-DC-CE-7F-49-68-B1
 _shaders/prefilter_shader;8AA5AE3B-A35C-4638-96-D3-AF-9B-B-BE-39-D1
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Coniferous_Trees/Tree_Spruce_tiny_02.fbx;79466013-55BC-4C4E-96-FC-46-7B-7-E1-C6-64
 assets\models\Coyote-Running\Running.anim;4B1B9128-1FC4-4FF9-8F-98-A9-55-97-93-BB-54
 _shaders/picking_shader;6C9039CE-9818-436D-BE-E9-F8-F9-84-15-D2-AC
 assets/models/capsule.obj;A736B6B3-BADE-48D4-92-9A-E2-68-39-6F-5B-23
-assets\models\league\rammus\rammus_attack1.anm.anim;B0ECECB3-25BB-4130-9E-46-D2-1F-E2-B7-56-AB
 _shaders/depth_shader;8197B1B7-CCA2-4268-81-C7-1D-F5-61-78-8E-39
+assets\models\league\rammus\rammus_attack1.anm.anim;B0ECECB3-25BB-4130-9E-46-D2-1F-E2-B7-56-AB
 assets/textures/pbr/stainless/used-stainless-steel2_ao.png;7094E218-5FD2-4B95-96-B3-42-AB-38-FF-58-F8
 assets\models\tree\uploads_files_3713597_forest_nature_set_separate_objects_fbx\Coniferous_Trees\Tree_Spruce_small_02\Cylinder.003.obj;7F9DF702-978A-48D4-8F-19-4C-23-7A-BA-D4-3C
 assets/textures/pbr/stainless/used-stainless-steel2_metallic.png;FD729C73-1920-471A-A4-16-0-DF-BF-99-31-FC
@@ -93,6 +96,7 @@ assets/models/Coyote-Running/Coyote.fbm/CH_NPC_MOB_Coyote_D_LTS.jpg;EB565D45-7C1
 assets/models/Coyote-Attack3/Coyote.fbm/CH_NPC_MOB_Coyote_N_LTS.jpg;76032C97-2EB3-4C0B-BC-D4-D3-AA-BA-DE-82-1
 assets/models/Coyote-Attack3/Coyote.fbm/CH_NPC_MOB_Coyote_SP_LTS.jpg;528FFE5E-FCE9-4E7D-8A-81-51-5-BA-DE-3-16
 assets/models/Coyote-Running/Coyote.fbm/CH_NPC_MOB_Coyote_N_LTS.jpg;89FCD6D6-7925-495D-A9-1B-30-DA-73-CA-39-FC
+assets/textures/desert/Sand054_2K-JPG_AmbientOcclusion.jpg;1EF354AF-5669-4A53-99-B-87-0-9A-72-E4-67
 assets/models/viking_room/mesh_all1_Texture1_0.obj;8ADE6BEB-C9C-4019-86-67-42-55-39-AD-D0-3D
 assets/models/Coyote-Running/Coyote.fbm/CH_NPC_MOB_Coyote_SP_LTS.jpg;8A33CCC6-DF8C-416A-BA-2E-1A-95-87-2-82-C2
 assets/models/pyramids.obj;973089F1-833C-488B-84-7E-DE-B1-8C-91-59-54
@@ -102,6 +106,7 @@ assets\models\league\malphite\malphite_spell2.anm.anim;3777AC05-969E-4783-8E-B6-
 assets/textures/pyramid_1.jpg;52EC4AFF-3F6E-4A87-86-2D-F2-CB-78-56-B5-15
 assets/models/Coyote-Walking/Coyote.fbm/CH_NPC_MOB_Coyote_N_LTS.jpg;CFA32EDC-CFB5-4F0B-83-1A-81-37-44-FD-F3-D1
 assets/models/Coyote-Walking/Coyote.fbm/CH_NPC_MOB_Coyote_D_LTS.jpg;96BA51DD-A097-44F0-BD-5C-8C-BF-CE-20-81-A0
+assets/models/Desert/rock02.fbx;DC59796D-D7A8-4148-AA-EB-B0-25-96-DC-D8-EA
 assets/textures/lantern/braziers_lantern_Roughness.png;4B7FB2F6-79DB-46A1-A3-4B-DD-DB-40-9F-46-FC
 assets\models\Arm Cannon (First Person)\Material__25.obj;F3BF216F-2076-41FA-93-6D-F9-57-8F-11-BA-B9
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Stones/Stone_group_average_mossy.fbx;B66ACDAD-C540-4E2C-BC-31-11-C5-B2-A6-61-68
@@ -110,9 +115,12 @@ assets/models/league/malphite.glb;306C000-A37A-4F10-87-AB-5E-42-7F-5D-F7-FF
 assets/models/league/rammus.glb;246B7F2C-EEB6-4B8E-B0-68-AA-60-2B-6A-31-2D
 assets\models\Arm Cannon (First Person)\Material__28.obj;35AED748-A377-483D-B5-6-AF-46-D8-61-88-78
 assets\models\tree\uploads_files_3713597_forest_nature_set_separate_objects_fbx\Stones\Stone_average_01\Icosphere.obj;5776634-B736-42F2-96-93-8C-A7-7A-BC-27-73
+assets/models/Desert/rock01.fbx;CD3A2BAD-E040-4E4C-96-14-62-66-DC-2-17-30
 assets/textures/9a3351c1.png;1B23E0FA-D07C-458B-8D-FF-A5-84-C5-41-82-8D
 assets/models/pyramids/polySurface9.obj;BA176858-C2D6-46D6-81-B0-E-23-87-2E-4F-23
+assets/models/Desert/rock04.fbx;7833BA7A-322A-464D-86-18-B4-D0-1C-F7-A5-74
 assets/textures/pyramid_0.jpg;AB046795-818B-47EE-89-EF-C1-B0-F2-2C-B7-CA
+assets\models\Desert\rock01\rock01.obj;6EFA9B27-ECC5-429B-B2-FC-AC-21-BA-60-65-43
 assets\models\cube\cube.obj;E377E40E-E396-4B48-BB-7D-15-A1-13-8E-7F-C7
 assets\models\cube\Cube.obj;DA7F5430-158D-4E2A-93-B4-DE-16-15-7D-D-8A
 assets\models\capsule\Cylinder.obj;4CF148A9-3658-4C0B-92-61-6C-7C-AA-DD-F6-D2
@@ -157,10 +165,12 @@ assets\models\league\rammus\rammus_laugh.anm.anim;DFB010A8-E0C3-4C5C-A0-FA-A5-A5
 assets\models\league\rammus\rammus_spell1_windup.anm.anim;77C954D1-31A9-460A-B9-38-DC-BA-AE-A3-4E-FE
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Grass/Grass_bush_low_01.fbx;489DF1C4-144C-4629-AB-1F-E0-C8-B1-B2-8D-8B
 assets\models\league\rammus\rammus_spell3.anm.anim;8387E53B-F6CD-4195-B0-91-E4-D0-84-F3-CC-78
+assets/models/Desert/cactus03.fbx;A732EBF0-277B-40D7-AB-16-67-74-1F-8E-68-36
 assets\models\league\rammus\rammus_taunt.anm.anim;D40974A1-F0EF-4613-A7-6F-97-D3-57-87-60-87
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Logs/Log_big_knotty.fbx;A9CB2794-7025-4111-98-75-64-F9-66-36-8F-10
 assets\models\league\rammus\spell4_jump.anm.anim;CE95542D-6948-4014-98-6B-92-AB-0-6E-49-93
 assets\models\Coyote-Running\U3DMesh.obj;CC7B2FF1-90C9-46AB-98-7C-65-2C-85-9E-24-B4
+assets/textures/desert/Sand054_2K-JPG_NormalDX.jpg;E50A61D3-E6BF-479F-BF-5-80-2C-53-DB-1D-65
 assets\models\Coyote-Running\Running.skel;1E0E4B21-FA45-42B3-BD-66-47-6E-B2-9C-BA-FE
 assets\models\Coyote-Walking\U3DMesh.obj;3B6D5C64-C551-4375-B0-8B-60-76-DA-EB-59-8D
 assets\models\Coyote-Walking\Walking.anim;4E9664BB-4AED-4AF2-B2-E1-2A-45-18-24-8E-20
@@ -170,6 +180,7 @@ assets\models\Coyote-Attack3\Attack3.anim;83BBBAF8-A95F-43FD-BA-CE-33-FB-F-1A-CD
 assets/textures/gold/albedo.png;4916125F-AD2F-41C0-93-F8-C-51-D3-9A-25-6B
 assets\models\tree\uploads_files_3713597_forest_nature_set_separate_objects_fbx\Mushrooms\Mushroom_flat_white\Cylinder.029.obj;D5FE8BCF-86C8-4BAE-98-5-F7-89-F3-B1-24-75
 _shaders/depth_shader_skinned;70EAF329-5575-4817-BD-9A-46-DB-49-A8-AA-30
+assets/models/Desert/rock05.fbx;5C1AA362-E75D-407A-B0-60-3-D6-DC-CC-90-B4
 _shaders/picking_shader_skinned;5334756-A586-4CE2-B0-ED-EF-8C-FE-3-28-E1
 assets/models/lantern.fbx;1477B7D2-B18F-4FD5-B3-60-6C-4-5F-3-4C-3A
 assets/textures/lantern/braziers_lantern_BaseColor.png;859554D6-B896-43BE-A6-70-37-10-92-57-7B-D4
@@ -193,9 +204,11 @@ assets\models\tree\uploads_files_3713597_forest_nature_set_separate_objects_fbx\
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Bushes/Bush_average.fbx;BC8FD462-67B0-4268-A6-B8-79-91-7B-CB-FD-58
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Branches/Branch_average_leaves.fbx;964559BD-28DB-4F42-AA-AF-A7-BA-86-F7-25-D5
 assets\models\tree\uploads_files_3713597_forest_nature_set_separate_objects_fbx\Bushes\Bush_group_big\Plane.138.obj;AEA2DE88-8DCC-4F6D-9F-C5-A2-6C-D3-AE-EB-66
+assets\models\Desert\rock02\rock02.obj;F17B4BD4-13BB-45E0-BB-F0-A1-1A-87-2D-8C-13
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Bushes/Bush_average_bare.fbx;10CD0FCF-8157-4A54-9B-30-AA-B3-6C-24-F7-68
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Bushes/Bush_group_big.fbx;DF9B6D1B-8E44-436E-B7-F6-84-22-54-4C-F-B0
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Deciduous_Trees/Tree_small_bare.fbx;59CD2B57-98AE-4D6C-97-97-DF-35-1B-65-6B-5
+assets\models\Desert\rock07\rock_07.obj;5298DBE4-5292-4776-BF-CC-41-43-F9-C4-79-95
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Bushes/Bush_group_average.fbx;C937E8F5-3C51-48A5-9B-5D-AE-BB-F9-C5-B9-10
 assets\models\tree\uploads_files_3713597_forest_nature_set_separate_objects_fbx\Stumps\Stump_average_low\Cube.014.obj;D16469FB-708-49F6-9A-32-11-15-12-59-FA-A3
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Deciduous_Trees/Tree_average_regular.fbx;8914E9C9-3DBD-47B2-B2-3-48-D3-1F-65-75-93
@@ -206,11 +219,13 @@ assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Deciduous_Trees/Tree_small_regular.fbx;CE155407-4DAD-4D28-94-28-56-C3-41-3D-FA-9C
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Flowers/Flower_bush_blue.fbx;8C9905E2-2AE2-4002-80-F2-2F-4C-D2-81-DD-65
 assets\models\tree\uploads_files_3713597_forest_nature_set_separate_objects_fbx\Branches\Branch_average_leaves\Cylinder.025.obj;303561FB-47E9-4B59-91-5B-ED-5D-D0-FA-50-E8
+assets\models\Desert\rock04\rock04.obj;3EB78460-2372-4686-AA-D5-A4-A6-28-5F-93-F6
 assets\models\tree\uploads_files_3713597_forest_nature_set_separate_objects_fbx\Coniferous_Trees\Tree_Spruce_tiny_02\Cylinder.014.obj;48A5C80E-CA8D-4B58-AA-5A-52-43-1A-EE-12-72
 assets\models\tree\uploads_files_3713597_forest_nature_set_separate_objects_fbx\Deciduous_Trees\Tree_average_bare\Cube.obj;B04A084B-3047-4B25-89-2D-E6-BB-AC-FE-54-59
 assets\models\tree\uploads_files_3713597_forest_nature_set_separate_objects_fbx\Coniferous_Trees\Tree_Spruce_tiny_01\Cylinder.012.obj;4F13AD22-D10B-4110-8A-58-B2-C0-A8-20-9C-1E
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Logs/Log_big_regular.fbx;A16A663E-A8D4-4640-A8-EC-4F-A1-F9-5C-6C-8C
 assets\models\tree\uploads_files_3713597_forest_nature_set_separate_objects_fbx\Coniferous_Trees\Tree_Spruce_small_01\Cylinder.016.obj;1E0B3A15-AF62-4858-8D-4E-CB-A4-D1-CE-2A-6D
+assets\models\Desert\aloe\aloe.002.obj;D7ED4B0D-CCD2-463B-9C-82-86-A0-63-40-47-51
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Mushrooms/Mushroom_flat_white.fbx;AA823CED-5548-4F44-AB-17-BA-E7-7E-AF-E7-3B
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Mushrooms/Mushroom_big_brown.fbx;DBEA4709-3A3D-47ED-9A-32-F4-8B-9E-49-EF-3E
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Mushrooms/Mushroom_big_group_brown.fbx;4040B00C-13F3-4612-85-98-D4-53-FC-DA-1D-68
@@ -220,6 +235,7 @@ assets\models\tree\uploads_files_3713597_forest_nature_set_separate_objects_fbx\
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Mushrooms/Mushroom_high_group_yellow.fbx;B9C9A33E-674E-4938-B4-37-7D-42-3D-D1-89-DF
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Mushrooms/Mushroom_high_yellow.fbx;DBE1DEE6-666E-4ADF-B6-5C-72-BE-9C-55-3A-30
 assets/models/tree/uploads_files_3713597_forest_nature_set_separate_objects_fbx/Stones/Stone_group_average.fbx;B8C0A82B-F9F-437A-A9-24-83-9D-B9-3C-E7-3F
+assets\models\Desert\cactus03\cactus03.obj;D505CEE3-B50F-48AC-9C-46-1C-17-A1-E6-44-57
 assets\models\tree\uploads_files_3713597_forest_nature_set_separate_objects_fbx\Logs\Log_big_regular\Cylinder.015.obj;9A990B7C-965E-4976-AD-71-C2-46-6B-64-7C-28
 assets/sounds/blaster.wav;155855B8-61F9-450B-9E-5E-C0-1F-2F-37-29-B1
 assets\models\tree\uploads_files_3713597_forest_nature_set_separate_objects_fbx\Flowers\Flower_bush_blue\Plane.030.obj;915B9CCE-6B6-44F9-AA-F5-89-55-5A-A6-3A-24
@@ -240,3 +256,19 @@ assets\models\tree\uploads_files_3713597_forest_nature_set_separate_objects_fbx\
 assets\models\tree\uploads_files_3713597_forest_nature_set_separate_objects_fbx\Mushrooms\Mushroom_high_yellow\Cylinder.062.obj;51318900-6B86-4A3B-A2-8-8D-1A-71-55-6E-5F
 assets\models\tree\uploads_files_3713597_forest_nature_set_separate_objects_fbx\Mushrooms\Mushroom_high_group_yellow\Cylinder.068.obj;4E3EAEEF-5082-4E77-8F-82-1D-2E-96-86-40-B8
 assets\models\tree\uploads_files_3713597_forest_nature_set_separate_objects_fbx\Stumps\Stump_average_hollow\Cube.016.obj;1B1BD27B-A78A-41D8-85-FA-32-C3-72-5F-6C-E4
+assets\models\Desert\rock03\rock03.obj;745B6383-23ED-46CC-83-23-2E-BC-FF-EA-7A-72
+assets/models/Desert/cactus02.fbx;5D194FDF-ADFD-4CAE-AD-FE-C0-B8-D8-CA-A-E3
+assets/models/Desert/aloe.fbx;87FD23FC-AF9B-4158-8D-B2-7E-AE-47-DB-A3-34
+assets\models\Desert\rock05\rock05.obj;A275B78B-9632-42C6-9E-EF-CE-E7-33-56-D3-A6
+assets/models/Desert/cactus01.fbx;51450B3F-542A-491D-B6-4C-37-44-25-A1-59-1B
+assets/models/Desert/rock06.fbx;9EA1B635-7522-4AB7-A9-33-91-A2-8D-7C-CE-F6
+assets\models\Desert\rock08\rock08.obj;105170AD-C18E-49BB-97-19-3C-2B-37-3B-47-FD
+assets\models\Desert\rock06\rock_06.obj;6393EE18-5DE2-4AEC-90-87-B0-5-C2-DC-66-6
+assets\models\Desert\cactus03\flower.obj;1E3A8834-2DC-4F8B-91-D5-CB-4F-19-29-26-2
+assets\models\Desert\cactus01\cactus01.obj;BCD7948C-85A-48FB-86-80-72-E-3B-91-52-33
+assets\models\Desert\cactus02\cactus02.obj;79AD0DB5-D7C0-4EC1-AF-A9-41-8F-67-F6-DE-5D
+assets/models/Desert/color atlas.png;43890A27-5632-4220-97-ED-E8-D6-4E-CF-85-72
+assets/textures/desert/Sand054_2K-JPG_Color.jpg;66816013-B187-444C-9B-EB-76-A2-D5-A7-2F-40
+assets/textures/desert/Sand054_2K-JPG_Displacement.jpg;D94E9881-A3F0-4677-94-5C-C2-DB-DF-BC-53-6B
+assets/textures/desert/Sand054_2K-JPG_NormalGL.jpg;757B1FD2-FEBD-4484-87-C3-EB-D6-86-17-99-42
+assets/textures/desert/Sand054_2K-JPG_Roughness.jpg;9AE358A9-FE91-42C6-B7-67-B1-B3-17-DB-5B-E6

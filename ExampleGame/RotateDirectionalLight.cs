@@ -16,9 +16,9 @@ namespace Game
 
         protected override void Update()
         {
-            Quaternion q = Quaternion.FromEuler(axis);
-
-            Transform.Rotation *= q;
+            Vector3 rot = Transform.RotationEulerAngle;
+            rot.X = Time.TotalTime;
+            Transform.RotationEulerAngle = rot;
         }
     }
 }

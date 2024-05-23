@@ -248,18 +248,18 @@ void OctreeNode<T>::DivideAndAdd(ObjectBounding<T>& objectBounding)
     for (size_t i = 0 ; i < m_Child.size(); i++)
     {
         uint32_t current = (0 | (1 << i));
-        Bound octanbound;
-        CreateBoundChild(static_cast<Octans>(current),&octanbound);
+        Bound octanBound;
+        CreateBoundChild(static_cast<Octans>(current),&octanBound);
 
         // if the current octan countain the object bound
-        if (octanbound.Countain(objectBounding.bound))
+        if (octanBound.Countain(objectBounding.bound))
         {
             m_ActiveOctans = static_cast<Octans>(m_ActiveOctans | (1 << i));
             
             if (m_Child[i] == nullptr)
                 m_Child[i] = new OctreeNode();
 
-            m_Child[i]->boudingBox = octanbound;
+            m_Child[i]->boudingBox = octanBound;
             m_Child[i]->parent = this;
             // try adding the current object bound in the valid octan
             hasDivide = true;
