@@ -223,9 +223,9 @@
 			<name>Lantern</name>
 			<m_EntityId>9144D2C0-8CE-41CA-93-B-F-F-A3-A6-32-8D</m_EntityId>
 			<transform>
-				<m_Position>5.3404927 ; 2 ; -4.341519</m_Position>
+				<m_Position>0 ; -0.54832536 ; 0</m_Position>
 				<m_EulerRotation>-1.5707965 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>0.5 ; 0.49996692 ; 0.49996692</m_Scale>
+				<m_Scale>0.5 ; 0.49995825 ; 0.49995825</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="StaticMeshRenderer">
@@ -257,15 +257,9 @@
 					<enabled>true</enabled>
 					<entity>9144D2C0-8CE-41CA-93-B-F-F-A3-A6-32-8D</entity>
 				</1>
-				<2 typeName="ScriptComponent" managedType="Game.Lantern">
-					<MaxRotationAngle>0.7853982</MaxRotationAngle>
-					<RotationSpeed>1</RotationSpeed>
-				</2>
 			</m_Components>
-			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
-			<m_Children>
-				<0>EEDA0633-16D1-4638-85-C5-E9-1C-1D-6A-6E-10</0>
-			</m_Children>
+			<m_Parent>AFDE1069-177D-4A5D-AB-5-64-82-EB-89-C7-C7</m_Parent>
+			<m_Children/>
 		</7>
 		<8>
 			<name>Rammus</name>
@@ -297,7 +291,7 @@
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
 						<m_Animation>7C216888-784A-457B-80-6D-AE-45-8-1D-EE-41</m_Animation>
-						<m_CurrentFrame>791</m_CurrentFrame>
+						<m_CurrentFrame>528</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>
@@ -309,18 +303,6 @@
 			<m_Children/>
 		</8>
 		<9>
-			<name>RotationOrigin</name>
-			<m_EntityId>EEDA0633-16D1-4638-85-C5-E9-1C-1D-6A-6E-10</m_EntityId>
-			<transform>
-				<m_Position>0 ; -1.8088093e-07 ; 1.5175257</m_Position>
-				<m_EulerRotation>1.5707965 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 0.9999681 ; 0.9999681</m_Scale>
-			</transform>
-			<m_Components/>
-			<m_Parent>9144D2C0-8CE-41CA-93-B-F-F-A3-A6-32-8D</m_Parent>
-			<m_Children/>
-		</9>
-		<10>
 			<name>Weapon</name>
 			<m_EntityId>CEE35AD1-3980-4298-AD-2B-48-6C-53-DF-30-53</m_EntityId>
 			<transform>
@@ -351,14 +333,17 @@
 					<enabled>true</enabled>
 					<entity>CEE35AD1-3980-4298-AD-2B-48-6C-53-DF-30-53</entity>
 				</0>
-				<1 typeName="ScriptComponent" managedType="Game.PlayerWeapon"/>
+				<1 typeName="PlayerShootCpp">
+					<enabled>true</enabled>
+					<entity>CEE35AD1-3980-4298-AD-2B-48-6C-53-DF-30-53</entity>
+				</1>
 			</m_Components>
 			<m_Parent>55E1E12F-7B57-4A4E-A6-92-63-AC-40-AA-B3-36</m_Parent>
 			<m_Children>
 				<0>D733C9EE-E38-4D78-83-FC-48-A9-AF-80-E5-4F</0>
 			</m_Children>
-		</10>
-		<11>
+		</9>
+		<10>
 			<name>ShootPoint</name>
 			<m_EntityId>D733C9EE-E38-4D78-83-FC-48-A9-AF-80-E5-4F</m_EntityId>
 			<transform>
@@ -369,8 +354,8 @@
 			<m_Components/>
 			<m_Parent>CEE35AD1-3980-4298-AD-2B-48-6C-53-DF-30-53</m_Parent>
 			<m_Children/>
-		</11>
-		<12>
+		</10>
+		<11>
 			<name>Plane</name>
 			<m_EntityId>A44A61BE-51AA-4167-A5-41-EE-35-8E-BC-FC-53</m_EntityId>
 			<transform>
@@ -415,8 +400,8 @@
 			</m_Components>
 			<m_Parent>CEE35AD1-3980-4298-AD-2B-48-6C-53-DF-30-53</m_Parent>
 			<m_Children/>
-		</12>
-		<13>
+		</11>
+		<12>
 			<name>Ground</name>
 			<m_EntityId>AFAA15E4-F63F-4D23-93-C3-49-12-59-A6-34-3E</m_EntityId>
 			<transform>
@@ -461,8 +446,8 @@
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
-		</13>
-		<14>
+		</12>
+		<13>
 			<name>Tree</name>
 			<m_EntityId>BFF5D416-7E5-4BFB-BF-89-53-16-B3-DF-80-8B</m_EntityId>
 			<transform>
@@ -496,8 +481,8 @@
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
-		</14>
-		<15>
+		</13>
+		<14>
 			<name>Enemy Maplhite</name>
 			<m_EntityId>B52820E-8798-4141-BA-7F-4E-FC-4A-AC-81-A2</m_EntityId>
 			<transform>
@@ -538,6 +523,24 @@
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
+		</14>
+		<15>
+			<name>LanternBase</name>
+			<m_EntityId>AFDE1069-177D-4A5D-AB-5-64-82-EB-89-C7-C7</m_EntityId>
+			<transform>
+				<m_Position>2.7990453 ; 0 ; 0</m_Position>
+				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="ScriptComponent" managedType="Game.Lantern">
+					<RotationSpeed>1</RotationSpeed>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children>
+				<0>9144D2C0-8CE-41CA-93-B-F-F-A3-A6-32-8D</0>
+			</m_Children>
 		</15>
 	</m_Entities>
 </Scene>
