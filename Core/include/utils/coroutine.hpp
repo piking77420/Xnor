@@ -51,18 +51,21 @@ public:
         /// @brief Called when @c co_return is used in a Coroutine body. Sets @c finished to @c true.
         XNOR_ENGINE void return_void();
 
-        /// @brief Converts a AwaitType value to an Awaitable. Called when @c co_await is used with an AwaitType value.
+        /// @brief Converts a @c AwaitType value to an @c Awaitable. Called when @c co_await is used with an @c AwaitType value.
         XNOR_ENGINE Awaitable await_transform(const AwaitType& duration);
+
+        /// @brief Converts a @c float_t value to an @c Awaitable. Called when @c co_await is used with a @c float_t value.
+        XNOR_ENGINE Awaitable await_transform(float_t duration);
     };
     
 private:
     struct Awaitable
     {
-        /// @brief Returns false if await_suspend should be called
+        /// @brief Returns @c false if @c await_suspend should be called
         XNOR_ENGINE bool_t await_ready();
 
-        /// @brief Effectively calls @c std::this_thread::sleep with promise_type::awaitValue
-        XNOR_ENGINE bool_t await_suspend(std::coroutine_handle<promise_type> h);
+        /// @brief Empty implementation
+        XNOR_ENGINE void await_suspend(std::coroutine_handle<promise_type>);
 
         /// @brief Empty implementation
         XNOR_ENGINE void await_resume();
