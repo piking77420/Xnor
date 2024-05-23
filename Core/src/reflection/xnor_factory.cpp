@@ -15,9 +15,6 @@
 #include "scene/component/image.hpp"
 #include "scene/component/player_shoot_cpp.hpp"
 #include "scene/component/skinned_mesh_renderer.hpp"
-#include "scene/component/test_component.hpp"
-#include "scene/component/test_component_animation.hpp"
-#include "scene/component/test_component_physics.hpp"
 #include "scene/component/text_component.hpp"
 
 using namespace XnorCore;
@@ -109,11 +106,9 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<Component>();
     
     RegisterType<SkinnedMeshRenderer>();
-    RegisterType<TestComponentAnimation>();
     RegisterType<PlayerShootCpp>();
     RegisterType<StaticMeshRenderer>();
     RegisterType<DirectionalLight>();
-    RegisterType<TestComponent>();
     RegisterType<PointLight>();
     RegisterType<Light>();
     RegisterType<SpotLight>();
@@ -122,7 +117,6 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<BoxCollider>();
     RegisterType<SphereCollider>();
     RegisterType<CapsuleCollider>();
-    RegisterType<TestComponentPhysics>();
     RegisterType<CameraComponent>();
 
     RegisterType<AudioListener>();

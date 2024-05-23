@@ -73,7 +73,7 @@ public:
 
     XNOR_ENGINE static void Reset();
 
-    // Retrun A array indexOf WindowInfo
+    // Return A array indexOf WindowInfo
     XNOR_ENGINE static uint32_t GetBindingId();
 
     XNOR_ENGINE static void UpdateBoundWindowInfo(uint32_t binding, const BoundWindowInfo& windowInfo);

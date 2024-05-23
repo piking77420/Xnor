@@ -1,14 +1,16 @@
 ﻿#pragma once
+
 #include "core.hpp"
 #include "gui_component.hpp"
 #include "image.hpp"
-#include "Maths/vector2i.hpp"
 #include "utils/event.hpp"
 
 BEGIN_XNOR_CORE
+
 class Button : public Component
 {
     REFLECTABLE_IMPL(Button)
+
 public:
     Image* componentTarget { nullptr };
 
@@ -26,5 +28,5 @@ END_XNOR_CORE
 
 REFL_AUTO(
     type(XnorCore::Button, bases<XnorCore::Component>),
-    field(onClick,XnorCore::Reflection::NotSerializable())
+    field(onClick, XnorCore::Reflection::NotSerializable())
 );

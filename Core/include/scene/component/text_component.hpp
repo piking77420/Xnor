@@ -10,6 +10,11 @@ BEGIN_XNOR_CORE
 class TextComponent : public GuiComponent
 {
 public:
+    TextComponent() = default;
+    ~TextComponent() override = default;
+
+    DEFAULT_COPY_MOVE_OPERATIONS(TextComponent)
+    
     Pointer<Font> font;
 
     std::string text = "text";
@@ -17,12 +22,6 @@ public:
     Color color = Color::White();
     
     float_t fontSize = 1.f;
-
-    DEFAULT_COPY_MOVE_OPERATIONS(TextComponent)
-
-    TextComponent() = default;
-
-    ~TextComponent() override = default;
 };
 
 END_XNOR_CORE

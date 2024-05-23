@@ -91,7 +91,7 @@ public:
 
     /// @brief Removes a specified Component
     /// @param component Component instance
-    void RemoveComponent(Component* component);
+    void RemoveComponent(const Component* component);
 
     /// @brief Gets the Guid of the entity
     /// @return Guid

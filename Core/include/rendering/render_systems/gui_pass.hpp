@@ -47,7 +47,7 @@ private:
     
     XNOR_ENGINE void RenderImage(Vector2 viewPortSize) const;
     
-    XNOR_ENGINE void DrawImage(const Image* imagComponent,Vector2 viewPortSize) const;
+    XNOR_ENGINE void DrawImage(const Image* imageComponent,Vector2 viewPortSize) const;
 };
 
 END_XNOR_CORE

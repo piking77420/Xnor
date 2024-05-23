@@ -626,9 +626,6 @@
     <ClInclude Include="include\scene\component\script_component.hpp" />
     <ClInclude Include="include\scene\component\skinned_mesh_renderer.hpp" />
     <ClInclude Include="include\scene\component\static_mesh_renderer.hpp" />
-    <ClInclude Include="include\scene\component\test_component.hpp" />
-    <ClInclude Include="include\scene\component\test_component_animation.hpp" />
-    <ClInclude Include="include\scene\component\test_component_physics.hpp" />
     <ClInclude Include="include\scene\component\text_component.hpp" />
     <ClInclude Include="include\scene\entity.hpp" />
     <ClInclude Include="include\scene\scene.hpp" />
@@ -757,7 +754,6 @@
     <ClCompile Include="src\scene\component\camera_component.cpp" />
     <ClCompile Include="src\scene\component\gui_component.cpp" />
     <ClCompile Include="src\scene\component\image.cpp" />
-    <ClCompile Include="src\scene\component\mesh_renderer.cpp" />
     <ClCompile Include="src\scene\component\player_shoot_cpp.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -836,9 +832,6 @@
     <ClCompile Include="src\scene\component\script_component.cpp" />
     <ClCompile Include="src\scene\component\skinned_mesh_renderer.cpp" />
     <ClCompile Include="src\scene\component\static_mesh_renderer.cpp" />
-    <ClCompile Include="src\scene\component\test_component.cpp" />
-    <ClCompile Include="src\scene\component\test_component_animation.cpp" />
-    <ClCompile Include="src\scene\component\test_component_physics.cpp" />
     <ClCompile Include="src\scene\component\text_component.cpp" />
     <ClCompile Include="src\scene\entity.cpp" />
     <ClCompile Include="src\scene\scene.cpp" />

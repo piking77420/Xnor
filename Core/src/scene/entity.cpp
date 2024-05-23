@@ -89,7 +89,7 @@ void Entity::AddComponent(Component* const component)
     }
 }
 
-void Entity::RemoveComponent(Component* component)
+void Entity::RemoveComponent(const Component* const component)
 {
     for (size_t i = 0; i < m_Components.GetSize(); i++)
     {

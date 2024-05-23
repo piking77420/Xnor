@@ -6,7 +6,7 @@
 #include "resource/model.hpp"
 #include "scene/component.hpp"
 
-/// @file mesh_renderer.hpp
+/// @file static_mesh_renderer.hpp
 /// @brief Defines the XnorCore::MeshRenderer class.
 
 BEGIN_XNOR_CORE
@@ -17,7 +17,6 @@ class StaticMeshRenderer : public Component
     REFLECTABLE_IMPL(StaticMeshRenderer)
     
 public:
-    
     /// @brief @ref Mesh
     Pointer<Mesh> mesh;
 
@@ -41,7 +40,7 @@ END_XNOR_CORE
 /// @private
 REFL_AUTO(
     type(XnorCore::StaticMeshRenderer, bases<XnorCore::Component>),
-    //field(model),
+    // field(model),
     field(mesh),
     field(material),
     field(drawModelAabb)

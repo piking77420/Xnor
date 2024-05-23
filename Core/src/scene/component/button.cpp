@@ -25,7 +25,7 @@ void Button::ButtonUpdate() const
     std::vector<Input::BoundWindowInfo> windowBindedInfos;
     Input::GetWindowBoundInfo(&windowBindedInfos);
 
-    // Look for each window if we ckeck on the boutton bounding box
+    // Look for each window if we click on the button bounding box
     for (const Input::BoundWindowInfo& windowInfo : windowBindedInfos)
     {
         if (!windowInfo.isRendering)
@@ -39,15 +39,14 @@ void Button::ButtonUpdate() const
         const Vector2 halfSize = componentTarget->size;
         
         const bool_t xAxis = mousePosWindow.x >= (componentTarget->screenTransform.x - halfSize.x) && 
-                       mousePosWindow.x <= (componentTarget->screenTransform.x + halfSize.x);
+                             mousePosWindow.x <= (componentTarget->screenTransform.x + halfSize.x);
         
         const bool_t yAxis = mousePosWindow.y >= (componentTarget->screenTransform.y - halfSize.y) &&
-                     mousePosWindow.y <= (componentTarget->screenTransform.y + halfSize.y);
+                             mousePosWindow.y <= (componentTarget->screenTransform.y + halfSize.y);
         
         if (yAxis && xAxis)
         {
             onClick.Invoke();
         }
-        
     }
 }
