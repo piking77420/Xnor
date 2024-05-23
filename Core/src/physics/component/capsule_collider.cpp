@@ -6,6 +6,13 @@
 
 using namespace XnorCore;
 
+void CapsuleCollider::Begin()
+{
+    Collider::Begin();
+    //SetFriction(m_Friction);
+    //SetMass(m_Mass);
+}
+
 void CapsuleCollider::Awake()
 {
     const Transform& t = entity->transform;
@@ -16,10 +23,14 @@ void CapsuleCollider::Awake()
         .rotation = t.GetRotation(),
         .scaling = t.GetScale(),
         .isTrigger = m_IsTrigger,
-        .isStatic = m_IsStatic
+        .isStatic = m_IsStatic,
+        .offsetShape = center
     };
 
     m_BodyId = PhysicsWorld::CreateCapsule(info, height, radius);
+    PrePhysics();
+
+
 }
 
 void CapsuleCollider::Update()

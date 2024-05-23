@@ -26,6 +26,8 @@ public:
         ConstraintRotation = 1 << 1,
     };
 
+    Vector3 center = Vector3::Zero();
+
     XNOR_ENGINE Collider(); 
     XNOR_ENGINE ~Collider() override;
 
@@ -58,6 +60,9 @@ public:
     /// @brief Set the friction of the body
     /// @param friction friction
     XNOR_ENGINE void SetFriction(float_t friction);
+
+    XNOR_ENGINE void SetMass(float_t mass);
+
 
     /// @brief Get the friction of the body
     /// @param value value
@@ -105,14 +110,18 @@ protected:
     bool_t m_IsActive = false;
 
     float_t m_Friction = 0.f;
+
+    float_t m_Mass = 1.f;
+
 };
 
 END_XNOR_CORE
 
 REFL_AUTO(type(XnorCore::Collider, bases<XnorCore::Component>),
+    field(center),
     field(constraints, XnorCore::Reflection::EnumFlags()),
     field(m_Friction,
-        XnorCore::Reflection::Range(0.f, 5.f),
+        XnorCore::Reflection::Range(0.f, 10000.f),
         XnorCore::Reflection::ModifiedCallback<XnorCore::Collider>(
             [](XnorCore::Collider* collider)
             {
@@ -120,6 +129,15 @@ REFL_AUTO(type(XnorCore::Collider, bases<XnorCore::Component>),
             }
         )
     ),
+    field(m_Mass,
+            XnorCore::Reflection::Range(0.f, 10000.f),
+            XnorCore::Reflection::ModifiedCallback<XnorCore::Collider>(
+                [](XnorCore::Collider* collider)
+                {
+                    collider->SetMass(collider->m_Mass);
+                }
+            )
+        ),
     field(m_IsStatic),
     field(m_IsTrigger),
     field(m_IsActive, XnorCore::Reflection::ReadOnly()),

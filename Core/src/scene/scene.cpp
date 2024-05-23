@@ -58,6 +58,15 @@ void Scene::OnRendering()
     }
 }
 
+void Scene::PopEnitiesToDelete()
+{
+    for (size_t i = 0 ;i < m_StackDestroyEntities.size(); i++)
+    {
+        DestroyEntity(m_StackDestroyEntities.top());
+        m_StackDestroyEntities.pop();
+    } 
+}
+
 Entity* Scene::FindEntityById(const Guid& xnorGuid)
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)
@@ -102,7 +111,7 @@ Entity* Scene::CreateEntity(const std::string& name, Entity* parent)
     return e;
 }
 
-void Scene::DestroyEntity(Entity* const entity)
+void Scene::DestroyEntityImmediate(Entity* const entity)
 {
     DestroyEntityChildren(entity);
     
@@ -132,6 +141,11 @@ uint32_t Scene::GetEntityIndex(const Entity* const entity) const
     }
 
     return std::numeric_limits<uint32_t>::max();
+}
+
+void Scene::DestroyEntity(Entity* entity)
+{
+    m_StackDestroyEntities.push(entity);
 }
 
 void Scene::DestroyEntityChildren(Entity* const entity)

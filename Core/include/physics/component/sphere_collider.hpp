@@ -12,6 +12,7 @@ BEGIN_XNOR_CORE
 /// @brief Sphere collider
 class SphereCollider : public Collider
 {
+private:
     REFLECTABLE_IMPL(SphereCollider)
 
 public:
@@ -26,6 +27,8 @@ public:
     XNOR_ENGINE void Begin() override;
     /// @brief Update function
     XNOR_ENGINE void Update() override;
+
+    XNOR_ENGINE void Awake() override;
 
     XNOR_ENGINE void SetRadius(float_t radius);
 

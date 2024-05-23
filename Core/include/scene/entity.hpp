@@ -91,7 +91,7 @@ public:
 
     /// @brief Removes a specified Component
     /// @param component Component instance
-    void RemoveComponent(const Component* component);
+    XNOR_ENGINE void RemoveComponent(const Component* component);
 
     /// @brief Gets the Guid of the entity
     /// @return Guid
@@ -168,10 +168,13 @@ public:
     /// of nested children.
     XNOR_ENGINE Entity* Clone() const;
 
+    XNOR_ENGINE void LookAt(const Vector3& sourcePoint, const Vector3& at, const Vector3& up = Vector3::UnitY());
+
     /// @brief Compares 2 entities using their Guid
     /// @param entity Other
     /// @return Equals
     XNOR_ENGINE bool_t operator==(const Entity& entity) const;
+    
 
 #ifdef SWIG_ONLY
     const List<Component*>& GetComponents() const;

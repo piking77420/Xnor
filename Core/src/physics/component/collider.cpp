@@ -9,7 +9,7 @@ using namespace XnorCore;
 
 Collider::Collider()
 {
-    // AddDebugEvents();
+    //AddDebugEvents();
 }
 
 Collider::~Collider()
@@ -34,9 +34,9 @@ void Collider::PrePhysics()
 
     if (m_IsActive)
     {
-        PhysicsWorld::SetPosition(m_BodyId, entity->transform.GetPosition());
+        PhysicsWorld::SetPosition(m_BodyId, entity->transform.GetPosition() + center);
         PhysicsWorld::SetRotation(m_BodyId, entity->transform.GetRotation().Normalized());
-    }
+    } 
 }
 
 void Collider::PostPhysics()
@@ -44,14 +44,19 @@ void Collider::PostPhysics()
     if (!m_IsActive)
         return;
 
+    if (m_IsTrigger)
+        return;
     
     if (!(constraints & ConstraintPosition))
     {
-        entity->transform.SetPosition(PhysicsWorld::GetBodyPosition(m_BodyId));
+        entity->transform.SetPosition(PhysicsWorld::GetBodyPosition(m_BodyId) - center);
     }
 
     if (!(constraints & ConstraintRotation))
-        entity->transform.SetRotationEulerAngle(Quaternion::ToEuler(PhysicsWorld::GetBodyRotation(m_BodyId)));
+    {
+        
+        entity->transform.SetRotation((PhysicsWorld::GetBodyRotation(m_BodyId)).Normalized());
+    }
 }
 
 bool_t Collider::IsTrigger() const
@@ -73,6 +78,11 @@ void Collider::SetFriction(const float_t friction)
 {
     m_Friction = friction;
     PhysicsWorld::SetFriction(m_BodyId, friction);
+}
+
+void Collider::SetMass(float_t mass)
+{
+    PhysicsWorld::SetInverseMass(m_BodyId,1.f/mass);
 }
 
 float_t Collider::GetFriction() const

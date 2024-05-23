@@ -56,8 +56,6 @@
             }
         }
     }
-
-    public void RemoveComponent(Component c) => GetComponents().Remove(c);
     
     public bool Equals(Entity other) => OperatorEq(other);
 

@@ -12,6 +12,8 @@ BEGIN_XNOR_CORE
 /// @brief Capsule collider
 class CapsuleCollider : public Collider
 {
+public:
+
 private:
     REFLECTABLE_IMPL(CapsuleCollider)
 
@@ -30,6 +32,8 @@ public:
     /// @brief Update function
     XNOR_ENGINE void Update() override;
     
+    XNOR_ENGINE void Begin() override;
+
 };
 
 END_XNOR_CORE
