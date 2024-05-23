@@ -12,7 +12,7 @@ void GuiPass::RenderGui(const Scene& scene, const Vector2i& viewportSize) const
     
     scene.GetAllComponentsOfType<Image>(&m_Images);
     scene.GetAllComponentsOfType<TextComponent>(&m_TextComponents);
-    const Matrix matrixProj = Matrix::Orthographic(0.f, size.x, 0.f ,size.y, 0.1f, 1000.f);
+    const Matrix matrixProj = Matrix::Orthographic(0.f, size.x, 0.f, size.y, 0.1f, 1000.f);
 
     m_FontShader->Use();
     m_FontShader->SetMat4("projection", matrixProj); 
@@ -47,7 +47,7 @@ void GuiPass::Init()
     m_FontShader->SetBlendFunction(blendFunction);
     m_FontShader->CreateInInterface();
     m_FontShader->Use();
-    m_FontShader->SetInt("text",0);
+    m_FontShader->SetInt("text", 0);
     m_FontShader->Unuse();
     
     m_Quad = ResourceManager::Get<Model>("assets/models/quad.obj");
@@ -59,19 +59,20 @@ void GuiPass::InitSliderQuad()
 {
     m_FontQuadVao.Init();
     m_FontQuadVbo.Init();
-    const Vector4 vertices[6] = {
-        // Vertex coordinates   // Texture coordinates
-        { 0.5f,  0.5f,       1.0f, 1.0f}, 
-        { 0.5f, -0.5f,       1.0f, 0.0f},  
-        {-0.5f, -0.5f,       0.f,  0.0f},
+
+    constexpr std::array vertices = {
+        // Vertex coordinates       // Texture coordinates
+        Vector4{ 0.5f,  0.5f,       1.0f, 1.0f}, 
+        Vector4{ 0.5f, -0.5f,       1.0f, 0.0f},  
+        Vector4{-0.5f, -0.5f,       0.f,  0.0f},
         
-        { 0.5f,  0.5f,       1.0f, 1.0f},
-        {-0.5f, -0.5f,       0.0f, 0.0f}, 
-        {-0.5f,  0.5f,       0.0f, 1.0f}
+        Vector4{ 0.5f,  0.5f,       1.0f, 1.0f},
+        Vector4{-0.5f, -0.5f,       0.0f, 0.0f}, 
+        Vector4{-0.5f,  0.5f,       0.0f, 1.0f}
     };
 
     constexpr size_t size = sizeof(vertices);
-    m_FontQuadVbo.Allocate(size, &vertices[0].x, BufferUsage::DynamicDraw);
+    m_FontQuadVbo.Allocate(size, vertices.data()->Raw(), BufferUsage::DynamicDraw);
     
     constexpr VertexAttributeBinding vertexAttributeBinding =
     {
@@ -102,18 +103,18 @@ void GuiPass::InitSliderQuad()
 
 void GuiPass::ResetQuad() const
 {
-    const Vector4 vertices[6] = {
-        // Vertex coordinates   // Texture coordinates
-        { 0.5f,  0.5f,       1.0f, 1.0f}, 
-        { 0.5f, -0.5f,       1.0f, 0.0f},  
-        {-0.5f, -0.5f,       0.f,  0.0f},
+    constexpr std::array vertices = {
+        // Vertex coordinates       // Texture coordinates
+        Vector4{ 0.5f,  0.5f,       1.0f, 1.0f}, 
+        Vector4{ 0.5f, -0.5f,       1.0f, 0.0f},  
+        Vector4{-0.5f, -0.5f,       0.f,  0.0f},
         
-        { 0.5f,  0.5f,       1.0f, 1.0f},
-        {-0.5f, -0.5f,       0.0f, 0.0f}, 
-        {-0.5f,  0.5f,       0.0f, 1.0f}
+        Vector4{ 0.5f,  0.5f,       1.0f, 1.0f},
+        Vector4{-0.5f, -0.5f,       0.0f, 0.0f}, 
+        Vector4{-0.5f,  0.5f,       0.0f, 1.0f}
     };
     
-    m_FontQuadVbo.UpdateData(0,sizeof(vertices),&vertices);
+    m_FontQuadVbo.UpdateData(0, sizeof(vertices), vertices.data());
 }
 
 void GuiPass::RenderText() const
@@ -128,7 +129,7 @@ void GuiPass::RenderText() const
         if (!textComponent->font.IsValid())
             continue;
 
-        m_FontShader->SetVec3("textColor",static_cast<Vector3>(textComponent->color));
+        m_FontShader->SetVec3("textColor", static_cast<Vector3>(textComponent->color));
         float_t x = textComponent->screenTransform.x;
         const float_t y = textComponent->screenTransform.y;
 
@@ -142,17 +143,17 @@ void GuiPass::RenderText() const
             const float_t xPos = x + (static_cast<float_t>(ch.bearing.x) * scale.x);
             const float_t yPos = y - (static_cast<float_t>(ch.size.y - ch.bearing.y) * scale.y);
 
-            const float_t w = (static_cast<float_t>(ch.size.x) * scale.x);
-            const float_t h = (static_cast<float_t>(ch.size.y) * scale.y );
+            const float_t w = static_cast<float_t>(ch.size.x) * scale.x;
+            const float_t h = static_cast<float_t>(ch.size.y) * scale.y;
             
             const float_t vertices[6][4] = {
-                { xPos,     yPos + h,   0.0f, 0.0f },            
+                { xPos,     yPos + h,   0.0f, 0.0f },
                 { xPos,     yPos,       0.0f, 1.0f },
                 { xPos + w, yPos,       1.0f, 1.0f },
 
                 { xPos,     yPos + h,   0.0f, 0.0f },
                 { xPos + w, yPos,       1.0f, 1.0f },
-                { xPos + w, yPos + h,   1.0f, 0.0f }           
+                { xPos + w, yPos + h,   1.0f, 0.0f }
             };
 
             ch.texture->BindTexture(0);
@@ -168,27 +169,26 @@ void GuiPass::RenderText() const
     m_FontQuadVao.UnBindBuffer();
 }
 
-
 void GuiPass::RenderImage(const Vector2 viewPortSize) const
 {
     for (const Image* image : m_Images)
         DrawImage(image, viewPortSize);
 }
 
-void GuiPass::DrawImage(const Image* imagComponent, Vector2 viewPortSize) const
+void GuiPass::DrawImage(const Image* const imageComponent, const Vector2 viewPortSize) const
 {
-    if (!imagComponent->enabled)
+    if (!imageComponent->enabled)
         return;
         
-    if (!imagComponent->image.IsValid())
+    if (!imageComponent->image.IsValid())
         return;
 
-    imagComponent->image->BindTexture(0);
-    Vector3 pos = static_cast<Vector3>(imagComponent->screenTransform * viewPortSize);
+    imageComponent->image->BindTexture(0);
+    Vector3 pos = static_cast<Vector3>(imageComponent->screenTransform * viewPortSize);
     pos.z = -1.f;
     pos.y = viewPortSize.y - pos.y; // Flip y axis to mach mouse position
-    m_GuiShader->SetMat4("model",Matrix::Trs(pos,Quaternion::Identity(),static_cast<Vector3>(imagComponent->size)));
+    m_GuiShader->SetMat4("model", Matrix::Trs(pos, Quaternion::Identity(), static_cast<Vector3>(imageComponent->size)));
 
     // DRAW QUAD
-    Rhi::DrawModel(DrawMode::Triangles,m_Quad->GetId());
+    Rhi::DrawModel(DrawMode::Triangles, m_Quad->GetId());
 }

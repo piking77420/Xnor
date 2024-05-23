@@ -23,7 +23,6 @@ void Application::Exit(const int32_t code)
 Application::Application(const int32_t, const char_t* const* const argv)
 {
     applicationInstance = this;
-	
 
 	executablePath = argv[0];
 

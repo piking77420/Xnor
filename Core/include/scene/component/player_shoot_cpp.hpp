@@ -5,22 +5,22 @@
 #include "scene/component.hpp"
 
 BEGIN_XNOR_CORE
+
 class PlayerShootCpp : public Component
 {
     REFLECTABLE_IMPL(PlayerShootCpp)
+
 public:
-    DEFAULT_COPY_MOVE_OPERATIONS(PlayerShootCpp)
-
     PlayerShootCpp() = default;
+    ~PlayerShootCpp() override = default;
 
-    ~PlayerShootCpp() = default;
+    DEFAULT_COPY_MOVE_OPERATIONS(PlayerShootCpp)
 
     void Awake() override;
     
     void Begin() override;
     
     void Update() override;
-    
     
 private:
     Entity* parent = nullptr;
@@ -34,6 +34,7 @@ private:
 };
 
 END_XNOR_CORE
+
 /// @private
 REFL_AUTO(
     type(XnorCore::PlayerShootCpp, bases<XnorCore::Component>)

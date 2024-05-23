@@ -91,7 +91,7 @@ public:
 
     /// @brief Removes a specified Component
     /// @param component Component instance
-    XNOR_ENGINE void RemoveComponent(Component* component);
+    XNOR_ENGINE void RemoveComponent(const Component* component);
 
     /// @brief Gets the Guid of the entity
     /// @return Guid

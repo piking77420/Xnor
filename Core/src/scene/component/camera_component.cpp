@@ -6,19 +6,18 @@ using namespace  XnorCore;
 
 CameraComponent::CameraComponent()
 {
-    Application::applicationInstance->gameViewPort->camera = &this->camera;
+    Application::applicationInstance->gameViewPort->camera = &camera;
 }
 
 CameraComponent::~CameraComponent()
 {
-    if (Application::applicationInstance->gameViewPort->camera == &this->camera)
+    if (Application::applicationInstance->gameViewPort->camera == &camera)
         Application::applicationInstance->gameViewPort->camera = nullptr;
 }
 
 void CameraComponent::Update()
 {
     Component::Update();
-    
 }
 
 void CameraComponent::Begin()

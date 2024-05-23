@@ -14,9 +14,7 @@
 BEGIN_XNOR_CORE
 
 /// @brief Component that defines a mesh to render
-class
-
-SkinnedMeshRenderer final : public Component
+class SkinnedMeshRenderer final : public Component
 {
     REFLECTABLE_IMPL(SkinnedMeshRenderer)
 

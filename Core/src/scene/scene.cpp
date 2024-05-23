@@ -122,7 +122,6 @@ void Scene::DestroyEntityImmediate(Entity* const entity)
 
 bool_t Scene::HasEntity(const Entity* const entity) const
 {
-    // TODO fix this thing
     return m_Entities.Contains(const_cast<Entity* const>(entity));
 }
 
@@ -131,7 +130,7 @@ const List<Entity*>& Scene::GetEntities() const
     return m_Entities;
 }
 
-uint32_t Scene::GetEntityIndex(const Entity* entity) const
+uint32_t Scene::GetEntityIndex(const Entity* const entity) const
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)
     {

@@ -120,7 +120,7 @@ void Input::HandleJoyStickCallBack(const int32_t jid, const int32_t event)
 }
 void Input::HandleGamepad()
 {
-    for (uint32_t i = 0; i < GamepadMax ; i++)
+    for (uint32_t i = 0; i < GamepadMax; i++)
     {
         if (!m_Gamepads[i].isConnected)
             continue;
@@ -159,7 +159,6 @@ void Input::HandleGamepad()
                     statuses.at(static_cast<size_t>(GamepadButtonStatus::Release)) = false;
                     statuses.at(static_cast<size_t>(GamepadButtonStatus::Down)) = true;
                     statuses.at(static_cast<size_t>(GamepadButtonStatus::Pressed)) = true;
-                    
                     break;
                 
                 default:
@@ -173,7 +172,6 @@ void Input::ResetKey()
 {
     glfwSetKeyCallback(m_WindowHandle, HandleKeyboard);
     glfwSetMouseButtonCallback(m_WindowHandle, HandleMouseButton);
-
 
     KeyStatuses defaultKeys;
     defaultKeys.fill(false);
