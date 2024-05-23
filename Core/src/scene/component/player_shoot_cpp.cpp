@@ -102,7 +102,7 @@ void PlayerShootCpp::Begin()
 
 void PlayerShootCpp::Update()
 {
-    if (Input::GetMouseButton(MouseButton::Right, MouseButtonStatus::Pressed))
+    if (Input::GetMouseButton(MouseButton::Right, MouseButtonStatus::Down))
         Shoot();
 
     UpdateBullets();

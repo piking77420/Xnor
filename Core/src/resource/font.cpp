@@ -49,11 +49,7 @@ void Font::CreateInInterface()
 
         const Vector2i glyphSize = Vector2i(static_cast<int32_t>(face->glyph->bitmap.width), static_cast<int32_t>(face->glyph->bitmap.rows));
         
-        if (glyphSize == Vector2i::Zero())
-        {
-            Logger::LogWarning("Character {} of the font {} has a size of {}", c, m_File->GetPath().generic_string(), glyphSize);
-            continue;
-        }
+      
 
         TextureCreateInfo createInfo =
         {

@@ -35,6 +35,8 @@ void EnemyCpp::OnTriggerStay(Collider* coll1, Collider* coll2, const CollisionDa
     if (coll2->entity->name != "Player")
         return;
 
+    LookAtPlayer();
+
     if (m_IsAttacking)
     {
         capsule->SetLinearVelocity(Vector3::Zero());
@@ -49,6 +51,7 @@ void EnemyCpp::OnTriggerStay(Collider* coll1, Collider* coll2, const CollisionDa
     {
         Move();
     }
+
 }
 
 void EnemyCpp::Move()
@@ -56,26 +59,26 @@ void EnemyCpp::Move()
     if (entity == nullptr)
         return;
     
-    const Vector3 pos1 = GetTransform().GetPosition();
-    const Vector3 pos2 = player->transform.GetPosition();
-
-    const Vector3 fow = (pos2 - pos1).Normalized();
-
-    Vector3 fowLook = fow;
-    fowLook.y = 0.f; 
-
-    const Vector3 targetPosition = pos1 + fowLook;
-
-    entity->LookAt(pos1, targetPosition);
-
     // Update velocity
     const Vector3 current_velocity = capsule->GetLinearVelocity();
-    Vector3 desired_velocity = fow * m_MoveSpeed;
+    Vector3 desired_velocity = m_FwdVector * m_MoveSpeed;
     desired_velocity.y = current_velocity.y;
     const Vector3 new_velocity = 0.75f * current_velocity + 0.25f * desired_velocity;
     
     // Update position
     capsule->SetLinearVelocity(new_velocity);
+}
+
+void EnemyCpp::LookAtPlayer()
+{
+    const Vector3 pos1 = GetTransform().GetPosition();
+    const Vector3 pos2 = player->transform.GetPosition();
+    const Vector3 fow = (pos2 - pos1).Normalized();
+    Vector3 fowLook = fow;
+    fowLook.y = 0.f;
+    m_FwdVector = fow;
+    const Vector3 targetPosition = pos1 + fowLook;
+    entity->LookAt(pos1, targetPosition);
 }
 
 bool_t EnemyCpp::IsInRange() const

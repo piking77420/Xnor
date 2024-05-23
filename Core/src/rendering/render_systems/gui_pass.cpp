@@ -136,10 +136,6 @@ void GuiPass::RenderText() const
         // update VBO for each character
         for (std::string::const_iterator c = textComponent->text.begin(); c != textComponent->text.end(); c++)
         {
-            // Skip Space
-            if (*c == ' ')
-                continue;
-            
             const Font::Character& ch = textComponent->font->GetGlyphByChar(*c);
 
             const Vector2 scale = textComponent->size * textComponent->fontSize;

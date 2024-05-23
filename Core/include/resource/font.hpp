@@ -50,3 +50,6 @@ private:
 };
 
 END_XNOR_CORE
+
+REFL_AUTO(type(XnorCore::Font, bases<XnorCore::Resource>))
+

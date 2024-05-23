@@ -55,6 +55,8 @@ private:
     float_t m_LifePoint = 100.f;
     
     bool_t m_IsInvincible = false;
+
+    Vector3 m_FwdVector;
     
     XNOR_ENGINE void OnDetectionEnter(Collider* coll1, Collider* coll2, const CollisionData& data);
 
@@ -63,6 +65,9 @@ private:
     XNOR_ENGINE void OnTriggerStay(Collider* coll1, Collider* coll2, const CollisionData& data);
     
     XNOR_ENGINE void Move();
+
+    // Return The fowardVector
+    XNOR_ENGINE void LookAtPlayer();
 
     XNOR_ENGINE bool_t IsInRange() const;
 

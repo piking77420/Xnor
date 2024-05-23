@@ -278,7 +278,7 @@
 				<2 typeName="SphereCollider">
 					<radius>15</radius>
 					<center>0 ; 0 ; 0</center>
-					<constraints>ConstraintPosition|ConstraintRotation</constraints>
+					<constraints>ConstraintRotation</constraints>
 					<m_Friction>0</m_Friction>
 					<m_Mass>1</m_Mass>
 					<m_IsStatic>false</m_IsStatic>
@@ -500,7 +500,7 @@
 			<name>Enemy Maplhite</name>
 			<m_EntityId>B52820E-8798-4141-BA-7F-4E-FC-4A-AC-81-A2</m_EntityId>
 			<transform>
-				<m_Position>10.369689 ; -4.6201406 ; 25.89512</m_Position>
+				<m_Position>10.211577 ; -4.6201406 ; 25.89512</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>0.02 ; 0.02 ; 0.02</m_Scale>
 			</transform>
@@ -550,7 +550,7 @@
 				<3 typeName="SphereCollider">
 					<radius>19.7</radius>
 					<center>0 ; 0 ; 0</center>
-					<constraints>ConstraintPosition|ConstraintRotation</constraints>
+					<constraints>ConstraintRotation</constraints>
 					<m_Friction>0</m_Friction>
 					<m_Mass>0</m_Mass>
 					<m_IsStatic>false</m_IsStatic>
@@ -643,6 +643,104 @@
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
 		</16>
+		<17>
+			<name>Music</name>
+			<m_EntityId>BBA687CE-AB2E-4089-9F-A5-11-15-EB-71-C8-57</m_EntityId>
+			<transform>
+				<m_Position>0 ; 0 ; 0</m_Position>
+				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="AudioSource">
+					<audioTrack>42D67A4F-15F5-41A8-A5-E1-E2-87-B1-F6-8F-E5</audioTrack>
+					<m_Volume>2.527</m_Volume>
+					<m_Pitch>1</m_Pitch>
+					<m_Looping>true</m_Looping>
+					<m_PlayOnBegin>true</m_PlayOnBegin>
+					<enabled>true</enabled>
+					<entity>BBA687CE-AB2E-4089-9F-A5-11-15-EB-71-C8-57</entity>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</17>
+		<18>
+			<name>GRAAGY</name>
+			<m_EntityId>C25BB243-655B-4A9B-9A-11-F5-6E-D1-E2-81-B1</m_EntityId>
+			<transform>
+				<m_Position>2.4644802 ; -4.9159856 ; 48.014088</m_Position>
+				<m_EulerRotation>3.1415925 ; 0.12204329 ; 3.1415925</m_EulerRotation>
+				<m_Scale>0.02000015 ; 0.02 ; 0.02000015</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="SkinnedMeshRenderer">
+					<mesh>205AC0EA-9C5F-42F7-A0-CD-B7-60-59-CE-55-53</mesh>
+					<material>
+						<materialType>Opaque</materialType>
+						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
+						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
+						<metallic>0</metallic>
+						<roughness>0</roughness>
+						<reflectance>0</reflectance>
+						<emissive>0</emissive>
+						<ambientOcclusion>0</ambientOcclusion>
+						<albedoTexture>7CB90EB1-E511-4045-A8-75-E6-F-12-24-F9-6D</albedoTexture>
+						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
+						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
+						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
+						<ambientOcclusionTexture>0-0-0-0-0-0-0-0-0-0-0</ambientOcclusionTexture>
+						<emissiveTexture>0-0-0-0-0-0-0-0-0-0-0</emissiveTexture>
+					</material>
+					<drawModelAabb>false</drawModelAabb>
+					<m_Animator>
+						<m_Animation>0-0-0-0-0-0-0-0-0-0-0</m_Animation>
+						<m_CurrentFrame>0</m_CurrentFrame>
+						<m_PlaySpeed>1</m_PlaySpeed>
+						<m_CrossFadeT>0</m_CrossFadeT>
+					</m_Animator>
+					<enabled>true</enabled>
+					<entity>C25BB243-655B-4A9B-9A-11-F5-6E-D1-E2-81-B1</entity>
+				</0>
+				<1 typeName="CapsuleCollider">
+					<height>1</height>
+					<radius>1</radius>
+					<center>0 ; 1.3 ; 0</center>
+					<constraints>ConstraintRotation</constraints>
+					<m_Friction>0</m_Friction>
+					<m_Mass>1</m_Mass>
+					<m_IsStatic>false</m_IsStatic>
+					<m_IsTrigger>false</m_IsTrigger>
+					<m_IsActive>false</m_IsActive>
+					<enabled>true</enabled>
+					<entity>C25BB243-655B-4A9B-9A-11-F5-6E-D1-E2-81-B1</entity>
+				</1>
+				<2 typeName="SphereCollider">
+					<radius>18</radius>
+					<center>0 ; 0 ; 0</center>
+					<constraints>ConstraintRotation</constraints>
+					<m_Friction>0</m_Friction>
+					<m_Mass>1</m_Mass>
+					<m_IsStatic>false</m_IsStatic>
+					<m_IsTrigger>true</m_IsTrigger>
+					<m_IsActive>false</m_IsActive>
+					<enabled>true</enabled>
+					<entity>C25BB243-655B-4A9B-9A-11-F5-6E-D1-E2-81-B1</entity>
+				</2>
+				<3 typeName="EnemyCpp">
+					<m_Idle>286B2D80-A21D-4FC8-A5-42-B5-84-4F-B5-A2-EB</m_Idle>
+					<m_Run>4044B0C5-EAB8-483B-B2-CB-9E-E-B6-8-41-F2</m_Run>
+					<m_Attack>7584DA98-FF61-4CD7-9B-40-8A-63-54-7E-98-D0</m_Attack>
+					<m_MoveSpeed>5</m_MoveSpeed>
+					<m_AttackRange>3</m_AttackRange>
+					<m_LifePoint>100</m_LifePoint>
+					<enabled>true</enabled>
+					<entity>C25BB243-655B-4A9B-9A-11-F5-6E-D1-E2-81-B1</entity>
+				</3>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</18>
 	</m_Entities>
 </Scene>
 
