@@ -3,17 +3,17 @@
 #include "rendering/rhi_typedef.hpp"
 
 BEGIN_XNOR_CORE
-class XNOR_ENGINE  VAO
+class XNOR_ENGINE Vao
 {
 public:
 
-    DEFAULT_COPY_MOVE_OPERATIONS(VAO)
+    DEFAULT_COPY_MOVE_OPERATIONS(Vao)
 
     void Init();
 
-    VAO() = default;
+    Vao() = default;
 
-    ~VAO();
+    ~Vao();
 
     void BindBuffer() const;
 

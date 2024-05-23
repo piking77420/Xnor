@@ -9,6 +9,7 @@ template<class T>
 struct ObjectBounding
 {
     T* handle = nullptr;
+    
     Bound bound;
 
     DEFAULT_COPY_MOVE_OPERATIONS(ObjectBounding)

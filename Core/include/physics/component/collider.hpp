@@ -28,17 +28,14 @@ public:
 
     Vector3 center = Vector3::Zero();
 
-    XNOR_ENGINE Collider(); 
+    XNOR_ENGINE Collider() = default; 
     XNOR_ENGINE ~Collider() override;
 
     DEFAULT_COPY_MOVE_OPERATIONS(Collider)
 
     /// @brief Awake function
     XNOR_ENGINE void Awake() override{}
-    /// @brief Begin function
-    XNOR_ENGINE void Begin() override;
-    /// @brief Update function
-    XNOR_ENGINE void Update() override;
+    
     /// @brief Pre-function
     XNOR_ENGINE void PrePhysics() override;
     /// @brief Post-function

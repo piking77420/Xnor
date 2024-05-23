@@ -10,8 +10,6 @@
 #include "render_systems/light_manager.hpp"
 #include "render_systems/meshes_drawer.hpp"
 #include "render_systems/skybox_renderer.hpp"
-#include "resource/model.hpp"
-#include "world/world.hpp"
 #include "render_systems/post_process_pass.hpp"
 
 /// @file renderer.hpp

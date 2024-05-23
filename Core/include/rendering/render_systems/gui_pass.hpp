@@ -31,7 +31,7 @@ private:
 
     Pointer<Model> m_Quad;
 
-    mutable VAO m_FontQuadVao;
+    mutable Vao m_FontQuadVao;
     
     mutable Vbo m_FontQuadVbo;
     
