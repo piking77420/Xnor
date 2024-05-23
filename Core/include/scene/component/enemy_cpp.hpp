@@ -19,13 +19,15 @@ public:
 
     XNOR_ENGINE EnemyCpp() = default;
 
-    XNOR_ENGINE ~EnemyCpp() = default;
+    XNOR_ENGINE ~EnemyCpp();
 
     XNOR_ENGINE void Awake() override;
     
     XNOR_ENGINE void Update() override;
     
     XNOR_ENGINE void OnRendering() override;
+
+    XNOR_ENGINE void GetDamage(float_t dmg);
     
 private:
     Pointer<Animation> m_Idle;
@@ -34,7 +36,7 @@ private:
 
     Pointer<Animation> m_Attack;
 
-    SkinnedMeshRenderer* skinnedMeshRenderer = nullptr;
+    SkinnedMeshRenderer* m_SkinnedMeshRenderer = nullptr;
 
     bool_t m_IsInDetectionRange;
 
@@ -49,7 +51,10 @@ private:
     float_t m_AttackRange = 1.f;
 
     bool_t m_IsAttacking = false;
+
+    float_t m_LifePoint = 100.f;
     
+    bool_t m_IsInvincible = false;
     
     XNOR_ENGINE void OnDetectionEnter(Collider* coll1, Collider* coll2, const CollisionData& data);
 
@@ -65,6 +70,11 @@ private:
 
     XNOR_ENGINE Coroutine ResetDirtyFlagAttackRoutine();
 
+    XNOR_ENGINE Coroutine ResetDirtyFlagIsInvicible();
+
+    Guid ResetDirtyFlagAttackRoutineGuid;
+
+    Guid ResetDirtyFlagIsInvicibleRoutineGuid;
 };
 
 END_XNOR_CORE
@@ -75,5 +85,6 @@ REFL_AUTO(
     field(m_Run),
     field(m_Attack),
     field(m_MoveSpeed),
-    field(m_AttackRange)
+    field(m_AttackRange),
+    field(m_LifePoint)
 );

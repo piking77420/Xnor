@@ -13,7 +13,7 @@ void EnemyCpp::OnDetectionEnter(Collider* coll1, Collider* coll2, const Collisio
         return;
 
     Logger::LogInfo("Maplhite will follow this entity = {}",coll2->entity->name);
-    skinnedMeshRenderer->StartAnimation(m_Run);
+    m_SkinnedMeshRenderer->StartAnimation(m_Run);
     player = coll2->entity;
     m_IsInDetectionRange = true;
 }
@@ -24,7 +24,7 @@ void EnemyCpp::OnDetectionExit(Collider* coll1, Collider* coll2)
         return;
 
     Logger::LogInfo("Maplhite Lost interest = {}",coll2->entity->name);
-    skinnedMeshRenderer->StartAnimation(m_Idle);
+    m_SkinnedMeshRenderer->StartAnimation(m_Idle);
     player = coll2->entity;
     m_IsInDetectionRange = false;
     capsule->SetLinearVelocity(Vector3::Zero());
@@ -36,7 +36,10 @@ void EnemyCpp::OnTriggerStay(Collider* coll1, Collider* coll2, const CollisionDa
         return;
 
     if (m_IsAttacking)
+    {
+        capsule->SetLinearVelocity(Vector3::Zero());
         return;
+    }
     
     if (IsInRange())
     {
@@ -70,8 +73,7 @@ void EnemyCpp::Move()
     Vector3 desired_velocity = fow * m_MoveSpeed;
     desired_velocity.y = current_velocity.y;
     const Vector3 new_velocity = 0.75f * current_velocity + 0.25f * desired_velocity;
-            
-
+    
     // Update position
     capsule->SetLinearVelocity(new_velocity);
 }
@@ -83,9 +85,9 @@ bool_t EnemyCpp::IsInRange() const
 
 void EnemyCpp::Attack()
 {
-    skinnedMeshRenderer->StartAnimation(m_Attack);
-    //m_IsAttacking = true;
-    //Coroutine::Start(ResetDirtyFlagAttackRoutine());
+    m_SkinnedMeshRenderer->StartAnimation(m_Attack);
+    m_IsAttacking = true;
+    ResetDirtyFlagAttackRoutineGuid = Coroutine::Start(ResetDirtyFlagAttackRoutine());
 }
 
 Coroutine EnemyCpp::ResetDirtyFlagAttackRoutine()
@@ -95,6 +97,20 @@ Coroutine EnemyCpp::ResetDirtyFlagAttackRoutine()
     m_IsAttacking = false;
 }
 
+Coroutine EnemyCpp::ResetDirtyFlagIsInvicible()
+{
+    using namespace std::chrono_literals;
+    co_await 2s;
+    m_IsInvincible = false;
+    m_SkinnedMeshRenderer->material.emissive = 0.f;
+}
+
+
+EnemyCpp::~EnemyCpp()
+{
+    Coroutine::Stop(ResetDirtyFlagAttackRoutineGuid);
+    Coroutine::Stop(ResetDirtyFlagIsInvicibleRoutineGuid);
+}
 
 void EnemyCpp::Awake()
 {
@@ -105,19 +121,37 @@ void EnemyCpp::Awake()
     s->onTriggerEnter += [this](Collider* coll1, Collider* coll2, const CollisionData& data) { OnDetectionEnter(coll1, coll2, data); };
     s->onTriggerExit += [this](Collider* coll1, Collider* coll2) { OnDetectionExit(coll1, coll2); };
     s->onTriggerStay += [this](Collider* coll1, Collider* coll2 ,const CollisionData& data) { OnTriggerStay(coll1, coll2, data); };
-    skinnedMeshRenderer = entity->GetComponent<SkinnedMeshRenderer>();
-    skinnedMeshRenderer->StartAnimation(m_Idle);
+    m_SkinnedMeshRenderer = entity->GetComponent<SkinnedMeshRenderer>();
+    m_SkinnedMeshRenderer->StartAnimation(m_Idle);
 }
 
 void EnemyCpp::Update()
 {
     Component::Update();
-
-  
 }
 
 void EnemyCpp::OnRendering()
 {
     Component::OnRendering();
     DrawGizmo::Sphere(entity->transform.GetPosition() ,m_AttackRange, Color::Red());
+}
+
+void EnemyCpp::GetDamage(float_t dmg)
+{
+    if (m_IsInvincible)
+        return;
+    
+    m_LifePoint -= dmg;
+    m_IsInvincible = true;
+
+    if (m_LifePoint <= 0.f)
+    {
+        World::scene->DestroyEntity(entity);
+        return;
+    }
+
+    m_SkinnedMeshRenderer->material.emissiveColor = Color::Red();
+    m_SkinnedMeshRenderer->material.emissive = 1000.f;
+    ResetDirtyFlagIsInvicibleRoutineGuid =  Coroutine::Start(ResetDirtyFlagIsInvicible());
+
 }

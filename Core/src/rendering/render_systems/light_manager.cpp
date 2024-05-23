@@ -90,6 +90,7 @@ void LightManager::DrawLightGizmoWithShader(const Camera& camera, const Scene& s
 
 		scaleScalar = std::clamp(scaleScalar, m_RenderingLightStruct.maxScalarFactor, m_RenderingLightStruct.minScalarFactor);
 		Matrix scale = Matrix::Scaling(Vector3(scaleScalar));
+		
 		modelData.model = (scale * Matrix::LookAt(it->second.pos, camera.position, Vector3::UnitY())).Inverted();
 		modelData.normalInvertMatrix = Matrix::Identity();
 

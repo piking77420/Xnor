@@ -77,11 +77,6 @@ public:
 	[[nodiscard]]
 	Vector2i ProjectOn(const Vector3& vertex, Vector2i screenSize, const Matrix& model) const;
 	
-	// fov in rad
-	static Matrix Perspective(float_t fovy, float_t aspect, float_t zNear, float_t zFar);
-	
-	static Matrix LookAtRH(Vector3 const& eye, Vector3 const& center, Vector3 const& up);
-	
 };
 
 END_XNOR_CORE

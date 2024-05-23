@@ -75,7 +75,7 @@ void CascadeShadowMap::ComputeFrustumCorner(std::vector<Vector4>* frustumCornerW
 
 void CascadeShadowMap::GetCamera(Camera* cascadedCamera,const float_t cascadedNear, const float_t cascadedFar, const Camera& baseCamera, const Vector3 lightDir, const Vector2i screenSize)
 {
-    const Matrix proj = Camera::Perspective(
+    const Matrix proj = Matrix::Perspective(
             baseCamera.fov * Calc::Deg2Rad, static_cast<float_t>(screenSize.x) / static_cast<float_t>(screenSize.y), cascadedNear,
             cascadedFar);
     

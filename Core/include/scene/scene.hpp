@@ -60,9 +60,7 @@ public:
     XNOR_ENGINE void PostPhysics();
 
     XNOR_ENGINE void OnRendering();
-
-    /// @brief Destroy the enities who need to be destroy
-    XNOR_ENGINE void PopEnitiesToDelete();
+    
 
     /// @brief Tries to find an entity in the scene via a Guid
     /// @param xnorGuid Guid
@@ -84,7 +82,7 @@ public:
 
     /// @brief Destroys an entity and removes it from the scene sound't use it in scripting environement
     /// @param entity Entity
-    XNOR_ENGINE void DestroyEntityImmediate(Entity* entity);
+    XNOR_ENGINE void DestroyEntity(Entity* entity);
 
     /// @brief Checks if the scene contains a specified entity
     /// @param entity Entity
@@ -103,17 +101,9 @@ public:
     [[nodiscard]]
     XNOR_ENGINE uint32_t GetEntityIndex(const Entity* entity) const;
 
-
-    /// @brief Destroys an entity and removes it from the scene sound't use it in scripting environement
-    /// @param entity Entity
-    XNOR_ENGINE void DestroyEntity(Entity* entity);
-
-
 private:
     List<Entity*> m_Entities;
-
-    std::stack<Entity*> m_StackDestroyEntities;
-
+    
     XNOR_ENGINE void DestroyEntityChildren(Entity* entity);
 };
 

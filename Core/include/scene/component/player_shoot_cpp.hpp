@@ -2,6 +2,7 @@
 #include "core.hpp"
 #include "audio/component/audio_listener.hpp"
 #include "audio/component/audio_source.hpp"
+#include "physics/component/collider.hpp"
 #include "scene/component.hpp"
 
 BEGIN_XNOR_CORE
@@ -26,11 +27,23 @@ private:
     Entity* parent = nullptr;
     Entity* shootPoint = nullptr;
     
-    float bulletSize = 0.2f;
+    float_t m_BulletSize = 0.2f;
 
+    float_t m_DmgOnHit = 25.f;
+
+    List<std::pair<Entity*,float_t>> m_Bullets;
+
+    float_t m_BulletLifeTime = 5.f;
+
+    void SetupBullet(Entity* bullet);
+    
     void Shoot();
 
-    void BulletSound();
+    void BulletSound(Entity* bullet);
+
+    void HitEnemy(Collider* bullet,Collider* enemy,const CollisionData& data);
+
+    void UpdateBullets();
 };
 
 END_XNOR_CORE

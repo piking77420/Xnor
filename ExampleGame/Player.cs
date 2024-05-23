@@ -32,14 +32,14 @@ namespace Game
             HandleInputs();
 
             // Update velocity
-            Vector3 current_velocity = collider.GetLinearVelocity();
-            Vector3 desired_velocity = MovementSpeed * movement;
-            desired_velocity.Y = current_velocity.Y;
-            Vector3 new_velocity = 0.75f * current_velocity + 0.25f * desired_velocity;
+            Vector3 currentVelocity = collider.GetLinearVelocity();
+            Vector3 desiredVelocity = MovementSpeed * movement;
+            desiredVelocity.Y = currentVelocity.Y;
+            Vector3 newVelocity = 0.75f * currentVelocity + 0.25f * desiredVelocity;
             
 
             // Update position
-            collider.SetLinearVelocity(new_velocity);
+            collider.SetLinearVelocity(newVelocity);
 
            
 

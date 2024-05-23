@@ -195,7 +195,7 @@ void Hierarchy::CheckDeleteEntity(XnorCore::Scene& scene)
 {
     if (m_EntityToDelete)
     {
-        scene.DestroyEntityImmediate(m_EntityToDelete);
+        scene.DestroyEntity(m_EntityToDelete);
         m_EntityToDelete = nullptr;
 
         if (!scene.HasEntity(m_Editor->data.selectedEntity))

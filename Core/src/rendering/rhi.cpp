@@ -1716,12 +1716,12 @@ void Rhi::GetCubeMapViewMatrices(std::array<Matrix, 6>* viewsMatricies)
 {
 	*viewsMatricies =
 	{
-		Camera::LookAtRH(Vector3(), -Vector3::UnitX(), -Vector3::UnitY()), // CubeMapPositiveX
-		Camera::LookAtRH(Vector3(),  Vector3::UnitX(), -Vector3::UnitY()), // CubeMapNegativeX
-		Camera::LookAtRH(Vector3(), -Vector3::UnitY(), -Vector3::UnitZ()), // CubeMapPositiveY
-		Camera::LookAtRH(Vector3(),  Vector3::UnitY(),  Vector3::UnitZ()), // CubeMapNegativeY
-		Camera::LookAtRH(Vector3(),  Vector3::UnitZ(), -Vector3::UnitY()), // CubeMapPositiveZ
-		Camera::LookAtRH(Vector3(), -Vector3::UnitZ(), -Vector3::UnitY()), // CubeMapNegativeZ
+		Matrix::LookAt(Vector3(), -Vector3::UnitX(), -Vector3::UnitY()), // CubeMapPositiveX
+		Matrix::LookAt(Vector3(),  Vector3::UnitX(), -Vector3::UnitY()), // CubeMapNegativeX
+		Matrix::LookAt(Vector3(), -Vector3::UnitY(), -Vector3::UnitZ()), // CubeMapPositiveY
+		Matrix::LookAt(Vector3(),  Vector3::UnitY(),  Vector3::UnitZ()), // CubeMapNegativeY
+		Matrix::LookAt(Vector3(),  Vector3::UnitZ(), -Vector3::UnitY()), // CubeMapPositiveZ
+		Matrix::LookAt(Vector3(), -Vector3::UnitZ(), -Vector3::UnitY()), // CubeMapNegativeZ
 	};
 }
 
