@@ -5,15 +5,17 @@
 #include <unordered_map>
 
 #include <Jolt/Jolt.h>
+#include <Jolt/Core/JobSystemThreadPool.h>
+#include <Jolt/Physics/PhysicsSystem.h>
 
-#include "components/collider.hpp"
-#include "Jolt/Physics/PhysicsSystem.h"
-#include "Jolt/Core/JobSystemThreadPool.h"
-#include "Maths/quaternion.hpp"
-#include "physics/broad_phase_layer_interface.hpp"
+#include <Maths/quaternion.hpp>
+#include <Maths/vector3.hpp>
+
+#include "jolt/Physics/Character/Character.h"
 #include "physics/body_activation_listener.hpp"
+#include "physics/broad_phase_layer_interface.hpp"
 #include "physics/contact_listener.hpp"
-#include "Maths/vector3.hpp"
+#include "physics/component/collider.hpp"
 #include "rendering/vertex.hpp"
 
 /// @file physics_world.hpp
@@ -44,6 +46,8 @@ public:
         bool_t isTrigger{};
         /// @brief Whether it's static
         bool_t isStatic{};
+
+        Vector3 offsetShape;
     };
 
     /// @brief Raycast result
@@ -58,6 +62,17 @@ public:
         /// @brief Distance between cast and collision
         float_t distance{};
     };
+
+    [[nodiscard]]
+    static JPH::Vec3Arg ToJph(const Vector3& in);
+    [[nodiscard]]
+    static JPH::QuatArg ToJph(const Quaternion& in);
+    [[nodiscard]]
+    static Vector3 FromJph(const JPH::Vec3& in);
+    [[nodiscard]]
+    static Quaternion FromJph(const JPH::Quat& in);
+
+
 
     /// @brief Initializes the physics world
     XNOR_ENGINE static void Initialize();
@@ -83,6 +98,9 @@ public:
     /// @returns Created body id
     [[nodiscard]]
     XNOR_ENGINE static uint32_t CreateBox(const BodyCreationInfo& info);
+
+    [[nodiscard]]
+    XNOR_ENGINE static JPH::Character* CreateCharacter(const BodyCreationInfo& info, const JPH::CharacterSettings& settings);
 
     /// @brief Creates a capsule body
     /// @param info Body creation info
@@ -120,7 +138,7 @@ public:
     /// @returns Rotation
     [[nodiscard]]
     XNOR_ENGINE static Quaternion GetBodyRotation(uint32_t bodyId);
-
+    
     /// @brief Sets the position of a body
     /// @param bodyId Body ID
     /// @param position Position
@@ -152,7 +170,16 @@ public:
     /// @param impulse Impulse
     /// @param point Point
     XNOR_ENGINE static void AddImpulse(uint32_t bodyId, const Vector3& impulse, const Vector3& point);
+    
+    /// @brief Adds a impulse to a body at a specific point
+    /// @param bodyId Body ID
+    /// @param friction friction
+    XNOR_ENGINE static void SetFriction(uint32_t bodyId, float_t friction);
 
+    /// @brief Adds a impulse to a body at a specific point
+    /// @param bodyId Body ID
+    XNOR_ENGINE static float_t GetFriction(uint32_t bodyId);
+    
     /// @brief Adds a torque to a body
     /// @param bodyId Body ID
     /// @param torque Torque
@@ -171,6 +198,16 @@ public:
     /// @param result Raycast result
     /// @returns Whether a hit occured
     XNOR_ENGINE static bool_t Raycast(const Vector3& position, const Vector3& direction, float_t length, RaycastResult* result);
+    
+    XNOR_ENGINE static void SetLinearVelocity(uint32_t bodyId,Vector3 velocity);
+
+    XNOR_ENGINE static void AddLinearVelocity(uint32_t bodyId,Vector3 velocity);
+
+    XNOR_ENGINE static Vector3 GetLinearVelocity(uint32_t bodyId);
+
+    XNOR_ENGINE static void MoveKinematic(uint32_t bodyId, Vector3 inTargetPosition, Quaternion inTargetRotation, float_t inDeltaTime);
+
+    XNOR_ENGINE static void SetInverseMass(uint32_t bodyId, float_t invertedMass);
 
 private:
     XNOR_ENGINE static void TraceImpl(const char_t* format, ...);

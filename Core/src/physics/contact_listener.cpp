@@ -82,16 +82,19 @@ void ContactListenerImpl::OnContactAdded(
 
     if (inBody1.IsSensor() && !inBody2.IsSensor())
     {
+        std::scoped_lock lock(m_EventsMutex);
         // Body 1 is the trigger, so body 2 entered in it
         m_Events[TriggerEnter].emplace_back(c1, c2, data);
     }
     else if (!inBody1.IsSensor() && inBody2.IsSensor())
     {
+        std::scoped_lock lock(m_EventsMutex);
         // Body 2 is the trigger, so body 1 entered in it
         m_Events[TriggerEnter].emplace_back(c2, c1, data);
     }
     else if (!inBody1.IsSensor() && !inBody2.IsSensor())
     {
+        std::scoped_lock lock(m_EventsMutex);
         // Both body aren't triggers, so it's a normal collision
         // We call the events of both of them unlike the triggers
         m_Events[CollisionEnter].emplace_back(c1, c2, data);
@@ -122,16 +125,19 @@ void ContactListenerImpl::OnContactPersisted(
     
     if (inBody1.IsSensor() && !inBody2.IsSensor())
     {
+        std::scoped_lock lock(m_EventsMutex);
         // Body 1 is the trigger, so body 2 entered in it
         m_Events[TriggerStay].emplace_back(c1, c2, data);
     }
     else if (!inBody1.IsSensor() && inBody2.IsSensor())
     {
+        std::scoped_lock lock(m_EventsMutex);
         // Body 2 is the trigger, so body 1 entered in it
         m_Events[TriggerStay].emplace_back(c2, c1, data);
     }
     else if (!inBody1.IsSensor() && !inBody2.IsSensor())
     {
+        std::scoped_lock lock(m_EventsMutex);
         // Both body aren't triggers, so it's a normal collision
         // We call the events of both of them unlike the triggers
         m_Events[CollisionStay].emplace_back(c1, c2, data);
@@ -158,16 +164,19 @@ void ContactListenerImpl::OnContactRemoved(const JPH::SubShapeIDPair& inSubShape
     
     if (c1->IsTrigger() && !c2->IsTrigger())
     {
+        std::scoped_lock lock(m_EventsMutex);
         // Body 1 is the trigger, so body 2 entered in it
         m_Events[TriggerExit].emplace_back(c1, c2, data);
     }
     else if (!c1->IsTrigger() && c2->IsTrigger())
     {
+        std::scoped_lock lock(m_EventsMutex);
         // Body 2 is the trigger, so body 1 entered in it
         m_Events[TriggerExit].emplace_back(c2, c1, data);
     }
     else if (!c1->IsTrigger() && !c2->IsTrigger())
     {
+        std::scoped_lock lock(m_EventsMutex);
         // Both body aren't triggers, so it's a normal collision
         // We call the events of both of them unlike the triggers
         m_Events[CollisionExit].emplace_back(c1, c2, data);

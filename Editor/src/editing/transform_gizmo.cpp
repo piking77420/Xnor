@@ -14,7 +14,7 @@ void TransfromGizmo::SetRendering(const XnorCore::Camera& camera, const Vector2 
     ImGuizmo::SetRect(windowPos.x, windowPos.y, static_cast<float_t>(windowSize.x), static_cast<float_t>(windowSize.y));
 }
 
-bool TransfromGizmo::Manipulate(XnorCore::Entity& entity)
+bool_t TransfromGizmo::Manipulate(XnorCore::Entity& entity)
 {
     UserInput();
     XnorCore::Transform& transform = entity.transform;
@@ -40,7 +40,6 @@ bool TransfromGizmo::Manipulate(XnorCore::Entity& entity)
     transform.SetPosition(position);
     // Convert Imgui gizmoRot
     transform.SetRotationEulerAngle(eulerRotation * Calc::Deg2Rad);
-    transform.SetRotation(Quaternion::FromEuler(eulerRotation));
     transform.SetScale(scale);
     
     return true;

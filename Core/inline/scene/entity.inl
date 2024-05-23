@@ -1,14 +1,12 @@
 #pragma once
+#include "scene/component/script_component.hpp"
 
 BEGIN_XNOR_CORE
-
-template <Concepts::ComponentT T>
+    template <Concepts::ComponentT T>
 T* Entity::AddComponent()
 {
     T* newT = new T;
-    newT->entity = this;
-    m_Components.Add(newT);
-
+    AddComponent(newT);
     return newT;
 }
 
@@ -63,6 +61,7 @@ void Entity::RemoveComponent()
     {
         if (dynamic_cast<T*>(m_Components[i]))
         {
+            m_Components[i]->Destroy();
             m_Components.RemoveAt(i);
             break;
         }

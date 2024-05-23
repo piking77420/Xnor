@@ -8,7 +8,7 @@
 BEGIN_XNOR_CORE
 
 /// @brief %List of mouse buttons
-BEGIN_ENUM(MouseButton)
+enum class MouseButton
 {
     /// @brief Left click
     Left,
@@ -31,10 +31,11 @@ BEGIN_ENUM(MouseButton)
     
     Count
 };
-END_ENUM
+
+constexpr size_t MouseButtonCount = static_cast<size_t>(MouseButton::Count);
 
 /// @brief %List of mouse button states
-BEGIN_ENUM(MouseButtonStatus)
+enum class MouseButtonStatus
 {
     /// @brief Pressed
     Pressed,
@@ -44,7 +45,8 @@ BEGIN_ENUM(MouseButtonStatus)
     Release,
     
     Count
-}
-END_ENUM
+};
+
+constexpr size_t MouseButtonStatusCount = static_cast<size_t>(MouseButtonStatus::Count);
 
 END_XNOR_CORE

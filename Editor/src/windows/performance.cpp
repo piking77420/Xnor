@@ -2,16 +2,8 @@
 
 #include <format>
 
-#undef APIENTRY
+#include "utils/windows.hpp"
 
-// ReSharper disable once CppInconsistentNaming
-#define XMLDocument XMLDocument_dont_care
-#include <windows.h>
-#undef XMLDocument
-
-#undef min
-#undef max
-#undef APIENTRY
 #include <psapi.h>
 
 #include "screen.hpp"
@@ -36,6 +28,7 @@ void Performance::Update()
 
     PROCESS_MEMORY_COUNTERS memory;
     GetProcessMemoryInfo(GetCurrentProcess(), &memory, sizeof(memory));
+    XnorCore::Windows::SilenceError();
 
     m_LastMemory = static_cast<float_t>(memory.WorkingSetSize) / 0x100000; // Convert to MB
     m_MemoryArray[m_ArrayIndex] = m_LastMemory;
@@ -63,21 +56,6 @@ void Performance::Display()
     format = std::format("Memory: {:.2f}MB", m_LastMemory);
     ImGui::PlotLines("##memory", m_MemoryArray.data(), static_cast<int32_t>(std::min(m_TotalSamples, m_MemoryArray.size())), m_ArrayIndex,
         format.c_str(), m_LowestArrayMemory, m_HighestArrayMemory, ImVec2(available.x, GraphsHeight));
-
-    if (ImGui::CollapsingHeader("Settings"))
-    {
-        ImGui::SliderFloat("Update interval", &m_UpdateInterval, 0.f, 2.f);
-
-        size_t newSampleCount = m_MaxTotalSamples;
-        
-        static constexpr size_t MinSamples = 1;
-        static constexpr size_t MaxSamples = 1000;
-        
-        ImGui::SliderScalar("Sample count", ImGuiDataType_U64, &newSampleCount, &MinSamples, &MaxSamples);
-
-        if (newSampleCount != m_MaxTotalSamples)
-            SetSampleCount(newSampleCount);
-    }
 }
 
 void Performance::SetSampleCount(const size_t sampleCount)

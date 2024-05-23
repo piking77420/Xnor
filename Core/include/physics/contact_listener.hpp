@@ -1,14 +1,16 @@
 #pragma once
 
 #include "core.hpp"
-#include "components/collider.hpp"
-#include "jolt/Jolt.h"
-#include "Jolt/Physics/Collision/ContactListener.h"
+
+#include <Jolt/Jolt.h>
+#include <Jolt/Physics/Collision/ContactListener.h>
+
+#include "physics/component/collider.hpp"
 
 BEGIN_XNOR_CORE
 
 /// @private
-class ContactListenerImpl : public JPH::ContactListener
+class ContactListenerImpl final : public JPH::ContactListener
 {
 public:
     void ProcessEvents();
@@ -41,8 +43,9 @@ private:
 
         EventCount
     };
-    
-    std::vector<std::vector<EventInfo>> m_Events = std::vector<std::vector<EventInfo>>(EventCount);
+
+    std::mutex m_EventsMutex;
+    std::array<std::vector<EventInfo>, EventCount> m_Events;
 };
 
 END_XNOR_CORE

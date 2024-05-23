@@ -18,6 +18,7 @@ private:
     static inline constexpr uint32_t SkyBoxAlbedoTextureBindingIndex = 0;
 public:
     XNOR_ENGINE SkyboxRenderer() = default;
+    
     XNOR_ENGINE ~SkyboxRenderer() = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(SkyboxRenderer)
@@ -28,7 +29,7 @@ public:
     /// @brief Renders a skybox
     /// @param cubeModel Cube model
     /// @param skybox Skybox
-    XNOR_ENGINE void DrawSkymap(const Pointer<Model>& cubeModel, const Skybox& skybox) const;
+    XNOR_ENGINE void DrawSkymap(const Pointer<Mesh>& cubeModel, const Skybox& skybox) const;
   
 private:
     Pointer<Shader> m_SkyboxDrawerShader;

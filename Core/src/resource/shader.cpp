@@ -80,34 +80,37 @@ bool_t Shader::Load(const char_t* const buffer, const int64_t length, const Shad
     return true;
 }
 
-void Shader::CreateInRhi()
+void Shader::CreateInInterface()
 {
     std::vector<ShaderCode> code(m_Code.size());
     std::ranges::copy(m_Code, code.begin());
     
     m_Id = Rhi::CreateShaders(code, { m_DepthFunction, m_BlendFunction, m_ShaderProgramCullInfo });
-    m_LoadedInRhi = true;
+    m_LoadedInInterface = true;
 }
 
-void Shader::DestroyInRhi()
+void Shader::DestroyInInterface()
 {
     Rhi::DestroyProgram(m_Id);
     
     m_Id = 0;
-    m_LoadedInRhi = false;
+    m_LoadedInInterface = false;
 }
 
 void Shader::Recompile()
 {
-    DestroyInRhi();
-
     for (Pointer<File>& file : m_Files)
     {
-        if (file)
-            file->Reload();
+        if (!file)
+            continue;
+        
+        file->Reload();
+        Load(file->GetData(), file->GetSize(), FileExtensionToType(file->GetExtension()));
     }
 
-    CreateInRhi();
+    std::vector<ShaderCode> code(m_Code.size());
+    std::ranges::copy(m_Code, code.begin());
+    m_Id = Rhi::ReloadProgram(m_Id, code);
 }
 
 void Shader::Unload()
@@ -167,7 +170,7 @@ void Shader::Unuse() const
 
 void Shader::SetDepthFunction(const DepthFunction::DepthFunction depthFunction)
 {
-    if (m_LoadedInRhi)
+    if (m_LoadedInInterface)
     {
         Logger::LogError("Can't modify depth function in already loaded shader\n Shader id = {}",m_Id);
         return;
@@ -178,7 +181,7 @@ void Shader::SetDepthFunction(const DepthFunction::DepthFunction depthFunction)
 
 void Shader::SetBlendFunction(const BlendFunction& blendFunction)
 {
-    if (m_LoadedInRhi)
+    if (m_LoadedInInterface)
     {
         Logger::LogError("Can't modify blend function in already loaded shader\n Shader id = {}",m_Id);
         return;
@@ -189,7 +192,7 @@ void Shader::SetBlendFunction(const BlendFunction& blendFunction)
 
 void Shader::SetFaceCullingInfo(const ShaderProgramCullInfo& shaderProgramCullInfo)
 {
-    if (m_LoadedInRhi)
+    if (m_LoadedInInterface)
     {
         Logger::LogError("Can't modify blend function in already loaded shader\n Shader id = {}",m_Id);
         return;

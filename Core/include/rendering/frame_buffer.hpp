@@ -2,7 +2,6 @@
 
 #include "core.hpp"
 #include "window.hpp"
-#include "resource/cubemap.hpp"
 #include "resource/texture.hpp"
 
 /// @file frame_buffer.hpp
@@ -31,14 +30,7 @@ public:
 	/// @param attachment Attachment
 	/// @param level Level
 	XNOR_ENGINE void AttachTexture(const Texture& texture, Attachment::Attachment attachment, uint32_t level = 0) const;
-
-	/// @brief Attach a single texture from a cubemap to the framebuffer
-	/// @param cubemap Cubemap
-	/// @param attachment Attachment
-	/// @param cubeMapFace Cubemap face
-	/// @param level Level
-	XNOR_ENGINE void AttachTexture(const Cubemap& cubemap, Attachment::Attachment attachment, CubeMapFace cubeMapFace, uint32_t level = 0) const;
-
+	
 	/// @brief Attach a texture layer to the framebuffer
 	/// @param texture Cubemap
 	/// @param attachment Attachment

@@ -23,10 +23,20 @@ public:
     template <Concepts::ResourceT T>
     static Pointer<T> FilterResources(Pointer<T>* target);
 
+    /// @brief Handles the resource filter
+    /// @param target Pointer<File>* target
+    /// @return Pointer<File>* return value
+    XNOR_ENGINE static Pointer<File> FilterFile(Pointer<File>* target);
+
     /// @brief Handles the entity filter
     /// @param target Target entity
     /// @return Selected value
     XNOR_ENGINE static Entity* FilterEntity(Entity** target);
+
+    /// @brief Handles the entity filter
+    /// @param target Target entity
+    /// @return Selected value
+    XNOR_ENGINE static Entity* FilterEntity();
 
     /// @brief Handles the component filter (with a List)
     /// @param target Target list
@@ -44,6 +54,8 @@ public:
     XNOR_ENGINE static void BeginEntityFilter();
     /// @brief Begins a component filter
     XNOR_ENGINE static void BeginComponentFilter();
+    /// @brief Begins a filter
+    XNOR_ENGINE static void BeginFilter(const std::string& filterName = "File");
 
 private:
     static inline ImGuiTextFilter m_TextFilter;

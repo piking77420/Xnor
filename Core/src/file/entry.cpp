@@ -8,9 +8,6 @@ using namespace XnorCore;
 Entry::Entry(std::filesystem::path&& path)
     : m_Path(std::move(path))
 {
-    if (!exists(m_Path))
-        throw std::invalid_argument("Path does not exist");
-    
     Entry::UpdateUtilityValues();
 }
 

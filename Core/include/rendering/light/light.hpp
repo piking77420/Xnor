@@ -1,8 +1,8 @@
 ﻿#pragma once
 
 #include "core.hpp"
-#include "reflection/reflection.hpp"
 #include "scene/component.hpp"
+#include "utils/color.hpp"
 
 /// @file light.hpp
 /// @brief Defines the XnorCore::Light class
@@ -16,7 +16,7 @@ class Light : public Component
     
 public:
     /// @brief Color of the light
-    Colorf color = Colorf(1.f, 1.f, 1.f);
+    Color color = Color(1.f, 1.f, 1.f);
     
     /// @brief Intensity of the light
     float_t intensity = 1.f;
@@ -25,12 +25,13 @@ public:
     bool_t castShadow = true;
 
     /// @brief Near clipping of the light
-    float_t near = 0.1f;
+    float_t near = 0.01f;
 
     /// @brief Far clipping of the light
-    float_t far = 100.f;
+    float_t far = 1000.f;
 
     XNOR_ENGINE Light() = default;
+    
     XNOR_ENGINE ~Light() override = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(Light)

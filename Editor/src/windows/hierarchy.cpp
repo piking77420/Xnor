@@ -10,9 +10,6 @@ using namespace XnorEditor;
 Hierarchy::Hierarchy(Editor* editor)
     : UiWindow(editor, "Scene Graph")
 {
-    m_EntityToDelete = nullptr;
-    m_EntityToRename = nullptr;
-    m_ClickedOnEntity = false;
 }
 
 void Hierarchy::Display()
@@ -21,7 +18,15 @@ void Hierarchy::Display()
   
     const XnorCore::List<XnorCore::Entity*>& entities = scene.GetEntities();
 
-    if (ImGui::TreeNodeEx("Entities", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_FramePadding))
+    const bool_t serializing = m_Editor->IsSerializing() || m_Editor->IsDeserializing();
+
+    if (serializing)
+        ImGui::BeginDisabled();
+
+    const std::string treeNodeName = m_Editor->data.currentScene.IsValid() ? m_Editor->data.currentScene->GetNameNoExtension() : "Entities";
+    const std::filesystem::path path = treeNodeName;
+
+    if (ImGui::TreeNodeEx(path.stem().generic_string().c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_FramePadding))
     {
         if (ImGui::BeginPopupContextItem())
         {
@@ -33,7 +38,6 @@ void Hierarchy::Display()
         
         if (ImGui::BeginDragDropTarget())
         {
-            // ReSharper disable once CppTooWideScope
             const ImGuiPayload* const payload = ImGui::AcceptDragDropPayload("HierarchyEntity");
             
             if (payload)
@@ -57,11 +61,14 @@ void Hierarchy::Display()
     
     CheckDeleteEntity(scene);
     CheckUnselectEntity();
+
+    if (serializing)
+        ImGui::EndDisabled();
 }
 
 void Hierarchy::DisplayEntity(XnorCore::Scene& scene, XnorCore::Entity* const entity)
 {
-    ImGui::PushID(entity);
+    ImGui::PushID(static_cast<int32_t>(entity->GetGuid().GetData1()));
     
     const char_t* name = entity->name.c_str();
     const bool_t isRenaming = IsRenamingEntity(entity);
@@ -118,6 +125,9 @@ void Hierarchy::DisplayEntityContextMenu(XnorCore::Scene& scene, XnorCore::Entit
                     
         if (ImGui::Selectable("Rename"))
             m_EntityToRename = entity;
+                    
+        if (ImGui::Selectable("Duplicate"))
+            m_Editor->data.selectedEntity = entity->Clone();
 
         if (ImGui::Selectable("Delete"))
             m_EntityToDelete = entity;

@@ -5,6 +5,7 @@
 #include "core.hpp"
 #include "reflection/reflection.hpp"
 #include "resource/texture.hpp"
+#include "utils/color.hpp"
 #include "utils/pointer.hpp"
 
 /// @file material.hpp
@@ -40,10 +41,12 @@ public:
     /// @brief Ambiant occlusion texture
     Pointer<Texture> ambientOcclusionTexture;
 
+    Pointer<Texture> emissiveTexture;
+
     /// @brief Albedo color
-    Colorf albedoColor;
+    Color albedoColor;
     /// @brief Emissive color
-    Colorf emissiveColor;
+    Color emissiveColor;
     
     /// @brief Metallic parameter
     float_t metallic = 0.f;
@@ -55,6 +58,8 @@ public:
     float_t emissive = 0.f;
     /// @brief Ambient occlusion parameter
     float_t ambientOcclusion = 0.f;
+    
+    void XNOR_ENGINE BindMaterial() const;
 };
 
 END_XNOR_CORE
@@ -74,5 +79,6 @@ REFL_AUTO(
     field(metallicTexture),
     field(roughnessTexture),
     field(normalTexture),
-    field(ambientOcclusionTexture)
+    field(ambientOcclusionTexture),
+    field(emissiveTexture)
 );

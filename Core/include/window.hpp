@@ -1,14 +1,15 @@
 #pragma once
 
-#include <functional>
-#include <GLFW/glfw3.h>
+#include <Maths/vector2i.hpp>
 
 #include "core.hpp"
-#include "Maths/vector2i.hpp"
 #include "resource/texture.hpp"
 
 /// @file window.hpp
 /// @brief Defines the XnorCore::Window class.
+
+// ReSharper disable once CppInconsistentNaming
+struct GLFWwindow;
 
 BEGIN_XNOR_CORE
 
@@ -51,6 +52,9 @@ public:
 	/// @brief Displays the window
 	static void Show();
 
+	/// @brief Hides the window
+	static void Hide();
+
 	/// @brief Sets the icon for the window
 	/// @param icon Icon
 	static void SetIcon(Texture& icon);
@@ -59,7 +63,7 @@ public:
 	/// @param value @c true hides, @c false displays
 	static void SetCursorHidden(bool_t value);
 
-	/// @brief Sets the mouse cursor position.
+	/// @brief Sets the mouse cursor position in screen space.
 	static void SetCursorPosition(Vector2 newPosition);
 
 private:

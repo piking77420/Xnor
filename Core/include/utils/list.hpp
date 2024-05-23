@@ -12,7 +12,7 @@ BEGIN_XNOR_CORE
 /// @brief A dynamic array implementation.
 /// 
 /// ### Reasons
-/// A more user friendly list than @c std::vector, based on how @c %List is done in C#
+/// A more user-friendly list than @c std::vector, based on how @c %List is done in C#
 /// The internal structure and workings are similar to how std::vector works, it uses a capacity that grows exponentially based on powers of 2
 /// 
 /// @tparam T Type stored
@@ -21,16 +21,18 @@ BEGIN_XNOR_CORE
 /// @see <a href="https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1?view=net-8.0">C# List</a>
 template <typename T>
 class List
-{    
+{
 public:
-    static_assert(std::is_default_constructible_v<T>, "T must have a default constructor");
-    static_assert(std::is_copy_constructible_v<T>, "T must have a copy constructor");
-
+    using Iterator = typename std::vector<T>::iterator;
+    using ConstIterator = typename std::vector<T>::const_iterator;
+    using ReverseIterator = typename std::vector<T>::reverse_iterator;
+    using ConstReverseIterator = typename std::vector<T>::const_reverse_iterator;
+    
     /// @brief The type of the List<T>, refers to T
     using Type = T;
 
     /// @brief Creates an empty list with a capacity of 0
-    explicit List();
+    List() = default;
 
     /// @brief Creates a list with the specified size, and fills it with the default value of T
     /// 
@@ -48,8 +50,15 @@ public:
     /// 
     /// @param size List size
     /// @param values Provided values
-    explicit List(size_t size, const T values[]);
+    explicit List(size_t size, const T* values);
 #endif
+    
+    /// @brief Creates a list with the specified array
+    ///
+    /// @tparam Size The @p array size
+    /// @param array Array
+    template <size_t Size>
+    explicit List(const std::array<T, Size>& array);
 
     /// @brief Creates a list with the specified values
     /// 
@@ -57,15 +66,20 @@ public:
     List(const std::initializer_list<T>& values);
 
     /// @brief Destroys the list
-    ~List();
+    ~List() = default;
 
-    /// @brief Reserves a specified amount of elements in the list
+    DEFAULT_COPY_MOVE_OPERATIONS(List)
+
+    /// @brief Resizes a specified amount of elements in the list
     /// 
-    /// @param capacity New capacity
-    void Reserve(size_t capacity);
+    /// @param size New size
+    void Resize(size_t size);
 
     /// @brief Clears the list
     void Clear();
+
+    /// @brief Returns whether the list is empty. This is equivalent to doing @c GetSize() == @c 0
+    bool_t Empty() const;
 
     /// @brief Adds a default element to the end of the list (calls the default constructor of T)
     void Add();
@@ -85,16 +99,13 @@ public:
     /// @brief Adds a range of elements to the end of the list
     /// 
     /// @param data Data
-    /// @param number Number of elements (array size of data)
-    void AddRange(const T* data, size_t number);
+    /// @param count Number of elements (array size of data)
+    void AddRange(const T* data, size_t count);
 
     /// @brief Adds a range of elements to the end of the list
     /// 
     /// @param values Values
     void AddRange(const std::initializer_list<T>& values);
-
-    /// @brief Adds a zeroed out element to the list  
-    void AddZeroed();
 
     /// @brief Fills the list with a specified value
     /// 
@@ -136,11 +147,6 @@ public:
     void Insert(T&& element, size_t index);
 #endif
 
-    /// @brief Inserts an zeroed element in the list at the given position
-    /// 
-    /// @param index Index
-    void InsertZeroed(size_t index);
-
     /// @brief Removes an element from the list (only removes the first occurence it finds)
     /// 
     /// @param element Element
@@ -166,43 +172,74 @@ public:
 
     /// @brief Allows iteration over the list with a lambda
     /// 
-    /// <p>The lambda returns void, and has a pointer to the current element and its index as parameters</p>
+    /// <p>The lambda returns void, and has a pointer to the current element as a parameters</p>
     /// 
     /// @param lambda Function lambda
-    void Iterate(const std::function<void(T*, size_t)>& lambda);
+    void Iterate(const std::function<void(T*)>& lambda);
+
+    /// @brief Allows iteration over the list with a lambda
+    /// 
+    /// <p>The lambda returns void, and has a pointer to the current element as a parameters</p>
+    /// 
+    /// @param lambda Function lambda
+    void Iterate(const std::function<void(const T*)>& lambda) const;
 
     /// @brief Checks if an element exists that fulfills the requirements provided in a lambda
     /// 
-    /// <p>The lambda returns bool_t, and has a pointer to the current element and its index as parameters</p>
+    /// <p>The lambda returns bool_t, and has a pointer to the current element as a parameters</p>
     /// 
     /// @param lambda Function lambda
     /// @return Element exists
-    bool_t Exists(const std::function<bool_t(const T*, size_t)>& lambda) const;
+    [[nodiscard]]
+    bool_t Exists(const std::function<bool_t(const T*)>& lambda) const;
 
     /// @brief Tries to find an element that fulfills the requirements provided in a lambda
     /// 
+    /// <p>The lambda returns bool_t, and has a pointer to the current element as a parameter</p>
+    /// 
+    /// @param lambda Function lambda
+    /// @return Pointer to element
+    [[nodiscard]]
+    T* Find(const std::function<bool_t(const T*)>& lambda);
+
+    /// @brief Tries to find an element that fulfills the requirements provided in a lambda
+    /// 
+    /// <p>The lambda returns bool_t, and has a pointer to the current element as a parameters</p>
+    /// 
+    /// @param lambda Function lambda
+    /// @return Pointer to element
+    [[nodiscard]]
+    const T* Find(const std::function<bool_t(const T*)>& lambda) const;
+
+    /// @brief Tries to find an element that fulfills the requirements provided in a lambda
+    /// 
+    /// @param lambda Function lambda
+    /// @return Index of the element in the list (size_t max if not found)
+    [[nodiscard]]
+    size_t FindPosition(const std::function<bool_t(const T*)>& lambda) const;
+
     /// <p>The lambda returns bool_t, and has a pointer to the current element and its index as parameters</p>
     /// 
     /// @param lambda Function lambda
     /// @return Pointer to element
+    [[nodiscard]]
     T* Find(const std::function<bool_t(const T*, size_t)>& lambda);
 
-    /// @brief Checks if the list if valid.
+    void Sort(std::function<bool_t(const T& left, const T& right)> predicate = std::less());
+
+#ifndef SWIG
+    /// @brief Gets the underlying pointer to the list
     /// 
-    /// A list is valid if it meets these requirements:
-    /// <p>- The internal pointer mustn't be nullptr</p>
-    /// <p>- Capacity mustn't be 0</p>
-    /// <p>- The size mustn't exceed the capacity</p>
-    /// 
-    /// @return Is valid
+    /// @return Pointer
     [[nodiscard]]
-    bool_t IsValid() const;
+    T* GetData();
 
     /// @brief Gets the underlying pointer to the list
     /// 
     /// @return Pointer
     [[nodiscard]]
-    T* GetData() const;
+    const T* GetData() const;
+#endif
 
     /// @brief Gets the size of the list
     /// 
@@ -216,12 +253,6 @@ public:
     [[nodiscard]]
     size_t GetCapacity() const;
 
-    /// @brief Gets the type size of T
-    /// 
-    /// @return Type size
-    [[nodiscard]]
-    size_t GetTypeSize() const;
-
 #ifndef SWIG
     /// @brief Gets an element of the list at a specified index
     /// 
@@ -229,6 +260,7 @@ public:
     /// @return Element
     /// 
     /// @throw invalid_argument If index >= list size
+    [[nodiscard]]
     T& operator[](size_t index);
     
     /// @brief Gets an element of the list at a specified index
@@ -237,48 +269,72 @@ public:
     /// @return Element
     /// 
     /// @throw invalid_argument If index >= list size
+    [[nodiscard]]
     const T& operator[](size_t index) const;
 #endif
 
-#ifndef UNIT_TEST
-private:
+    [[nodiscard]]
+    const T& Front() const;
+
+#ifndef SWIG
+    [[nodiscard]]
+    T& Front();
 #endif
-    T* m_Data;
-    size_t m_Size;
-    size_t m_Capacity;
-    size_t m_TypeSize;
 
-    /// @brief Performs a malloc on the data
-    /// @param size Size
-    void Malloc(size_t size);
-    
-    /// @brief Performs a calloc on the data
-    /// @param size Size
-    void Calloc(size_t size);
-
-    /// @brief Performs a realloc on the data
-    /// @param size Size
-    void Realloc(size_t size);
-
-    /// @brief Checks if the list should grow
-    /// @param newSize New size
-    void CheckGrow(size_t newSize);
-    
-    /// @brief Checks if the list should shrink
-    /// @param newSize New size
-    void CheckShrink(size_t newSize);
-
-    /// @brief Gets the address to the nth element of the list
-    /// @param index Index
-    /// @return Pointer to nth element
     [[nodiscard]]
-    T* Access(size_t index);
+    const T& Back() const;
 
-    /// @brief Gets the address to the nth element of the list
-    /// @param index Index
-    /// @return Pointer to nth element
+#ifndef SWIG
     [[nodiscard]]
-    const T* Access(size_t index) const;
+    T& Back();
+#endif
+
+    [[nodiscard]]
+    Iterator Begin();
+
+    [[nodiscard]]
+    Iterator End();
+
+    [[nodiscard]]
+    ConstIterator CBegin() const;
+
+    [[nodiscard]]
+    ConstIterator CEnd() const;
+
+    [[nodiscard]]
+    ReverseIterator RBegin();
+
+    [[nodiscard]]
+    ReverseIterator REnd();
+
+    [[nodiscard]]
+    ConstReverseIterator CrBegin() const;
+
+    [[nodiscard]]
+    ConstReverseIterator CrEnd() const;
+
+    /// @private
+    /// Necessary when using range-for loops
+    [[nodiscard]]
+    Iterator begin();
+
+    /// @private
+    /// Necessary when using range-for loops with a @c const list
+    [[nodiscard]]
+    ConstIterator begin() const;
+
+    /// @private
+    /// Necessary when using range-for loops
+    [[nodiscard]]
+    Iterator end();
+
+    /// @private
+    /// Necessary when using range-for loops with a @c const list
+    [[nodiscard]]
+    ConstIterator end() const;
+
+private:
+    std::vector<T> m_Vector;
 };
 
 END_XNOR_CORE

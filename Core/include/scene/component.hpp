@@ -17,12 +17,20 @@ class XNOR_ENGINE Component
     REFLECTABLE_IMPL(Component)
 
 public:
+    bool_t enabled = true;
+
+    /// @brief Entity bound to the component
+    Entity* entity = nullptr;
+    
     Component() = default;
 
     virtual ~Component() = 0;
 
     DEFAULT_COPY_MOVE_OPERATIONS(Component)
 
+    /// @brief Awake the component
+    virtual void Awake() {}
+    
     /// @brief Begins the component
     virtual void Begin() {}
 
@@ -34,6 +42,11 @@ public:
 
     /// @brief Called after the physics update
     virtual void PostPhysics() {}
+
+    virtual void OnRendering() {} 
+
+    /// @brief Deletes this Component. This is only used for polymorphism purposes with the ScriptComponent type.
+    virtual void Destroy();
 
     /// @brief Get the Entity on which this Component is attached
     [[nodiscard]]
@@ -64,11 +77,8 @@ public:
     ///
     /// @see GetEntity
     Transform& GetTransform();
-
-    // TODO m_Entity must be private at some point
-    /// @brief Entity bound to the component
-    Entity* entity = nullptr;
 #endif
+    
 private:
 
     // We need Entity to be able to set m_Entity
@@ -78,4 +88,7 @@ private:
 END_XNOR_CORE
 
 /// @private
-REFL_AUTO(type(XnorCore::Component));
+REFL_AUTO(type(XnorCore::Component),
+    field(enabled),
+    field(entity, XnorCore::Reflection::HideInInspector())
+);

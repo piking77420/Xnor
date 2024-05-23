@@ -1,8 +1,7 @@
 #pragma once
 
 #include "core.hpp"
-
-#include "utils/meta_programming.hpp"
+#include "utils/color.hpp"
 
 /// @file concepts.hpp
 /// @brief Defines the XnorCore::Concepts namespace which contains useful concepts used in the engine.
@@ -19,15 +18,19 @@ namespace Concepts
 {
     /// @brief A class satisfies the ResourceT concept if it is derived of Resource.
     template <class T>
-    concept ResourceT = Meta::IsBaseOf<Resource, T>;
+    concept ResourceT = std::is_base_of_v<Resource, T>;
 
     /// @brief A class satisfies the EntryT concept if it is derived of Entry.
     template <class T>
-    concept EntryT = Meta::IsBaseOf<Entry, T>;
+    concept EntryT = std::is_base_of_v<Entry, T>;
+    
+    /// @brief Concept that forces a class to be same as the others
+    template <class T, class U>
+    concept IsTSameAsU = std::is_same_v<T,U>;
     
     /// @brief Concept that forces a type to be a child of Component
     template <class T>
-    concept ComponentT = Meta::IsBaseOf<Component, T>;
+    concept ComponentT = std::is_base_of_v<Component, T>;
 
     /// @brief The Formattable concept requires a type to be formattable.
     ///
@@ -42,7 +45,7 @@ namespace Concepts
 
     /// @brief A class satisfies the ExceptionT concept if it is derived of Exception.
     template<typename T>
-    concept ExceptionT = Meta::IsBaseOf<std::exception, T>;
+    concept ExceptionT = std::is_base_of_v<std::exception, T>;
 
     /// @brief Concept that forces a type to be a function
     template <class T>
@@ -53,7 +56,15 @@ namespace Concepts
 
     /// @brief Concept that forces a type to be a color, e.g. one of: ColorRgb, ColorRgba, Colorf or ColorHsv
     template <class T>
-    concept ColorT = Meta::IsAny<T, ColorRgb, ColorRgba, Colorf, ColorHsva>;
+    concept ColorT = std::is_same_v<Color, T> || std::is_same_v<ColorHsva, T>;
+
+    /// @brief Concept that forces a type to be a raw pointer
+    template <typename T>
+    concept PointerT = std::is_pointer_v<T>;
+    
+    /// @brief Concept that forces a type to be of an integral type
+    template <typename T>
+    concept IntegralT = std::is_integral_v<T>;
 }
 
 END_XNOR_CORE

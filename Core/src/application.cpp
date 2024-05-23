@@ -8,26 +8,33 @@
 #include "rendering/rhi.hpp"
 #include "resource/resource_manager.hpp"
 
-// We need windows.h for GetModuleFileNameA
-#undef APIENTRY
-// ReSharper disable once CppInconsistentNaming
-#define XMLDocument XMLDocument_dont_care
-#include <windows.h>
-#undef XMLDocument
+#include "audio/audio.hpp"
+#include "utils/message_box.hpp"
+#include "world/world.hpp"
 
 using namespace XnorCore;
 
-Application::Application()
+void Application::Exit(const int32_t code)
 {
-    m_ApplicationInstance = this;
+	Logger::LogInfo("Force exiting Application");
 
-	char_t exePath[MAX_PATH];
-	GetModuleFileNameA(nullptr, exePath, MAX_PATH);
-	executablePath = absolute(std::filesystem::path(exePath));
+	std::exit(code);  // NOLINT(concurrency-mt-unsafe)
+}
+
+Application::Application(const int32_t, const char_t* const* const argv)
+{
+    applicationInstance = this;
+
+	executablePath = argv[0];
+
+	Logger::Start();
     
     Window::Initialize();
 
 	Rhi::Initialize();
+	
+	if (!Audio::Initialize())
+		Logger::LogError("Couldn't initialize audio");
 
 	Texture::defaultLoadOptions = { .flipVertically = true };
 	FileManager::LoadDirectory("assets");
@@ -45,19 +52,23 @@ Application::Application()
 
 	if (!DotnetRuntime::Initialize())
 	{
-		const int result = MessageBoxA(nullptr, "Couldn't initialize .NET runtime. Continue execution anyway ?", "Error", MB_YESNO | MB_ICONERROR | MB_DEFBUTTON2);
-		if (result == IDNO)
+		const auto result = MessageBox::Show("Error", "Couldn't initialize .NET runtime. Continue execution anyway ?", MessageBox::Type::YesNo, MessageBox::Icon::Error, MessageBox::DefaultButton::Second);
+		if (result == MessageBox::Result::No)
 			Exit(EXIT_FAILURE);
 	}
 
 	World::scene = new Scene;
+	World::scene->Initialize();
 
-	if (!DotnetRuntime::LoadAssembly("Game"))
-		Logger::LogWarning("Couldn't load assembly Game.dll");
+	if (!DotnetRuntime::LoadAssembly(Dotnet::GameProjectName))
+		Logger::LogWarning("Couldn't load assembly {}.dll", Dotnet::GameProjectName);
+
+	gameViewPort = new Viewport();
 }
 
 Application::~Application()
 {
+	delete gameViewPort;
 	delete World::scene;
 	
 	DotnetRuntime::Shutdown();
@@ -65,17 +76,14 @@ Application::~Application()
 	PhysicsWorld::Destroy();
 	
     ResourceManager::UnloadAll();
+	
+	Audio::Shutdown();
+	
 	Rhi::Shutdown();
 
     Window::Shutdown();
 	
     FileManager::UnloadAll();
-	
-    Logger::Stop();
-}
 
-void Application::Exit(const int32_t code)
-{
-	Logger::LogInfo("Force exiting Application");
-	std::exit(code);
+	Logger::Stop();
 }

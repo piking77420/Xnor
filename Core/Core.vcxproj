@@ -50,20 +50,21 @@
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY;JPH_DEBUG_RENDERER;JPH_FLOATING_POINT_EXCEPTIONS_ENABLED;JPH_PROFILE_ENABLED</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;include;inline;externals\inline</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;include;inline;externals\inline;..\CoreLibs\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ConformanceMode>false</ConformanceMode>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);$(ProjectDir)externals\libs\lib\Common;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp.lib;zlibstatic.lib;toolbox.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib</AdditionalDependencies>
-      <AdditionalOptions>/WHOLEARCHIVE:toolbox.lib %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\static\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib;OpenAL32.lib;freetype.lib</AdditionalDependencies>
+      <AdditionalOptions>/WHOLEARCHIVE:CoreLibs.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y "externals\libs\dll\Common\*" "$(OutDir)" &amp; xcopy /Y "externals\libs\dll\$(Configuration)\*" "$(OutDir)"</Command>
+      <Command>xcopy /Y "externals\libs\dynamic\$(Configuration)\*" "$(OutDir)"</Command>
       <Message>Copy external DLL files</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -74,114 +75,63 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);XNOR_EXPORT;MATH_TOOLBOX_DLL_EXPORT;MATH_DEFINE_FORMATTER;IMGUI_EXPORT;RAPID_XML_EXPORT;JPH_SHARED_LIBRARY</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;include;inline;externals\inline</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);externals\include;include;inline;externals\inline;..\CoreLibs\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ConformanceMode>false</ConformanceMode>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\lib\$(Configuration);$(ProjectDir)externals\libs\lib\Common;%(AdditionalLibraryDirectories);$(OutDir)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp.lib;zlibstatic.lib;toolbox.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib</AdditionalDependencies>
-      <AdditionalOptions>/WHOLEARCHIVE:toolbox.lib %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>$(ProjectDir)externals\libs\static\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;assimp.lib;zlibstatic.lib;%(AdditionalDependencies);Coral.Native.lib;Jolt.lib;CoreLibs.lib;OpenAL32.lib;freetype.lib</AdditionalDependencies>
+      <AdditionalOptions>/WHOLEARCHIVE:CoreLibs.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y "externals\libs\dll\Common\*" "$(OutDir)" &amp; xcopy /Y "externals\libs\dll\$(Configuration)\*" "$(OutDir)"</Command>
+      <Command>xcopy /Y "externals\libs\dynamic\$(Configuration)\*" "$(OutDir)"</Command>
       <Message>Copy external DLL files</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="externals\src\glad.c" />
-    <ClCompile Include="externals\src\ImguiGizmo\ImGuizmo.cpp" />
-    <ClCompile Include="externals\src\ImGui\imgui.cpp" />
-    <ClCompile Include="externals\src\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="externals\src\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="externals\src\ImGui\imgui_impl_glfw.cpp" />
-    <ClCompile Include="externals\src\ImGui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="externals\src\ImGui\imgui_stdlib.cpp" />
-    <ClCompile Include="externals\src\ImGui\imgui_tables.cpp" />
-    <ClCompile Include="externals\src\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="externals\src\RapidXMLSTD.cpp" />
-    <ClCompile Include="externals\src\stb\stb_image.c" />
-    <ClCompile Include="externals\src\ttf\ttfParser.cpp" />
-    <ClInclude Include="include\reflection\filters.hpp" />
-    <ClInclude Include="include\scene\component\test_component_physics.hpp" />
-    <ClCompile Include="src\application.cpp" />
-    <ClCompile Include="src\csharp\dotnet_assembly.cpp" />
-    <ClCompile Include="src\csharp\dotnet_runtime.cpp" />
-    <ClCompile Include="src\csharp\dotnet_utils.cpp" />
-    <ClCompile Include="src\file\directory.cpp" />
-    <ClCompile Include="src\file\entry.cpp" />
-    <ClCompile Include="src\input\input.cpp" />
-    <ClCompile Include="src\input\gamepad_input.cpp" />
-    <ClCompile Include="src\input\time.cpp" />
-    <ClCompile Include="src\reflection\dotnet_reflection.cpp" />
-    <ClCompile Include="src\physics\body_activation_listener.cpp" />
-    <ClCompile Include="src\physics\broad_phase_layer_interface.cpp" />
-    <ClCompile Include="src\physics\components\capsule_collider.cpp" />
-    <ClCompile Include="src\physics\components\collider.cpp" />
-    <ClCompile Include="src\physics\components\mesh_collider.cpp" />
-    <ClCompile Include="src\physics\components\sphere_collider.cpp" />
-    <ClCompile Include="src\physics\contact_listener.cpp" />
-    <ClCompile Include="src\physics\physics_world.cpp" />
-    <ClCompile Include="src\reflection\xnor_factory.cpp" />
-    <ClCompile Include="src\reflection\filters.cpp" />
-    <ClCompile Include="src\reflection\type_renderer.cpp" />
-    <ClCompile Include="src\rendering\bloom_rendertarget.cpp" />
-    <ClCompile Include="src\rendering\light\directional_light.cpp" />
-    <ClCompile Include="src\rendering\light\light.cpp" />
-    <ClCompile Include="src\rendering\light\point_light.cpp" />
-    <ClCompile Include="src\rendering\light\spot_light.cpp" />
-    <ClCompile Include="src\rendering\material.cpp" />
-    <ClCompile Include="src\rendering\postprocess_rendertarget.cpp" />
-    <ClCompile Include="src\rendering\render_pass.cpp" />
-    <ClCompile Include="src\rendering\render_systems\bloom_pass.cpp" />
-    <ClCompile Include="src\rendering\render_systems\post_process_pass.cpp" />
-    <ClCompile Include="src\rendering\render_systems\skybox_parser.cpp" />
-    <ClCompile Include="src\rendering\render_systems\light_manager.cpp" />
-    <ClCompile Include="src\rendering\render_systems\skybox_renderer.cpp" />
-    <ClCompile Include="src\rendering\render_systems\tone_mapping.cpp" />
-    <ClCompile Include="src\rendering\rhi.cpp" />
-    <ClCompile Include="src\rendering\uniformBuffer.cpp" />
-    <ClCompile Include="src\rendering\viewport_data.cpp" />
-    <ClCompile Include="src\resource\compute_shader.cpp" />
-    <ClCompile Include="src\resource\cubemap.cpp" />
-    <ClCompile Include="src\resource\font.cpp" />
-    <ClCompile Include="src\resource\shader.cpp" />
-    <ClCompile Include="src\file\file.cpp" />
-    <ClCompile Include="src\file\file_manager.cpp" />
-    <ClCompile Include="src\rendering\camera.cpp" />
-    <ClCompile Include="src\rendering\frame_buffer.cpp" />
-    <ClCompile Include="src\rendering\renderer.cpp" />
-    <ClCompile Include="src\rendering\viewport.cpp" />
-    <ClCompile Include="src\resource\model.cpp" />
-    <ClCompile Include="src\resource\resource.cpp" />
-    <ClCompile Include="src\resource\resource_manager.cpp" />
-    <ClCompile Include="src\resource\texture.cpp" />
-    <ClCompile Include="src\scene\component.cpp" />
-    <ClCompile Include="src\scene\component\camera_component.cpp" />
-    <ClCompile Include="src\scene\component\mesh_renderer.cpp" />
-    <ClCompile Include="src\scene\component\script_component.cpp" />
-    <ClCompile Include="src\scene\component\test_component.cpp" />
-    <ClCompile Include="src\scene\component\test_component_physics.cpp" />
-    <ClCompile Include="src\scene\entity.cpp" />
-    <ClCompile Include="src\scene\scene.cpp" />
-    <ClCompile Include="src\screen.cpp" />
-    <ClCompile Include="src\serialization\serializer.cpp" />
-    <ClCompile Include="src\transform.cpp" />
-    <ClCompile Include="src\utils\coroutine.cpp" />
-    <ClCompile Include="src\utils\file_system_watcher.cpp" />
-    <ClCompile Include="src\utils\logger.cpp" />
-    <ClCompile Include="src\utils\utils.cpp" />
-    <ClCompile Include="src\window.cpp" />
-    <ClCompile Include="src\rendering\vertex.cpp" />
-    <ClCompile Include="src\utils\guid.cpp" />
-    <ClCompile Include="src\world\scene_graph.cpp" />
-    <ClCompile Include="src\world\skybox.cpp" />
-    <ClCompile Include="src\world\world.cpp" />
+    <ClInclude Include="externals\include\AL\al.h" />
+    <ClInclude Include="externals\include\AL\alc.h" />
+    <ClInclude Include="externals\include\AL\alext.h" />
+    <ClInclude Include="externals\include\AL\efx-creative.h" />
+    <ClInclude Include="externals\include\AL\efx-presets.h" />
+    <ClInclude Include="externals\include\AL\efx.h" />
+    <ClInclude Include="include\scene\component\enemy_cpp.hpp" />
+    <ClInclude Include="include\scene\component\player_shoot_cpp.hpp" />
+    <ClInclude Include="include\utils\plane.hpp" />
+    <ClInclude Include="include\world\skybox.hpp" />
+    <ClInclude Include="inline\file\file.inl" />
+    <ClInclude Include="inline\file\file_manager.inl" />
+    <ClInclude Include="inline\input\input.inl" />
+    <ClInclude Include="inline\input\low_pass_filter.inl" />
+    <ClInclude Include="inline\input\time.inl" />
+    <ClInclude Include="inline\reflection\dotnet_reflection.inl" />
+    <ClInclude Include="inline\reflection\filters.inl" />
+    <ClInclude Include="inline\reflection\reflection.inl" />
+    <ClInclude Include="inline\reflection\type_renderer.inl" />
+    <ClInclude Include="inline\reflection\type_renderer_impl.inl" />
+    <ClInclude Include="inline\reflection\xnor_factory.inl" />
+    <ClInclude Include="inline\resource\audio_track.inl" />
+    <ClInclude Include="inline\resource\resource_manager.inl" />
+    <ClInclude Include="inline\resource\texture.inl" />
+    <ClInclude Include="inline\scene\entity.inl" />
+    <ClInclude Include="inline\scene\scene.inl" />
+    <ClInclude Include="inline\serialization\serializer.inl" />
+    <ClInclude Include="inline\utils\color.inl" />
+    <ClInclude Include="inline\utils\event.inl" />
+    <ClInclude Include="inline\utils\list.inl" />
+    <ClInclude Include="inline\utils\logger.inl" />
+    <ClInclude Include="inline\utils\pointer.inl" />
+    <ClInclude Include="inline\utils\reference_counter.inl" />
+    <ClInclude Include="inline\utils\timeline.inl" />
+    <ClInclude Include="inline\utils\ts_queue.inl" />
+    <ClInclude Include="inline\utils\utils.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\include\assimp\aabb.h" />
@@ -293,20 +243,6 @@
     <ClInclude Include="externals\include\Coral\Type.hpp" />
     <ClInclude Include="externals\include\Coral\TypeCache.hpp" />
     <ClInclude Include="externals\include\Coral\Utility.hpp" />
-    <ClInclude Include="externals\include\glad\glad.h" />
-    <ClInclude Include="externals\include\GLFW\glfw3.h" />
-    <ClInclude Include="externals\include\GLFW\glfw3native.h" />
-    <ClInclude Include="externals\include\ImguiGizmo\ImGuizmo.h" />
-    <ClInclude Include="externals\include\ImGui\imconfig.h" />
-    <ClInclude Include="externals\include\ImGui\imgui.h" />
-    <ClInclude Include="externals\include\ImGui\imgui_impl_glfw.h" />
-    <ClInclude Include="externals\include\ImGui\imgui_impl_opengl3.h" />
-    <ClInclude Include="externals\include\ImGui\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="externals\include\ImGui\imgui_internal.h" />
-    <ClInclude Include="externals\include\ImGui\imgui_stdlib.h" />
-    <ClInclude Include="externals\include\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="externals\include\ImGui\imstb_textedit.h" />
-    <ClInclude Include="externals\include\ImGui\imstb_truetype.h" />
     <ClInclude Include="externals\include\jolt\AABBTree\AABBTreeBuilder.h" />
     <ClInclude Include="externals\include\jolt\AABBTree\AABBTreeToBuffer.h" />
     <ClInclude Include="externals\include\jolt\AABBTree\NodeCodec\NodeCodecQuadTreeHalfFloat.h" />
@@ -588,7 +524,6 @@
     <ClInclude Include="externals\include\jolt\TriangleSplitter\TriangleSplitterLongestAxis.h" />
     <ClInclude Include="externals\include\jolt\TriangleSplitter\TriangleSplitterMean.h" />
     <ClInclude Include="externals\include\jolt\TriangleSplitter\TriangleSplitterMorton.h" />
-    <ClInclude Include="externals\include\KHR\khrplatform.h" />
     <ClInclude Include="externals\include\magic_enum\magic_enum.hpp" />
     <ClInclude Include="externals\include\magic_enum\magic_enum_all.hpp" />
     <ClInclude Include="externals\include\magic_enum\magic_enum_containers.hpp" />
@@ -598,57 +533,60 @@
     <ClInclude Include="externals\include\magic_enum\magic_enum_iostream.hpp" />
     <ClInclude Include="externals\include\magic_enum\magic_enum_switch.hpp" />
     <ClInclude Include="externals\include\magic_enum\magic_enum_utility.hpp" />
-    <ClInclude Include="externals\include\Maths\calc.hpp" />
-    <ClInclude Include="externals\include\Maths\definitions.hpp" />
-    <ClInclude Include="externals\include\Maths\easing.hpp" />
-    <ClInclude Include="externals\include\Maths\math.hpp" />
-    <ClInclude Include="externals\include\Maths\matrix.hpp" />
-    <ClInclude Include="externals\include\Maths\matrix3.hpp" />
-    <ClInclude Include="externals\include\Maths\quaternion.hpp" />
-    <ClInclude Include="externals\include\Maths\vector2.hpp" />
-    <ClInclude Include="externals\include\Maths\vector2i.hpp" />
-    <ClInclude Include="externals\include\Maths\vector3.hpp" />
-    <ClInclude Include="externals\include\Maths\vector4.hpp" />
-    <ClInclude Include="externals\include\RapidXML\rapidxml.hpp" />
-    <ClInclude Include="externals\include\RapidXML\RapidXMLSTD.hpp" />
-    <ClInclude Include="externals\include\RapidXML\rapidxml_iterators.hpp" />
-    <ClInclude Include="externals\include\RapidXML\rapidxml_print.hpp" />
-    <ClInclude Include="externals\include\RapidXML\rapidxml_utils.hpp" />
     <ClInclude Include="externals\include\refl\refl.hpp" />
-    <ClInclude Include="externals\include\stb\stb_image.h" />
-    <ClInclude Include="externals\include\ttf\ttfParser.h" />
     <ClInclude Include="include\application.hpp" />
+    <ClInclude Include="include\audio\audio.hpp" />
+    <ClInclude Include="include\audio\audio_buffer.hpp" />
+    <ClInclude Include="include\audio\audio_context.hpp" />
+    <ClInclude Include="include\audio\audio_device.hpp" />
+    <ClInclude Include="include\audio\component\audio_listener.hpp" />
+    <ClInclude Include="include\audio\component\audio_source.hpp" />
     <ClInclude Include="include\core.hpp" />
     <ClInclude Include="include\csharp\dotnet_assembly.hpp" />
+    <ClInclude Include="include\csharp\dotnet_constants.hpp" />
     <ClInclude Include="include\csharp\dotnet_runtime.hpp" />
     <ClInclude Include="include\csharp\dotnet_utils.hpp" />
+    <ClInclude Include="include\data_structure\object_bounding.hpp" />
+    <ClInclude Include="include\data_structure\octree.hpp" />
+    <ClInclude Include="include\data_structure\octree_iterator.hpp" />
+    <ClInclude Include="include\data_structure\octree_node.hpp" />
     <ClInclude Include="include\file\directory.hpp" />
     <ClInclude Include="include\file\entry.hpp" />
     <ClInclude Include="include\file\file.hpp" />
     <ClInclude Include="include\file\file_manager.hpp" />
-    <ClInclude Include="include\input\input.hpp" />
     <ClInclude Include="include\input\gamepad_input.hpp" />
+    <ClInclude Include="include\input\input.hpp" />
     <ClInclude Include="include\input\keyboard_input.hpp" />
+    <ClInclude Include="include\input\low_pass_filter.hpp" />
     <ClInclude Include="include\input\mouse_input.hpp" />
     <ClInclude Include="include\input\time.hpp" />
     <ClInclude Include="include\physics\body_activation_listener.hpp" />
     <ClInclude Include="include\physics\broad_phase_layer_interface.hpp" />
-    <ClInclude Include="include\physics\components\box_collider.hpp" />
-    <ClInclude Include="include\physics\components\capsule_collider.hpp" />
-    <ClInclude Include="include\physics\components\collider.hpp" />
-    <ClInclude Include="include\physics\components\mesh_collider.hpp" />
-    <ClInclude Include="include\physics\components\sphere_collider.hpp" />
+    <ClInclude Include="include\physics\component\box_collider.hpp" />
+    <ClInclude Include="include\physics\component\capsule_collider.hpp" />
+    <ClInclude Include="include\physics\component\collider.hpp" />
+    <ClInclude Include="include\physics\component\mesh_collider.hpp" />
+    <ClInclude Include="include\physics\component\sphere_collider.hpp" />
     <ClInclude Include="include\physics\contact_listener.hpp" />
     <ClInclude Include="include\physics\data\collision_data.hpp" />
     <ClInclude Include="include\physics\layers.hpp" />
     <ClInclude Include="include\physics\physics_world.hpp" />
-    <ClInclude Include="include\reflection\xnor_factory.hpp" />
     <ClInclude Include="include\reflection\dotnet_reflection.hpp" />
+    <ClInclude Include="include\reflection\filters.hpp" />
     <ClInclude Include="include\reflection\reflection.hpp" />
     <ClInclude Include="include\reflection\type_renderer.hpp" />
+    <ClInclude Include="include\reflection\xnor_factory.hpp" />
+    <ClInclude Include="include\rendering\animator.hpp" />
     <ClInclude Include="include\rendering\bloom_render_target.hpp" />
+    <ClInclude Include="include\rendering\bone.hpp" />
+    <ClInclude Include="include\rendering\buffer\uniform_buffer.hpp" />
+    <ClInclude Include="include\rendering\buffer\vao.hpp" />
+    <ClInclude Include="include\rendering\buffer\vbo.hpp" />
     <ClInclude Include="include\rendering\camera.hpp" />
+    <ClInclude Include="include\rendering\draw_gizmo.hpp" />
     <ClInclude Include="include\rendering\frame_buffer.hpp" />
+    <ClInclude Include="include\rendering\frustum.hpp" />
+    <ClInclude Include="include\rendering\light\cascade_shadow_map.hpp" />
     <ClInclude Include="include\rendering\light\directional_light.hpp" />
     <ClInclude Include="include\rendering\light\light.hpp" />
     <ClInclude Include="include\rendering\light\point_light.hpp" />
@@ -656,83 +594,72 @@
     <ClInclude Include="include\rendering\material.hpp" />
     <ClInclude Include="include\rendering\post_process_render_target.hpp" />
     <ClInclude Include="include\rendering\renderer.hpp" />
+    <ClInclude Include="include\rendering\render_pass.hpp" />
     <ClInclude Include="include\rendering\render_systems\bloom_pass.hpp" />
+    <ClInclude Include="include\rendering\render_systems\gui_pass.hpp" />
+    <ClInclude Include="include\rendering\render_systems\light_manager.hpp" />
+    <ClInclude Include="include\rendering\render_systems\meshes_drawer.hpp" />
     <ClInclude Include="include\rendering\render_systems\post_process_pass.hpp" />
     <ClInclude Include="include\rendering\render_systems\skybox_parser.hpp" />
-    <ClInclude Include="include\rendering\viewport.hpp" />
-    <ClInclude Include="include\rendering\render_pass.hpp" />
-    <ClInclude Include="include\rendering\render_systems\light_manager.hpp" />
     <ClInclude Include="include\rendering\render_systems\skybox_renderer.hpp" />
     <ClInclude Include="include\rendering\render_systems\tone_mapping.hpp" />
-    <ClInclude Include="include\rendering\uniform_buffer.hpp" />
+    <ClInclude Include="include\rendering\rhi.hpp" />
+    <ClInclude Include="include\rendering\rhi_typedef.hpp" />
+    <ClInclude Include="include\rendering\vertex.hpp" />
+    <ClInclude Include="include\rendering\viewport.hpp" />
     <ClInclude Include="include\rendering\viewport_data.hpp" />
+    <ClInclude Include="include\resource\animation.hpp" />
+    <ClInclude Include="include\resource\animation_montage.hpp" />
+    <ClInclude Include="include\resource\audio_track.hpp" />
     <ClInclude Include="include\resource\compute_shader.hpp" />
-    <ClInclude Include="include\resource\cubemap.hpp" />
     <ClInclude Include="include\resource\font.hpp" />
+    <ClInclude Include="include\resource\mesh.hpp" />
     <ClInclude Include="include\resource\model.hpp" />
     <ClInclude Include="include\resource\resource.hpp" />
     <ClInclude Include="include\resource\resource_manager.hpp" />
+    <ClInclude Include="include\resource\shader.hpp" />
+    <ClInclude Include="include\resource\skeleton.hpp" />
     <ClInclude Include="include\resource\texture.hpp" />
     <ClInclude Include="include\scene\component.hpp" />
+    <ClInclude Include="include\scene\component\button.hpp" />
     <ClInclude Include="include\scene\component\camera_component.hpp" />
-    <ClInclude Include="include\scene\component\mesh_renderer.hpp" />
+    <ClInclude Include="include\scene\component\gui_component.hpp" />
+    <ClInclude Include="include\scene\component\image.hpp" />
     <ClInclude Include="include\scene\component\script_component.hpp" />
-    <ClInclude Include="include\scene\component\test_component.hpp" />
+    <ClInclude Include="include\scene\component\skinned_mesh_renderer.hpp" />
+    <ClInclude Include="include\scene\component\static_mesh_renderer.hpp" />
+    <ClInclude Include="include\scene\component\text_component.hpp" />
     <ClInclude Include="include\scene\entity.hpp" />
     <ClInclude Include="include\scene\scene.hpp" />
     <ClInclude Include="include\screen.hpp" />
     <ClInclude Include="include\serialization\serializer.hpp" />
+    <ClInclude Include="include\transform.hpp" />
+    <ClInclude Include="include\utils\bound.hpp" />
     <ClInclude Include="include\utils\color.hpp" />
     <ClInclude Include="include\utils\concepts.hpp" />
     <ClInclude Include="include\utils\coroutine.hpp" />
     <ClInclude Include="include\utils\event.hpp" />
     <ClInclude Include="include\utils\file_system_watcher.hpp" />
     <ClInclude Include="include\utils\formatter.hpp" />
+    <ClInclude Include="include\utils\guid.hpp" />
     <ClInclude Include="include\utils\list.hpp" />
     <ClInclude Include="include\utils\logger.hpp" />
+    <ClInclude Include="include\utils\message_box.hpp" />
+    <ClInclude Include="include\utils\meta_programming.hpp" />
     <ClInclude Include="include\utils\pointer.hpp" />
     <ClInclude Include="include\utils\reference_counter.hpp" />
+    <ClInclude Include="include\utils\timeline.hpp" />
     <ClInclude Include="include\utils\ts_queue.hpp" />
     <ClInclude Include="include\utils\utils.hpp" />
+    <ClInclude Include="include\utils\windows.hpp" />
     <ClInclude Include="include\window.hpp" />
-    <ClInclude Include="include\rendering\vertex.hpp" />
-    <ClInclude Include="include\transform.hpp" />
-    <ClInclude Include="include\utils\guid.hpp" />
-    <ClInclude Include="include\resource\shader.hpp" />
-    <ClInclude Include="include\rendering\rhi.hpp" />
     <ClInclude Include="include\world\scene_graph.hpp" />
-    <ClInclude Include="include\world\skybox.hpp" />
     <ClInclude Include="include\world\world.hpp" />
-    <ClInclude Include="inline\file\file.inl" />
-    <ClInclude Include="inline\file\file_manager.inl" />
-    <ClInclude Include="inline\input\input.inl" />
-    <ClInclude Include="inline\input\time.inl" />
-    <ClInclude Include="inline\reflection\filters.inl" />
-    <ClInclude Include="inline\reflection\xnor_factory.inl" />
-    <ClInclude Include="inline\reflection\reflection.inl" />
-    <ClInclude Include="inline\reflection\type_renderer.inl" />
-    <ClInclude Include="inline\resource\resource_manager.inl" />
-    <ClInclude Include="inline\resource\texture.inl" />
-    <ClInclude Include="inline\scene\entity.inl" />
-    <ClInclude Include="inline\scene\scene.inl" />
-    <ClInclude Include="inline\serialization\serializer.inl" />
-    <ClInclude Include="inline\utils\color.inl" />
-    <ClInclude Include="inline\utils\event.inl" />
-    <ClInclude Include="inline\utils\list.inl" />
-    <ClInclude Include="inline\utils\logger.inl" />
-    <ClInclude Include="inline\utils\pointer.inl" />
-    <ClInclude Include="inline\utils\reference_counter.inl" />
-    <ClInclude Include="inline\utils\ts_queue.inl" />
-    <ClInclude Include="inline\utils\utils.inl" />
-    <ClCompile Include="src\physics\components\box_collider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="externals\include\assimp\.editorconfig" />
     <Content Include="externals\include\assimp\config.h.in" />
     <Content Include="externals\include\jolt\Physics\Collision\Shape\TaperedCapsuleShape.gliffy" />
-    <Content Include="include\rendering\rhi_typedef.hpp" />
-    <Content Include="include\utils\meta_programming.hpp" />
-    <ClInclude Include="inline\reflection\dotnet_reflection.inl" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="externals\include\jolt\Jolt.natvis" />
@@ -743,8 +670,119 @@
   <ItemGroup>
     <CoralManagedFiles Include="$(ProjectDir)externals\managed\Coral\$(Configuration)\*" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\application.cpp" />
+    <ClCompile Include="src\audio\audio.cpp" />
+    <ClCompile Include="src\audio\audio_buffer.cpp" />
+    <ClCompile Include="src\audio\audio_context.cpp" />
+    <ClCompile Include="src\audio\audio_device.cpp" />
+    <ClCompile Include="src\audio\component\audio_listener.cpp" />
+    <ClCompile Include="src\audio\component\audio_source.cpp" />
+    <ClCompile Include="src\csharp\dotnet_assembly.cpp" />
+    <ClCompile Include="src\csharp\dotnet_runtime.cpp" />
+    <ClCompile Include="src\csharp\dotnet_utils.cpp" />
+    <ClCompile Include="src\data_structure\object_bounding.cpp" />
+    <ClCompile Include="src\data_structure\octree.cpp" />
+    <ClCompile Include="src\data_structure\octree_iterator.cpp" />
+    <ClCompile Include="src\data_structure\octree_node.cpp" />
+    <ClCompile Include="src\file\directory.cpp" />
+    <ClCompile Include="src\file\entry.cpp" />
+    <ClCompile Include="src\file\file.cpp" />
+    <ClCompile Include="src\file\file_manager.cpp" />
+    <ClCompile Include="src\input\gamepad_input.cpp" />
+    <ClCompile Include="src\input\input.cpp" />
+    <ClCompile Include="src\input\low_pass_filter.cpp" />
+    <ClCompile Include="src\input\time.cpp" />
+    <ClCompile Include="src\physics\body_activation_listener.cpp" />
+    <ClCompile Include="src\physics\broad_phase_layer_interface.cpp" />
+    <ClCompile Include="src\physics\component\box_collider.cpp" />
+    <ClCompile Include="src\physics\component\capsule_collider.cpp" />
+    <ClCompile Include="src\physics\component\collider.cpp" />
+    <ClCompile Include="src\physics\component\mesh_collider.cpp" />
+    <ClCompile Include="src\physics\component\sphere_collider.cpp" />
+    <ClCompile Include="src\physics\contact_listener.cpp" />
+    <ClCompile Include="src\physics\physics_world.cpp" />
+    <ClCompile Include="src\reflection\dotnet_reflection.cpp" />
+    <ClCompile Include="src\reflection\filters.cpp" />
+    <ClCompile Include="src\reflection\reflection.cpp" />
+    <ClCompile Include="src\reflection\type_renderer.cpp" />
+    <ClCompile Include="src\reflection\xnor_factory.cpp" />
+    <ClCompile Include="src\rendering\animator.cpp" />
+    <ClCompile Include="src\rendering\bloom_rendertarget.cpp" />
+    <ClCompile Include="src\rendering\bone.cpp" />
+    <ClCompile Include="src\rendering\buffer\uniformBuffer.cpp" />
+    <ClCompile Include="src\rendering\buffer\vao.cpp" />
+    <ClCompile Include="src\rendering\buffer\vbo.cpp" />
+    <ClCompile Include="src\rendering\camera.cpp" />
+    <ClCompile Include="src\rendering\draw_gizmo.cpp" />
+    <ClCompile Include="src\rendering\frame_buffer.cpp" />
+    <ClCompile Include="src\rendering\frustum.cpp" />
+    <ClCompile Include="src\rendering\light\cascade_shadow_map.cpp" />
+    <ClCompile Include="src\rendering\light\directional_light.cpp" />
+    <ClCompile Include="src\rendering\light\light.cpp" />
+    <ClCompile Include="src\rendering\light\point_light.cpp" />
+    <ClCompile Include="src\rendering\light\spot_light.cpp" />
+    <ClCompile Include="src\rendering\material.cpp" />
+    <ClCompile Include="src\rendering\postprocess_rendertarget.cpp" />
+    <ClCompile Include="src\rendering\renderer.cpp" />
+    <ClCompile Include="src\rendering\render_pass.cpp" />
+    <ClCompile Include="src\rendering\render_systems\animation_render.cpp" />
+    <ClCompile Include="src\rendering\render_systems\bloom_pass.cpp" />
+    <ClCompile Include="src\rendering\render_systems\gui_pass.cpp" />
+    <ClCompile Include="src\rendering\render_systems\light_manager.cpp" />
+    <ClCompile Include="src\rendering\render_systems\meshes_drawer.cpp" />
+    <ClCompile Include="src\rendering\render_systems\post_process_pass.cpp" />
+    <ClCompile Include="src\rendering\render_systems\skybox_parser.cpp" />
+    <ClCompile Include="src\rendering\render_systems\skybox_renderer.cpp" />
+    <ClCompile Include="src\rendering\render_systems\tone_mapping.cpp" />
+    <ClCompile Include="src\rendering\rhi.cpp" />
+    <ClCompile Include="src\rendering\vertex.cpp" />
+    <ClCompile Include="src\rendering\viewport.cpp" />
+    <ClCompile Include="src\rendering\viewport_data.cpp" />
+    <ClCompile Include="src\resource\animation.cpp" />
+    <ClCompile Include="src\resource\animation_montage.cpp" />
+    <ClCompile Include="src\resource\audio_track.cpp" />
+    <ClCompile Include="src\resource\compute_shader.cpp" />
+    <ClCompile Include="src\resource\font.cpp" />
+    <ClCompile Include="src\resource\mesh.cpp" />
+    <ClCompile Include="src\resource\model.cpp" />
+    <ClCompile Include="src\resource\resource.cpp" />
+    <ClCompile Include="src\resource\resource_manager.cpp" />
+    <ClCompile Include="src\resource\shader.cpp" />
+    <ClCompile Include="src\resource\skeleton.cpp" />
+    <ClCompile Include="src\resource\texture.cpp" />
+    <ClCompile Include="src\scene\component.cpp" />
+    <ClCompile Include="src\scene\component\button.cpp" />
+    <ClCompile Include="src\scene\component\camera_component.cpp" />
+    <ClCompile Include="src\scene\component\enemy_cpp.cpp" />
+    <ClCompile Include="src\scene\component\gui_component.cpp" />
+    <ClCompile Include="src\scene\component\image.cpp" />
+    <ClCompile Include="src\scene\component\player_shoot_cpp.cpp"/>
+    <ClCompile Include="src\scene\component\script_component.cpp" />
+    <ClCompile Include="src\scene\component\skinned_mesh_renderer.cpp" />
+    <ClCompile Include="src\scene\component\static_mesh_renderer.cpp" />
+    <ClCompile Include="src\scene\component\text_component.cpp" />
+    <ClCompile Include="src\scene\entity.cpp" />
+    <ClCompile Include="src\scene\scene.cpp" />
+    <ClCompile Include="src\screen.cpp" />
+    <ClCompile Include="src\serialization\serializer.cpp" />
+    <ClCompile Include="src\transform.cpp" />
+    <ClCompile Include="src\utils\bound.cpp" />
+    <ClCompile Include="src\utils\coroutine.cpp" />
+    <ClCompile Include="src\utils\file_system_watcher.cpp" />
+    <ClCompile Include="src\utils\guid.cpp" />
+    <ClCompile Include="src\utils\logger.cpp" />
+    <ClCompile Include="src\utils\message_box.cpp" />
+    <ClCompile Include="src\utils\plane.cpp"/>
+    <ClCompile Include="src\utils\utils.cpp" />
+    <ClCompile Include="src\utils\windows.cpp" />
+    <ClCompile Include="src\window.cpp" />
+    <ClCompile Include="src\world\scene_graph.cpp" />
+    <ClCompile Include="src\world\skybox.cpp" />
+    <ClCompile Include="src\world\world.cpp" />
+  </ItemGroup>
   <Target Name="CopyCoralManaged" AfterTargets="Build">
-    <Copy SourceFiles="@(CoralManagedFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(CoralManagedFiles)" DestinationFolder="$(OutDir)\DotnetAssemblies" SkipUnchangedFiles="true" />
     <Message Text="Copy Coral Managed Assemblies" Importance="high" />
   </Target>
 </Project>

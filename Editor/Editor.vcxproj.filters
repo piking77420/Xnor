@@ -51,6 +51,9 @@
     <ClCompile Include="src\editing\transform_gizmo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\editing\picking_strategy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\editor.hpp">
@@ -93,6 +96,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\editing\transform_gizmo.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\editing\picking_strategy.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

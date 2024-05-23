@@ -6,6 +6,7 @@
 ///
 /// @brief Defines utilities for meta programming and template manipulation
 
+#include <map>
 #include <type_traits>
 
 #include <Maths/quaternion.hpp>
@@ -51,6 +52,11 @@ namespace Meta
     template <typename T>
     constexpr bool_t IsPointer = std::is_pointer_v<T>;
 
+    /// @brief Checks whether @c T is a class
+    /// @tparam T Type
+    template <typename T>
+    constexpr bool_t IsClass = std::is_class_v<T>;
+
     /// @brief Checks whether @c T is an enum
     /// @tparam T Type
     template <typename T>
@@ -75,6 +81,14 @@ namespace Meta
     /// @tparam T Type
     template <typename T>
     constexpr bool_t IsDefaultConstructible = std::is_default_constructible_v<T>;
+
+    /// @brief Checks whether @c T can be copied without semantics
+    /// @tparam T Type
+    template <typename T>
+    constexpr bool_t IsCopyAssignable = std::is_copy_assignable_v<T>;
+
+    template <bool_t Test>
+    using EnableIf = std::enable_if_t<Test>;
 
     /// @brief Removes the array specification from @c T
     ///
@@ -103,6 +117,20 @@ namespace Meta
 
     template <typename T, typename A>
     constexpr bool_t IsStdVector<std::vector<T, A>> = true;
+
+    /// @brief Checks whether the type is a @c std::vector
+    template <typename>
+    constexpr bool_t IsStdFunction = false;
+
+    template <typename T, typename... Args>
+    constexpr bool_t IsStdFunction<std::function<T(Args...)>> = true;
+
+    /// @brief Checks whether the type is a @c std::vector
+    template <typename>
+    constexpr bool_t IsStdMap = false;
+
+    template <typename T, typename A>
+    constexpr bool_t IsStdMap<std::map<T, A>> = true;
 
     /// @brief Checks whether the type is a List
     template <typename>
@@ -135,7 +163,7 @@ namespace Meta
     /// 
     /// @tparam T Type
     template <typename T>
-    constexpr bool_t IsNativeType = IsAny<T, uint8_t, int8_t, uint16_t, int16_t, uint32_t, int32_t, float_t, double_t, bool_t>;
+    constexpr bool_t IsNativeType = IsAny<T, uint8_t, int8_t, uint16_t, int16_t, uint32_t, int32_t, uint64_t, int64_t, float_t, double_t, bool_t>;
 
     /// @brief Checks if T is an integral or a floating type.
     /// 
@@ -151,7 +179,7 @@ namespace Meta
     /// 
     /// @tparam T Type
     template <typename T>
-    constexpr bool_t IsIntegralOrFloating = IsAny<T, uint8_t, int8_t, uint16_t, int16_t, uint32_t, int32_t, float_t, double_t>;
+    constexpr bool_t IsIntegralOrFloating = IsAny<T, uint8_t, int8_t, uint16_t, int16_t, uint32_t, int32_t, uint64_t, int64_t, float_t, double_t>;
 
     /// @brief Checks if T is a math type.
     /// 
@@ -176,7 +204,7 @@ namespace Meta
     /// 
     /// @tparam T Type
     template <typename T>
-    constexpr bool_t IsColorType = IsAny<T, Colorf, ColorRgb, ColorHsva, ColorRgba>;
+    constexpr bool_t IsColorType = IsAny<T, Color, ColorHsva>;
 }
 
 END_XNOR_CORE;

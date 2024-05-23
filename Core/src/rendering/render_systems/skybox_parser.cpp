@@ -20,14 +20,14 @@ void SkyBoxParser::Init()
     
     m_EquirectangularToCubeMapShader = ResourceManager::Get<Shader>("equirectangular_to_cubemap");
     m_EquirectangularToCubeMapShader->SetDepthFunction(DepthFunction::LessEqual);
-    m_EquirectangularToCubeMapShader->CreateInRhi();
+    m_EquirectangularToCubeMapShader->CreateInInterface();
     m_EquirectangularToCubeMapShader->Use();
     m_EquirectangularToCubeMapShader->SetInt("equirectangularMap",0);
     m_EquirectangularToCubeMapShader->Use();
 
     m_IrradianceConvolution = ResourceManager::Get<Shader>("irradiance_convolution");
     m_IrradianceConvolution->SetDepthFunction(DepthFunction::LessEqual);
-    m_IrradianceConvolution->CreateInRhi();
+    m_IrradianceConvolution->CreateInInterface();
     
     m_IrradianceConvolution->Use();
     m_IrradianceConvolution->SetInt("environmentMap", 0);
@@ -35,23 +35,23 @@ void SkyBoxParser::Init()
 
     m_PrefilterShader = ResourceManager::Get<Shader>("prefilter_shader");
     m_PrefilterShader->SetDepthFunction(DepthFunction::LessEqual);
-    m_PrefilterShader->CreateInRhi();
+    m_PrefilterShader->CreateInInterface();
     m_PrefilterShader->Use();
     m_PrefilterShader->SetInt("environmentMap",0);
     m_PrefilterShader->Use();
 
     m_PreComputeBrdr = ResourceManager::Get<Shader>("precompute_brdf");
-    m_PreComputeBrdr->CreateInRhi();
+    m_PreComputeBrdr->CreateInInterface();
 
     m_FrameBuffer = new Framebuffer();
 }
 
-void SkyBoxParser::EquirectangularToCubeMapFunc(const Texture& equirectangularMap, const Cubemap& cubemap)
+void SkyBoxParser::EquirectangularToCubeMapFunc(const Texture& equirectangularMap, const Texture& cubemap)
 {
     Compute(equirectangularMap, cubemap, m_EquirectangularToCubeMapShader);
 }
 
-void SkyBoxParser::ComputeIrradiance(const Cubemap& irradianceInput, const Cubemap& irradianceOutput, const Vector2i irradianceSize) 
+void SkyBoxParser::ComputeIrradiance(const Texture& irradianceInput, const Texture& irradianceOutput, const Vector2i irradianceSize) 
 {
     Matrix projection;
     Matrix::Perspective(90.f * Calc::Deg2Rad, 1.0f, 0.1f, 10.f, &projection);
@@ -74,16 +74,17 @@ void SkyBoxParser::ComputeIrradiance(const Cubemap& irradianceInput, const Cubem
 
         m_IrradianceConvolution->SetMat4("view", captureViews[i]);
 
-        m_FrameBuffer->AttachTexture(irradianceOutput, Attachment::Color00, static_cast<CubeMapFace>(i));
+        m_FrameBuffer->AttachTextureLayer(irradianceOutput, Attachment::Color00, 0, static_cast<uint32_t>(i));
+
         m_RenderPass.BeginRenderPass(renderPassBeginInfo);
 
-        Rhi::DrawModel(m_Cube->GetId());
+        Rhi::DrawModel(DrawMode::Triangles, m_Cube->models[0]->GetId());
 
         m_RenderPass.EndRenderPass();
     }
 }
 
-void SkyBoxParser::ComputePreFiltering(const Cubemap& environementMap, const Cubemap& prefilteringMap, const uint32_t mipLevels)
+void SkyBoxParser::ComputePreFiltering(const Texture& environementMap, const Texture& prefilteringMap, const uint32_t mipLevels)
 {
     Matrix projection;
     Matrix::Perspective(90.f * Calc::Deg2Rad, 1.0f, 0.1f, 10.f,&projection);
@@ -112,11 +113,12 @@ void SkyBoxParser::ComputePreFiltering(const Cubemap& environementMap, const Cub
         
         for (uint32_t i = 0; i < 6; i++)
         {
-            m_FrameBuffer->AttachTexture(prefilteringMap, Attachment::Color00, static_cast<CubeMapFace>(i), mip);
+            m_FrameBuffer->AttachTextureLayer(prefilteringMap, Attachment::Color00, mip, i);
+
             Rhi::ClearBuffer(BufferFlag::DepthBit);
             m_PrefilterShader->SetMat4("view", captureViews[i]);
             
-            Rhi::DrawModel(m_Cube->GetId());
+            Rhi::DrawModel(DrawMode::Triangles, m_Cube->models[0]->GetId());
         }
     }
     m_RenderPass.EndRenderPass();
@@ -139,14 +141,14 @@ void SkyBoxParser::PreComputeBrdf(const Vector2i environementMapSize, const Text
     m_PreComputeBrdr->Use();
     m_RenderPass.BeginRenderPass(renderPassBeginInfo);
 
-    Rhi::DrawModel(m_Quad->GetId());
+    Rhi::DrawModel(DrawMode::Triangles, m_Quad->models[0]->GetId());
 
     m_RenderPass.EndRenderPass();
     m_PreComputeBrdr->Unuse();
     m_RenderPass.EndRenderPass();
 }
 
-void SkyBoxParser::Compute(const Texture& equirectangularMap, const Cubemap& cubemap, const Pointer<Shader>& shader)
+void SkyBoxParser::Compute(const Texture& equirectangularMap, const Texture& cubemap, const Pointer<Shader>& shader)
 {
     Resize(cubemap.GetSize());
 
@@ -172,10 +174,10 @@ void SkyBoxParser::Compute(const Texture& equirectangularMap, const Cubemap& cub
 
         shader->SetMat4("view", captureViews[i]);
 
-        m_FrameBuffer->AttachTexture(cubemap, Attachment::Color00, static_cast<CubeMapFace>(i));
+        m_FrameBuffer->AttachTextureLayer(cubemap, Attachment::Color00, 0, static_cast<uint32_t>(i));
         m_RenderPass.BeginRenderPass(renderPassBeginInfo);
 
-        Rhi::DrawModel(m_Cube->GetId());
+        Rhi::DrawModel(DrawMode::Triangles, m_Cube->models[0]->GetId());
 
         m_RenderPass.EndRenderPass();
     }
@@ -190,7 +192,7 @@ void SkyBoxParser::Resize(const Vector2i size)
         delete m_TextureDepth;
     
         m_TextureDepth = new Texture(TextureInternalFormat::DepthComponent32, size);
-        m_TextureDepth->CreateInRhi();
+        m_TextureDepth->CreateInInterface();
         m_FrameBuffer->AttachTexture(*m_TextureDepth, Attachment::Depth);
     }
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core.hpp"
+#include "rhi_typedef.hpp"
 
 #include "Maths/vector2i.hpp"
 #include "Maths/vector3.hpp"
@@ -15,7 +16,7 @@ class XNOR_ENGINE Camera
 {
 public:
 	/// @brief Position
-	Vector3 position = { 0, 0, -3.f };
+	Vector3 position = { 0, 0, 6.f };
 
 	/// @brief Front vector, where the camera is looking
 	Vector3 front = -Vector3::UnitZ();
@@ -39,6 +40,12 @@ public:
 	/// @brief Whether the camera is orthographic
 	bool_t isOrthographic = false;
 
+	Camera() = default;
+
+	~Camera() = default;
+
+	DEFAULT_COPY_MOVE_OPERATIONS(Camera);
+
 	/// @brief Computes the projection @ref Matrix of the camera
 	/// @param screenSize Screen size
 	/// @param matrix Result matrix
@@ -56,6 +63,11 @@ public:
 	/// @brief Makes the camera look at a specific position
 	/// @param at Where
 	void LookAt(const Vector3& at);
+	
+	/// @brief Makes the camera look at a specific position
+	/// @param at Where
+	/// @param upVector custom UpVector
+	void LookAt(const Vector3& at,const Vector3& upVector);
 
 	/// @brief Projects a 3D position onto the 2D screen coords space
 	/// @param vertex 3D position
@@ -64,6 +76,7 @@ public:
 	/// @return Result position
 	[[nodiscard]]
 	Vector2i ProjectOn(const Vector3& vertex, Vector2i screenSize, const Matrix& model) const;
+	
 };
 
 END_XNOR_CORE

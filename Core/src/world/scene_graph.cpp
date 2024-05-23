@@ -2,6 +2,8 @@
 
 #include <Maths/matrix.hpp>
 
+#include "utils/logger.hpp"
+
 using namespace XnorCore;
 
 Matrix GetTrsOfParents(const Entity& parent)
@@ -43,7 +45,7 @@ void SceneGraph::UpdateTransform(Entity& entity)
 	}
 }
 
-void SceneGraph::Update(const List<Entity*>& entities)
+void SceneGraph::	Update(const List<Entity*>& entities)
 {
     for (size_t i = 0; i < entities.GetSize(); i++)
     {

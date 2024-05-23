@@ -89,6 +89,10 @@ public:
     template <Concepts::ComponentT T>
     void RemoveComponent();
 
+    /// @brief Removes a specified Component
+    /// @param component Component instance
+    XNOR_ENGINE void RemoveComponent(const Component* component);
+
     /// @brief Gets the Guid of the entity
     /// @return Guid
     [[nodiscard]]
@@ -138,6 +142,9 @@ public:
     /// @param child Child
     XNOR_ENGINE void RemoveChild(Entity* child);
 
+    /// @brief Awake the entity
+    XNOR_ENGINE void Awake();
+    
     /// @brief Begins behavior for the entity
     XNOR_ENGINE void Begin();
 
@@ -150,10 +157,24 @@ public:
     /// @brief Called after the physics update
     XNOR_ENGINE void PostPhysics();
 
+    XNOR_ENGINE void OnRendering();
+
+    /// @brief Clones the current Entity.
+    ///
+    /// This function creates a new Entity at the same scope in the scene graph and with the same
+    /// components, parent, and children, but a different ID.
+    ///
+    /// Be aware that this function can be very performance heavy, especially for Entities with a lot
+    /// of nested children.
+    XNOR_ENGINE Entity* Clone() const;
+
+    XNOR_ENGINE void LookAt(const Vector3& sourcePoint, const Vector3& at);
+
     /// @brief Compares 2 entities using their Guid
     /// @param entity Other
     /// @return Equals
     XNOR_ENGINE bool_t operator==(const Entity& entity) const;
+    
 
 #ifdef SWIG_ONLY
     const List<Component*>& GetComponents() const;
@@ -163,6 +184,7 @@ private:
     XNOR_ENGINE explicit Entity(const Guid& entiyId);
     
     Entity* m_Parent = nullptr;
+    
     List<Entity*> m_Children;
     
     Guid m_EntityId = Guid::New();
@@ -170,6 +192,7 @@ private:
     List<Component*> m_Components;
 
     friend class Scene;
+    friend class Component;
 };
 
 END_XNOR_CORE
@@ -179,9 +202,9 @@ END_XNOR_CORE
 REFL_AUTO(
     type(XnorCore::Entity),
     field(name),
-    field(m_EntityId, XnorCore::Reflection::HideInInspector()),
+    field(m_EntityId, XnorCore::Reflection::HideInInspector(), XnorCore::Reflection::DontClone()),
     field(transform),
     field(m_Components),
-    field(m_Parent, XnorCore::Reflection::HideInInspector()),
-    field(m_Children, XnorCore::Reflection::HideInInspector())
+    field(m_Parent, XnorCore::Reflection::HideInInspector(), XnorCore::Reflection::DontClone()),
+    field(m_Children, XnorCore::Reflection::HideInInspector(), XnorCore::Reflection::DontClone())
 )

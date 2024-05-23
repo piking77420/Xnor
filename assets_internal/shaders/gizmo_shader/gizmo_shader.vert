@@ -10,14 +10,19 @@ layout (std140, binding = 0) uniform CameraUniform
 {
     mat4 view;
     mat4 projection;
+    mat4 inView;
+    mat4 inProjection;
     vec3 cameraPos;
+    float near;
+    float far;
 };
-
 layout (std140, binding = 1) uniform ModelUniform
 {
     mat4 model;
     mat4 normalInvertMatrix;
+    uint drawId;
 };
+
 
 out vec4 Color;
 

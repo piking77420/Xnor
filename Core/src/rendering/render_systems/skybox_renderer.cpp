@@ -9,16 +9,18 @@ void SkyboxRenderer::InitializeResources()
 {
     m_SkyboxDrawerShader = ResourceManager::Get<Shader>("skymap_shader");
     m_SkyboxDrawerShader->SetDepthFunction(DepthFunction::LessEqual);
-    m_SkyboxDrawerShader->CreateInRhi();
+    m_SkyboxDrawerShader->CreateInInterface();
     
     m_SkyboxDrawerShader->Use();
     m_SkyboxDrawerShader->SetInt("skybox",SkyBoxAlbedoTextureBindingIndex);
 }
 
-void SkyboxRenderer::DrawSkymap(const Pointer<Model>& cubeModel, const Skybox& skybox) const 
+void SkyboxRenderer::DrawSkymap(const Pointer<Mesh>& cubeModel, const Skybox& skybox) const 
 {
     m_SkyboxDrawerShader->Use();
-    skybox.GetSkyboxAlbedoColor()->BindTexture(SkyBoxAlbedoTextureBindingIndex);
-    Rhi::DrawModel(cubeModel->GetId());
+    const Texture* skyboxAlbredo = skybox.GetSkyboxAlbedoColor();
+    if (skyboxAlbredo)
+        skyboxAlbredo->BindTexture(SkyBoxAlbedoTextureBindingIndex);
+    Rhi::DrawModel(DrawMode::Triangles, cubeModel->models[0]->GetId());
     m_SkyboxDrawerShader->Unuse();
 }

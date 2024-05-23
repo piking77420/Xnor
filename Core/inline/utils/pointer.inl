@@ -4,13 +4,13 @@ BEGIN_XNOR_CORE
 
 template <typename T>
 template <typename... Args>
-Pointer<T> Pointer<T>::Create(Args&&... args)  // NOLINT(cppcoreguidelines-missing-std-forward)
+Pointer<T> Pointer<T>::New(Args&&... args)  // NOLINT(cppcoreguidelines-missing-std-forward)
 {
     return Pointer(new ReferenceCounter<T>(std::forward<Args>(args)...), true);
 }
 
 template <typename T>
-Pointer<T> Pointer<T>::Create(Construct)
+Pointer<T> Pointer<T>::New()
 {
     return Pointer(new ReferenceCounter<T>, true);
 }
@@ -207,22 +207,6 @@ Pointer<T>::operator T*()
     if (m_ReferenceCounter)
         return m_ReferenceCounter->GetPointer();
     return nullptr;
-}
-
-template <typename T>
-#ifdef DOXYGEN
-Pointer<T>::operator stdstring() const
-#else
-Pointer<T>::operator std::string() const
-#endif
-{
-    return std::format(
-        "{{ ptr={:p}, sRefs={:d}, wRefs={:d}, isSRef={} }}",
-        static_cast<const T*>(this),
-        m_ReferenceCounter->GetStrong(),
-        m_ReferenceCounter->GetWeak(),
-        m_IsStrongReference
-    );
 }
 
 template <typename T>

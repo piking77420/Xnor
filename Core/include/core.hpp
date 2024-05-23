@@ -40,6 +40,8 @@ typedef bool bool_t;
 #define XNOR_ENGINE __declspec(dllimport)
 #endif
 
+#define ALLOCATOR_FUNC __declspec(allocator)
+
 /// @brief Starts the @ref XnorCore namespace.
 #define BEGIN_XNOR_CORE namespace XnorCore {
 
@@ -90,10 +92,10 @@ namespace XnorCore {}
 /// 
 /// @param type The type to default the copy and move operations of.
 #define DEFAULT_COPY_MOVE_OPERATIONS(type)         \
-    type(const type& other) = default;             \
-    type(type&& other) = default;                  \
-    type& operator=(const type& other) = default;  \
-    type& operator=(type&& other) = default;
+    type(const type& other) noexcept = default;             \
+    type(type&& other) noexcept = default;                  \
+    type& operator=(const type& other) noexcept = default;  \
+    type& operator=(type&& other) noexcept = default;
 
 /// @brief Deletes the copy and move operations of a given @p type.
 /// 
@@ -206,3 +208,6 @@ using stdstring = std::string;
 #else
 #define ALIGNAS(size)
 #endif
+
+/// @brief Forwards a value with its own type as template.
+#define FORWARD(value) std::forward<decltype(value)>(value)

@@ -5,8 +5,8 @@
 #include <Maths/vector2i.hpp>
 
 #include "core.hpp"
-#include "resource.hpp"
 #include "rendering/rhi_typedef.hpp"
+#include "resource/resource.hpp"
 
 /// @file texture.hpp
 /// @brief Defines the XnorCore::Texture class
@@ -14,7 +14,7 @@
 BEGIN_XNOR_CORE
 
 /// @brief Represents an image in memory.
-class Texture : public Resource
+class Texture final : public Resource
 {
 public:
     /// @brief Options for loading the data of a Texture.
@@ -35,19 +35,12 @@ public:
     XNOR_ENGINE static inline LoadOptions defaultLoadOptions;
 
     /// @brief Allowed extensions for texture files
-    XNOR_ENGINE static inline constexpr std::array<const char_t*, 11> FileExtensions
+    XNOR_ENGINE static constexpr std::array<const char_t*, 4> FileExtensions
     {
         ".jpg",
         ".jpeg",
         ".png",
-        ".bmp",
-        ".hdr",
-        ".psd",
-        ".tga",
-        ".gif",
-        ".pic",
-        ".pgm",
-        ".ppm"
+        ".hdr"
     };
 
     /// @brief Options to use when loading this Texture.
@@ -71,29 +64,31 @@ public:
     /// @param textureInternalFormat Format inside the FrameBuffer
     /// @param size Size
     /// @param textureFormat The memory format
-    XNOR_ENGINE Texture(TextureInternalFormat::TextureInternalFormat textureInternalFormat, Vector2i size , const TextureFormat::TextureFormat textureFormat = TextureFormat::TextureFormat::Rgb );
+    XNOR_ENGINE Texture(ENUM_VALUE(TextureInternalFormat) textureInternalFormat, Vector2i size, ENUM_VALUE(TextureFormat) textureFormat = TextureFormat::Rgb);
     
     XNOR_ENGINE ~Texture() override;
 
     XNOR_ENGINE bool_t Load(const uint8_t* buffer, int64_t length) override;
     
-    XNOR_ENGINE void CreateInRhi() override;
+    XNOR_ENGINE void CreateInInterface() override;
 
-    XNOR_ENGINE void DestroyInRhi() override;
+    XNOR_ENGINE void DestroyInInterface() override;
     
     XNOR_ENGINE void Unload() override;
+
+    XNOR_ENGINE void SetIsEmbedded();
 
     /// @brief Gets the raw data of the texture
     /// @tparam T Type
     /// @return Data
-    template<typename T = char_t>
+    template <typename T = char_t>
     [[nodiscard]]
     const T* GetData() const;
 
     /// @brief Gets the raw data of the texture
     /// @tparam T Type
     /// @return Data
-    template<typename T = char_t>
+    template <typename T = char_t>
     [[nodiscard]]
     T* GetData();
 
@@ -118,7 +113,7 @@ public:
     
     /// @brief Unbinds the texture
     /// @param index Index
-    XNOR_ENGINE void UnBindTexture(uint32_t index) const;
+    XNOR_ENGINE void UnbindTexture(uint32_t index) const;
 
     /// @brief Gets the texture id
     /// @return Texture id
@@ -127,32 +122,37 @@ public:
 
     /// @brief Gets the filtering option
     /// @return Filtering
-    XNOR_ENGINE TextureFiltering::TextureFiltering GetTextureFiltering() const;
+    XNOR_ENGINE ENUM_VALUE(TextureFiltering) GetTextureFiltering() const;
 
     /// @brief Gets the wrapping option
     /// @return Wrapping option
-    XNOR_ENGINE TextureWrapping::TextureWrapping GetTextureWrapping() const;
+    XNOR_ENGINE ENUM_VALUE(TextureWrapping) GetTextureWrapping() const;
     
     /// @brief Gets the internal format
     /// @return Internal format
-    XNOR_ENGINE TextureInternalFormat::TextureInternalFormat GetInternalFormat() const;
+    XNOR_ENGINE ENUM_VALUE(TextureInternalFormat) GetInternalFormat() const;
 
     /// @brief Gets the format
     /// @return Format
-    XNOR_ENGINE TextureFormat::TextureFormat GetTextureFormat() const;
+    XNOR_ENGINE ENUM_VALUE(TextureFormat) GetTextureFormat() const;
+    
+    XNOR_ENGINE bool_t Save() const override;
 
 private:
     uint8_t* m_Data = nullptr;
     Vector2i m_Size;
     int32_t m_DataChannels = 0;
     uint32_t m_Id = 0;
-    
-    TextureFiltering::TextureFiltering m_TextureFiltering = TextureFiltering::Nearest;
-    TextureWrapping::TextureWrapping m_TextureWrapping = TextureWrapping::Repeat;
-    TextureInternalFormat::TextureInternalFormat m_TextureInternalFormat = TextureInternalFormat::Rgba8;
-    TextureFormat::TextureFormat m_TextureFormat = TextureFormat::Rgb;
+    bool_t m_IsEmbedded = false;
+
+    ENUM_VALUE(TextureFiltering) m_TextureFiltering = TextureFiltering::Nearest;
+    ENUM_VALUE(TextureWrapping) m_TextureWrapping = TextureWrapping::Repeat;
+    ENUM_VALUE(TextureInternalFormat) m_TextureInternalFormat = TextureInternalFormat::Rgba8;
+    ENUM_VALUE(TextureFormat) m_TextureFormat = TextureFormat::Rgb;
 };
 
 END_XNOR_CORE
+
+REFL_AUTO(type(XnorCore::Texture, bases<XnorCore::Resource>))
 
 #include "resource/texture.inl"

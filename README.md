@@ -7,19 +7,17 @@
 
 ## Features
 
-- Entity component system
+- Entity component
 - Scene graph
 - Content browser
 - Entity inspector
 - Physical Based Rendering
-
-
-- WIP : C# scripting
-- WIP : Physics engine
-
-
-- TODO : Animation
-- TODO : Shader graph
+- Animation
+- C# scripting
+- Physics
+- Shadows
+- Hot reloading
+- Audio
 
 ## Screenshots
 
@@ -46,6 +44,18 @@
 ![Colliders](screenshots/beta/4.png)
 
 ![Test scene](screenshots/beta/5.png)
+
+### Gold
+
+![Gq;e](screenshots/gold/1.png)
+
+![Engine](screenshots/gold/2.png)
+
+![Animations](screenshots/gold/3.png)
+
+![Shadow](screenshots/gold/4.png)
+
+![Viking room](screenshots/gold/5.png)
 
 ## External libraries
 

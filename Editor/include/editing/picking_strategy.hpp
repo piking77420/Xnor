@@ -7,29 +7,30 @@
 #include "scene/entity.hpp"
 #include "world/skybox.hpp"
 
-
 BEGIN_XNOR_EDITOR
-    class Editor;
+
+class Editor;
 class Shader;
 
 class PickingStrategy
 {
 public:
-    
     explicit PickingStrategy(Editor* editor);
-
     ~PickingStrategy();
+
+    DEFAULT_COPY_MOVE_OPERATIONS(PickingStrategy)
     
     // Should be call on the Imgui editor window only
     void ResizeHandle(Vector2i newSize);
 
     // Pixel pos in image current Window
-    bool GetEntityFromScreen(Vector2i pixelPos, XnorCore::Scene& scene,const XnorCore::Camera& pointOfView,
-    XnorCore::Entity** entity);
+    bool_t GetEntityFromScreen(Vector2i pixelPos, XnorCore::Scene& scene,const XnorCore::Camera& pointOfView, XnorCore::Entity** entity);
+
 private:
     Editor* m_Editor = nullptr;
-    XnorCore::Pointer<XnorCore::Shader> m_PickingShader;
-    
+    XnorCore::Pointer<XnorCore::Shader> m_PickingShaderStatic;
+    XnorCore::Pointer<XnorCore::Shader> m_PickingShaderSkinned;
+
     XnorCore::RenderPass m_ColorPass;
     XnorCore::Framebuffer* frameBuffer = nullptr;
 

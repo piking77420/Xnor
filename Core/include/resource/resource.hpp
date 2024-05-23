@@ -3,6 +3,7 @@
 #include "core.hpp"
 #include "utils/guid.hpp"
 #include "utils/pointer.hpp"
+#include "reflection/reflection.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -35,11 +36,11 @@ public:
     /// @returns @c true if the loading succeeded, @c false otherwise.
     XNOR_ENGINE virtual bool_t Load(const Pointer<File>& file);
 
-    /// @brief Creates the Resource in the Rhi.
-    XNOR_ENGINE virtual void CreateInRhi();
+    /// @brief Creates the Resource in the current interface (Rhi/Audio).
+    XNOR_ENGINE virtual void CreateInInterface();
 
-    /// @brief Destroys the Resource in the Rhi.
-    XNOR_ENGINE virtual void DestroyInRhi();
+    /// @brief Destroys the Resource in the current interface (Rhi/Audio).
+    XNOR_ENGINE virtual void DestroyInInterface();
 
     /// @brief Unloads the loaded data.
     XNOR_ENGINE virtual void Unload();
@@ -49,14 +50,14 @@ public:
     /// This is effectively equivalent to calling Unload and then @ref Load(const uint8_t* buffer, int64_t length) "Load".
     /// 
     /// @returns @c true if the loading succeeded, @c false otherwise.
-    XNOR_ENGINE virtual bool_t Reload(const uint8_t* buffer, int64_t length, bool_t reloadInRhi = true);
+    XNOR_ENGINE virtual bool_t Reload(const uint8_t* buffer, int64_t length, bool_t reloadInInterface = true);
 
     /// @brief Unloads and then loads back this Resource.
     ///
     /// This is effectively equivalent to calling Unload and then @ref Load(const Pointer<File>&) "Load".
     /// 
     /// @returns @c true if the loading succeeded, @c false otherwise.
-    XNOR_ENGINE virtual bool_t Reload(const Pointer<File>& file, bool_t reloadInRhi = true);
+    XNOR_ENGINE virtual bool_t Reload(const Pointer<File>& file, bool_t reloadInInterface = true);
 
     /// @brief Unloads and then loads back this Resource.
     ///
@@ -64,15 +65,17 @@ public:
     /// using FileManager::Get(const std::filesystem::path&) as a parameter.
     /// 
     /// @returns @c true if the loading succeeded, @c false otherwise.
-    XNOR_ENGINE virtual bool_t Reload(bool_t reloadInRhi = true);
+    XNOR_ENGINE virtual bool_t Reload(bool_t reloadInInterface = true);
+
+    XNOR_ENGINE virtual bool_t Save() const;
 
     /// @brief Returns whether the Resource has already been loaded.
     [[nodiscard]]
     XNOR_ENGINE bool_t IsLoaded() const;
 
-    /// @brief Returns whether the Resource has already been loaded in the Rhi.
+    /// @brief Returns whether the Resource has already been loaded in the associated interface (Rhi/Audio).
     [[nodiscard]]
-    XNOR_ENGINE bool_t IsLoadedInRhi() const;
+    XNOR_ENGINE bool_t IsLoadedInInterface() const;
 
     /// @brief Returns the name of this Resource.
     [[nodiscard]]
@@ -90,16 +93,28 @@ public:
     [[nodiscard]]
     XNOR_ENGINE const Guid& GetGuid() const;
 
+    XNOR_ENGINE void SetFile(const Pointer<File> file);
+
 protected:
     /// @brief Whether the resource was loaded
     bool_t m_Loaded = false;
-    /// @brief Whether the resource was loaded in the Rhi
-    bool_t m_LoadedInRhi = false;
+    /// @brief Whether the resource was loaded in the associated interface (Rhi/Audio)
+    bool_t m_LoadedInInterface = false;
 
     /// @brief Name of the resource
     std::string m_Name;
     /// @brief Guid of the resource
     Guid m_Guid;
+
+    Pointer<File> m_File;
+
+    // We need this in order to set m_File from the ResourceManager
+    // which is the only class that needs to modify this field
+    friend class ResourceManager;
 };
 
 END_XNOR_CORE
+
+REFL_AUTO(type(XnorCore::Resource))
+
+#include "file/file.hpp"

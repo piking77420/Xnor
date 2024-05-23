@@ -8,6 +8,7 @@
 #include "rendering/rhi_typedef.hpp"
 #include "resource/resource.hpp"
 #include "utils/pointer.hpp"
+#include "reflection/reflection.hpp"
 
 /// @file shader.hpp
 /// @brief Defines the XnorCore::Shader class
@@ -15,9 +16,8 @@
 BEGIN_XNOR_CORE
 
 /// @brief Encapsulates a GPU shader
-class Shader : public Resource
+class Shader final : public Resource
 {
-private:
 	ShaderPipeline::ShaderPipeline ShaderTypeToShaderPipeline(ShaderType::ShaderType shaderType);
 
 	ShaderType::ShaderType ShaderPipelineToShaderType(ShaderPipeline::ShaderPipeline shaderPipeline);
@@ -69,10 +69,10 @@ public:
 	XNOR_ENGINE bool_t Load(const char_t* buffer, int64_t length, ShaderPipeline::ShaderPipeline type);
 
 	/// @brief Creates the shader in the @ref Rhi
-	XNOR_ENGINE void CreateInRhi() override;
+	XNOR_ENGINE void CreateInInterface() override;
 
 	/// @brief Destroys the shader in the @ref Rhi
-	XNOR_ENGINE void DestroyInRhi() override;
+	XNOR_ENGINE void DestroyInInterface() override;
 
 	/// @brief Recompiles the shader
 	XNOR_ENGINE void Recompile();
@@ -126,11 +126,11 @@ public:
 	/// @brief Unbinds the shader
 	XNOR_ENGINE void Unuse() const;
 
-	/// @brief Sets a specialized depth function for the shader, should only be called it before @ref CreateInRhi
+	/// @brief Sets a specialized depth function for the shader, should only be called it before @ref CreateInInterface
 	/// @param depthFunction Depth function
 	XNOR_ENGINE void SetDepthFunction(DepthFunction::DepthFunction depthFunction);
 	
-	/// @brief Sets a specialized blend function for the shader, should only be called it before @ref CreateInRhi
+	/// @brief Sets a specialized blend function for the shader, should only be called it before @ref CreateInInterface
 	/// @param blendFunction Blend function
 	XNOR_ENGINE void SetBlendFunction(const BlendFunction& blendFunction);
 
@@ -147,6 +147,8 @@ private:
 	
 	std::array<Pointer<File>, ShaderPipeline::Count> m_Files;
 	std::array<ShaderCode, ShaderPipeline::Count> m_Code;
-	
 };
+
 END_XNOR_CORE
+
+REFL_AUTO(type(XnorCore::Shader, bases<XnorCore::Resource>))

@@ -1,309 +1,187 @@
+// ReSharper disable CppClangTidyCppcoreguidelinesRvalueReferenceParamNotMoved
+// ReSharper disable CppClangTidyCppcoreguidelinesMissingStdForward
+
 #pragma once
 
-#include <stdexcept>
+#include <algorithm>
+#include <ranges>
 
 BEGIN_XNOR_CORE
 
 template <typename T>
-List<T>::List()
-    : m_Size(0), m_TypeSize(sizeof(T))
-{
-    m_Capacity = 1;
-
-    Calloc(m_Capacity);
-}
-
-template <typename T>
 List<T>::List(const size_t size)
-    : m_Size(size), m_TypeSize(sizeof(T))
+    : m_Vector(size)
 {
-    m_Capacity = std::bit_ceil(m_Size);
-    
-    Malloc(m_Capacity);
-
-    for (size_t i = 0; i < m_Size; i++)
-        m_Data[i] = T();
 }
 
 template <typename T>
 List<T>::List(const size_t size, const T& defaultValue)
-    : m_Size(size), m_TypeSize(sizeof(T))
+    : m_Vector(size, defaultValue)
 {
-    m_Capacity = std::bit_ceil(m_Size);
-
-    Malloc(m_Capacity);
-    
-    for (size_t i = 0; i < m_Size; i++)
-        m_Data[i] = defaultValue;
 }
 
 template <typename T>
-List<T>::List(const size_t size, const T values[])
-    : m_Size(size), m_TypeSize(sizeof(T))
+List<T>::List(const size_t size, const T* const values)
+    : m_Vector(size)
 {
-    m_Capacity = std::bit_ceil(m_Size);
-    
-    Malloc(m_Capacity);
+    for (size_t i = 0; i < size; i++)
+        m_Vector[i] = values[i];
+}
 
-    for (size_t i = 0; i < m_Size; i++)
-        m_Data[i] = values[i];
+template <typename T>
+template <size_t Size>
+List<T>::List(const std::array<T, Size>& array)
+    : m_Vector(Size)
+{
+    for (size_t i = 0; i < Size; i++)
+        m_Vector[i] = array[i];
 }
 
 template <typename T>
 List<T>::List(const std::initializer_list<T>& values)
-    : m_TypeSize(sizeof(T))
+    : m_Vector(values)
 {
-    m_Size = values.size();
-    m_Capacity = std::bit_ceil(m_Size);
-    
-    Malloc(m_Capacity);
-    
-    const T* const it = values.begin();
-
-    for (size_t i = 0; i < m_Size; i++)
-        m_Data[i] = it[i];
 }
 
 template <typename T>
-List<T>::~List()
+void List<T>::Resize(const size_t size)
 {
-    Clear();
-    std::free(m_Data);
-
-    m_Data = nullptr;
-    
-    m_Size = 0;
-    m_Capacity = 0;
-}
-
-template <typename T>
-void List<T>::Reserve(const size_t capacity)
-{
-    if (m_Capacity >= capacity)
-        return;
-    
-    m_Capacity = capacity;
-
-    Realloc(m_Capacity);
+    m_Vector.resize(size);
 }
 
 template <typename T>
 void List<T>::Clear()
 {
-    if (m_Size == 0)
-        return;
-    
-    for (size_t i = 0; i < m_Size; i++)
-    {
-        m_Data[i].~T();
-    }
+    m_Vector.clear();
+}
 
-    CheckShrink(0);
-    m_Size = 0;
+template <typename T>
+bool_t List<T>::Empty() const
+{
+    return GetSize() == 0;
 }
 
 template <typename T>
 void List<T>::Add()
 {
-    CheckGrow(m_Size + 1);
-
-    m_Data[m_Size] = T();
-    m_Size++;
+    m_Vector.emplace_back();
 }
 
 template <typename T>
 void List<T>::Add(const T& element)
 {
-    CheckGrow(m_Size + 1);
-
-    m_Data[m_Size] = element;
-    m_Size++;
+    m_Vector.emplace_back(element);
 }
 
 template <typename T>
 void List<T>::Add(T&& element)
 {
-    CheckGrow(m_Size + 1);
-
-    m_Data[m_Size] = std::move(element);
-    m_Size++;
+    m_Vector.emplace_back(std::forward<T>(element));
 }
 
 template <typename T>
-void List<T>::AddRange(const T* const data, const size_t number)
+void List<T>::AddRange(const T* const data, const size_t count)
 {
-    CheckGrow(m_Size + number);
-
-    std::memcpy(&m_Data[m_Size], data, number * m_TypeSize);
-
-    m_Size += number;
+    for (size_t i = 0; i < count; i++)
+        m_Vector.emplace_back(data[i]);
 }
 
 template <typename T>
 void List<T>::AddRange(const std::initializer_list<T>& values)
 {
-    const size_t number = values.size();
-
-    CheckGrow(m_Size + number);
-
-    std::memcpy(&m_Data[m_Size], values.begin(), number * m_TypeSize);
-
-    m_Size += number;
-}
-
-template <typename T>
-void List<T>::AddZeroed()
-{
-    CheckGrow(m_Size + 1);
-
-    std::memset(Access(m_Size), 0, m_TypeSize);
-    m_Size++;
+    const size_t size = values.size();
+    const T* const begin = values.begin();
+    
+    for (size_t i = 0; i < size; i++)
+        m_Vector.emplace_back(begin[i]);
 }
 
 template <typename T>
 void List<T>::Fill(const T& value)
 {
-    for (size_t i = 0; i < m_Size; i++)
-        m_Data[i] = value;
+    for (size_t i = 0; i < m_Vector.size(); i++)
+        m_Vector[i] = value;
 }
 
 template <typename T>
 void List<T>::Fill(T&& value)
 {
-    for (size_t i = 0; i < m_Size; i++)
-        m_Data[i] = std::move(value);
+    for (size_t i = 0; i < m_Vector.size(); i++)
+        m_Vector[i] = value;
 }
 
 template <typename T>
 template <class... Args>
-void List<T>::Emplace(Args&&... args) // NOLINT(cppcoreguidelines-missing-std-forward)
+void List<T>::Emplace(Args&&... args)
 {
-    CheckGrow(m_Size + 1);
-
-    m_Data[m_Size] = T(std::forward<Args>(args)...);
-    m_Size++;
+    m_Vector.emplace_back(std::forward<Args>(args)...);
 }
 
 template <typename T>
 void List<T>::Insert(size_t index)
 {
-    if (index >= m_Size)
-        throw std::invalid_argument("List insert index out of range");
-
-    CheckGrow(m_Size + 1);
-
-    std::memcpy(&m_Data[index + 1], &m_Data[index], (m_Size - index) * m_TypeSize);
-    m_Data[index] = T();
-    
-    m_Size++;
+    m_Vector.insert(m_Vector.begin() + index, T());
 }
 
 template <typename T>
 void List<T>::Insert(const T& element, const size_t index)
 {
-    if (index >= m_Size)
-        throw std::invalid_argument("List insert index out of range");
-
-    CheckGrow(m_Size + 1);
-
-    std::memcpy(&m_Data[index + 1], &m_Data[index], (m_Size - index) * m_TypeSize);
-    m_Data[index] = element;
-    
-    m_Size++;
+    m_Vector.insert(m_Vector.begin() + index, element);
 }
 
 template <typename T>
 void List<T>::Insert(T&& element, const size_t index)
 {
-    if (index >= m_Size)
-        throw std::invalid_argument("List insert index out of range");
-
-    CheckGrow(m_Size + 1);
-
-    std::memcpy(&m_Data[index + 1], &m_Data[index], (m_Size - index) * m_TypeSize);
-    m_Data[index] = std::move(element);
-    
-    m_Size++;
-}
-
-template <typename T>
-void List<T>::InsertZeroed(const size_t index)
-{
-    if (index >= m_Size)
-        throw std::invalid_argument("List insert index out of range");
-
-    CheckGrow(m_Size + 1);
-
-    std::memcpy(Access(index + 1), Access(index), (m_Size - index) * m_TypeSize);
-    std::memset(Access(index), 0, m_TypeSize);
-    
-    m_Size++;
+    m_Vector.insert(m_Vector.begin() + index, std::forward<T>(element));
 }
 
 template <typename T>
 void List<T>::Remove(const T& element)
 {
-    size_t i;
-    for (i = 0; i < m_Size; i++)
-    {
-        if (m_Data[i] == element)
-            break;
-    }
+    Iterator position = std::find(m_Vector.begin(), m_Vector.end(), element);
 
-    if (i == m_Size)
-        return;
-
-    m_Data[i].~T();
-    std::memcpy(&m_Data[i], &m_Data[i + 1], (m_Size - i - 1) * m_TypeSize);
-
-    CheckShrink(m_Size - 1);
-    m_Size--;
+    if (position != m_Vector.end())
+        m_Vector.erase(position);
 }
 
 template <typename T>
 void List<T>::RemoveAt(const size_t index)
 {
-    if (index >= m_Size)
-        throw std::invalid_argument("List remove at subscript out of range");
-
-    m_Data[index].~T();
-    std::memcpy(Access(index), Access(index + 1), (m_Size - index - 1) * m_TypeSize);
-
-    CheckShrink(m_Size - 1);
-    m_Size--;
+    m_Vector.erase(m_Vector.begin() + index);
 }
 
 template <typename T>
 void List<T>::RemoveRange(const size_t start, const size_t end)
 {
-    if (start >= m_Size)
-        throw std::invalid_argument("List remove range start subscript out of range");
-    
-    if (end >= m_Size)
-        throw std::invalid_argument("List remove range start subscript out of range");
-    
-    if (start >= end)
-        throw std::invalid_argument("List remove range start was higher than range end");
-
-    const size_t removedSize = end - start;
-
-    for (size_t i = start; i < end; i++)
-    {
-        m_Data[i].~T();
-    }
-    
-    std::memcpy(Access(start), Access(end + 1), (m_Size - end - 1) * m_TypeSize);
-
-    CheckShrink(m_Size - removedSize);
-    m_Size -= removedSize;
+    m_Vector.erase(m_Vector.begin() + start, m_Vector.begin() + end);
 }
 
 template <typename T>
 bool_t List<T>::Contains(const T& element) const
 {
-    for (size_t i = 0; i < m_Size; i++)
+    return std::ranges::find(m_Vector, element) != m_Vector.end();
+}
+
+template <typename T>
+void List<T>::Iterate(const std::function<void(T*)>& lambda)
+{
+    for (size_t i = 0; i < m_Vector.size(); i++)
+        lambda(&m_Vector[i]);
+}
+
+template <typename T>
+void List<T>::Iterate(const std::function<void(const T*)>& lambda) const
+{
+    for (size_t i = 0; i < m_Vector.size(); i++)
+        lambda(&m_Vector[i]);
+}
+
+template <typename T>
+bool_t List<T>::Exists(const std::function<bool_t(const T*)>& lambda) const
+{
+    for (size_t i = 0; i < m_Vector.size(); i++)
     {
-        if (m_Data[i] == element)
+        if (lambda(&m_Vector[i]))
             return true;
     }
 
@@ -311,143 +189,120 @@ bool_t List<T>::Contains(const T& element) const
 }
 
 template <typename T>
-void List<T>::Iterate(const std::function<void(T*, size_t)>& lambda)
+T* List<T>::Find(const std::function<bool_t(const T*)>& lambda)
 {
-    for (size_t i = 0; i < m_Size; i++)
-        lambda(&m_Data[i], i);
-}
-
-template <typename T>
-bool_t List<T>::Exists(const std::function<bool_t(const T*, size_t)>& lambda) const
-{
-    for (size_t i = 0; i < m_Size; i++)
+    for (size_t i = 0; i < m_Vector.size(); i++)
     {
-        if (lambda(&m_Data[i], i))
-            return true;
-    }
-
-    return false;
-}
-
-template <typename T>
-T* List<T>::Find(const std::function<bool_t(const T*, size_t)>& lambda)
-{
-    for (size_t i = 0; i < m_Size; i++)
-    {
-        if (lambda(&m_Data[i], i))
-            return &m_Data[i];
+        if (lambda(&m_Vector[i]))
+            return &m_Vector[i];
     }
 
     return nullptr;
 }
 
 template <typename T>
-bool_t List<T>::IsValid() const
+const T* List<T>::Find(const std::function<bool_t(const T*)>& lambda) const
 {
-    if (m_Data == nullptr)
-        return false;
-
-    if (m_Capacity == 0)
-        return false;
-
-    if (m_Size > m_Capacity)
-        return false;
-
-    return true;
-}
-
-template <typename T>
-T* List<T>::GetData() const
-{
-    return m_Data;
-}
-
-template <typename T>
-size_t List<T>::GetSize() const
-{
-    return m_Size;
-}
-
-template <typename T>
-size_t List<T>::GetCapacity() const
-{
-    return m_Capacity;
-}
-
-template <typename T>
-size_t List<T>::GetTypeSize() const
-{
-    return m_TypeSize;
-}
-
-template <typename T>
-T& List<T>::operator[](const size_t index)
-{
-    if (index >= m_Size)
-        throw std::invalid_argument("List subscript out of range");
-
-    return *Access(index);
-}
-
-template <typename T>
-const T& List<T>::operator[](const size_t index) const
-{
-    if (index >= m_Size)
-        throw std::invalid_argument("List subscript out of range");
-
-    return *Access(index);
-}
-
-template <typename T>
-void List<T>::Malloc(const size_t size)
-{
-    m_Data = static_cast<T*>(std::malloc(size * m_TypeSize));
-}
-
-template <typename T>
-void List<T>::Calloc(const size_t size)
-{
-    m_Data = static_cast<T*>(std::calloc(size, m_TypeSize));
-}
-
-template <typename T>
-void List<T>::Realloc(const size_t size)
-{
-    m_Data = static_cast<T*>(std::realloc(m_Data, size * m_TypeSize));
-}
-
-template <typename T>
-void List<T>::CheckGrow(const size_t newSize)
-{
-    if (newSize > m_Capacity)
+    for (size_t i = 0; i < m_Vector.size(); i++)
     {
-        m_Capacity = std::bit_ceil(newSize);
-
-        Realloc(m_Capacity);
+        if (lambda(&m_Vector[i]))
+            return &m_Vector[i];
     }
+
+    return nullptr;
 }
 
 template <typename T>
-void List<T>::CheckShrink(const size_t newSize)
+size_t List<T>::FindPosition(const std::function<bool_t(const T*)>& lambda) const
 {
-    if (newSize < m_Capacity)
+    for (size_t i = 0; i < m_Vector.size(); i++)
     {
-        m_Capacity = std::bit_ceil(newSize);
-
-        Realloc(m_Capacity);
+        if (lambda(&m_Vector[i]))
+            return i;
     }
+
+    return std::numeric_limits<size_t>::max();
 }
 
 template <typename T>
-T* List<T>::Access(const size_t index)
+T* List<T>::Find(const std::function<bool_t(const T*, size_t)>& lambda)
 {
-    return reinterpret_cast<T*>(reinterpret_cast<uint8_t*>(m_Data) + index * m_TypeSize);
+    for (size_t i = 0; i < m_Vector.size(); i++)
+    {
+        if (lambda(&m_Vector[i], i))
+            return &m_Vector[i];
+    }
+
+    return nullptr;
 }
 
 template <typename T>
-const T* List<T>::Access(const size_t index) const
-{
-    return reinterpret_cast<const T*>(reinterpret_cast<const uint8_t*>(m_Data) + index * m_TypeSize);
-}
+void List<T>::Sort(std::function<bool_t(const T& left, const T& right)> predicate) { std::ranges::sort(m_Vector, predicate); }
+
+template <typename T>
+T* List<T>::GetData() { return m_Vector.data(); }
+
+template <typename T>
+const T* List<T>::GetData() const { return m_Vector.data(); }
+
+template <typename T>
+size_t List<T>::GetSize() const { return m_Vector.size(); }
+
+template <typename T>
+size_t List<T>::GetCapacity() const { return m_Vector.capacity(); }
+
+template <typename T>
+T& List<T>::operator[](const size_t index) { return m_Vector[index]; }
+
+template <typename T>
+const T& List<T>::operator[](const size_t index) const { return m_Vector[index]; }
+
+template <typename T>
+const T& List<T>::Front() const { return m_Vector.front(); }
+
+template <typename T>
+T& List<T>::Front() { return m_Vector.front(); }
+
+template <typename T>
+const T& List<T>::Back() const { return m_Vector.back(); }
+
+template <typename T>
+T& List<T>::Back() { return m_Vector.back(); }
+
+template <typename T>
+typename List<T>::Iterator List<T>::Begin() { return m_Vector.begin(); }
+
+template <typename T>
+typename List<T>::Iterator List<T>::End() { return m_Vector.end(); }
+
+template <typename T>
+typename List<T>::ConstIterator List<T>::CBegin() const { return m_Vector.cbegin(); }
+
+template <typename T>
+typename List<T>::ConstIterator List<T>::CEnd() const { return m_Vector.cend(); }
+
+template <typename T>
+typename List<T>::ReverseIterator List<T>::RBegin() { return m_Vector.rbegin(); }
+
+template <typename T>
+typename List<T>::ReverseIterator List<T>::REnd() { return m_Vector.rend(); }
+
+template <typename T>
+typename List<T>::ConstReverseIterator List<T>::CrBegin() const { return m_Vector.crbegin(); }
+
+template <typename T>
+typename List<T>::ConstReverseIterator List<T>::CrEnd() const { return m_Vector.crend(); }
+
+template <typename T>
+typename List<T>::Iterator List<T>::begin() { return Begin(); }
+
+template <typename T>
+typename List<T>::ConstIterator List<T>::begin() const { return CBegin(); }
+
+template <typename T>
+typename List<T>::Iterator List<T>::end() { return End(); }
+
+template <typename T>
+typename List<T>::ConstIterator List<T>::end() const { return CEnd(); }
 
 END_XNOR_CORE

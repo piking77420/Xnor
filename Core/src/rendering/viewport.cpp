@@ -7,7 +7,7 @@ using namespace XnorCore;
 void Viewport::Init(const Vector2i size)
 {
     viewPortSize = size;
-
+ 
     using namespace XnorCore;
     const std::vector<RenderTargetInfo> attachementsType =
     {
@@ -18,11 +18,11 @@ void Viewport::Init(const Vector2i size)
 
     // Init Rendering
     frameBuffer = new Framebuffer();
-    m_Image = new Texture(TextureInternalFormat::Rgba32F, viewPortSize, TextureFormat::Rgb);
+    image = new Texture(TextureInternalFormat::Rgba32F, viewPortSize, TextureFormat::Rgb);
 
     // Set Up renderPass
     const RenderPass renderPass(attachementsType);
-    const std::vector<const Texture*> targets = { m_Image };
+    const std::vector<const Texture*> targets = { image };
     frameBuffer->AttachTextures(renderPass, targets);
     
     viewportData.Init(viewPortSize);
@@ -31,7 +31,7 @@ void Viewport::Init(const Vector2i size)
 void Viewport::Destroy()
 {
     delete frameBuffer;
-    delete m_Image;
+    delete image;
 
     viewportData.Destroy();
 }
@@ -43,7 +43,7 @@ void Viewport::Resize(const Vector2i newSize)
 }
 
 
-bool_t Viewport::IsValid() const
+float_t Viewport::GetAspect() const
 {
-    return camera != nullptr && frameBuffer != nullptr;  
+    return static_cast<float_t>(viewPortSize.x) / static_cast<float_t>(viewPortSize.y); 
 }

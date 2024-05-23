@@ -1,25 +1,30 @@
 #include "resource/texture.hpp"
 
 #include <stb/stb_image.h>
+#include <stb/stb_image_write.h>
 
 #include "rendering/rhi.hpp"
+#include "utils/logger.hpp"
 
 using namespace XnorCore;
 
-Texture::Texture(const TextureCreateInfo& createInfo) :
-    m_Size(createInfo.size)
-    , m_TextureFiltering(createInfo.filtering), m_TextureWrapping(createInfo.wrapping)
+Texture::Texture(const TextureCreateInfo& createInfo)
+    : m_Size(createInfo.size)
+    , m_TextureFiltering(createInfo.filtering)
+    , m_TextureWrapping(createInfo.wrapping)
     , m_TextureInternalFormat(createInfo.internalFormat)
 {
     if (!createInfo.datas.empty())
-    m_Data = static_cast<uint8_t*>(createInfo.datas.at(0));
+        m_Data = static_cast<uint8_t*>(createInfo.datas.at(0));
     
     m_Id = Rhi::CreateTexture(createInfo);
-    m_LoadedInRhi = true;
+    m_LoadedInInterface = true;
 }
 
-Texture::Texture(const TextureInternalFormat::TextureInternalFormat textureInternalFormat, const Vector2i size , const TextureFormat::TextureFormat textureFormat)
-    : m_Size(size), m_TextureInternalFormat(textureInternalFormat) , m_TextureFormat(textureFormat)
+Texture::Texture(const ENUM_VALUE(TextureInternalFormat) textureInternalFormat, const Vector2i size, const ENUM_VALUE(TextureFormat) textureFormat)
+    : m_Size(size)
+    , m_TextureInternalFormat(textureInternalFormat)
+    , m_TextureFormat(textureFormat)
 {
     const TextureCreateInfo createInfo
     {
@@ -31,21 +36,20 @@ Texture::Texture(const TextureInternalFormat::TextureInternalFormat textureInter
         .internalFormat = m_TextureInternalFormat
     };
     
-
     m_Id = Rhi::CreateTexture(createInfo);
-    m_LoadedInRhi = true;
+    m_LoadedInInterface = true;
 }
 
 Texture::~Texture()
 {
-    if (m_LoadedInRhi)
-        Texture::DestroyInRhi();
+    if (m_LoadedInInterface)
+        Texture::DestroyInInterface();
     
     if (m_Loaded)
         Texture::Unload();
 }
 
-bool Texture::Load(const uint8_t* buffer, const int64_t length)
+bool_t Texture::Load(const uint8_t* const buffer, const int64_t length)
 {
     stbi_set_flip_vertically_on_load(loadData.flipVertically);
     
@@ -60,12 +64,12 @@ bool Texture::Load(const uint8_t* buffer, const int64_t length)
     
     m_TextureFormat = Rhi::GetTextureFormatFromChannels(m_DataChannels);
     m_Loaded = true;
+
     return true;
 }
 
-void Texture::CreateInRhi()
+void Texture::CreateInInterface()
 {
-    
     TextureCreateInfo createInfo
     {
         .size = m_Size,
@@ -88,23 +92,30 @@ void Texture::CreateInRhi()
     
     m_Id = Rhi::CreateTexture(createInfo);
     
-    m_LoadedInRhi = true;
+    m_LoadedInInterface = true;
 }
 
-void Texture::DestroyInRhi()
+void Texture::DestroyInInterface()
 {
     Rhi::DestroyTexture(m_Id);
     
-    m_LoadedInRhi = false;
+    m_LoadedInInterface = false;
 }
 
 void Texture::Unload()
 {
-    stbi_image_free(m_Data);
+    if (!m_IsEmbedded)
+        stbi_image_free(m_Data);
+
     m_Data = nullptr;
     m_Size = Vector2i::Zero();
     
     m_Loaded = false;
+}
+
+void Texture::SetIsEmbedded()
+{
+    m_IsEmbedded = true;
 }
 
 Vector2i Texture::GetSize() const
@@ -127,7 +138,7 @@ void Texture::BindTexture(const uint32_t index) const
     Rhi::BindTexture(index, m_Id);
 }
 
-void Texture::UnBindTexture(const uint32_t index) const
+void Texture::UnbindTexture(const uint32_t index) const
 {
     Rhi::BindTexture(index, 0);
 }
@@ -155,5 +166,24 @@ TextureInternalFormat::TextureInternalFormat Texture::GetInternalFormat() const
 TextureFormat::TextureFormat Texture::GetTextureFormat() const
 {
     return m_TextureFormat;
+}
+
+bool_t Texture::Save() const
+{
+    stbi_flip_vertically_on_write(loadData.flipVertically);
+
+    const std::string&& extension = m_File->GetExtension();
+    
+    int32_t result = 0;
+    if (extension == ".hdr")
+        result = stbi_write_hdr(m_File->GetPath().generic_string().c_str(), m_Size.x, m_Size.y, m_DataChannels, reinterpret_cast<const float_t* const>(m_Data));
+    else if (extension == ".png")
+        result = stbi_write_png(m_File->GetPath().generic_string().c_str(), m_Size.x, m_Size.y, m_DataChannels, m_Data, 0);
+    else if (extension == ".jpg" || extension == ".jpeg")
+        result = stbi_write_jpg(m_File->GetPath().generic_string().c_str(), m_Size.x, m_Size.y, m_DataChannels, m_Data, 100);
+    else
+        Logger::LogError("Unrecognized texture file extension {}", extension);
+
+    return result != 0;
 }
 

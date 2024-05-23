@@ -10,7 +10,11 @@ layout (std140, binding = 0) uniform CameraUniform
 {
     mat4 view;
     mat4 projection;
+    mat4 inView;
+    mat4 inProjection;
     vec3 cameraPos;
+    float near;
+    float far;
 };
 
 out VS_OUT
@@ -27,4 +31,4 @@ void main()
     vec4 pos = projection * mat4(viewMat3) * vec4(aPos, 1.0);
 
     gl_Position = pos.xyww;
-}
+}   

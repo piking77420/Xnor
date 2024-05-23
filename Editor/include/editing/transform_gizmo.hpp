@@ -25,9 +25,9 @@ public:
 
     void SetRendering(const XnorCore::Camera& camera, Vector2 windowPos, Vector2i windowSize);
 
-    bool Manipulate(XnorCore::Entity& entity);
+    bool_t Manipulate(XnorCore::Entity& entity);
 
-    bool_t useSnap = true;
+    bool_t useSnap = false;
     
     Vector3 snap;
 

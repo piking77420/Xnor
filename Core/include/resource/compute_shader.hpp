@@ -23,7 +23,7 @@ class ComputeShader : public Resource
 {
 public:
     /// @brief Allowed extensions for compute shaders
-    XNOR_ENGINE static inline constexpr std::array<const char_t*, 2> ComputeFileExtensions
+    XNOR_ENGINE static constexpr std::array<const char_t*, 2> ComputeFileExtensions
     {
         ".comp",
         ".compute"
@@ -49,10 +49,10 @@ public:
 	XNOR_ENGINE bool_t Load(const char_t* buffer, int64_t length);
 
 	/// @brief Creates the shader in the @ref Rhi
-	XNOR_ENGINE void CreateInRhi() override;
+	XNOR_ENGINE void CreateInInterface() override;
 
 	/// @brief Destroys the shader in the @ref Rhi
-	XNOR_ENGINE void DestroyInRhi() override;
+	XNOR_ENGINE void DestroyInInterface() override;
 
 	/// @brief Recompiles the shader
 	XNOR_ENGINE void Recompile();

@@ -1,6 +1,9 @@
 #pragma once
 
 #include <filesystem>
+#include <ranges>
+
+#include "utils/formatter.hpp"
 
 BEGIN_XNOR_CORE
 
@@ -19,12 +22,12 @@ Pointer<T> FileManager::Get(const std::filesystem::path& path)
 template <Concepts::EntryT T>
 Pointer<T> FileManager::Find()
 {
-    for (auto&& mapEntry : m_Entries)
+    for (auto& entry : m_Entries | std::views::values)
     {
-        Pointer<Entry> entry = mapEntry.second;
+        Pointer<T> t = Utils::DynamicPointerCast<T>(entry);
         
-        if (Utils::DynamicPointerCast<T>(entry))
-            return entry;
+        if (t)
+            return t;
     }
 
     return nullptr;
@@ -33,9 +36,8 @@ Pointer<T> FileManager::Find()
 template <Concepts::EntryT T>
 Pointer<T> FileManager::Find(std::function<bool_t(Pointer<T>)>&& predicate)
 {
-    for (auto&& mapEntry : m_Entries)
+    for (auto& entry : m_Entries | std::views::values)
     {
-        Pointer<Entry> entry = mapEntry.second;
         auto&& t = Utils::DynamicPointerCast<T>(entry);
         
         if (t && predicate(t))
@@ -58,12 +60,12 @@ void FileManager::FindAll(std::vector<Pointer<T>>* result)
 {
     result->clear();
     
-    for (auto&& mapEntry : m_Entries)
+    for (auto& entry : m_Entries | std::views::values)
     {
-        Pointer<T> entry = Utils::DynamicPointerCast<T>(mapEntry.second);
+        Pointer<T> t = Utils::DynamicPointerCast<T>(entry);
         
-        if (entry)
-            result->push_back(std::move(entry));
+        if (t)
+            result->push_back(std::move(t));
     }
 }
 
@@ -71,7 +73,7 @@ template <Concepts::EntryT T>
 std::vector<Pointer<T>> FileManager::FindAll(std::function<bool_t(Pointer<T>)>&& predicate)
 {
     std::vector<Pointer<T>> result;
-    FindAll<T>(predicate, &result);
+    FindAll<T>(FORWARD(predicate), &result);
     return result;
 }
 
@@ -80,9 +82,8 @@ void FileManager::FindAll(std::function<bool(Pointer<T>)>&& predicate, std::vect
 {
     result->clear();
     
-    for (auto&& mapEntry : m_Entries)
+    for (auto& entry : m_Entries | std::views::values)
     {
-        Pointer<Entry> entry = mapEntry.second;
         auto&& t = Utils::DynamicPointerCast<T>(entry);
         
         if (t && predicate(t))

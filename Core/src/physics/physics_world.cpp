@@ -1,20 +1,24 @@
 #include "physics/physics_world.hpp"
 
 #include <cstdarg>
+
 #include <Jolt/Jolt.h>
+#include <Jolt/RegisterTypes.h>
+#include <Jolt/Core/Factory.h>
+#include <Jolt/Core/TempAllocator.h>
+#include <Jolt/Physics/Body/BodyCreationSettings.h>
+#include <Jolt/Physics/Collision/CastResult.h>
+#include <Jolt/Physics/Collision/RayCast.h>
+#include <Jolt/Physics/Collision/Shape/BoxShape.h>
+#include <Jolt/Physics/Collision/Shape/CapsuleShape.h>
+#include <Jolt/Physics/Collision/Shape/ConvexHullShape.h>
+#include <Jolt/Physics/Collision/Shape/SphereShape.h>
+#include <Jolt/Physics/Collision/Shape/CompoundShape.h>
 
 #include "input/time.hpp"
-#include "Jolt/RegisterTypes.h"
-#include "Jolt/Core/Factory.h"
-#include "Jolt/Core/TempAllocator.h"
-#include "Jolt/Physics/Collision/Shape/BoxShape.h"
+#include "jolt/Physics/Character/Character.h"
+#include "Maths/matrix.hpp"
 #include "utils/logger.hpp"
-#include "Jolt/Physics/Collision/Shape/SphereShape.h"
-#include "jolt/Physics/Body/BodyCreationSettings.h"
-#include "Jolt/Physics/Collision/CastResult.h"
-#include "Jolt/Physics/Collision/Shape/CapsuleShape.h"
-#include "Jolt/Physics/Collision/Shape/ConvexHullShape.h"
-#include "jolt/Physics/Collision/RayCast.h"
 
 using namespace XnorCore;
 
@@ -25,29 +29,28 @@ namespace Layers
     static constexpr JPH::ObjectLayer NON_MOVING = 0;
     static constexpr JPH::ObjectLayer MOVING = 1;
     static constexpr JPH::ObjectLayer NUM_LAYERS = 2;
-};
+}
 
-[[nodiscard]]
-static JPH::Vec3Arg ToJph(const Vector3& in)
+JPH::Vec3Arg PhysicsWorld::ToJph(const Vector3& in)
 {
     return JPH::RVec3Arg(in.x, in.y, in.z);
 }
 
-[[nodiscard]]
-static JPH::QuatArg ToJph(const Quaternion& in)
+JPH::QuatArg PhysicsWorld::ToJph(const Quaternion& in)
 {
     return JPH::QuatArg(in.X(), in.Y(), in.Z(), in.W());
 }
 
-static Vector3 FromJph(const JPH::Vec3& in)
+Vector3 PhysicsWorld::FromJph(const JPH::Vec3& in)
 {
     return Vector3(in.GetX(), in.GetY(), in.GetZ());
 }
 
-static Quaternion FromJph(const JPH::Quat& in)
+Quaternion PhysicsWorld::FromJph(const JPH::Quat& in)
 {
     return Quaternion(in.GetX(), in.GetY(), in.GetZ(), in.GetW());
 }
+
 
 void PhysicsWorld::Initialize()
 {
@@ -153,7 +156,18 @@ uint32_t PhysicsWorld::CreateBox(const BodyCreationInfo& info)
     return CreateBody(info, settings);
 }
 
-uint32_t PhysicsWorld::CreateCapsule(const BodyCreationInfo& info, float_t height, float_t radius)
+JPH::Character* PhysicsWorld::CreateCharacter(const BodyCreationInfo& info, const JPH::CharacterSettings& settings)
+{
+    JPH::Character* const c = new JPH::Character(&settings, ToJph(info.position), ToJph(info.rotation), 0, m_PhysicsSystem);
+    c->AddToPhysicsSystem(JPH::EActivation::Activate);
+    
+    const uint32_t bodyId = c->GetBodyID().GetIndexAndSequenceNumber();
+    m_BodyMap.emplace(bodyId, info.collider);
+
+    return c;
+}
+
+uint32_t PhysicsWorld::CreateCapsule(const BodyCreationInfo& info, const float_t height, const float_t radius)
 {
     const JPH::CapsuleShapeSettings capsuleSettings(height, radius);
     const JPH::ShapeSettings::ShapeResult result = capsuleSettings.Create();
@@ -163,7 +177,6 @@ uint32_t PhysicsWorld::CreateCapsule(const BodyCreationInfo& info, float_t heigh
         Logger::LogError("[Physics] - Couldn't create the capsule shape");
         return JPH::BodyID::cInvalidBodyID;
     }
-    
     JPH::BodyCreationSettings settings(result.Get(), ToJph(info.position), ToJph(info.rotation), JPH::EMotionType::Dynamic, Layers::MOVING);
 
     return CreateBody(info, settings);
@@ -223,7 +236,6 @@ Quaternion PhysicsWorld::GetBodyRotation(uint32_t bodyId)
     }
 
     const JPH::Quat rotation = m_BodyInterface->GetRotation(id);
-
     return FromJph(rotation);
 }
 
@@ -245,7 +257,6 @@ void PhysicsWorld::AddForce(const uint32_t bodyId, const Vector3& force)
         return;
 
     JPH::Body& body = lock.GetBody();
-
     body.AddForce(ToJph(force) / body.GetMotionProperties()->GetInverseMass());
 }
 
@@ -285,6 +296,30 @@ void PhysicsWorld::AddImpulse(const uint32_t bodyId, const Vector3& impulse, con
     body.AddImpulse(ToJph(impulse) * body.GetMotionProperties()->GetInverseMass(), ToJph(point));
 }
 
+void PhysicsWorld::SetFriction(uint32_t bodyId, float_t friction)
+{
+    const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
+
+    if (!lock.Succeeded())
+        return;
+
+    JPH::Body& body = lock.GetBody();
+
+    body.SetFriction(friction);
+}
+
+float_t PhysicsWorld::GetFriction(uint32_t bodyId)
+{
+    const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
+
+    if (!lock.Succeeded())
+        return 0.f;
+
+    JPH::Body& body = lock.GetBody();
+
+    return body.GetFriction();
+}
+
 void PhysicsWorld::AddTorque(const uint32_t bodyId, const Vector3& torque)
 {
     m_BodyInterface->AddTorque(JPH::BodyID(bodyId), ToJph(torque));
@@ -320,6 +355,66 @@ bool_t PhysicsWorld::Raycast(const Vector3& position, const Vector3& direction, 
     result->distance = length * jphResult.mFraction;
     
     return hit;
+}
+
+void PhysicsWorld::SetLinearVelocity(uint32_t bodyId, Vector3 velocity)
+{
+    const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
+
+    if (!lock.Succeeded())
+        return;
+
+    JPH::Body& body = lock.GetBody();
+    
+    
+    body.SetLinearVelocity(ToJph(velocity));
+}
+
+void PhysicsWorld::AddLinearVelocity(uint32_t bodyId, Vector3 velocity)
+{
+    const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
+
+    if (!lock.Succeeded())
+        return;
+
+    JPH::Body& body = lock.GetBody();
+
+    body.SetLinearVelocity(ToJph(velocity) + body.GetLinearVelocity());
+}
+
+Vector3 PhysicsWorld::GetLinearVelocity(uint32_t bodyId)
+{
+    const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
+
+    if (!lock.Succeeded())
+        return Vector3::Zero();
+
+    JPH::Body& body = lock.GetBody();
+
+    return FromJph(body.GetLinearVelocity());
+}
+
+void PhysicsWorld::MoveKinematic(uint32_t bodyId, Vector3 inTargetPosition, Quaternion inTargetRotation, float_t inDeltaTime)
+{
+    const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
+
+    if (!lock.Succeeded())
+        return;
+
+    JPH::Body& body = lock.GetBody();
+    body.MoveKinematic(ToJph(inTargetPosition),ToJph(inTargetRotation),inDeltaTime);
+}
+
+void PhysicsWorld::SetInverseMass(uint32_t bodyId, float_t invertedMass)
+{
+    const JPH::BodyLockWrite lock(m_PhysicsSystem->GetBodyLockInterface(), JPH::BodyID(bodyId));
+
+    if (!lock.Succeeded())
+        return;
+
+    JPH::Body& body = lock.GetBody();
+
+    body.GetMotionProperties()->SetInverseMass(invertedMass);
 }
 
 bool_t PhysicsWorld::IsBodyActive(const uint32_t bodyId)

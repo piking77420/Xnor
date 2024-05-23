@@ -19,12 +19,14 @@ public:
     
     DEFAULT_COPY_MOVE_OPERATIONS(UiWindow)
 
-    ImGuiWindowFlags_ windowFlags = ImGuiWindowFlags_None;
+    int32_t windowFlags = ImGuiWindowFlags_NoFocusOnAppearing;
 
     [[nodiscard]]
-    const char* GetName() const;
+    const std::string& GetName() const;
     
     virtual void Display() = 0;
+
+    virtual void SetParam([[maybe_unused]] void* const param) {}
     
     [[nodiscard]]
     bool IsFocused() const;
@@ -35,18 +37,23 @@ public:
     [[nodiscard]]
     Vector2i GetSize() const;
     
-    void FetchInfo();
+    virtual void FetchInfo();
 
     // Whenever the window need to render after the update of the world
     virtual void OnApplicationRendering();
 
+    virtual XnorCore::Input::BoundWindowInfo GetBindWindowInfo() const;
+    
+    bool_t opened = true;
+    bool_t canClose = false;
+
 protected:
     std::string m_WindowTitle = "Untitled";
+    uint32_t m_InputBindId = 0;
     
-    bool m_IsFocused;
+    bool_t m_IsFocused;
     Vector2i m_Position;
     Vector2i m_Size;
-
 
     Editor* m_Editor;
 };

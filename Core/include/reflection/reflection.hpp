@@ -1,8 +1,7 @@
 ﻿#pragma once
 
 #include <refl/refl.hpp>
-
-#include "utils/meta_programming.hpp"
+#include "core.hpp"
 
 /// @file reflection.hpp
 /// @brief Defines reflection types and helpers
@@ -17,7 +16,7 @@ using TypeDescriptor = refl::type_descriptor<T>;
 /// @brief refl::attr::usage::type shorthand
 ///
 /// Specifies that an attribute can only be used on a type
-using FieldType = refl::attr::usage::type;
+using TypeAttribute = refl::attr::usage::type;
 
 /// @brief refl::attr::usage::field shorthand
 ///
@@ -39,6 +38,7 @@ using MemberAttribute = refl::attr::usage::member;
 private:                                              \
 friend struct refl_impl::metadata::type_info__<type>; \
 
+class Component;
 
 /// @brief Provides utility functions for reflection
 namespace Reflection
@@ -74,6 +74,16 @@ namespace Reflection
         constexpr explicit NotifyChange(const PtrType ptr) : pointer(ptr) {}
     };
 
+    template <typename T>
+    struct ModifiedCallback : FieldAttribute
+    {
+        using Type = void(*)(T*);
+        
+        Type callback;
+
+        constexpr explicit ModifiedCallback(Type&& c) : callback(std::move(c)) {}
+    };
+
     /// @brief Allows an enum to be treated as a list of binary flags
     struct EnumFlags : FieldAttribute
     {
@@ -84,8 +94,6 @@ namespace Reflection
     template <typename T>
     struct Range : FieldAttribute
     {
-        static_assert(Meta::IsIntegralOrFloating<T>, "Range attribute can only be used on integer or floating values");
-
         /// @brief Minimum value
         T minimum;
         /// @brief Maximum value
@@ -95,6 +103,30 @@ namespace Reflection
         /// @param min Minimum
         /// @param max Maximum
         constexpr explicit Range(const T& min, const T& max) : minimum(min), maximum(max) {}
+    };
+
+    /// @brief Allows an integer or floating type to be bound between a dynamic minimum and a maximum value, it will display the field using a slider
+    /// @tparam ReflectT Top level type
+    /// @tparam T Field type
+    template <typename ReflectT, typename T>
+    struct DynamicRange : FieldAttribute
+    {
+        /// @brief Shorthand for a class member pointer
+        using PtrType = T ReflectT::*;
+
+        /// @brief Minimum value
+        PtrType minimum;
+        /// @brief Maximum value
+        PtrType maximum;
+
+        /// @brief Creates a dynamic range with 0 being the minimum
+        /// @param max Maximum
+        constexpr explicit DynamicRange(const PtrType max) : minimum(nullptr), maximum(max) {}
+
+        /// @brief Creates a dynamic range
+        /// @param min Minimum
+        /// @param max Maximum
+        constexpr explicit DynamicRange(const PtrType min, const PtrType max) : minimum(min), maximum(max) {}
     };
 
     /// @brief Allows a tooltip to be bound to a field
@@ -110,6 +142,10 @@ namespace Reflection
 
     /// @brief Specifies that a Vector3 should be displayed as euler angles
     struct AsEulerAngles : FieldAttribute
+    {
+    };
+
+    struct AsAngle : FieldAttribute
     {
     };
 
@@ -131,33 +167,67 @@ namespace Reflection
     struct ReadOnly : FieldAttribute
     {
     };
+
+    /// @brief Binds a window to a type
+    struct OpenEditorWindow : TypeAttribute
+    {
+        /// @brief Window text
+        const char_t* windowName;
+
+        /// @brief Creates a tooltip from a string literal
+        /// @param name Window name
+        constexpr explicit OpenEditorWindow(const char_t* const name) : windowName(name) {}
+    };
+
+    /// @brief Prevents a field from being cloned when cloning a type
+    struct DontClone : FieldAttribute
+    {
+    };
+
+    /// @brief Prevents a field content from being displayed
+    struct DontExpand : FieldAttribute
+    {
+    };
+
+    template <typename T>
+    constexpr bool_t IsReflected = refl::trait::is_reflectable_v<T>;
+
+    template <typename T>
+    constexpr bool_t IsFunction = refl::trait::is_function_v<T>;
     
     /// @brief Gets the type info of a class
     /// @tparam ReflectT Type
     /// @return Type info
     template <typename ReflectT>
-    static constexpr TypeDescriptor<ReflectT> GetTypeInfo();
+    constexpr TypeDescriptor<ReflectT> GetTypeInfo();
 
     /// @brief Checks if a descriptor has a specified attribute
     /// @tparam AttributeT Attribute type
     /// @tparam DescriptorT Descriptor type
     /// @return Result
     template <typename AttributeT, typename DescriptorT>
-    static constexpr bool_t HasAttribute();
+    constexpr bool_t HasAttribute();
 
     /// @brief Gets the specified attribute of a descriptor
     /// @tparam AttributeT Attribute type
     /// @tparam DescriptorT Descriptor type
     /// @return Attribute
     template <typename AttributeT, typename DescriptorT>
-    static constexpr const AttributeT& GetAttribute();
+    constexpr const AttributeT& GetAttribute();
 
     /// @brief Tries to get a specified attribute of a descriptor
     /// @tparam AttributeT Attribute type
     /// @tparam DescriptorT Descriptor type
     /// @return Attribute, @c nullptr if not found
     template <typename AttributeT, typename DescriptorT>
-    static constexpr const AttributeT* TryGetAttribute();
+    constexpr const AttributeT* TryGetAttribute();
+
+    template <typename T>
+    void Clone(const T* src, T* dst);
+
+    void CloneUsingFactory(const void* src, void* dst, size_t hash);
+    [[nodiscard]]
+    void* CreateUsingFactory(size_t hash, const Component* obj);
 }
 
 END_XNOR_CORE

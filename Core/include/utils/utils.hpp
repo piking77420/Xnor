@@ -1,5 +1,4 @@
-﻿// ReSharper disable CppInconsistentNaming
-#pragma once
+﻿#pragma once
 
 #include <filesystem>
 #include <functional>
@@ -8,11 +7,9 @@
 #include <Maths/vector2.hpp>
 #include <Maths/vector3.hpp>
 
-#include <ImGui/imgui.h>
-
 #include "core.hpp"
 
-#include "utils/color.hpp"
+#include "utils/concepts.hpp"
 #include "utils/pointer.hpp"
 
 /// @file utils.hpp
@@ -33,7 +30,7 @@ namespace Utils
     /// @tparam IntT Type of the number, must be integral
     /// @param number Number to convert
     /// @return Pointer representation of the number
-    template <typename PtrT, typename IntT>
+    template <Concepts::PointerT PtrT, Concepts::IntegralT IntT>
     [[nodiscard]]
     constexpr PtrT IntToPointer(IntT number);
 
@@ -56,42 +53,6 @@ namespace Utils
     /// @param objectWidth Width of the element to align
     /// @param alignment In window alignment, 0.5f by default to center the object
     XNOR_ENGINE void AlignImGuiCursor(float_t objectWidth, float_t alignment = 0.5f);
-
-    /// @brief Converts a Vector2 to an ImVec2
-    /// @param v Vector2 to convert
-    /// @return ImVec2 representation
-    [[nodiscard]]
-    XNOR_ENGINE constexpr ImVec2 ToImVec(Vector2 v);
-
-    /// @brief Converts an ImVec2 to a Vector2
-    /// @param v ImVec2 to convert
-    /// @return Vector2 representation
-    [[nodiscard]]
-    XNOR_ENGINE constexpr Vector2 FromImVec(ImVec2 v);
-
-    /// @brief Converts a ColorRgb to an ImVec4
-    /// @param color ColorRgb to convert
-    /// @return ImVec4 representation
-    [[nodiscard]]
-    XNOR_ENGINE constexpr ImVec4 ToImCol(ColorRgb color);
-
-    /// @brief Converts a Colorf to an ImVec4
-    /// @param color Colorf to convert
-    /// @return ImVec4 representation
-    [[nodiscard]]
-    XNOR_ENGINE constexpr ImVec4 ToImCol(const Colorf& color);
-
-    /// @brief Converts a ColorHsv to an ImVec4
-    /// @param color ColorHsv to convert
-    /// @return ImVec4 representation
-    [[nodiscard]]
-    XNOR_ENGINE constexpr ImVec4 ToImCol(ColorHsva color);
-
-    /// @brief Converts an ImVec4 to a Colorf
-    /// @param color ImVec4 to convert
-    /// @return Colorf representation
-    [[nodiscard]]
-    XNOR_ENGINE constexpr Colorf FromImCol(const ImVec4& color);
 
     /// @brief Humanizes the provided string
     ///
@@ -141,7 +102,17 @@ namespace Utils
     /// @param newRange New range
     /// @return New value
     [[nodiscard]]
-    XNOR_ENGINE constexpr float_t RemapValue(float_t oldValue, Vector2 oldRange, Vector2 newRange); 
+    XNOR_ENGINE constexpr float_t RemapValue(float_t oldValue, Vector2 oldRange, Vector2 newRange);
+
+    /// @brief Remaps a value from one range to another
+    ///
+    /// e.g., the number 5 in the range [0;10] will become 1 if remapped to the range [0;2]
+    /// @param oldValue Value
+    /// @param oldRange Old range
+    /// @param newRange New range
+    /// @return New value
+    [[nodiscard]]
+    XNOR_ENGINE constexpr size_t RemapValue(size_t oldValue, Vector2i oldRange, Vector2i newRange);
 
     /// @brief Normalizes an angle (clamps its value between 0 and 2 * PI)
     /// @param angle Angle to normalize
@@ -207,6 +178,12 @@ namespace Utils
     template <typename Ret, typename... Args>
     [[nodiscard]]
     constexpr size_t FunctionAddress(std::function<Ret(Args...)> f);
+
+    XNOR_ENGINE int32_t TerminalCommand(const std::string& command, bool_t asynchronous = true);
+
+    XNOR_ENGINE void CreateEmptyFile(const std::filesystem::path& path);
+
+    XNOR_ENGINE void SetThreadName(std::thread& thread, const std::wstring& name);
 }
 
 END_XNOR_CORE

@@ -2,6 +2,7 @@
 
 #include "core.hpp"
 #include "rendering/frame_buffer.hpp"
+#include "resource/mesh.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
 
@@ -17,6 +18,7 @@ class ToneMapping
 
 public:
     XNOR_ENGINE ToneMapping() = default;
+    
     XNOR_ENGINE ~ToneMapping() = default;
 
     DEFAULT_COPY_MOVE_OPERATIONS(ToneMapping)
@@ -29,13 +31,13 @@ public:
     
     /// @brief Computes the tone mapping
     /// @param imageWithoutToneMapping Initial image
-    /// @param bloomTexture Bloom texture
+    /// @param bloomTexture Bloom texture   
     XNOR_ENGINE void ComputeToneMaping(const Texture& imageWithoutToneMapping, const Texture& bloomTexture) const;
 
 private:
     Pointer<Shader> m_Aces = nullptr;
 
-    Pointer<Model> m_Quad = nullptr;
+    Pointer<Mesh> m_Quad = nullptr;
 };
 
 END_XNOR_CORE

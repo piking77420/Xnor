@@ -1,25 +1,33 @@
 ﻿#pragma once
 
+#include <vector>
+
 #include <Maths/matrix.hpp>
 #include <Maths/vector2i.hpp>
 
 #include "core.hpp"
-#include "utils/color.hpp"
-
+#include "rendering/vertex.hpp"
 
 
 /// @file rhi_typedef.hpp
 /// @brief Defines various types and enumerations needed by XnorCore::Rhi.
 
 BEGIN_XNOR_CORE
+
 class Framebuffer;
 
 /// @brief Maximum amount of spot lights that can exists in a same scene
-static constexpr uint32_t MaxSpotLights = 100;
+static constexpr uint32_t MaxSpotLights = 50;
 /// @brief Maximum amount of point lights that can exists in a same scene
-static constexpr uint32_t MaxPointLights = 100;
+static constexpr uint32_t MaxPointLights = 50;
 /// @brief Maximum amount of directional lights that can exists in a same scene
 static constexpr uint32_t MaxDirectionalLights = 1;
+
+static constexpr uint32_t MaxBones = 100;
+
+static constexpr size_t DirectionalCascadeLevelAllocation = 12;
+static constexpr size_t DirectionalCascadeLevel = 4;
+
 
 /// @brief Polygon rasterization mode
 /// @see <a href="https://registry.khronos.org/OpenGL-Refpages/gl4/html/glPolygonMode.xhtml">OpenGL specification</a>
@@ -71,15 +79,15 @@ struct ShaderProgramCullInfo
 BEGIN_ENUM(DrawMode)
 {
 	Point = 0,
-	LineStrip,
+	Line,
 	LineLoop,
-	LineStripAdjency,
+	LineStrip,
+	Triangles,
 	TrianglesStrip,
 	TrianglesFan,
-	Triangles,
+	LineStripAdjency,
 	TrianglesStripAdjency,
 	TrianglesAdjency,
-	Patches 
 }
 END_ENUM
 
@@ -145,7 +153,7 @@ BEGIN_ENUM(TextureWrapping)
 	/// @brief Uses the last valid border pixel of the texture
 	ClampToEdge,
 	/// @brief Samples a user given pixel
-	ClampToBorder
+	ClampToBorder,
 }
 END_ENUM
 
@@ -217,9 +225,14 @@ END_ENUM
 /// @brief %Texture data type
 BEGIN_ENUM(DataType)
 {
-	Float = 0,
+	Byte,
 	UnsignedByte,
-	UnsignedByte64,
+	Short,
+	UnsignedShort,
+	Int,
+	UnsignedInt,
+	Float,
+	Double
 }
 END_ENUM
 
@@ -331,8 +344,17 @@ struct CameraUniformData
 	Matrix view = Matrix::Identity();
 	/// @brief Projection matrix
 	Matrix projection = Matrix::Identity();
+	/// @brief View matrix
+	Matrix invView = Matrix::Identity();
+	/// @brief Projection matrix
+	Matrix invProjection = Matrix::Identity();
+	
 	/// @brief Camera position
 	Vector3 cameraPos;
+
+	float_t near;
+
+	float_t far;
 };
 
 /// @brief Model UniformBuffer data
@@ -367,6 +389,23 @@ BEGIN_ENUM(UniformType)
 	Mat4,
 }
 END_ENUM
+
+struct GpuUniform
+{
+	ENUM_VALUE(UniformType) type;
+	uint32_t shaderKey;
+	union
+	{
+		int32_t Int;
+		int32_t Bool;
+		float_t Float;
+		Vector2 Vec2;
+		Vector3 Vec3;
+		Vector4 Vec4;
+		Matrix3 Mat3;
+		Matrix Mat4;
+	} data = {};
+};
 
 /// @brief Depth function
 BEGIN_ENUM(DepthFunction)
@@ -505,12 +544,6 @@ struct ALIGNAS(16) SpotLightData
 	
 	/// @brief CastShadow
 	int32_t isCastingShadow = 0;
-
-	/// @brief Cringe padding even with alignas(16) skill issue
-	float_t padding[3];
-	
-	/// @brief LightSpaceMatrix for shadowMapping
-	Matrix lightSpaceMatrix;
 };
 
 /// @brief Directional light UniformBuffer data
@@ -526,8 +559,9 @@ struct ALIGNAS(16) DirectionalLightData
 	/// @brief CastShadow
 	int32_t isDirlightCastingShadow = 0;
 
-	/// @brief Light space matrix
-	Matrix lightSpaceMatrix;
+	int32_t cascadeCount = DirectionalCascadeLevel;
+
+	float_t cascadePlaneDistance[DirectionalCascadeLevel];
 };
 
 /// @brief Light UniformBuffer data
@@ -544,9 +578,25 @@ struct ALIGNAS(16) GpuLightData
 	SpotLightData spotLightData[MaxSpotLights];
 	/// @brief Directional light data
 	DirectionalLightData directionalData[MaxDirectionalLights];
+	
+	/// @brief LightSpaceMatrix for shadowMapping
+	Matrix spotLightSpaceMatrix[MaxSpotLights];
+
+	/// @brief Light space matrix
+	Matrix dirLightSpaceMatrix[DirectionalCascadeLevelAllocation];
+	
+	/// @brief Number of active directional lights shoul be 0 or 1
+	uint32_t nbrOfDirLight{};
+};
+
+/// @brief UniformBuffer data for animation
+struct ALIGNAS(16) SkinnedMeshGpuData
+{
+	Matrix boneMatrices[MaxBones];
 };
 
 #pragma warning(pop) // 4324
+	
 
 /// @brief Material UniformBuffer data
 struct MaterialData
@@ -560,6 +610,8 @@ struct MaterialData
 	Vector3 emissiveColor;
 	/// @brief Emissive parameter
 	float_t emissive = 0.f;
+
+	int32_t hasEmissive;
 	
 	/// @brief Whether it has a metallic map
 	int32_t hasMetallicMap;
@@ -585,12 +637,12 @@ struct MaterialData
 /// @brief The type of DefferedDescriptor.
 BEGIN_ENUM(DefferedDescriptor)
 {
-	Position = 4,
-	Normal,
+	Normal = 5,
 	Albedo,
 	MetallicRoughessReflectance,
 	AmbiantOcclusion,
 	Emissivive,
+	Depth,
 	
 	SkyboxIrradiance = 12,
 	SkyboxPrefilterMap = 13,
@@ -615,6 +667,7 @@ BEGIN_ENUM(MaterialTextureEnum) : int32_t
 	Roughness,
 	Normal,
 	AmbiantOcclusion,
+	EmissiveMap,
 };
 END_ENUM
 
@@ -686,6 +739,70 @@ enum class ImageAccess
 	ReadOnly,
 	WriteOnly,
 	ReadWrite,
+};
+
+
+
+struct VertexAttributePointer
+{
+	uint32_t index = 0;
+	size_t size = 0;
+	DataType::DataType bufferDatatype = DataType::Byte;
+	bool_t normalized = false;
+	size_t stride = 0;
+	const void* pointer = nullptr;
+	
+};
+
+struct AttributeDivisor
+{
+	uint32_t index = 0;
+	uint32_t divisor = 0;
+};
+
+struct VertexAttributeBinding
+{
+	uint32_t attribIndex = 0;
+	uint32_t bindingIndex = 0;
+};
+
+struct VertexAttribFormat
+{
+	 uint32_t attribIndex = 0;
+	 uint32_t size = 0;
+	 DataType::DataType type = DataType::Float;
+	 bool_t normalized = false;
+	 uint32_t relativeOffset = 0;
+};
+
+struct VaoDescriptor
+{
+	const VertexAttributeBinding* vertexAttributeBindings = nullptr;
+	size_t vertexAttributeBindingSize = 0;
+	
+	const VertexAttribFormat* vertexAttribFormats = nullptr;
+	size_t vertexAttribFormatsSize = 0;
+
+	uint32_t vboId = 0;
+};
+
+enum class DataAlignment
+{
+	Pack,
+	UnPack
+};
+
+enum class BufferUsage
+{
+	StreamDraw,
+	StreamRead,
+	StreamCopy,
+	StaticDraw,
+	StaticRead,
+	StaticCopy,
+	DynamicDraw,
+	DrawRead,
+	ReadCopy,
 };
 
 END_XNOR_CORE

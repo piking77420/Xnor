@@ -17,66 +17,70 @@ Resource::Resource(std::string name)
 
 Resource::~Resource() = default;
 
-bool_t Resource::Load(const uint8_t*, int64_t)
+bool_t Resource::Load(const uint8_t* const, const int64_t)
 {
     return false;
 }
 
 bool_t Resource::Load(const Pointer<File>& file)
 {
-    if (!file->GetLoaded())
-        Logger::LogWarning("Tried to load resource {} with an unloaded file: {}", m_Name, file->GetPath());
+    m_File = file;
     
     return Load(file->GetData<uint8_t>(), file->GetSize());
 }
 
-void Resource::CreateInRhi()
+void Resource::CreateInInterface()
 {
-    m_LoadedInRhi = true;
+    m_LoadedInInterface = true;
 }
 
-void Resource::DestroyInRhi()
+void Resource::DestroyInInterface()
 {
-    m_LoadedInRhi = false;
+    m_LoadedInInterface = false;
 }
 
 void Resource::Unload()
 {
 }
 
-bool_t Resource::Reload(const uint8_t* buffer, const int64_t length, const bool_t reloadInRhi)
+bool_t Resource::Reload(const uint8_t* buffer, const int64_t length, const bool_t reloadInInterface)
 {
-    if (reloadInRhi)
-        DestroyInRhi();
+    if (reloadInInterface)
+        DestroyInInterface();
     
     Unload();
     
     const bool_t result = Load(buffer, length);
     
-    if (reloadInRhi)
-        CreateInRhi();
+    if (reloadInInterface)
+        CreateInInterface();
     
     return result;
 }
 
-bool_t Resource::Reload(const Pointer<File>& file, const bool_t reloadInRhi)
+bool_t Resource::Reload(const Pointer<File>& file, const bool_t reloadInInterface)
 {
-    if (reloadInRhi)
-        DestroyInRhi();
+    if (reloadInInterface)
+        DestroyInInterface();
     
     Unload();
     
     const bool_t result = Load(file);
     
-    if (reloadInRhi)
-        CreateInRhi();
+    if (reloadInInterface)
+        CreateInInterface();
     
     return result;
 }
 
-bool_t Resource::Reload(const bool_t reloadInRhi)
+bool_t Resource::Reload(const bool_t reloadInInterface)
 {
-    return Reload(FileManager::Get(m_Name), reloadInRhi);
+    return Reload(FileManager::Get(m_Name), reloadInInterface);
+}
+
+bool_t Resource::Save() const
+{
+    return false;
 }
 
 bool_t Resource::IsLoaded() const
@@ -84,9 +88,9 @@ bool_t Resource::IsLoaded() const
     return m_Loaded;
 }
 
-bool_t Resource::IsLoadedInRhi() const
+bool_t Resource::IsLoadedInInterface() const
 {
-    return m_LoadedInRhi;
+    return m_LoadedInInterface;
 }
 
 std::string Resource::GetName() const
@@ -109,4 +113,9 @@ void Resource::SetGuid(const Guid& guid)
 const Guid& Resource::GetGuid() const
 {
     return m_Guid;
+}
+
+void Resource::SetFile(const Pointer<File> file)
+{
+    m_File = file;
 }

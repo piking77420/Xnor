@@ -1,12 +1,16 @@
 #include "rendering/rhi.hpp"
 
+#include <ranges>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "window.hpp"
 #include "magic_enum/magic_enum.hpp"
-#include "rendering/render_pass.hpp"
+#include "rendering/camera.hpp"
 #include "rendering/frame_buffer.hpp"
+#include "rendering/render_pass.hpp"
+#include "resource/resource_manager.hpp"
 #include "resource/shader.hpp"
 #include "utils/logger.hpp"
 
@@ -22,12 +26,6 @@ void Rhi::SetViewport(const Vector2i screenOffset, const Vector2i screenSize)
 	glViewport(screenOffset.x, screenOffset.y, screenSize.x, screenSize.y);
 }
 
-void Rhi::DrawQuad(const uint32_t quadId)
-{
-	const ModelInternal model = m_ModelMap.at(quadId);
-	glBindVertexArray(model.vao);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-}
 
 void Rhi::BeginRenderPassInternal(const RenderPassBeginInfo& beginInfo)
 {
@@ -52,35 +50,51 @@ uint32_t Rhi::CreateModel(const std::vector<Vertex>& vertices, const std::vector
 	modelInternal.nbrOfIndicies = static_cast<uint32_t>(indices.size()); 
 	
 	glCreateVertexArrays(1, &modelInternal.vao);
-
+	
 	glCreateBuffers(1, &modelInternal.vbo);
 	glCreateBuffers(1, &modelInternal.ebo);
 
-	GLintptr offset = static_cast<GLintptr>(vertices.size() * sizeof(Vertex));
-	glNamedBufferData(modelInternal.vbo, offset, vertices.data(), GL_STATIC_DRAW);
-	offset = static_cast<GLintptr>(indices.size() * sizeof(uint32_t));
-	glNamedBufferData(modelInternal.ebo, offset, indices.data(), GL_STATIC_DRAW);
+	GLintptr size = static_cast<GLintptr>(vertices.size() * sizeof(Vertex));
+	glNamedBufferData(modelInternal.vbo, size, vertices.data(), GL_STATIC_DRAW);
+	size = static_cast<GLintptr>(indices.size() * sizeof(uint32_t));
+	glNamedBufferData(modelInternal.ebo, size, indices.data(), GL_STATIC_DRAW);
 
+	// Position
 	glEnableVertexArrayAttrib(modelInternal.vao, 0);
 	glVertexArrayAttribBinding(modelInternal.vao, 0, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 0, 3, GL_FLOAT, GL_FALSE, 0);
 
+	// Normal
 	glEnableVertexArrayAttrib(modelInternal.vao, 1);
 	glVertexArrayAttribBinding(modelInternal.vao, 1, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 1, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, normal));
 
+	// Texture Coord
 	glEnableVertexArrayAttrib(modelInternal.vao, 2);
 	glVertexArrayAttribBinding(modelInternal.vao, 2, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 2, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex, textureCoord));
 
+	// Tangent
 	glEnableVertexArrayAttrib(modelInternal.vao, 3);
 	glVertexArrayAttribBinding(modelInternal.vao, 3, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 3, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, tangent));
-
+	
+	// bitangent 
 	glEnableVertexArrayAttrib(modelInternal.vao, 4);
 	glVertexArrayAttribBinding(modelInternal.vao, 4, 0);
 	glVertexArrayAttribFormat(modelInternal.vao, 4, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, bitangent));
+
 	
+	// bone indices
+	glEnableVertexArrayAttrib(modelInternal.vao, 5);
+	glVertexArrayAttribBinding(modelInternal.vao, 5, 0);
+	glVertexArrayAttribFormat(modelInternal.vao, 5, Vertex::MaxBoneWeight, GL_FLOAT, GL_FALSE, offsetof(Vertex, boneIndices));
+	// bone weights
+	glEnableVertexArrayAttrib(modelInternal.vao, 6);
+	glVertexArrayAttribBinding(modelInternal.vao, 6, 0);
+	glVertexArrayAttribFormat(modelInternal.vao, 6, Vertex::MaxBoneWeight, GL_FLOAT, GL_FALSE, offsetof(Vertex, boneWeight));
+	
+
 	glVertexArrayVertexBuffer(modelInternal.vao, 0, modelInternal.vbo, 0, sizeof(Vertex));
 	glVertexArrayElementBuffer(modelInternal.vao, modelInternal.ebo);
 	
@@ -98,18 +112,28 @@ bool_t Rhi::DestroyModel(const uint32_t modelId)
 
 	const ModelInternal* model = &m_ModelMap.at(modelId);
 
-	glDeleteBuffers(1, &model->vbo);
-	glDeleteBuffers(1, &model->ebo);
-	glDeleteVertexArrays(1, &model->vao);
+	if (glIsBuffer(model->vbo))
+		glDeleteBuffers(1, &model->vbo);
+	if (glIsBuffer(model->ebo))
+		glDeleteBuffers(1, &model->ebo);
+	if (glIsVertexArray(model->vao))
+		glDeleteVertexArrays(1, &model->vao);
 
 	return true;
 }
 
-void Rhi::DrawModel(const uint32_t modelId)
+void Rhi::DrawModel(const ENUM_VALUE(DrawMode) drawMode,const uint32_t modelId)
 {
 	const ModelInternal model = m_ModelMap.at(modelId);
 	glBindVertexArray(model.vao);
-	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(model.nbrOfIndicies), GL_UNSIGNED_INT, nullptr);
+	
+	
+	glDrawElements(DrawModeToOpengl(drawMode), static_cast<GLsizei>(model.nbrOfIndicies), GL_UNSIGNED_INT, nullptr);
+}
+
+void Rhi::DrawArray(DrawMode::DrawMode drawMode,uint32_t first, uint32_t count)
+{
+	glDrawArrays(DrawModeToOpengl(drawMode), static_cast<GLint>(first),  static_cast<GLint>(count));
 }
 
 void Rhi::DestroyProgram(const uint32_t shaderId)
@@ -118,17 +142,43 @@ void Rhi::DestroyProgram(const uint32_t shaderId)
 	glDeleteProgram(shaderId);
 }
 
+uint32_t Rhi::ReloadProgram(const uint32_t oldShaderId, const std::vector<ShaderCode>& shaderCodes)
+{
+	if (!m_ShaderMap.contains(oldShaderId) || !glIsProgram(oldShaderId))
+	{
+		Logger::LogWarning("Tried to reload an invalid shader");
+		return std::numeric_limits<uint32_t>::max();
+	}
+
+	glDeleteProgram(oldShaderId);
+	
+	const ShaderInternal oldData = m_ShaderMap[oldShaderId];
+	m_ShaderMap.erase(oldShaderId);
+	const uint32_t result = CreateShaders(shaderCodes, ShaderCreateInfo{oldData.depthFunction, oldData.blendFunction, oldData.cullInfo});
+
+	UseShader(result);
+	for (auto&& uniform : oldData.uniformMap)
+	{
+		auto val = uniform.second;
+		SetUniform(val.type, &val.data, result, uniform.first.c_str());
+	}
+	UnuseShader();
+	
+	return result;
+}
+
 void Rhi::CheckCompilationError(const uint32_t shaderId, const std::string& type)
 {
-	int success;
-	std::string infoLog(1024, '\0');
+	int success = 0;
+	constexpr uint32_t infoLogSize = 1024;
+	std::string infoLog(infoLogSize, '\0');
 
 	if (type != "PROGRAM")
 	{
 		glGetShaderiv(shaderId, GL_COMPILE_STATUS, &success);
 		if (!success)
 		{
-			glGetShaderInfoLog(shaderId, 1024, nullptr, infoLog.data());
+			glGetShaderInfoLog(shaderId, infoLogSize, nullptr, infoLog.data());
 			Logger::LogError("Error while compiling shader of type {}: {}", type, infoLog);
 		}
 	}
@@ -137,7 +187,7 @@ void Rhi::CheckCompilationError(const uint32_t shaderId, const std::string& type
 		glGetProgramiv(shaderId, GL_LINK_STATUS, &success);
 		if (!success)
 		{
-			glGetProgramInfoLog(shaderId, 1024, nullptr, infoLog.data());
+			glGetProgramInfoLog(shaderId, infoLogSize, nullptr, infoLog.data());
 			Logger::LogError("Error while linking shader program of type {}: {}", type, infoLog);
 		}
 	}
@@ -234,40 +284,62 @@ void Rhi::UnuseShader()
 
 void Rhi::SetUniform(const UniformType::UniformType uniformType, const void* const data, const uint32_t shaderId, const char_t* const uniformKey)
 {
-	const GLint uniformLocation = GetUniformInMap(shaderId, uniformKey);
+	GpuUniform& uniform = GetUniformInMap(shaderId, uniformKey, uniformType);
 
+	const int32_t value = static_cast<int32_t>(uniform.shaderKey);
+	
+	const int32_t* i;
+	const bool_t* b;
+	const GLfloat* f;
+	
 	switch (uniformType)
 	{
 		case UniformType::Int:
-			glUniform1i(uniformLocation, *static_cast<const int32_t*>(data));
+			i = static_cast<const int32_t*>(data);
+			uniform.data.Int = *i;
+			glUniform1i(value, *i);
 			break;
 			
 		case UniformType::Bool:
-			glUniform1i(uniformLocation, *static_cast<const bool_t*>(data));
+			b = static_cast<const bool_t*>(data);
+			uniform.data.Int = *b;
+			glUniform1i(value, *b);
 			break;
 			
 		case UniformType::Float:
-			glUniform1f(uniformLocation, *static_cast<const GLfloat*>(data));
+			f = static_cast<const GLfloat*>(data);
+			uniform.data.Float = *f;
+			glUniform1f(value, *f);
 			break;
 
 		case UniformType::Vec2:
-			glUniform2fv(uniformLocation, 1, static_cast<const GLfloat*>(data));
+			f = static_cast<const GLfloat*>(data);
+			uniform.data.Vec2 = Vector2(f);
+			glUniform2fv(value, 1, f);
 			break;
 
 		case UniformType::Vec3:
-			glUniform3fv(uniformLocation, 1, static_cast<const GLfloat*>(data));
+			f = static_cast<const GLfloat*>(data);
+			uniform.data.Vec3 = Vector3(f);
+			glUniform3fv(value, 1, f);
 			break;
 			
 		case UniformType::Vec4:
-			glUniform4fv(uniformLocation, 1, static_cast<const GLfloat*>(data));
+			f = static_cast<const GLfloat*>(data);
+			uniform.data.Vec4 = Vector4(f);
+			glUniform4fv(value, 1, f);
 			break;
 			
 		case UniformType::Mat3:
-			glUniformMatrix3fv(uniformLocation, 1, GL_FALSE, static_cast<const GLfloat*>(data));
+			f = static_cast<const GLfloat*>(data);
+			uniform.data.Mat3 = Matrix3(f);
+			glUniformMatrix3fv(value, 1, GL_FALSE, f);
 			break;
 			
 		case UniformType::Mat4:
-			glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, static_cast<const GLfloat*>(data));
+			f = static_cast<const GLfloat*>(data);
+			uniform.data.Mat4 = Matrix(f);
+			glUniformMatrix4fv(value, 1, GL_FALSE, f);
 			break;
 	}
 }
@@ -899,7 +971,8 @@ bool Rhi::IsDataValid(const std::vector<void*>& data, const size_t wantedSize)
 
 void Rhi::DestroyTexture(const uint32_t textureId)
 {
-	glDeleteTextures(1, &textureId);
+	if (glIsTexture(textureId))
+		glDeleteTextures(1, &textureId);
 }
 
 void Rhi::BindTexture(const uint32_t unit, const uint32_t textureId)
@@ -909,7 +982,7 @@ void Rhi::BindTexture(const uint32_t unit, const uint32_t textureId)
 
 uint32_t Rhi::CreateFrameBuffer()
 {
-	uint32_t frameBufferId;
+	uint32_t frameBufferId = 0;
 	glCreateFramebuffers(1, &frameBufferId);
 	return frameBufferId;
 }
@@ -985,7 +1058,8 @@ void Rhi::BlitFrameBuffer(const uint32_t readBuffer, const uint32_t targetBuffer
 
 void Rhi::BindFrameBuffer(const uint32_t frameBufferId)
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
+	if (glIsFramebuffer(frameBufferId))
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
 }
 
 void Rhi::UnbindFrameBuffer()
@@ -1039,7 +1113,7 @@ void Rhi::GetPixelFromAttachement(const uint32_t attachmentIndex, const Vector2i
 
 void Rhi::SwapBuffers()
 {
-	glfwSwapBuffers(Window::GetHandle());
+	glfwSwapBuffers(glfwGetCurrentContext());
 }
 
 uint32_t Rhi::GetOpenglShaderType(const ShaderType::ShaderType shaderType)
@@ -1226,67 +1300,175 @@ uint32_t Rhi::GetOpenGlTextureFormat(const TextureFormat::TextureFormat textureF
 
 void Rhi::LogComputeShaderInfo()
 {
-	int32_t workGroupCount[3];
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &workGroupCount[0]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &workGroupCount[1]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &workGroupCount[2]);
+	std::array<int32_t, 3> workGroupCount{};
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, workGroupCount.data());
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, workGroupCount.data() + 1);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, workGroupCount.data() + 2);
 	Logger::LogDebug("Max work groups per compute shader x: {} y: {} x: {}", workGroupCount[0], workGroupCount[1], workGroupCount[2]);
 	
-	int32_t workGroupSize[3];
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &workGroupSize[0]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, &workGroupSize[1]);
-	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, &workGroupSize[2]);
+	std::array<int32_t, 3> workGroupSize{};
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, workGroupSize.data());
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, workGroupSize.data() + 1);
+	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, workGroupSize.data() + 2);
 	Logger::LogDebug("Max work group sizes  x: {} y: {} x: {}", workGroupSize[0], workGroupSize[1], workGroupSize[2]); 
 
-	int32_t workGroupInvocation;
+	int32_t workGroupInvocation = 0;
 	glGetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &workGroupInvocation);
 	Logger::LogDebug("Max invocations count per work group: {} ", workGroupInvocation);
 }
 
 void Rhi::IsShaderValid(const uint32_t shaderId)
 {
-	if (!m_ShaderMap.contains(shaderId) || !glIsProgram(shaderId))
+	const bool_t contain = m_ShaderMap.contains(shaderId);
+	const bool_t isProgram = glIsProgram(shaderId);
+
+	if (!contain || !isProgram)
 	{
 		Logger::LogFatal("No shader with id #{}", shaderId);
 		throw std::runtime_error("No shader with this id");
 	}
 }
 
-int32_t Rhi::GetUniformInMap(const uint32_t shaderId, const char_t* const uniformKey)
+GpuUniform& Rhi::GetUniformInMap(const uint32_t shaderId, const char_t* const uniformKey, const UniformType::UniformType type)
 {
-	std::map<std::string, uint32_t>& shaderUniformMap = m_ShaderMap.at(shaderId).uniformMap;
+	auto& shaderUniformMap = m_ShaderMap.at(shaderId).uniformMap;
 
 	if (shaderUniformMap.contains(uniformKey))
-	{
-		return static_cast<int32_t>(shaderUniformMap[uniformKey]);
-	}
+		return shaderUniformMap[uniformKey];
 
 	const GLint location = glGetUniformLocation(shaderId, uniformKey);
 	if (location == NullUniformLocation)
-	{
 		Logger::LogWarning("No uniform with key [{}] in shader #{}", uniformKey, shaderId);
-	}
-		
-	shaderUniformMap[uniformKey] = location;
 
-	return location;
+	shaderUniformMap[uniformKey] = GpuUniform{type, static_cast<uint32_t>(location)};
+	return shaderUniformMap[uniformKey];
 }
 
 uint32_t Rhi::GetOpenglDataType(const DataType::DataType dataType)
 {
 	switch (dataType)
 	{
-		case DataType::Float:
-			return GL_FLOAT;
-
+		
+		case DataType::Byte:
+			return GL_BYTE;
+		
 		case DataType::UnsignedByte:
 			return GL_UNSIGNED_BYTE;
 		
-		case DataType::UnsignedByte64:
-			return GL_UNSIGNED_INT_8_8_8_8;
+		case DataType::Short:
+			return GL_SHORT;
+		
+		case DataType::UnsignedShort:
+			return GL_UNSIGNED_SHORT;
+			
+		case DataType::Int:
+			return GL_INT;
+			
+		case DataType::UnsignedInt:
+			return GL_UNSIGNED_INT ;
+
+		case DataType::Float:
+			return GL_FLOAT;
+		
+		case DataType::Double:
+			return GL_DOUBLE;
+			
 	}
 
 	return GL_UNSIGNED_BYTE;
+}
+
+uint32_t Rhi::DrawModeToOpengl(DrawMode::DrawMode drawMode)
+{
+	switch (drawMode)
+	{
+	case DrawMode::Point:
+		return GL_POINTS;
+		
+	case DrawMode::Line:
+		return GL_LINES;
+		
+	case DrawMode::LineLoop:
+		return GL_LINE_LOOP;
+		
+	case DrawMode::LineStrip:
+		return GL_LINE_STRIP;
+
+	case DrawMode::Triangles:
+		return GL_TRIANGLES;
+		
+	case DrawMode::TrianglesStrip:
+		return GL_TRIANGLE_STRIP;
+
+	case DrawMode::TrianglesFan:
+		return GL_TRIANGLE_FAN;
+		
+	case DrawMode::LineStripAdjency:
+		return GL_LINES_ADJACENCY;
+	
+	case DrawMode::TrianglesStripAdjency:
+		return GL_LINE_STRIP_ADJACENCY;
+		
+	case DrawMode::TrianglesAdjency:
+		return GL_TRIANGLES_ADJACENCY;
+	
+	default :
+		return GL_TRIANGLES;
+		
+	}
+
+}
+
+void Rhi::SetPixelStore(const DataAlignment alignement, const int32_t value)
+{
+	GLuint alignementOpengl {};
+
+	switch (alignement)
+	{
+		case DataAlignment::Pack:
+			alignementOpengl = GL_PACK_ALIGNMENT;
+			break;
+		case DataAlignment::UnPack:
+			alignementOpengl = GL_UNPACK_ALIGNMENT;
+			break;
+	}
+
+	glPixelStorei(alignementOpengl, value);
+}
+
+uint32_t Rhi::BufferUsageToOpenglUsage(const BufferUsage usage)
+{
+	switch (usage)
+	{
+		case BufferUsage::StreamDraw:
+			return GL_STREAM_DRAW;
+			
+		case BufferUsage::StreamRead:
+			return GL_STREAM_READ;
+			
+		case BufferUsage::StreamCopy:
+			return GL_STREAM_COPY;
+			
+		case BufferUsage::StaticDraw:
+			return GL_STATIC_DRAW;
+			
+		case BufferUsage::StaticRead:
+			return GL_STATIC_READ;
+			
+		case BufferUsage::StaticCopy:
+			return GL_STATIC_COPY;
+			
+		case BufferUsage::DynamicDraw:
+			return GL_DYNAMIC_DRAW;
+			
+		case BufferUsage::DrawRead:
+			return GL_DYNAMIC_READ;
+			
+		case BufferUsage::ReadCopy:
+			return GL_DYNAMIC_COPY;
+	}
+
+	return GL_DYNAMIC_DRAW;
 }
 
 void Rhi::OpenglDebugCallBack(const uint32_t source, const uint32_t type, const uint32_t id, const uint32_t severity, const int32_t, const char_t* const message, const void* const)
@@ -1423,6 +1605,7 @@ void Rhi::Shutdown()
 	delete m_ModelUniform;
 	delete m_LightUniform;
 	delete m_MaterialUniform;
+	delete m_AnimationBuffer;
 }
 
 void Rhi::PrepareRendering()
@@ -1442,6 +1625,10 @@ void Rhi::PrepareRendering()
 	m_MaterialUniform = new UniformBuffer;
 	m_MaterialUniform->Allocate(sizeof(MaterialData),nullptr);
 	m_MaterialUniform->Bind(4);
+
+	m_AnimationBuffer = new UniformBuffer();
+	m_AnimationBuffer->Allocate(sizeof(SkinnedMeshGpuData),nullptr);
+	m_AnimationBuffer->Bind(5);
 
 	skyBoxParser.Init();
 }
@@ -1466,6 +1653,11 @@ void Rhi::UpdateCameraUniform(const CameraUniformData& cameraUniformData)
 	m_CameraUniform->Update(sizeof(CameraUniformData), 0, cameraUniformData.view.Raw());
 }
 
+void Rhi::UpdateAnimationUniform(const SkinnedMeshGpuData& skinnedMeshGpuData)
+{
+	m_AnimationBuffer->Update(sizeof(SkinnedMeshGpuData), 0, skinnedMeshGpuData.boneMatrices->Raw());
+}
+
 void Rhi::UpdateLight(const GpuLightData& lightData)
 {
 	m_LightUniform->Update(sizeof(GpuLightData), 0, &lightData.nbrOfPointLight);
@@ -1480,18 +1672,19 @@ void Rhi::BindMaterial(const Material& material)
 	materialData.hasRoughnessMap =  static_cast<int32_t>(material.roughnessTexture.IsValid());
 	materialData.hasNormalMap =  static_cast<int32_t>(material.normalTexture.IsValid());
 	materialData.hasAmbientOcclusionMap =  static_cast<int32_t>(material.ambientOcclusionTexture.IsValid());
-	
+	materialData.hasEmissive =  static_cast<int32_t>(material.emissiveTexture.IsValid());
+
 	materialData.albedoColor = static_cast<Vector3>(material.albedoColor);
 	materialData.emissiveColor = static_cast<Vector3>(material.emissiveColor);
-	
+
+	// Set Scalar value
 	materialData.metallic = material.metallic;
 	materialData.roughness = material.roughness;
 	materialData.reflectance = material.reflectance;
 	materialData.emissive = material.emissive;
 	materialData.ambientOcclusion = material.ambientOcclusion;
-	
-	constexpr size_t size = sizeof(MaterialData);
-	m_MaterialUniform->Update(size, 0, &materialData);
+
+	m_MaterialUniform->Update(sizeof(MaterialData), 0, &materialData);
 }
 
 TextureFormat::TextureFormat Rhi::GetTextureFormatFromChannels(const uint32_t channels)
@@ -1523,10 +1716,10 @@ void Rhi::GetCubeMapViewMatrices(std::array<Matrix, 6>* viewsMatricies)
 {
 	*viewsMatricies =
 	{
-		Matrix::LookAt(Vector3(), -Vector3::UnitX(), -Vector3::UnitY()), // CubeMapPositiveX
-		Matrix::LookAt(Vector3(),  Vector3::UnitX(), -Vector3::UnitY()), // CubeMapNegativeX
-		Matrix::LookAt(Vector3(), -Vector3::UnitY(), -Vector3::UnitZ()), // CubeMapPositiveY
-		Matrix::LookAt(Vector3(),  Vector3::UnitY(),  Vector3::UnitZ()), // CubeMapNegativeY
+		Matrix::LookAt(Vector3(), Vector3::UnitX(), -Vector3::UnitY()), // CubeMapPositiveX
+		Matrix::LookAt(Vector3(),  -Vector3::UnitX(), -Vector3::UnitY()), // CubeMapNegativeX
+		Matrix::LookAt(Vector3(), Vector3::UnitY(), Vector3::UnitZ()), // CubeMapPositiveY
+		Matrix::LookAt(Vector3(),  -Vector3::UnitY(),  -Vector3::UnitZ()), // CubeMapNegativeY
 		Matrix::LookAt(Vector3(),  Vector3::UnitZ(), -Vector3::UnitY()), // CubeMapPositiveZ
 		Matrix::LookAt(Vector3(), -Vector3::UnitZ(), -Vector3::UnitY()), // CubeMapNegativeZ
 	};
@@ -1556,6 +1749,11 @@ uint32_t Rhi::CreateTexture(const TextureCreateInfo& textureCreateInfo)
 	AllocTexture(textureCreateInfo.textureType, textureId, textureCreateInfo);
 	ComputeTextureFiltering(textureCreateInfo.textureType, textureId, textureCreateInfo);
 	ComputeTextureWrapping(textureCreateInfo.textureType, textureId, textureCreateInfo);
+	/*
+	float_t aniso = 0.f;
+	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &aniso);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso);*/ 
 	glGenerateTextureMipmap(textureId);
+	
 	return textureId;
 }

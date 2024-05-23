@@ -2,23 +2,57 @@
 
 #include <ranges>
 
+#include "file/file_manager.hpp"
 #include "resource/compute_shader.hpp"
 #include "resource/shader.hpp"
+#include "utils/formatter.hpp"
 
 BEGIN_XNOR_CORE
 
 template <Concepts::ResourceT T>
-Pointer<T> ResourceManager::Add(std::string name)
+Pointer<T> ResourceManager::Add(const std::string& name)
 {
     Logger::LogDebug("Adding resource {}", name);
 
     if (Contains(name))
     {
-        Logger::LogWarning("This resource has already been added, consider using ResourceManager::Get instead");
+        Logger::LogWarning("The resource {} has already been added, consider using ResourceManager::Get instead", name);
         return GetNoCheck<T>(name);
     }
+
+    Pointer<T> result = AddNoCheck<T>(name);
+
+    Pointer<Resource>(result)->m_File = FileManager::Add(name);
     
-    return AddNoCheck<T>(std::forward<std::string>(name));
+    return result;
+}
+
+template <>
+inline Pointer<Shader> ResourceManager::Add<Shader>(const std::string& name)
+{
+    Logger::LogDebug("Adding shader {}", name);
+
+    if (Contains(name))
+    {
+        Logger::LogWarning("The shader {} has already been added, consider using ResourceManager::Get instead", name);
+        return GetNoCheck<Shader>(name);
+    }
+
+    return AddNoCheck<Shader>(name);
+}
+
+template <>
+inline Pointer<ComputeShader> ResourceManager::Add<ComputeShader>(const std::string& name)
+{
+    Logger::LogDebug("Adding compute shader {}", name);
+
+    if (Contains(name))
+    {
+        Logger::LogWarning("The compute shader {} has already been added, consider using ResourceManager::Get instead", name);
+        return GetNoCheck<ComputeShader>(name);
+    }
+
+    return AddNoCheck<ComputeShader>(name);
 }
 
 template <Concepts::ResourceT T>
@@ -42,8 +76,7 @@ Pointer<T> ResourceManager::Load(const Pointer<File>& file, bool_t loadInRhi)
             loaded ? "" : ". Loading it"
         );
 
-        if (!loaded)
-            resource->Load(file);
+        resource->Load(file);
 
         return resource;
     }
@@ -86,7 +119,7 @@ inline Pointer<ComputeShader> ResourceManager::Get<ComputeShader>(const std::str
         if (Contains(ReservedShaderPrefix + name))
             return GetNoCheck<ComputeShader>(ReservedShaderPrefix + name);
         
-        Logger::LogError("Attempt to get an unknown resource: {}", name);
+        Logger::LogError("Attempt to get an unknown compute shader: {}", name);
         return nullptr;
     }
 
@@ -108,7 +141,7 @@ Pointer<T> ResourceManager::Get(const Guid& guid)
     if (it == m_GuidMap.end())
         return nullptr;
 
-    return Utils::DynamicPointerCast<T>(it->second);
+    return Utils::DynamicPointerCast<T>(GetNoCheck<T>(it->second));
 }
 
 template <Concepts::ResourceT T>
@@ -126,7 +159,6 @@ void ResourceManager::FindAll(std::vector<Pointer<T>>* result)
     
     for (auto& val : m_Resources | std::views::values)
     {
-        // ReSharper disable once CppTooWideScope
         Pointer<T> entry = Utils::DynamicPointerCast<T>(val);
         
         if (entry)
@@ -153,7 +185,7 @@ template <Concepts::ResourceT T>
 std::vector<Pointer<T>> ResourceManager::FindAll(std::function<bool_t(Pointer<T>)>&& predicate)
 {
     std::vector<Pointer<T>> result;
-    FindAll<T>(std::forward<decltype(predicate)>(predicate), &result);
+    FindAll<T>(FORWARD(predicate), &result);
     return result;
 }
 
@@ -193,8 +225,8 @@ void ResourceManager::Unload(const Pointer<T>& resource)
         Pointer<Resource>& storedResource = it->second;
         if (storedResource == Utils::DynamicPointerCast<Resource>(resource))
         {
-            if (storedResource->IsLoadedInRhi())
-                storedResource->DestroyInRhi();
+            if (storedResource->IsLoadedInInterface())
+                storedResource->DestroyInInterface();
             
             if (storedResource->IsLoaded())
                 storedResource->Unload();
@@ -208,16 +240,19 @@ void ResourceManager::Unload(const Pointer<T>& resource)
 
     // If no resources were deleted
     if (oldSize == m_Resources.size())
-        Logger::LogWarning("Attempt to unload an unknown file entry: {}", static_cast<T*>(resource));
+        Logger::LogWarning("Attempt to unload an unknown file entry: {}", resource);
 }
 
 template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::AddNoCheck(std::string name)
 {
-    Pointer<T> resource = Pointer<T>::Create(std::forward<std::string>(name));
+    Pointer<T> resource = Pointer<T>::New(std::forward<std::string>(name));
 
-    // We cannot reuse the variable 'name' here in case it was moved inside the Resource constructor
-    m_Resources[resource->GetName()] = static_cast<Pointer<Resource>>(resource.CreateStrongReference());
+    {
+        std::scoped_lock lock(m_ResourcesMutex);
+        // We cannot reuse the variable 'name' here in case it was moved inside the Resource constructor
+        m_Resources[resource->GetName()] = static_cast<Pointer<Resource>>(resource.CreateStrongReference());
+    }
 
     // Make sure to return a weak reference
     resource.ToWeakReference();
@@ -228,9 +263,12 @@ Pointer<T> ResourceManager::AddNoCheck(std::string name)
 template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file, const bool_t loadInRhi)
 {
-    Pointer<T> resource = Pointer<T>::Create(file->GetPathString());
-
-    m_Resources[resource->GetName()] = static_cast<Pointer<Resource>>(resource.CreateStrongReference());
+    Pointer<T> resource = Pointer<T>::New(file->GetPathString());
+    
+    {
+        std::scoped_lock lock(m_ResourcesMutex);
+        m_Resources[resource->GetName()] = static_cast<Pointer<Resource>>(resource.CreateStrongReference());
+    }
 
     // Make sure to return a weak reference
     resource.ToWeakReference();
@@ -240,7 +278,7 @@ Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file, const bool_t loadInR
     file->m_Resource = std::move(Pointer<Resource>(resource, false));
 
     if (loadInRhi)
-        resource->CreateInRhi();
+        resource->CreateInInterface();
 
     return resource;
 }
@@ -248,6 +286,7 @@ Pointer<T> ResourceManager::LoadNoCheck(Pointer<File> file, const bool_t loadInR
 template <Concepts::ResourceT T>
 Pointer<T> ResourceManager::GetNoCheck(const std::string& name)
 {
+    std::scoped_lock lock(m_ResourcesMutex);
     return Pointer<T>(m_Resources.at(name));
 }
 

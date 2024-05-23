@@ -7,6 +7,19 @@
 
 using namespace XnorCore;
 
+void Scene::Initialize()
+{
+    skybox.Initialize();
+}
+
+void Scene::Awake()
+{
+    for (size_t i = 0; i < m_Entities.GetSize(); i++)
+    {
+        m_Entities[i]->Awake();
+    }
+}
+
 void Scene::Begin()
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)
@@ -34,19 +47,23 @@ void Scene::PrePhysics()
 void Scene::PostPhysics()
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)
-    {
         m_Entities[i]->PostPhysics();
+}
+
+void Scene::OnRendering()
+{
+    for (size_t i = 0; i < m_Entities.GetSize(); i++)
+    {
+        m_Entities[i]->OnRendering();
     }
 }
 
-Entity* Scene::GetEntityById(const Guid& xnorGuid)
+Entity* Scene::FindEntityById(const Guid& xnorGuid)
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)
     {
         if (m_Entities[i]->GetGuid() == xnorGuid)
-        {
             return m_Entities[i];
-        }
     }
 
     Logger::LogWarning("No entity with id {} in scene", static_cast<std::string>(xnorGuid));
@@ -54,21 +71,43 @@ Entity* Scene::GetEntityById(const Guid& xnorGuid)
     return nullptr;
 }
 
-Entity* Scene::CreateEntity(const std::string&& name, Entity* parent)
+Entity* Scene::FindEntityByName(const std::string& name)
+{
+    for (size_t i = 0; i < m_Entities.GetSize(); i++)
+    {
+        if (m_Entities[i]->name == name)
+            return m_Entities[i];
+    }
+
+    Logger::LogWarning("No entity with name {} in scene", name);
+
+    return nullptr;
+}
+
+Entity* Scene::CreateEntity(const std::string& name, Entity* parent)
 {
     Entity* const e = new Entity();
 
     e->name = name;
     e->SetParent(parent);
-    e->Begin();
+
+    if (World::isPlaying)
+    {
+        e->Awake();
+        e->Begin();
+    }
 
     m_Entities.Add(e);
+
+    onCreateEntity(e);
 
     return e;
 }
 
 void Scene::DestroyEntity(Entity* const entity)
 {
+    onDestroyEntity(entity);
+    
     DestroyEntityChildren(entity);
     
     entity->SetParent(nullptr);
@@ -78,16 +117,15 @@ void Scene::DestroyEntity(Entity* const entity)
 
 bool_t Scene::HasEntity(const Entity* const entity) const
 {
-    // TODO fix this thing
     return m_Entities.Contains(const_cast<Entity* const>(entity));
 }
 
-const List<Entity*>& Scene::GetEntities()
+const List<Entity*>& Scene::GetEntities() const
 {
     return m_Entities;
 }
 
-uint32_t Scene::GetEntityIndex(const Entity* entity) const
+uint32_t Scene::GetEntityIndex(const Entity* const entity) const
 {
     for (size_t i = 0; i < m_Entities.GetSize(); i++)
     {
@@ -99,6 +137,7 @@ uint32_t Scene::GetEntityIndex(const Entity* entity) const
 
     return std::numeric_limits<uint32_t>::max();
 }
+
 
 void Scene::DestroyEntityChildren(Entity* const entity)
 {
@@ -113,16 +152,6 @@ void Scene::DestroyEntityChildren(Entity* const entity)
     }
 
     entity->m_Children.Clear();
-}
-
-Scene::Scene()
-{
-    // TODO Make menue to selelect skybox
-    skybox.Initialize();
-    Pointer<Texture> texture = ResourceManager::Get<Texture>("assets/textures/puresky.hdr");
-    texture->loadData.flipVertically = true;
-    texture->Reload();
-    skybox.LoadFromHdrTexture(texture);
 }
 
 Scene::~Scene()

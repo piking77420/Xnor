@@ -1,9 +1,6 @@
 ﻿#include "utils/logger.hpp"
 
-#include <fstream>
 #include <iostream>
-
-#include <windows.h>
 
 #include "utils/formatter.hpp"
 
@@ -18,109 +15,129 @@
 
 using namespace XnorCore;
 
-std::mutex mutex;
-bool synchronizing = false;
-bool running = true;
-std::ofstream file;
-
 void Logger::OpenFile(const std::filesystem::path &filepath)
 {
     CloseFile();
     
-    const bool exists = std::filesystem::exists(filepath);
+    const bool_t exists = std::filesystem::exists(filepath);
     if (!exists)
+    {
         create_directories(filepath.parent_path());
+    }
 
-    file.open(filepath, std::ios_base::out | std::ios_base::app);
+    m_File.open(filepath, std::ios_base::out | std::ios_base::app);
+    m_Filepath = filepath;
 
-    if (!file.is_open() || !file.good())
+    if (!m_File.is_open() || !m_File.good())
     {
         LogWarning("Could not open log file for writing: {}", absolute(filepath));
         return;
     }
+    
+    // Separate the current logs from the previous ones using a newline
+    if (exists)
+        m_File << '\n';
 
     LogInfo("Logging to file: {}", filepath);
+    // Prevent this log from being printed to the file
+    m_NewLogs.Back()->printToFile = false;
 
-    // If the file already exists, add newlines to space from the last log
-    if (!exists)
-    {
-        LogInfo("Starting logging #0");
-    }
-    else
-    {
-        // Write a newline to separate each log entry and use std::endl to make
-        // sure to flush it so that when we count the number of newlines, we get
-        // the correct number
-        file << std::endl; // NOLINT(performance-avoid-endl)
-
-        // Read file contents to count empty lines and therefore know how many logs
-        // where written in the file.
-        std::ifstream in(filepath);
-
-        if (!in.is_open() || !in.good())
-        {
-            LogWarning("Could not open log file for reading: {}", absolute(filepath));
-        }
-        else
-        {
-            std::string line;
-            uint32_t count = 0;
-            while (!in.eof())
-            {
-                std::getline(in, line);
-                if (line.empty() || line == "\n")
-                    count++;
-            }
-            LogInfo("Starting logging #{}", 1);
-        }
-    }
+    LogInfo("Starting logging #{}", m_LogIndex);
 }
 
 void Logger::OpenDefaultFile()
 {
     // Get the current date and format it in yyyy-mm-dd for the file name
     const std::time_t t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    std::tm ltime;
-    (void) localtime_s(&ltime, &t);
-    const std::_Timeobj<char_t, const tm *> timeFormatter = std::put_time(&ltime, "%F.log");
+    std::tm localTime{};
+    (void) localtime_s(&localTime, &t);
+    const std::_Timeobj<char_t, const tm *> timeFormatter = std::put_time(&localTime, "%F");
     const std::string date = (std::ostringstream() << timeFormatter).str();
-    OpenFile("logs/" + date);
+
+    const std::filesystem::path directory = std::filesystem::path("logs") / date;
+    if (!exists(directory))
+    {
+        OpenFile(directory / "0.log");
+        return;
+    }
+
+    // Count the number of existing logs to get the log index
+    // Start at -1 so that we get index-like numbers, e.g. 0 for the first one, 1 for the second one, etc...
+    int32_t fileCount = -1;
+    for (const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator(directory))
+    {
+        if (is_regular_file(entry))
+            fileCount++;
+    }
+
+    m_LogIndex = fileCount;
+    OpenFile(directory / (std::to_string(fileCount) + ".log"));
 }
 
 bool Logger::HasFileOpen()
 {
-    return file.is_open();
+    return m_File.is_open();
 }
 
 void Logger::CloseFile()
 {
-    if (!file.is_open())
+    if (!m_File.is_open())
         return;
     
-    file.flush();
-    file.close();
+    m_File.flush();
+    m_File.close();
+
+    copy_file(m_Filepath, m_Filepath.parent_path() / "latest.log", std::filesystem::copy_options::overwrite_existing);
 }
 
 void Logger::Synchronize()
 {
-    if (m_Lines.Empty())
+    if (m_NewLogs.Empty())
         return;
     
-    synchronizing = true;
+    m_Synchronizing = true;
     m_CondVar.notify_one();
-    std::unique_lock lock(mutex);
-    m_CondVar.wait(lock, [] { return !synchronizing; });
+    std::unique_lock lock(m_Mutex);
+    m_CondVar.wait(lock, [] { return !m_Synchronizing; });
+}
+
+void Logger::Start()
+{
+    if (m_Running)
+        return;
+    
+    LogInfo("Starting logger");
+
+    m_Running = true;
+    
+    m_Thread = std::thread(Run);
 }
 
 void Logger::Stop()
 {
+    if (!m_Running)
+        return;
+    
     LogInfo("Stopping logger");
     
-    running = false;
+    m_Running = false;
     m_CondVar.notify_one();
 
     if (m_Thread.joinable())
         m_Thread.join();
+    
+    CloseFile();
+}
+
+const decltype(Logger::m_Logs)& Logger::GetLogList() { return m_Logs; }
+
+void Logger::Clear() { m_Logs.clear(); }
+
+Logger::LogEntry::LogEntry()
+    : level(LogLevel::Info)
+    , printToConsole(false)
+    , printToFile(false)
+{
 }
 
 Logger::LogEntry::LogEntry(std::string&& message, const LogLevel level)
@@ -171,89 +188,170 @@ Logger::LogEntry::LogEntry(
 {
 }
 
+bool_t Logger::LogEntry::operator==(const LogEntry& other) const { return message == other.message && level == other.level && printToConsole == other.printToConsole && printToFile == other.printToFile; }
+
 void Logger::Run()
 {
     // Set thread name for easier debugging
-    (void) SetThreadDescription(m_Thread.native_handle(), L"Logger Thread");
-    
-    std::unique_lock lock(mutex);
-    while (running || !m_Lines.Empty())
+    Utils::SetThreadName(m_Thread, L"Logger Thread");
+
+    // Detach this thread from the main one to make sure it finishes normally
+    m_Thread.detach();
+
+    std::unique_lock lock(m_Mutex);
+    while (m_Running || !m_NewLogs.Empty())
     {
-        m_CondVar.wait(lock, [] { return !m_Lines.Empty() || !running || synchronizing; });
+        m_CondVar.wait(lock, [] { return !m_NewLogs.Empty() || !m_Running || m_Synchronizing; });
 
-        while (!m_Lines.Empty())
-            PrintLog(m_Lines.Pop());
+        m_Logs.reserve(m_Logs.size() + m_NewLogs.Count());
 
-        // As we don't use std::endl for newlines, make sure to flush the streams before going to sleep
-        std::cout.flush();
-        if (file.is_open())
-            file.flush();
-
-        if (synchronizing)
+        while (!m_NewLogs.Empty())
         {
-            synchronizing = false;
+            auto&& log = m_NewLogs.Pop();
+
+            // Check if the log is equal to the previous one
+            if (log->previousLog && *log->previousLog == *log)
+                log->sameAsPrevious = true;
+            
+            // Add the log to the list
+            m_Logs.push_back(log);
+
+            // Print the log to the console and/or the file
+            PrintLog(log);
+        }
+
+        // As we don't use std::endl for newlines, make sure to flush the streams before going back to sleep
+        std::cout.flush();
+        if (m_File.is_open())
+            m_File.flush();
+
+        if (m_Synchronizing)
+        {
+            m_Synchronizing = false;
             m_CondVar.notify_one();
         }
     }
-    
-    CloseFile();
+
+    m_Logs.clear();
 }
 
-void Logger::PrintLog(const LogEntry& log)
+void Logger::PushLog(const std::shared_ptr<LogEntry>& log)
+{
+    // Kinda hardcoded but at least it works
+    if (log->message.starts_with(DotnetLogPrefix))
+        log->fromDotnet = true;
+    
+    m_NewLogs.Push(log);
+    if (m_LastLog)
+        log->previousLog = m_LastLog;
+    m_LastLog = log;
+    
+    m_CondVar.notify_one();
+}
+
+void Logger::PrintLog(const std::shared_ptr<LogEntry>& log)
+{
+    static uint64_t sameLastLogs;
+    static decltype(sameLastLogs) oldSameLastLogs;
+    
+    oldSameLastLogs = sameLastLogs;
+    if (log->sameAsPrevious)
+        sameLastLogs++;
+    else
+        sameLastLogs = 0;
+
+    auto&& prefix = BuildLogPrefix(log);
+    const std::string& baseMessage = prefix.first;
+    const char_t* const color = prefix.second;
+
+    const bool_t printToFile = log->printToFile && m_File.is_open();
+
+    // If the last log is the same as the current one, we should collapse this one
+    if (sameLastLogs > 0)
+    {
+        if (log->printToConsole)
+        {
+            // If we already printed the same log, move the cursor back to the beginning of the line
+            if (sameLastLogs > 1)
+                std::cout << '\r';
+
+            std::cout << color + baseMessage + "[...and " + std::to_string(sameLastLogs) + " more]" + ANSI_RESET;
+        }
+
+        // If we need to print to a file, we first wait for a different log
+        
+        m_LastLogCollapsed = true;
+    }
+    else
+    {
+        const std::string message = baseMessage + log->message + '\n';
+
+        if (log->printToConsole)
+        {
+            if (m_LastLogCollapsed)
+                std::cout << '\n';
+            std::cout << color + message + ANSI_RESET;
+        }
+
+        if (printToFile)
+        {
+            if (m_LastLogCollapsed)
+                m_File << BuildLogPrefix(log->previousLog).first + "[...and " + std::to_string(oldSameLastLogs) + " more]\n";
+            else
+                m_File << message;
+        }
+
+        m_LastLogCollapsed = false;
+    }
+    
+    log->previousLog.reset();
+}
+
+std::pair<std::string, const char_t*> Logger::BuildLogPrefix(const std::shared_ptr<LogEntry>& log)
 {
     // Get the message time and format it in [hh:mm:ss:ms]
-    const auto&& t = std::chrono::duration_cast<std::chrono::milliseconds, long long>(log.time.time_since_epoch());
+    const auto&& t = std::chrono::duration_cast<std::chrono::milliseconds, int64_t>(log->time.time_since_epoch());
     const std::string time = std::format("[{:%T}] ", t);
 
-    // Setup the base text message
-    std::string baseMessage = log.message + '\n';
-    const LogLevel level = log.level;
-
-    const char* color = ANSI_RESET;
-    switch (level)
+    std::string baseMessage;
+    const char_t* color = ANSI_RESET;
+    switch (log->level)
     {
         case LogLevel::TemporaryDebug:
             color = ANSI_COLOR_GREEN;
-            baseMessage = time + "[TEMP DEBUG] " + log.file + "(" + std::to_string(log.line) + "): " + baseMessage;
+            baseMessage = time + "[TEMP DEBUG] ";
+            if (log->fromDotnet)
+            {
+                baseMessage += DotnetLogPrefix;
+                log->message.erase(0, DotnetLogPrefix.size());
+            }
+            baseMessage += log->file + "(" + std::to_string(log->line) + "): ";
             break;
         
         case LogLevel::Debug:
             color = ANSI_COLOR_GRAY;
-            baseMessage = time + "[DEBUG] " + baseMessage;
+            baseMessage = time + "[DEBUG] ";
             break;
 
         case LogLevel::Info:
-            baseMessage = time + "[INFO] " + baseMessage;
+            baseMessage = time + "[INFO] ";
             break;
 
         case LogLevel::Warning:
             color = ANSI_COLOR_YELLOW;
-            baseMessage = time + "[WARN] " + baseMessage;
+            baseMessage = time + "[WARN] ";
             break;
 
         case LogLevel::Error:
             color = ANSI_COLOR_RED;
-            baseMessage = time + "[ERROR] " + baseMessage;
+            baseMessage = time + "[ERROR] ";
             break;
 
         case LogLevel::Fatal:
             color = ANSI_STYLE_BOLD ANSI_COLOR_RED;
-            baseMessage = time + "[FATAL] " + baseMessage;
+            baseMessage = time + "[FATAL] ";
             break;
     }
 
-    if (log.printToConsole)
-        std::cout << color + baseMessage + ANSI_RESET;
-
-    if (log.printToFile && file.is_open())
-        file << baseMessage;
+    return std::make_pair(baseMessage, color);
 }
-
-// Explicitly instantiate empty template versions of the Log functions for the C# DLL linkage
-template void Logger::Log<>(LogLevel level, const std::string& format);
-template void Logger::LogTempDebug<>(const std::string& format, const char_t* file, int32_t line);
-template void Logger::LogDebug<>(const std::string& format);
-template void Logger::LogInfo<>(const std::string& format);
-template void Logger::LogWarning<>(const std::string& format);
-template void Logger::LogError<>(const std::string& format);
-template void Logger::LogFatal<>(const std::string& format);

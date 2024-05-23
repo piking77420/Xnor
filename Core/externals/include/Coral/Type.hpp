@@ -36,6 +36,13 @@ namespace Coral {
 
 		ManagedType GetManagedType() const;
 
+		bool IsClass() const;
+		bool IsEnum() const;
+		bool IsValueType() const;
+
+		void GetEnumNames(std::vector<String>& OutNames) const;
+		void GetEnumValues(std::vector<int>& OutValues) const;
+
 		bool IsSZArray() const;
 		Type& GetElementType();
 

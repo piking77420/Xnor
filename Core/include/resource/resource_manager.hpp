@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include <type_traits>
 #include <unordered_map>
 
 #include "file/file.hpp"
@@ -32,7 +31,7 @@ public:
     
     /// @brief Creates the Resource corresponding to the given @p name without loading it.
     template <Concepts::ResourceT T>
-    static Pointer<T> Add(std::string name);
+    static Pointer<T> Add(const std::string& name);
     
     /// @brief Creates the Resource corresponding to the given @p file without loading it.
     template <Concepts::ResourceT T>
@@ -47,6 +46,9 @@ public:
 
     /// @brief Loads the Guid resource map internally
     XNOR_ENGINE static void LoadGuidMap();
+
+    /// @brief Saves the Guid resource map internally
+    XNOR_ENGINE static void SaveGuidMap();
 
     /// @brief Checks whether the ResourceManager contains the specified Resource name.
     [[nodiscard]]
@@ -135,7 +137,8 @@ public:
 
 private:
     XNOR_ENGINE static inline std::unordered_map<std::string, Pointer<Resource>> m_Resources;
-    XNOR_ENGINE static inline std::unordered_map<Guid, Pointer<Resource>> m_GuidMap;
+    XNOR_ENGINE static inline std::mutex m_ResourcesMutex;
+    XNOR_ENGINE static inline std::unordered_map<Guid, std::string> m_GuidMap;
     
     template <Concepts::ResourceT T>
     static Pointer<T> AddNoCheck(std::string name);

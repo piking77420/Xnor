@@ -2,7 +2,7 @@
 
 #include "core.hpp"
 #include "rendering/render_pass.hpp"
-#include "resource/cubemap.hpp"
+#include "resource/mesh.hpp"
 #include "resource/model.hpp"
 #include "resource/shader.hpp"
 #include "resource/texture.hpp"
@@ -17,6 +17,7 @@ class SkyBoxParser
 {
 public:
     XNOR_ENGINE SkyBoxParser() = default;
+    
     XNOR_ENGINE ~SkyBoxParser();
 
     DEFAULT_COPY_MOVE_OPERATIONS(SkyBoxParser)
@@ -27,19 +28,19 @@ public:
     /// @brief Converts an equirectangular map to a cubemap
     /// @param equirectangularMap Source equirectangular map
     /// @param cubemap Target cubemap
-    XNOR_ENGINE void EquirectangularToCubeMapFunc(const Texture& equirectangularMap, const Cubemap& cubemap);
+    XNOR_ENGINE void EquirectangularToCubeMapFunc(const Texture& equirectangularMap, const Texture& cubemap);
 
     /// @brief Computes the irradiance
     /// @param irradianceInput Source cubemap
     /// @param irradianceOutput Target cubemap
     /// @param irradianceSize Irradiance size
-    XNOR_ENGINE void ComputeIrradiance(const Cubemap& irradianceInput, const Cubemap& irradianceOutput, Vector2i irradianceSize);
+    XNOR_ENGINE void ComputeIrradiance(const Texture& irradianceInput, const Texture& irradianceOutput, Vector2i irradianceSize);
 
     /// @brief Computes the pre-filtering
     /// @param environementMap Source cubemap
     /// @param prefilteringMap Target cubemap
     /// @param mipLevels Mip levels
-    XNOR_ENGINE void ComputePreFiltering(const Cubemap& environementMap, const Cubemap& prefilteringMap, uint32_t mipLevels);
+    XNOR_ENGINE void ComputePreFiltering(const Texture& environementMap, const Texture& prefilteringMap, uint32_t mipLevels);
 
     /// @brief Computes the BRDF
     /// @param environementMapSize Map size
@@ -47,23 +48,28 @@ public:
     XNOR_ENGINE void PreComputeBrdf(Vector2i environementMapSize, const Texture& brdfTexture);
 
 private:
-    Pointer<Model> m_Cube;
-    Pointer<Model> m_Quad;
+    Pointer<Mesh> m_Cube;
+    
+    Pointer<Mesh> m_Quad;
 
     Framebuffer* m_FrameBuffer = nullptr;
     RenderPass m_RenderPass;
+    
     Pointer<Shader> m_EquirectangularToCubeMapShader;
+    
     Pointer<Shader> m_IrradianceConvolution;
     
     Pointer<Shader> m_PrefilterShader;
+    
     Pointer<Shader> m_PreComputeBrdr;
 
     Texture* m_TextureDepth = nullptr;
+    
     Texture* m_Color = nullptr;
     
     XNOR_ENGINE void Resize(Vector2i size);
     
-    XNOR_ENGINE void Compute(const Texture& equirectangularMap, const Cubemap& cubemap, const Pointer<Shader>& shader);
+    XNOR_ENGINE void Compute(const Texture& equirectangularMap, const Texture& cubemap, const Pointer<Shader>& shader);
 };
 
 END_XNOR_CORE
