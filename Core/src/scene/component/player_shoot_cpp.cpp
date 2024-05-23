@@ -64,8 +64,10 @@ void PlayerShootCpp::UpdateBullets()
 {
     // DERIEN
     reset:  
-    for (auto&& bullet : m_Bullets)
+    for (size_t i = 0; i< m_Bullets.GetSize(); i++)
     {
+        std::pair<Entity*,float_t>& bullet = m_Bullets[i];
+        
         bullet.second -= Time::GetDeltaTime<float_t>();
 
         if (bullet.second <= 0.f)
