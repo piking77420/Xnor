@@ -99,7 +99,6 @@ void CascadeShadowMap::GetCamera(Camera* cascadedCamera,const float_t cascadedNe
     Matrix lightView;
     cascadedCamera->GetView(&lightView);
     
-
     float_t minX = std::numeric_limits<float_t>::max();
     float_t maxX = std::numeric_limits<float_t>::lowest();
     float_t minY = std::numeric_limits<float_t>::max();

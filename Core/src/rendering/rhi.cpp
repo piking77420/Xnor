@@ -1716,10 +1716,10 @@ void Rhi::GetCubeMapViewMatrices(std::array<Matrix, 6>* viewsMatricies)
 {
 	*viewsMatricies =
 	{
-		Matrix::LookAt(Vector3(), -Vector3::UnitX(), -Vector3::UnitY()), // CubeMapPositiveX
-		Matrix::LookAt(Vector3(),  Vector3::UnitX(), -Vector3::UnitY()), // CubeMapNegativeX
-		Matrix::LookAt(Vector3(), -Vector3::UnitY(), -Vector3::UnitZ()), // CubeMapPositiveY
-		Matrix::LookAt(Vector3(),  Vector3::UnitY(),  Vector3::UnitZ()), // CubeMapNegativeY
+		Matrix::LookAt(Vector3(), Vector3::UnitX(), -Vector3::UnitY()), // CubeMapPositiveX
+		Matrix::LookAt(Vector3(),  -Vector3::UnitX(), -Vector3::UnitY()), // CubeMapNegativeX
+		Matrix::LookAt(Vector3(), Vector3::UnitY(), Vector3::UnitZ()), // CubeMapPositiveY
+		Matrix::LookAt(Vector3(),  -Vector3::UnitY(),  -Vector3::UnitZ()), // CubeMapNegativeY
 		Matrix::LookAt(Vector3(),  Vector3::UnitZ(), -Vector3::UnitY()), // CubeMapPositiveZ
 		Matrix::LookAt(Vector3(), -Vector3::UnitZ(), -Vector3::UnitY()), // CubeMapNegativeZ
 	};
