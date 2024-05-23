@@ -2,6 +2,7 @@
 #include "editor.hpp"
 #include "rendering/rhi_typedef.hpp"
 #include "resource/resource_manager.hpp"
+#include "world/world.hpp"
 
 using namespace XnorEditor;
 

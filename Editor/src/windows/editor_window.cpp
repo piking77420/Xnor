@@ -3,6 +3,7 @@
 #include "assimp/Logger.hpp"
 #include "utils/logger.hpp"
 #include "utils/utils.hpp"
+#include "world/world.hpp"
 
 using namespace XnorEditor;
 
