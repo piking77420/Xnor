@@ -27,7 +27,7 @@ public:
     
     XNOR_ENGINE void OnRendering() override;
 
-    XNOR_ENGINE void GetDamage(float_t dmg);
+    XNOR_ENGINE void TakeDamage(float_t dmg);
     
 private:
     Pointer<Animation> m_Idle;
@@ -58,17 +58,18 @@ private:
 
     Vector3 m_FwdVector;
     
-    XNOR_ENGINE void OnDetectionEnter(Collider* coll1, Collider* coll2, const CollisionData& data);
+    XNOR_ENGINE void OnDetectionEnter(Collider* coll1, const Collider* other, const CollisionData& data);
 
-    XNOR_ENGINE void OnDetectionExit(Collider* coll1, Collider* coll2);
+    XNOR_ENGINE void OnDetectionExit(Collider* coll1, const Collider* other);
     
-    XNOR_ENGINE void OnTriggerStay(Collider* coll1, Collider* coll2, const CollisionData& data);
+    XNOR_ENGINE void OnTriggerStay(Collider* coll1, const Collider* other, const CollisionData& data);
     
-    XNOR_ENGINE void Move();
+    XNOR_ENGINE void Move() const;
 
-    // Return The fowardVector
+    // Return The forward Vector
     XNOR_ENGINE void LookAtPlayer();
 
+    [[nodiscard]]
     XNOR_ENGINE bool_t IsInRange() const;
 
     XNOR_ENGINE void Attack();
@@ -77,9 +78,9 @@ private:
 
     XNOR_ENGINE Coroutine ResetDirtyFlagIsInvicible();
 
-    Guid ResetDirtyFlagAttackRoutineGuid;
+    Guid m_ResetDirtyFlagAttackRoutineGuid;
 
-    Guid ResetDirtyFlagIsInvicibleRoutineGuid;
+    Guid m_ResetDirtyFlagIsInvicibleRoutineGuid;
 };
 
 END_XNOR_CORE

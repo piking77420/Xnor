@@ -7,32 +7,32 @@
 
 using namespace XnorCore;
 
-void EnemyCpp::OnDetectionEnter(Collider* coll1, Collider* coll2, const CollisionData&)
+void EnemyCpp::OnDetectionEnter(Collider* const, const Collider* const other, const CollisionData&)
 {
-    if (coll2->entity->name != "Player")
+    if (other->entity->name != "Player")
         return;
 
-    Logger::LogInfo("Maplhite will follow this entity = {}",coll2->entity->name);
+    Logger::LogInfo("Malphite will follow this entity = {}", other->entity->name);
     m_SkinnedMeshRenderer->StartAnimation(m_Run);
-    player = coll2->entity;
+    player = other->entity;
     m_IsInDetectionRange = true;
 }
 
-void EnemyCpp::OnDetectionExit(Collider* coll1, Collider* coll2)
+void EnemyCpp::OnDetectionExit(Collider* const, const Collider* const other)
 {
-    if (coll2->entity->name != "Player")
+    if (other->entity->name != "Player")
         return;
 
-    Logger::LogInfo("Maplhite Lost interest = {}",coll2->entity->name);
+    Logger::LogInfo("Malphite Lost interest = {}", other->entity->name);
     m_SkinnedMeshRenderer->StartAnimation(m_Idle);
-    player = coll2->entity;
+    player = other->entity;
     m_IsInDetectionRange = false;
     capsule->SetLinearVelocity(Vector3::Zero());
 }
 
-void EnemyCpp::OnTriggerStay(Collider* coll1, Collider* coll2, const CollisionData& data)
+void EnemyCpp::OnTriggerStay(Collider* const, const Collider* const other, const CollisionData&)
 {
-    if (coll2->entity->name != "Player")
+    if (other->entity->name != "Player")
         return;
 
     LookAtPlayer();
@@ -51,22 +51,21 @@ void EnemyCpp::OnTriggerStay(Collider* coll1, Collider* coll2, const CollisionDa
     {
         Move();
     }
-
 }
 
-void EnemyCpp::Move()
+void EnemyCpp::Move() const
 {
     if (entity == nullptr)
         return;
     
     // Update velocity
-    const Vector3 current_velocity = capsule->GetLinearVelocity();
-    Vector3 desired_velocity = m_FwdVector * m_MoveSpeed;
-    desired_velocity.y = current_velocity.y;
-    const Vector3 new_velocity = 0.75f * current_velocity + 0.25f * desired_velocity;
+    const Vector3 currentVelocity = capsule->GetLinearVelocity();
+    Vector3 desiredVelocity = m_FwdVector * m_MoveSpeed;
+    desiredVelocity.y = currentVelocity.y;
+    const Vector3 newVelocity = 0.75f * currentVelocity + 0.25f * desiredVelocity;
     
     // Update position
-    capsule->SetLinearVelocity(new_velocity);
+    capsule->SetLinearVelocity(newVelocity);
 }
 
 void EnemyCpp::LookAtPlayer()
@@ -90,7 +89,7 @@ void EnemyCpp::Attack()
 {
     m_SkinnedMeshRenderer->StartAnimation(m_Attack);
     m_IsAttacking = true;
-    ResetDirtyFlagAttackRoutineGuid = Coroutine::Start(ResetDirtyFlagAttackRoutine());
+    m_ResetDirtyFlagAttackRoutineGuid = Coroutine::Start(ResetDirtyFlagAttackRoutine());
 }
 
 Coroutine EnemyCpp::ResetDirtyFlagAttackRoutine()
@@ -111,19 +110,20 @@ Coroutine EnemyCpp::ResetDirtyFlagIsInvicible()
 
 EnemyCpp::~EnemyCpp()
 {
-    Coroutine::Stop(ResetDirtyFlagAttackRoutineGuid);
-    Coroutine::Stop(ResetDirtyFlagIsInvicibleRoutineGuid);
+    Coroutine::Stop(m_ResetDirtyFlagAttackRoutineGuid);
+    Coroutine::Stop(m_ResetDirtyFlagIsInvicibleRoutineGuid);
 }
 
 void EnemyCpp::Awake()
 {
     Component::Awake();
-    SphereCollider* s = entity->GetComponent<SphereCollider>();
+    SphereCollider* const s = entity->GetComponent<SphereCollider>();
     capsule = entity->GetComponent<CapsuleCollider>();
     
-    s->onTriggerEnter += [this](Collider* coll1, Collider* coll2, const CollisionData& data) { OnDetectionEnter(coll1, coll2, data); };
-    s->onTriggerExit += [this](Collider* coll1, Collider* coll2) { OnDetectionExit(coll1, coll2); };
-    s->onTriggerStay += [this](Collider* coll1, Collider* coll2 ,const CollisionData& data) { OnTriggerStay(coll1, coll2, data); };
+    s->onTriggerEnter += [this](Collider* const self, const Collider* const other, const CollisionData& data) { OnDetectionEnter(self, other, data); };
+    s->onTriggerExit += [this](Collider* const self, const Collider* const other) { OnDetectionExit(self, other); };
+    s->onTriggerStay += [this](Collider* const self, const Collider* const other, const CollisionData& data) { OnTriggerStay(self, other, data); };
+
     m_SkinnedMeshRenderer = entity->GetComponent<SkinnedMeshRenderer>();
     m_SkinnedMeshRenderer->StartAnimation(m_Idle);
 }
@@ -139,7 +139,7 @@ void EnemyCpp::OnRendering()
     DrawGizmo::Sphere(entity->transform.GetPosition() ,m_AttackRange, Color::Red());
 }
 
-void EnemyCpp::GetDamage(float_t dmg)
+void EnemyCpp::TakeDamage(const float_t dmg)
 {
     if (m_IsInvincible)
         return;
@@ -155,6 +155,5 @@ void EnemyCpp::GetDamage(float_t dmg)
 
     m_SkinnedMeshRenderer->material.emissiveColor = Color::Red();
     m_SkinnedMeshRenderer->material.emissive = 1000.f;
-    ResetDirtyFlagIsInvicibleRoutineGuid =  Coroutine::Start(ResetDirtyFlagIsInvicible());
-
+    m_ResetDirtyFlagIsInvicibleRoutineGuid =  Coroutine::Start(ResetDirtyFlagIsInvicible());
 }
