@@ -29,11 +29,16 @@ void PlayerShootCpp::SetupBullet(Entity* const bullet)
 
 void PlayerShootCpp::Shoot()
 {
+    if (!m_CanShoot)
+        return;
+    
     Entity* const bullet = World::scene->CreateEntity("Bullet");
     m_Bullets.Add({bullet, m_BulletLifeTime });
   
     SetupBullet(bullet);
     BulletSound(bullet);
+    m_CanShoot = false;
+    m_RestShoot = Coroutine::Start(ResetDirtyFlagShoot());
 }
 
 void PlayerShootCpp::BulletSound(Entity* bullet)
@@ -72,10 +77,21 @@ void PlayerShootCpp::UpdateBullets()
     }
 }
 
+Coroutine PlayerShootCpp::ResetDirtyFlagShoot()
+{
+    using namespace std::chrono_literals;
+    co_await m_FireRate;
+    m_CanShoot = true;
+}
+
+
+PlayerShootCpp::~PlayerShootCpp()
+{
+    Coroutine::Stop(m_RestShoot);
+}
 
 void PlayerShootCpp::Awake()
 {
-    
 }
 
 void PlayerShootCpp::Begin()

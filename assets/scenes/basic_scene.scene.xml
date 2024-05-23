@@ -337,7 +337,7 @@
 					<m_Idle>72945F08-B4D5-4A59-9C-6E-D6-5E-29-25-1-4F</m_Idle>
 					<m_Run>7C216888-784A-457B-80-6D-AE-45-8-1D-EE-41</m_Run>
 					<m_Attack>B0ECECB3-25BB-4130-9E-46-D2-1F-E2-B7-56-AB</m_Attack>
-					<m_MoveSpeed>1</m_MoveSpeed>
+					<m_MoveSpeed>5</m_MoveSpeed>
 					<m_AttackRange>3</m_AttackRange>
 					<m_LifePoint>100</m_LifePoint>
 					<enabled>true</enabled>
@@ -391,6 +391,7 @@
 					<entity>CEE35AD1-3980-4298-AD-2B-48-6C-53-DF-30-53</entity>
 				</0>
 				<1 typeName="PlayerShootCpp">
+					<m_FireRate>0.8</m_FireRate>
 					<enabled>true</enabled>
 					<entity>CEE35AD1-3980-4298-AD-2B-48-6C-53-DF-30-53</entity>
 				</1>
