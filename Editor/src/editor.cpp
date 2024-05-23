@@ -565,13 +565,6 @@ void Editor::UpdateWindows()
 		}
 		ImGui::End();
 	}
-
-	ImGui::Begin("Debug");
-	if (ImGui::Button("Run GC.Collect"))
-		XnorCore::DotnetRuntime::GcCollect();
-	if (ImGui::Button("Run GC.Collect without waiting"))
-		XnorCore::DotnetRuntime::GcCollect(false);
-	ImGui::End();
 }
 
 void Editor::OnRenderingWindow()
