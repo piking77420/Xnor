@@ -10,14 +10,12 @@ using namespace XnorCore;
 
 void SphereCollider::Begin()
 {
-    //SetFriction(m_Friction);
-    //SetMass(m_Mass);
+
 }
 
 void SphereCollider::Update()
 {
     Collider::Update();
-    
 }
 
 void SphereCollider::Awake()

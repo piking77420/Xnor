@@ -6,22 +6,22 @@
 
 using namespace XnorCore;
 
-void VAO::BindBuffer() const
+void Vao::BindBuffer() const
 {
     glBindVertexArray(m_Id);
 }
 
-void VAO::UnBindBuffer() const
+void Vao::UnBindBuffer() const
 {
     glBindVertexArray(0);
 }
 
-uint32_t VAO::GetId() const
+uint32_t Vao::GetId() const
 {
     return m_Id;
 }
 
-void VAO::ComputeDescriptor(const VaoDescriptor& vaoDescriptor) const
+void Vao::ComputeDescriptor(const VaoDescriptor& vaoDescriptor) const
 {
     for (size_t i = 0; i < vaoDescriptor.vertexAttributeBindingSize; i++)
     {
@@ -38,12 +38,12 @@ void VAO::ComputeDescriptor(const VaoDescriptor& vaoDescriptor) const
 
 }
 
-void VAO::Init()
+void Vao::Init()
 {
     glCreateVertexArrays(1, &m_Id);
 }
 
-VAO::~VAO()
+Vao::~Vao()
 {
     if (glIsBuffer(m_Id))
         glDeleteBuffers(1, &m_Id);

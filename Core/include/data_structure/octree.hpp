@@ -13,9 +13,6 @@
 
 BEGIN_XNOR_CORE
 
-
-
-
 template<class T>
 class Octree
 {
@@ -65,6 +62,7 @@ template <class T>
 void Octree<T>::Update(std::vector<ObjectBounding<T>>& data)
 {
     Clear();
+    
     m_HandleSize = data.size();
     // Reset mother bound
     m_MotherNode.boudingBox = Bound();

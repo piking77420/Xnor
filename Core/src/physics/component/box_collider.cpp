@@ -24,14 +24,3 @@ void BoxCollider::Awake()
     PrePhysics();
 
 }
-
-void BoxCollider::Begin()
-{
-    //SetFriction(m_Friction);
-    //SetMass(m_Mass);
-}
-
-void BoxCollider::Update()
-{
-    Collider::Update();
-}

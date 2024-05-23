@@ -7,7 +7,7 @@
 
 
 BEGIN_XNOR_CORE
-    class Renderer;
+class Renderer;
 
 class MeshesDrawer
 {

@@ -7,12 +7,13 @@
 #include "utils/coroutine.hpp"
 
 BEGIN_XNOR_CORE
-    class PlayerShootCpp : public Component
+class PlayerShootCpp : public Component
 {
     REFLECTABLE_IMPL(PlayerShootCpp)
 
 public:
     PlayerShootCpp() = default;
+    
     ~PlayerShootCpp();
 
     DEFAULT_COPY_MOVE_OPERATIONS(PlayerShootCpp)
@@ -25,6 +26,7 @@ public:
     
 private:
     Entity* parent = nullptr;
+    
     Entity* shootPoint = nullptr;
     
     float_t m_BulletSize = 0.2f;

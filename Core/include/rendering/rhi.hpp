@@ -5,12 +5,10 @@
 #include <vector>
 
 #include "material.hpp"
-#include "render_pass.hpp"
 #include "rhi_typedef.hpp"
 #include "vertex.hpp"
 #include "buffer/uniform_buffer.hpp"
 #include "render_systems/skybox_parser.hpp"
-#include "resource/model.hpp"
 
 /// @file rhi.hpp
 /// Defines the XnorCore::Rhi static class

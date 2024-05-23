@@ -63,7 +63,6 @@ void PlayerShootCpp::HitEnemy(Collider* bullet, Collider* enemy, const Collision
 void PlayerShootCpp::UpdateBullets()
 {
     // DERIEN
-    reset:  
     for (size_t i = 0; i< m_Bullets.GetSize(); i++)
     {
         std::pair<Entity*,float_t>& bullet = m_Bullets[i];
@@ -74,7 +73,6 @@ void PlayerShootCpp::UpdateBullets()
         {
             World::scene->DestroyEntity(bullet.first);
             m_Bullets.Remove(bullet);
-            goto reset;
         }
     }
 }

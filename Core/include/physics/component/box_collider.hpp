@@ -24,11 +24,6 @@ public:
     
     DEFAULT_COPY_MOVE_OPERATIONS(BoxCollider)
 
-    /// @brief Begin function
-    XNOR_ENGINE void Begin() override;
-    /// @brief Update function
-    XNOR_ENGINE void Update() override;
-
     Vector3 size = Vector3(1.f);
 };
 

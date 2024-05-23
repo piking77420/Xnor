@@ -17,6 +17,7 @@ class SkyBoxParser
 {
 public:
     XNOR_ENGINE SkyBoxParser() = default;
+    
     XNOR_ENGINE ~SkyBoxParser();
 
     DEFAULT_COPY_MOVE_OPERATIONS(SkyBoxParser)
@@ -48,17 +49,22 @@ public:
 
 private:
     Pointer<Mesh> m_Cube;
+    
     Pointer<Mesh> m_Quad;
 
     Framebuffer* m_FrameBuffer = nullptr;
     RenderPass m_RenderPass;
+    
     Pointer<Shader> m_EquirectangularToCubeMapShader;
+    
     Pointer<Shader> m_IrradianceConvolution;
     
     Pointer<Shader> m_PrefilterShader;
+    
     Pointer<Shader> m_PreComputeBrdr;
 
     Texture* m_TextureDepth = nullptr;
+    
     Texture* m_Color = nullptr;
     
     XNOR_ENGINE void Resize(Vector2i size);

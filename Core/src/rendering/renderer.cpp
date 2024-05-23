@@ -4,6 +4,7 @@
 #include "resource/resource_manager.hpp"
 #include "scene/component/static_mesh_renderer.hpp"
 #include "reflection/filters.hpp"
+#include "world/world.hpp"
 
 using namespace XnorCore;
 

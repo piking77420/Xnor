@@ -41,12 +41,9 @@ namespace Game
             desiredVelocity.Y = currentVelocity.Y;
             Vector3 newVelocity = 0.75f * currentVelocity + 0.25f * desiredVelocity;
             
-
             // Update position
             collider.SetLinearVelocity(newVelocity);
-
-           
-
+            
             movement = new Vector3();
         }
 

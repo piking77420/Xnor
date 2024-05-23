@@ -5,10 +5,9 @@ namespace Game
     public class PlayerWeapon : ScriptComponent
     {
         private Entity parent;
+        
         private Entity shootPoint;
-
-        //private List<Entity> bullets = new();
-
+        
         private float bulletSize = 0.2f;
         
         private void SetupBullet(Entity bullet)
