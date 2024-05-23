@@ -334,7 +334,7 @@ void LightManager::GetDistanceFromCamera(std::map<float_t, GizmoLight>* sortedLi
 		if (pointLight == nullptr)
 			continue;
 
-		const Vector3 entityPosition = pointLight->GetEntity()->transform.GetPosition();
+		const Vector3 entityPosition = static_cast<Vector3>(pointLight->GetEntity()->transform.worldMatrix[3]);
 		
 		GizmoLight gizmoLight = {
 			.pos = entityPosition,
@@ -351,7 +351,7 @@ void LightManager::GetDistanceFromCamera(std::map<float_t, GizmoLight>* sortedLi
 		if (spotLight == nullptr)
 			continue;
 
-		const Vector3 entityPosition = spotLight->GetEntity()->transform.GetPosition();
+		const Vector3 entityPosition = static_cast<Vector3>(spotLight->GetEntity()->transform.worldMatrix[3]);
 		
 		GizmoLight gizmoLight = {
 			.pos = entityPosition,
@@ -368,7 +368,7 @@ void LightManager::GetDistanceFromCamera(std::map<float_t, GizmoLight>* sortedLi
 		if (dirLight == nullptr)
 			continue;
 
-		const Vector3 entityPosition = dirLight->GetEntity()->transform.GetPosition();
+		const Vector3 entityPosition = static_cast<Vector3>(dirLight->GetEntity()->transform.worldMatrix[3]);
 		
 		GizmoLight gizmoLight = {
 			.pos = entityPosition,

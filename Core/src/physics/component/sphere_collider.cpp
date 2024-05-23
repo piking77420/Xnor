@@ -10,6 +10,19 @@ using namespace XnorCore;
 
 void SphereCollider::Begin()
 {
+    //SetFriction(m_Friction);
+    //SetMass(m_Mass);
+}
+
+void SphereCollider::Update()
+{
+    Collider::Update();
+    
+}
+
+void SphereCollider::Awake()
+{
+    Collider::Awake();
     const Transform& t = entity->transform;
 
     const PhysicsWorld::BodyCreationInfo info = {
@@ -22,14 +35,7 @@ void SphereCollider::Begin()
     };
 
     m_BodyId = PhysicsWorld::CreateSphere(info, radius);
-    
-    SetFriction(m_Friction);
     PrePhysics();
-}
-
-void SphereCollider::Update()
-{
-    Collider::Update();
 }
 
 void SphereCollider::SetRadius(float_t newRadius)

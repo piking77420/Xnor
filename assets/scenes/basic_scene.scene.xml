@@ -57,10 +57,11 @@
 					<entity>DC36B839-E893-481D-B6-28-93-7E-24-FC-F4-C</entity>
 				</0>
 				<1 typeName="BoxCollider">
-					<center>0 ; 0 ; 0</center>
 					<size>1 ; 1 ; 1</size>
+					<center>0 ; 0 ; 0</center>
 					<constraints/>
 					<m_Friction>0</m_Friction>
+					<m_Mass>1</m_Mass>
 					<m_IsStatic>true</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
 					<m_IsActive>false</m_IsActive>
@@ -104,11 +105,13 @@
 				</0>
 				<1 typeName="SphereCollider">
 					<radius>1</radius>
+					<center>0 ; 0 ; 0</center>
 					<constraints/>
 					<m_Friction>0</m_Friction>
+					<m_Mass>1</m_Mass>
 					<m_IsStatic>false</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
-					<m_IsActive>true</m_IsActive>
+					<m_IsActive>false</m_IsActive>
 					<enabled>true</enabled>
 					<entity>E3E78C-FDE4-4857-9A-2F-7C-C0-5-69-4F-D6</entity>
 				</1>
@@ -185,8 +188,10 @@
 				<2 typeName="CapsuleCollider">
 					<height>1</height>
 					<radius>1</radius>
+					<center>0 ; 0 ; 0</center>
 					<constraints>ConstraintRotation</constraints>
 					<m_Friction>1000</m_Friction>
+					<m_Mass>1</m_Mass>
 					<m_IsStatic>false</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
 					<m_IsActive>false</m_IsActive>
@@ -271,9 +276,9 @@
 			<name>Rammus</name>
 			<m_EntityId>AA4C0C09-AB9-4A1E-90-DA-D3-CC-FA-5F-BA-1</m_EntityId>
 			<transform>
-				<m_Position>-3.6612613 ; -3.6183074 ; 40.619995</m_Position>
-				<m_EulerRotation>0.0049710334 ; 0.12107528 ; 0.0069478876</m_EulerRotation>
-				<m_Scale>0.050002605 ; 0.050000906 ; 0.050003022</m_Scale>
+				<m_Position>-3.661261 ; -4.0988145 ; 40.619995</m_Position>
+				<m_EulerRotation>0.004971037 ; 0.12107528 ; 0.0069478825</m_EulerRotation>
+				<m_Scale>0.02 ; 0.02 ; 0.02</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="SkinnedMeshRenderer">
@@ -296,14 +301,48 @@
 					</material>
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
-						<m_Animation>7C216888-784A-457B-80-6D-AE-45-8-1D-EE-41</m_Animation>
-						<m_CurrentFrame>14</m_CurrentFrame>
+						<m_Animation>0-0-0-0-0-0-0-0-0-0-0</m_Animation>
+						<m_CurrentFrame>51</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>
 					<enabled>true</enabled>
 					<entity>AA4C0C09-AB9-4A1E-90-DA-D3-CC-FA-5F-BA-1</entity>
 				</0>
+				<1 typeName="CapsuleCollider">
+					<height>0.6</height>
+					<radius>1</radius>
+					<center>0 ; 1.5 ; 0</center>
+					<constraints>ConstraintRotation</constraints>
+					<m_Friction>0</m_Friction>
+					<m_Mass>1</m_Mass>
+					<m_IsStatic>false</m_IsStatic>
+					<m_IsTrigger>false</m_IsTrigger>
+					<m_IsActive>false</m_IsActive>
+					<enabled>true</enabled>
+					<entity>AA4C0C09-AB9-4A1E-90-DA-D3-CC-FA-5F-BA-1</entity>
+				</1>
+				<2 typeName="SphereCollider">
+					<radius>15</radius>
+					<center>0 ; 0 ; 0</center>
+					<constraints>ConstraintPosition|ConstraintRotation</constraints>
+					<m_Friction>0</m_Friction>
+					<m_Mass>1</m_Mass>
+					<m_IsStatic>false</m_IsStatic>
+					<m_IsTrigger>true</m_IsTrigger>
+					<m_IsActive>false</m_IsActive>
+					<enabled>true</enabled>
+					<entity>AA4C0C09-AB9-4A1E-90-DA-D3-CC-FA-5F-BA-1</entity>
+				</2>
+				<3 typeName="EnemyCpp">
+					<m_Idle>72945F08-B4D5-4A59-9C-6E-D6-5E-29-25-1-4F</m_Idle>
+					<m_Run>7C216888-784A-457B-80-6D-AE-45-8-1D-EE-41</m_Run>
+					<m_Attack>B0ECECB3-25BB-4130-9E-46-D2-1F-E2-B7-56-AB</m_Attack>
+					<m_MoveSpeed>1</m_MoveSpeed>
+					<m_AttackRange>3</m_AttackRange>
+					<enabled>true</enabled>
+					<entity>AA4C0C09-AB9-4A1E-90-DA-D3-CC-FA-5F-BA-1</entity>
+				</3>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
@@ -325,8 +364,8 @@
 			<m_EntityId>CEE35AD1-3980-4298-AD-2B-48-6C-53-DF-30-53</m_EntityId>
 			<transform>
 				<m_Position>-0.18116966 ; -0.13631852 ; 0</m_Position>
-				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>1 ; 1 ; 1</m_Scale>
+				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_Scale>0.9999975 ; 1 ; 0.9999975</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="StaticMeshRenderer">
@@ -365,7 +404,7 @@
 			<name>ShootPoint</name>
 			<m_EntityId>D733C9EE-E38-4D78-83-FC-48-A9-AF-80-E5-4F</m_EntityId>
 			<transform>
-				<m_Position>0.011752859 ; -0.032314703 ; 1.140566</m_Position>
+				<m_Position>0.09578023 ; 0.05246891 ; 0.5906848</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>1 ; 1 ; 1</m_Scale>
 			</transform>
@@ -405,10 +444,11 @@
 					<entity>A44A61BE-51AA-4167-A5-41-EE-35-8E-BC-FC-53</entity>
 				</0>
 				<1 typeName="BoxCollider">
-					<center>0 ; 0 ; 0</center>
 					<size>1 ; 1 ; 1</size>
+					<center>0 ; 0 ; 0</center>
 					<constraints>ConstraintPosition|ConstraintRotation</constraints>
 					<m_Friction>0</m_Friction>
+					<m_Mass>1</m_Mass>
 					<m_IsStatic>true</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
 					<m_IsActive>false</m_IsActive>
@@ -451,10 +491,11 @@
 					<entity>AFAA15E4-F63F-4D23-93-C3-49-12-59-A6-34-3E</entity>
 				</0>
 				<1 typeName="BoxCollider">
-					<center>0 ; 0 ; 0</center>
 					<size>1 ; 1 ; 1</size>
+					<center>0 ; 0 ; 0</center>
 					<constraints/>
 					<m_Friction>0</m_Friction>
+					<m_Mass>1</m_Mass>
 					<m_IsStatic>true</m_IsStatic>
 					<m_IsTrigger>false</m_IsTrigger>
 					<m_IsActive>false</m_IsActive>
@@ -469,13 +510,13 @@
 			<name>Tree</name>
 			<m_EntityId>BFF5D416-7E5-4BFB-BF-89-53-16-B3-DF-80-8B</m_EntityId>
 			<transform>
-				<m_Position>10.994434 ; -4.6623583 ; 55.473328</m_Position>
+				<m_Position>-7.257478 ; -4.421797 ; 26.47454</m_Position>
 				<m_EulerRotation>-0.06794939 ; 0.7720041 ; -0.12069226</m_EulerRotation>
 				<m_Scale>0.99999595 ; 1.0000066 ; 0.9999997</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="StaticMeshRenderer">
-					<mesh>0-0-0-0-0-0-0-0-0-0-0</mesh>
+					<mesh>F0BD0C16-A3CD-448D-8F-6F-AB-E2-F4-69-1A-7A</mesh>
 					<material>
 						<materialType>Opaque</materialType>
 						<albedoColor>0.29007608 ; 0.8787129 ; 0.12615184 ; 1</albedoColor>
@@ -504,7 +545,7 @@
 			<name>Enemy Maplhite</name>
 			<m_EntityId>B52820E-8798-4141-BA-7F-4E-FC-4A-AC-81-A2</m_EntityId>
 			<transform>
-				<m_Position>10.369689 ; -4.1882763 ; 25.89512</m_Position>
+				<m_Position>10.369689 ; -4.6201406 ; 25.89512</m_Position>
 				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
 				<m_Scale>0.02 ; 0.02 ; 0.02</m_Scale>
 			</transform>
@@ -538,6 +579,40 @@
 					<entity>B52820E-8798-4141-BA-7F-4E-FC-4A-AC-81-A2</entity>
 				</0>
 				<1 typeName="ScriptComponent" managedType="Game.Enemy"/>
+				<2 typeName="CapsuleCollider">
+					<height>1</height>
+					<radius>1</radius>
+					<center>0 ; 1.9 ; 0</center>
+					<constraints>ConstraintRotation</constraints>
+					<m_Friction>0</m_Friction>
+					<m_Mass>1</m_Mass>
+					<m_IsStatic>false</m_IsStatic>
+					<m_IsTrigger>false</m_IsTrigger>
+					<m_IsActive>false</m_IsActive>
+					<enabled>true</enabled>
+					<entity>B52820E-8798-4141-BA-7F-4E-FC-4A-AC-81-A2</entity>
+				</2>
+				<3 typeName="SphereCollider">
+					<radius>19.7</radius>
+					<center>0 ; 0 ; 0</center>
+					<constraints>ConstraintPosition|ConstraintRotation</constraints>
+					<m_Friction>0</m_Friction>
+					<m_Mass>0</m_Mass>
+					<m_IsStatic>false</m_IsStatic>
+					<m_IsTrigger>true</m_IsTrigger>
+					<m_IsActive>false</m_IsActive>
+					<enabled>true</enabled>
+					<entity>B52820E-8798-4141-BA-7F-4E-FC-4A-AC-81-A2</entity>
+				</3>
+				<4 typeName="EnemyCpp">
+					<m_Idle>C6F64E9A-9091-433A-84-18-A5-57-2F-7D-60-2D</m_Idle>
+					<m_Run>4C913EC6-2466-43E5-86-5C-1D-7B-AF-1A-B8-A5</m_Run>
+					<m_Attack>58E19681-D8BE-4D67-B3-55-94-79-69-F8-7E-9D</m_Attack>
+					<m_MoveSpeed>6</m_MoveSpeed>
+					<m_AttackRange>3</m_AttackRange>
+					<enabled>true</enabled>
+					<entity>B52820E-8798-4141-BA-7F-4E-FC-4A-AC-81-A2</entity>
+				</4>
 			</m_Components>
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>

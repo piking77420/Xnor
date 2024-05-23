@@ -11,6 +11,7 @@
 #include "rendering/light/spot_light.hpp"
 #include "scene/component/button.hpp"
 #include "scene/component/camera_component.hpp"
+#include "scene/component/enemy_cpp.hpp"
 #include "scene/component/gui_component.hpp"
 #include "scene/component/image.hpp"
 #include "scene/component/player_shoot_cpp.hpp"
@@ -111,6 +112,7 @@ void XnorFactory::RegisterAllTypes()
     RegisterType<SkinnedMeshRenderer>();
     RegisterType<TestComponentAnimation>();
     RegisterType<PlayerShootCpp>();
+    RegisterType<EnemyCpp>();
     RegisterType<StaticMeshRenderer>();
     RegisterType<DirectionalLight>();
     RegisterType<TestComponent>();

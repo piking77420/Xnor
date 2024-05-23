@@ -77,6 +77,23 @@ Entity* Entity::Clone() const
     return clone;
 }
 
+void Entity::LookAt(const Vector3& sourcePoint, const Vector3& at, const Vector3& up)
+{
+    const Vector3 forwardVector = (at -  sourcePoint).Normalized();
+
+    const Vector3 rotAxis = Vector3::Cross(Vector3::UnitZ(), forwardVector);
+    float dot = Vector3::Dot(Vector3::UnitZ(), forwardVector);
+
+    Quaternion q;
+    q.X() = rotAxis.x;
+    q.Y() = rotAxis.y;
+    q.Z() = rotAxis.z;
+    q.W() = dot + 1.f;
+
+    transform.SetRotation( q.Normalized());
+
+}
+
 void Entity::AddComponent(Component* const component)
 {
     component->entity = this;
