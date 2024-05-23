@@ -355,7 +355,6 @@ void MeshesDrawer::RenderStaticMeshNonShaded(const Camera& camera, const Frustum
     else
     {
 #pragma region Draw iteration
-
         for (const StaticMeshRenderer* mesh : m_StaticMeshs)
         {
             if (!mesh->mesh)
@@ -370,6 +369,7 @@ void MeshesDrawer::RenderStaticMeshNonShaded(const Camera& camera, const Frustum
                 // +1 to avoid the black color of the attachment be a valid index  
                 modelData.meshRenderIndex = scene.GetEntityIndex(mesh->GetEntity()) + 1;
 
+                // Use a try-catch block in case the matrix is not invertible
                 try
                 {
                     modelData.normalInvertMatrix = transform.worldMatrix.Inverted().Transposed();
@@ -379,14 +379,12 @@ void MeshesDrawer::RenderStaticMeshNonShaded(const Camera& camera, const Frustum
                     modelData.normalInvertMatrix = Matrix::Identity();
                 }
 
-
                 if (model.IsValid())
                 {
                     Rhi::UpdateModelUniform(modelData);
                     Rhi::DrawModel(DrawMode::Triangles, model->GetId());
                 }
             }
-           
         }
 #pragma endregion Draw iteration
     }

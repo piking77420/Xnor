@@ -224,9 +224,9 @@ void Renderer::RenderNonShadedPass(const Scene& scene, const Camera& camera,
     const Vector2i viewportSize = renderPassBeginInfo.renderAreaOffset + renderPassBeginInfo.renderAreaExtent;
     const float_t aspect =  static_cast<float_t>(viewportSize.x) / static_cast<float_t>(viewportSize.y);
     BindCamera(camera, viewportSize);
-    m_Frustum.UpdateFromCamera(camera,aspect);
+    m_Frustum.UpdateFromCamera(camera, aspect);
     renderPass.BeginRenderPass(renderPassBeginInfo);
-    meshesDrawer.RenderStaticMeshNonShaded(camera,m_Frustum, scene);
+    meshesDrawer.RenderStaticMeshNonShaded(camera, m_Frustum, scene);
     shaderToUseStatic->Unuse();
 
     shaderToUseSkinned->Use();

@@ -297,7 +297,7 @@
 					<drawModelAabb>false</drawModelAabb>
 					<m_Animator>
 						<m_Animation>7C216888-784A-457B-80-6D-AE-45-8-1D-EE-41</m_Animation>
-						<m_CurrentFrame>14</m_CurrentFrame>
+						<m_CurrentFrame>791</m_CurrentFrame>
 						<m_PlaySpeed>1</m_PlaySpeed>
 						<m_CrossFadeT>0</m_CrossFadeT>
 					</m_Animator>
@@ -351,10 +351,7 @@
 					<enabled>true</enabled>
 					<entity>CEE35AD1-3980-4298-AD-2B-48-6C-53-DF-30-53</entity>
 				</0>
-				<1 typeName="PlayerShootCpp">
-					<enabled>true</enabled>
-					<entity>CEE35AD1-3980-4298-AD-2B-48-6C-53-DF-30-53</entity>
-				</1>
+				<1 typeName="ScriptComponent" managedType="Game.PlayerWeapon"/>
 			</m_Components>
 			<m_Parent>55E1E12F-7B57-4A4E-A6-92-63-AC-40-AA-B3-36</m_Parent>
 			<m_Children>

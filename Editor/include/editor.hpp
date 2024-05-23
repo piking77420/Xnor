@@ -70,6 +70,9 @@ public:
 	
 	[[nodiscard]]
 	bool_t IsReloadingScripts() const;
+	
+	[[nodiscard]]
+	bool_t IsAutoReloadingScripts() const;
 
 	[[nodiscard]]
 	bool_t IsGamePlaying() const;
@@ -80,6 +83,8 @@ private:
 	bool_t m_Serializing = false;
 	bool_t m_Deserializing = false;
 	bool_t m_ReloadingScripts = false;
+	
+	bool_t m_AutoReloadingScripts = false;
 	
 	/// @brief This thread is used both for serializing the scene, deserializing it, and reloading scripts
 	std::thread m_CurrentAsyncActionThread;

@@ -538,6 +538,8 @@ bool_t Editor::IsDeserializing() const { return m_Deserializing; }
 
 bool_t Editor::IsReloadingScripts() const { return m_ReloadingScripts; }
 
+bool_t Editor::IsAutoReloadingScripts() const { return m_AutoReloadingScripts; }
+
 bool_t Editor::IsGamePlaying() const { return m_GamePlaying; }
 
 void Editor::UpdateWindows()

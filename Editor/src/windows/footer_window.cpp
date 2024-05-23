@@ -165,7 +165,7 @@ void FooterWindow::Display()
 
     ImGui::SetItemTooltip("Build and reload C# scripts");
     
-    if (!scriptsUpToDate || buildButton)
+    if ((m_Editor->IsAutoReloadingScripts() && !scriptsUpToDate) || buildButton)
         m_Editor->BuildAndReloadCodeAsync();
     
     if (reloadingScripts)

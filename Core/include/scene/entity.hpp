@@ -89,6 +89,10 @@ public:
     template <Concepts::ComponentT T>
     void RemoveComponent();
 
+    /// @brief Removes a specified Component
+    /// @param component Component instance
+    void RemoveComponent(Component* component);
+
     /// @brief Gets the Guid of the entity
     /// @return Guid
     [[nodiscard]]
