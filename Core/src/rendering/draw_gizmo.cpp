@@ -51,7 +51,6 @@ void DrawGizmo::DrawGizmos(const Viewport& viewport, const Entity* selectedEntit
 
     DrawRectangle();
     DrawSphere();
-    DrawCapsule();
     
     m_RenderPass.EndRenderPass();
     Rhi::SetPolygonMode(PolygonFace::FrontAndBack, PolygonMode::Fill);
@@ -129,11 +128,6 @@ void DrawGizmo::DrawSphere()
         Rhi::UpdateModelUniform(modelData);
         Rhi::DrawModel(DrawMode::Triangles, m_Sphere->models[0]->GetId());
     }
-}
-
-void DrawGizmo::DrawCapsule()
-{
-    // TODO
 }
 
 void DrawGizmo::Clear()

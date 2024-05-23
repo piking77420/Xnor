@@ -40,7 +40,6 @@ END_XNOR_CORE
 /// @private
 REFL_AUTO(
     type(XnorCore::StaticMeshRenderer, bases<XnorCore::Component>),
-    // field(model),
     field(mesh),
     field(material),
     field(drawModelAabb)

@@ -250,9 +250,7 @@ public:
 	/// @param imageAcess Image access
 	/// @param textureInternalFormat Texture internal format
 	XNOR_ENGINE static void BindImageTexture(uint32_t unit, uint32_t texture, uint32_t level, bool_t layered, uint32_t layer, ImageAccess imageAcess, TextureInternalFormat::TextureInternalFormat textureInternalFormat);
-
-
-
+	
 	// Enum to OpenglEnum
 	XNOR_ENGINE static uint32_t GetOpengDepthEnum(DepthFunction::DepthFunction depthFunction);
 	
@@ -296,7 +294,6 @@ public:
 
 	XNOR_ENGINE static uint32_t BufferUsageToOpenglUsage(BufferUsage usage);
 
-
 private:
 	struct ModelInternal
 	{
@@ -322,12 +319,15 @@ private:
 	XNOR_ENGINE static inline UniformBuffer* m_AnimationBuffer = nullptr;
 	
 	XNOR_ENGINE static inline bool_t m_Blending = false;
+	
 	XNOR_ENGINE static inline bool_t m_Cullface = false;
+	
 	XNOR_ENGINE static inline bool_t m_Depth = true;
 
 	static constexpr int32_t NullUniformLocation = -1;
 	
 	XNOR_ENGINE static inline std::unordered_map<uint32_t, ShaderInternal> m_ShaderMap;
+	
 	XNOR_ENGINE static inline std::unordered_map<uint32_t, ModelInternal> m_ModelMap;
 
 	XNOR_ENGINE static void LogComputeShaderInfo();
@@ -354,7 +354,9 @@ private:
 	);
 	
 	XNOR_ENGINE static void ComputeTextureFiltering(TextureType::TextureType textureType, uint32_t textureId,  const TextureCreateInfo& textureCreateInfo);
+	
 	XNOR_ENGINE static void ComputeTextureWrapping(TextureType::TextureType textureType, uint32_t textureId, const TextureCreateInfo& textureCreateInfo);
+	
 	XNOR_ENGINE static void AllocTexture(TextureType::TextureType textureType, uint32_t textureId, const TextureCreateInfo& textureCreateInfo);
 
 	XNOR_ENGINE static bool IsDataValid(const std::vector<void*>& data,size_t wantedSize = 1);

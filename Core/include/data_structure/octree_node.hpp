@@ -169,9 +169,9 @@ void OctreeNode<T>::Draw()
     {
         if (m_ActiveOctans & (1 << i))
         {
-            if (!m_Child[i]->handles.empty())//)m_Child[i]->m_ObjectBounding.handle != nullptr)
+            if (!m_Child[i]->handles.empty())
             {
-                color = Color::Blue();
+                color = Color::Yellow();
                 break;
             }
         }

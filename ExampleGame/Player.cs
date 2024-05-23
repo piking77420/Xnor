@@ -14,10 +14,14 @@ namespace Game
 
         private Vector3 movement = Vector3.Zero;
         
-        
         [Serialized] 
         private float MaxVelocity = 10f;
 
+        private float JectpackTim = 4f;
+        
+        private float JetPackValue = 2f;
+
+        private bool CanJump = true;
         
         protected override void Begin()
         {
@@ -30,7 +34,7 @@ namespace Game
         protected override void Update()
         {
             HandleInputs();
-
+            
             // Update velocity
             Vector3 currentVelocity = collider.GetLinearVelocity();
             Vector3 desiredVelocity = MovementSpeed * movement;
@@ -65,8 +69,24 @@ namespace Game
                 movement += cameraRight;
 
             // Handle jump
-            if (Input.GetKey(Key.Space))
-                collider.AddForce(Vector3.UnitY * JumpSpeed);;
+            if (CanJump && Input.GetKey(Key.Space))
+            {
+                collider.AddForce(Vector3.UnitY * JumpSpeed);
+                JetPackValue -= Time.DeltaTime;
+            }
+
+            if (JetPackValue <= 0)
+            {
+                CanJump = false;
+                JectpackTim -= Time.DeltaTime;
+                
+                if (JectpackTim <= 0)
+                {
+                    JectpackTim = 4f;
+                    CanJump = true;
+                    JetPackValue = 2f;
+                }
+            }
         }
     }
 }

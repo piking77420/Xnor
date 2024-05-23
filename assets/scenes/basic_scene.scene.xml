@@ -131,7 +131,7 @@
 			<m_Components>
 				<0 typeName="ScriptComponent" managedType="Game.Player">
 					<MovementSpeed>13</MovementSpeed>
-					<JumpSpeed>20</JumpSpeed>
+					<JumpSpeed>14</JumpSpeed>
 				</0>
 				<1 typeName="AudioListener">
 					<dopplerEffect>true</dopplerEffect>
@@ -230,8 +230,8 @@
 			<m_EntityId>AA4C0C09-AB9-4A1E-90-DA-D3-CC-FA-5F-BA-1</m_EntityId>
 			<transform>
 				<m_Position>-3.661261 ; -4.0988145 ; 40.619995</m_Position>
-				<m_EulerRotation>0.004971037 ; 0.12107528 ; 0.0069478825</m_EulerRotation>
-				<m_Scale>0.02 ; 0.02 ; 0.02</m_Scale>
+				<m_EulerRotation>-3.1366222 ; -0.12057299 ; -3.1190698</m_EulerRotation>
+				<m_Scale>0.020000128 ; 0.01999998 ; 0.020000074</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="SkinnedMeshRenderer">
@@ -501,8 +501,8 @@
 			<m_EntityId>B52820E-8798-4141-BA-7F-4E-FC-4A-AC-81-A2</m_EntityId>
 			<transform>
 				<m_Position>10.211577 ; -4.6201406 ; 25.89512</m_Position>
-				<m_EulerRotation>0 ; -0 ; 0</m_EulerRotation>
-				<m_Scale>0.02 ; 0.02 ; 0.02</m_Scale>
+				<m_EulerRotation>-3.1415925 ; -0.38174766 ; -3.1415925</m_EulerRotation>
+				<m_Scale>0.020000165 ; 0.02 ; 0.020000165</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="SkinnedMeshRenderer">
@@ -653,7 +653,7 @@
 			</transform>
 			<m_Components>
 				<0 typeName="AudioSource">
-					<audioTrack>42D67A4F-15F5-41A8-A5-E1-E2-87-B1-F6-8F-E5</audioTrack>
+					<audioTrack>478F64B5-5689-49B4-87-A4-86-7C-7-73-5-79</audioTrack>
 					<m_Volume>2.527</m_Volume>
 					<m_Pitch>1</m_Pitch>
 					<m_Looping>true</m_Looping>
@@ -669,13 +669,13 @@
 			<name>GRAAGY</name>
 			<m_EntityId>C25BB243-655B-4A9B-9A-11-F5-6E-D1-E2-81-B1</m_EntityId>
 			<transform>
-				<m_Position>2.4644802 ; -4.9159856 ; 48.014088</m_Position>
-				<m_EulerRotation>3.1415925 ; 0.12204329 ; 3.1415925</m_EulerRotation>
-				<m_Scale>0.02000015 ; 0.02 ; 0.02000015</m_Scale>
+				<m_Position>2.4644802 ; -5.0482464 ; 48.014088</m_Position>
+				<m_EulerRotation>3.1415925 ; 0.122043 ; 3.1415925</m_EulerRotation>
+				<m_Scale>0.02000019 ; 0.02 ; 0.02000019</m_Scale>
 			</transform>
 			<m_Components>
 				<0 typeName="SkinnedMeshRenderer">
-					<mesh>205AC0EA-9C5F-42F7-A0-CD-B7-60-59-CE-55-53</mesh>
+					<mesh>7C57290F-4FEA-448C-A5-B1-79-57-71-A9-FC-49</mesh>
 					<material>
 						<materialType>Opaque</materialType>
 						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
@@ -685,7 +685,7 @@
 						<reflectance>0</reflectance>
 						<emissive>0</emissive>
 						<ambientOcclusion>0</ambientOcclusion>
-						<albedoTexture>7CB90EB1-E511-4045-A8-75-E6-F-12-24-F9-6D</albedoTexture>
+						<albedoTexture>B1BF8210-EDE-4352-BC-E2-67-77-EA-9B-6C-B6</albedoTexture>
 						<metallicTexture>0-0-0-0-0-0-0-0-0-0-0</metallicTexture>
 						<roughnessTexture>0-0-0-0-0-0-0-0-0-0-0</roughnessTexture>
 						<normalTexture>0-0-0-0-0-0-0-0-0-0-0</normalTexture>
@@ -705,7 +705,7 @@
 				<1 typeName="CapsuleCollider">
 					<height>1</height>
 					<radius>1</radius>
-					<center>0 ; 1.3 ; 0</center>
+					<center>0 ; 1.1 ; 0</center>
 					<constraints>ConstraintRotation</constraints>
 					<m_Friction>0</m_Friction>
 					<m_Mass>1</m_Mass>
@@ -728,9 +728,9 @@
 					<entity>C25BB243-655B-4A9B-9A-11-F5-6E-D1-E2-81-B1</entity>
 				</2>
 				<3 typeName="EnemyCpp">
-					<m_Idle>286B2D80-A21D-4FC8-A5-42-B5-84-4F-B5-A2-EB</m_Idle>
-					<m_Run>4044B0C5-EAB8-483B-B2-CB-9E-E-B6-8-41-F2</m_Run>
-					<m_Attack>7584DA98-FF61-4CD7-9B-40-8A-63-54-7E-98-D0</m_Attack>
+					<m_Idle>A5402C4A-65BA-4FAA-A6-C9-E2-98-85-1A-EE-BD</m_Idle>
+					<m_Run>3E87AC97-150-4D1D-B5-13-69-67-1F-41-4A-EE</m_Run>
+					<m_Attack>BC749444-4E02-459E-B4-BF-A6-21-79-A6-7-2D</m_Attack>
 					<m_MoveSpeed>5</m_MoveSpeed>
 					<m_AttackRange>3</m_AttackRange>
 					<m_LifePoint>100</m_LifePoint>
@@ -741,6 +741,111 @@
 			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
 			<m_Children/>
 		</18>
+		<19>
+			<name>Gui</name>
+			<m_EntityId>E526D7F0-752A-4EA9-B2-8-4E-12-A1-7A-18-2D</m_EntityId>
+			<transform>
+				<m_Position>0 ; 0 ; 0</m_Position>
+				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="TextComponent">
+					<font>EF89F61A-D25F-4353-A8-19-CC-AB-C6-B7-BD-D2</font>
+					<text>Demo</text>
+					<color>0.78193146 ; 0.6600214 ; 0.01461555 ; 1</color>
+					<fontSize>1</fontSize>
+					<screenTransform>0 ; 0</screenTransform>
+					<size>1 ; 1</size>
+					<enabled>true</enabled>
+					<entity>E526D7F0-752A-4EA9-B2-8-4E-12-A1-7A-18-2D</entity>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</19>
+		<20>
+			<name>DQS</name>
+			<m_EntityId>576D3735-28E-4401-BE-AF-DF-ED-86-B1-3C-54</m_EntityId>
+			<transform>
+				<m_Position>0 ; 0 ; 0</m_Position>
+				<m_EulerRotation>0 ; 0 ; 0</m_EulerRotation>
+				<m_Scale>1 ; 1 ; 1</m_Scale>
+			</transform>
+			<m_Components/>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</20>
+		<21>
+			<name>Gold VikingRoom</name>
+			<m_EntityId>8110E2-C936-41F2-8D-88-2F-8F-A7-11-21-8D</m_EntityId>
+			<transform>
+				<m_Position>0 ; -5.1091695 ; 69.77935</m_Position>
+				<m_EulerRotation>2.056735 ; 1.5445664 ; -2.6558068</m_EulerRotation>
+				<m_Scale>10 ; 9.999928 ; 10</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="StaticMeshRenderer">
+					<mesh>7D4A901C-2429-4A7D-B2-98-A0-92-E4-79-B4-BE</mesh>
+					<material>
+						<materialType>Opaque</materialType>
+						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
+						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
+						<metallic>0</metallic>
+						<roughness>0</roughness>
+						<reflectance>0</reflectance>
+						<emissive>0</emissive>
+						<ambientOcclusion>0</ambientOcclusion>
+						<albedoTexture>4916125F-AD2F-41C0-93-F8-C-51-D3-9A-25-6B</albedoTexture>
+						<metallicTexture>305C17F4-B611-44D3-BC-F3-66-A5-1A-C0-BC-64</metallicTexture>
+						<roughnessTexture>D1189582-EC00-49BD-A0-4A-57-1C-53-82-B3-2A</roughnessTexture>
+						<normalTexture>57B0A6C2-3-4FDC-B0-BF-E4-17-A7-E6-4F-3E</normalTexture>
+						<ambientOcclusionTexture>210AF9D9-1CE6-4B0B-85-87-87-2C-90-70-37-75</ambientOcclusionTexture>
+						<emissiveTexture>0-0-0-0-0-0-0-0-0-0-0</emissiveTexture>
+					</material>
+					<drawModelAabb>false</drawModelAabb>
+					<enabled>true</enabled>
+					<entity>8110E2-C936-41F2-8D-88-2F-8F-A7-11-21-8D</entity>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</21>
+		<22>
+			<name>Rock</name>
+			<m_EntityId>FBF9AEC0-8ADF-45B4-A5-D9-2F-AD-2F-C8-D5-35</m_EntityId>
+			<transform>
+				<m_Position>17.880417 ; -5.2832174 ; 54.41781</m_Position>
+				<m_EulerRotation>0 ; 1.4440306 ; 0</m_EulerRotation>
+				<m_Scale>0.9999997 ; 1 ; 0.9999997</m_Scale>
+			</transform>
+			<m_Components>
+				<0 typeName="StaticMeshRenderer">
+					<mesh>7833BA7A-322A-464D-86-18-B4-D0-1C-F7-A5-74</mesh>
+					<material>
+						<materialType>Opaque</materialType>
+						<albedoColor>0 ; 0 ; 0 ; 1</albedoColor>
+						<emissiveColor>0 ; 0 ; 0 ; 1</emissiveColor>
+						<metallic>0</metallic>
+						<roughness>0</roughness>
+						<reflectance>0</reflectance>
+						<emissive>0</emissive>
+						<ambientOcclusion>0</ambientOcclusion>
+						<albedoTexture>3E99424F-1A6-4743-98-72-98-42-2D-58-90-A1</albedoTexture>
+						<metallicTexture>1E92A8A-1E18-4293-93-8C-CF-72-26-10-45-0</metallicTexture>
+						<roughnessTexture>3CAC993F-67FD-46A2-B1-9E-C8-2A-57-F-ED-E0</roughnessTexture>
+						<normalTexture>1E92A8A-1E18-4293-93-8C-CF-72-26-10-45-0</normalTexture>
+						<ambientOcclusionTexture>6FCAC0FC-11AE-4E1A-AA-FD-80-9F-8D-15-13-BA</ambientOcclusionTexture>
+						<emissiveTexture>0-0-0-0-0-0-0-0-0-0-0</emissiveTexture>
+					</material>
+					<drawModelAabb>false</drawModelAabb>
+					<enabled>true</enabled>
+					<entity>FBF9AEC0-8ADF-45B4-A5-D9-2F-AD-2F-C8-D5-35</entity>
+				</0>
+			</m_Components>
+			<m_Parent>0-0-0-0-0-0-0-0-0-0-0</m_Parent>
+			<m_Children/>
+		</22>
 	</m_Entities>
 </Scene>
 

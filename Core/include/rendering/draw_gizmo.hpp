@@ -70,8 +70,6 @@ private:
     XNOR_ENGINE void DrawRectangle();
 
     XNOR_ENGINE void DrawSphere();
-
-    XNOR_ENGINE void DrawCapsule();
     
     XNOR_ENGINE void Clear();
     
