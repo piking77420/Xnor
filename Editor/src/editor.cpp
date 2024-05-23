@@ -427,10 +427,7 @@ void Editor::BuildAndReloadCodeAsync()
 void Editor::StartPlaying()
 {
 	if (m_GamePlaying)
-	{
-		XnorCore::Logger::LogWarning("Editor::StartPlaying was called while the game was already playing");
 		return;
-	}
 
 	SerializeScene();
 	XnorCore::World::isPlaying = true;
@@ -450,10 +447,7 @@ void Editor::StartPlaying()
 void Editor::StopPlaying()
 {
 	if (!m_GamePlaying)
-	{
-		XnorCore::Logger::LogWarning("Editor::StopPlaying was called while the game was already not playing");
 		return;
-	}
 	
 	XnorCore::Logger::LogInfo("Stopping game");
 	
