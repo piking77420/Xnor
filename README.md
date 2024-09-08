@@ -12,6 +12,7 @@
 - Content browser
 - Entity inspector
 - Physical Based Rendering
+- Deferred rendering
 - Animation
 - C# scripting
 - Physics
