@@ -16,8 +16,10 @@
 - C# scripting
 - Physics
 - Shadows
+- Cascaded Shadow 
 - Hot reloading
 - Audio
+- Frustum culling with a octree
 
 ## Screenshots
 
