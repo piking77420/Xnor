@@ -11,7 +11,7 @@
 - Scene graph
 - Content browser
 - Entity inspector
-- Physical Based Rendering
+- Physically Based Rendering
 - Deferred rendering
 - Animation
 - C# scripting
